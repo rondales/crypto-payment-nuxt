@@ -1,0 +1,62 @@
+$black: #232323;
+$light-black:#292536;
+$gray:#4E455A;
+$border:#78668D;
+
+
+
+$gradation: linear-gradient(90.25deg, #1D4C65 5.43%,#313067 59.32%,#431769 98.19%);
+$gradation-light: linear-gradient(90.25deg, #3EB9FC 5.43%,#6A68ED 59.32%,#8B2AE1 98.19%);
+$box-shadow: 0 0 15px #ccc;
+
+$colors-array: color_font, color_bg, color_bg_parts, color_bg_modal;
+
+//-------
+// opacity
+$opacity-hover: .6;
+$opacity-disabled: .35;
+$opacity-placeholder: .3;
+
+//-------
+// size
+$size-font: 2rem;
+$size-line-height: 1.5;
+$size-radius: 6px;
+
+//-------
+// transition
+$transition-common: all ease 200ms;
+
+//-------
+// media
+
+$x-small-screen-size: 320px;
+// $small-screen-size: 480px;
+// $middle-screen-size: 980px;
+// $large-screen-size: 1200px;
+// $x-large-screen-size: 1960px;
+$sp-screen-size: 768px;
+
+@mixin media($mode) {
+  @if ($mode == pc) {
+    @media screen and (min-width: $sp-screen-size + 1) {
+      @content;
+    }
+  } @else if($mode == sp) {
+    @media screen and (max-width: $sp-screen-size) {
+      @content;
+    }
+  // } @else if($mode == tb) {
+  //   @media screen and (max-width: 1024px) {
+  //     @content;
+  //   }
+  // } @else if($mode == pctb) {
+  //   @media screen and (min-width: 768px) and (max-width: 1299px) {
+  //     @content;
+  //   }
+  } @else {
+    @media screen and ($mode) {
+      @content;
+    }
+  }
+}
