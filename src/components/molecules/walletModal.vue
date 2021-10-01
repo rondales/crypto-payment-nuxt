@@ -9,13 +9,13 @@
       <button class="btn __m full" @click="connectWithMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
-        </span> 
+        </span>
           MetaMask
       </button>
       <button class="btn __m full" @click="connectWithWalletConnect">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect.svg">
-        </span> 
+        </span>
           WalletConnect
       </button>
     </div>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import Web3 from 'web3';
 
   export default {
     name: 'walletModal',
@@ -36,7 +37,7 @@
       return {
         num: "",
       };
-    },    
+    },
     computed: {
       classes() {
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -48,11 +49,21 @@
         this.$store.dispatch('closeModal')
       },
       connectWithMetamask() {
-          sessionStorage.setItem("provider", "metamask");
-          this.$store.dispatch("onLogin", {
-            provider: "metamask",
-          });        
-        // api.catch(errorMetamaskModal.vue)
+        if (typeof ethereum !== 'undefined') {
+          // eslint-disable-next-line
+          const web3 = new Web3(ethereum);
+          web3.eth.requestAccounts().then((accounts) => {
+            sessionStorage.setItem('provider', 'metamask');
+            this.$store.dispatch('onLogin', {
+              provider: web3,
+              walletAddress: accounts[0]
+            });
+          }).catch(() => {
+            this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
+          });
+        } else {
+          this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
+        }
       },
       connectWithWalletConnect() {
         sessionStorage.setItem("provider", "wallet_connect");
@@ -60,10 +71,13 @@
           provider: "metamask",
         });
         // api.catch(errorWalletModal.vue)
+      },
+      isSelectedNetwork() {
+        return !!this.$store.state.network;
       }
     },
     mounted() {
-      
+      //
     }
   }
 </script>

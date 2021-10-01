@@ -4,7 +4,7 @@
       <h1 class="logo"><img src="@/assets/images/logo.svg" alt="Web3 Payment"></h1>
 
       <div class="global-header__actions">
-        <button v-if="$store.state.network === 'none'" class="btn __s sp-fixed" @click="networkModal('network-modal')">
+        <button v-if="$store.state.network === null" class="btn __s sp-fixed" @click="networkModal('network-modal')">
           <span class="btn-icon">
             <img src="@/assets/images/select.svg" alt="Web3 Payment">
           </span>
@@ -27,18 +27,22 @@
 
         <button v-if="$store.state.isLogin && $store.state.network === 'eth'" class="account-wallet">
           <span class="price">0.04247ETH</span>
-          <span class="id">0x6994…69CE</span>
+          <span class="id">{{ formatWalletAddress }}</span>
         </button>
         <button v-else-if="$store.state.isLogin && $store.state.network === 'bsc'" class="account-wallet">
-          <span class="price">0.04247BSC</span>
-          <span class="id">0x6994…69CE</span>
+          <span class="price">0.04247BNB</span>
+          <span class="id">{{ formatWalletAddress }}</span>
         </button>
-        <p v-else-if="$store.state.isLogin">
+        <button v-else-if="$store.state.isLogin && $store.state.network === null" class="account-wallet">
+          <span class="price">Network not selected</span>
+          <span class="id">{{ formatWalletAddress }}</span>
+        </button>
+        <!-- <p v-else-if="$store.state.isLogin">
           selec Network
-        </p>
+        </p> -->
         <button v-else class="btn __g __s sp-fixed"  @click="walletModal('wallet-modal')">
           Connect to a wallet
-        </button>        
+        </button>
       </div>
     </div>
   </header>
@@ -49,6 +53,17 @@
   export default {
     name: 'Header',
     components: {
+    },
+    computed: {
+      formatWalletAddress() {
+        if ((this.$store.state.web3.walletAddress)) {
+          const prefix = this.$store.state.web3.walletAddress.substr(0, 6);
+          const sufix = this.$store.state.web3.walletAddress.slice(-4);
+          return prefix + '…' + sufix;
+        } else {
+          return '';
+        }
+      }
     },
     methods: {
     networkModal(target) {
@@ -109,7 +124,7 @@
         flex-wrap: wrap;
         background: #171522;
         width: 100%;
-      }      
+      }
     }
     .sp-fixed{
       @include media(sp) {
@@ -151,7 +166,7 @@
         margin-left: 16px;
         margin-right: 0;
         background: $gradation;
-        box-sizing: border-box;        
+        box-sizing: border-box;
       }
     }
     @include media(sp) {
@@ -173,7 +188,7 @@
         margin-left: 0;
         margin-right: 0;
         background: $gradation;
-        box-sizing: border-box;   
+        box-sizing: border-box;
       }
     }
     .id {
@@ -183,7 +198,5 @@
       display: block;
     }
   }
-  .btn-icon{
-    
-  }
+  .btn-icon{}
 </style>

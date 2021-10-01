@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="payment_pay add-flex border j-between" v-if="$store.state.network === 'none'">
+    <div class="payment_pay add-flex border j-between" v-if="$store.state.network === null">
       <div class="payment_pay_name add-flex j-between a-center">
         <div class="payment_usdt_logo">
           <img src="@/assets/images/none.svg" alt="">
@@ -15,7 +15,7 @@
             </button>
             <button class="btn __g" v-if="network" @click="openModal('network-modal')">
               Select Network
-            </button>          
+            </button>
           </dd>
         </dl>
       </div>
@@ -63,9 +63,9 @@
             Balance：900021.00 SYMBOL
           </span>
 
-          <div class="equivalent green" v-if="!equivalent">＝ 1000 USD equivalent</div>          
-          <div class="equivalent red" v-if="!equivalent">＝ 651 USDT equivalent</div>          
-        </div>         
+          <div class="equivalent green" v-if="!equivalent">＝ 1000 USD equivalent</div>
+          <div class="equivalent red" v-if="!equivalent">＝ 651 USDT equivalent</div>
+        </div>
         <div class="payment_rate add-flex j-between a-center" v-if="$store.state.bases">
           <p>
             Uniswap Exchamge Rate
@@ -89,7 +89,7 @@
           </dt>
           <dd>
             <button class="btn __g" @click="tokenModal('detail-modal')">
-              Select Network
+              Select a Token
             </button>
           </dd>
         </dl>
@@ -99,10 +99,8 @@
           Binance Smart Chain Mainnet
         </p>
       </div>
-    </div>    
+    </div>
   </div>
-  
-
 </template>
 
 <script>
@@ -137,7 +135,7 @@ export default {
   left: 40px;
   transform: translate(0, -50%);
 }
-.payment_pay {
+.payment_pay{
   padding: 24px;
   &.slected{
     padding: 0 !important;
@@ -147,13 +145,13 @@ export default {
         font-weight: 400;
         font-size: 15px;
       }
-    }  
+    }
     .payment_usdt_name{
       width: 28%;
-    @include media(sp) {
-      width: 100%;
-      justify-content: flex-start;
-    }      
+      @include media(sp){
+        width: 100%;
+        justify-content: flex-start;
+      }
     }
     .bases-state{
       span{
@@ -163,7 +161,7 @@ export default {
       }
     }
     .payment_pay_name{
-      @include media(sp) {
+      @include media(sp){
         margin-bottom: 16px;
       }
     }
@@ -171,7 +169,7 @@ export default {
       img{
         border-radius: 8px;
       }
-      @include media(sp) {
+      @include media(sp){
         margin-right: 16px;
       }
     }
@@ -186,20 +184,20 @@ export default {
     .payment_network{
       padding: 12px 16px;
       min-width: 410px;
-      @include media(sp) {
+      @include media(sp){
         width: 100%;
         min-width: auto;
         line-height: 16px;
         &.sp-lh{
           line-height: 32px;
         }
-      }      
+      }
       p{
         font-size: 10px;
         font-weight: 100;
         display: inline;
-        height: 100%;    
-      }    
+        height: 100%;
+      }
     }
     .payment_rate{
       width: 100%;
@@ -221,7 +219,7 @@ export default {
     dd{
       font-size: 25px;
     }
-  }  
+  }
 }
 .payment_pay{
   margin-bottom: 16px;
@@ -230,17 +228,16 @@ export default {
   }
   &_name{
     width: 34%;
-    @include media(sp) {
+    @include media(sp){
       width: 100%;
       justify-content: flex-start;
-    }       
+    }
   }
   dl{
     dt{
       margin-bottom: 8px;
     }
-    dd{
-    }
+    dd{}
   }
 }
 </style>

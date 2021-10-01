@@ -11,19 +11,19 @@
         </span>
         <span v-if="success">
           <img src="@/assets/images/badge.svg" alt="">
-        </span>            
+        </span>
       </div>
     </div>
     <div class="payment_invoice">
-      Invoice ID.<span>******************</span>
+      <!-- Invoice ID.<span>******************</span> -->
     </div>
     <div class="payment_linkbox add-flex j-around a-center">
       <span>
-        <img src="@/assets/images/link.svg" alt="">
+        <!-- <img src="@/assets/images/link.svg" alt=""> -->
       </span>
       <span class="refresh" @click="hoge">
         <img src="@/assets/images/refresh.svg" alt="">
-      </span>          
+      </span>
     </div>
   </div>
 </template>
@@ -88,9 +88,9 @@ export default {
   width: 40%;
   @include media(sp) {
     width: 85%;
-    padding: 16px 24px 16px 10px;    
+    padding: 16px 24px 16px 10px;
     margin-top: 8px;
-  }  
+  }
   span{
     margin-left: 8px;
   }
