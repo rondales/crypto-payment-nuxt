@@ -12,13 +12,13 @@
       <button class="btn __m half" @click="networkValue('eth')">
         <span class="btn-icon">
           <img src="@/assets/images/eth.svg">
-        </span> 
+        </span>
           Ethereum Main net
       </button>
       <button class="btn __m half" @click="networkValue('bsc')">
         <span class="btn-icon">
           <img src="@/assets/images/bsc.svg">
-        </span> 
+        </span>
           Binance Smart Chain Mainnet
       </button>
     </div>
@@ -39,7 +39,7 @@
       return {
         num: "",
       };
-    },    
+    },
     computed: {
       classes() {
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -54,9 +54,7 @@
         this.$store.dispatch('selectNetwork', currency)
       }
     },
-    mounted() {
-      
-    }
+    mounted() {}
   }
 </script>
 
@@ -102,7 +100,7 @@
       }
       &__desc {
         font-size: 1.5rem;
-      }      
+      }
     }
     &__title {
       font-weight: 500;
@@ -138,7 +136,7 @@
         &:nth-child(1){
           margin-bottom: 16px;
         }
-      }      
+      }
     }
   }
   .footer {

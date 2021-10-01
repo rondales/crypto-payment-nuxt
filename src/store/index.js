@@ -6,7 +6,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     isLogin: false,
-    network: "none",
+    network: null,
     bases: "",
     modal: {
       isShow: false,
@@ -15,6 +15,7 @@ const store = new Vuex.Store({
     },
     web3: {
       provider: null,
+      walletAddress: '',
     }
   },
   actions: {
@@ -45,6 +46,7 @@ const store = new Vuex.Store({
     onLogin(state, payload) {
       state.isLogin = true
       state.web3.provider = payload.provider
+      state.web3.walletAddress = payload.walletAddress
       state.modal.isShow = false
     },
     onLogout(state) {
