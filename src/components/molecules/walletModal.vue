@@ -28,6 +28,7 @@
 
 <script>
   import Web3 from 'web3';
+  import WalletConnectProvider from '@walletconnect/web3-provider';
 
   export default {
     name: 'walletModal',
@@ -49,9 +50,8 @@
         this.$store.dispatch('closeModal')
       },
       connectWithMetamask() {
-        if (typeof ethereum !== 'undefined') {
-          // eslint-disable-next-line
-          const web3 = new Web3(ethereum);
+        if (typeof window.ethereum !== 'undefined') {
+          const web3 = new Web3(window.ethereum);
           web3.eth.requestAccounts().then((accounts) => {
             sessionStorage.setItem('provider', 'metamask');
             this.$store.dispatch('onLogin', {
@@ -65,12 +65,28 @@
           this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
         }
       },
-      connectWithWalletConnect() {
+      async connectWithWalletConnect() {
+        const provider = new WalletConnectProvider({
+          infuraId: process.env.VUE_APP_INFURA_ID,
+          rpc: {
+            56: 'https://bsc-dataseed.binance.org',
+            97: 'https://data-seed-prebsc-1-s1.binance.org:8545'
+          }
+        });
+
+        let accounts;
+        try {
+          accounts = await provider.enable()
+        } catch {
+          this.$store.dispatch('openModal', {target: 'error-wallet-modal', size: 'small'});
+          return;
+        }
+        const web3 = new Web3(provider);
         sessionStorage.setItem("provider", "wallet_connect");
         this.$store.dispatch("onLogin", {
-          provider: "metamask",
+          provider: web3,
+          walletAddress: accounts[0]
         });
-        // api.catch(errorWalletModal.vue)
       },
       isSelectedNetwork() {
         return !!this.$store.state.network;
