@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="パス_1810" data-name="パス 1810" d="M720.6,306.4h26.776v14H720.6Z" transform="translate(-720.6 -306.4)"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <path id="パス_1812" data-name="パス 1812" d="M720.6,0h13.391V30.129H720.6Z" transform="translate(-720.6)"/>
+    </clipPath>
+    <clipPath id="clip-path-3">
+      <path id="パス_1814" data-name="パス 1814" d="M975,0h13.391V30.129H975Z" transform="translate(-975)"/>
+    </clipPath>
+    <clipPath id="clip-path-4">
+      <path id="パス_1816" data-name="パス 1816" d="M720.6,470.3h13.391v18.865H720.6Z" transform="translate(-720.6 -470.3)"/>
+    </clipPath>
+    <clipPath id="clip-path-5">
+      <path id="パス_1818" data-name="パス 1818" d="M975,470.3h13.4v18.865H975Z" transform="translate(-975 -470.3)"/>
+    </clipPath>
+  </defs>
+  <g id="グループ_5135" data-name="グループ 5135" transform="translate(-298 -257)">
+    <g id="グループ_4944" data-name="グループ 4944" transform="translate(2 -1)">
+      <rect id="長方形_2334" data-name="長方形 2334" width="64" height="64" transform="translate(296 258)" fill="#e2e4e8"/>
+    </g>
+    <g id="ethereum" transform="translate(-403.993 267)">
+      <g id="グループ_4949" data-name="グループ 4949" transform="translate(720.6 16.128)" opacity="0.6">
+        <g id="グループ_4948" data-name="グループ 4948" transform="translate(0)" clip-path="url(#clip-path)">
+          <path id="パス_1809" data-name="パス 1809" d="M733.991,306.4,720.6,312.49l13.391,7.911,13.385-7.911Z" transform="translate(-720.6 -306.4)" fill="#010101"/>
+        </g>
+      </g>
+      <g id="グループ_4951" data-name="グループ 4951" transform="translate(720.6)" opacity="0.45">
+        <g id="グループ_4950" data-name="グループ 4950" transform="translate(0)" clip-path="url(#clip-path-2)">
+          <path id="パス_1811" data-name="パス 1811" d="M720.6,22.218l13.391,7.911V0Z" transform="translate(-720.6)" fill="#010101"/>
+        </g>
+      </g>
+      <g id="グループ_4953" data-name="グループ 4953" transform="translate(733.991)" opacity="0.8">
+        <g id="グループ_4952" data-name="グループ 4952" transform="translate(0)" clip-path="url(#clip-path-3)">
+          <path id="パス_1813" data-name="パス 1813" d="M975,0V30.129l13.385-7.911Z" transform="translate(-975)" fill="#010101"/>
+        </g>
+      </g>
+      <g id="グループ_4955" data-name="グループ 4955" transform="translate(720.6 24.755)" opacity="0.45">
+        <g id="グループ_4954" data-name="グループ 4954" transform="translate(0)" clip-path="url(#clip-path-4)">
+          <path id="パス_1815" data-name="パス 1815" d="M720.6,470.3l13.391,18.865V478.211Z" transform="translate(-720.6 -470.3)" fill="#010101"/>
+        </g>
+      </g>
+      <g id="グループ_4957" data-name="グループ 4957" transform="translate(733.991 24.755)" opacity="0.8">
+        <g id="グループ_4956" data-name="グループ 4956" transform="translate(0)" clip-path="url(#clip-path-5)">
+          <path id="パス_1817" data-name="パス 1817" d="M975,478.211v10.954L988.4,470.3Z" transform="translate(-975 -470.3)" fill="#010101"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,8 +1,17 @@
 <template>
   <header class="global-header">
     <div class="global-header__inner">
-      <h1 class="logo"><img src="@/assets/images/logo.svg" alt="Web3 Payment"></h1>
-
+      <div class="add-flex a-center">
+        <h1 class="logo"><img src="@/assets/images/logo.svg" alt="Web3 Payment"></h1>
+        <div class="user-status" :class="{'is-admin': $route.name === 'admin'}">
+          merchant
+        </div>
+        <div @click="open()" class="humberger" :class="{'active': $store.state.humberger === true}">
+          <button type="button" class="menu-btn" >
+            <img src="@/assets/images/humberger.png" alt="">
+          </button>    
+        </div>
+      </div>
       <div class="global-header__actions">
         <button v-if="$store.state.network === null" class="btn __s sp-fixed" @click="networkModal('network-modal')">
           <span class="btn-icon">
@@ -52,6 +61,11 @@
 
   export default {
     name: 'Header',
+    data(){
+      return{
+        humberger: false
+      }
+    },
     components: {
     },
     computed: {
@@ -72,18 +86,63 @@
     walletModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
+    open(){
+      this.$store.dispatch("humberger", {humberger: true});
     }
+    },
   }
 </script>
 
 <style lang="scss" scoped>
-    @import '@/assets/scss/style.scss';
-
+  @import '@/assets/scss/style.scss';
+  .user-status{
+    display: none;
+    font-size: 14px;
+    font-weight: 200;
+    line-height: 24px;
+    background: $gradation-light;
+    padding: 2px 24px;
+    border-radius:50px;
+    margin-left: 32px;  
+    @include media(sp) {
+      font-size: 12px;
+      margin-left: 16px;
+      padding: 2px 12px;
+    }
+  }
+  .humberger{
+    display: none;
+    @include media(sp) {
+      display: block;
+      position: relative;
+      width: 24px;
+      height: 24px;
+      overflow: hidden;
+      margin-left: 32px;
+      &.active{
+        .menu-btn{
+          top: 0;
+        }
+      }
+      .menu-btn{
+        position: absolute;
+        top: -24px;
+      }
+    }
+  }
+  .is-admin{
+    display: block;
+  }
   .global-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #58466E;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background: #171522;
+    z-index: 1000;
     &__inner {
       display: flex;
       justify-content: space-between;

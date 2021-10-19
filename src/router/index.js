@@ -26,6 +26,23 @@ export default new Router({
           path: "/payment",
           component: () => import("@/pages/payment"),
         },
+        {
+          name: "admin",
+          path: "/admin",
+          component: () => import("@/pages/admin"),
+        },
+        {
+          name: "admin",
+          path: "/admin/dashboard",
+          component: () => import("@/pages/admin-page"),
+          children: [
+            { name: "admin" , path: "/admin/dashboard", component: () => import("@/components/organisms/admin/AdminDashboard") },
+            { name: "admin" , path: "/admin/web3payment", component: () => import("@/components/organisms/admin/AdminWeb3Payment") },
+            { name: "admin" , path: "/admin/invoice", component: () => import("@/components/organisms/admin/AdminInvoice") },
+            { name: "admin" , path: "/admin/keys", component: () => import("@/components/organisms/admin/AdminKeys") },
+            { name: "admin" , path: "/admin/documents", component: () => import("@/components/organisms/admin/AdminDocuments") },
+          ]
+        },
       ],
     },
   ],
