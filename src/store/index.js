@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     isLogin: false,
     network: null,
     bases: "",
+    humberger: false,
     modal: {
       isShow: false,
       target: '',
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
     selectBases({ commit }, bases) {
       commit('selectBases', bases)
     },
+    humberger({ commit }) {
+      commit('humberger')
+    },
   },
   mutations: {
     onLogin(state, payload) {
@@ -68,6 +72,9 @@ const store = new Vuex.Store({
     },
     selectBases(state, bases) {
       state.bases = bases
+    },
+    humberger(state) {
+      state.humberger = !state.humberger
     }
   }
 })

@@ -10,10 +10,6 @@ body {
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  overflow: hidden;
-  @include media(pc) {
-    min-width: 1260px;
-  }
   @include media(sp) {
   overflow:auto;
   height: calc(100vh + 32rem);
@@ -43,7 +39,12 @@ a {
     text-decoration: underline;
   }
 }
-
+select{
+  cursor: pointer;
+  &:hover{
+    opacity: .8;
+  }
+}
 em {
   font-style: normal;
 }
@@ -219,4 +220,10 @@ li {
 }
 .bold-desc{
   font-size: 17px !important;
+}
+.sp{
+  display: none;
+  @include media(sp) {
+    display: block;
+  }
 }

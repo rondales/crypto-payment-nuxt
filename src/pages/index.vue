@@ -2,7 +2,12 @@
   <div class="home">
     <div>
       <a href="/payment">PAYMENT PAGE</a>
-      <a href="/">ADMIN PAGE</a>
+      <a href="/admin">ADMIN PAGE</a>
+      <a href="/admin/dashboard">ADMIN/dashboard</a>
+      <a href="/admin/web3payment">ADMIN/web3payment</a>
+      <a href="/admin/invoice">ADMIN/inovoice</a>
+      <a href="/admin/keys">ADMIN/keys</a>      
+      <a href="/admin/documents">ADMIN/documents</a>      
     </div>
   </div>
 </template>
@@ -18,16 +23,12 @@ export default {
 <style lang="scss" scoped>
 .home{
   text-align: center;
-  margin-top: 50vh;
+  margin-top: 10vh;
   a{
     display: block;
     font: 24px;
     color: #fff;
     margin-bottom: 20px;
-    &:nth-child(2){
-      opacity: .6;
-      text-decoration: line-through;
-    }
   }
 }
 </style>
