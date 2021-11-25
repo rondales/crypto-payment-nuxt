@@ -3,13 +3,11 @@
     <div class="global-header__inner">
       <div class="add-flex a-center">
         <h1 class="logo"><img src="@/assets/images/logo.svg" alt="Web3 Payment"></h1>
+        <p class="logo-sub">
+          Web3 Payment
+        </p>
         <div class="user-status" :class="{'is-admin': $route.name === 'admin'}">
           merchant
-        </div>
-        <div @click="open()" class="humberger" :class="{'active': $store.state.humberger === true}">
-          <button type="button" class="menu-btn" >
-            <img src="@/assets/images/humberger.png" alt="">
-          </button>    
         </div>
       </div>
       <div class="global-header__actions">
@@ -40,10 +38,6 @@
         </button>
         <button v-else-if="$store.state.isLogin && $store.state.network === 'bsc'" class="account-wallet">
           <span class="price">0.04247BNB</span>
-          <span class="id">{{ formatWalletAddress }}</span>
-        </button>
-        <button v-else-if="$store.state.isLogin && $store.state.network === null" class="account-wallet">
-          <span class="price">Network not selected</span>
           <span class="id">{{ formatWalletAddress }}</span>
         </button>
         <!-- <p v-else-if="$store.state.isLogin">
@@ -86,9 +80,6 @@
     walletModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
-    open(){
-      this.$store.dispatch("humberger", {humberger: true});
-    }
     },
   }
 </script>
@@ -108,26 +99,6 @@
       font-size: 12px;
       margin-left: 16px;
       padding: 2px 12px;
-    }
-  }
-  .humberger{
-    display: none;
-    @include media(sp) {
-      display: block;
-      position: relative;
-      width: 24px;
-      height: 24px;
-      overflow: hidden;
-      margin-left: 32px;
-      &.active{
-        .menu-btn{
-          top: 0;
-        }
-      }
-      .menu-btn{
-        position: absolute;
-        top: -24px;
-      }
     }
   }
   .is-admin{
@@ -156,6 +127,11 @@
       .logo {
         height: 36px;
       }
+      .logo-sub{
+        margin-top: 10px;
+        margin-left: 16px;
+        font-size: 14px;
+      }      
     }
     @include media(sp) {
       height: 72px;
@@ -164,6 +140,9 @@
       .logo {
         height: 24px;
       }
+      .logo-sub{
+        display: none;
+      }      
     }
     .logo {
       white-space: nowrap;

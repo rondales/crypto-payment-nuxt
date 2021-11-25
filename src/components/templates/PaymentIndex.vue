@@ -2,28 +2,18 @@
   <div>
     <Header />
     <div class="payment">
-      <PaymentTop />
-      <div>
-        <div class="payment_input">
-          <PaymentUsdt />
-          <div class="payment-arrow">
-            <img src="@/assets/images/arrow.svg" alt="">
-          </div>
-          <PaymentTokens />
+      <payment-top />
+      <div class="add-flex j-between">
+        <div>
+          <p class="payment_Receiver mb-1">
+            Receiver：{{Receiver}}
+          </p>
+          <p class="payment_invoice-id">
+            Invoice ID: {{invoiceId | maskText}}
+          </p>      
         </div>
+          <router-view /> 
       </div>
-      <button v-if="!$store.state.isLogin" class="btn __g __l" @click="openModal('wallet-modal')">
-        Connect to a wallet
-      </button>
-      <p class="connected" v-else-if="!$store.state.network">
-        Select the network you want to use for payment
-      </p>
-      <p class="connected" v-else-if="!$store.state.bases">
-        Select the token you want to pay for
-      </p>
-      <button v-else-if="$store.state.bases" class="btn __g __l">
-        Payment
-      </button>
     </div>
   </div>
 </template>
@@ -32,25 +22,30 @@
 <script>
 import Header from "@/components/organisms/header"
 import PaymentTop from '@/components/organisms/PaymentTop'
-import PaymentUsdt from '@/components/organisms/PaymentUsdt'
-import PaymentTokens from '@/components/organisms/PaymentTokens'
 
 export default {
   name: 'payment',
     data() {
-      return {}
+      return {
+        Receiver: "E-check.online",
+        invoiceId: "hogehogefugafuga",        
+      }
     },
   components: {
     Header,
     PaymentTop,
-    PaymentUsdt,
-    PaymentTokens
   },
   methods: {
     openModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
   },
+  filters: {
+    maskText(text) {
+      text = "*************";
+      return text;
+    },
+  }  
 }
 </script>
 
@@ -62,30 +57,23 @@ export default {
 }
 .payment{
   position: absolute;
-  top: calc(50% + 6rem);
+  top: 60vh;
   left: 50%;
   transform: translate(-50%,-50%);
   box-shadow:
     -20px 20px 70px rgba(139, 42, 225, 0.7),
     20px -20px 70px rgba(62, 185, 252, 0.7);
   width: 100%;
-  max-width: 76.7rem;
-  padding: 16px;
+  max-width: 36.1rem;
+  padding: 32px 24px 24px;
   border-radius: 8px;
   background: #292536;
   @include media(sp) {
     top: calc(50% + 12rem);
   }
-}
-.payment-arrow{
-  margin-top: -10px;
-  margin-bottom: -10px;
-  margin-left: 24px;
-}
-.connected{
-  text-align: center;
-  font-size: 15px;
-  font-weight: 100;
-  padding: 24px 0;
+  .payment_Receiver,
+  .payment_invoice-id{
+    font-size: 15px;
+  }  
 }
 </style>

@@ -11,7 +11,7 @@
     <div class="body">
       <a href="/">View on explorer</a>
       <div class="btn __g __l mt-2" @click="back">
-        Back to Payee’s Services
+        Back to Receiver’s Services
       </div>      
     </div>
     <button class="close" @click="closeModal">

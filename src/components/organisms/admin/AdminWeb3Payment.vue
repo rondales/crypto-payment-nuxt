@@ -259,7 +259,7 @@
           </div>
           <div class="manage-domain" v-if="settingTab === 'domain'">
             <div class="manage-contents_clm">
-              <h4>Payee Domain Setting</h4>
+              <h4>Receiver Domain Setting</h4>
               <p>
                 Enter the request URL (POST) for the Deposit Notification API.
               </p>

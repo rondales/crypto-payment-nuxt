@@ -105,7 +105,7 @@
 
 <script>
 export default {
-  name: 'PaymentUsdt',
+  name: 'PaymentPriceHandler',
     data() {
       return{
         success: false,

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="長方形_17663" data-name="長方形 17663" width="40" height="40" transform="translate(746 631)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="マスクグループ_1" data-name="マスクグループ 1" transform="translate(-746 -631)" clip-path="url(#clip-path)">
+    <g id="Page-1" transform="translate(746.8 638.904)">
+      <g id="walletconnect-logo-alt">
+        <path id="WalletConnect" d="M7.951,4.969a16.387,16.387,0,0,1,22.828,0l.759.743a.779.779,0,0,1,0,1.118l-2.6,2.541a.41.41,0,0,1-.571,0L27.328,8.348a11.432,11.432,0,0,0-15.925,0L10.284,9.443a.41.41,0,0,1-.571,0L7.118,6.9a.779.779,0,0,1,0-1.118Zm28.195,5.255,2.31,2.261a.779.779,0,0,1,0,1.118L28.041,23.8a.819.819,0,0,1-1.141,0h0l-7.392-7.237a.2.2,0,0,0-.285,0h0L11.831,23.8a.819.819,0,0,1-1.141,0h0L.274,13.6a.779.779,0,0,1,0-1.118l2.31-2.261a.819.819,0,0,1,1.141,0l7.392,7.237a.2.2,0,0,0,.285,0h0l7.392-7.237a.819.819,0,0,1,1.141,0h0l7.392,7.237a.2.2,0,0,0,.285,0L35,10.224A.819.819,0,0,1,36.146,10.224Z" transform="translate(-0.038 -0.34)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

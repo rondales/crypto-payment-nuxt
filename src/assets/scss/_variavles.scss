@@ -2,11 +2,13 @@ $black: #232323;
 $light-black:#292536;
 $gray:#4E455A;
 $border:#78668D;
-
+$dark-gray: #5D5D5D;
 
 
 $gradation: linear-gradient(90.25deg, #1D4C65 5.43%,#313067 59.32%,#431769 98.19%);
 $gradation-light: linear-gradient(90.25deg, #3EB9FC 5.43%,#6A68ED 59.32%,#8B2AE1 98.19%);
+$gradation-pale: linear-gradient(90.25deg, #7BC8FC 5.43%,#9695F2 40.32%,#A677EC 98.19%);
+
 $box-shadow: 0 0 15px #ccc;
 
 $colors-array: color_font, color_bg, color_bg_parts, color_bg_modal;

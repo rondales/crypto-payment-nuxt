@@ -11,7 +11,7 @@
       </p>      
     </div>
     <div class="body">
-      <a href="/" class="btn __m full hight add-flex a-center mb-0" @click="connectWithMetamask">
+      <a href="/" class="btn __m __pg full hight add-flex a-center mb-0" @click="connectWithMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect.svg">
         </span>
