@@ -27,7 +27,8 @@
             Payment detail
           </p>
           <figure class="reload" @click="reload">
-            <img src="@/assets/images/reload.svg" alt="">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
           </figure>
         </div>
         <div class="payment_detail add-flex j-between mb-1">
@@ -253,34 +254,8 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
-      }
-    }
   }
-  .payment-box{
-    background: #4E455A;
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    width: 100%;
-    &_desc{
-      font-size: 16px;
-      padding-left: 8px;
-    }
-    &_btn{
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 200;
-      background: $gradation-light;
-      padding: 4px 24px;
-      border-radius: 20px;
-    }
-  }
+
   .dattail-lists{
     .dattail-list{
       p{
@@ -348,13 +323,5 @@ export default {
       height: 20px;
     }
   }
-  .spin{
-    animation: 3s linear infinite spin;
-  }
-
-  @keyframes spin {
-    from { transform: rotateZ(0deg); }
-    to { transform: rotateZ(360deg); }
-  }  
 }
 </style>

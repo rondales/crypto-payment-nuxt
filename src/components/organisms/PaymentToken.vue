@@ -27,10 +27,10 @@
       <div class="payment-box network">
         <div class="add-flex a-center j-between">
           <div class="add-flex a-center">
-            <img src="@/assets/images/eth.svg" alt="">
+            <img :src="$store.state.network.icon">
             <div class="payment-box_desc">
               <p>
-                Ethereum Main net
+                {{$store.state.network.name}}
               </p>
             </div>
           </div>
@@ -53,8 +53,8 @@
             Select token
           </p>
           <div class="token-items">
-            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key">
-              <div class="add-flex j-between a-center" @click="importToken(token)">
+            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="importToken(token)">
+              <div class="add-flex j-between a-center">
                 <figure>
                   <img :src="token.icon" alt="">
                 </figure>
@@ -331,14 +331,6 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
-      }
-    }
   }
   .token-title{
     font-size: 17px;
@@ -366,14 +358,6 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
-      }
-    }
   }
   .payment-with{
     text-align: left;
@@ -387,16 +371,14 @@ export default {
     padding: 12px;
     border-radius: 12px;
     margin-bottom: 16px;
-    &.network{
-      border: 1px solid #fff;
-    }
+    color: #fff;
     img{
       width: 38px;
       height: 38px;
       border-radius: 10px;
     }
     &_desc{
-      font-size: 14px;
+      font-size: 11px;
       padding-left: 8px;
       font-weight: 100;
     }
@@ -428,7 +410,7 @@ export default {
   }  
   .body {
     .toggle-btn{
-      background: #352D40;
+      background: var(--color_darken);
       padding: 8px;
       border-radius: 10px;
     }
@@ -451,13 +433,16 @@ export default {
       font-size: 16px;
       font-weight: 100;
       &.active{
-        background: #4E455A;
+        background: var(--color_inner);
       }
     }
     .token-items{
       overflow: hidden;
       overflow-y: auto;
       height: 20vh;
+      .token-item{
+        cursor: pointer;
+      }
     }
     .manage-content{
       .manage-title{
@@ -481,7 +466,7 @@ export default {
       .manage-clear{
         font-size: 14px;
         font-weight: 100;
-        background: $gray;
+        background: var(--color_darken);
         border-radius: 10px;
         padding: 4px 24px;
         cursor: pointer;
@@ -506,6 +491,7 @@ export default {
           font-size: 12px;
           font-weight: 100;
           cursor: pointer;
+          color: #fff;
         }
         figure{
           img{

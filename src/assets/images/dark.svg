@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="43" height="43" viewBox="0 0 43 43">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="長方形_17846" data-name="長方形 17846" width="43" height="43" rx="10" transform="translate(1013 26)" fill="#fff"/>
+    </clipPath>
+    <filter id="長方形_2822" x="-9" y="-6" width="61" height="61" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="マスクグループ_3" data-name="マスクグループ 3" transform="translate(-1013 -26)" clip-path="url(#clip-path)">
+    <g id="グループ_67081" data-name="グループ 67081">
+      <g id="グループ_5364" data-name="グループ 5364" transform="translate(799 -740)">
+        <g transform="matrix(1, 0, 0, 1, 214, 766)" filter="url(#長方形_2822)">
+          <rect id="長方形_2822-2" data-name="長方形 2822" width="43" height="43" rx="10" fill="#4e455a"/>
+        </g>
+      </g>
+      <path id="moon_4_" data-name="moon (4)" d="M20.695,15.48A8.176,8.176,0,0,1,9.725,4.511.667.667,0,0,0,9.6,3.745a.66.66,0,0,0-.766-.124A9.513,9.513,0,1,0,21.584,16.37a.663.663,0,0,0-.89-.89Zm-7.627,4.847A8.184,8.184,0,0,1,7.817,5.861a9.507,9.507,0,0,0,9.234,11.81,9.244,9.244,0,0,0,2.293-.283A8.125,8.125,0,0,1,13.067,20.327Z" transform="translate(1022.45 35.45)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

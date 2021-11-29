@@ -83,11 +83,14 @@
           <input v-model="mail" class="mail" type="text" placeholder="your@mail.com">
         </div>
       </div>
-      <button class="btn __g __l inactive mb-2" :class="{'active': mail}">
+      <button class="btn __g __l inactive mb-2" @click="sendMail" :class="{'active': mail}">
         Yes required
       </button>
       <button class="btn __g __l" @click="next">
         Not required
+        <div class="loading-wrap" :class="{'active': loading}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
       </button>
     </div>
   </div>
@@ -104,8 +107,9 @@ export default {
         paid: false,
         changedPrice: false,
         selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
-        price: 1000.00,
+        price: 0,
         invoiceId: "hogehogefugafuga",
+        loading: false,
         currencys: [
           {
             name: "JPY",
@@ -138,7 +142,13 @@ export default {
     handlePayment(){
       this.paid = true;
     },
+    sendMail(){
+      this.$router.push({
+        path: 'payment/wallets',
+      })
+    },
     next(){
+      this.loading = true;
       this.$router.push({
         path: 'payment/wallets',
       })
@@ -253,14 +263,6 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
-      }
-    }
   }
   .payment-with{
     text-align: center;
@@ -269,25 +271,7 @@ export default {
     padding-top: 8px;
     padding-bottom: 24px;
   }
-  .payment-box{
-    background: #4E455A;
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    width: 100%;
-    &_desc{
-      font-size: 16px;
-      padding-left: 8px;
-    }
-    &_btn{
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 200;
-      background: $gradation-light;
-      padding: 4px 24px;
-      border-radius: 20px;
-    }
-  }
+
   .payment_receiptwrap{
     width: 100%;
   }
@@ -304,7 +288,10 @@ export default {
         width: 100%;
       }
     }
-  }  
+  }
+  .btn{
+    position: relative;
+  }
 }
 
 </style>

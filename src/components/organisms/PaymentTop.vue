@@ -11,7 +11,8 @@
       </div>
       <div class="hamburger" @click="open()" :class="{'active': $store.state.humberger === true}">
         <button type="button" class="menu-btn" >
-          <img src="@/assets/images/humberger.png" alt="">
+          <img v-if="$store.state.theme == 'dark'" src="@/assets/images/hamburger.svg" alt="">
+          <img v-if="$store.state.theme == 'light'" src="@/assets/images/hamburger-light.svg" alt="">
         </button> 
       </div>      
     </div>
@@ -41,10 +42,6 @@ export default {
 @import '@/assets/scss/style.scss';
 .payment_top{
   margin-bottom: 16px;
-  @include media(sp) {
-    margin-top: 8px;
-    margin-bottom: 4px;
-  }
   .logo{
     .product_name{
       font-size: 15px;
@@ -59,6 +56,7 @@ export default {
     height: 24px;
     overflow: hidden;
     margin-left: 32px;
+    z-index: 2;
     &.active{
       .menu-btn{
         top: 0;
@@ -66,7 +64,7 @@ export default {
     }
     .menu-btn{
       position: absolute;
-      top: -24px;
+      top: -23px;
     }
   } 
 }

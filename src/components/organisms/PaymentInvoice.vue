@@ -174,11 +174,6 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      color: #fff;
-      font-weight: 300;
-    }
   }
   .payment-with{
     text-align: center;

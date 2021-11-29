@@ -23,7 +23,8 @@ export default {
 <style lang="scss" scoped>
 .home{
   text-align: center;
-  margin-top: 10vh;
+  padding-top: 10vh;
+  background: var(--color_bg);
   a{
     display: block;
     font: 24px;

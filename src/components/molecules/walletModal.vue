@@ -89,7 +89,7 @@
         });
       },
       isSelectedNetwork() {
-        return !!this.$store.state.network;
+        return !!this.$store.state.network.abbriviation;
       }
     },
     mounted() {
@@ -107,7 +107,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background:$light-black;
+    background:var(--color_bg);
     @include media(pc) {
       &.--small {
         width: 470px;

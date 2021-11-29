@@ -25,12 +25,18 @@
         Connect Web3 wallet to make a payment
       </div>
       <button class="btn __m __pg icon-right full" @click="connectWithMetamask">
+        <div class="loading-wrap" :class="{'active': loadingMeta}">
+          <img class="spin mt" src="@/assets/images/loading.svg">
+        </div>        
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
       <button class="btn __m __pg icon-right full" @click="connectWithWalletConnect">
+        <div class="loading-wrap" :class="{'active': loadingWallet}">
+          <img class="spin mt" src="@/assets/images/loading.svg">
+        </div>        
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect_w.svg">
         </span>
@@ -56,6 +62,8 @@ export default {
         selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
         price: 1000.00,
         invoiceId: "hogehogefugafuga",
+        loadingMeta: false,
+        loadingWallet: false,
         currencys: [
           {
             name: "JPY",
@@ -95,6 +103,7 @@ export default {
           }
         }
       );
+      this.loadingMeta = true;
       /////////// connect metamask
       // if (typeof window.ethereum !== 'undefined') {
       //   const web3 = new Web3(window.ethereum);
@@ -112,6 +121,7 @@ export default {
       // }
     },    
     async connectWithWalletConnect() {
+      this.loadingWallet = true;
       const provider = new WalletConnectProvider({
         infuraId: process.env.VUE_APP_INFURA_ID,
         rpc: {
@@ -243,14 +253,6 @@ export default {
       dd{
         font-size: 18px;
         font-weight: 300;
-      }
-    }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
       }
     }
   }

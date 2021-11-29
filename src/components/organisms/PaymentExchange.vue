@@ -27,7 +27,8 @@
             Your Balance
           </p>
           <figure class="reload" @click="reload">
-            <img src="@/assets/images/reload.svg" alt="">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
           </figure>
         </div>
         <div class="payment_balance add-flex j-between mb-1">
@@ -76,8 +77,11 @@
             </div>          
           </div>
         </div>          
-        <button :class="{'inactive': changedPrice}" class="btn __g __l mb-2" @click="sendToken">
+        <button :class="{'inactive': changedPrice}" class="btn __g __l mb-2" @click="sendTokenItems">
           Go Exchange to Payment
+          <div class="loading-wrap" :class="{'active': loading}">
+            <img class="spin" src="@/assets/images/loading.svg">
+          </div>
         </button>
         <p class="via">
           via Uniswap：Slash Payment 
@@ -105,6 +109,7 @@ export default {
         tokenName: "",
         balancePrice: 2340,
         equivalent: 2340,
+        loading: false
       }
     },
   components: {
@@ -128,9 +133,10 @@ export default {
       location.reload();
     },
     updatePrice(){
-      console.log("update")
+      location.reload();
     },
-    sendToken(){
+    sendTokenItems(){
+      this.loading = true;
       this.$router.push(
         {
           path: 'detail',
@@ -205,34 +211,8 @@ export default {
         font-weight: 300;
       }
     }
-    .usdt-price{
-      font-size: 18px;
-      font-weight: 300;
-      color: #fff;
-      &.inactive{
-        color: $dark-gray;
-      }
-    }
   }
-  .payment-box{
-    background: #4E455A;
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    width: 100%;
-    &_desc{
-      font-size: 16px;
-      padding-left: 8px;
-    }
-    &_btn{
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 200;
-      background: $gradation-light;
-      padding: 4px 24px;
-      border-radius: 20px;
-    }
-  }  
+
   .reload{
     cursor: pointer;
   }
