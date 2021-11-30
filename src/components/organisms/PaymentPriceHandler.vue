@@ -1,14 +1,14 @@
 <template>
   <div class="payment_handleprice">
-    <div class="payment_desc mb-3">
+    <div v-if="!paid" class="payment_desc mb-3">
       <p>
         Enter the payment amount
       </p>
       <span>&#128591;</span>
     </div>
     <div class="payment_handleprice-pricewrap">
-      <p class="mb-3">How much would you pay?</p>
-      <div class="payment_handleprice-price add-flex border j-between">
+      <p v-if="!paid" class="mb-3">How much would you pay?</p>
+      <div v-if="!paid" class="payment_handleprice-price add-flex border j-between">
         <input v-model="price" class="price" type="text" placeholder="0">
         <div class="add-flex currency a-center">
           <figure>
@@ -167,6 +167,7 @@ export default {
 @import '@/assets/scss/style.scss';
 
 .payment_handleprice{
+  width: 100%;
   dl{
     dt{
       font-weight: 400;

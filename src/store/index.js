@@ -23,6 +23,7 @@ const store = new Vuex.Store({
       walletAddress: '',
     },
     theme: "dark",
+    invoicePage: true
   },
   actions: {
     onLogin({ commit }, payload) {
@@ -53,6 +54,9 @@ const store = new Vuex.Store({
     changeTheme({ commit }, theme) {
       commit("changeTheme", { theme: theme });
     },
+    currentPath({ commit }, invoicePage){
+      commit("currentPath", invoicePage);
+    }
   },
   mutations: {
     onLogin(state, payload) {
@@ -88,6 +92,9 @@ const store = new Vuex.Store({
     },
     changeTheme(state, { theme }) {
       state.theme = theme;
+    },
+    currentPath(state, { invoicePage }) {
+      state.invoicePage = invoicePage;
     },
   }
 })

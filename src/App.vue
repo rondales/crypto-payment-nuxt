@@ -28,6 +28,14 @@ export default {
       ];
     },
   },
+  updated(){
+    if(!(this.$route.path == "/payment")){
+      this.$store.dispatch("currentPath", {invoicePage: true});
+    }
+    else{
+      this.$store.dispatch("currentPath", {invoicePage: false});
+    }
+  }
 }
 </script>
 

@@ -17,7 +17,8 @@
       </button>
     </div>
     <button class="close" @click="closeModal">
-      <img src="@/assets/images/cross.svg">
+      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
+      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
       閉じる
     </button>
   </div>
