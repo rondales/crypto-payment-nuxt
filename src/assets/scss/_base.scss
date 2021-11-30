@@ -263,9 +263,9 @@ li {
   font-size: 17px !important;
 }
 .sp{
-  display: none;
+  display: none !important;
   @include media(sp) {
-    display: block;
+    display: block !important;
   }
 }
 .pc{

@@ -40,44 +40,46 @@
           <router-view /> 
       </div>
     </div>
-    <div class="fixed sp add-flex j-between a-center">
-      <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
-        <span class="icon-wrap">
-          <img src="@/assets/images/wallet-connect_w.svg">
+    <div class="sp">
+      <div class="fixed add-flex j-between a-center">
+        <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+          <span class="icon-wrap">
+            <img src="@/assets/images/wallet-connect_w.svg">
+          </span>
+          Connect to a wallet
+        </button>
+        <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+          <span class="icon-wrap">
+            <img src="@/assets/images/link.svg">
+          </span>        
+          Copy URL
+        </button>      
+        <span class="toggle-theme">
+          <button
+            :class="[
+              'theme-button',
+              '--light',
+              { 'is-active': $store.state.theme == 'light' },
+            ]"
+            @click="changeTheme('light')"
+            v-if="$store.state.theme == 'dark'"
+          >
+            <img src="@/assets/images/light.svg" alt="">
+          </button>
+          <button
+            :class="[
+              'theme-button',
+              '--dark',
+              { 'is-active': $store.state.theme == 'dark' },
+            ]"
+            @click="changeTheme('dark')"
+            v-if="$store.state.theme == 'light'"
+          >
+            <img src="@/assets/images/dark.svg" alt="">
+          </button>
         </span>
-        Connect to a wallet
-      </button>
-      <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
-        <span class="icon-wrap">
-          <img src="@/assets/images/link.svg">
-        </span>        
-        Copy URL
-      </button>      
-      <span class="toggle-theme">
-        <button
-          :class="[
-            'theme-button',
-            '--light',
-            { 'is-active': $store.state.theme == 'light' },
-          ]"
-          @click="changeTheme('light')"
-          v-if="$store.state.theme == 'dark'"
-        >
-          <img src="@/assets/images/light.svg" alt="">
-        </button>
-        <button
-          :class="[
-            'theme-button',
-            '--dark',
-            { 'is-active': $store.state.theme == 'dark' },
-          ]"
-          @click="changeTheme('dark')"
-          v-if="$store.state.theme == 'light'"
-        >
-          <img src="@/assets/images/dark.svg" alt="">
-        </button>
-      </span>
-    </div>    
+      </div>    
+    </div>
   </div>
 </template>
 
