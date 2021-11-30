@@ -76,6 +76,9 @@ export default {
   }
   &--content{
     overflow-y: auto;
+    &::-webkit-scrollbar{
+      display: none;
+    }      
   }
   &--inner{
     width: 170px;

@@ -12,7 +12,8 @@
       <div class="add-flex a-end j-between" v-if="$store.state.invoicePage">
         <div class="logo copy" @click="copyLink(address)">
           <figure>
-            <img src="@/assets/images/link.svg">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/link.svg">
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/link-l.svg">
           </figure>
         </div>
       </div>
@@ -50,7 +51,7 @@ export default {
     },
     copyLink(value){
       this.$clipboard(value);
-    }
+    },
   },
   components: {
   },

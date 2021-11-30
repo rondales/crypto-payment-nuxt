@@ -440,6 +440,9 @@ export default {
       overflow: hidden;
       overflow-y: auto;
       height: 20vh;
+      &::-webkit-scrollbar{
+        display: none;
+      }        
       .token-item{
         cursor: pointer;
       }

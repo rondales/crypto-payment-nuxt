@@ -7,12 +7,11 @@
 
 html,
 body {
-  height: 110vh;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   @include media(sp) {
-  overflow:auto;
-  height: calc(100vh + 32rem);
+    overflow:auto;
+    height: calc(100vh + 32rem);
   }
 }
 html {
@@ -175,6 +174,8 @@ li {
     box-sizing: border-box !important;
   }
   &.__s{
+    font-weight: 100;
+    color: #fff;
     padding: 0 2rem;
     height: 4.2rem;
     line-height:  3rem;   
@@ -183,6 +184,7 @@ li {
   }
   &.__m{
     background: var(--color_darken);
+    color: #fff;
     font-size: 15px;
     padding: 1rem 1.5rem;
     height: 6.6rem;

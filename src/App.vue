@@ -1,9 +1,9 @@
 <template>
-  <body class="scroll-lock" :class="classes" >
+  <body class="scroll-lock min-height" :class="classes" >
     <router-view />
     <div v-if="$store.state.modal.isShow" class="modal-base">
       <component :is="$store.state.modal.target" />
-    </div>    
+    </div>
   </body>
 </template>
 
@@ -66,5 +66,8 @@ body{
   left: 0;
   top: 0;
   z-index: 100;
+}
+.min-height{
+  min-height: 120vh;
 }
 </style>

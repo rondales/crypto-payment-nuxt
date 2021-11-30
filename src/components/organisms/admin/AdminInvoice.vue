@@ -519,7 +519,7 @@ export default {
       top: 50%;
       left: 45%;
       transform: translate(-50%, -50%);      
-      z-index: -1;
+      z-index: 0;
     }    
     select, input{
       width: 50%;
@@ -565,7 +565,7 @@ export default {
       top: 50%;
       right: 2%;
       transform: translate(-50%, -50%);      
-      z-index: -1;
+      z-index: 0;
     }      
     &_title{
       width: 30%;
@@ -623,7 +623,7 @@ export default {
       top: 50%;
       left: 8px;
       transform: translate(0%, -50%);      
-      z-index: -1;
+      z-index: 0;
     }         
   }
   .search-btn{
@@ -663,7 +663,7 @@ export default {
         top: 50%;
         right: 5%;
         transform: translate(0, -50%);      
-        z-index: -1;
+        z-index: 0;
       } 
     }
     select{
@@ -695,20 +695,27 @@ export default {
   position: absolute;
   z-index: 10;
   width: calc(100% - 228px);
-  overflow-x: auto;
+  &::-webkit-scrollbar{
+    display: none;
+  }  
   @include media(sp) {
-    width: calc(100% - 24px);
+    width: 100%;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;      
     padding-bottom: 120px;
   }  
   table{
     width: calc(100% - 40px);
     border-collapse: collapse;
     margin-bottom: 32px;
+    display: block;
+    overflow-x: auto;
+    height: 50vh;
     @include media(sp) {
+      width: 100%;
       overflow-x: scroll;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
-      width: 1200px;      
     }    
     thead,tbody{
       width: 100%;
@@ -751,32 +758,26 @@ export default {
           font-weight: 100;
           &:nth-child(1){
             width: 22.22vw;
-            max-width: calc(22.22vw - 16px);
             padding-right: 16px;
           }
           &:nth-child(2){
             width: 11.111vw;
-            max-width: calc(11.111vw - 16px);
             padding-right: 16px;
           }
           &:nth-child(3){
             width: 11.111vw;
-            max-width: calc(11.111vw - 16px);
             padding-right: 16px;
           }
           &:nth-child(4){
             width: 27.77vw;
-            max-width: calc(27.77vw - 16px);
             padding-right: 16px;
           }
           &:nth-child(5){
             width: 11.111vw;
-            max-width: calc(11.111vw - 16px);
             padding-right: 16px;
           }
           &:nth-child(6){
             width: 16.666vw;
-            max-width: calc(11.111vw - 16px);
             padding-right: 16px;
           }          
         }
@@ -787,6 +788,9 @@ export default {
 .pagination{
   margin-bottom: 32px;
   width: calc(100% - 40px);
+  @include media(sp) {
+    width: calc(100% - 40px);
+  }
   .page-count{
     font-size: 16px;
     font-weight: 300;

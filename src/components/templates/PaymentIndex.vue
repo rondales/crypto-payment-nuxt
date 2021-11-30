@@ -40,6 +40,44 @@
           <router-view /> 
       </div>
     </div>
+    <div class="fixed sp add-flex j-between a-center">
+      <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+        <span class="icon-wrap">
+          <img src="@/assets/images/wallet-connect_w.svg">
+        </span>
+        Connect to a wallet
+      </button>
+      <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+        <span class="icon-wrap">
+          <img src="@/assets/images/link.svg">
+        </span>        
+        Copy URL
+      </button>      
+      <span class="toggle-theme">
+        <button
+          :class="[
+            'theme-button',
+            '--light',
+            { 'is-active': $store.state.theme == 'light' },
+          ]"
+          @click="changeTheme('light')"
+          v-if="$store.state.theme == 'dark'"
+        >
+          <img src="@/assets/images/light.svg" alt="">
+        </button>
+        <button
+          :class="[
+            'theme-button',
+            '--dark',
+            { 'is-active': $store.state.theme == 'dark' },
+          ]"
+          @click="changeTheme('dark')"
+          v-if="$store.state.theme == 'light'"
+        >
+          <img src="@/assets/images/dark.svg" alt="">
+        </button>
+      </span>
+    </div>    
   </div>
 </template>
 
@@ -64,6 +102,9 @@ export default {
     openModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
+    changeTheme(theme) {
+      this.$store.dispatch("changeTheme", theme);
+    },    
   },
   filters: {
     maskText(text) {
@@ -120,5 +161,28 @@ export default {
   .payment_invoice-id{
     font-size: 15px;
   }  
+}
+.fixed{
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 100%;
+  padding: 16px 8px;
+  background: var(--color_darken);
+  .btn{
+    font-size: 12px;
+    height: 4.2rem;
+    line-height: 4.2rem;
+    padding: 0 1.4rem;
+    .icon-wrap{
+      margin-right: 4px;
+    }
+    img{
+      vertical-align: middle;      
+      width: 18px;
+      height: 18px;
+    }
+  }
 }
 </style>
