@@ -1,10 +1,10 @@
 <template>
-  <div class="scroll-lock">
+  <body class="scroll-lock min-height" :class="classes" >
     <router-view />
     <div v-if="$store.state.modal.isShow" class="modal-base">
       <component :is="$store.state.modal.target" />
-    </div>    
-  </div>
+    </div>
+  </body>
 </template>
 
 <script>
@@ -14,25 +14,50 @@ export default {
   components: {
     networkModal: () => import('@/components/molecules/networkModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
-    tokenModal: () => import('@/components/molecules/tokenModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
-    manageModal: () => import('@/components/molecules/manageModal'),
     detailModal: () => import('@/components/molecules/detailModal'),
     waitingModal: () => import('@/components/molecules/waitingModal'),
     submittedModal: () => import('@/components/molecules/submittedModal'),
     dismissModal: () => import('@/components/molecules/dismissModal'),
   },
+  computed: {
+    classes() {
+      return [
+        `theme--${this.$store.state.theme}`,
+      ];
+    },
+  },
+  updated(){
+    if(!(this.$route.path == "/payment")){
+      this.$store.dispatch("currentPath", {invoicePage: true});
+    }
+    else{
+      this.$store.dispatch("currentPath", {invoicePage: false});
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-  @import '@/assets/scss/style.scss';
+@import '@/assets/scss/style.scss';
   
-body {
-  background: #171522;
+
+body{
+    background: var(--color_bg);
+    color: var(--color_font);
+}
+.theme--light {
+  @each $item in $colors-array {
+    --#{$item}: #{map-get($light-theme, #{$item})};
+  }
 }
 
+.theme--dark {
+  @each $item in $colors-array {
+    --#{$item}: #{map-get($dark-theme, #{$item})};
+  }
+}
 .modal-base {
   background: rgba(0,0,0,.6);
   position: fixed;
@@ -41,5 +66,8 @@ body {
   left: 0;
   top: 0;
   z-index: 100;
+}
+.min-height{
+  min-height: 120vh;
 }
 </style>

@@ -7,12 +7,11 @@
 
 html,
 body {
-  min-height: 100vh;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   @include media(sp) {
-  overflow:auto;
-  height: calc(100vh + 32rem);
+    overflow:auto;
+    height: calc(100vh + 32rem);
   }
 }
 html {
@@ -33,10 +32,9 @@ img {
 a {
   text-decoration: none;
   transition: $transition-common;
-
+  color: var(--color_font);
   &:hover {
     opacity: $opacity-hover;
-    text-decoration: underline;
   }
 }
 select{
@@ -87,6 +85,15 @@ small {
 .mt-5{
   margin-top: 5rem !important;
 }
+.ml-1{
+  margin-left: 1rem !important;
+}
+.ml-2{
+  margin-left: 2rem !important;
+}
+.ml-3{
+  margin-left: 3rem !important;
+}
 ul,
 ol,
 li {
@@ -123,6 +130,9 @@ li {
 .a-center{
   align-items: center;
 }
+.a-end{
+  align-items: flex-end;
+}
 .border{
   border: 1px solid $border;
   border-radius: 8px;
@@ -130,7 +140,6 @@ li {
 .btn{
     border-radius: 3rem;
     padding: 0 2rem;
-    color: #fff;
     box-shadow: 0 0 1rem rgba(#000, 0.1);  
     font-size: 13px;
     font-weight: 500;
@@ -139,8 +148,9 @@ li {
     height: 3.1rem;
     line-height: 3.1rem;    
     text-align: center;
-    background: $light-black;
+    background: var(--color_bg);
     cursor: pointer;
+    position: relative;
     &:hover{
       opacity: 1;
       text-decoration: none;
@@ -156,17 +166,25 @@ li {
     }
   }
   &.__g{
-    background: $gradation;
-    box-sizing: border-box;
+    background: $gradation !important;
+    box-sizing: border-box !important;
+  }
+  &.__pg{
+    background: $gradation-pale !important;
+    box-sizing: border-box !important;
   }
   &.__s{
+    font-weight: 100;
+    color: #fff;
     padding: 0 2rem;
     height: 4.2rem;
     line-height:  3rem;   
     border-radius: 1rem;
+    background: var(--color_darken);
   }
   &.__m{
-    background: $gray;
+    background: var(--color_darken);
+    color: #fff;
     font-size: 15px;
     padding: 1rem 1.5rem;
     height: 6.6rem;
@@ -209,21 +227,118 @@ li {
     }
   }  
   &.__l{
-    background: $gradation-light;
+    background: $gradation-pale !important;
     width: 100%;
     font-size: 15px;
     font-weight: 400;
     height: 6rem;
     line-height: 6rem;    
     border-radius: 10px;
+    color: #fff;
+    &.inactive{
+      background: var(--color_inactive) !important;
+      pointer-events: none !important;
+      color: #fff !important;
+    }
+    &.active{
+      background: $gradation-pale !important;
+      pointer-events: all !important;
+      color: #fff !important;
+    }
+    img{
+      padding-top: 18px;
+      padding-right: 4px;
+    }
+  }
+  &.icon-right{
+    .btn-icon{
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translate(0,-50%);
+    }
   }
 }
 .bold-desc{
   font-size: 17px !important;
 }
 .sp{
-  display: none;
+  display: none !important;
   @include media(sp) {
+    display: block !important;
+  }
+}
+.pc{
+  display: block;
+  @include media(sp) {
+    display: none;
+  }
+}
+.spin{
+  animation: 3s linear infinite spin;
+}
+
+@keyframes spin {
+  from { transform: rotateZ(0deg); }
+  to { transform: rotateZ(360deg); }
+}  
+
+.loading-wrap{
+  display: none;  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,.5);
+  width: 100%;
+  height: 100%;
+  pointer-events: none !important;
+  text-align: center;
+  z-index: 1;
+  &.active{
     display: block;
+    border-radius: 8px;
+  }    
+  .spin{
+    padding-top: 0 !important;
+    padding-right:0 !important;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    &.mt{
+      margin-top: 12px;
+    }
+  } 
+}
+.payment-box{
+  background: var(--color_update);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+  color: #fff;
+  &_desc{
+    font-size: 16px;
+    padding-left: 8px;
+  }
+  &_btn{
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 200;
+    background: $gradation-light;
+    padding: 4px 24px;
+    border-radius: 20px;
+  }
+  &.network{
+    border: 1px solid #fff;
+    background: var(--color_box) !important;
+  }  
+}
+.usdt-price{
+  font-size: 18px;
+  font-weight: 300;
+  &.inactive{
+    color: $dark-gray;
+    opacity: .5;
   }
 }

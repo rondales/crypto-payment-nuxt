@@ -2,56 +2,70 @@
   <header class="global-header">
     <div class="global-header__inner">
       <div class="add-flex a-center">
-        <h1 class="logo"><img src="@/assets/images/logo.svg" alt="Web3 Payment"></h1>
+        <h1 class="logo">
+          <img class="pc" src="@/assets/images/logo.svg" alt="Web3 Payment">
+          <img class="sp" src="@/assets/images/logo-icon.svg" alt="Web3 Payment">
+        </h1>
+        <p class="logo-sub">
+          Web3 Payment
+        </p>
         <div class="user-status" :class="{'is-admin': $route.name === 'admin'}">
           merchant
         </div>
-        <div @click="open()" class="humberger" :class="{'active': $store.state.humberger === true}">
-          <button type="button" class="menu-btn" >
-            <img src="@/assets/images/humberger.png" alt="">
-          </button>    
-        </div>
       </div>
-      <div class="global-header__actions">
-        <button v-if="$store.state.network === null" class="btn __s sp-fixed" @click="networkModal('network-modal')">
-          <span class="btn-icon">
-            <img src="@/assets/images/select.svg" alt="Web3 Payment">
-          </span>
-          Select Network
-        </button>
+      <div class="global-header__actions add-flex a-center">
+        <span class="toggle-theme pc">
+          <button
+            :class="[
+              'theme-button',
+              '--light',
+              { 'is-active': $store.state.theme == 'light' },
+            ]"
+            @click="changeTheme('light')"
+            v-if="$store.state.theme == 'dark'"
+          >
+            <img src="@/assets/images/light.svg" alt="">
+          </button>
+          <button
+            :class="[
+              'theme-button',
+              '--dark',
+              { 'is-active': $store.state.theme == 'dark' },
+            ]"
+            @click="changeTheme('dark')"
+            v-if="$store.state.theme == 'light'"
+          >
+            <img src="@/assets/images/dark.svg" alt="">
+          </button>
+        </span>
+        <div v-if="show" class="pc">
+          <button v-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'eth'" class="btn __s sp-fixed">
+            <span class="btn-icon">
+              <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
+            </span>
+            Ethereum
+          </button>
 
-        <button v-else-if="$store.state.network === 'eth'" class="btn __s sp-fixed">
-          <span class="btn-icon">
-            <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
-          </span>
-          Ethereum
-        </button>
-
-        <button v-else-if="$store.state.network === 'bsc'" class="btn __s sp-fixed">
-          <span class="btn-icon">
-            <img src="@/assets/images/h-bsc.svg" alt="Web3 Payment">
-          </span>
-          BSC
-        </button>
-
-        <button v-if="$store.state.isLogin && $store.state.network === 'eth'" class="account-wallet">
-          <span class="price">0.04247ETH</span>
-          <span class="id">{{ formatWalletAddress }}</span>
-        </button>
-        <button v-else-if="$store.state.isLogin && $store.state.network === 'bsc'" class="account-wallet">
-          <span class="price">0.04247BNB</span>
-          <span class="id">{{ formatWalletAddress }}</span>
-        </button>
-        <button v-else-if="$store.state.isLogin && $store.state.network === null" class="account-wallet">
-          <span class="price">Network not selected</span>
-          <span class="id">{{ formatWalletAddress }}</span>
-        </button>
-        <!-- <p v-else-if="$store.state.isLogin">
-          selec Network
-        </p> -->
-        <button v-else class="btn __g __s sp-fixed"  @click="walletModal('wallet-modal')">
-          Connect to a wallet
-        </button>
+          <button v-else-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'bsc'" class="btn __s sp-fixed">
+            <span class="btn-icon">
+              <img src="@/assets/images/h-bsc.svg" alt="Web3 Payment">
+            </span>
+            BSC
+          </button>
+        </div>
+        <div v-if="show" class="ml-2">
+          <button v-if="$store.state.isLogin && $store.state.network.abbriviation === 'eth'" class="account-wallet">
+            <span class="price">0.04247ETH</span>
+            <span class="id">{{ formatWalletAddress }}</span>
+          </button>
+          <button v-else-if="$store.state.isLogin && $store.state.network.abbriviation === 'bsc'" class="account-wallet">
+            <span class="price">0.04247BNB</span>
+            <span class="id">{{ formatWalletAddress }}</span>
+          </button>
+          <button v-else class="btn __g __s sp-fixed"  @click="walletModal('wallet-modal')">
+            Connect to a wallet
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -63,11 +77,20 @@
     name: 'Header',
     data(){
       return{
-        humberger: false
+        humberger: false,
+        show: false,
       }
     },
-    components: {
+    mounted(){
+      
     },
+    watch: {
+      $route(to, from) {
+        if(from.fullPath === "/payment") {
+          this.show = true
+        }
+      }
+    },    
     computed: {
       formatWalletAddress() {
         if ((this.$store.state.web3.walletAddress)) {
@@ -77,18 +100,18 @@
         } else {
           return '';
         }
-      }
+      },
     },
     methods: {
-    networkModal(target) {
-      this.$store.dispatch("openModal", {target: target, size: "medium"});
-    },
-    walletModal(target) {
-      this.$store.dispatch("openModal", {target: target, size: "small"});
-    },
-    open(){
-      this.$store.dispatch("humberger", {humberger: true});
-    }
+      networkModal(target) {
+        this.$store.dispatch("openModal", {target: target, size: "medium"});
+      },
+      walletModal(target) {
+        this.$store.dispatch("openModal", {target: target, size: "small"});
+      },
+      changeTheme(theme) {
+        this.$store.dispatch("changeTheme", theme);
+      },      
     },
   }
 </script>
@@ -110,26 +133,6 @@
       padding: 2px 12px;
     }
   }
-  .humberger{
-    display: none;
-    @include media(sp) {
-      display: block;
-      position: relative;
-      width: 24px;
-      height: 24px;
-      overflow: hidden;
-      margin-left: 32px;
-      &.active{
-        .menu-btn{
-          top: 0;
-        }
-      }
-      .menu-btn{
-        position: absolute;
-        top: -24px;
-      }
-    }
-  }
   .is-admin{
     display: block;
   }
@@ -137,11 +140,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #58466E;
+    border-bottom:var(--color_border);
     width: 100%;
     position: fixed;
     top: 0;
-    background: #171522;
+    background: var(--color_bg);
     z-index: 1000;
     &__inner {
       display: flex;
@@ -156,45 +159,36 @@
       .logo {
         height: 36px;
       }
+      .logo-sub{
+        margin-top: 10px;
+        margin-left: 16px;
+        font-size: 14px;
+      }      
     }
     @include media(sp) {
       height: 72px;
       padding: 0 24px;
       bottom: 0;
       .logo {
-        height: 24px;
+        height: 36px;
       }
+      .logo-sub{
+        display: none;
+      }      
     }
     .logo {
       white-space: nowrap;
     }
-    &__actions {
-      display: flex;
-      align-items: center;
-      @include media(sp) {
-        height: auto;
-        padding: 24px;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        transform: translate(0,0);
-        z-index: 99;
-        display: flex;
-        flex-wrap: wrap;
-        background: #171522;
-        width: 100%;
-      }
-    }
     .sp-fixed{
       @include media(sp) {
         width: 100%;
-        &:nth-child(1){
-          margin-bottom: 8px;
-        }
       }
     }
-    button{
+    .theme-button{
       margin-right: 2rem;
+      width: 54px;
+      height: 54px;
+      vertical-align: middle;
       @include media(sp) {
         margin-right: 0;
       }
@@ -207,7 +201,7 @@
     font-weight: 700;
     display: flex;
     align-items: center;
-    background: $light-black;
+    background: var(--color_darken);
     @include media(pc) {
       height: 42px;
       border-radius: 8px;
@@ -240,8 +234,8 @@
       .id {
         max-width: 192px;
         width: 50%;
-        height: 42px;
-        line-height: 42px;
+        height: 34px;
+        line-height: 34px;
         border-radius: 8px;
         padding: 0 16px;
         margin-left: 0;
@@ -257,5 +251,41 @@
       display: block;
     }
   }
-  .btn-icon{}
+.toggle-theme {
+  text-align: center;
+  @include media(pc) {
+    margin-left: 24px;
+  }
+  @include media(sp) {
+    margin-left: 8px;
+  }
+}
+.theme-button {
+  font-size: 0;
+
+  @include media(pc) {
+    .emoji {
+      font-size: 28px;
+    }
+  }
+  @include media(sp) {
+    .emoji {
+      font-size: 2rem;
+    }
+    &.is-active {
+      display: none;
+    }
+  }
+  .emoji {
+    font-style: normal;
+  }
+  &--light {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  &--dark {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
 </style>

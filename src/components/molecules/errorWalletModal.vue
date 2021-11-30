@@ -11,7 +11,7 @@
       </p>      
     </div>
     <div class="body">
-      <a href="/" class="btn __m full hight add-flex a-center mb-0" @click="connectWithMetamask">
+      <a href="/" class="btn __m __pg full hight add-flex a-center mb-0" @click="connectWithMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect.svg">
         </span>
@@ -72,7 +72,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background:$light-black;
+    background:var(--color_bg);
     @include media(pc) {
       &.--small {
         width: 470px;

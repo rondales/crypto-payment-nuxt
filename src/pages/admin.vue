@@ -41,7 +41,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
-
 header{
   .logo{
     width: 250px;

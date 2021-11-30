@@ -9,21 +9,16 @@
       </p>
     </div>
     <div class="body add-flex j-between">
-      <button class="btn __m half" @click="networkValue('eth')">
+      <button v-for="(networkItem, key) in networkItems" :key="key" class="btn __m half" @click="networkValue(networkItem)">
         <span class="btn-icon">
-          <img src="@/assets/images/eth.svg">
+          <img :src="networkItem.icon">
         </span>
-          Ethereum Main net
-      </button>
-      <button class="btn __m half" @click="networkValue('bsc')">
-        <span class="btn-icon">
-          <img src="@/assets/images/bsc.svg">
-        </span>
-          Binance Smart Chain Mainnet
+          {{networkItem.name}}
       </button>
     </div>
     <button class="close" @click="closeModal">
-      <img src="@/assets/images/cross.svg">
+      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
+      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
       閉じる
     </button>
   </div>
@@ -38,6 +33,18 @@
     data() {
       return {
         num: "",
+        networkItems: [
+          {
+            name: "Ethereum Main net",
+            icon:  require('@/assets/images/eth.svg'),
+            abbriviation: 'eth',
+          },
+          {
+            name: "Binance Smart Chain Mainnet",
+            icon:  require('@/assets/images/bsc.svg'),
+            abbriviation: 'bsc',
+          },
+        ]
       };
     },
     computed: {
@@ -50,8 +57,12 @@
       closeModal() {
         this.$store.dispatch('closeModal')
       },
-      networkValue(currency) {
-        this.$store.dispatch('selectNetwork', currency)
+      networkValue(e) {
+        this.$store.dispatch('selectNetwork', {
+          name: e.name,
+          icon: e.icon,
+          abbriviation: e.abbriviation
+        })
       }
     },
     mounted() {}
@@ -67,7 +78,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background:$light-black;
+    background:var(--color_bg);
     @include media(pc) {
       &.--small {
         width: 470px;

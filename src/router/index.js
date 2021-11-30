@@ -25,6 +25,14 @@ export default new Router({
           name: "payment",
           path: "/payment",
           component: () => import("@/pages/payment"),
+          children: [
+            { name: "price", path: "/payment", component: () => import("@/components/organisms/PaymentPriceHandler") },
+            { name: "invoice", path: "/payment/invoice", component: () => import("@/components/organisms/PaymentInvoice") },
+            { name: "wallets", path: "/payment/wallets", component: () => import("@/components/organisms/PaymentSelectWallets") },
+            { name: "token", path: "/payment/token", component: () => import("@/components/organisms/PaymentToken") },
+            { name: "exchange", path: "/payment/exchange", component: () => import("@/components/organisms/PaymentExchange") },
+            { name: "detail", path: "/payment/detail", component: () => import("@/components/organisms/PaymentDetail") },
+          ]
         },
         {
           name: "admin",

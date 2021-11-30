@@ -66,7 +66,7 @@ export default {
       display: block;
       top: 0;
       width: 100%;
-      background: #171522;
+      background: var(--color_bg);
       z-index: 999;
       padding-top: 64px;
     }
@@ -76,6 +76,9 @@ export default {
   }
   &--content{
     overflow-y: auto;
+    &::-webkit-scrollbar{
+      display: none;
+    }      
   }
   &--inner{
     width: 170px;

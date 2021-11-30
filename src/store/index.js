@@ -6,7 +6,11 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     isLogin: false,
-    network: null,
+    network: {
+      name: '',
+      icon: '',
+      abbriviation: ''
+    },
     bases: "",
     humberger: false,
     modal: {
@@ -17,7 +21,9 @@ const store = new Vuex.Store({
     web3: {
       provider: null,
       walletAddress: '',
-    }
+    },
+    theme: "dark",
+    invoicePage: true
   },
   actions: {
     onLogin({ commit }, payload) {
@@ -45,6 +51,12 @@ const store = new Vuex.Store({
     humberger({ commit }) {
       commit('humberger')
     },
+    changeTheme({ commit }, theme) {
+      commit("changeTheme", { theme: theme });
+    },
+    currentPath({ commit }, invoicePage){
+      commit("currentPath", invoicePage);
+    }
   },
   mutations: {
     onLogin(state, payload) {
@@ -65,17 +77,25 @@ const store = new Vuex.Store({
       state.modal.isShow = false
       state.modal.target = ''
     },
-    selectNetwork(state, currency) {
+    selectNetwork(state, { name, icon, abbriviation }) {
       state.modal.isShow = false
       state.modal.target = ''
-      state.network = currency
+      state.network.name = name
+      state.network.icon = icon
+      state.network.abbriviation = abbriviation
     },
     selectBases(state, bases) {
       state.bases = bases
     },
     humberger(state) {
       state.humberger = !state.humberger
-    }
+    },
+    changeTheme(state, { theme }) {
+      state.theme = theme;
+    },
+    currentPath(state, { invoicePage }) {
+      state.invoicePage = invoicePage;
+    },
   }
 })
 
