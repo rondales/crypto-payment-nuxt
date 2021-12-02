@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
+    connected: false,
     isLogin: false,
     network: {
       name: '',
@@ -18,14 +19,27 @@ const store = new Vuex.Store({
       target: '',
       size: ''
     },
-    web3: {
+    connection: {
       provider: null,
-      walletAddress: '',
+      networkId: null,
+      walletAddress: null
     },
     theme: "dark",
     invoicePage: true
   },
   actions: {
+    onConnect({ commit }, connection) {
+      commit('setConnection', connection)
+      commit('changeConnectStatus', true)
+    },
+    onDisconnect({ commit }) {
+      commit('setConnection', {
+        provider: null,
+        networkId: null,
+        walletAddress: null
+      })
+      commit('changeConnectStatus', false)
+    },
     onLogin({ commit }, payload) {
       commit('onLogin', payload)
     },
@@ -59,6 +73,14 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setConnection(state, connection) {
+      state.connection.provider = connection.provider
+      state.connection.networkId = connection.networkId
+      state.connection.walletAddress = connection.walletAddress
+    },
+    changeConnectStatus(state, status) {
+      state.connected = status
+    },
     onLogin(state, payload) {
       state.isLogin = true
       state.web3.provider = payload.provider
