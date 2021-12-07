@@ -42,7 +42,7 @@
     </div>
     <div class="sp">
       <div class="fixed add-flex j-between a-center">
-        <button class="btn __pg __s sp-fixed"  @click="openWalletModal">
+        <button class="btn __pg __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
           <span class="icon-wrap">
             <img src="@/assets/images/wallet-connect_w.svg">
           </span>
@@ -85,15 +85,11 @@
 
 
 <script>
-import ModalControlMixin from '@/components/mixins/ModalControl'
 import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
 
 export default {
   name: 'payment',
-  mixins: [
-    ModalControlMixin
-  ],
   data() {
     return {
       Receiver: "E-check.online",
@@ -109,6 +105,9 @@ export default {
     PaymentTop,
   },
   methods: {
+    openModal(target, size) {
+      this.$store.dispatch('openModal', {target: target, size: size});
+    },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
     }

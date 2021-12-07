@@ -27,26 +27,35 @@
 </template>
 
 <script>
-  import ModalControlMixin from '@/components/mixins/ModalControl';
   import ConnectWalletMixin from '@/components/mixins/ConnectWallet';
 
   export default {
     name: 'walletModal',
     mixins: [
-      ModalControlMixin,
       ConnectWalletMixin
     ],
+    computed: {
+      classes() {
+        return [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      }
+    },
     methods: {
+      openModal(target, size) {
+        this.$store.dispatch('openModal', {target: target, size: size});
+      },
+      closeModal() {
+        this.$store.dispatch('closeModal')
+      },
       useMetamask() {
         const successFunc = () => { this.closeModal() };
-        const failureFunc = () => { this.openMetamaskErrorModal() };
-        const errorFunc = () => { this.openMetamaskErrorModal() };
+        const failureFunc = () => { this.openModal('error-metamask-modal', 'small') };
+        const errorFunc = () => { this.openModal('error-metamask-modal', 'small') };
         this.connectByMetamask(successFunc, failureFunc, errorFunc);
       },
       useWalletConnect() {
         const successFunc = () => { this.closeModal() };
-        const failureFunc = () => { this.openWalletConnectErrorModal() };
-        const errorFunc = () => { this.openWalletConnectErrorModal() };
+        const failureFunc = () => { this.openModal('error-wallet-modal', 'small') };
+        const errorFunc = () => { this.openModal('error-wallet-modal', 'small') };
         this.connectByWalletConnect(successFunc, failureFunc, errorFunc);
       },
       isSelectedNetwork() {

@@ -51,7 +51,7 @@
             <span class="price">{{ networkTickerBalance }}{{ networkTickerSymbol }}</span>
             <span class="id">{{ formatWalletAddress }}</span>
           </button>
-          <button v-else class="btn __g __s sp-fixed"  @click="openWalletModal">
+          <button v-else class="btn __g __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
             Connect to a wallet
           </button>
         </div>
@@ -62,13 +62,11 @@
 
 <script>
   import * as Enum from '@/enum'
-  import ModalControlMixin from '@/components/mixins/ModalControl'
   import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 
   export default {
     name: 'Header',
     mixins: [
-      ModalControlMixin,
       ConnectWalletMixin
     ],
     data(){
@@ -110,11 +108,11 @@
       },
     },
     methods: {
-      networkModal(target) {
-        this.$store.dispatch("openModal", {target: target, size: "medium"});
-      },
       changeTheme(theme) {
         this.$store.dispatch("changeTheme", theme);
+      },
+      openModal(target, size) {
+        this.$store.dispatch('openModal', {target: target, size: size});
       }
     },
     created() {
