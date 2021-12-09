@@ -58,7 +58,7 @@
             </div>
             <div class="payment-box_btn" @click="updatePrice">
               Accept
-            </div>          
+            </div>
           </div>
         </div>
         <div class="dattail-lists mt-1" v-if="!processing">
@@ -95,7 +95,7 @@
             <p>0.0004735 BNB</p>
           </div>
           <p class="dattail-list_desc">
-            Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert.            
+            Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert.
           </p>
         </div>
         <div class="payment-status mt-3 mb-3" v-if="processing">
@@ -141,13 +141,26 @@
           <span>
             <img src="@/assets/images/slash-s.svg" alt="">
           </span>
-        </p>        
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+/*
+@todo Web3ConnectTeam
+
+In this page, you need to implement the following process or function.
+
+1. Obtaining and displaying information on gas bills and other items related to payment
+2. Transaction approval on the wallet side(clicked confirm wallet button)
+3. Sending transactions to smart contracts
+4. Transaction transmission result reception
+
+* Since the contract address to send the transaction is stored in the DB, implement the process to get it by API (Web App Team)
+
+*/
 export default {
   name: 'PaymentDetail',
     data() {
@@ -172,14 +185,14 @@ export default {
     setTimeout(() => {
       self.changedPrice = true;
     }, 3000);
-  },  
+  },
   mounted(){
     this.price = this.$route.query.price;
     this.invoiceId = this.$route.query.id;
     this.abbriviation = this.$route.query.abbriviation;
     this.tokenIcon = this.$route.query.icon;
     this.tokenName = this.$route.query.name;
-  },  
+  },
   methods: {
     reload(){
       location.reload();
@@ -192,7 +205,7 @@ export default {
     },
     updatePrice(){
       location.reload();
-    },    
+    },
   },
   filters: {
     maskText(text) {
@@ -213,7 +226,7 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
@@ -271,8 +284,8 @@ export default {
       font-weight: 100;
       padding-bottom: 16px;
       margin-bottom: 16px;
-    }      
-  }  
+    }
+  }
   .reload{
     cursor: pointer;
   }

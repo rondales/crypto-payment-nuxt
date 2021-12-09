@@ -6,13 +6,13 @@
       </h3>
     </div>
     <div class="body">
-      <button class="btn __m full" @click="connectWithMetamask">
+      <button class="btn __m full" @click="useMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
-      <button class="btn __m full" @click="connectWithWalletConnect">
+      <button class="btn __m full" @click="useWalletConnect">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect.svg">
         </span>
@@ -27,73 +27,40 @@
 </template>
 
 <script>
-  import Web3 from 'web3';
-  import WalletConnectProvider from '@walletconnect/web3-provider';
+  import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
   export default {
     name: 'walletModal',
-    components: {
-    },
-    data() {
-      return {
-        num: "",
-      };
-    },
+    mixins: [
+      Web3ConnectorMixin
+    ],
     computed: {
       classes() {
-        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-        return classes
+        return [ 'modal-box', `--${this.$store.state.modal.size}` ]
       }
     },
     methods: {
+      openModal(target, size) {
+        this.$store.dispatch('openModal', {target: target, size: size});
+      },
       closeModal() {
         this.$store.dispatch('closeModal')
       },
-      connectWithMetamask() {
-        if (typeof window.ethereum !== 'undefined') {
-          const web3 = new Web3(window.ethereum);
-          web3.eth.requestAccounts().then((accounts) => {
-            sessionStorage.setItem('provider', 'metamask');
-            this.$store.dispatch('onLogin', {
-              provider: web3,
-              walletAddress: accounts[0]
-            });
-          }).catch(() => {
-            this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-          });
-        } else {
-          this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-        }
+      useMetamask() {
+        const successFunc = () => { this.closeModal() };
+        const failureFunc = () => { this.openModal('error-metamask-modal', 'small') };
+        const errorFunc = () => { this.openModal('error-metamask-modal', 'small') };
+        this.connectByMetamask(successFunc, failureFunc, errorFunc);
       },
-      async connectWithWalletConnect() {
-        const provider = new WalletConnectProvider({
-          infuraId: process.env.VUE_APP_INFURA_ID,
-          rpc: {
-            56: 'https://bsc-dataseed.binance.org',
-            97: 'https://data-seed-prebsc-1-s1.binance.org:8545'
-          }
-        });
-
-        let accounts;
-        try {
-          accounts = await provider.enable()
-        } catch {
-          this.$store.dispatch('openModal', {target: 'error-wallet-modal', size: 'small'});
-          return;
-        }
-        const web3 = new Web3(provider);
-        sessionStorage.setItem("provider", "wallet_connect");
-        this.$store.dispatch("onLogin", {
-          provider: web3,
-          walletAddress: accounts[0]
-        });
+      useWalletConnect() {
+        const successFunc = () => { this.closeModal() };
+        const failureFunc = () => { this.openModal('error-wallet-modal', 'small') };
+        const errorFunc = () => { this.openModal('error-wallet-modal', 'small') };
+        this.connectByWalletConnect(successFunc, failureFunc, errorFunc);
       },
       isSelectedNetwork() {
         return !!this.$store.state.network.abbriviation;
       }
-    },
-    mounted() {
-      //
     }
   }
 </script>

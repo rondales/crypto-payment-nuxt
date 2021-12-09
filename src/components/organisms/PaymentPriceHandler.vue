@@ -18,7 +18,7 @@
             <option disabled value="">{{selected.name}}</option>
             <option v-for="(currency, key) in currencys" :value="currency" :key="key">
               {{ currency.name }}
-            </option>            
+            </option>
           </select>
         </div>
       </div>
@@ -58,14 +58,14 @@
             </div>
             <div class="payment-box_btn" @click="updatePrice">
               Accept
-            </div>          
+            </div>
           </div>
         </div>
         <button :class="{'inactive': changedPrice}" class="btn __g __l" @click="handlePayment">
           <img v-if="!changedPrice" src="@/assets/images/slash-s.svg" alt="">
           <img v-if="changedPrice" src="@/assets/images/slash-s_inactive.svg" alt="">
           Go Payment
-        </button> 
+        </button>
       </div>
     </div>
     <div class="payment_receiptwrap" v-if="paid">
@@ -114,7 +114,7 @@ export default {
           {
             name: "JPY",
             images: require('@/assets/images/JPY.svg'),
-          },          
+          },
           {
             name: "USD",
             images: require('@/assets/images/USD.svg'),
@@ -122,7 +122,7 @@ export default {
           {
             name: "EUR",
             images: require('@/assets/images/EUR.svg'),
-          }          
+          }
         ]
       }
     },
@@ -152,6 +152,18 @@ export default {
       this.$router.push({
         path: 'payment/wallets',
       })
+    },
+    getReceiveData(){
+      // Functions for connecting to the "Payment Acceptance Information Acquisition API(Handled by Web App Team)
+    },
+    publishTransaction(){
+      // Functions for connecting to the "Transaction Publish API(Handled by Web App Team)
+    },
+    updateTransactionForAmountData(){
+      // Functions for connecting to the "Transaction Update API(Handled by Web App Team)
+    },
+    updateTransactionForReceiptData(){
+      // Functions for connecting to the "Transaction Update API(Handled by Web App Team)
     }
   },
   filters: {
@@ -173,14 +185,14 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
@@ -200,7 +212,7 @@ export default {
       padding-left: 16px;
       @include media(sp) {
         width: 55%;
-      }          
+      }
     }
     .currency{
       width: 35%;
@@ -234,8 +246,8 @@ export default {
         font-weight: 400;
         width: 100%;
         border: none;
-        outline: none;        
-      }      
+        outline: none;
+      }
     }
     span{
       vertical-align: middle;

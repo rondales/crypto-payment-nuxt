@@ -35,25 +35,25 @@
           </p>
           <p class="payment_invoice-id">
             Invoice ID: {{invoiceId | maskText}}
-          </p>      
+          </p>
         </div>
-          <router-view /> 
+          <router-view />
       </div>
     </div>
     <div class="sp">
       <div class="fixed add-flex j-between a-center">
-        <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+        <button class="btn __pg __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
           <span class="icon-wrap">
             <img src="@/assets/images/wallet-connect_w.svg">
           </span>
           Connect to a wallet
         </button>
-        <button class="btn __pg __s sp-fixed"  @click="walletModal('wallet-modal')">
+        <button class="btn __pg __s sp-fixed">
           <span class="icon-wrap">
             <img src="@/assets/images/link.svg">
-          </span>        
+          </span>
           Copy URL
-        </button>      
+        </button>
         <span class="toggle-theme">
           <button
             :class="[
@@ -78,42 +78,46 @@
             <img src="@/assets/images/dark.svg" alt="">
           </button>
         </span>
-      </div>    
+      </div>
     </div>
   </div>
 </template>
 
 
 <script>
-import Header from "@/components/organisms/header"
+import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
 
 export default {
   name: 'payment',
-    data() {
-      return {
-        Receiver: "E-check.online",
-        invoiceId: "hogehogefugafuga",        
-      }
-    },
+  data() {
+    return {
+      Receiver: "E-check.online",
+      invoiceId: "hogehogefugafuga",
+      walletAddress: null,
+      selectedNetwork: null,
+      tickerSymbol: null,
+      tickerSymbolBalance: null
+    }
+  },
   components: {
     Header,
     PaymentTop,
   },
   methods: {
-    openModal(target) {
-      this.$store.dispatch("openModal", {target: target, size: "small"});
+    openModal(target, size) {
+      this.$store.dispatch('openModal', {target: target, size: size});
     },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
-    },    
+    }
   },
   filters: {
     maskText(text) {
       text = "*************";
       return text;
     },
-  }  
+  }
 }
 </script>
 
@@ -162,7 +166,7 @@ export default {
   .payment_Receiver,
   .payment_invoice-id{
     font-size: 15px;
-  }  
+  }
 }
 .fixed{
   position: fixed;
@@ -181,7 +185,7 @@ export default {
       margin-right: 4px;
     }
     img{
-      vertical-align: middle;      
+      vertical-align: middle;
       width: 18px;
       height: 18px;
     }

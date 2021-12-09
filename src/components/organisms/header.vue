@@ -39,30 +39,19 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'eth'" class="btn __s sp-fixed">
+          <button v-if="$store.state.connected" class="btn __s sp-fixed">
             <span class="btn-icon">
               <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
             </span>
-            Ethereum
-          </button>
-
-          <button v-else-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'bsc'" class="btn __s sp-fixed">
-            <span class="btn-icon">
-              <img src="@/assets/images/h-bsc.svg" alt="Web3 Payment">
-            </span>
-            BSC
+            {{ networkName }}
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="$store.state.isLogin && $store.state.network.abbriviation === 'eth'" class="account-wallet">
-            <span class="price">0.04247ETH</span>
+          <button v-if="$store.state.connected" class="account-wallet">
+            <span class="price">{{ networkTickerBalance }}{{ networkTickerSymbol }}</span>
             <span class="id">{{ formatWalletAddress }}</span>
           </button>
-          <button v-else-if="$store.state.isLogin && $store.state.network.abbriviation === 'bsc'" class="account-wallet">
-            <span class="price">0.04247BNB</span>
-            <span class="id">{{ formatWalletAddress }}</span>
-          </button>
-          <button v-else class="btn __g __s sp-fixed"  @click="walletModal('wallet-modal')">
+          <button v-else class="btn __g __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
             Connect to a wallet
           </button>
         </div>
@@ -72,17 +61,20 @@
 </template>
 
 <script>
+  import * as Enum from '@/enum'
+  import Web3ConnectorMixin from '@/components/mixins/Web3Connector'
 
   export default {
     name: 'Header',
+    mixins: [
+      Web3ConnectorMixin
+    ],
     data(){
       return{
         humberger: false,
         show: false,
+        networkTickerBalance: null
       }
-    },
-    mounted(){
-      
     },
     watch: {
       $route(to, from) {
@@ -90,29 +82,42 @@
           this.show = true
         }
       }
-    },    
+    },
     computed: {
       formatWalletAddress() {
-        if ((this.$store.state.web3.walletAddress)) {
-          const prefix = this.$store.state.web3.walletAddress.substr(0, 6);
-          const sufix = this.$store.state.web3.walletAddress.slice(-4);
+        const walletAddress = this.$store.state.connection.walletAddress
+        if ((walletAddress)) {
+          const prefix = walletAddress.substr(0, 6);
+          const sufix = walletAddress.slice(-4);
           return prefix + '…' + sufix;
         } else {
           return '';
         }
       },
+      networkName() {
+        const networkId = this.$store.state.connection.networkId;
+        return Enum.network[networkId].name
+      },
+      networkIconFileName() {
+        const networkId = this.$store.state.connection.networkId;
+        return Enum.network[networkId].icon
+      },
+      networkTickerSymbol() {
+        const networkId = this.$store.state.connection.networkId;
+        return Enum.network[networkId].symbol
+      },
     },
     methods: {
-      networkModal(target) {
-        this.$store.dispatch("openModal", {target: target, size: "medium"});
-      },
-      walletModal(target) {
-        this.$store.dispatch("openModal", {target: target, size: "small"});
-      },
       changeTheme(theme) {
         this.$store.dispatch("changeTheme", theme);
-      },      
+      },
+      openModal(target, size) {
+        this.$store.dispatch('openModal', {target: target, size: size});
+      }
     },
+    created() {
+      this.networkTickerBalance = this.setNetworkTickerBalance();
+    }
   }
 </script>
 
@@ -126,7 +131,7 @@
     background: $gradation-light;
     padding: 2px 24px;
     border-radius:50px;
-    margin-left: 32px;  
+    margin-left: 32px;
     @include media(sp) {
       font-size: 12px;
       margin-left: 16px;
@@ -163,7 +168,7 @@
         margin-top: 10px;
         margin-left: 16px;
         font-size: 14px;
-      }      
+      }
     }
     @include media(sp) {
       height: 72px;
@@ -174,7 +179,7 @@
       }
       .logo-sub{
         display: none;
-      }      
+      }
     }
     .logo {
       white-space: nowrap;

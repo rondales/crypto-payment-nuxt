@@ -28,8 +28,8 @@
         <button type="button" class="menu-btn" >
           <img v-if="$store.state.theme == 'dark'" src="@/assets/images/hamburger.svg" alt="">
           <img v-if="$store.state.theme == 'light'" src="@/assets/images/hamburger-light.svg" alt="">
-        </button> 
-      </div>      
+        </button>
+      </div>
     </div>
   </div>
 </template>
