@@ -62,12 +62,12 @@
 
 <script>
   import * as Enum from '@/enum'
-  import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
+  import Web3ConnectorMixin from '@/components/mixins/Web3Connector'
 
   export default {
     name: 'Header',
     mixins: [
-      ConnectWalletMixin
+      Web3ConnectorMixin
     ],
     data(){
       return{

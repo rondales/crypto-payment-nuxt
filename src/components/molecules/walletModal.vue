@@ -27,12 +27,12 @@
 </template>
 
 <script>
-  import ConnectWalletMixin from '@/components/mixins/ConnectWallet';
+  import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
   export default {
     name: 'walletModal',
     mixins: [
-      ConnectWalletMixin
+      Web3ConnectorMixin
     ],
     computed: {
       classes() {

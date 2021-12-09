@@ -5,7 +5,7 @@ import Web3 from 'web3';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 
 export default {
-  name: 'ConnectWallet',
+  name: 'Web3Connector',
   methods: {
     connectByMetamask(success = null, failure = null, error = null) {
       /*

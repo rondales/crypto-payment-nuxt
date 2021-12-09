@@ -47,12 +47,12 @@
 </template>
 
 <script>
-import ConnectWalletMixin from '@/components/mixins/ConnectWallet';
+import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
 export default {
   name: 'PaymentPriceHandler',
   mixins: [
-    ConnectWalletMixin
+    Web3ConnectorMixin
   ],
   data() {
     return{
