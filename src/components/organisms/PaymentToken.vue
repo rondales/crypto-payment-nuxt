@@ -36,7 +36,7 @@
           </div>
           <div class="payment-box_btn" @click="networkModal('network-modal')">
             Change
-          </div>          
+          </div>
         </div>
       </div>
       <div class="body">
@@ -72,7 +72,7 @@
                   {{token.price}}
                 </p>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
         <div class="manage-content" v-else-if="tab === 'tokens'">
@@ -116,8 +116,8 @@
               <div class="manage-clear" v-if="tokenCount" @click="clearToken">
                 Clear all
               </div>
-            </div>          
-          </div>        
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,7 +125,18 @@
 </template>
 
 <script>
+/*
+@todo Web3ConnectTeam
 
+In this page, you need to implement the following process or function.
+
+1. Network switching
+2. Retrieve and screen display of network default token list
+3. Obtaining the balance of each network default token and displaying it on the screen
+4. Search for tokens by token contract address
+5. Import of retrieved tokens (like SushiSwap)
+6. Transition to the balance confirmation screen after selecting or importing tokens
+*/
 export default {
   name: 'PaymentPriceHandler',
     data() {
@@ -182,7 +193,7 @@ export default {
     },
     networkModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "medium"});
-    },    
+    },
     handlePayment(){
       this.paid = true;
     },
@@ -218,7 +229,7 @@ export default {
             price: this.price,
           }
         }
-      );      
+      );
     }
   },
   filters: {
@@ -240,7 +251,7 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
@@ -267,7 +278,7 @@ export default {
       padding-left: 16px;
       @include media(sp) {
         width: 55%;
-      }          
+      }
     }
     .currency{
       width: 35%;
@@ -301,8 +312,8 @@ export default {
         font-weight: 400;
         width: 100%;
         border: none;
-        outline: none;        
-      }      
+        outline: none;
+      }
     }
     span{
       vertical-align: middle;
@@ -407,7 +418,7 @@ export default {
         width: 100%;
       }
     }
-  }  
+  }
   .body {
     .toggle-btn{
       background: var(--color_darken);
@@ -442,7 +453,7 @@ export default {
       height: 20vh;
       &::-webkit-scrollbar{
         display: none;
-      }        
+      }
       .token-item{
         cursor: pointer;
       }
@@ -501,9 +512,9 @@ export default {
             vertical-align: inherit;
           }
         }
-      }      
+      }
     }
-  }  
+  }
 }
 
 </style>

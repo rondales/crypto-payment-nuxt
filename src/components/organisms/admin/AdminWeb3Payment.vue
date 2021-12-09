@@ -26,25 +26,25 @@
               <option value="0">All</option>
               <option value="1">Cancelled</option>
               <option value="2">Cancelled to Refund</option>
-              <option value="3">System Received</option>            
+              <option value="3">System Received</option>
               <option value="4">System Receivedto Refund</option>
             </select>
           </div>
           <div class="select-date-wrap add-flex">
             <div class="select-date">
-              <Datepicker         
+              <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
                 format="dd-MM-yyyy"
-              ></Datepicker>      
+              ></Datepicker>
             </div>
             <div class="select-date">
-              <Datepicker         
+              <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
                 format="dd-MM-yyyy"
-              ></Datepicker>      
-            </div>    
+              ></Datepicker>
+            </div>
           </div>
           <div class="search-btn" @click="search">
             Search
@@ -64,7 +64,7 @@
             </div>
             <div class="manage-show-unit">
               entries
-            </div>            
+            </div>
           </div>
           <div class="manage-csv" @click="createCsv">
             CSV
@@ -160,7 +160,7 @@
             </div>
             <div class="setting-toggle-left" :class="{'active': settingTab === 'domain'}" @click="settingRightTab">
               Domain Setting
-            </div>            
+            </div>
           </div>
           <div class="manage-contents" v-if="settingTab === 'contract'">
             <div class="manage-contents_head">
@@ -219,8 +219,8 @@
                       {{address.bsc}}
                     </div>
                     <div class="manage-contents_copy" @click="copy(address.bsc)">Copy Address</div>
-                  </div>                  
-                </div>                
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -255,7 +255,7 @@
             </div>
             <div class="manage-contents_creat-url">
               Save
-            </div>            
+            </div>
           </div>
           <div class="manage-domain" v-if="settingTab === 'domain'">
             <div class="manage-contents_clm">
@@ -284,22 +284,33 @@
               <div class="verify">
                 verify
               </div>
-            </div>            
+            </div>
           </div>
         </div>
-      </div>      
+      </div>
     </div>
   </div>
 </template>
 
 
 <script>
+/*
+@todo Web3ConnectTeam
+
+In this page, you need to implement the following process or function.
+
+1. Network switching
+2. Contract issuance
+
+*The issued contract information is saved in the DB via the API.
+ Please make sure that you can get the contract address and argument information.
+*/
 import Datepicker from 'vuejs-datepicker';
 export default {
   name: 'PaymentTop',
   components: {
     Datepicker
-  },  
+  },
   data() {
     return {
       tab: "history",
@@ -422,7 +433,7 @@ export default {
         this.pageNum = null;
       }else{
         this.pageNum = page;
-      }      
+      }
       this.current = page;
     },
     prev(){
@@ -438,7 +449,7 @@ export default {
     },
     copy(value) {
       this.$clipboard(value);
-    },    
+    },
   },
   filters: {
     omittedText(text) {
@@ -475,7 +486,7 @@ export default {
       content: "";
       position: relative;
       bottom: -8px;
-      margin-top: 10px;      
+      margin-top: 10px;
       display: block;
       height: 3px;
       background: $gradation-light;
@@ -501,7 +512,7 @@ export default {
       height: 32px;
       width: 1px;
       background: #78668D;
-    }    
+    }
     &::before{
       position: absolute;
       content: "";
@@ -510,9 +521,9 @@ export default {
       height: 20px;
       top: 50%;
       left: 45%;
-      transform: translate(-50%, -50%);      
+      transform: translate(-50%, -50%);
       z-index: 0;
-    }    
+    }
     select, input{
       width: 50%;
       font-size: 13px;
@@ -535,7 +546,7 @@ export default {
     @include media(sp) {
       width: 100%;
       margin-bottom: 16px;
-    }    
+    }
     &::after{
       position: absolute;
       right: 70%;
@@ -546,8 +557,8 @@ export default {
       background: #78668D;
       @include media(sp) {
         right: 50%;
-      }        
-    }    
+      }
+    }
     &::before{
       position: absolute;
       content: "";
@@ -556,18 +567,18 @@ export default {
       height: 20px;
       top: 50%;
       right: 2%;
-      transform: translate(-50%, -50%);      
+      transform: translate(-50%, -50%);
       z-index: 0;
-    }      
+    }
     &_title{
       width: 30%;
       font-size: 13px;
       line-height: 32px;
-      font-weight: 100;    
+      font-weight: 100;
       padding: 0 8px;
       @include media(sp) {
         width: 50%;
-      }        
+      }
     }
     select{
       width: 70%;
@@ -577,8 +588,8 @@ export default {
       padding: 0 8px;
       @include media(sp) {
         width: 50%;
-      }  
-    }    
+      }
+    }
   }
   .select-date-wrap{
     width: 30%;
@@ -586,7 +597,7 @@ export default {
     @include media(sp) {
       width: 100%;
       margin-bottom: 16px;
-    }      
+    }
     &::after{
       content: "";
       position: absolute;
@@ -596,7 +607,7 @@ export default {
       width: 8px;
       height: 2px;
       background: #fff;
-    }    
+    }
   }
   .select-date{
     width: 46%;
@@ -614,9 +625,9 @@ export default {
       height: 20px;
       top: 50%;
       left: 8px;
-      transform: translate(0%, -50%);      
+      transform: translate(0%, -50%);
       z-index: 0;
-    }         
+    }
   }
   .search-btn{
     font-weight: 200;
@@ -632,7 +643,7 @@ export default {
     }
     &:hover{
       opacity: .8;
-    }    
+    }
   }
 }
 .manage-function{
@@ -654,9 +665,9 @@ export default {
         height: 20px;
         top: 50%;
         right: 5%;
-        transform: translate(0, -50%);      
+        transform: translate(0, -50%);
         z-index: 0;
-      } 
+      }
     }
     select{
       font-size: 14px;
@@ -681,7 +692,7 @@ export default {
     &:hover{
       opacity: .8;
     }
-  }  
+  }
 }
 .manage-table{
   position: absolute;
@@ -699,24 +710,24 @@ export default {
     height: 50vh;
     &::-webkit-scrollbar{
       display: none;
-    }    
+    }
     @include media(sp) {
       width: 100%;
       overflow-x: scroll;
-      -ms-overflow-style: none; 
-      scrollbar-width: none; 
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
     thead,tbody{
       width: 100%;
       tr{
-        border-bottom: 2px solid #58466E;        
+        border-bottom: 2px solid #58466E;
         th{
           font-size: 16px;
           text-align: left;
           padding-bottom: 8px;
         }
         td{
-          font-size: 14px; 
+          font-size: 14px;
           padding: 16px 0;
           div{
             text-align: center;
@@ -768,7 +779,7 @@ export default {
           &:nth-child(6){
             width: 16.666vw;
             padding-right: 16px;
-          }          
+          }
         }
       }
     }
@@ -850,7 +861,7 @@ export default {
         width: 60%;
         @include media(sp) {
           width:100%;
-        }        
+        }
       }
       .created{
         .manage-contents_network{
@@ -862,7 +873,7 @@ export default {
           opacity: .6;
           cursor: unset;
         }
-      }      
+      }
       &_network{
         p{
           margin-left: 16px;
@@ -937,17 +948,17 @@ export default {
           top: 50%;
           right: -40px;
           transform: translate(-50%, -60%);
-        }        
+        }
       }
       &_clm{
-        margin-bottom: 32px;        
+        margin-bottom: 32px;
         h4{
           font-size: 18px;
           font-weight: 100;
           margin-bottom: 16px;
           span{
             color: #B52828;
-          }          
+          }
         }
         p{
           font-size: 14px;
@@ -980,8 +991,8 @@ export default {
             top: 50%;
             left: 10px;
             transform: translate(-50%, -50%);
-          }          
-        }          
+          }
+        }
       }
       &_creat-url{
         display: inline;
@@ -993,7 +1004,7 @@ export default {
         padding: 12px 40px;
         border-radius: 8px;
         cursor: pointer;
-      }      
+      }
     }
   }
 }
@@ -1016,7 +1027,7 @@ export default {
       background: #000 !important;
       opacity: .8;
     }
-  } 
+  }
   .vdp-datepicker__calendar {
     background: #000 !important;
     right: 10px;

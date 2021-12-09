@@ -22,6 +22,16 @@
 </template>
 
 <script>
+/*
+@todo Web3ConnectTeam
+
+In this page, you need to implement the following process or function.
+
+1. Wallet connection process
+
+* After connecting to the wallet, communicate with the login API to login (Web App Team)
+
+*/
 import Header from "@/components/organisms/header"
 
 // import AdminIndex from '@/components/templates/AdminIndex'

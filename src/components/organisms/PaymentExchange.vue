@@ -74,9 +74,9 @@
             </div>
             <div class="payment-box_btn" @click="updatePrice">
               Accept
-            </div>          
+            </div>
           </div>
-        </div>          
+        </div>
         <button :class="{'inactive': changedPrice}" class="btn __g __l mb-2" @click="sendTokenItems">
           Go Exchange to Payment
           <div class="loading-wrap" :class="{'active': loading}">
@@ -95,6 +95,16 @@
 </template>
 
 <script>
+/*
+@todo Web3ConnectTeam
+
+In this page, you need to implement the following process or function.
+
+1. Check the balance of the token selected on the previous page
+2. Exchange to USDT(Exchange Uni swap)
+3. Check if the selected token has enough USDT payment amount
+4. Transition to the payment details screen
+*/
 export default {
   name: 'PaymentExchange',
     data() {
@@ -120,7 +130,7 @@ export default {
     setTimeout(() => {
       self.changedPrice = true;
     }, 3000);
-  },  
+  },
   mounted(){
     this.price = this.$route.query.price;
     this.invoiceId = this.$route.query.id;
@@ -149,7 +159,7 @@ export default {
           }
         }
       );
-    },    
+    },
   },
   filters: {
     maskText(text) {
@@ -170,14 +180,14 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
