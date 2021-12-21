@@ -25,9 +25,19 @@ const store = new Vuex.Store({
       walletAddress: null
     },
     theme: "dark",
-    invoicePage: true
+    invoicePage: true,
+    paymentData: {
+      merchantDomain: null,
+      orderCode: null,
+      amount: null,
+      symbol: null,
+      email: null,
+    }
   },
   actions: {
+    setReceiveData({ commit }, data) {
+      commit('setReceiveData', data)
+    },
     onConnect({ commit }, connection) {
       commit('setConnection', connection)
       commit('changeConnectStatus', true)
@@ -73,6 +83,16 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setReceiveData(state, data) {
+      state.paymentData.merchantDomain = data.domain
+      state.paymentData.orderCode = data.order_code
+      state.paymentData.symbol = data.symbol
+      state.paymentData.amount = data.amount
+      state.theme = data.display_theme
+    },
+    setEmail(state, email) {
+      state.paymentData.email = email
+    },
     setConnection(state, connection) {
       state.connection.provider = connection.provider
       state.connection.networkId = connection.networkId

@@ -99,41 +99,31 @@
 <script>
 export default {
   name: 'PaymentPriceHandler',
-    data() {
-      return{
-        success: false,
-        Receiver: "E-check.online",
-        mail: "",
-        paid: false,
-        changedPrice: false,
-        selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
-        price: 0,
-        invoiceId: "hogehogefugafuga",
-        loading: false,
-        currencys: [
-          {
-            name: "JPY",
-            images: require('@/assets/images/JPY.svg'),
-          },
-          {
-            name: "USD",
-            images: require('@/assets/images/USD.svg'),
-          },
-          {
-            name: "EUR",
-            images: require('@/assets/images/EUR.svg'),
-          }
-        ]
-      }
-    },
-  components: {
-  },
-  created(){
-    const self = this;
-
-    setTimeout(() => {
-      self.changedPrice = true;
-    }, 3000);
+  data() {
+    return{
+      receiveData: null,
+      success: false,
+      mail: "",
+      paid: false,
+      changedPrice: false,
+      selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
+      price: 0,
+      loading: false,
+      currencys: [
+        {
+          name: "JPY",
+          images: require('@/assets/images/JPY.svg'),
+        },
+        {
+          name: "USD",
+          images: require('@/assets/images/USD.svg'),
+        },
+        {
+          name: "EUR",
+          images: require('@/assets/images/EUR.svg'),
+        }
+      ]
+    }
   },
   methods: {
     updatePrice(){
@@ -153,8 +143,25 @@ export default {
         path: 'payment/wallets',
       })
     },
-    getReceiveData(){
-      // Functions for connecting to the "Payment Acceptance Information Acquisition API(Handled by Web App Team)
+    async getReceiveData(){
+      const config = {
+        method: 'get',
+        baseURL: process.env.VUE_APP_API_BASE_URL,
+        url: '/api/v1/payment',
+        params: {
+          payment_token: this.$route.params.token
+        }
+      }
+      // @todo Error handling will be discussed separately
+      await this.axios(config).then(response => (this.receiveData = response.data))
+    },
+    setReceiveData() {
+      this.$store.dispatch('setReceiveData', this.receiveData)
+    },
+    switchScreen() {
+      if (this.receiveData.amount !== null && this.receiveData.symbol !== null) {
+        this.paid = true
+      }
     },
     publishTransaction(){
       // Functions for connecting to the "Transaction Publish API(Handled by Web App Team)
@@ -166,11 +173,15 @@ export default {
       // Functions for connecting to the "Transaction Update API(Handled by Web App Team)
     }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  async created(){
+    await this.getReceiveData();
+    this.setReceiveData();
+    this.switchScreen();
+
+    const self = this;
+    setTimeout(() => {
+      self.changedPrice = true;
+    }, 3000);
   }
 }
 </script>
