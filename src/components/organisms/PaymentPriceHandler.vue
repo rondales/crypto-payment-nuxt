@@ -144,16 +144,11 @@ export default {
       })
     },
     async getReceiveData(){
-      const config = {
-        method: 'get',
-        baseURL: process.env.VUE_APP_API_BASE_URL,
-        url: '/api/v1/payment',
-        params: {
-          payment_token: this.$route.params.token
-        }
-      }
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment'
+      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+
       // @todo Error handling will be discussed separately
-      await this.axios(config).then(response => (this.receiveData = response.data))
+      await this.axios.get(url, { params }).then(response => (this.receiveData = response.data))
     },
     setReceiveData() {
       this.$store.dispatch('setReceiveData', this.receiveData)
@@ -178,9 +173,8 @@ export default {
     this.setReceiveData();
     this.switchScreen();
 
-    const self = this;
     setTimeout(() => {
-      self.changedPrice = true;
+      this.changedPrice = true;
     }, 3000);
   }
 }
