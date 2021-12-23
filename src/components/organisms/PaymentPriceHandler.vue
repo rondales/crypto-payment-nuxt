@@ -102,7 +102,6 @@ export default {
   data() {
     return{
       showTemplate: false,
-      receiveData: null,
       success: false,
       mail: "",
       fixedAmount: false,
