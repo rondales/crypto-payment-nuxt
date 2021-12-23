@@ -1,14 +1,14 @@
 <template>
-  <div class="payment_handleprice">
-    <div v-if="!paid" class="payment_desc mb-3">
+  <div v-show="showTemplate" class="payment_handleprice">
+    <div v-if="!fixedAmount" class="payment_desc mb-3">
       <p>
         Enter the payment amount
       </p>
       <span>&#128591;</span>
     </div>
     <div class="payment_handleprice-pricewrap">
-      <p v-if="!paid" class="mb-3">How much would you pay?</p>
-      <div v-if="!paid" class="payment_handleprice-price add-flex border j-between">
+      <p v-if="!fixedAmount" class="mb-3">How much would you pay?</p>
+      <div v-if="!fixedAmount" class="payment_handleprice-price add-flex border j-between">
         <input v-model="price" class="price" type="text" placeholder="0">
         <div class="add-flex currency a-center">
           <figure>
@@ -36,16 +36,16 @@
             </dd>
           </dl>
         </div>
-        <div class="usdt-price" :class="{'inactive': changedPrice && !paid}">
+        <div class="usdt-price" :class="{'inactive': changedPrice && !fixedAmount}">
           <p>
             {{ price }}
           </p>
         </div>
       </div>
-      <div v-if="!changedPrice && !paid" class="payment-with">
+      <div v-if="!changedPrice && !fixedAmount" class="payment-with">
         Payment with Web3 Wallet
       </div>
-      <div v-if="!paid">
+      <div v-if="!fixedAmount">
         <div class="payment-box" v-if="changedPrice">
           <div class="add-flex a-center j-between">
             <div class="add-flex a-center">
@@ -61,14 +61,14 @@
             </div>
           </div>
         </div>
-        <button :class="{'inactive': changedPrice}" class="btn __g __l" @click="handlePayment">
+        <button :class="{'inactive': changedPrice}" class="btn __g __l" @click="switchEmailTemplate">
           <img v-if="!changedPrice" src="@/assets/images/slash-s.svg" alt="">
           <img v-if="changedPrice" src="@/assets/images/slash-s_inactive.svg" alt="">
           Go Payment
         </button>
       </div>
     </div>
-    <div class="payment_receiptwrap" v-if="paid">
+    <div class="payment_receiptwrap" v-if="fixedAmount">
       <div class="payment_desc mb-2 mt-1">
         <p>
           Do you want a receipt?
@@ -101,10 +101,11 @@ export default {
   name: 'PaymentPriceHandler',
   data() {
     return{
+      showTemplate: false,
       receiveData: null,
       success: false,
       mail: "",
-      paid: false,
+      fixedAmount: false,
       changedPrice: false,
       selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
       price: 0,
@@ -129,8 +130,8 @@ export default {
     updatePrice(){
       location.reload();
     },
-    handlePayment(){
-      this.paid = true;
+    switchEmailTemplate(){
+      this.fixedAmount = true;
     },
     sendMail(){
       this.$router.push({
@@ -143,20 +144,10 @@ export default {
         path: 'payment/wallets',
       })
     },
-    async getReceiveData(){
+    apiReceiveData(){
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment'
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
-
-      // @todo Error handling will be discussed separately
-      await this.axios.get(url, { params }).then(response => (this.receiveData = response.data))
-    },
-    setReceiveData() {
-      this.$store.dispatch('setReceiveData', this.receiveData)
-    },
-    switchScreen() {
-      if (this.receiveData.amount !== null && this.receiveData.symbol !== null) {
-        this.paid = true
-      }
+      return this.axios.get(url, { params })
     },
     publishTransaction(){
       // Functions for connecting to the "Transaction Publish API(Handled by Web App Team)
@@ -168,10 +159,15 @@ export default {
       // Functions for connecting to the "Transaction Update API(Handled by Web App Team)
     }
   },
-  async created(){
-    await this.getReceiveData();
-    this.setReceiveData();
-    this.switchScreen();
+  created(){
+    this.apiReceiveData().then((res) => {
+      const data = res.data
+      this.$store.dispatch('setReceiveData', data)
+      if (data.amount !== null && data.symbol !== null) {
+        this.fixedAmount = true
+      }
+      this.showTemplate = true
+    })
 
     setTimeout(() => {
       this.changedPrice = true;
