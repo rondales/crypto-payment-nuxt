@@ -1,30 +1,29 @@
 <template>
-  <div class="home">
-    <div>
-      <a href="/payment">PAYMENT PAGE</a>
-      <a href="/admin">ADMIN PAGE</a>
-      <a href="/admin/dashboard">ADMIN/dashboard</a>
-      <a href="/admin/web3payment">ADMIN/web3payment</a>
-      <a href="/admin/invoice">ADMIN/inovoice</a>
-      <a href="/admin/keys">ADMIN/keys</a>      
-      <a href="/admin/documents">ADMIN/documents</a>      
-    </div>
+  <div class="lp-wrapper">
+    <lp-index/>
   </div>
 </template>
 
 <script>
+import LpIndex from '@/components/templates/LpIndex'
 export default {
-  name: 'home',
+  name: 'payment',
   components: {
-  }
+    LpIndex
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.home{
+@import '@/assets/scss/style.scss';
+
+.lp-wrapper{
   text-align: center;
   padding-top: 10vh;
-  background: var(--color_bg);
+  background: var(--color_lp_bg);
+  @include media(sp) {
+    padding-top: 8vh;
+  }
   a{
     display: block;
     font: 24px;

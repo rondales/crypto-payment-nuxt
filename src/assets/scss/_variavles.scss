@@ -9,6 +9,7 @@ $dark-gray: #5D5D5D;
 $gradation: linear-gradient(90.25deg, #1D4C65 5.43%,#313067 59.32%,#431769 98.19%);
 $gradation-light: linear-gradient(90.25deg, #3EB9FC 5.43%,#6A68ED 59.32%,#8B2AE1 98.19%);
 $gradation-pale: linear-gradient(90.25deg, #7BC8FC 5.43%,#9695F2 40.32%,#A677EC 98.19%);
+$gradation-orange: linear-gradient(90.25deg, #D97C87 5.43%,#8A2CE1 98.19%);
 
 $box-shadow: 0 0 15px #ccc;
 
@@ -16,6 +17,7 @@ $light-theme: (
   color_font: $black,
   color_font_parts: $black,
   color_bg: #f7f5fd,
+  color_lp_bg: $white,
   color_bg_parts: $white,
   color_bg_modal: rgba(#e8e7e9, .7),
   color_border: 1px solid #ECECEC,
@@ -23,6 +25,7 @@ $light-theme: (
   color_inactive: "#BDC2C4 !important",
   color_update: #8E86AD,
   color_box:#BDC2C4,
+  color_lp_box: #EFEFEF,
   color_darken: #BDC2C4,
   color_inner: #fff
 );
@@ -30,6 +33,7 @@ $dark-theme: (
   color_font: $white,
   color_font_parts: $white,
   color_bg: #191820,
+  color_lp_bg: #191820,
   color_bg_parts: #312c3e,
   color_bg_modal: rgba(#000, .7),
   color_border: 1px solid #58466E,
@@ -37,11 +41,12 @@ $dark-theme: (
   color_inactive: "#5D5D5D !important",
   color_update: #4E455A,
   color_box: #4E455A,
+  color_lp_box: #292536,
   color_darken: #352D40,
   color_inner: #4E455A
 );
 
-$colors-array: color_font, color_bg, color_bg_parts, color_bg_modal, color_border, color_shadow, color_inactive, color_update, color_box, color_darken, color_inner;
+$colors-array: color_font, color_bg, color_lp_bg, color_bg_parts, color_bg_modal, color_border, color_shadow, color_inactive, color_update, color_lp_box, color_box, color_darken, color_inner;
 
 //-------
 // opacity
