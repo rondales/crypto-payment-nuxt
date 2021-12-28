@@ -1,4 +1,5 @@
 export const errorCodeList = {
+  2011: { msg: 'Please reapply for payment again.' },
   2130: { msg: 'Please reapply for payment again.' },
   2140: { msg: 'Please enter your email address.' },
   2150: { msg: 'Please try again.' },
