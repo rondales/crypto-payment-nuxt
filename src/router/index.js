@@ -26,12 +26,13 @@ export default new Router({
           path: "/payment",
           component: () => import("@/pages/payment"),
           children: [
-            { name: "price", path: "/payment", component: () => import("@/components/organisms/PaymentPriceHandler") },
-            { name: "invoice", path: "/payment/invoice", component: () => import("@/components/organisms/PaymentInvoice") },
-            { name: "wallets", path: "/payment/wallets", component: () => import("@/components/organisms/PaymentSelectWallets") },
-            { name: "token", path: "/payment/token", component: () => import("@/components/organisms/PaymentToken") },
-            { name: "exchange", path: "/payment/exchange", component: () => import("@/components/organisms/PaymentExchange") },
-            { name: "detail", path: "/payment/detail", component: () => import("@/components/organisms/PaymentDetail") },
+            { name: "entrance", path: "/payment/:token", component: () => import("@/components/organisms/PaymentEntrance") },
+            { name: "receipt", path: "/payment/receipt/:token", component: () => import("@/components/organisms/PaymentEmail") },
+            { name: "wallets", path: "/payment/wallets/:token", component: () => import("@/components/organisms/PaymentSelectWallets") },
+            { name: "token", path: "/payment/token/:token", component: () => import("@/components/organisms/PaymentToken") },
+            { name: "exchange", path: "/payment/exchange/:token", component: () => import("@/components/organisms/PaymentExchange") },
+            { name: "detail", path: "/payment/detail/:token", component: () => import("@/components/organisms/PaymentDetail") },
+            { name: "invoice", path: "/payment/invoice", component: () => import("@/components/organisms/PaymentInvoice") }
           ]
         },
         {

@@ -31,10 +31,10 @@
       <div class="add-flex j-between">
         <div>
           <p class="payment_Receiver mb-1">
-            Receiver：{{Receiver}}
+            Receiver：{{ merchantDomain }}
           </p>
           <p class="payment_invoice-id">
-            Invoice ID: {{invoiceId | maskText}}
+            Invoice ID: {{ invoiceId }}
           </p>
         </div>
           <router-view />
@@ -92,8 +92,6 @@ export default {
   name: 'payment',
   data() {
     return {
-      Receiver: "E-check.online",
-      invoiceId: "hogehogefugafuga",
       walletAddress: null,
       selectedNetwork: null,
       tickerSymbol: null,
@@ -103,6 +101,14 @@ export default {
   components: {
     Header,
     PaymentTop,
+  },
+  computed: {
+    merchantDomain: function() {
+      return this.$store.state.paymentData.merchantDomain
+    },
+    invoiceId: function() {
+      return this.$store.state.paymentData.orderCode
+    }
   },
   methods: {
     openModal(target, size) {

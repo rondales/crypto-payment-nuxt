@@ -17,7 +17,8 @@ const store = new Vuex.Store({
     modal: {
       isShow: false,
       target: '',
-      size: ''
+      size: '',
+      message: ''
     },
     connection: {
       provider: null,
@@ -25,9 +26,22 @@ const store = new Vuex.Store({
       walletAddress: null
     },
     theme: "dark",
-    invoicePage: true
+    invoicePage: true,
+    paymentData: {
+      merchantDomain: null,
+      orderCode: null,
+      base_amount: null,
+      base_symbol: 'USDT',
+      email: null,
+    }
   },
   actions: {
+    setReceiveData({ commit }, data) {
+      commit('setReceiveData', data)
+    },
+    setPaymentBaseAmount({ commit }, amount) {
+      commit('setPaymentBaseAmount', amount)
+    },
     onConnect({ commit }, connection) {
       commit('setConnection', connection)
       commit('changeConnectStatus', true)
@@ -46,10 +60,11 @@ const store = new Vuex.Store({
     onLogout({ commit }) {
       commit('onLogout')
     },
-    openModal({ commit }, {target, size}) {
+    openModal({ commit }, {target, size, message = ''}) {
       const modalData = {
         target: target,
-        size: size
+        size: size,
+        message: message
       }
       commit('openModal', modalData)
     },
@@ -73,6 +88,19 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setReceiveData(state, data) {
+      state.paymentData.merchantDomain = data.domain
+      state.paymentData.orderCode = data.order_code
+      state.paymentData.base_symbol = data.symbol
+      state.paymentData.base_amount = data.amount
+      state.theme = data.display_theme
+    },
+    setPaymentBaseAmount(state, amount) {
+      state.paymentData.base_amount = amount
+    },
+    setEmail(state, email) {
+      state.paymentData.email = email
+    },
     setConnection(state, connection) {
       state.connection.provider = connection.provider
       state.connection.networkId = connection.networkId
@@ -90,10 +118,11 @@ const store = new Vuex.Store({
     onLogout(state) {
       state.isLogin = false
     },
-    openModal(state, { target, size }) {
+    openModal(state, { target, size, message }) {
       state.modal.isShow = true
       state.modal.target = target
       state.modal.size = size
+      state.modal.message = message
     },
     closeModal(state) {
       state.modal.isShow = false
