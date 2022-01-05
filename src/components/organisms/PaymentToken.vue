@@ -187,14 +187,8 @@ export default {
     }
   },
   methods: {
-    updatePrice(){
-      location.reload();
-    },
     networkModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "medium"});
-    },
-    handlePayment(){
-      this.paid = true;
     },
     leftTab(){
       this.tab = "list"
