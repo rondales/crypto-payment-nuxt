@@ -276,12 +276,12 @@
                 By proving the ownership of the domain with a TXT record, a certification mark will be included in the domain display on the payment screen.
               </p>
               <div>
-                <input class="text-box" type="text" v-model="txt">
+                <input class="text-box" type="text" v-model="txtRecord">
               </div>
               <div class="manage-contents_creat-url">
                 Save
               </div>
-              <div class="verify" v-if="verified === true">
+              <div class="verify" v-if="verified">
                 verify
               </div>
             </div>
@@ -320,7 +320,7 @@ export default {
       pageNum: 1,
       settingTab: "contract",
       domain: '',
-      txt: '',
+      txtRecord: '',
       verified: false,
       columns: [
         {
@@ -466,7 +466,7 @@ export default {
       }
       this.axios.get(url, data).then((response) => {
         this.domain = response.data.domain
-        this.txt = response.data.txt
+        this.txtRecord = response.data.txt
         this.verified = response.data.verified
       }).catch((error) => {
         if (error.response.status === 401) {
