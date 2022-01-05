@@ -31,7 +31,7 @@ const store = new Vuex.Store({
       merchantDomain: null,
       orderCode: null,
       base_amount: null,
-      base_symbol: 'USDT',
+      base_symbol: null,
       email: null,
     }
   },
@@ -91,7 +91,7 @@ const store = new Vuex.Store({
     setReceiveData(state, data) {
       state.paymentData.merchantDomain = data.domain
       state.paymentData.orderCode = data.order_code
-      state.paymentData.base_symbol = data.symbol
+      state.paymentData.base_symbol = (data.symbol === null) ? 'USDT' : data.symbol
       state.paymentData.base_amount = data.amount
       state.theme = data.display_theme
     },
