@@ -15,9 +15,9 @@
             </dd>
           </dl>
         </div>
-        <div class="usdt-price" :class="{'inactive': changedPrice}">
+        <div class="usdt-price">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -56,39 +56,16 @@ export default {
   ],
   data() {
     return{
-      success: false,
-      Receiver: "e-check.online",
-      mail: "",
-      paid: false,
-      changedPrice: false,
-      selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
-      price: 1000.00,
-      invoiceId: "hogehogefugafuga",
       loadingMeta: false,
-      loadingWallet: false,
-      currencys: [
-        {
-          name: "JPY",
-          images: require('@/assets/images/JPY.svg'),
-        },
-        {
-          name: "USD",
-          images: require('@/assets/images/USD.svg'),
-        },
-        {
-          name: "EUR",
-          images: require('@/assets/images/EUR.svg'),
-        }
-      ]
+      loadingWallet: false
+    }
+  },
+  computed: {
+    amount() {
+      return this.$store.state.paymentData.base_amount
     }
   },
   methods: {
-    updatePrice(){
-      location.reload();
-    },
-    handlePayment(){
-      this.paid = true;
-    },
     useMetamask() {
       const successFunc = () => {
         this.$router.push({
@@ -105,12 +82,6 @@ export default {
       }
       this.connectByWalletConnect(successFunc);
     }
-  },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
   }
 }
 </script>
