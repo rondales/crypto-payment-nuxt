@@ -220,7 +220,7 @@ export default {
     importToken(data){
       this.$router.push(
         {
-          path: 'exchange',
+          path: '/payment/exchange/' + this.$route.params.token,
           query: {
             abbriviation: data.abbriviation,
             icon: data.icon,

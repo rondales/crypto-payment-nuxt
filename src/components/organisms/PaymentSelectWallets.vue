@@ -92,7 +92,7 @@ export default {
     useMetamask() {
       const successFunc = () => {
         this.$router.push({
-          path: 'token',
+          path: '/payment/token/' + this.$route.params.token,
         })
       }
       this.connectByMetamask(successFunc);
@@ -100,7 +100,7 @@ export default {
     useWalletConnect() {
       const successFunc = () => {
         this.$router.push({
-          path: 'token',
+          path: '/payment/token/' + this.$route.params.token,
         })
       }
       this.connectByWalletConnect(successFunc);

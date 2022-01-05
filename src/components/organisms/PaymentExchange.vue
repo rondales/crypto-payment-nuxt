@@ -149,7 +149,7 @@ export default {
       this.loading = true;
       this.$router.push(
         {
-          path: 'detail',
+          path: '/payment/detail/' + this.$route.params.token,
           query: {
             abbriviation: this.abbriviation,
             icon: this.tokenIcon,
