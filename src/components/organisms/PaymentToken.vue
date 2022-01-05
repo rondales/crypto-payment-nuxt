@@ -17,7 +17,7 @@
         </div>
         <div class="usdt-price">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -139,53 +139,52 @@ In this page, you need to implement the following process or function.
 */
 export default {
   name: 'PaymentPriceHandler',
-    data() {
-      return{
-        price: 0,
-        invoiceId: "",
-        tab: "list",
-        tokenCount: 1,
-        tokenList: [
-          {
-            name: 'Tether USD',
-            abbriviation: 'USDT',
-            icon: require('@/assets/images/icon/usdt.svg'),
-            price: 0.4959
-          },
-          {
-            name: 'USD Coin',
-            abbriviation: 'USDC',
-            icon: require('@/assets/images/icon/usdc.svg'),
-            price: 0.5011
-          },
-          {
-            name: 'Dai stablecoin',
-            abbriviation: 'DAI',
-            icon: require('@/assets/images/icon/dai.svg'),
-            price: 0.6129
-          },
-          {
-            name: 'Ethereum',
-            abbriviation: 'ETH',
-            icon: require('@/assets/images/icon/eth.svg'),
-            price: 0.7129
-          },
-        ],
-        tokenIdList: [
-          {
-            icon:  require('@/assets/images/icon/sauna.svg'),
-            abbriviation: "SAUNA",
-            tokenName: "SaunaFinance Token",
-          }
-        ],
-        validAddress: false,
-      }
-    },
-  components: {
+  data() {
+    return{
+      price: 0,
+      invoiceId: "",
+      tab: "list",
+      tokenCount: 1,
+      tokenList: [
+        {
+          name: 'Tether USD',
+          abbriviation: 'USDT',
+          icon: require('@/assets/images/icon/usdt.svg'),
+          price: 0.4959
+        },
+        {
+          name: 'USD Coin',
+          abbriviation: 'USDC',
+          icon: require('@/assets/images/icon/usdc.svg'),
+          price: 0.5011
+        },
+        {
+          name: 'Dai stablecoin',
+          abbriviation: 'DAI',
+          icon: require('@/assets/images/icon/dai.svg'),
+          price: 0.6129
+        },
+        {
+          name: 'Ethereum',
+          abbriviation: 'ETH',
+          icon: require('@/assets/images/icon/eth.svg'),
+          price: 0.7129
+        },
+      ],
+      tokenIdList: [
+        {
+          icon:  require('@/assets/images/icon/sauna.svg'),
+          abbriviation: "SAUNA",
+          tokenName: "SaunaFinance Token",
+        }
+      ],
+      validAddress: false,
+    }
   },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
+  computed: {
+    amount() {
+      return this.$store.state.paymentData.base_amount
+    }
   },
   methods: {
     updatePrice(){
@@ -232,11 +231,9 @@ export default {
       );
     }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  mounted(){
+    this.price = this.$route.query.price;
+    this.invoiceId = this.$route.query.id;
   }
 }
 </script>
@@ -258,7 +255,7 @@ export default {
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
@@ -516,5 +513,4 @@ export default {
     }
   }
 }
-
 </style>
