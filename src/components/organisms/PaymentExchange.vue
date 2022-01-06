@@ -107,22 +107,18 @@ In this page, you need to implement the following process or function.
 */
 export default {
   name: 'PaymentExchange',
-    data() {
-      return{
-        Receiver: "E-check.online",
-        paid: false,
-        changedPrice: false,
-        price: 0,
-        invoiceId: "",
-        abbriviation: "",
-        tokenIcon: "",
-        tokenName: "",
-        balancePrice: 2340,
-        equivalent: 2340,
-        loading: false
-      }
-    },
-  components: {
+  data() {
+    return{
+      changedPrice: false,
+      price: 0,
+      invoiceId: "",
+      abbriviation: "",
+      tokenIcon: "",
+      tokenName: "",
+      balancePrice: 2340,
+      equivalent: 2340,
+      loading: false
+    }
   },
   created(){
     const self = this;
@@ -159,12 +155,6 @@ export default {
           }
         }
       );
-    },
-  },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
     },
   }
 }
