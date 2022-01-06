@@ -17,7 +17,7 @@
         </div>
         <div class="usdt-price">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -60,7 +60,7 @@
                 </figure>
                 <dl>
                   <dt>
-                    {{token.abbriviation}}
+                    {{token.symbol}}
                   </dt>
                   <dd>
                     {{token.name}}
@@ -69,7 +69,7 @@
               </div>
               <div class="usdt-price">
                 <p>
-                  {{token.price}}
+                  {{token.balance}}
                 </p>
               </div>
             </div>
@@ -92,7 +92,7 @@
                 <img :src="tokenId.icon">
               </li>
               <li class="token-name">
-                {{tokenId.abbriviation}}
+                {{tokenId.symbol}}
                 <br>
                 <span>
                   {{tokenId.tokenName}}
@@ -139,63 +139,54 @@ In this page, you need to implement the following process or function.
 */
 export default {
   name: 'PaymentPriceHandler',
-    data() {
-      return{
-        price: 0,
-        invoiceId: "",
-        tab: "list",
-        tokenCount: 1,
-        tokenList: [
-          {
-            name: 'Tether USD',
-            abbriviation: 'USDT',
-            icon: require('@/assets/images/icon/usdt.svg'),
-            price: 0.4959
-          },
-          {
-            name: 'USD Coin',
-            abbriviation: 'USDC',
-            icon: require('@/assets/images/icon/usdc.svg'),
-            price: 0.5011
-          },
-          {
-            name: 'Dai stablecoin',
-            abbriviation: 'DAI',
-            icon: require('@/assets/images/icon/dai.svg'),
-            price: 0.6129
-          },
-          {
-            name: 'Ethereum',
-            abbriviation: 'ETH',
-            icon: require('@/assets/images/icon/eth.svg'),
-            price: 0.7129
-          },
-        ],
-        tokenIdList: [
-          {
-            icon:  require('@/assets/images/icon/sauna.svg'),
-            abbriviation: "SAUNA",
-            tokenName: "SaunaFinance Token",
-          }
-        ],
-        validAddress: false,
-      }
-    },
-  components: {
+  data() {
+    return {
+      tab: "list",
+      tokenCount: 1,
+      tokenList: [
+        {
+          name: 'Tether USD',
+          symbol: 'USDT',
+          icon: require('@/assets/images/icon/usdt.svg'),
+          balance: 0.4959
+        },
+        {
+          name: 'USD Coin',
+          symbol: 'USDC',
+          icon: require('@/assets/images/icon/usdc.svg'),
+          balance: 0.5011
+        },
+        {
+          name: 'Dai stablecoin',
+          symbol: 'DAI',
+          icon: require('@/assets/images/icon/dai.svg'),
+          balance: 0.6129
+        },
+        {
+          name: 'Ethereum',
+          symbol: 'ETH',
+          icon: require('@/assets/images/icon/eth.svg'),
+          balance: 0.7129
+        },
+      ],
+      tokenIdList: [
+        {
+          icon:  require('@/assets/images/icon/sauna.svg'),
+          symbol: "SAUNA",
+          tokenName: "SaunaFinance Token",
+        }
+      ],
+      validAddress: false,
+    }
   },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
+  computed: {
+    amount() {
+      return this.$store.state.paymentData.base_amount
+    }
   },
   methods: {
-    updatePrice(){
-      location.reload();
-    },
     networkModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "medium"});
-    },
-    handlePayment(){
-      this.paid = true;
     },
     leftTab(){
       this.tab = "list"
@@ -218,25 +209,22 @@ export default {
       this.tokenCount = 0;
     },
     importToken(data){
+      const paymentData = this.$store.state.paymentData
+
       this.$router.push(
         {
           path: '/payment/exchange/' + this.$route.params.token,
           query: {
-            abbriviation: data.abbriviation,
-            icon: data.icon,
-            name: data.tokenName,
-            id: this.invoiceId,
-            price: this.price,
+            receiver: paymentData.merchantDomain,
+            order_code: paymentData.orderCode,
+            symbol: paymentData.base_symbol,
+            amount: paymentData.base_amount,
+            email: paymentData.email,
+            token: data.symbol
           }
         }
       );
     }
-  },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
   }
 }
 </script>
@@ -258,7 +246,7 @@ export default {
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
@@ -516,5 +504,4 @@ export default {
     }
   }
 }
-
 </style>
