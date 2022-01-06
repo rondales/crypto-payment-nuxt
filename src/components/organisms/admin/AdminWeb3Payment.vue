@@ -471,7 +471,11 @@ export default {
         this.verified = response.data.verified
       }).catch((error) => {
         if (error.response.status === 401) {
-          this.checkLoginToken()
+          this.logout()
+        } else {
+          let message
+          message = 'Please try again.'
+          alert(message)
         }
       })
     },
@@ -486,18 +490,23 @@ export default {
       this.axios.patch(url, data, options).then((response) => {
         this.verified = !response.data.re_verify
       }).catch((error) => {
-        let message
+
         if (error.response.status === 401) {
-          this.checkLoginToken()
-        } else if (error.response.status === 400) {
-          message = errorCodeList[
-            error.response.data.errors.shift()
-          ].msg
+          this.logout()
+        } else {
+          let message
+          if (error.response.status === 400) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
           alert(message)
         }
       })
     },
-    checkLoginToken() {
+    logout() {
       localStorage.removeItem('login_token');
         this.$router.push({
         path: '/admin'
