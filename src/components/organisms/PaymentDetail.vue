@@ -11,13 +11,13 @@
               Amount billed
             </dt>
             <dd>
-              USDT
+              {{ symbol }}
             </dd>
           </dl>
         </div>
         <div class="usdt-price" :class="{'inactive': changedPrice && !processing}">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -37,12 +37,12 @@
               <img :src="tokenIcon">
             </figure>
             <p>
-              {{abbriviation}}
+              {{ selectedSymbol }}
             </p>
           </div>
           <div class="payment_detail-value">
             <p>
-              23400.00
+              {{ payAmount }}
             </p>
           </div>
         </div>
@@ -166,12 +166,38 @@ export default {
   data() {
     return{
       changedPrice: false,
-      price: 0,
-      abbriviation: "",
       tokenIcon: "",
       processing: false,
       status: 0,
     }
+  },
+  computed: {
+    symbol() {
+      return this.$store.state.paymentData.base_symbol
+    },
+    amount() {
+      return this.$store.state.paymentData.base_amount
+    },
+    selectedSymbol() {
+      return this.$store.state.paymentData.selectTokenSymbol
+    },
+    payAmount() {
+      return this.$store.state.paymentData.selectTokenAmount
+    }
+  },
+  methods: {
+    reload(){
+      location.reload();
+    },
+    pushData(){
+      this.processing = true;
+      setTimeout(() => {
+        this.status = 2;
+      }, 3000);
+    },
+    updatePrice(){
+      location.reload();
+    },
   },
   created(){
     const params = {
@@ -188,25 +214,6 @@ export default {
     setTimeout(() => {
       this.changedPrice = true;
     }, 3000);
-  },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.abbriviation = this.$route.query.abbriviation;
-    this.tokenIcon = this.$route.query.icon;
-  },
-  methods: {
-    reload(){
-      location.reload();
-    },
-    pushData(){
-      this.processing = true;
-      setTimeout(() => {
-        this.status = 2;
-      }, 3000);
-    },
-    updatePrice(){
-      location.reload();
-    },
   }
 }
 </script>
