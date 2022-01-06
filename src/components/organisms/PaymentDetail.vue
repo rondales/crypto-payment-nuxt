@@ -174,6 +174,17 @@ export default {
     }
   },
   created(){
+    const params = {
+      receiver: this.$route.query.receiver,
+      orderCode: this.$route.query.code,
+      symbol: this.$route.query.symbol,
+      amount: this.$route.query.amount,
+      email: this.$route.query.email,
+      selectTokenSymbol: this.$route.query.token,
+      selectTokenAmount: this.$route.query.token_amount
+    }
+    this.$store.dispatch('setPaymentData', params)
+
     setTimeout(() => {
       this.changedPrice = true;
     }, 3000);
