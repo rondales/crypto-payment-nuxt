@@ -470,6 +470,7 @@ export default {
         this.verified = response.data.verified
       }).catch((error) => {
         if (error.response.status === 401) {
+          localStorage.removeItem('login_token');
           this.$router.push({
             path: '/admin'
           })
