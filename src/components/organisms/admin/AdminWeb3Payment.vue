@@ -106,7 +106,7 @@
                     </span>
                   </div>
                   <div v-if="column.status === 3" class="received-refund">
-                    System Received 
+                    System Received
                     <br class="sp">
                     to refund
                   </div>
@@ -238,7 +238,7 @@
                 Enter the URL to return to the merchant’s site from the speed payment page.
               </p>
               <input class="text-box" type="text">
-            </div> 
+            </div>
             <div class="manage-contents_clm">
               <h4><span>*</span>Acceptance error notify URL</h4>
               <p>
@@ -264,7 +264,7 @@
                 Enter the request URL (POST) for the Deposit Notification API.
               </p>
               <div>
-                <input class="text-box" type="text">
+                <input class="text-box" type="text" v-model="domain">
               </div>
               <div class="manage-contents_creat-url">
                 Save
@@ -276,12 +276,12 @@
                 By proving the ownership of the domain with a TXT record, a certification mark will be included in the domain display on the payment screen.
               </p>
               <div>
-                <input class="text-box" type="text">
+                <input class="text-box" type="text" v-model="txtRecord">
               </div>
               <div class="manage-contents_creat-url">
                 Save
               </div>
-              <div class="verify">
+              <div class="verify" v-if="verified">
                 verify
               </div>
             </div>
@@ -318,7 +318,10 @@ export default {
       myDataVariable: false,
       datePickerFormat: 'dd-MM-yyyy',
       pageNum: 1,
-      settingTab:"contract",
+      settingTab: "contract",
+      domain: '',
+      txtRecord: '',
+      verified: false,
       columns: [
         {
           status: 0,
@@ -407,26 +410,30 @@ export default {
       },
       createdAdress: null
     };
-  }, 
+  },
+  created() {
+    this.leftTab()
+  },
   methods: {
-    leftTab(){
+    leftTab() {
       this.tab = "history"
     },
-    rightTab(){
+    rightTab() {
       this.tab = "settings"
+      this.getDomainData()
     },
-    settingLeftTab(){
+    settingLeftTab() {
       this.settingTab = "contract"
     },
-    settingCenterTab(){
+    settingCenterTab() {
       this.settingTab = "payment"
-    },    
-    settingRightTab(){
+    },
+    settingRightTab() {
       this.settingTab = "domain"
     },
-    search(){
+    search() {
     },
-    createCsv(){
+    createCsv() {
     },
     changePage(page) {
       if(this.pageNum === page){
@@ -436,19 +443,39 @@ export default {
       }
       this.current = page;
     },
-    prev(){
+    prev() {
     },
-    next(){
+    next() {
     },
     networkValue(currency) {
       this.$store.dispatch('selectNetwork', currency)
       this.createdAdress = false
     },
-    createAddress(){
+    createAddress() {
       this.createdAdress = true
     },
     copy(value) {
       this.$clipboard(value);
+    },
+    getDomainData() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain'
+      const data = {
+        headers: {
+         Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.get(url, data).then((response) => {
+        this.domain = response.data.domain
+        this.txtRecord = response.data.txt
+        this.verified = response.data.verified
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          localStorage.removeItem('login_token');
+          this.$router.push({
+            path: '/admin'
+          })
+        }
+      })
     },
   },
   filters: {
