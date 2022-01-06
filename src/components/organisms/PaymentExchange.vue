@@ -11,13 +11,13 @@
               Amount billed
             </dt>
             <dd>
-              USDT
+              {{ symbol }}
             </dd>
           </dl>
         </div>
         <div class="usdt-price" :class="{'inactive': changedPrice}">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -37,12 +37,12 @@
               <img :src="tokenIcon">
             </figure>
             <p>
-              {{abbriviation}}
+              {{ selectedSymbol }}
             </p>
           </div>
           <div class="payment_balance-value">
             <p>
-              Balance : {{balancePrice}} {{abbriviation}}
+              Balance : {{balancePrice}} {{ selectedSymbol }}
             </p>
             <p>
               equivalent : {{equivalent}} USDT
@@ -52,10 +52,10 @@
         <div class="payment_balance-topken border mb-2">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
-              SAUNA
+              {{ selectedSymbol }}
             </p>
             <div class="payment_balance-equivalent">
-              1000 USD equivalent
+              {{ amount }} USD equivalent
             </div>
           </div>
           <div class="payment_balance-price">
@@ -110,27 +110,22 @@ export default {
   data() {
     return{
       changedPrice: false,
-      price: 0,
-      invoiceId: "",
-      abbriviation: "",
-      tokenIcon: "",
-      tokenName: "",
+      tokenIcon: '',
       balancePrice: 2340,
       equivalent: 2340,
       loading: false
     }
   },
-  created(){
-    setTimeout(() => {
-      this.changedPrice = true;
-    }, 3000);
-  },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
-    this.abbriviation = this.$route.query.abbriviation;
-    this.tokenIcon = this.$route.query.icon;
-    this.tokenName = this.$route.query.name;
+  computed: {
+    symbol() {
+      return this.$store.state.paymentData.base_symbol
+    },
+    amount() {
+      return this.$store.state.paymentData.base_amount
+    },
+    selectedSymbol() {
+      return this.$store.state.paymentData.selectTokenSymbol
+    }
   },
   methods: {
     reload(){
@@ -140,20 +135,41 @@ export default {
       location.reload();
     },
     sendTokenItems(){
+      const paymentData = this.$store.state.paymentData
+
+      this.$store.dispatch('setPaymentTokenAmount', 1000.11)
+
       this.loading = true;
       this.$router.push(
         {
           path: '/payment/detail/' + this.$route.params.token,
           query: {
-            abbriviation: this.abbriviation,
-            icon: this.tokenIcon,
-            name: this.tokenName,
-            id: this.invoiceId,
-            price: this.price,
+            receiver: paymentData.merchantDomain,
+            code: paymentData.orderCode,
+            symbol: paymentData.base_symbol,
+            amount: paymentData.base_amount,
+            token: paymentData.selectTokenSymbol,
+            token_amount: 1000.11,
           }
         }
       );
     },
+  },
+  created(){
+    // @todo Implement a process to determine the token icon
+    const params = {
+      receiver: this.$route.query.receiver,
+      orderCode: this.$route.query.order_code,
+      symbol: this.$route.query.symbol,
+      amount: this.$route.query.amount,
+      email: this.$route.query.email,
+      selectTokenSymbol: this.$route.query.token
+    }
+    this.$store.dispatch('setPaymentData', params)
+
+    setTimeout(() => {
+      this.changedPrice = true;
+    }, 3000);
   }
 }
 </script>

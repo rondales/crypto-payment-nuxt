@@ -33,14 +33,22 @@ const store = new Vuex.Store({
       base_amount: null,
       base_symbol: null,
       email: null,
+      selectTokenSymbol: null,
+      selectTokenAmount: null
     }
   },
   actions: {
     setReceiveData({ commit }, data) {
       commit('setReceiveData', data)
     },
+    setPaymentData({ commit }, data) {
+      commit('setPaymentData', data)
+    },
     setPaymentBaseAmount({ commit }, amount) {
       commit('setPaymentBaseAmount', amount)
+    },
+    setPaymentTokenAmount({ commit }, amount) {
+      commit('setPaymentTokenAmount', amount)
     },
     onConnect({ commit }, connection) {
       commit('setConnection', connection)
@@ -95,11 +103,23 @@ const store = new Vuex.Store({
       state.paymentData.base_amount = data.amount
       state.theme = data.display_theme
     },
+    setPaymentData(state, data) {
+      state.paymentData.merchantDomain = (data.receiver) ? data.receiver : null
+      state.paymentData.orderCode = (data.orderCode) ? data.orderCode : null
+      state.paymentData.base_amount = (data.amount) ? data.amount : null
+      state.paymentData.base_symbol = (data.symbol) ? data.symbol : 'USDT'
+      state.paymentData.email = (data.email) ? data.email : null
+      state.paymentData.selectTokenSymbol = (data.selectTokenSymbol) ? data.selectTokenSymbol : null
+      state.paymentData.selectTokenAmount = (data.selectTokenAmount) ? data.selectTokenAmount : null
+    },
     setPaymentBaseAmount(state, amount) {
       state.paymentData.base_amount = amount
     },
     setEmail(state, email) {
       state.paymentData.email = email
+    },
+    setPaymentTokenAmount(state, amount) {
+      state.paymentData.selectTokenAmount = amount
     },
     setConnection(state, connection) {
       state.connection.provider = connection.provider
