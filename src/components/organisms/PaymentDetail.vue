@@ -163,22 +163,15 @@ In this page, you need to implement the following process or function.
 */
 export default {
   name: 'PaymentDetail',
-    data() {
-      return{
-        Receiver: "E-check.online",
-        paid: false,
-        changedPrice: false,
-        balancePrice: 2340,
-        price: 0,
-        invoiceId: "",
-        abbriviation: "",
-        tokenIcon: "",
-        tokenName: "",
-        processing: false,
-        status: 0,
-      }
-    },
-  components: {
+  data() {
+    return{
+      changedPrice: false,
+      price: 0,
+      abbriviation: "",
+      tokenIcon: "",
+      processing: false,
+      status: 0,
+    }
   },
   created(){
     const self = this;
@@ -188,10 +181,8 @@ export default {
   },
   mounted(){
     this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
     this.abbriviation = this.$route.query.abbriviation;
     this.tokenIcon = this.$route.query.icon;
-    this.tokenName = this.$route.query.name;
   },
   methods: {
     reload(){
@@ -205,12 +196,6 @@ export default {
     },
     updatePrice(){
       location.reload();
-    },
-  },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
     },
   }
 }
@@ -233,7 +218,7 @@ export default {
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
