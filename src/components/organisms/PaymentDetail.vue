@@ -174,9 +174,8 @@ export default {
     }
   },
   created(){
-    const self = this;
     setTimeout(() => {
-      self.changedPrice = true;
+      this.changedPrice = true;
     }, 3000);
   },
   mounted(){
