@@ -269,10 +269,8 @@ export default {
   },
   created(){
     this.apiGetContract().then((response) => {
-      console.log('get contract address')
       this.contractAddress = response.data.address
     }).catch((error) => {
-      console.log('get contract address err')
       let message
       if ('errors' in error.response.data) {
         message = errorCodeList[error.response.data.errors.shift()].msg
