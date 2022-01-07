@@ -194,11 +194,29 @@ export default {
       location.reload();
     },
     pushData(){
-      this.updateTransaction()
-      this.processing = true;
-      setTimeout(() => {
-        this.status = 2;
-      }, 3000);
+      // @todo Update the transaction after approval in Metamask
+      const params = {
+        payment_token: this.$route.params.token,
+        network_type: networkList[this.$store.state.connection.networkId].type,
+        contract_address: this.contractAddress,
+        wallet_address: this.$store.state.connection.walletAddress,
+        pay_symbol: this.$store.state.paymentData.selectTokenSymbol,
+        pay_amount: this.$store.state.paymentData.selectTokenAmount
+      }
+      this.apiUpdateTransaction(params).then(() => {
+        this.processing = true;
+        setTimeout(() => {
+          this.status = 2;
+        }, 3000);
+      }).catch((error) => {
+        let message
+        if ('errors' in error.response.data) {
+          message = errorCodeList[error.response.data.errors.shift()].msg
+        } else {
+          message = 'Please reapply for payment again.'
+        }
+        this.showErrorModal(message)
+      })
     },
     updatePrice(){
       this.changedPrice = false;
@@ -213,6 +231,33 @@ export default {
         ['network_type', networkList[this.$store.state.connection.networkId].type]
       ])
       return this.axios.get(url, { params })
+    },
+    apiUpdateTransaction(params) {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
+      return this.axios.patch(url, params)
+    },
+    updateTransactionForComplete() {
+      // @todo Set the transaction address returned from the blockchain to "transaction_address" in "params"
+      const params = {
+        payment_token: this.$route.params.token,
+        transaction_address: 'test_transaction_address'
+      }
+
+      this.apiUpdateTransaction(params).then(() => {
+        // @todo Change the status according to the result of sending a transaction to the blockchain
+        this.processing = true;
+        setTimeout(() => {
+          this.status = 2;
+        }, 3000);
+      }).catch((error) => {
+        let message
+        if ('errors' in error.response.data) {
+          message = errorCodeList[error.response.data.errors.shift()].msg
+        } else {
+          message = 'Please reapply for payment again.'
+        }
+        this.showErrorModal(message)
+      })
     },
     showErrorModal(message) {
       this.$store.dispatch('openModal', {
