@@ -11,13 +11,13 @@
               Amount billed
             </dt>
             <dd>
-              USDT
+              {{ symbol }}
             </dd>
           </dl>
         </div>
         <div class="usdt-price" :class="{'inactive': changedPrice && !processing}">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -37,12 +37,12 @@
               <img :src="tokenIcon">
             </figure>
             <p>
-              {{abbriviation}}
+              {{ selectedSymbol }}
             </p>
           </div>
           <div class="payment_detail-value">
             <p>
-              23400.00
+              {{ payAmount }}
             </p>
           </div>
         </div>
@@ -161,57 +161,139 @@ In this page, you need to implement the following process or function.
 * Since the contract address to send the transaction is stored in the DB, implement the process to get it by API (Web App Team)
 
 */
+import { networkList } from '@/enum/network'
+import { errorCodeList } from '@/enum/error_code'
+
 export default {
   name: 'PaymentDetail',
-    data() {
-      return{
-        Receiver: "E-check.online",
-        paid: false,
-        changedPrice: false,
-        balancePrice: 2340,
-        price: 0,
-        invoiceId: "",
-        abbriviation: "",
-        tokenIcon: "",
-        tokenName: "",
-        processing: false,
-        status: 0,
-      }
+  data() {
+    return{
+      changedPrice: false,
+      tokenIcon: "",
+      processing: false,
+      status: 0,
+      contractAddress: null
+    }
+  },
+  computed: {
+    symbol() {
+      return this.$store.state.paymentData.base_symbol
     },
-  components: {
-  },
-  created(){
-    const self = this;
-    setTimeout(() => {
-      self.changedPrice = true;
-    }, 3000);
-  },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
-    this.abbriviation = this.$route.query.abbriviation;
-    this.tokenIcon = this.$route.query.icon;
-    this.tokenName = this.$route.query.name;
+    amount() {
+      return this.$store.state.paymentData.base_amount
+    },
+    selectedSymbol() {
+      return this.$store.state.paymentData.selectTokenSymbol
+    },
+    payAmount() {
+      return this.$store.state.paymentData.selectTokenAmount
+    }
   },
   methods: {
     reload(){
       location.reload();
     },
     pushData(){
-      this.processing = true;
-      setTimeout(() => {
-        this.status = 2;
-      }, 3000);
+      // @todo Update the transaction after approval in Metamask
+      const params = {
+        payment_token: this.$route.params.token,
+        network_type: networkList[this.$store.state.connection.networkId].type,
+        contract_address: this.contractAddress,
+        wallet_address: this.$store.state.connection.walletAddress,
+        pay_symbol: this.$store.state.paymentData.selectTokenSymbol,
+        pay_amount: this.$store.state.paymentData.selectTokenAmount
+      }
+      this.apiUpdateTransaction(params).then(() => {
+        this.processing = true;
+        setTimeout(() => {
+          this.status = 2;
+        }, 3000);
+      }).catch((error) => {
+        let message
+        if ('errors' in error.response.data) {
+          message = errorCodeList[error.response.data.errors.shift()].msg
+        } else {
+          message = 'Please reapply for payment again.'
+        }
+        this.showErrorModal(message)
+      })
     },
     updatePrice(){
-      location.reload();
+      this.changedPrice = false;
+      setTimeout(() => {
+        this.changedPrice = true;
+      }, 3000);
     },
+    apiGetContract() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/contract'
+      const params = new URLSearchParams([
+        ['payment_token', this.$route.params.token],
+        ['network_type', networkList[this.$store.state.connection.networkId].type]
+      ])
+      return this.axios.get(url, { params })
+    },
+    apiUpdateTransaction(params) {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
+      return this.axios.patch(url, params)
+    },
+    updateTransactionForComplete() {
+      // @todo Set the transaction address returned from the blockchain to "transaction_address" in "params"
+      const params = {
+        payment_token: this.$route.params.token,
+        transaction_address: 'test_transaction_address'
+      }
+
+      this.apiUpdateTransaction(params).then(() => {
+        // @todo Change the status according to the result of sending a transaction to the blockchain
+        this.processing = true;
+        setTimeout(() => {
+          this.status = 2;
+        }, 3000);
+      }).catch((error) => {
+        let message
+        if ('errors' in error.response.data) {
+          message = errorCodeList[error.response.data.errors.shift()].msg
+        } else {
+          message = 'Please reapply for payment again.'
+        }
+        this.showErrorModal(message)
+      })
+    },
+    showErrorModal(message) {
+      this.$store.dispatch('openModal', {
+        target: 'error-modal',
+        size: 'small',
+        message: message
+      })
+    }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  created(){
+    this.apiGetContract().then((response) => {
+      this.contractAddress = response.data.address
+    }).catch((error) => {
+      let message
+      if ('errors' in error.response.data) {
+        message = errorCodeList[error.response.data.errors.shift()].msg
+      } else {
+        message = 'Please reapply for payment again.'
+      }
+      this.showErrorModal(message)
+    })
+
+    const params = {
+      receiver: this.$route.query.receiver,
+      orderCode: this.$route.query.code,
+      symbol: this.$route.query.symbol,
+      amount: this.$route.query.amount,
+      email: this.$route.query.email,
+      selectTokenSymbol: this.$route.query.token,
+      selectTokenAmount: this.$route.query.token_amount
+    }
+    this.$store.dispatch('setPaymentData', params)
+
+    setTimeout(() => {
+      this.changedPrice = true;
+    }, 3000);
   }
 }
 </script>
@@ -233,7 +315,7 @@ export default {
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
