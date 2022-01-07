@@ -161,6 +161,9 @@ In this page, you need to implement the following process or function.
 * Since the contract address to send the transaction is stored in the DB, implement the process to get it by API (Web App Team)
 
 */
+import { networkList } from '@/enum/network'
+import { errorCodeList } from '@/enum/error_code'
+
 export default {
   name: 'PaymentDetail',
   data() {
@@ -169,6 +172,7 @@ export default {
       tokenIcon: "",
       processing: false,
       status: 0,
+      contractAddress: null
     }
   },
   computed: {
@@ -190,16 +194,49 @@ export default {
       location.reload();
     },
     pushData(){
+      this.updateTransaction()
       this.processing = true;
       setTimeout(() => {
         this.status = 2;
       }, 3000);
     },
     updatePrice(){
-      location.reload();
+      this.changedPrice = false;
+      setTimeout(() => {
+        this.changedPrice = true;
+      }, 3000);
     },
+    apiGetContract() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/contract'
+      const params = new URLSearchParams([
+        ['payment_token', this.$route.params.token],
+        ['network_type', networkList[this.$store.state.connection.networkId].type]
+      ])
+      return this.axios.get(url, { params })
+    },
+    showErrorModal(message) {
+      this.$store.dispatch('openModal', {
+        target: 'error-modal',
+        size: 'small',
+        message: message
+      })
+    }
   },
   created(){
+    this.apiGetContract().then((response) => {
+      console.log('get contract address')
+      this.contractAddress = response.data.address
+    }).catch((error) => {
+      console.log('get contract address err')
+      let message
+      if ('errors' in error.response.data) {
+        message = errorCodeList[error.response.data.errors.shift()].msg
+      } else {
+        message = 'Please reapply for payment again.'
+      }
+      this.showErrorModal(message)
+    })
+
     const params = {
       receiver: this.$route.query.receiver,
       orderCode: this.$route.query.code,
