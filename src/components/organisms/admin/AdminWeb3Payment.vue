@@ -276,10 +276,10 @@
                 By proving the ownership of the domain with a TXT record, a certification mark will be included in the domain display on the payment screen.
               </p>
               <div>
-                <input class="text-box" type="text" v-model="txtRecord">
+                <input class="text-box" type="text" v-model="txtRecord" disabled>
               </div>
-              <div class="manage-contents_creat-url">
-                Save
+              <div class="manage-contents_creat-url" @click="checkDomain">
+                Check
               </div>
               <div class="verify" v-if="verified">
                 verify
@@ -490,7 +490,6 @@ export default {
       this.axios.patch(url, data, options).then((response) => {
         this.verified = !response.data.re_verify
       }).catch((error) => {
-
         if (error.response.status === 401) {
           this.logout()
         } else {
@@ -499,6 +498,30 @@ export default {
             message = errorCodeList[
               error.response.data.errors.shift()
             ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
+    },
+    checkDomain() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain/verify'
+      const data = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.get(url, data).then(() => {
+        this.verified = true
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout(error.response.status)
+        } else {
+          let message
+          if (error.response.status === 400) {
+            this.verified = false
+            message = 'Domain authentication failed.'
           } else {
             message = 'Please try again.'
           }
