@@ -12,5 +12,6 @@ export const errorCodeList = {
   2180: { msg: 'Please try again.' },
   2190: { msg: 'Please try again.' },
   2280: { msg: 'Please try again.' },
+  3020: { msg: 'The domain value is invalid.' },
   9000: { msg: 'Cannot be continued due to system reasons.' }
 }

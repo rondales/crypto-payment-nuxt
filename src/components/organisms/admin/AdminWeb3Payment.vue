@@ -266,7 +266,7 @@
               <div>
                 <input class="text-box" type="text" v-model="domain">
               </div>
-              <div class="manage-contents_creat-url">
+              <div class="manage-contents_creat-url" @click="saveDomain">
                 Save
               </div>
             </div>
@@ -306,6 +306,7 @@ In this page, you need to implement the following process or function.
  Please make sure that you can get the contract address and argument information.
 */
 import Datepicker from 'vuejs-datepicker';
+import { errorCodeList } from '@/enum/error_code'
 export default {
   name: 'PaymentTop',
   components: {
@@ -470,13 +471,47 @@ export default {
         this.verified = response.data.verified
       }).catch((error) => {
         if (error.response.status === 401) {
-          localStorage.removeItem('login_token');
-          this.$router.push({
-            path: '/admin'
-          })
+          this.logout()
+        } else {
+          let message
+          message = 'Please try again.'
+          alert(message)
         }
       })
     },
+    saveDomain() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain'
+      const data = { domain: this.domain }
+      const options = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.patch(url, data, options).then((response) => {
+        this.verified = !response.data.re_verify
+      }).catch((error) => {
+
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          if (error.response.status === 400) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
+    },
+    logout() {
+      localStorage.removeItem('login_token');
+        this.$router.push({
+        path: '/admin'
+      })
+    }
   },
   filters: {
     omittedText(text) {
