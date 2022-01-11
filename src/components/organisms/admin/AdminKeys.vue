@@ -2,32 +2,32 @@
   <div>
     <div class="keys-wrap">
       <div class="title">
-        Authentication key
+        Authentication Token
       </div>
       <div class="address">
-        {{address | omittedText}}
+        {{orderToken | omittedText}}
       </div>
-      <div class="copy" @click="copy(address)">Copy Address</div>
+      <div class="copy" @click="copy(orderToken)">Copy Address</div>
       <div class="desc">
-        The Authentication key is a unique value that is assigned to each merchant.
+        This is the authentication token used when making a payment request to Slash Payment.
         <br>
-        The Authentication key is used to generate the signature parameters for certain web APIs that require a request parameter for signature.        
+        Specify this value in the "order_token" field of the request parameter when sending a request to the "Payment Request API".
       </div>
     </div>
     <div class="keys-wrap">
       <div class="title">
-        Bearer Token
+        Hash Token
       </div>
       <div class="address">
-        {{address | omittedText}}
+        {{hashToken | omittedText}}
       </div>
-      <div class="copy" @click="copy(address)">Copy Address</div>
+      <div class="copy" @click="copy(hashToken)">Copy Address</div>
       <div class="desc">
-        The Authentication key is a unique value that is assigned to each merchant.
+        This is the value used to generate the hash string set in "verify_token", a request parameter of the "Payment Request API".
         <br>
-        The Authentication key is used to generate the signature parameters for certain web APIs that require a request parameter for signature.        
+        The hash value to be set for "verify_token" is the value obtained by hashing the string "order_code::amount::ThisValue(HashToken)" with SHA256.
       </div>
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -35,18 +35,40 @@
 <script>
 export default {
   name: 'PaymentTop',
-    data() {
-      return{
-        success: true,
-        address: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189"
-      }
-    },
+  data() {
+    return{
+      success: true,
+      orderToken: '',
+      hashKey: '',
+    }
+  },
+  created() {
+    this.getCertificationData()
+  },
   methods: {
+    getCertificationData() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/certification'
+      const data = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.get(url, data).then((response) => {
+        this.orderToken = response.data.order_token
+        this.hashToken = response.data.hash_token
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          message = 'Please try again.'
+          alert(message)
+        }
+      })
+    },
     copy(value) {
       this.$clipboard(value);
     },
-  },
-  components: {
   },
   filters: {
     omittedText(text) {
