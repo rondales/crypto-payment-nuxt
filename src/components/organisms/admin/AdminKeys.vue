@@ -39,7 +39,7 @@ export default {
     return{
       success: true,
       orderToken: '',
-      hashKey: '',
+      hashToken: '',
     }
   },
   created() {
@@ -121,7 +121,7 @@ export default {
     top: 50%;
     right: -40px;
     transform: translate(-50%, -60%);
-  }        
+  }
 }
 .desc{
   font-size: 17px;
