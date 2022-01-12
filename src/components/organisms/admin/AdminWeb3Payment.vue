@@ -253,7 +253,7 @@
               </p>
               <input class="text-box" type="text" v-model="exchangeMarginRate">
             </div>
-            <div class="manage-contents_creat-url" @click="savePayment">
+            <div class="manage-contents_creat-url" @click="savePaymentSettings">
               Save
             </div>
           </div>
@@ -487,7 +487,7 @@ export default {
       })
     },
     //@todo Split by function. #54
-    savePayment() {
+    savePaymentSettings() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/payment'
       const data = {
         complete_kickback_url: this.completeKickbackUrl,
