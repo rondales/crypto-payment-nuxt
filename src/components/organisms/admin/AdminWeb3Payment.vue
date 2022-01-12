@@ -226,32 +226,32 @@
           </div>
           <div class="manage-payment" v-if="settingTab === 'payment'">
             <div class="manage-contents_clm">
-              <h4><span>*</span>success notify URL</h4>
+              <h4><span>*</span>Success notify URL</h4>
               <p>
-                Enter the request URL (POST) for the Deposit Notification API.
+                URL to receive kickbacks sent by SlashPayment after payment is successed.
               </p>
-              <input class="text-box" type="text">
+              <input class="text-box" type="text" v-model="completeKickbackUrl">
             </div>
             <div class="manage-contents_clm">
-              <h4><span>*</span>Return URL</h4>
+              <h4><span>*</span>Payment success return URL</h4>
               <p>
-                Enter the URL to return to the merchant’s site from the speed payment page.
+                A URL for the user to go from SlashPayment to the merchant's website after a successful payment.
               </p>
-              <input class="text-box" type="text">
+              <input class="text-box" type="text" v-model="succeededReturnUrl">
             </div>
             <div class="manage-contents_clm">
-              <h4><span>*</span>Acceptance error notify URL</h4>
+              <h4>Payment faliure return URL</h4>
               <p>
-                Enter the request URL (POST) to notify the error data in case of a reception error.
+                A URL for the user to go from SlashPayment to the merchant's website after a failure payment.
               </p>
-              <input class="text-box" type="text">
+              <input class="text-box" type="text" v-model="failuredReturnUrl">
             </div>
             <div class="manage-contents_clm">
-              <h4><span>*</span>Acceptance error return URL</h4>
+              <h4>Exchange margin rate</h4>
               <p>
-                Enter the URL that you want to post the user to in the event of a reception error. The error content is sent with the request body.
+                The margin rate to be added to the actual exchange rate.
               </p>
-              <input class="text-box" type="text">
+              <input class="text-box" type="text" v-model="exchangeMarginRate">
             </div>
             <div class="manage-contents_creat-url">
               Save
@@ -320,6 +320,10 @@ export default {
       datePickerFormat: 'dd-MM-yyyy',
       pageNum: 1,
       settingTab: "contract",
+      completeKickbackUrl: '',
+      succeededReturnUrl: '',
+      failuredReturnUrl: '',
+      exchangeMarginRate: '0.0',
       domain: '',
       txtRecord: '',
       verified: false,
@@ -422,6 +426,7 @@ export default {
     rightTab() {
       this.tab = "settings"
       this.getDomainData()
+      this.getPaymentData()
     },
     settingLeftTab() {
       this.settingTab = "contract"
@@ -457,6 +462,28 @@ export default {
     },
     copy(value) {
       this.$clipboard(value);
+    },
+    getPaymentData() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/payment'
+      const data = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.get(url, data).then((response) => {
+        this.completeKickbackUrl = response.data.complete_kickback_url,
+        this.succeededReturnUrl = response.data.succeeded_return_url,
+        this.failuredReturnUrl = response.data.failured_return_url,
+        this.exchangeMarginRate = response.data.exchange_margin_rate
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          message = 'Please try again.'
+          alert(message)
+        }
+      })
     },
     getDomainData() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain'
