@@ -226,14 +226,14 @@
           </div>
           <div class="manage-payment" v-if="settingTab === 'payment'">
             <div class="manage-contents_clm">
-              <h4><span>*</span>Success notify URL</h4>
+              <h4>Success notify URL</h4>
               <p>
                 URL to receive kickbacks sent by SlashPayment after payment is successed.
               </p>
               <input class="text-box" type="text" v-model="completeKickbackUrl">
             </div>
             <div class="manage-contents_clm">
-              <h4><span>*</span>Payment success return URL</h4>
+              <h4>Payment success return URL</h4>
               <p>
                 A URL for the user to go from SlashPayment to the merchant's website after a successful payment.
               </p>
@@ -247,13 +247,13 @@
               <input class="text-box" type="text" v-model="failuredReturnUrl">
             </div>
             <div class="manage-contents_clm">
-              <h4>Exchange margin rate</h4>
+              <h4><span>*</span>Exchange margin rate</h4>
               <p>
                 The margin rate to be added to the actual exchange rate.
               </p>
               <input class="text-box" type="text" v-model="exchangeMarginRate">
             </div>
-            <div class="manage-contents_creat-url">
+            <div class="manage-contents_creat-url" @click="savePayment">
               Save
             </div>
           </div>
@@ -463,6 +463,7 @@ export default {
     copy(value) {
       this.$clipboard(value);
     },
+    //@todo Split by function. #54
     getPaymentData() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/payment'
       const data = {
@@ -485,6 +486,37 @@ export default {
         }
       })
     },
+    //@todo Split by function. #54
+    savePayment() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/payment'
+      const data = {
+        complete_kickback_url: this.completeKickbackUrl,
+        succeeded_return_url: this.succeededReturnUrl,
+        failured_return_url: this.failuredReturnUrl,
+        exchange_margin_rate: this.exchangeMarginRate
+      }
+      const options = {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('login_token')
+        }
+      }
+      this.axios.patch(url, data, options).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          if ('errors' in error.response.data) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
+    },
+    //@todo Split by function. #54
     getDomainData() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain'
       const data = {
@@ -506,6 +538,7 @@ export default {
         }
       })
     },
+    //@todo Split by function. #54
     saveDomain() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain'
       const data = { domain: this.domain }
@@ -532,6 +565,7 @@ export default {
         }
       })
     },
+    //@todo Split by function. #54
     checkDomain() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/setting/domain/verify'
       const data = {

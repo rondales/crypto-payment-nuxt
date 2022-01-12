@@ -11,11 +11,15 @@ export const errorCodeList = {
   2170: { msg: 'Please confirm the payment amount you entered.' },
   2180: { msg: 'Please try again.' },
   2190: { msg: 'Please try again.' },
+  3250: { msg: 'Please enter the exchange margin rate in the correct format.' },
   2280: { msg: 'Please try again.' },
   2330: { msg: 'Please reapply for payment again.' },
   2340: { msg: 'No currency is selected.' },
   2341: { msg: 'Please select the currency again.' },
   2350: { msg: 'Please reinput the amount.' },
   3020: { msg: 'The domain value is invalid.' },
+  3030: { msg: 'Please enter the success notification URL in the correct format.' },
+  3031: { msg: 'Please enter the successful payment return URL in the correct format.' },
+  3032: { msg: 'Please enter the payment faliure return URL in the correct format.' },
   9000: { msg: 'Cannot be continued due to system reasons.' }
 }
