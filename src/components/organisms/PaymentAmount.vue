@@ -9,7 +9,7 @@
     <div class="payment_handleprice-pricewrap">
       <p class="mb-3">How much would you pay?</p>
       <div class="payment_handleprice-price add-flex border j-between">
-        <input v-model="legalTenderAmount" class="price" type="text" placeholder="0">
+        <input v-model="legalCurrencyAmount" class="price" type="text" placeholder="0">
         <div class="add-flex currency a-center">
           <figure>
             <img :src="selectedCurrencyIcon">
@@ -56,7 +56,7 @@
                 </p>
               </div>
             </div>
-            <div class="payment-box_btn" @click="updateExchangedAmount">
+            <div class="payment-box_btn" @click="updateExchangeData()">
               Accept
             </div>
           </div>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import MathExtend from '@/utils/math_extend'
 import { currencyList } from '@/enum/currency'
 import { errorCodeList } from '@/enum/error_code'
 
@@ -84,7 +85,7 @@ export default {
     return {
       loading: false,
       requireUpdateExchange: false,
-      legalTenderAmount: 0,
+      legalCurrencyAmount: 0,
       selectedCurrency: currencyList['JPY'].name,
       exchangedAmount: 0,
       exchangeRate: 100,
@@ -92,8 +93,11 @@ export default {
     }
   },
   watch: {
-    legalTenderAmount: function(amount) {
-      this.calculationExchange(amount)
+    legalCurrencyAmount: function() {
+      this.calculationExchange()
+    },
+    selectedCurrency: function(currency) {
+      this.updateExchangeData(currency)
     }
   },
   computed: {
@@ -108,27 +112,45 @@ export default {
     }
   },
   methods: {
-    exchangedAmountCountdown() {
-      setTimeout(() => {
-        this.requireUpdateExchange = true
-      }, 5000)
+    calculationExchange() {
+      this.exchangedAmount = MathExtend.ceilDecimal(this.legalCurrencyAmount / this.exchangeRate, 2)
     },
-    updateExchangedAmount() {
-      // @todo We will implement the exchange rate acquisition API as soon as the requirements are determined
-      this.requireUpdateExchange = false
-      this.exchangedAmountCountdown()
+    updateExchangeData(currency = null) {
+      if (currency === null) currency = this.selectedCurrency
+      this.apiGetExchangeRate(currency).then((response) => {
+        this.exchangeRate = response.data.include_margin_rate
+        this.exchangeMarginRate = response.data.margin_rate
+        if (this.legalCurrencyAmount) this.calculationExchange()
+        this.requireUpdateExchange = false
+        setTimeout(() => {
+          this.requireUpdateExchange = true
+        }, 120000)
+      }).catch((error) => {
+        let message
+        if ('errors' in error.response.data) {
+          message = errorCodeList[
+            error.response.data.errors.shift()
+          ].msg
+        } else {
+          message = 'Please try again after a while.'
+        }
+        this.showErrorModal(message)
+      })
     },
-    calculationExchange(amount) {
-      // @todo We will implement the exchange rate acquisition API as soon as the requirements are determined
-      // this.exchangedAmount = amount * exchangeRate
-      this.exchangedAmount = amount
+    apiGetExchangeRate(currency) {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/exchange'
+      const params = new URLSearchParams([
+        ['payment_token', this.$route.params.token],
+        ['legal_currency', currency]
+      ])
+      return this.axios.get(url, { params })
     },
     apiUpdateTransaction() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
       const params = {
         payment_token: this.$route.params.token,
         base_currency: currencyList[this.selectedCurrency].name,
-        base_amount: this.legalTenderAmount,
+        base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
         margin_rate: this.exchangeMarginRate
@@ -153,16 +175,19 @@ export default {
           message = 'Please try again after a while.'
         }
         this.loading = false
-        this.$store.dispatch('openModal', {
-          target: 'error-modal',
-          size: 'small',
-          message: message
-        })
+        this.showErrorModal(message)
+      })
+    },
+    showErrorModal(message) {
+      this.$store.dispatch('openModal', {
+        target: 'error-modal',
+        size: 'small',
+        message: message
       })
     }
   },
   created() {
-    this.exchangedAmountCountdown()
+    this.updateExchangeData(this.selectedCurrency)
   }
 }
 </script>
