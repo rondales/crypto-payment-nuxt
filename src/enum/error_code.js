@@ -12,6 +12,10 @@ export const errorCodeList = {
   2180: { msg: 'Please try again.' },
   2190: { msg: 'Please try again.' },
   2280: { msg: 'Please try again.' },
+  2330: { msg: 'Please reapply for payment again.' },
+  2340: { msg: 'No currency is selected.' },
+  2341: { msg: 'Please select the currency again.' },
+  2350: { msg: 'Please reinput the amount.' },
   3020: { msg: 'The domain value is invalid.' },
   9000: { msg: 'Cannot be continued due to system reasons.' }
 }
