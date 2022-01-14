@@ -40,26 +40,55 @@
       }
     },
     methods: {
-      openModal(target, size) {
-        this.$store.dispatch('openModal', {target: target, size: size});
+      openModal(target, size, message = '') {
+        this.$store.dispatch('openModal', {target: target, size: size, message: message});
       },
       closeModal() {
         this.$store.dispatch('closeModal')
       },
       useMetamask() {
-        const successFunc = () => { this.closeModal() };
-        const failureFunc = () => { this.openModal('error-metamask-modal', 'small') };
-        const errorFunc = () => { this.openModal('error-metamask-modal', 'small') };
-        this.connectByMetamask(successFunc, failureFunc, errorFunc);
+        this.$web3.connectByMetamask().then((connectRes) => {
+          this.$store.dispatch('web3/update', connectRes)
+          this.$web3.getAccountData(
+            connectRes.instance,
+            connectRes.chainId
+          ).then((accountRes) =>{
+            this.$store.dispatch('account/update', accountRes)
+            const pathRegPattern = /^\/payment\//
+            let nextPath
+            if (pathRegPattern.test(this.$route.path)) {
+              nextPath = '/payment/token/' + this.$route.params.token
+            }
+            this.closeModal()
+            this.$router.push({ path: nextPath })
+          })
+        }).catch((error) => {
+          if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
+            this.openModal('error-modal', 'small', error.message)
+          } else {
+            this.openModal('error-metamask-modal', 'small')
+          }
+        })
       },
       useWalletConnect() {
-        const successFunc = () => { this.closeModal() };
-        const failureFunc = () => { this.openModal('error-wallet-modal', 'small') };
-        const errorFunc = () => { this.openModal('error-wallet-modal', 'small') };
-        this.connectByWalletConnect(successFunc, failureFunc, errorFunc);
-      },
-      isSelectedNetwork() {
-        return !!this.$store.state.network.abbriviation;
+        this.$web3.connectByWalletConnect().then((connectRes) => {
+          this.$store.dispatch('web3/update', connectRes)
+          this.$web3.getAccountData(
+            connectRes.instance,
+            connectRes.chainId
+          ).then((accountRes) =>{
+            this.$store.dispatch('account/update', accountRes)
+            const pathRegPattern = /^\/payment\//
+            let nextPath
+            if (pathRegPattern.test(this.$route.path)) {
+              nextPath = '/payment/token/' + this.$route.params.token
+            }
+            this.closeModal()
+            this.$router.push({ path: nextPath })
+          })
+        }).catch(() => {
+          this.openModal('error-wallet-modal', 'small')
+        })
       }
     }
   }

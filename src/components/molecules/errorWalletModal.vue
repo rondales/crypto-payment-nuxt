@@ -8,10 +8,10 @@
         Error connecting.
         <br>
         Try Again
-      </p>      
+      </p>
     </div>
     <div class="body">
-      <a href="/" class="btn __m __pg full hight add-flex a-center mb-0" @click="connectWithMetamask">
+      <a class="btn __m __pg full hight add-flex a-center mb-0" @click="retry">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect.svg">
         </span>
@@ -33,16 +33,8 @@
 </template>
 
 <script>
-
   export default {
     name: 'walletModal',
-    components: {
-    },
-    data() {
-      return {
-        num: "",
-      };
-    },    
     computed: {
       classes() {
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -53,12 +45,24 @@
       closeModal() {
         this.$store.dispatch('closeModal')
       },
-      connectWithMetamask(){
-        
+      retry(){
+        this.$web3.connectByWalletConnect().then((connectRes) => {
+          this.$store.dispatch('web3/update', connectRes)
+          this.$web3.getAccountData(
+            connectRes.instance,
+            connectRes.chainId
+          ).then((accountRes) =>{
+            this.$store.dispatch('account/update', accountRes)
+            const pathRegPattern = /^\/payment\//
+            let nextPath
+            if (pathRegPattern.test(this.$route.path)) {
+              nextPath = '/payment/token/' + this.$route.params.token
+            }
+            this.closeModal()
+            this.$router.push({ path: nextPath })
+          })
+        })
       }
-    },
-    mounted() {
-      
     }
   }
 </script>
@@ -104,7 +108,7 @@
       }
       &__desc {
         font-size: 1.5rem;
-      }      
+      }
     }
     &__title {
       font-weight: 500;

@@ -47,9 +47,9 @@
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="$store.state.connected" class="account-wallet">
-            <span class="price">{{ networkTickerBalance }}{{ networkTickerSymbol }}</span>
-            <span class="id">{{ formatWalletAddress }}</span>
+          <button v-if="connected" class="account-wallet">
+            <span class="price">{{ balance }}{{ symbol }}</span>
+            <span class="id">{{ walletAddress }}</span>
           </button>
           <button v-else class="btn __g __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
             Connect to a wallet
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-  import * as Enum from '@/enum'
+  import { NETWORKS } from '@/constants'
   import Web3ConnectorMixin from '@/components/mixins/Web3Connector'
 
   export default {
@@ -71,9 +71,7 @@
     ],
     data(){
       return{
-        humberger: false,
-        show: false,
-        networkTickerBalance: null
+        humberger: false
       }
     },
     watch: {
@@ -84,8 +82,8 @@
       }
     },
     computed: {
-      formatWalletAddress() {
-        const walletAddress = this.$store.state.connection.walletAddress
+      walletAddress() {
+        const walletAddress = this.$store.state.account.address
         if ((walletAddress)) {
           const prefix = walletAddress.substr(0, 6);
           const sufix = walletAddress.slice(-4);
@@ -95,17 +93,26 @@
         }
       },
       networkName() {
-        const networkId = this.$store.state.connection.networkId;
-        return Enum.network[networkId].name
+        const chainId = this.$store.state.web3.chainId;
+        return NETWORKS[chainId].name
       },
       networkIconFileName() {
-        const networkId = this.$store.state.connection.networkId;
-        return Enum.network[networkId].icon
+        const chainId = this.$store.state.web3.chainId;
+        return NETWORKS[chainId].icon
       },
-      networkTickerSymbol() {
-        const networkId = this.$store.state.connection.networkId;
-        return Enum.network[networkId].symbol
+      symbol() {
+        return this.$store.state.account.symbol
       },
+      balance() {
+        return this.$store.state.account.balance
+      },
+      show() {
+        const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+        return pathPattern.test(this.$route.path)
+      },
+      connected() {
+        return (this.$store.state.web3.provider)
+      }
     },
     methods: {
       changeTheme(theme) {
@@ -114,9 +121,6 @@
       openModal(target, size) {
         this.$store.dispatch('openModal', {target: target, size: size});
       }
-    },
-    created() {
-      this.networkTickerBalance = this.setNetworkTickerBalance();
     }
   }
 </script>

@@ -50,7 +50,7 @@
 import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
 export default {
-  name: 'PaymentPriceHandler',
+  name: 'PaymentSelectWallets',
   mixins: [
     Web3ConnectorMixin
   ],
@@ -67,20 +67,46 @@ export default {
   },
   methods: {
     useMetamask() {
-      const successFunc = () => {
-        this.$router.push({
-          path: '/payment/token/' + this.$route.params.token,
+      this.$web3.connectByMetamask().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          const pathRegPattern = /^\/payment\//
+          let nextPath
+          if (pathRegPattern.test(this.$route.path)) {
+            nextPath = '/payment/token/' + this.$route.params.token
+          }
+          this.$router.push({ path: nextPath })
         })
-      }
-      this.connectByMetamask(successFunc);
+      }).catch((error) => {
+        if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
+          this.$store.dispatch('openModal', { target: 'error-modal', size: 'small', message: error.message })
+        } else {
+          this.$store.dispatch('openModal', { target: 'error-metamask-modal', size: 'small' })
+        }
+      })
     },
     useWalletConnect() {
-      const successFunc = () => {
-        this.$router.push({
-          path: '/payment/token/' + this.$route.params.token,
+      this.$web3.connectByWalletConnect().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          const pathRegPattern = /^\/payment\//
+          let nextPath
+          if (pathRegPattern.test(this.$route.path)) {
+            nextPath = '/payment/token/' + this.$route.params.token
+          }
+          this.$router.push({ path: nextPath })
         })
-      }
-      this.connectByWalletConnect(successFunc);
+      }).catch(() => {
+        this.$store.dispatch('openModal', { target: 'error-wallet-modal', size: 'small' })
+      })
     }
   }
 }
