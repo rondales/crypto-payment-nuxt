@@ -4,6 +4,7 @@ export const NETWORKS = {
     symbol: 'ETH',
     chainId: 1,
     rpcUrl: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    scanUrl: 'https://etherscan.io',
     icon: 'h-eth.svg',
     type: 2
   },
@@ -12,6 +13,7 @@ export const NETWORKS = {
     symbol: 'ETH',
     chainId: 3,
     rpcUrl: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    scanUrl: 'https://ropsten.etherscan.io',
     icon: 'h-eth.svg',
     type: null
   },
@@ -20,6 +22,7 @@ export const NETWORKS = {
     symbol: 'BNB',
     chainId: 56,
     rpcUrl: 'https://bsc-dataseed.binance.org/',
+    scanUrl: 'https://bscscan.com',
     icon: 'h-bsc.svg',
     type: 1
   },
@@ -28,6 +31,7 @@ export const NETWORKS = {
     symbol: 'BNB',
     chainId: 97,
     rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    scanUrl: 'https://testnet.bscscan.com',
     icon: 'h-bsc.svg',
     type: null
   },
@@ -36,6 +40,7 @@ export const NETWORKS = {
     symbol: 'MATIC',
     chainId: 137,
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/',
+    scanUrl: 'https://polygonscan.com',
     icon: 'h-matic.svg',
     type: null
   },
@@ -44,6 +49,7 @@ export const NETWORKS = {
     symbol: 'MATIC',
     chainId: 80001,
     rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
+    scanUrl: 'https://mumbai.polygonscan.com/',
     icon: 'h-matic.svg',
     type: null
   },
@@ -52,6 +58,7 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43114,
     rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
+    scanUrl: 'https://avascan.info',
     icon: 'h-avalanche.svg',
     type: null
   },
@@ -60,6 +67,7 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43113,
     rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
+    scanUrl: 'https://testnet.avascan.info',
     icon: 'h-avalanche.svg',
     type: null
   }
