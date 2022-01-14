@@ -89,15 +89,7 @@ import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
 
 export default {
-  name: 'payment',
-  data() {
-    return {
-      walletAddress: null,
-      selectedNetwork: null,
-      tickerSymbol: null,
-      tickerSymbolBalance: null
-    }
-  },
+  name: 'PaymentIndex',
   components: {
     Header,
     PaymentTop,
@@ -112,7 +104,7 @@ export default {
   },
   methods: {
     openModal(target, size) {
-      this.$store.dispatch('openModal', {target: target, size: size});
+      this.$store.dispatch('openModal', { target: target, size: size });
     },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);

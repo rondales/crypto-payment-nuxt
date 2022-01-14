@@ -1,9 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import web3 from './modules/web3'
+import account from './modules/account'
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+  modules: {
+    web3,
+    account
+  },
   state: {
     connected: false,
     isLogin: false,
