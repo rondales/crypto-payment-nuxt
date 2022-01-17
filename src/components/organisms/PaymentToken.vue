@@ -30,7 +30,7 @@
             <img :src="$store.state.network.icon">
             <div class="payment-box_desc">
               <p>
-                {{$store.state.network.name}}
+                {{ $store.state.network.name }}
               </p>
             </div>
           </div>
@@ -60,16 +60,16 @@
                 </figure>
                 <dl>
                   <dt>
-                    {{token.symbol}}
+                    {{ token.symbol }}
                   </dt>
                   <dd>
-                    {{token.name}}
+                    {{ token.name }}
                   </dd>
                 </dl>
               </div>
               <div class="usdt-price">
                 <p>
-                  {{token.balance}}
+                  {{ token.balance | balanceFormat }}
                 </p>
               </div>
             </div>
@@ -92,10 +92,10 @@
                 <img :src="tokenId.icon">
               </li>
               <li class="token-name">
-                {{tokenId.symbol}}
+                {{ tokenId.symbol }}
                 <br>
                 <span>
-                  {{tokenId.tokenName}}
+                  {{ tokenId.tokenName }}
                 </span>
               </li>
               <li class="manage-item--right add-flex a-center j-between">
@@ -111,7 +111,7 @@
             </ul>
             <div class="add-flex j-between a-center">
               <div class="manage-none">
-                {{tokenCount}} Custom Token
+                {{ tokenCount }} Custom Token
               </div>
               <div class="manage-clear" v-if="tokenCount" @click="clearToken">
                 Clear all
@@ -138,37 +138,12 @@ In this page, you need to implement the following process or function.
 6. Transition to the balance confirmation screen after selecting or importing tokens
 */
 export default {
-  name: 'PaymentPriceHandler',
+  name: 'PaymentToken',
   data() {
     return {
       tab: "list",
       tokenCount: 1,
-      tokenList: [
-        {
-          name: 'Tether USD',
-          symbol: 'USDT',
-          icon: require('@/assets/images/icon/usdt.svg'),
-          balance: 0.4959
-        },
-        {
-          name: 'USD Coin',
-          symbol: 'USDC',
-          icon: require('@/assets/images/icon/usdc.svg'),
-          balance: 0.5011
-        },
-        {
-          name: 'Dai stablecoin',
-          symbol: 'DAI',
-          icon: require('@/assets/images/icon/dai.svg'),
-          balance: 0.6129
-        },
-        {
-          name: 'Ethereum',
-          symbol: 'ETH',
-          icon: require('@/assets/images/icon/eth.svg'),
-          balance: 0.7129
-        },
-      ],
+      tokenList: [],
       tokenIdList: [
         {
           icon:  require('@/assets/images/icon/sauna.svg'),
@@ -177,6 +152,21 @@ export default {
         }
       ],
       validAddress: false,
+    }
+  },
+  filters: {
+    balanceFormat(balance) {
+      const pattern = /^[0-9]+.[0-9]+$/
+      if (pattern.test(balance)) {
+        let balanceSplit = balance.toString().split('.')
+        if (balanceSplit[1].length > 4) {
+          balanceSplit[1] = balanceSplit[1].substr(0, 4)
+        } else {
+          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+        }
+        balance = balanceSplit[0] + '.' + balanceSplit[1]
+      }
+      return balance
     }
   },
   computed: {
@@ -225,6 +215,13 @@ export default {
         }
       );
     }
+  },
+  created() {
+    this.$web3.getDefaultTokens(
+      this.$store.state.web3.instance,
+      this.$store.state.web3.chainId,
+      this.$store.state.account.address
+    ).then((tokens) => { this.tokenList = tokens })
   }
 }
 </script>

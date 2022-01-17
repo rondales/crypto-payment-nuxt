@@ -2,6 +2,7 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
+import { EthereumTokens, BscTokens } from '@/contracts/tokens'
 
 export default {
   install(Vue) {
@@ -11,7 +12,8 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
-          getAccountData: getAccountData
+          getAccountData: getAccountData,
+          getDefaultTokens: getDefaultTokens
         }
       }
     })
@@ -65,6 +67,49 @@ const getAccountData = async function(web3, chainId) {
     address: addresses[0],
     symbol: NETWORKS[chainId].symbol,
     balance: balanceInEther
+  }
+}
+
+const getDefaultTokens = async function(web3, chainId, walletAddress) {
+  const defaultTokens = getTokenAbis(chainId)
+  const userTokens = Promise.all(
+    Object.values(defaultTokens).map(async (defaultToken) => {
+      let balance = `${0}`
+
+      if (defaultToken.address === null) {
+        balance = await web3.eth.getBalance(walletAddress)
+      } else {
+        const tokenContract = new web3.eth.Contract(
+          defaultToken.abi,
+          defaultToken.address
+        )
+        balance = await tokenContract.methods
+          .balanceOf(walletAddress)
+          .call({ from: walletAddress })
+      }
+
+      const balanceInEther = web3.utils.fromWei(balance, 'ether')
+
+      return {
+        name: defaultToken.name,
+        symbol: defaultToken.symbol,
+        balance: balanceInEther,
+        icon: defaultToken.icon
+      }
+    })
+  )
+
+  return userTokens
+}
+
+function getTokenAbis(chainId) {
+  switch(chainId) {
+    case NETWORKS[1].chainId:
+    case NETWORKS[3].chainId:
+      return EthereumTokens
+    case NETWORKS[56].chainId:
+    case NETWORKS[97].chainId:
+      return BscTokens
   }
 }
 

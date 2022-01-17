@@ -39,7 +39,7 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="$store.state.connected" class="btn __s sp-fixed">
+          <button v-if="connected" class="btn __s sp-fixed">
             <span class="btn-icon">
               <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
             </span>
@@ -48,7 +48,7 @@
         </div>
         <div v-if="show" class="ml-2">
           <button v-if="connected" class="account-wallet">
-            <span class="price">{{ balance }}{{ symbol }}</span>
+            <span class="price">{{ balance | balanceFormat }}{{ symbol }}</span>
             <span class="id">{{ walletAddress }}</span>
           </button>
           <button v-else class="btn __g __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
@@ -79,6 +79,21 @@
         if(from.fullPath === "/payment") {
           this.show = true
         }
+      }
+    },
+    filters: {
+      balanceFormat(balance) {
+        const pattern = /^[0-9]+.[0-9]+$/
+        if (pattern.test(balance)) {
+          let balanceSplit = balance.toString().split('.')
+          if (balanceSplit[1].length > 4) {
+            balanceSplit[1] = balanceSplit[1].substr(0, 4)
+          } else {
+            balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+          }
+          balance = balanceSplit[0] + '.' + balanceSplit[1]
+        }
+        return balance
       }
     },
     computed: {
