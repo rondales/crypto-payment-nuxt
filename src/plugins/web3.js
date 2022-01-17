@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import Erc20Abi from 'erc-20-abi'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import { EthereumTokens, BscTokens } from '@/contracts/tokens'
@@ -13,7 +14,10 @@ export default {
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
           getAccountData: getAccountData,
-          getDefaultTokens: getDefaultTokens
+          getDefaultTokens: getDefaultTokens,
+          getBalanceInEther: getBalanceInEther,
+          searchToken: searchToken,
+          importToken: importToken
         }
       }
     })
@@ -61,12 +65,11 @@ const connectByWalletConnect = async function() {
 
 const getAccountData = async function(web3, chainId) {
   const addresses = await web3.eth.getAccounts()
-  const balance = await web3.eth.getBalance(addresses[0])
-  const balanceInEther = web3.utils.fromWei(balance, 'ether')
+  const balance = await getBalanceInEther(web3, addresses[0])
   return {
     address: addresses[0],
     symbol: NETWORKS[chainId].symbol,
-    balance: balanceInEther
+    balance: balance
   }
 }
 
@@ -74,32 +77,56 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
   const defaultTokens = getTokenAbis(chainId)
   const userTokens = Promise.all(
     Object.values(defaultTokens).map(async (defaultToken) => {
-      let balance = `${0}`
-
-      if (defaultToken.address === null) {
-        balance = await web3.eth.getBalance(walletAddress)
-      } else {
-        const tokenContract = new web3.eth.Contract(
-          defaultToken.abi,
-          defaultToken.address
-        )
-        balance = await tokenContract.methods
-          .balanceOf(walletAddress)
-          .call({ from: walletAddress })
-      }
-
-      const balanceInEther = web3.utils.fromWei(balance, 'ether')
+      const tokenContract = defaultToken.address === null
+        ? null
+        : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
+      const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
 
       return {
         name: defaultToken.name,
         symbol: defaultToken.symbol,
-        balance: balanceInEther,
+        balance: balance,
         icon: defaultToken.icon
       }
     })
   )
 
   return userTokens
+}
+
+const searchToken = async function(web3, contractAddress, walletAddress) {
+  const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
+
+  try {
+    const name = await tokenContract.methods.name().call()
+    const symbol = await tokenContract.methods.symbol().call()
+    const decimals = await tokenContract.methods.decimals().call()
+    const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
+    return {
+      name: name,
+      symbol: symbol,
+      decimals: decimals,
+      balance: balance,
+      address: contractAddress,
+      icon: require('@/assets/images/symbol/unknown.svg')
+    }
+  } catch(e) {
+    console.log(e)
+    throw new Error('Invalid token address')
+  }
+}
+
+const importToken = async function(web3, contractAddress, walletAddress) {
+  const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
+  const name = await tokenContract.name
+  const symbol = await tokenContract.symbol
+  const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
+  return {
+    name: name,
+    symbol: symbol,
+    balance: balance,
+    icon: require('@/assets/images/symbol/unknown.svg')
+  }
 }
 
 function getTokenAbis(chainId) {
@@ -111,6 +138,20 @@ function getTokenAbis(chainId) {
     case NETWORKS[97].chainId:
       return BscTokens
   }
+}
+
+const getBalanceInEther = async function(web3, walletAddress, tokenContract = null) {
+  let balance = `${0}`
+
+  if (tokenContract === null) {
+    balance = await web3.eth.getBalance(walletAddress)
+  } else {
+    balance = await tokenContract.methods
+      .balanceOf(walletAddress)
+      .call({ from: walletAddress })
+  }
+
+  return web3.utils.fromWei(balance, 'ether')
 }
 
 class MetamaskNotInstalledError extends Error {

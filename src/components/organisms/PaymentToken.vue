@@ -82,20 +82,20 @@
           <div class="manage-desc">
             *Does not support tokenomics tokens, which have the property that transactions are subject to TAX 🙅‍♂️
           </div>
-          <input class="token-dsc border" type="text" value="" placeholder="0x0000" @keyup.enter="pushTokenId">
+          <input class="token-dsc border" type="text" placeholder="0x0000" v-model="tokenAddress" @keyup.enter="searchToken">
           <div class="manage-wrap">
             <div class="manage-warning" v-if="validAddress">
               Enter valid token address
             </div>
-            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(tokenId, key) in tokenIdList" :key="key">
+            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(token, key) in tokenIdList" :key="key">
               <li>
-                <img :src="tokenId.icon">
+                <img :src="token.icon">
               </li>
               <li class="token-name">
-                {{ tokenId.symbol }}
+                {{ token.symbol }}
                 <br>
                 <span>
-                  {{ tokenId.tokenName }}
+                  {{ token.name }}
                 </span>
               </li>
               <li class="manage-item--right add-flex a-center j-between">
@@ -104,7 +104,7 @@
                     <img src="@/assets/images/link-icon.svg">
                   </figure>
                 </a>
-                <div class="manage-import" @click="importToken(tokenId)">
+                <div class="manage-import" @click="importToken(key)">
                   Import
                 </div>
               </li>
@@ -142,15 +142,10 @@ export default {
   data() {
     return {
       tab: "list",
-      tokenCount: 1,
+      tokenAddress: '',
+      tokenCount: 0,
       tokenList: [],
-      tokenIdList: [
-        {
-          icon:  require('@/assets/images/icon/sauna.svg'),
-          symbol: "SAUNA",
-          tokenName: "SaunaFinance Token",
-        }
-      ],
+      tokenIdList: [],
       validAddress: false,
     }
   },
@@ -195,25 +190,42 @@ export default {
       e.target.value = "";
     },
     clearToken(){
+      this.tokenAddress = ''
       this.tokenIdList = []
       this.tokenCount = 0;
+      this.validAddress = false
     },
-    importToken(data){
-      const paymentData = this.$store.state.paymentData
-
-      this.$router.push(
-        {
-          path: '/payment/exchange/' + this.$route.params.token,
-          query: {
-            receiver: paymentData.merchantDomain,
-            order_code: paymentData.orderCode,
-            symbol: paymentData.base_symbol,
-            amount: paymentData.base_amount,
-            email: paymentData.email,
-            token: data.symbol
-          }
-        }
-      );
+    searchToken(event) {
+      this.$web3.searchToken(
+        this.$store.state.web3.instance,
+        event.target.value,
+        this.$store.state.account.address
+      ).then((response) => {
+        this.tokenIdList.push({
+          name: response.name,
+          symbol: response.symbol,
+          balance: response.balance,
+          address: response.address,
+          icon: response.icon
+        })
+        this.tokenCount = this.tokenIdList.length
+      }).catch((error) => {
+        console.log(error)
+        this.tokenCount = 0
+        this.tokenIdList = []
+        this.validAddress = true
+      })
+    },
+    importToken(index){
+      const token = this.tokenIdList[index]
+      this.tokenList.unshift({
+        name: token.name,
+        symbol: token.symbol,
+        balance: token.balance,
+        icon: token.icon
+      })
+      this.clearToken()
+      this.tab = 'list'
     }
   },
   created() {
