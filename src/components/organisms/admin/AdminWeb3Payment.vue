@@ -137,30 +137,9 @@
                   :next-text="'Next'"
                   :container-class="'pagenation-wrap'"
                   :prev-class="'prev-item'"
-                  :prev-link-class="'prev-item'"
                   :page-class="'p-num'"
-                  :page-link-class="'p-num'"
                   :next-class="'next-item'"
-                  :next-link-class="'next-item'"
-                >
-                </Paginate>
-                <!-- <div class="pagenation-wrap">
-                <span class="prev-item" :class="{'disabled': currentPage == 1}" @click="prev">
-                  Previous
-                </span>
-                <span v-for="page of 3" :key="page" class="p-num" :class="{ 'active': currentPage === page }" @click="changePage(page)">
-                  {{page}}
-                </span>
-                <span class="p-num">
-                  …
-                </span>
-                <span class="p-num">
-                  {{lastPage}}
-                </span>
-                <span class="next-item" :class="{'disabled': currentPage == lastPage}" @click="next">
-                  Next
-                </span>
-              </div> -->
+                />
             </div>
           </div>
         </div>
@@ -948,49 +927,9 @@ export default {
     font-size: 16px;
     font-weight: 300;
   }
-  ul.pagenation-wrap{
+  .pagenation-wrap{
     font-weight: 300;
     font-size: 16px;
-    li.prev-item{
-      font-size: 16px;
-      margin: 0 8px;
-      display: inline;
-    }
-    li.next-item{
-      font-size: 16px;
-      margin: 0 8px;
-      display: inline;
-    }
-    li.p-num{
-      padding: 8px;
-      font-size: 13px;
-      border-radius: 8px;
-      display: inline;
-      cursor: pointer;
-      &.active{
-        background: #4E455A;
-      }
-    }
-    i{
-      font-size: 11px;
-    }
-    a.prev-item{
-      font-size: 16px;
-      margin: 0 8px;
-    }
-    a.next-item{
-      font-size: 16px;
-      margin: 0 8px;
-    }
-    a.p-num{
-      padding: 8px;
-      font-size: 13px;
-      border-radius: 8px;
-      cursor: pointer;
-      &.active{
-        background: #4E455A;
-      }
-    }
   }
 }
 .manage-setting{
@@ -1208,5 +1147,28 @@ export default {
   .vdp-datepicker__calendar {
     background: #000 !important;
     right: 10px;
+  }
+
+  .prev-item {
+    font-size: 16px;
+    margin: 0 8px;
+    display: inline;
+  }
+
+  .next-item {
+    font-size: 16px;
+    margin: 0 8px;
+    display: inline;
+  }
+
+  .p-num{
+    padding: 8px;
+    font-size: 13px;
+    border-radius: 8px;
+    display: inline;
+    cursor: pointer;
+    &.active{
+      background: #4E455A;
+    }
   }
 </style>
