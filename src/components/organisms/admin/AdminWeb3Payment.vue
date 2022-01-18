@@ -12,22 +12,22 @@
       <div class="manage-content" v-if="tab === 'history'">
         <div class="search-wrap add-flex j-between">
           <div class="select-id">
-            <select name="example">
-              <option value="transaction">Transaction ID</option>
-              <option value="order">Order ID</option>
+            <select name="example" v-model="selectId">
+              <option value="transaction_address">Transaction ID</option>
+              <option value="order_code">Order ID</option>
             </select>
-            <input type="text">
+            <input type="text" v-model="selectIdValue">
           </div>
           <div class="select-status add-flex">
             <div class="select-status_title">
               Status
             </div>
-            <select name="example">
+            <select name="example" v-model="selectStatus">
               <option value="0">All</option>
-              <option value="1">Cancelled</option>
-              <option value="2">Cancelled to Refund</option>
-              <option value="3">System Received</option>
-              <option value="4">System Receivedto Refund</option>
+              <option value="1">Payment start</option>
+              <option value="2">Sent transaction</option>
+              <option value="3">Mining transaction</option>
+              <option value="4">Payment complete</option>
             </select>
           </div>
           <div class="select-date-wrap add-flex">
@@ -35,6 +35,7 @@
               <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
+                :v-model="timeFrom"
                 format="dd-MM-yyyy"
               ></Datepicker>
             </div>
@@ -42,11 +43,12 @@
               <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
+                :v-model="timeTo"
                 format="dd-MM-yyyy"
               ></Datepicker>
             </div>
           </div>
-          <div class="search-btn" @click="search">
+          <div class="search-btn" @click="searchConditions">
             Search
           </div>
         </div>
@@ -56,10 +58,10 @@
               show
             </div>
             <div class="show-select">
-              <select name="show">
-                <option value="0">10</option>
-                <option value="1">25</option>
-                <option value="2">50</option>
+              <select name="show" v-model="perPage" @change="searchConditions">
+                <option value="1">1</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
               </select>
             </div>
             <div class="manage-show-unit">
@@ -82,69 +84,83 @@
                 <th>Transaction Amount</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody v-if="columns.length">
               <tr
                 v-for="(column, index) in columns"
                 :key="index"
               >
                 <td>
-                  <div v-if="column.status === 0" class="cancelled">
-                    Cancelled
-                    <br>
-                    <span>
-                      (Time over)
-                    </span>
-                  </div>
                   <div v-if="column.status === 1" class="received">
-                    System Received
+                    Payment start
                   </div>
-                  <div v-if="column.status === 2" class="cancelled-refund">
-                    Cancelled to Refund
-                    <br>
-                    <span>
-                      (Amount short)
-                    </span>
+                  <div v-if="column.status === 2" class="received">
+                    Sent transaction
                   </div>
-                  <div v-if="column.status === 3" class="received-refund">
-                    System Received
-                    <br class="sp">
-                    to refund
+                  <div v-if="column.status === 3" class="received">
+                    Mining transaction
+                  </div>
+                  <div v-if="column.status === 4" class="received">
+                    Payment complete
                   </div>
                 </td>
                 <td>
-                  {{column.orderId}}
+                  {{column.order_code}}
                 </td>
                 <td>
-                  {{column.time}}
+                  {{column.updated_at}}
                 </td>
                 <td>
-                  {{column.transactionID | omittedText}}
+                  {{column.transaction_address | omittedText}}
+                </td>
+                <td v-if="column.network_type === 1">
+                  BNB
+                <td v-else>
+                  ETH
                 </td>
                 <td>
-                  {{column.network}}
-                </td>
-                <td>
-                  {{column.amount}} USTD
+                  {{column.user_amount}} USTD
                 </td>
               </tr>
             </tbody>
           </table>
           <div class="pagination add-flex j-between a-center">
             <div class="page-count">
-              Showing {{pageNum}} to 10 of 274 entries
+              Showing {{currentPage}} to {{perPage}} of {{totalCount}} entries
             </div>
             <div>
-              <div class="pagenation-wrap">
-                <span class="prev-item" @click="prev">
+                <Paginate
+                  :page-count="lastPage"
+                  :page-range="3"
+                  :margin-pages="1"
+                  :click-handler="clickCallback"
+                  :prev-text="'Previous'"
+                  :next-text="'Next'"
+                  :container-class="'pagenation-wrap'"
+                  :prev-class="'prev-item'"
+                  :prev-link-class="'prev-item'"
+                  :page-class="'p-num'"
+                  :page-link-class="'p-num'"
+                  :next-class="'next-item'"
+                  :next-link-class="'next-item'"
+                >
+                </Paginate>
+                <!-- <div class="pagenation-wrap">
+                <span class="prev-item" :class="{'disabled': currentPage == 1}" @click="prev">
                   Previous
                 </span>
-                <span v-for="page of 6" :key="page" class="p-num" :class="{ 'active': pageNum === page }" @click="changePage(page)">
+                <span v-for="page of 3" :key="page" class="p-num" :class="{ 'active': currentPage === page }" @click="changePage(page)">
                   {{page}}
                 </span>
-                <span class="next-item" @click="next">
+                <span class="p-num">
+                  …
+                </span>
+                <span class="p-num">
+                  {{lastPage}}
+                </span>
+                <span class="next-item" :class="{'disabled': currentPage == lastPage}" @click="next">
                   Next
                 </span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -190,7 +206,7 @@
                       switch network
                     </div>
                   </div>
-                  <div class="manage-contents_address-wrap"  v-if="this.createdAdress && $store.state.network.abbriviation === 'eth'">
+                  <div class="manage-contents_address-wrap" v-if="this.createdAdress && $store.state.network.abbriviation === 'eth'">
                     <div class="manage-contents_address">
                       {{address.eth}}
                     </div>
@@ -306,19 +322,33 @@ In this page, you need to implement the following process or function.
  Please make sure that you can get the contract address and argument information.
 */
 import Datepicker from 'vuejs-datepicker';
+import Paginate from 'vuejs-paginate';
 import { errorCodeList } from '@/enum/error_code'
 export default {
   name: 'PaymentTop',
   components: {
-    Datepicker
+    Datepicker,
+    Paginate
   },
   data() {
     return {
       tab: "history",
       currentState: false,
       myDataVariable: false,
+      selectId: 'transaction_address',
+      selectIdValue: '',
+      selectStatus: '0',
+      timeFrom:'',
+      timeTo:'',
+      sortKey: '',
+      sortValue: '',
       datePickerFormat: 'dd-MM-yyyy',
-      pageNum: 1,
+      currentPage: 1,
+      pageFrom: 0,
+      lastPage: 0,
+      perPage: 1,
+      toPage: 1,
+      totalCount: 0,
       settingTab: "contract",
       completeKickbackUrl: '',
       succeededReturnUrl: '',
@@ -327,88 +357,7 @@ export default {
       domain: '',
       txtRecord: '',
       verified: false,
-      columns: [
-        {
-          status: 0,
-          orderId: 1661,
-          time: "30/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "BNB",
-          amount: 45.83,
-        },
-        {
-          status: 1,
-          orderId: 1662,
-          time: "31/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "ETH",
-          amount: 46.83,
-        },
-        {
-          status: 2,
-          orderId: 1663,
-          time: "01/10/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "BNB",
-          amount: 48.83,
-        },
-        {
-          status: 3,
-          orderId: 1664,
-          time: "02/10/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "ETH",
-          amount: 47.83,
-        },
-        {
-          status: 0,
-          orderId: 1661,
-          time: "30/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "BNB",
-          amount: 45.83,
-        },
-        {
-          status: 1,
-          orderId: 1662,
-          time: "31/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "ETH",
-          amount: 46.83,
-        },
-        {
-          status: 2,
-          orderId: 1663,
-          time: "01/10/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "BNB",
-          amount: 48.83,
-        },
-        {
-          status: 3,
-          orderId: 1664,
-          time: "02/10/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "ETH",
-          amount: 47.83,
-        },
-        {
-          status: 0,
-          orderId: 1661,
-          time: "30/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "BNB",
-          amount: 45.83,
-        },
-        {
-          status: 1,
-          orderId: 1662,
-          time: "31/9/2021 00:00",
-          transactionID: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
-          network: "ETH",
-          amount: 46.83,
-        },
-      ],
+      columns: [],
       address:{
         eth: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
         bsc: "https://bscscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189"
@@ -418,6 +367,7 @@ export default {
   },
   created() {
     this.leftTab()
+    this.search()
   },
   methods: {
     leftTab() {
@@ -437,22 +387,72 @@ export default {
     settingRightTab() {
       this.settingTab = "domain"
     },
+    clickCallback(pageNum) {
+      this.currentPage = Number(pageNum)
+      this.search()
+    },
+    searchConditions() {
+      this.currentPage = 1
+      this.search()
+    },
     search() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal'
+      let params = new URLSearchParams([
+        ['per_page', this.perPage],
+        ['current_page', this.currentPage]
+      ])
+      if (this.selectStatus !== '0') params.append('status', this.selectStatus)
+      if (this.selectIdValue) params.append(this.selectId, this.selectIdValue)
+      if (this.timeFrom) params.append('updated_at_from', this.timeFrom)
+      if (this.timeTo) params.append('updated_at_to', this.timeTo)
+      if (this.sortKey) params.append('sort_key', this.sortKey)
+      if (this.sortValue) params.append('sort_value', this.sortValue)
+      console.log(params.toString())
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('login_token')}`
+      }
+      this.axios.get(url, { headers: headers, params: params }).then((response) => {
+        this.columns = response.data.data
+        this.currentPage = response.data.current_page
+        this.pageFrom = response.data.from
+        this.lastPage = response.data.last_page
+        this.perPage = response.data.per_page
+        this.toPage = response.data.to
+        this.totalCount = response.data.total
+        console.log(response.data)
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          console.log(error.response.data)
+          let message
+          if ('errors' in error.response.data) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
     },
     createCsv() {
     },
     changePage(page) {
-      if(this.pageNum === page){
-        this.pageNum = null;
+      if(this.currentPage === page){
+        this.currentPage = null;
       }else{
-        this.pageNum = page;
+        this.currentPage = page;
       }
       this.current = page;
     },
-    prev() {
-    },
-    next() {
-    },
+    // prev() {
+    //   console.log('prev')
+    // },
+    // next() {
+    //   console.log('next')
+    // },
     networkValue(currency) {
       this.$store.dispatch('selectNetwork', currency)
       this.createdAdress = false
@@ -595,6 +595,16 @@ export default {
         this.$router.push({
         path: '/admin'
       })
+    }
+  },
+  computed: {
+    getItems() {
+      let current = this.currentPage * this.parPage;
+      let start = current - this.parPage;
+      return this.items.slice(start, current);
+    },
+    getPageCount() {
+      return Math.ceil(this.items.length / this.parPage);
     }
   },
   filters: {
@@ -938,20 +948,41 @@ export default {
     font-size: 16px;
     font-weight: 300;
   }
-  .pagenation-wrap{
+  ul.pagenation-wrap{
     font-weight: 300;
-    .prev-item{
+    font-size: 16px;
+    li.prev-item{
       font-size: 16px;
       margin: 0 8px;
+      display: inline;
     }
-    .next-item{
+    li.next-item{
       font-size: 16px;
       margin: 0 8px;
+      display: inline;
+    }
+    li.p-num{
+      padding: 8px;
+      font-size: 13px;
+      border-radius: 8px;
+      display: inline;
+      cursor: pointer;
+      &.active{
+        background: #4E455A;
+      }
     }
     i{
       font-size: 11px;
     }
-    .p-num{
+    a.prev-item{
+      font-size: 16px;
+      margin: 0 8px;
+    }
+    a.next-item{
+      font-size: 16px;
+      margin: 0 8px;
+    }
+    a.p-num{
       padding: 8px;
       font-size: 13px;
       border-radius: 8px;
