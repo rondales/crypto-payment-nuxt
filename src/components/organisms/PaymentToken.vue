@@ -53,7 +53,7 @@
             Select token
           </p>
           <div class="token-items">
-            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="importToken(token)">
+            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="selectedToken(token)">
               <div class="add-flex j-between a-center">
                 <figure>
                   <img :src="token.icon" alt="">
@@ -125,18 +125,6 @@
 </template>
 
 <script>
-/*
-@todo Web3ConnectTeam
-
-In this page, you need to implement the following process or function.
-
-1. Network switching
-2. Retrieve and screen display of network default token list
-3. Obtaining the balance of each network default token and displaying it on the screen
-4. Search for tokens by token contract address
-5. Import of retrieved tokens (like SushiSwap)
-6. Transition to the balance confirmation screen after selecting or importing tokens
-*/
 import { NETWORKS } from '@/constants'
 
 export default {
@@ -245,6 +233,21 @@ export default {
       })
       this.clearToken()
       this.tab = 'list'
+    },
+    selectedToken(token) {
+      const paymentData = this.$store.state.paymentData
+
+      this.$router.push({
+        path: '/payment/exchange/' + this.$route.params.token,
+        query: {
+          receiver: paymentData.merchantDomain,
+          code: paymentData.orderCode,
+          symbol: paymentData.base_symbol,
+          amount: paymentData.base_amount,
+          token: token.symbol,
+          balance: token.balance
+        }
+      })
     }
   },
   created() {
