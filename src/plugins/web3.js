@@ -15,7 +15,7 @@ export default {
           connectByWalletConnect: connectByWalletConnect,
           getAccountData: getAccountData,
           getDefaultTokens: getDefaultTokens,
-          getBalanceInEther: getBalanceInEther,
+          getBalance: getBalance,
           searchToken: searchToken,
           importToken: importToken
         }
@@ -65,7 +65,7 @@ const connectByWalletConnect = async function() {
 
 const getAccountData = async function(web3, chainId) {
   const addresses = await web3.eth.getAccounts()
-  const balance = await getBalanceInEther(web3, addresses[0])
+  const balance = await getBalance(web3, addresses[0], 'ether')
   return {
     address: addresses[0],
     symbol: NETWORKS[chainId].symbol,
@@ -80,7 +80,12 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
       const tokenContract = defaultToken.address === null
         ? null
         : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
-      const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
+      const balance = await getBalance(
+        web3,
+        walletAddress,
+        defaultToken.symbol === 'USDC' ? 'mwei' : 'ether',
+        tokenContract
+      )
 
       return {
         name: defaultToken.name,
@@ -101,7 +106,7 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     const name = await tokenContract.methods.name().call()
     const symbol = await tokenContract.methods.symbol().call()
     const decimals = await tokenContract.methods.decimals().call()
-    const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
+    const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
     return {
       name: name,
       symbol: symbol,
@@ -120,7 +125,7 @@ const importToken = async function(web3, contractAddress, walletAddress) {
   const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
   const name = await tokenContract.name
   const symbol = await tokenContract.symbol
-  const balance = await getBalanceInEther(web3, walletAddress, tokenContract)
+  const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
   return {
     name: name,
     symbol: symbol,
@@ -140,7 +145,7 @@ function getTokenAbis(chainId) {
   }
 }
 
-const getBalanceInEther = async function(web3, walletAddress, tokenContract = null) {
+const getBalance = async function(web3, walletAddress, unit, tokenContract = null) {
   let balance = `${0}`
 
   if (tokenContract === null) {
@@ -151,7 +156,7 @@ const getBalanceInEther = async function(web3, walletAddress, tokenContract = nu
       .call({ from: walletAddress })
   }
 
-  return web3.utils.fromWei(balance, 'ether')
+  return web3.utils.fromWei(balance, unit)
 }
 
 class MetamaskNotInstalledError extends Error {
