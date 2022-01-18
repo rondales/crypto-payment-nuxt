@@ -1,15 +1,12 @@
-import { PRODUCTION, NETWORKS } from '../../../constants'
-import Usdt from '../abis/ethereum/usdt'
-import Usdc from '../abis/ethereum/usdc'
-import Dai from '../abis/ethereum/dai'
-import Uni from '../abis/ethereum/uni'
-import Sushi from '../abis/ethereum/sushi'
-import Weth from '../abis/ethereum/weth'
+import { NETWORKS } from '@/constants'
+import Usdt from '../../abis/ethereum/usdt'
+import Usdc from '../../abis/ethereum/usdc'
+import Dai from '../../abis/ethereum/dai'
+import Uni from '../../abis/ethereum/uni'
+import Sushi from '../../abis/ethereum/sushi'
+import Weth from '../../abis/ethereum/weth'
 
-const url =
-  process.env.NODE_ENV === PRODUCTION
-  ? NETWORKS[1].scanUrl + '/address'
-  : NETWORKS[3].scanUrl + '/address'
+const url = NETWORKS[1].scanUrl + '/address'
 
 export default {
   ETH: {

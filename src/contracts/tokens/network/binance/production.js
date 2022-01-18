@@ -1,14 +1,11 @@
-import { PRODUCTION, NETWORKS } from '../../../constants'
-import Usdt from '../abis/binance/usdt'
-import Busd from '../abis/binance/busd'
-import Usdc from '../abis/binance/usdc'
-import Cake from '../abis/binance/cake'
-import Wbnb from '../abis/binance/wbnb'
+import { NETWORKS } from '@/constants'
+import Usdt from '../../abis/binance/usdt'
+import Busd from '../../abis/binance/busd'
+import Usdc from '../../abis/binance/usdc'
+import Cake from '../../abis/binance/cake'
+import Wbnb from '../../abis/binance/wbnb'
 
-const url =
-  process.env.NODE_ENV === PRODUCTION
-  ? NETWORKS[56].scanUrl + '/address'
-  : NETWORKS[97].scanUrl + '/address'
+const url = NETWORKS[56].scanUrl + '/address'
 
 export default {
   BNB: {
@@ -58,5 +55,5 @@ export default {
     abi: Wbnb.abi,
     url: `${url}/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c`,
     icon: require('@/assets/images/symbol/wbnb.svg')
-  },
+  }
 }
