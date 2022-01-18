@@ -101,14 +101,22 @@ export default {
       return this.$store.state.account.address
     },
     networkName() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].name
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].name
+      } else {
+        return ''
+      }
     },
     networkIcon() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].icon
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].icon
+      } else {
+        return ''
+      }
     },
     symbol() {
       return this.$store.state.account.symbol
@@ -121,7 +129,7 @@ export default {
       return pathPattern.test(this.$route.path)
     },
     connected() {
-      return (this.$store.state.web3.instance)
+      return (this.$store.state.web3.provider)
     }
   },
   methods: {
