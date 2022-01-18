@@ -17,7 +17,8 @@ export default {
           getDefaultTokens: getDefaultTokens,
           getBalance: getBalance,
           searchToken: searchToken,
-          importToken: importToken
+          importToken: importToken,
+          switchChain: switchChain
         }
       }
     })
@@ -134,17 +135,6 @@ const importToken = async function(web3, contractAddress, walletAddress) {
   }
 }
 
-function getTokenAbis(chainId) {
-  switch(chainId) {
-    case NETWORKS[1].chainId:
-    case NETWORKS[3].chainId:
-      return EthereumTokens
-    case NETWORKS[56].chainId:
-    case NETWORKS[97].chainId:
-      return BscTokens
-  }
-}
-
 const getBalance = async function(web3, walletAddress, unit, tokenContract = null) {
   let balance = `${0}`
 
@@ -157,6 +147,29 @@ const getBalance = async function(web3, walletAddress, unit, tokenContract = nul
   }
 
   return web3.utils.fromWei(balance, unit)
+}
+
+const switchChain = async function(web3, chainId) {
+  try {
+    await web3.currentProvider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: web3.utils.toHex(chainId) }]
+    })
+  } catch(e) {
+    console.log(e)
+    throw new Error(e.message)
+  }
+}
+
+function getTokenAbis(chainId) {
+  switch(chainId) {
+    case NETWORKS[1].chainId:
+    case NETWORKS[3].chainId:
+      return EthereumTokens
+    case NETWORKS[56].chainId:
+    case NETWORKS[97].chainId:
+      return BscTokens
+  }
 }
 
 class MetamaskNotInstalledError extends Error {

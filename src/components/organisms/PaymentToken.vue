@@ -27,10 +27,10 @@
       <div class="payment-box network">
         <div class="add-flex a-center j-between">
           <div class="add-flex a-center">
-            <img :src="$store.state.network.icon">
+            <img :src="networkIcon">
             <div class="payment-box_desc">
               <p>
-                {{ $store.state.network.name }}
+                {{ networkName }}
               </p>
             </div>
           </div>
@@ -137,6 +137,8 @@ In this page, you need to implement the following process or function.
 5. Import of retrieved tokens (like SushiSwap)
 6. Transition to the balance confirmation screen after selecting or importing tokens
 */
+import { NETWORKS } from '@/constants'
+
 export default {
   name: 'PaymentToken',
   data() {
@@ -164,9 +166,27 @@ export default {
       return balance
     }
   },
+  watch: {
+    chainId() {
+      this.getDefaultTokens()
+    }
+  },
   computed: {
     amount() {
       return this.$store.state.paymentData.base_amount
+    },
+    networkIcon() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
+    },
+    networkName() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].name
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
     }
   },
   methods: {
@@ -181,13 +201,12 @@ export default {
       this.tab = "tokens"
       this.isActive = true
     },
-    pushTokenId(e){
-      this.tokenId = e.target.value;
-      this.validAddress = true;
-      if(this.validAddress === false) {
-        this.tokenCount += 1;
-      }
-      e.target.value = "";
+    getDefaultTokens() {
+      this.$web3.getDefaultTokens(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address
+      ).then((tokens) => { this.tokenList = tokens })
     },
     clearToken(){
       this.tokenAddress = ''
@@ -229,11 +248,7 @@ export default {
     }
   },
   created() {
-    this.$web3.getDefaultTokens(
-      this.$store.state.web3.instance,
-      this.$store.state.web3.chainId,
-      this.$store.state.account.address
-    ).then((tokens) => { this.tokenList = tokens })
+    this.getDefaultTokens()
   }
 }
 </script>

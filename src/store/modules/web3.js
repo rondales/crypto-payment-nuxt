@@ -21,8 +21,8 @@ const store = {
       state.chainId = payload.chainId
       state.provider = payload.provider
     },
-    updateChaninId(state, payload) {
-      state.chaninId = payload
+    updateChainId(state, payload) {
+      state.chainId = payload
     }
   }
 }
