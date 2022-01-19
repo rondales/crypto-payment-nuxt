@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     amount() {
-      return this.$store.state.paymentData.base_amount
+      return this.$store.state.payment.amount
     }
   },
   methods: {

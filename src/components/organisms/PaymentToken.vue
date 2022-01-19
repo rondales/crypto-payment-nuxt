@@ -161,7 +161,7 @@ export default {
   },
   computed: {
     amount() {
-      return this.$store.state.paymentData.base_amount
+      return this.$store.state.payment.amount
     },
     networkIcon() {
       return NETWORKS[
@@ -235,17 +235,15 @@ export default {
       this.tab = 'list'
     },
     selectedToken(token) {
-      const paymentData = this.$store.state.paymentData
-
+      this.$store.dispatch('payment/updatePaySymbol', { paySymbol: token.symbol })
       this.$router.push({
         path: '/payment/exchange/' + this.$route.params.token,
         query: {
-          receiver: paymentData.merchantDomain,
-          code: paymentData.orderCode,
-          symbol: paymentData.base_symbol,
-          amount: paymentData.base_amount,
-          token: token.symbol,
-          balance: token.balance
+          receiver: this.$store.state.payment.domain,
+          code: this.$store.state.payment.orderCode,
+          symbol: this.$store.state.payment.symbol,
+          amount: this.$store.state.payment.amount,
+          token: token.symbol
         }
       })
     }

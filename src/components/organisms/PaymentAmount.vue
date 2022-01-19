@@ -160,7 +160,7 @@ export default {
     next() {
       this.loading = true
       this.apiUpdateTransaction().then(() => {
-        this.$store.dispatch('setPaymentBaseAmount', this.exchangedAmount)
+        this.$store.dispatch('payment/updateAmount', this.exchangedAmount)
         this.$router.push({
           path: 'receipt/' + this.$route.params.token,
         })

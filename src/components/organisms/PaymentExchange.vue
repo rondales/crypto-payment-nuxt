@@ -118,13 +118,13 @@ export default {
   },
   computed: {
     symbol() {
-      return this.$store.state.paymentData.base_symbol
+      return this.$store.state.payment.symbol
     },
     amount() {
-      return this.$store.state.paymentData.base_amount
+      return this.$store.state.payment.amount
     },
     selectedSymbol() {
-      return this.$store.state.paymentData.selectTokenSymbol
+      return this.$store.state.payment.paySymbol
     }
   },
   methods: {
@@ -135,20 +135,18 @@ export default {
       location.reload();
     },
     sendTokenItems(){
-      const paymentData = this.$store.state.paymentData
-
-      this.$store.dispatch('setPaymentTokenAmount', 1000.11)
+      this.$store.dispatch('payment/updatePayAmount', 1000.11)
 
       this.loading = true;
       this.$router.push(
         {
           path: '/payment/detail/' + this.$route.params.token,
           query: {
-            receiver: paymentData.merchantDomain,
-            code: paymentData.orderCode,
-            symbol: paymentData.base_symbol,
-            amount: paymentData.base_amount,
-            token: paymentData.selectTokenSymbol,
+            receiver: this.$store.state.payment.domain,
+            code: this.$store.state.payment.orderCode,
+            symbol: this.$store.state.payment.symbol,
+            amount: this.$store.state.payment.amount,
+            token: this.$store.state.payment.paySymbol,
             token_amount: 1000.11,
           }
         }
@@ -157,15 +155,13 @@ export default {
   },
   created(){
     // @todo Implement a process to determine the token icon
-    const params = {
-      receiver: this.$route.query.receiver,
-      orderCode: this.$route.query.order_code,
+    this.$store.dispatch('payment/update', {
+      domain: this.$route.query.receiver,
+      orderCode: this.$route.query.code,
       symbol: this.$route.query.symbol,
       amount: this.$route.query.amount,
-      email: this.$route.query.email,
-      selectTokenSymbol: this.$route.query.token
-    }
-    this.$store.dispatch('setPaymentData', params)
+      paySymbol: this.$route.query.token
+    })
 
     setTimeout(() => {
       this.changedPrice = true;
