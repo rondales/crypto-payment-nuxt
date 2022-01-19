@@ -59,7 +59,7 @@
             </div>
             <div class="show-select">
               <select name="show" v-model="perPage" @change="searchConditions">
-                <option value="1">1</option>
+                <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
               </select>
@@ -132,7 +132,7 @@
                   :page-count="lastPage"
                   :page-range="3"
                   :margin-pages="1"
-                  :click-handler="clickCallback"
+                  :click-handler="clickPage"
                   :prev-text="'Previous'"
                   :next-text="'Next'"
                   :container-class="'pagenation-wrap'"
@@ -325,7 +325,7 @@ export default {
       currentPage: 1,
       pageFrom: 0,
       lastPage: 0,
-      perPage: 1,
+      perPage: 10,
       toPage: 1,
       totalCount: 0,
       settingTab: "contract",
@@ -366,12 +366,12 @@ export default {
     settingRightTab() {
       this.settingTab = "domain"
     },
-    clickCallback(pageNum) {
-      this.currentPage = Number(pageNum)
-      this.search()
-    },
     searchConditions() {
       this.currentPage = 1
+      this.search()
+    },
+    clickPage(pageNum) {
+      this.currentPage = Number(pageNum)
       this.search()
     },
     search() {
@@ -386,7 +386,6 @@ export default {
       if (this.timeTo) params.append('updated_at_to', this.timeTo)
       if (this.sortKey) params.append('sort_key', this.sortKey)
       if (this.sortValue) params.append('sort_value', this.sortValue)
-      console.log(params.toString())
       const headers = {
         Authorization: `Bearer ${localStorage.getItem('login_token')}`
       }
@@ -398,12 +397,10 @@ export default {
         this.perPage = response.data.per_page
         this.toPage = response.data.to
         this.totalCount = response.data.total
-        console.log(response.data)
       }).catch((error) => {
         if (error.response.status === 401) {
           this.logout()
         } else {
-          console.log(error.response.data)
           let message
           if ('errors' in error.response.data) {
             message = errorCodeList[
@@ -418,20 +415,6 @@ export default {
     },
     createCsv() {
     },
-    changePage(page) {
-      if(this.currentPage === page){
-        this.currentPage = null;
-      }else{
-        this.currentPage = page;
-      }
-      this.current = page;
-    },
-    // prev() {
-    //   console.log('prev')
-    // },
-    // next() {
-    //   console.log('next')
-    // },
     networkValue(currency) {
       this.$store.dispatch('selectNetwork', currency)
       this.createdAdress = false
