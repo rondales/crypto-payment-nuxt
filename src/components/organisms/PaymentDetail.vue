@@ -177,16 +177,16 @@ export default {
   },
   computed: {
     symbol() {
-      return this.$store.state.paymentData.base_symbol
+      return this.$store.state.payment.symbol
     },
     amount() {
-      return this.$store.state.paymentData.base_amount
+      return this.$store.state.payment.amount
     },
     selectedSymbol() {
-      return this.$store.state.paymentData.selectTokenSymbol
+      return this.$store.state.payment.paySymbol
     },
     payAmount() {
-      return this.$store.state.paymentData.selectTokenAmount
+      return this.$store.state.payment.payAmount
     }
   },
   methods: {
@@ -200,8 +200,8 @@ export default {
         network_type: networkList[this.$store.state.connection.networkId].type,
         contract_address: this.contractAddress,
         wallet_address: this.$store.state.connection.walletAddress,
-        pay_symbol: this.$store.state.paymentData.selectTokenSymbol,
-        pay_amount: this.$store.state.paymentData.selectTokenAmount
+        pay_symbol: this.$store.state.payment.paySymbol,
+        pay_amount: this.$store.state.payment.payAmount
       }
       this.apiUpdateTransaction(params).then(() => {
         this.processing = true;
@@ -280,16 +280,14 @@ export default {
       this.showErrorModal(message)
     })
 
-    const params = {
-      receiver: this.$route.query.receiver,
+    this.$store.dispatch('payment/update', {
+      domain: this.$route.query.receiver,
       orderCode: this.$route.query.code,
       symbol: this.$route.query.symbol,
       amount: this.$route.query.amount,
-      email: this.$route.query.email,
-      selectTokenSymbol: this.$route.query.token,
-      selectTokenAmount: this.$route.query.token_amount
-    }
-    this.$store.dispatch('setPaymentData', params)
+      paySymbol: this.$route.query.token,
+      payAmount: this.$route.query.token.token_amount
+    })
 
     setTimeout(() => {
       this.changedPrice = true;

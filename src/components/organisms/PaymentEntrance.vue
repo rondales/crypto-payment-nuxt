@@ -43,15 +43,24 @@ export default {
     }
   },
   created() {
-    this.apiReceiveData().then((res) => {
-      this.$store.dispatch('setReceiveData', res.data)
+    this.apiReceiveData().then((response) => {
+      const responseData = response.data
+
+      this.$store.dispatch('changeTheme', responseData.display_theme)
+      this.$store.dispatch('payment/update', {
+        domain: responseData.domain,
+        orderCode: responseData.order_code,
+        symbol: (responseData.symbol === null) ? 'USDT' : responseData.symbol,
+        amount: responseData.amount
+      })
+
       this.apiPublishTransaction().then(() => {
-        this.showComponent = (this.$store.state.paymentData.base_amount === null) ? 'PaymentAmount' : 'PaymentEmail'
+        this.showComponent = (this.$store.state.payment.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
-            this.apiGetTransactionState().then((res) => {
-              switch(res.data.state) {
+            this.apiGetTransactionState().then((response) => {
+              switch(response.data.state) {
                 case 'unset_base_amount':
                   this.showComponent = 'PaymentAmount'
                   break;
