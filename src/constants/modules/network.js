@@ -4,7 +4,8 @@ export const NETWORKS = {
     symbol: 'ETH',
     chainId: 1,
     rpcUrl: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-    icon: 'h-eth.svg',
+    scanUrl: 'https://etherscan.io',
+    icon: require('@/assets/images/network/ethereum.svg'),
     type: 2
   },
   3: {
@@ -12,7 +13,8 @@ export const NETWORKS = {
     symbol: 'ETH',
     chainId: 3,
     rpcUrl: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-    icon: 'h-eth.svg',
+    scanUrl: 'https://ropsten.etherscan.io',
+    icon: require('@/assets/images/network/ethereum.svg'),
     type: null
   },
   56: {
@@ -20,7 +22,8 @@ export const NETWORKS = {
     symbol: 'BNB',
     chainId: 56,
     rpcUrl: 'https://bsc-dataseed.binance.org/',
-    icon: 'h-bsc.svg',
+    scanUrl: 'https://bscscan.com',
+    icon: require('@/assets/images/network/binance.svg'),
     type: 1
   },
   97: {
@@ -28,7 +31,8 @@ export const NETWORKS = {
     symbol: 'BNB',
     chainId: 97,
     rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-    icon: 'h-bsc.svg',
+    scanUrl: 'https://testnet.bscscan.com',
+    icon: require('@/assets/images/network/binance.svg'),
     type: null
   },
   137: {
@@ -36,7 +40,8 @@ export const NETWORKS = {
     symbol: 'MATIC',
     chainId: 137,
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/',
-    icon: 'h-matic.svg',
+    scanUrl: 'https://polygonscan.com',
+    icon: require('@/assets/images/network/matic.svg'),
     type: null
   },
   80001: {
@@ -44,7 +49,8 @@ export const NETWORKS = {
     symbol: 'MATIC',
     chainId: 80001,
     rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
-    icon: 'h-matic.svg',
+    scanUrl: 'https://mumbai.polygonscan.com/',
+    icon: require('@/assets/images/network/matic.svg'),
     type: null
   },
   43114: {
@@ -52,7 +58,8 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43114,
     rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-    icon: 'h-avalanche.svg',
+    scanUrl: 'https://avascan.info',
+    icon: require('@/assets/images/network/avalanche.svg'),
     type: null
   },
   43113: {
@@ -60,7 +67,8 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43113,
     rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
-    icon: 'h-avalanche.svg',
+    scanUrl: 'https://testnet.avascan.info',
+    icon: require('@/assets/images/network/avalanche.svg'),
     type: null
   }
 }

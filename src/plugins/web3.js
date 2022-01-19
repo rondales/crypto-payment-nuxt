@@ -1,7 +1,9 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import Erc20Abi from 'erc-20-abi'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
+import { EthereumTokens, BscTokens } from '@/contracts/tokens'
 
 export default {
   install(Vue) {
@@ -11,7 +13,12 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
-          getAccountData: getAccountData
+          getAccountData: getAccountData,
+          getDefaultTokens: getDefaultTokens,
+          getBalance: getBalance,
+          searchToken: searchToken,
+          importToken: importToken,
+          switchChain: switchChain
         }
       }
     })
@@ -59,12 +66,109 @@ const connectByWalletConnect = async function() {
 
 const getAccountData = async function(web3, chainId) {
   const addresses = await web3.eth.getAccounts()
-  const balance = await web3.eth.getBalance(addresses[0])
-  const balanceInEther = web3.utils.fromWei(balance, 'ether')
+  const balance = await getBalance(web3, addresses[0], 'ether')
   return {
     address: addresses[0],
     symbol: NETWORKS[chainId].symbol,
-    balance: balanceInEther
+    balance: balance
+  }
+}
+
+const getDefaultTokens = async function(web3, chainId, walletAddress) {
+  const defaultTokens = getTokenAbis(chainId)
+  const userTokens = Promise.all(
+    Object.values(defaultTokens).map(async (defaultToken) => {
+      const tokenContract = defaultToken.address === null
+        ? null
+        : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
+      const balance = await getBalance(
+        web3,
+        walletAddress,
+        defaultToken.symbol === 'USDC' ? 'mwei' : 'ether',
+        tokenContract
+      )
+
+      return {
+        name: defaultToken.name,
+        symbol: defaultToken.symbol,
+        balance: balance,
+        icon: defaultToken.icon
+      }
+    })
+  )
+
+  return userTokens
+}
+
+const searchToken = async function(web3, contractAddress, walletAddress) {
+  const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
+
+  try {
+    const name = await tokenContract.methods.name().call()
+    const symbol = await tokenContract.methods.symbol().call()
+    const decimals = await tokenContract.methods.decimals().call()
+    const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
+    return {
+      name: name,
+      symbol: symbol,
+      decimals: decimals,
+      balance: balance,
+      address: contractAddress,
+      icon: require('@/assets/images/symbol/unknown.svg')
+    }
+  } catch(e) {
+    console.log(e)
+    throw new Error('Invalid token address')
+  }
+}
+
+const importToken = async function(web3, contractAddress, walletAddress) {
+  const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
+  const name = await tokenContract.name
+  const symbol = await tokenContract.symbol
+  const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
+  return {
+    name: name,
+    symbol: symbol,
+    balance: balance,
+    icon: require('@/assets/images/symbol/unknown.svg')
+  }
+}
+
+const getBalance = async function(web3, walletAddress, unit, tokenContract = null) {
+  let balance = `${0}`
+
+  if (tokenContract === null) {
+    balance = await web3.eth.getBalance(walletAddress)
+  } else {
+    balance = await tokenContract.methods
+      .balanceOf(walletAddress)
+      .call({ from: walletAddress })
+  }
+
+  return web3.utils.fromWei(balance, unit)
+}
+
+const switchChain = async function(web3, chainId) {
+  try {
+    await web3.currentProvider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: web3.utils.toHex(chainId) }]
+    })
+  } catch(e) {
+    console.log(e)
+    throw new Error(e.message)
+  }
+}
+
+function getTokenAbis(chainId) {
+  switch(chainId) {
+    case NETWORKS[1].chainId:
+    case NETWORKS[3].chainId:
+      return EthereumTokens
+    case NETWORKS[56].chainId:
+    case NETWORKS[97].chainId:
+      return BscTokens
   }
 }
 

@@ -181,6 +181,9 @@ li {
     line-height:  3rem;   
     border-radius: 1rem;
     background: var(--color_darken);
+    .btn-icon {
+      margin-right: 12px;
+    }
   }
   &.__m{
     background: var(--color_darken);

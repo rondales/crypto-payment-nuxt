@@ -39,17 +39,17 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="$store.state.connected" class="btn __s sp-fixed">
+          <button v-if="connected" class="btn __s sp-fixed">
             <span class="btn-icon">
-              <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
+              <img :src="networkIcon" alt="Web3 Payment">
             </span>
             {{ networkName }}
           </button>
         </div>
         <div v-if="show" class="ml-2">
           <button v-if="connected" class="account-wallet">
-            <span class="price">{{ balance }}{{ symbol }}</span>
-            <span class="id">{{ walletAddress }}</span>
+            <span class="price">{{ balance | balanceFormat }}{{ symbol }}</span>
+            <span class="id">{{ walletAddress | walletAddressFormat }}</span>
           </button>
           <button v-else class="btn __g __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
             Connect to a wallet
@@ -61,68 +61,86 @@
 </template>
 
 <script>
-  import { NETWORKS } from '@/constants'
-  import Web3ConnectorMixin from '@/components/mixins/Web3Connector'
+import { NETWORKS } from '@/constants'
 
-  export default {
-    name: 'Header',
-    mixins: [
-      Web3ConnectorMixin
-    ],
-    data(){
-      return{
-        humberger: false
-      }
-    },
-    watch: {
-      $route(to, from) {
-        if(from.fullPath === "/payment") {
-          this.show = true
-        }
-      }
-    },
-    computed: {
-      walletAddress() {
-        const walletAddress = this.$store.state.account.address
-        if ((walletAddress)) {
-          const prefix = walletAddress.substr(0, 6);
-          const sufix = walletAddress.slice(-4);
-          return prefix + '…' + sufix;
-        } else {
-          return '';
-        }
-      },
-      networkName() {
-        const chainId = this.$store.state.web3.chainId;
-        return NETWORKS[chainId].name
-      },
-      networkIconFileName() {
-        const chainId = this.$store.state.web3.chainId;
-        return NETWORKS[chainId].icon
-      },
-      symbol() {
-        return this.$store.state.account.symbol
-      },
-      balance() {
-        return this.$store.state.account.balance
-      },
-      show() {
-        const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
-        return pathPattern.test(this.$route.path)
-      },
-      connected() {
-        return (this.$store.state.web3.provider)
-      }
-    },
-    methods: {
-      changeTheme(theme) {
-        this.$store.dispatch("changeTheme", theme);
-      },
-      openModal(target, size) {
-        this.$store.dispatch('openModal', {target: target, size: size});
+export default {
+  name: 'Header',
+  watch: {
+    $route(to, from) {
+      if(from.fullPath === "/payment") {
+        this.show = true
       }
     }
+  },
+  filters: {
+    balanceFormat(balance) {
+      const pattern = /^[0-9]+.[0-9]+$/
+      if (pattern.test(balance)) {
+        let balanceSplit = balance.toString().split('.')
+        if (balanceSplit[1].length > 4) {
+          balanceSplit[1] = balanceSplit[1].substr(0, 4)
+        } else {
+          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+        }
+        balance = balanceSplit[0] + '.' + balanceSplit[1]
+      }
+      return balance
+    },
+    walletAddressFormat(walletAddress) {
+      if ((walletAddress)) {
+        const prefix = walletAddress.substr(0, 6);
+        const sufix = walletAddress.slice(-4);
+        return prefix + '…' + sufix;
+      } else {
+        return '';
+      }
+    }
+  },
+  computed: {
+    walletAddress() {
+      return this.$store.state.account.address
+    },
+    networkName() {
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].name
+      } else {
+        return ''
+      }
+    },
+    networkIcon() {
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].icon
+      } else {
+        return ''
+      }
+    },
+    symbol() {
+      return this.$store.state.account.symbol
+    },
+    balance() {
+      return this.$store.state.account.balance
+    },
+    show() {
+      const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+      return pathPattern.test(this.$route.path)
+    },
+    connected() {
+      return (this.$store.state.web3.provider)
+    }
+  },
+  methods: {
+    changeTheme(theme) {
+      this.$store.dispatch("changeTheme", theme);
+    },
+    openModal(target, size) {
+      this.$store.dispatch('openModal', {target: target, size: size});
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -204,6 +222,10 @@
       span{
         margin-right: 8px;
       }
+    }
+    .btn-icon img {
+      width: 26px;
+      height: 26px;
     }
   }
   .account-wallet {
