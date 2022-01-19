@@ -3,13 +3,15 @@ import Vuex from 'vuex';
 
 import web3 from './modules/web3'
 import account from './modules/account'
+import payment from './modules/payment'
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
     web3,
-    account
+    account,
+    payment
   },
   state: {
     connected: false,
@@ -33,30 +35,9 @@ const store = new Vuex.Store({
       walletAddress: null
     },
     theme: "dark",
-    invoicePage: true,
-    paymentData: {
-      merchantDomain: null,
-      orderCode: null,
-      base_amount: null,
-      base_symbol: null,
-      email: null,
-      selectTokenSymbol: null,
-      selectTokenAmount: null
-    }
+    invoicePage: true
   },
   actions: {
-    setReceiveData({ commit }, data) {
-      commit('setReceiveData', data)
-    },
-    setPaymentData({ commit }, data) {
-      commit('setPaymentData', data)
-    },
-    setPaymentBaseAmount({ commit }, amount) {
-      commit('setPaymentBaseAmount', amount)
-    },
-    setPaymentTokenAmount({ commit }, amount) {
-      commit('setPaymentTokenAmount', amount)
-    },
     onConnect({ commit }, connection) {
       commit('setConnection', connection)
       commit('changeConnectStatus', true)
@@ -103,31 +84,6 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setReceiveData(state, data) {
-      state.paymentData.merchantDomain = data.domain
-      state.paymentData.orderCode = data.order_code
-      state.paymentData.base_symbol = (data.symbol === null) ? 'USDT' : data.symbol
-      state.paymentData.base_amount = data.amount
-      state.theme = data.display_theme
-    },
-    setPaymentData(state, data) {
-      state.paymentData.merchantDomain = (data.receiver) ? data.receiver : null
-      state.paymentData.orderCode = (data.orderCode) ? data.orderCode : null
-      state.paymentData.base_amount = (data.amount) ? data.amount : null
-      state.paymentData.base_symbol = (data.symbol) ? data.symbol : 'USDT'
-      state.paymentData.email = (data.email) ? data.email : null
-      state.paymentData.selectTokenSymbol = (data.selectTokenSymbol) ? data.selectTokenSymbol : null
-      state.paymentData.selectTokenAmount = (data.selectTokenAmount) ? data.selectTokenAmount : null
-    },
-    setPaymentBaseAmount(state, amount) {
-      state.paymentData.base_amount = amount
-    },
-    setEmail(state, email) {
-      state.paymentData.email = email
-    },
-    setPaymentTokenAmount(state, amount) {
-      state.paymentData.selectTokenAmount = amount
-    },
     setConnection(state, connection) {
       state.connection.provider = connection.provider
       state.connection.networkId = connection.networkId

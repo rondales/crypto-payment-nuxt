@@ -31,7 +31,7 @@
       <div class="add-flex j-between">
         <div>
           <p class="payment_Receiver mb-1">
-            Receiver：{{ merchantDomain }}
+            Receiver：{{ receiver }}
           </p>
           <p class="payment_invoice-id">
             Invoice ID: {{ invoiceId }}
@@ -95,11 +95,11 @@ export default {
     PaymentTop,
   },
   computed: {
-    merchantDomain: function() {
-      return this.$store.state.paymentData.merchantDomain
+    receiver: function() {
+      return this.$store.state.payment.domain
     },
     invoiceId: function() {
-      return this.$store.state.paymentData.orderCode
+      return this.$store.state.payment.orderCode
     }
   },
   methods: {
