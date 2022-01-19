@@ -4,7 +4,7 @@ const store = {
   namespaced: true,
   state: {
     instance: Web3,
-    chaninId: null,
+    chainId: null,
     provider: null
   },
   actions: {
@@ -18,11 +18,11 @@ const store = {
   mutations: {
     update(state, payload) {
       state.instance = payload.instance
-      state.chaninId = payload.chaninId
+      state.chainId = payload.chainId
       state.provider = payload.provider
     },
-    updateChaninId(state, payload) {
-      state.chaninId = payload
+    updateChainId(state, payload) {
+      state.chainId = payload
     }
   }
 }

@@ -16,6 +16,7 @@
     "@walletconnect/web3-provider": "^1.6.5",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "erc-20-abi": "^1.0.0",
     "v-clipboard": "^2.2.3",
     "vue": "^2.6.11",
     "vue-axios": "^3.4.0",

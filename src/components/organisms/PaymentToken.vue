@@ -27,10 +27,10 @@
       <div class="payment-box network">
         <div class="add-flex a-center j-between">
           <div class="add-flex a-center">
-            <img :src="$store.state.network.icon">
+            <img :src="networkIcon">
             <div class="payment-box_desc">
               <p>
-                {{$store.state.network.name}}
+                {{ networkName }}
               </p>
             </div>
           </div>
@@ -53,23 +53,23 @@
             Select token
           </p>
           <div class="token-items">
-            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="importToken(token)">
+            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="selectedToken(token)">
               <div class="add-flex j-between a-center">
                 <figure>
                   <img :src="token.icon" alt="">
                 </figure>
                 <dl>
                   <dt>
-                    {{token.symbol}}
+                    {{ token.symbol }}
                   </dt>
                   <dd>
-                    {{token.name}}
+                    {{ token.name }}
                   </dd>
                 </dl>
               </div>
               <div class="usdt-price">
                 <p>
-                  {{token.balance}}
+                  {{ token.balance | balanceFormat }}
                 </p>
               </div>
             </div>
@@ -82,20 +82,20 @@
           <div class="manage-desc">
             *Does not support tokenomics tokens, which have the property that transactions are subject to TAX 🙅‍♂️
           </div>
-          <input class="token-dsc border" type="text" value="" placeholder="0x0000" @keyup.enter="pushTokenId">
+          <input class="token-dsc border" type="text" placeholder="0x0000" v-model="tokenAddress" @keyup.enter="searchToken">
           <div class="manage-wrap">
             <div class="manage-warning" v-if="validAddress">
               Enter valid token address
             </div>
-            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(tokenId, key) in tokenIdList" :key="key">
+            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(token, key) in tokenIdList" :key="key">
               <li>
-                <img :src="tokenId.icon">
+                <img :src="token.icon">
               </li>
               <li class="token-name">
-                {{tokenId.symbol}}
+                {{ token.symbol }}
                 <br>
                 <span>
-                  {{tokenId.tokenName}}
+                  {{ token.name }}
                 </span>
               </li>
               <li class="manage-item--right add-flex a-center j-between">
@@ -104,14 +104,14 @@
                     <img src="@/assets/images/link-icon.svg">
                   </figure>
                 </a>
-                <div class="manage-import" @click="importToken(tokenId)">
+                <div class="manage-import" @click="importToken(key)">
                   Import
                 </div>
               </li>
             </ul>
             <div class="add-flex j-between a-center">
               <div class="manage-none">
-                {{tokenCount}} Custom Token
+                {{ tokenCount }} Custom Token
               </div>
               <div class="manage-clear" v-if="tokenCount" @click="clearToken">
                 Clear all
@@ -125,63 +125,56 @@
 </template>
 
 <script>
-/*
-@todo Web3ConnectTeam
+import { NETWORKS } from '@/constants'
 
-In this page, you need to implement the following process or function.
-
-1. Network switching
-2. Retrieve and screen display of network default token list
-3. Obtaining the balance of each network default token and displaying it on the screen
-4. Search for tokens by token contract address
-5. Import of retrieved tokens (like SushiSwap)
-6. Transition to the balance confirmation screen after selecting or importing tokens
-*/
 export default {
-  name: 'PaymentPriceHandler',
+  name: 'PaymentToken',
   data() {
     return {
       tab: "list",
-      tokenCount: 1,
-      tokenList: [
-        {
-          name: 'Tether USD',
-          symbol: 'USDT',
-          icon: require('@/assets/images/icon/usdt.svg'),
-          balance: 0.4959
-        },
-        {
-          name: 'USD Coin',
-          symbol: 'USDC',
-          icon: require('@/assets/images/icon/usdc.svg'),
-          balance: 0.5011
-        },
-        {
-          name: 'Dai stablecoin',
-          symbol: 'DAI',
-          icon: require('@/assets/images/icon/dai.svg'),
-          balance: 0.6129
-        },
-        {
-          name: 'Ethereum',
-          symbol: 'ETH',
-          icon: require('@/assets/images/icon/eth.svg'),
-          balance: 0.7129
-        },
-      ],
-      tokenIdList: [
-        {
-          icon:  require('@/assets/images/icon/sauna.svg'),
-          symbol: "SAUNA",
-          tokenName: "SaunaFinance Token",
-        }
-      ],
+      tokenAddress: '',
+      tokenCount: 0,
+      tokenList: [],
+      tokenIdList: [],
       validAddress: false,
+    }
+  },
+  filters: {
+    balanceFormat(balance) {
+      const pattern = /^[0-9]+.[0-9]+$/
+      if (pattern.test(balance)) {
+        let balanceSplit = balance.toString().split('.')
+        if (balanceSplit[1].length > 4) {
+          balanceSplit[1] = balanceSplit[1].substr(0, 4)
+        } else {
+          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+        }
+        balance = balanceSplit[0] + '.' + balanceSplit[1]
+      }
+      return balance
+    }
+  },
+  watch: {
+    chainId() {
+      this.getDefaultTokens()
     }
   },
   computed: {
     amount() {
       return this.$store.state.paymentData.base_amount
+    },
+    networkIcon() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
+    },
+    networkName() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].name
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
     }
   },
   methods: {
@@ -196,35 +189,69 @@ export default {
       this.tab = "tokens"
       this.isActive = true
     },
-    pushTokenId(e){
-      this.tokenId = e.target.value;
-      this.validAddress = true;
-      if(this.validAddress === false) {
-        this.tokenCount += 1;
-      }
-      e.target.value = "";
+    getDefaultTokens() {
+      this.$web3.getDefaultTokens(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address
+      ).then((tokens) => { this.tokenList = tokens })
     },
     clearToken(){
+      this.tokenAddress = ''
       this.tokenIdList = []
       this.tokenCount = 0;
+      this.validAddress = false
     },
-    importToken(data){
+    searchToken(event) {
+      this.$web3.searchToken(
+        this.$store.state.web3.instance,
+        event.target.value,
+        this.$store.state.account.address
+      ).then((response) => {
+        this.tokenIdList.push({
+          name: response.name,
+          symbol: response.symbol,
+          balance: response.balance,
+          address: response.address,
+          icon: response.icon
+        })
+        this.tokenCount = this.tokenIdList.length
+      }).catch((error) => {
+        console.log(error)
+        this.tokenCount = 0
+        this.tokenIdList = []
+        this.validAddress = true
+      })
+    },
+    importToken(index){
+      const token = this.tokenIdList[index]
+      this.tokenList.unshift({
+        name: token.name,
+        symbol: token.symbol,
+        balance: token.balance,
+        icon: token.icon
+      })
+      this.clearToken()
+      this.tab = 'list'
+    },
+    selectedToken(token) {
       const paymentData = this.$store.state.paymentData
 
-      this.$router.push(
-        {
-          path: '/payment/exchange/' + this.$route.params.token,
-          query: {
-            receiver: paymentData.merchantDomain,
-            order_code: paymentData.orderCode,
-            symbol: paymentData.base_symbol,
-            amount: paymentData.base_amount,
-            email: paymentData.email,
-            token: data.symbol
-          }
+      this.$router.push({
+        path: '/payment/exchange/' + this.$route.params.token,
+        query: {
+          receiver: paymentData.merchantDomain,
+          code: paymentData.orderCode,
+          symbol: paymentData.base_symbol,
+          amount: paymentData.base_amount,
+          token: token.symbol,
+          balance: token.balance
         }
-      );
+      })
     }
+  },
+  created() {
+    this.getDefaultTokens()
   }
 }
 </script>
