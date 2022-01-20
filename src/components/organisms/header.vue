@@ -7,14 +7,14 @@
           <img class="sp" src="@/assets/images/logo-icon.svg" alt="Web3 Payment">
         </h1>
         <p class="logo-sub">
-          Web3 Payment
+          {{ subTitle }}
         </p>
         <div class="user-status" :class="{'is-admin': $route.name === 'admin'}">
           merchant
         </div>
       </div>
       <div class="global-header__actions add-flex a-center">
-        <span class="toggle-theme pc">
+        <span class="toggle-theme pc" v-if="showSwitchThemeButton">
           <button
             :class="[
               'theme-button',
@@ -97,6 +97,18 @@ export default {
     }
   },
   computed: {
+    subTitle() {
+      let subTitle = ''
+      if (this.$route.name === 'admin') {
+        subTitle = 'Apps'
+      } else {
+        subTitle = 'Web3 Payment'
+      }
+      return subTitle
+    },
+    showSwitchThemeButton() {
+      return (this.$route.name !== 'admin')
+    },
     walletAddress() {
       return this.$store.state.account.address
     },
