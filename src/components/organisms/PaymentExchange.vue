@@ -37,12 +37,12 @@
               <img :src="tokenIcon">
             </figure>
             <p>
-              {{ selectedSymbol }}
+              {{ tokenSymbol }}
             </p>
           </div>
           <div class="payment_balance-value">
             <p>
-              Balance : {{balancePrice}} {{ selectedSymbol }}
+              Balance : {{ tokenBalance | balanceFormat }} {{ tokenSymbol }}
             </p>
             <p>
               equivalent : {{equivalent}} USDT
@@ -52,7 +52,7 @@
         <div class="payment_balance-topken border mb-2">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
-              {{ selectedSymbol }}
+              {{ tokenSymbol }}
             </p>
             <div class="payment_balance-equivalent">
               {{ amount }} USD equivalent
@@ -105,26 +105,63 @@ In this page, you need to implement the following process or function.
 3. Check if the selected token has enough USDT payment amount
 4. Transition to the payment details screen
 */
+import { NETWORKS } from '@/constants'
+import { BscTokens, EthereumTokens } from '@/contracts/tokens'
+
 export default {
   name: 'PaymentExchange',
   data() {
     return{
       changedPrice: false,
-      tokenIcon: '',
       balancePrice: 2340,
       equivalent: 2340,
       loading: false
     }
   },
+  filters: {
+    balanceFormat(balance) {
+      const pattern = /^[0-9]+.[0-9]+$/
+      if (pattern.test(balance)) {
+        let balanceSplit = balance.toString().split('.')
+        if (balanceSplit[1].length > 4) {
+          balanceSplit[1] = balanceSplit[1].substr(0, 4)
+        } else {
+          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+        }
+        balance = balanceSplit[0] + '.' + balanceSplit[1]
+      }
+      return balance
+    }
+  },
   computed: {
+    tokenIcon() {
+      const chainId = this.$store.state.web3.chainId
+      const symbol = this.$store.state.payment.token.symbol
+      const tokens =
+        NETWORKS[1].chainId === chainId || NETWORKS[3].chainId === chainId
+        ? EthereumTokens
+        : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
+        ? BscTokens
+        : null
+      if (tokens !== null) {
+        return symbol in tokens
+          ? tokens[symbol].icon
+          : require('@/assets/images/symbol/unknown.svg')
+      } else {
+        return require('@/assets/images/symbol/unknown.svg')
+      }
+    },
     symbol() {
       return this.$store.state.payment.symbol
     },
     amount() {
       return this.$store.state.payment.amount
     },
-    selectedSymbol() {
-      return this.$store.state.payment.paySymbol
+    tokenSymbol() {
+      return this.$store.state.payment.token.symbol
+    },
+    tokenBalance() {
+      return this.$store.state.payment.token.balance
     }
   },
   methods: {
@@ -135,7 +172,9 @@ export default {
       location.reload();
     },
     sendTokenItems(){
-      this.$store.dispatch('payment/updatePayAmount', 1000.11)
+      this.$store.dispatch('payment/updateToken', {
+        amount: 1000.11
+      })
 
       this.loading = true;
       this.$router.push(
@@ -146,7 +185,7 @@ export default {
             code: this.$store.state.payment.orderCode,
             symbol: this.$store.state.payment.symbol,
             amount: this.$store.state.payment.amount,
-            token: this.$store.state.payment.paySymbol,
+            token: this.$store.state.payment.token.symbol,
             token_amount: 1000.11,
           }
         }
@@ -159,9 +198,18 @@ export default {
       domain: this.$route.query.receiver,
       orderCode: this.$route.query.code,
       symbol: this.$route.query.symbol,
-      amount: this.$route.query.amount,
-      paySymbol: this.$route.query.token
+      amount: this.$route.query.amount
     })
+    this.$store.dispatch('payment/updateToken', {
+      symbol: this.$route.query.token
+    })
+    this.$web3.checkTokenBalance(
+      this.$store.state.web3.instance,
+      this.$store.state.web3.chainId,
+      this.$store.state.payment.token.symbol,
+      this.$store.state.payment.token.decimal,
+      this.$store.state.payment.token.address
+    )
 
     setTimeout(() => {
       this.changedPrice = true;

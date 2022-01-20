@@ -1,6 +1,9 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
+import { ethers } from 'ethers'
+import { AlphaRouter } from '@uniswap/smart-order-router'
+import { Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import { EthereumTokens, BscTokens } from '@/contracts/tokens'
@@ -18,7 +21,8 @@ export default {
           getBalance: getBalance,
           searchToken: searchToken,
           importToken: importToken,
-          switchChain: switchChain
+          switchChain: switchChain,
+          checkTokenBalance: checkTokenBalance
         }
       }
     })
@@ -66,7 +70,7 @@ const connectByWalletConnect = async function() {
 
 const getAccountData = async function(web3, chainId) {
   const addresses = await web3.eth.getAccounts()
-  const balance = await getBalance(web3, addresses[0], 'ether')
+  const balance = await getBalance(web3, addresses[0])
   return {
     address: addresses[0],
     symbol: NETWORKS[chainId].symbol,
@@ -81,16 +85,20 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
       const tokenContract = defaultToken.address === null
         ? null
         : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
+      const decimal = tokenContract === null
+        ? 18
+        : parseInt(await tokenContract.methods.decimals().call(), 10)
       const balance = await getBalance(
         web3,
         walletAddress,
-        defaultToken.symbol === 'USDC' ? 'mwei' : 'ether',
         tokenContract
       )
 
       return {
         name: defaultToken.name,
         symbol: defaultToken.symbol,
+        decimal: decimal,
+        address: defaultToken.address,
         balance: balance,
         icon: defaultToken.icon
       }
@@ -106,12 +114,12 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
   try {
     const name = await tokenContract.methods.name().call()
     const symbol = await tokenContract.methods.symbol().call()
-    const decimals = await tokenContract.methods.decimals().call()
-    const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
+    const decimal = parseInt(await tokenContract.methods.decimals().call(), 10)
+    const balance = await getBalance(web3, walletAddress, tokenContract)
     return {
       name: name,
       symbol: symbol,
-      decimals: decimals,
+      decimal: decimal,
       balance: balance,
       address: contractAddress,
       icon: require('@/assets/images/symbol/unknown.svg')
@@ -126,7 +134,7 @@ const importToken = async function(web3, contractAddress, walletAddress) {
   const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
   const name = await tokenContract.name
   const symbol = await tokenContract.symbol
-  const balance = await getBalance(web3, walletAddress, 'ether', tokenContract)
+  const balance = await getBalance(web3, walletAddress, tokenContract)
   return {
     name: name,
     symbol: symbol,
@@ -135,12 +143,21 @@ const importToken = async function(web3, contractAddress, walletAddress) {
   }
 }
 
-const getBalance = async function(web3, walletAddress, unit, tokenContract = null) {
+const getBalance = async function(web3, walletAddress, tokenContract = null) {
+  let unit
   let balance = `${0}`
 
   if (tokenContract === null) {
+    unit = 'ether'
     balance = await web3.eth.getBalance(walletAddress)
   } else {
+    const decimal = await tokenContract.methods.decimals().call()
+    const weiValue = (10 ** decimal).toString()
+    const unitMap = web3.utils.unitMap
+    const units = Object.keys(unitMap).filter((key) => {
+      return unitMap[key] === weiValue
+    })
+    unit = units.length > 0 ? units[0] : 'ether'
     balance = await tokenContract.methods
       .balanceOf(walletAddress)
       .call({ from: walletAddress })
@@ -159,6 +176,46 @@ const switchChain = async function(web3, chainId) {
     console.log(e)
     throw new Error(e.message)
   }
+}
+
+const checkTokenBalance = async function(
+  web3,
+  chainId,
+  tokenSymbol,
+  tokenDecimal,
+  tokenAddress
+) {
+  const usdtContract = new web3.eth.Contract(
+    EthereumTokens.USDT.abi,
+    EthereumTokens.USDT.address
+  )
+  const usdtDecimal = parseInt(await usdtContract.methods.decimals().call())
+  const usdt = new Token(
+    chainId,
+    EthereumTokens.USDT.address,
+    usdtDecimal,
+    EthereumTokens.USDT.symbol
+  )
+  const swapToken = new Token(
+    chainId,
+    tokenAddress,
+    tokenDecimal,
+    tokenSymbol
+  )
+  const provider = new ethers.providers.JsonRpcProvider(
+    NETWORKS[chainId].rpcUrl
+  )
+  const router = new AlphaRouter({
+    chainId: chainId,
+    provider: provider
+  })
+  const usdtAmount = CurrencyAmount.fromRawAmount(usdt, 1)
+  const route = await router.route(usdtAmount, swapToken, TradeType.EXACT_INPUT)
+
+  console.log(route)
+  console.log(`Quote Exact In: ${route.quote.toFixed(16)}`)
+  console.log(`Gas Adjusted Quote In: ${route.quoteGasAdjusted.toFixed(2)}`)
+  console.log(`Gas Used USD: ${route.estimatedGasUsedUSD.toFixed(6)}`)
 }
 
 function getTokenAbis(chainId) {
