@@ -35,7 +35,7 @@
 import Header from "@/components/organisms/header"
 
 export default {
-  name: 'payment',
+  name: 'MerchantLogin',
   components: {
     Header
   },
