@@ -35,16 +35,16 @@
               <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
-                :v-model="timeFrom"
-                format="dd-MM-yyyy"
+                v-model="timeFrom"
+                format="dd/MM/yyyy"
               ></Datepicker>
             </div>
             <div class="select-date">
               <Datepicker
                 :monday-first="true"
                 :placeholder="this.datePickerFormat"
-                :v-model="timeTo"
-                format="dd-MM-yyyy"
+                v-model="timeTo"
+                format="dd/MM/yyyy"
               ></Datepicker>
             </div>
           </div>
@@ -107,7 +107,7 @@
                   {{column.order_code}}
                 </td>
                 <td>
-                  {{column.updated_at}}
+                  {{column.updated_at | convertResultTime}}
                 </td>
                 <td>
                   {{column.transaction_address | omittedText}}
@@ -302,6 +302,7 @@ In this page, you need to implement the following process or function.
 */
 import Datepicker from 'vuejs-datepicker';
 import Paginate from 'vuejs-paginate';
+import moment from 'moment'
 import { errorCodeList } from '@/enum/error_code'
 export default {
   name: 'PaymentTop',
@@ -321,7 +322,7 @@ export default {
       timeTo:'',
       sortKey: '',
       sortValue: '',
-      datePickerFormat: 'dd-MM-yyyy',
+      datePickerFormat: 'dd/MM/yyyy',
       currentPage: 1,
       pageFrom: 0,
       lastPage: 0,
@@ -375,6 +376,10 @@ export default {
       this.search()
     },
     search() {
+      let unixTimeFrom = ''
+      let unixTimeTo = ''
+      if (this.timeFrom) unixTimeFrom = moment(this.timeFrom).unix()
+      if (this.timeTo) unixTimeTo = moment(this.timeTo).unix()
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal'
       let params = new URLSearchParams([
         ['per_page', this.perPage],
@@ -382,8 +387,8 @@ export default {
       ])
       if (this.selectStatus !== '0') params.append('status', this.selectStatus)
       if (this.selectIdValue) params.append(this.selectId, this.selectIdValue)
-      if (this.timeFrom) params.append('updated_at_from', this.timeFrom)
-      if (this.timeTo) params.append('updated_at_to', this.timeTo)
+      if (this.timeFrom) params.append('updated_at_from', unixTimeFrom)
+      if (this.timeTo) params.append('updated_at_to', unixTimeTo)
       if (this.sortKey) params.append('sort_key', this.sortKey)
       if (this.sortValue) params.append('sort_value', this.sortValue)
       const headers = {
@@ -577,6 +582,9 @@ export default {
         return text;
       }
     },
+    convertResultTime(value){
+      return moment(value).format('hh:mm:ss DD/MM/YYYY');
+    }
   }
 }
 </script>

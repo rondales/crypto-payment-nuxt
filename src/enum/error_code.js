@@ -21,8 +21,6 @@ export const errorCodeList = {
   3031: { msg: 'Please enter the successful payment return URL in the correct format.' },
   3032: { msg: 'Please enter the payment faliure return URL in the correct format.' },
   3080: { msg: 'Status is incorrect.' },
-  3090: { msg: 'The search date and time from is not correct.' },
-  3091: { msg: 'The search date and time to is not correct.' },
   3100: { msg: 'The number of items per page setting is incorrect.' },
   3101: { msg: 'The page number setting for the current page is incorrect.' },
   3110: { msg: 'Sort items are incorrect.' },
