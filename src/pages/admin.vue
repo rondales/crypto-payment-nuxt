@@ -32,29 +32,49 @@
 </template>
 
 <script>
-/*
-@todo Web3ConnectTeam
-
-In this page, you need to implement the following process or function.
-
-1. Wallet connection process
-
-* After connecting to the wallet, communicate with the login API to login (Web App Team)
-
-*/
 import Header from "@/components/organisms/header"
 
-// import AdminIndex from '@/components/templates/AdminIndex'
 export default {
   name: 'payment',
   components: {
-    Header,
-    // AdminIndex
+    Header
   },
   methods: {
     walletModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
+    useMetamask() {
+      this.$web3.connectByMetamask().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          // @todo here put authentificate logic code
+        })
+      }).catch((error) => {
+        if (error.name === 'MetamaskNotInstalledError') {
+          this.openModal('error-modal', 'small', error.message)
+        } else {
+          this.openModal('error-metamask-modal', 'small')
+        }
+      })
+    },
+    useWalletConnect() {
+      this.$web3.connectByWalletConnect().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          // @todo here put authentificate logic code
+        })
+      }).catch(() => {
+        this.openModal('error-wallet-modal', 'small')
+      })
+    }
   }
 }
 </script>
