@@ -20,6 +20,11 @@ export const errorCodeList = {
   3030: { msg: 'Please enter the success notification URL in the correct format.' },
   3031: { msg: 'Please enter the successful payment return URL in the correct format.' },
   3032: { msg: 'Please enter the payment faliure return URL in the correct format.' },
+  3080: { msg: 'Status is incorrect.' },
+  3100: { msg: 'The number of items per page setting is incorrect.' },
+  3101: { msg: 'The page number setting for the current page is incorrect.' },
+  3110: { msg: 'Sort items are incorrect.' },
+  3111: { msg: 'Sort settings are incorrect.' },
   3250: { msg: 'Please enter the exchange margin rate in the correct format.' },
   9000: { msg: 'Cannot be continued due to system reasons.' }
 }
