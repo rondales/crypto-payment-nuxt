@@ -84,41 +84,41 @@
                 <th>Transaction Amount</th>
               </tr>
             </thead>
-            <tbody v-if="columns.length">
+            <tbody v-if="records.length">
               <tr
-                v-for="(column, index) in columns"
+                v-for="(record, index) in records"
                 :key="index"
               >
                 <td>
-                  <div v-if="column.status === 1" class="received">
+                  <div v-if="record.status === 1" class="received">
                     Payment start
                   </div>
-                  <div v-if="column.status === 2" class="received">
+                  <div v-if="record.status === 2" class="received">
                     Sent transaction
                   </div>
-                  <div v-if="column.status === 3" class="received">
+                  <div v-if="record.status === 3" class="received">
                     Mining transaction
                   </div>
-                  <div v-if="column.status === 4" class="received">
+                  <div v-if="record.status === 4" class="received">
                     Payment complete
                   </div>
                 </td>
                 <td>
-                  {{column.order_code}}
+                  {{record.order_code}}
                 </td>
                 <td>
-                  {{column.updated_at | convertResultTime}}
+                  {{record.updated_at | convertResultTime}}
                 </td>
                 <td>
-                  {{column.transaction_address | omittedText}}
+                  {{record.transaction_address | omittedText}}
                 </td>
-                <td v-if="column.network_type === 1">
+                <td v-if="record.network_type === 1">
                   BNB
                 <td v-else>
                   ETH
                 </td>
                 <td>
-                  {{column.user_amount}} USTD
+                  {{record.user_amount}} USTD
                 </td>
               </tr>
             </tbody>
@@ -337,7 +337,7 @@ export default {
       domain: '',
       txtRecord: '',
       verified: false,
-      columns: [],
+      records: [],
       address:{
         eth: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
         bsc: "https://bscscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189"
@@ -376,10 +376,8 @@ export default {
       this.search()
     },
     search() {
-      let unixTimeFrom = ''
-      let unixTimeTo = ''
-      if (this.timeFrom) unixTimeFrom = moment(this.timeFrom).unix()
-      if (this.timeTo) unixTimeTo = moment(this.timeTo).unix()
+      const unixTimeFrom = this.timeFrom ? moment(this.timeFrom).unix() : this.timeFrom
+      const unixTimeTo = this.timeTo ? moment(this.timeTo).unix() : this.timeTo
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal'
       let params = new URLSearchParams([
         ['per_page', this.perPage],
@@ -395,7 +393,7 @@ export default {
         Authorization: `Bearer ${localStorage.getItem('login_token')}`
       }
       this.axios.get(url, { headers: headers, params: params }).then((response) => {
-        this.columns = response.data.data
+        this.records = response.data.data
         this.currentPage = response.data.current_page
         this.pageFrom = response.data.from
         this.lastPage = response.data.last_page
