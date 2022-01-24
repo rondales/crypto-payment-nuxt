@@ -45,15 +45,8 @@ export default {
       this.$store.dispatch("openModal", {target: target, size: "small"});
     },
     useMetamask() {
-      this.$web3.connectByMetamask().then((connectRes) => {
-        this.$store.dispatch('web3/update', connectRes)
-        this.$web3.getAccountData(
-          connectRes.instance,
-          connectRes.chainId
-        ).then((accountRes) =>{
-          this.$store.dispatch('account/update', accountRes)
-          // @todo here put authentificate logic code
-        })
+      this.$web3.connectByMetamask().then((provider) => {
+        this.walletConnected(provider)
       }).catch((error) => {
         if (error.name === 'MetamaskNotInstalledError') {
           this.openModal('error-modal', 'small', error.message)
@@ -63,15 +56,8 @@ export default {
       })
     },
     useWalletConnect() {
-      this.$web3.connectByWalletConnect().then((connectRes) => {
-        this.$store.dispatch('web3/update', connectRes)
-        this.$web3.getAccountData(
-          connectRes.instance,
-          connectRes.chainId
-        ).then((accountRes) =>{
-          this.$store.dispatch('account/update', accountRes)
-          // @todo here put authentificate logic code
-        })
+      this.$web3.connectByWalletConnect().then((provider) => {
+        this.walletConnected(provider)
       }).catch(() => {
         this.openModal('error-wallet-modal', 'small')
       })
@@ -85,35 +71,31 @@ export default {
       }
       return this.axios.post(url, params)
     },
-    authentificatedRedirect() {
-      this.$router.push({ path: '/admin/dashboard' })
+    walletConnected(provider) {
+      this.$web3.getAccountData(
+        provider.instance,
+        provider.chainId
+      ).then((account) =>{
+        this.apiConnectAuthentification(account.address).then((authed) => {
+          this.$store.dispatch('web3/update', provider)
+          this.$store.dispatch('account/update', account)
+          localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+          this.$router.push({ path: '/admin/dashboard' })
+        })
+      })
     }
   },
   created() {
-    if (this.$web3.isConnectedByWalletConnect) {
+    if (this.$web3.isConnectedByWalletConnect()) {
       this.$web3.connectByWalletConnect().then((provider) => {
-        this.$web3.getAccountData(provider.instance, provider.chainId).then((account) => {
-          this.apiConnectAuthentification(account.address).then((authed) => {
-            this.$store.dispatch('web3/update', provider)
-            this.$store.dispatch('account/update', account)
-            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-            this.authentificatedRedirect()
-          })
-        })
+        this.walletConnected(provider)
       })
     } else {
       const web3 = this.$web3.getWeb3Instance()
       this.$web3.getAccounts(web3).then((accounts) => {
         if (accounts.length > 0) {
           this.$web3.connectByMetamask().then((provider) => {
-            this.$web3.getAccountData(provider.instance, provider.chainId).then((account) => {
-              this.apiConnectAuthentification(account.address).then((authed) => {
-                this.$store.dispatch('web3/update', provider)
-                this.$store.dispatch('account/update', account)
-                localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-                this.authentificatedRedirect()
-              })
-            })
+            this.walletConnected(provider)
           })
         }
       })
