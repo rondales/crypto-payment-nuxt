@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { LOGIN_TOKEN } from '@/constants'
 import Header from "@/components/organisms/header"
 
 export default {
@@ -73,6 +74,48 @@ export default {
         })
       }).catch(() => {
         this.openModal('error-wallet-modal', 'small')
+      })
+    },
+    apiConnectAuthentification(walletAddress) {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
+      const params = {
+        address: walletAddress,
+        token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null,
+        direct_token: this.$route.query.token ? this.$route.query.token : null
+      }
+      return this.axios.post(url, params)
+    },
+    authentificatedRedirect() {
+      this.$router.push({ path: '/admin/dashboard' })
+    }
+  },
+  created() {
+    if (this.$web3.isConnectedByWalletConnect) {
+      this.$web3.connectByWalletConnect().then((provider) => {
+        this.$web3.getAccountData(provider.instance, provider.chainId).then((account) => {
+          this.apiConnectAuthentification(account.address).then((authed) => {
+            this.$store.dispatch('web3/update', provider)
+            this.$store.dispatch('account/update', account)
+            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+            this.authentificatedRedirect()
+          })
+        })
+      })
+    } else {
+      const web3 = this.$web3.getWeb3Instance()
+      this.$web3.getAccounts(web3).then((accounts) => {
+        if (accounts.length > 0) {
+          this.$web3.connectByMetamask().then((provider) => {
+            this.$web3.getAccountData(provider.instance, provider.chainId).then((account) => {
+              this.apiConnectAuthentification(account.address).then((authed) => {
+                this.$store.dispatch('web3/update', provider)
+                this.$store.dispatch('account/update', account)
+                localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+                this.authentificatedRedirect()
+              })
+            })
+          })
+        }
       })
     }
   }

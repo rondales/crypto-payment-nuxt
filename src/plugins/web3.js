@@ -13,6 +13,9 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
+          getWeb3Instance: getWeb3Instance,
+          isConnectedByWalletConnect: isConnectedByWalletConnect,
+          getAccounts: getAccounts,
           getAccountData: getAccountData,
           getDefaultTokens: getDefaultTokens,
           getBalance: getBalance,
@@ -62,6 +65,25 @@ const connectByWalletConnect = async function() {
     instance: provider,
     chainId: chainId
   }
+}
+
+const isConnectedByWalletConnect = function() {
+  let rpcList = { rpc: {} }
+  Object.keys(AvailableNetworks).forEach((key) => {
+    rpcList.rpc[AvailableNetworks[key].chainId] = AvailableNetworks[key].rpcUrl
+  })
+  const provider = new WalletConnectProvider(rpcList)
+  return provider.wc.session.connected
+}
+
+const getWeb3Instance = function() {
+  return new Web3(Web3.givenProvider)
+}
+
+const getAccounts = async function(web3) {
+  return await web3.currentProvider.request({
+    method: 'eth_accounts'
+  })
 }
 
 const getAccountData = async function(web3, chainId) {
