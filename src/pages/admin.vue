@@ -86,19 +86,21 @@ export default {
     }
   },
   created() {
-    if (this.$web3.isConnectedByWalletConnect()) {
-      this.$web3.connectByWalletConnect().then((provider) => {
-        this.walletConnected(provider)
-      })
-    } else {
-      const web3 = this.$web3.getWeb3Instance()
-      this.$web3.getAccounts(web3).then((accounts) => {
-        if (accounts.length > 0) {
-          this.$web3.connectByMetamask().then((provider) => {
-            this.walletConnected(provider)
-          })
-        }
-      })
+    if (process.env.VUE_APP_MANAGEMENT_AUTO_LOGIN === 'true') {
+      if (this.$web3.isConnectedByWalletConnect()) {
+        this.$web3.connectByWalletConnect().then((provider) => {
+          this.walletConnected(provider)
+        })
+      } else {
+        const web3 = this.$web3.getWeb3Instance()
+        this.$web3.getAccounts(web3).then((accounts) => {
+          if (accounts.length > 0) {
+            this.$web3.connectByMetamask().then((provider) => {
+              this.walletConnected(provider)
+            })
+          }
+        })
+      }
     }
   }
 }
