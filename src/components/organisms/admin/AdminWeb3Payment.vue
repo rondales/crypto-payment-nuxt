@@ -32,20 +32,33 @@
           </div>
           <div class="select-date-wrap add-flex">
             <div class="select-date">
-              <Datepicker
-                :monday-first="true"
-                :placeholder="this.datePickerFormat"
+              <DatetimePicker
                 v-model="timeFrom"
-                format="dd/MM/yyyy"
-              ></Datepicker>
+                :id="'from'"
+                :locale="'en'"
+                :first-day-of-week="1"
+                :format="'YYYY-MM-DD HH:mm:00'"
+                :formatted="'DD/MM/YYYY HH:mm'"
+                :label="'from'"
+                :no-label="true"
+                :no-header="true"
+                :dark="true"
+              ></DatetimePicker>
             </div>
             <div class="select-date">
-              <Datepicker
-                :monday-first="true"
-                :placeholder="this.datePickerFormat"
+              <DatetimePicker
                 v-model="timeTo"
-                format="dd/MM/yyyy"
-              ></Datepicker>
+                :id="'to'"
+                :locale="'en'"
+                :first-day-of-week="1"
+                :format="'YYYY-MM-DD HH:mm:59'"
+                :formatted="'DD/MM/YYYY HH:mm'"
+                :label="'to'"
+                :no-label="true"
+                :no-header="true"
+                :dark="true"
+                :right="true"
+              ></DatetimePicker>
             </div>
           </div>
           <div class="search-btn" @click="searchConditions">
@@ -300,14 +313,15 @@ In this page, you need to implement the following process or function.
 *The issued contract information is saved in the DB via the API.
  Please make sure that you can get the contract address and argument information.
 */
-import Datepicker from 'vuejs-datepicker';
+import DatetimePicker from 'vue-ctk-date-time-picker'
+import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 import Paginate from 'vuejs-paginate';
 import moment from 'moment'
 import { errorCodeList } from '@/enum/error_code'
 export default {
   name: 'PaymentTop',
   components: {
-    Datepicker,
+    DatetimePicker,
     Paginate
   },
   data() {
@@ -322,7 +336,6 @@ export default {
       timeTo:'',
       sortKey: '',
       sortValue: '',
-      datePickerFormat: 'dd/MM/yyyy',
       currentPage: 1,
       pageFrom: 0,
       lastPage: 0,
@@ -581,7 +594,7 @@ export default {
       }
     },
     convertResultTime(value){
-      return moment(value).format('hh:mm:ss DD/MM/YYYY');
+      return moment(value).format('DD/MM/YYYY hh:mm');
     }
   }
 }
@@ -589,6 +602,31 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+
+.select-date::v-deep {
+  .date-time-picker {
+    $base-bg-color: #191820;
+    $base-font-color: #FFFFFF;
+    .field-input {
+      height: 35px;
+      min-height: 30px;
+      padding-left: 32px;
+      padding-right: 0px;
+      background: $base-bg-color;
+      border: none !important;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: $base-font-color;
+    }
+    .field-clear-button {
+      right: 3px;
+    }
+    .datepicker {
+      margin-top: 4px;
+    }
+  }
+}
 
 .toggle-btn{
   width: 30%;
@@ -633,7 +671,7 @@ export default {
       right: 50%;
       transform: translate(-50%,0);
       content: "";
-      height: 32px;
+      height: 35px;
       width: 1px;
       background: #78668D;
     }
@@ -676,7 +714,7 @@ export default {
       right: 70%;
       transform: translate(-50%,0);
       content: "";
-      height: 32px;
+      height: 35px;
       width: 1px;
       background: #78668D;
       @include media(sp) {
@@ -716,7 +754,7 @@ export default {
     }
   }
   .select-date-wrap{
-    width: 30%;
+    width: 35%;
     position: relative;
     @include media(sp) {
       width: 100%;
@@ -750,7 +788,7 @@ export default {
       top: 50%;
       left: 8px;
       transform: translate(0%, -50%);
-      z-index: 0;
+      z-index: 1;
     }
   }
   .search-btn{
@@ -1115,49 +1153,26 @@ export default {
 }
 </style>
 <style lang="scss">
-  .vdp-datepicker{
-    input{
-      font-size: 14px;
-      font-weight: 300;
-      width: 100%;
-      padding: 0 4px 0 36px;
-      line-height: 32px;
-    }
-  }
-  .prev,.next{
-    background: #fff !important;
-  }
-  .day__month_btn,.month__year_btn{
-    &:hover{
-      background: #000 !important;
-      opacity: .8;
-    }
-  }
-  .vdp-datepicker__calendar {
-    background: #000 !important;
-    right: 10px;
-  }
+.prev-item {
+  font-size: 16px;
+  margin: 0 8px;
+  display: inline;
+}
 
-  .prev-item {
-    font-size: 16px;
-    margin: 0 8px;
-    display: inline;
-  }
+.next-item {
+  font-size: 16px;
+  margin: 0 8px;
+  display: inline;
+}
 
-  .next-item {
-    font-size: 16px;
-    margin: 0 8px;
-    display: inline;
+.p-num{
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 8px;
+  display: inline;
+  cursor: pointer;
+  &.active{
+    background: #4E455A;
   }
-
-  .p-num{
-    padding: 8px;
-    font-size: 13px;
-    border-radius: 8px;
-    display: inline;
-    cursor: pointer;
-    &.active{
-      background: #4E455A;
-    }
-  }
+}
 </style>
