@@ -302,6 +302,7 @@ In this page, you need to implement the following process or function.
 */
 import Datepicker from 'vuejs-datepicker';
 import Paginate from 'vuejs-paginate';
+import { saveAs } from 'file-saver';
 import moment from 'moment'
 import { errorCodeList } from '@/enum/error_code'
 export default {
@@ -338,6 +339,15 @@ export default {
       txtRecord: '',
       verified: false,
       records: [],
+      searchParamsTemp: {
+        status: '0',
+        variableKey: 'transaction_address',
+        variableValue: '',
+        datetimeFrom: '',
+        datetimeTo: '',
+        sortKey: '',
+        sortValue: ''
+      },
       address:{
         eth: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
         bsc: "https://bscscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189"
@@ -369,6 +379,7 @@ export default {
     },
     searchConditions() {
       this.currentPage = 1
+      this.setSearchParamsTemp()
       this.search()
     },
     clickPage(pageNum) {
@@ -416,7 +427,48 @@ export default {
         }
       })
     },
+    setSearchParamsTemp() {
+      this.searchParamsTemp.status = this.selectStatus
+      this.searchParamsTemp.variableKey = this.selectId
+      this.searchParamsTemp.variableValue = this.selectIdValue
+      this.searchParamsTemp.datetimeFrom = this.timeFrom
+      this.searchParamsTemp.datetimeTo = this.timeTo
+      this.searchParamsTemp.sortKey = this.sortKey
+      this.searchParamsTemp.sortValue = this.sortValue
+    },
     createCsv() {
+      const unixTimeFrom = this.searchParamsTemp.datetimeFrom ? moment(this.searchParamsTemp.datetimeFrom).unix() : this.searchParamsTemp.datetimeFrom
+      const unixTimeTo = this.searchParamsTemp.datetimeTo ? moment(this.searchParamsTemp.datetimeTo).unix() : this.searchParamsTemp.datetimeTo
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal/csv'
+      let params = new URLSearchParams([])
+      if (this.searchParamsTemp.status !== '0') params.append('status', this.searchParamsTemp.status)
+      if (this.searchParamsTemp.variableValue) params.append(this.searchParamsTemp.variableKey, this.searchParamsTemp.variableValue)
+      if (this.searchParamsTemp.datetimeFrom) params.append('updated_at_from', unixTimeFrom)
+      if (this.searchParamsTemp.datetimeTo) params.append('updated_at_to', unixTimeTo)
+      if (this.searchParamsTemp.sortKey) params.append('sort_key', this.searchParamsTemp.sortKey)
+      if (this.searchParamsTemp.sortValue) params.append('sort_value', this.searchParamsTemp.sortValue)
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('login_token')}`
+      }
+      this.axios.get(url, { headers: headers, params: params }).then((response) => {
+        const fileName = 'history_' + moment().format('DDMMYYYYhhmmss') + '.csv'
+        let blob = new Blob([response.data], {type: 'text/csv;charset=utf8'})
+        saveAs(blob, fileName)
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          if (error.response.status === 400) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
     },
     networkValue(currency) {
       this.$store.dispatch('selectNetwork', currency)
@@ -581,7 +633,7 @@ export default {
       }
     },
     convertResultTime(value){
-      return moment(value).format('hh:mm:ss DD/MM/YYYY');
+      return moment(value).format('DD/MM/YYYY hh:mm:ss');
     }
   }
 }
