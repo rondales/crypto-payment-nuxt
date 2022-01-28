@@ -12,17 +12,17 @@
       <div class="manage-content" v-if="tab === 'history'">
         <div class="search-wrap add-flex j-between">
           <div class="select-id">
-            <select name="example" v-model="selectId">
+            <select name="example" v-model="searchParams.variable.key">
               <option value="transaction_address">Transaction ID</option>
               <option value="order_code">Order ID</option>
             </select>
-            <input type="text" v-model="selectIdValue">
+            <input type="text" v-model="searchParams.variable.value">
           </div>
           <div class="select-status add-flex">
             <div class="select-status_title">
               Status
             </div>
-            <select name="example" v-model="selectStatus">
+            <select name="example" v-model="searchParams.status.value">
               <option value="0">All</option>
               <option value="1">Payment start</option>
               <option value="2">Sent transaction</option>
@@ -33,7 +33,7 @@
           <div class="select-date-wrap add-flex">
             <div class="select-date">
               <DatetimePicker
-                v-model="timeFrom"
+                v-model="searchParams.datetimeFrom.value"
                 :id="'from'"
                 :locale="'en'"
                 :first-day-of-week="1"
@@ -47,7 +47,7 @@
             </div>
             <div class="select-date">
               <DatetimePicker
-                v-model="timeTo"
+                v-model="searchParams.datetimeTo.value"
                 :id="'to'"
                 :locale="'en'"
                 :first-day-of-week="1"
@@ -71,7 +71,7 @@
               show
             </div>
             <div class="show-select">
-              <select name="show" v-model="perPage" @change="searchConditions">
+              <select name="show" v-model="paginateParams.perPage.value" @change="searchConditions">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -97,9 +97,9 @@
                 <th>Transaction Amount</th>
               </tr>
             </thead>
-            <tbody v-if="records.length">
+            <tbody v-if="summaries.records.length">
               <tr
-                v-for="(record, index) in records"
+                v-for="(record, index) in summaries.records"
                 :key="index"
               >
                 <td>
@@ -138,11 +138,11 @@
           </table>
           <div class="pagination add-flex j-between a-center">
             <div class="page-count">
-              Showing {{currentPage}} to {{perPage}} of {{totalCount}} entries
+              Showing {{ summaries.fromItemNumber }} to {{ summaries.toItemNumber }} of {{ summaries.total }} entries
             </div>
             <div>
                 <Paginate
-                  :page-count="lastPage"
+                  :page-count="summaries.lastPageNumber"
                   :page-range="3"
                   :margin-pages="1"
                   :click-handler="clickPage"
@@ -316,6 +316,7 @@ In this page, you need to implement the following process or function.
 import DatetimePicker from 'vue-ctk-date-time-picker'
 import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 import Paginate from 'vuejs-paginate';
+import { saveAs } from 'file-saver';
 import moment from 'moment'
 import { errorCodeList } from '@/enum/error_code'
 export default {
@@ -327,21 +328,6 @@ export default {
   data() {
     return {
       tab: "history",
-      currentState: false,
-      myDataVariable: false,
-      selectId: 'transaction_address',
-      selectIdValue: '',
-      selectStatus: '0',
-      timeFrom:'',
-      timeTo:'',
-      sortKey: '',
-      sortValue: '',
-      currentPage: 1,
-      pageFrom: 0,
-      lastPage: 0,
-      perPage: 10,
-      toPage: 1,
-      totalCount: 0,
       settingTab: "contract",
       completeKickbackUrl: '',
       succeededReturnUrl: '',
@@ -350,7 +336,26 @@ export default {
       domain: '',
       txtRecord: '',
       verified: false,
-      records: [],
+      summaries: {
+        lastPageNumber: 0,
+        fromItemNumber: null,
+        toItemNumber: null,
+        total: null,
+        records: []
+      },
+      paginateParams: {
+        perPage: { key: 'per_page', value: '10' },
+        currentPage: { key: 'currentPage', value: '1' },
+      },
+      searchParams: {
+        variable: { key: 'transaction_address', value: null },
+        status: { key: 'status', value: '0'},
+        datetimeFrom: { key: 'updated_at_from', value: null },
+        datetimeTo: { key: 'updated_at_to', value: null },
+        sortKey: { key: 'sort_key', value: null },
+        sortType: { key: 'sort_value', value: null }
+      },
+      csvParams: {},
       address:{
         eth: "https://ethscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189",
         bsc: "https://bscscan.com/address/0x262acb69eda34ed724034aea047c90bb86236189"
@@ -381,38 +386,42 @@ export default {
       this.settingTab = "domain"
     },
     searchConditions() {
-      this.currentPage = 1
+      this.paginateParams.currentPage.value = '1'
       this.search()
     },
     clickPage(pageNum) {
-      this.currentPage = Number(pageNum)
+      this.paginateParams.currentPage.value = pageNum
       this.search()
     },
     search() {
-      const unixTimeFrom = this.timeFrom ? moment(this.timeFrom).unix() : this.timeFrom
-      const unixTimeTo = this.timeTo ? moment(this.timeTo).unix() : this.timeTo
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal'
-      let params = new URLSearchParams([
-        ['per_page', this.perPage],
-        ['current_page', this.currentPage]
-      ])
-      if (this.selectStatus !== '0') params.append('status', this.selectStatus)
-      if (this.selectIdValue) params.append(this.selectId, this.selectIdValue)
-      if (this.timeFrom) params.append('updated_at_from', unixTimeFrom)
-      if (this.timeTo) params.append('updated_at_to', unixTimeTo)
-      if (this.sortKey) params.append('sort_key', this.sortKey)
-      if (this.sortValue) params.append('sort_value', this.sortValue)
+      const inputedParams = Object.entries(this.searchParams).map(([key, param]) => {
+        if (
+          (param.key !== 'status' && param.value)
+          || (param.key === 'status' && param.value !== '0')
+        ) {
+          const value = key === 'datetimeFrom' || key === 'datetimeTo'
+            ? String(moment(param.value).unix())
+            : param.value
+          this.csvParams[param.key] = value
+          return [ param.key, value ]
+        }
+        return false
+      }).filter(param => param)
+      const controlParams = Object.values(this.paginateParams).map((param) => {
+        return [ param.key, param.value ]
+      })
+      const convertedParams = new URLSearchParams(inputedParams.concat(controlParams))
+
       const headers = {
         Authorization: `Bearer ${localStorage.getItem('login_token')}`
       }
-      this.axios.get(url, { headers: headers, params: params }).then((response) => {
-        this.records = response.data.data
-        this.currentPage = response.data.current_page
-        this.pageFrom = response.data.from
-        this.lastPage = response.data.last_page
-        this.perPage = response.data.per_page
-        this.toPage = response.data.to
-        this.totalCount = response.data.total
+      this.axios.get(url, { headers: headers, params: convertedParams }).then((response) => {
+        this.summaries.records = response.data.data
+        this.summaries.total = response.data.total
+        this.summaries.fromItemNumber = response.data.from
+        this.summaries.toItemNumber = response.data.to
+        this.summaries.lastPageNumber = response.data.last_page
       }).catch((error) => {
         if (error.response.status === 401) {
           this.logout()
@@ -430,6 +439,33 @@ export default {
       })
     },
     createCsv() {
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal/csv'
+      const searchParams = Object.entries(this.csvParams).map(([key, value]) =>  {
+        return [ key, value ]
+      })
+      const convertedParams = new URLSearchParams(searchParams)
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('login_token')}`
+      }
+      this.axios.get(url, { headers: headers, params: convertedParams }).then((response) => {
+        const fileName = 'history_' + moment().format('DDMMYYYYhhmmss') + '.csv'
+        let blob = new Blob([response.data], {type: 'text/csv;charset=utf8'})
+        saveAs(blob, fileName)
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          this.logout()
+        } else {
+          let message
+          if (error.response.status === 400) {
+            message = errorCodeList[
+              error.response.data.errors.shift()
+            ].msg
+          } else {
+            message = 'Please try again.'
+          }
+          alert(message)
+        }
+      })
     },
     networkValue(currency) {
       this.$store.dispatch('selectNetwork', currency)
@@ -577,7 +613,7 @@ export default {
   },
   computed: {
     getItems() {
-      let current = this.currentPage * this.parPage;
+      let current = this.paginateParams.currentPage.value * this.parPage;
       let start = current - this.parPage;
       return this.items.slice(start, current);
     },
