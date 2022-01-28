@@ -440,13 +440,14 @@ export default {
     },
     createCsv() {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/transaction/normal/csv'
-      const searchParams = Object.values(this.csvParams).map((param) => {
-        return [ param.key, param.value ]
+      const searchParams = Object.entries(this.csvParams).map(([key, value]) =>  {
+        return [ key, value ]
       })
+      const convertedParams = new URLSearchParams(searchParams)
       const headers = {
         Authorization: `Bearer ${localStorage.getItem('login_token')}`
       }
-      this.axios.get(url, { headers: headers, params: searchParams }).then((response) => {
+      this.axios.get(url, { headers: headers, params: convertedParams }).then((response) => {
         const fileName = 'history_' + moment().format('DDMMYYYYhhmmss') + '.csv'
         let blob = new Blob([response.data], {type: 'text/csv;charset=utf8'})
         saveAs(blob, fileName)
