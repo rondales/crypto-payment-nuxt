@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="slash-bg">
     <Header />
     <div class="payment">
       <div class="menu-nav" v-if="$store.state.humberger">
@@ -121,7 +121,31 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
-
+  .slash-bg{
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    &::before{
+      content: "";
+      background: url(/assets/images/slash-bg.png) no-repeat center center;
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 100px;
+      z-index: 0;
+      @include media(sp) {
+        top: 70px;
+      }
+    }
+  }
+.theme--light {
+  .slash-bg{
+    &::before{
+      content: "";
+      background: url(/assets/images/slash-bg-l.png) no-repeat center center;
+    }
+  }
+}
 .home{
   text-align: center;
 }
@@ -138,6 +162,17 @@ export default {
   background: var(--color_bg);
   @include media(sp) {
     top: calc(50% + 12rem);
+  }
+  &::before{
+    content: "Slash.fi Web3 Payment ®︎";
+    font-size: 11px;
+    color: var(--color_font);
+    font-weight: 100;
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    opacity: .7;
   }
   .menu-nav{
     position: absolute;
