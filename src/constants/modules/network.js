@@ -49,7 +49,7 @@ export const NETWORKS = {
     symbol: 'MATIC',
     chainId: 80001,
     rpcUrl: 'https://rpc-mumbai.maticvigil.com/',
-    scanUrl: 'https://mumbai.polygonscan.com/',
+    scanUrl: 'https://mumbai.polygonscan.com',
     icon: require('@/assets/images/network/matic.svg'),
     type: null
   },
