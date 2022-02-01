@@ -56,7 +56,7 @@
                     <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_btn">
                       Update
                     </div>
-                    <div @click="publishPaymentContract" v-else-if="isCurrentNetwork(chainId)" class="manage-contents_btn">
+                    <div @click="publishMerchantContract(chainId)" v-else-if="isCurrentNetwork(chainId)" class="manage-contents_btn">
                       Create
                     </div>
                     <div @click="switchNetwork(chainId)" v-else class="manage-contents_btn other">
@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import { METAMASK, LOGIN_TOKEN, HTTP_CODES } from '@/constants'
+import { METAMASK, LOGIN_TOKEN, HTTP_CODES, NORMAL_TYPE_PAYMENT } from '@/constants'
 import AvailableNetworks from '@/network'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
@@ -222,14 +222,14 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
-    apiRegistContract() {
+    apiRegistContract(chainId, contractAddress, contractAbi) {
       const url = `${this.baseUrl}/api/v1/management/contract`
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
-        address: null,
-        args: null,
-        network_type: null,
-        payment_type: null
+        address: contractAddress,
+        args: JSON.stringify(contractAbi),
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
       }
       return this.axios.post(url, data, options)
     },
@@ -317,8 +317,40 @@ export default {
           : this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
-    publishPaymentContract() {
-      // @todo Implemented the process of publishing Payment Contracts
+    publishMerchantContract(chainId) {
+      const adminWalletAddress = this.$store.state.account.address
+      const merchantWalletAddress = this.$store.state.account.address
+      const marketingWalletAddress = this.$store.state.account.address
+      const donationWalletAddress = this.$store.state.account.address
+
+      this.$web3.publishMerchantContract(
+        this.$store.state.web3.instance,
+        chainId,
+        adminWalletAddress,
+        merchantWalletAddress,
+        marketingWalletAddress,
+        donationWalletAddress
+      ).then((contract) => {
+        console.log(`Pulgin return values: ${contract}`)
+        this.apiRegistContract(
+          chainId,
+          contract.address,
+          contract.abi,
+        ).then(() => {
+          this.contractSettings.contracts[chainId].address = contract.address
+        }).catch((error) => {
+          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+        })
+      }).catch((error) => {
+        this.$store.dispatch(
+          'openModal',
+          {
+            target: 'error-modal',
+            size: 'small',
+            message: error.message
+          }
+        )
+      })
     },
     switchNetwork(chainId) {
       if (this.isMetamask) {
