@@ -331,7 +331,6 @@ export default {
         marketingWalletAddress,
         donationWalletAddress
       ).then((contract) => {
-        console.log(`Pulgin return values: ${contract}`)
         this.apiRegistContract(
           chainId,
           contract.address,
