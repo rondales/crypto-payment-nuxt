@@ -53,13 +53,25 @@
                     </p>
                   </div>
                   <div v-if="contractLoaded">
-                    <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_btn">
+                    <div
+                      v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+                      @click="updateContract"
+                      class="manage-contents_btn"
+                    >
                       Update
                     </div>
-                    <div @click="publishMerchantContract(chainId)" v-else-if="isCurrentNetwork(chainId)" class="manage-contents_btn">
+                    <div
+                      v-else-if="isCurrentNetwork(chainId)"
+                      @click="publishMerchantContract(chainId)"
+                      class="manage-contents_btn"
+                    >
                       Create
                     </div>
-                    <div @click="switchNetwork(chainId)" v-else class="manage-contents_btn other">
+                    <div
+                      v-else
+                      @click="switchNetwork(chainId)"
+                      class="manage-contents_btn other"
+                    >
                       switch network
                     </div>
                   </div>
@@ -233,6 +245,16 @@ export default {
       }
       return this.axios.post(url, data, options)
     },
+    apiDeleteContract(chainId, contractAddress) {
+      const url = `${this.baseUrl}/api/v1/management/contract`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = {
+        address: contractAddress,
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
+      }
+      return this.axios.delete(url, data, options)
+    },
     apiGetPaymentSettings() {
       const url = `${this.baseUrl}/api/v1/management/setting/payment`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
@@ -318,6 +340,7 @@ export default {
       })
     },
     publishMerchantContract(chainId) {
+      this.contractSettings.contracts[chainId].processing = true
       const adminWalletAddress = this.$store.state.account.address
       const merchantWalletAddress = this.$store.state.account.address
       const marketingWalletAddress = this.$store.state.account.address
@@ -337,6 +360,7 @@ export default {
           contract.abi,
         ).then(() => {
           this.contractSettings.contracts[chainId].address = contract.address
+          this.contractSettings.contracts[chainId].processing = false
         }).catch((error) => {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
         })
@@ -349,6 +373,15 @@ export default {
             message: error.message
           }
         )
+      })
+    },
+    updateContract(chainId, contractAddress) {
+      this.contractSettings.contracts[chainId].processing = true
+      this.$web3.deleteMerchantContract().then(() => {
+        this.apiDeleteContract(chainId, contractAddress).then(() => {
+          this.publishMerchantContract(chainId)
+          this.contractSettings.contracts[chainId].processing = false
+        })
       })
     },
     switchNetwork(chainId) {
@@ -397,7 +430,8 @@ export default {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
-        icon: network.icon
+        icon: network.icon,
+        processing: false
       })
     })
     this.getContracts()

@@ -24,7 +24,8 @@ export default {
           searchToken: searchToken,
           importToken: importToken,
           switchChain: switchChain,
-          publishMerchantContract: publishMerchantContract
+          publishMerchantContract: publishMerchantContract,
+          deleteMerchantContract: deleteMerchantContract
         }
       }
     })
@@ -227,6 +228,11 @@ const publishMerchantContract = async function(
   } catch(error) {
     throw new Error(error)
   }
+}
+
+const deleteMerchantContract = function() {
+  // @todo Implement functions for deletion inside smart contracts as soon as they are known
+  throw new Error('deleteMerchantContract function is not yet implemented')
 }
 
 function getTokenAbis(chainId) {
