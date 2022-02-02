@@ -70,6 +70,16 @@ export default {
       if(from.fullPath === "/payment") {
         this.show = true
       }
+    },
+    chainId(id) {
+      if (id) {
+        this.$web3.getAccountData(
+          this.$store.state.web3.instance,
+          id
+        ).then((account) => {
+          this.$store.dispatch('account/update', account)
+        })
+      }
     }
   },
   filters: {
@@ -111,6 +121,9 @@ export default {
     },
     walletAddress() {
       return this.$store.state.account.address
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
     },
     networkName() {
       if (this.$store.state.web3.chainId !== null) {

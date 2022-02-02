@@ -3,6 +3,8 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
+import MerchantContract from '@/contracts/merchant'
+import MerchantFactoryContract from '@/contracts/merchant_factory'
 import { EthereumTokens, BscTokens } from '@/contracts/tokens'
 
 export default {
@@ -21,7 +23,9 @@ export default {
           getBalance: getBalance,
           searchToken: searchToken,
           importToken: importToken,
-          switchChain: switchChain
+          switchChain: switchChain,
+          publishMerchantContract: publishMerchantContract,
+          deleteMerchantContract: deleteMerchantContract
         }
       }
     })
@@ -181,6 +185,54 @@ const switchChain = async function(web3, chainId) {
     console.log(e)
     throw new Error(e.message)
   }
+}
+
+const publishMerchantContract = async function(
+  web3,
+  chainId,
+  adminWalletAddress,
+  merchantWalletAddress,
+  marketingWalletAddress,
+  donationWalletAddress
+) {
+  if (!MerchantFactoryContract.addresses[chainId]) {
+    throw new Error('Currently, this network has stopped issuing contracts.')
+  }
+
+  const factoryContract = new web3.eth.Contract(
+    MerchantFactoryContract.abi,
+    MerchantFactoryContract.addresses[chainId]
+  )
+
+  try {
+    let contractAddress = null
+    factoryContract.once('NewMerchant', {}, function(error, event) {
+      if (event) {
+        contractAddress = event.returnValues.merchant
+      } else {
+        throw new Error(error)
+      }
+    })
+
+    await factoryContract.methods.deployMerchant(
+      marketingWalletAddress,
+      merchantWalletAddress,
+      donationWalletAddress,
+      adminWalletAddress
+    ).send({ from: merchantWalletAddress })
+
+    return {
+      abi: MerchantContract.abi,
+      address: contractAddress
+    }
+  } catch(error) {
+    throw new Error(error)
+  }
+}
+
+const deleteMerchantContract = function() {
+  // @todo Implement functions for deletion inside smart contracts as soon as they are known
+  throw new Error('deleteMerchantContract function is not yet implemented')
 }
 
 function getTokenAbis(chainId) {
