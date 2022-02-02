@@ -42,7 +42,6 @@ export default {
 
 <style lang="scss">
 @import '@/assets/scss/style.scss';
-  
 
 body{
     background: var(--color_bg);

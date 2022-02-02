@@ -86,6 +86,8 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('web3/initialize')
+    this.$store.dispatch('account/initialize')
     if (process.env.VUE_APP_MANAGEMENT_AUTO_LOGIN === 'true') {
       if (this.$web3.isConnectedByWalletConnect()) {
         this.$web3.connectByWalletConnect().then((provider) => {

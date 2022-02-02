@@ -8,6 +8,9 @@ const store = {
     provider: null
   },
   actions: {
+    initialize({ commit }) {
+      commit('initialize')
+    },
     update({ commit }, payload) {
       commit('update', payload)
     },
@@ -16,6 +19,11 @@ const store = {
     }
   },
   mutations: {
+    initialize(state) {
+      state.instance = Web3
+      state.chainId = null
+      state.provider = null
+    },
     update(state, payload) {
       state.instance = payload.instance
       state.chainId = payload.chainId
