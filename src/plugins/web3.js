@@ -1,11 +1,12 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
-import { ethers } from 'ethers'
 import { AlphaRouter } from '@uniswap/smart-order-router'
 import { Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
+import MerchantContract from '@/contracts/merchant'
+import MerchantFactoryContract from '@/contracts/merchant_factory'
 import { EthereumTokens, BscTokens } from '@/contracts/tokens'
 
 export default {
@@ -25,7 +26,9 @@ export default {
           searchToken: searchToken,
           importToken: importToken,
           switchChain: switchChain,
-          checkTokenBalance: checkTokenBalance
+          checkTokenBalance: checkTokenBalance,
+          publishMerchantContract: publishMerchantContract,
+          deleteMerchantContract: deleteMerchantContract
         }
       }
     })
@@ -238,6 +241,54 @@ const checkTokenBalance = async function(
   console.log(`Quote Exact In: ${route.quote.toFixed(16)}`)
   console.log(`Gas Adjusted Quote In: ${route.quoteGasAdjusted.toFixed(2)}`)
   console.log(`Gas Used USD: ${route.estimatedGasUsedUSD.toFixed(6)}`)
+}
+
+const publishMerchantContract = async function(
+  web3,
+  chainId,
+  adminWalletAddress,
+  merchantWalletAddress,
+  marketingWalletAddress,
+  donationWalletAddress
+) {
+  if (!MerchantFactoryContract.addresses[chainId]) {
+    throw new Error('Currently, this network has stopped issuing contracts.')
+  }
+
+  const factoryContract = new web3.eth.Contract(
+    MerchantFactoryContract.abi,
+    MerchantFactoryContract.addresses[chainId]
+  )
+
+  try {
+    let contractAddress = null
+    factoryContract.once('NewMerchant', {}, function(error, event) {
+      if (event) {
+        contractAddress = event.returnValues.merchant
+      } else {
+        throw new Error(error)
+      }
+    })
+
+    await factoryContract.methods.deployMerchant(
+      marketingWalletAddress,
+      merchantWalletAddress,
+      donationWalletAddress,
+      adminWalletAddress
+    ).send({ from: merchantWalletAddress })
+
+    return {
+      abi: MerchantContract.abi,
+      address: contractAddress
+    }
+  } catch(error) {
+    throw new Error(error)
+  }
+}
+
+const deleteMerchantContract = function() {
+  // @todo Implement functions for deletion inside smart contracts as soon as they are known
+  throw new Error('deleteMerchantContract function is not yet implemented')
 }
 
 function getTokenAbis(chainId) {

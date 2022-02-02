@@ -42,7 +42,6 @@ export default {
 
 <style lang="scss">
 @import '@/assets/scss/style.scss';
-  
 
 body{
     background: var(--color_bg);
@@ -66,7 +65,7 @@ body{
   height: 100vh;
   left: 0;
   top: 0;
-  z-index: 100;
+  z-index: 9999;
 }
 .min-height{
   min-height: 120vh;

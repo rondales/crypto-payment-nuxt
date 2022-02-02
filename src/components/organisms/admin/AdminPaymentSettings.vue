@@ -36,54 +36,51 @@
           </div>
           <div class="manage-contents_body">
             <div class="manage-contents_items">
-              <div class="manage-contents_item" :class="{created: true && $store.state.network.abbriviation === 'eth'}">
+
+              <div
+                v-for="(contract, chainId) in contracts"
+                :key="chainId"
+                class="manage-contents_item"
+                :class="{ created: contractLoaded && isPublishedContract(chainId) }"
+              >
                 <div class="manage-contents_network add-flex a-center j-between">
                   <div class="manage-contents_logo add-flex a-center">
                     <figure>
-                      <img src="@/assets/images/eth.svg" alt="">
+                      <img :src="contract.icon" :alt="contract.name">
                     </figure>
                     <p>
-                      Ethereum Main net
+                      {{ contract.name }}
                     </p>
                   </div>
-                  <div @click="publishPaymentContract" v-if="$store.state.network.abbriviation === 'eth'" class="manage-contents_btn">
-                    Create
-                  </div>
-                  <div @click="switchNetwork" v-else class="manage-contents_btn other">
-                    switch network
+                  <div v-if="contractLoaded">
+                    <div
+                      v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+                      @click="updateContract"
+                      class="manage-contents_btn"
+                    >
+                      Update
+                    </div>
+                    <div
+                      v-else-if="isCurrentNetwork(chainId)"
+                      @click="publishMerchantContract(chainId)"
+                      class="manage-contents_btn"
+                    >
+                      Create
+                    </div>
+                    <div
+                      v-else
+                      @click="switchNetwork(chainId)"
+                      class="manage-contents_btn other"
+                    >
+                      switch network
+                    </div>
                   </div>
                 </div>
-                <div class="manage-contents_address-wrap" v-if="true && $store.state.network.abbriviation === 'eth'">
+                <div class="manage-contents_address-wrap" v-if="isPublishedContract(chainId)">
                   <div class="manage-contents_address">
-                    <!-- {{address.eth}} -->
-                    https://etherscan.io/address/0x0testpaymentcontractaddress
+                    {{ contractUrl(chainId) }}
                   </div>
-                  <div class="manage-contents_copy" @click="copyPaymentContractUrl">Copy Address</div>
-                </div>
-              </div>
-              <div class="manage-contents_item" :class="{created: true && $store.state.network.abbriviation === 'bsc'}">
-                <div class="manage-contents_network add-flex a-center j-between">
-                  <div class="manage-contents_logo add-flex a-center">
-                    <figure>
-                      <img src="@/assets/images/bsc.svg" alt="">
-                    </figure>
-                    <p>
-                      Binance Smart Chain Mainnet
-                    </p>
-                  </div>
-                  <div @click="publishPaymentContract" v-if="$store.state.network.abbriviation === 'bsc'" class="manage-contents_btn">
-                    Create
-                  </div>
-                  <div @click="switchNetwork" v-else class="manage-contents_btn other">
-                    switch network
-                  </div>
-                </div>
-                <div class="manage-contents_address-wrap" v-if="true && $store.state.network.abbriviation === 'bsc'">
-                  <div class="manage-contents_address">
-                    <!-- {{address.bsc}} -->
-                    https://bscscan.io/address/0x0testpaymentcontractaddress
-                  </div>
-                  <div class="manage-contents_copy" @click="copyPaymentContractUrl">Copy Address</div>
+                  <div class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy Address</div>
                 </div>
               </div>
             </div>
@@ -157,18 +154,8 @@
 </template>
 
 <script>
-/*
-@todo Web3ConnectTeam
-
-In this page, you need to implement the following process or function.
-
-1. Network switching
-2. Contract issuance
-
-*The issued contract information is saved in the DB via the API.
- Please make sure that you can get the contract address and argument information.
-*/
-import { LOGIN_TOKEN, HTTP_CODES } from '@/constants'
+import { METAMASK, LOGIN_TOKEN, HTTP_CODES, NORMAL_TYPE_PAYMENT } from '@/constants'
+import AvailableNetworks from '@/network'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 
@@ -182,7 +169,10 @@ export default {
         paymentSetting: 2,
         domainSetting: 3
       },
-      contractSettings: {},
+      contractSettings: {
+        loaded: false,
+        contracts: {}
+      },
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
@@ -197,6 +187,12 @@ export default {
     }
   },
   computed: {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
+    contracts() {
+      return this.contractSettings.contracts
+    },
     isContractSettingTab() {
       return this.currentTab === this.tabs.contractSetting
     },
@@ -206,8 +202,27 @@ export default {
     isDomainSettingTab() {
       return this.currentTab === this.tabs.domainSetting
     },
-    baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL
+    isCurrentNetwork() {
+      return (chainId) => {
+        return this.$store.state.web3.chainId === parseInt(chainId, 10)
+      }
+    },
+    isPublishedContract() {
+      return (chainId) => {
+        return Boolean(this.contractSettings.contracts[chainId].address)
+      }
+    },
+    isMetamask() {
+      return this.$store.state.web3.provider === METAMASK
+    },
+    contractLoaded() {
+      return this.contractSettings.loaded
+    },
+    contractUrl() {
+      return (chainId) => {
+        const contract = this.contractSettings.contracts[chainId]
+        return `${contract.scanUrl}/address/${contract.address}`
+      }
     }
   },
   methods: {
@@ -219,16 +234,26 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
-    apiRegistContract() {
+    apiRegistContract(chainId, contractAddress, contractAbi) {
       const url = `${this.baseUrl}/api/v1/management/contract`
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
-        address: null,
-        args: null,
-        network_type: null,
-        payment_type: null
+        address: contractAddress,
+        args: JSON.stringify(contractAbi),
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
       }
       return this.axios.post(url, data, options)
+    },
+    apiDeleteContract(chainId, contractAddress) {
+      const url = `${this.baseUrl}/api/v1/management/contract`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = {
+        address: contractAddress,
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
+      }
+      return this.axios.delete(url, data, options)
     },
     apiGetPaymentSettings() {
       const url = `${this.baseUrl}/api/v1/management/setting/payment`
@@ -261,6 +286,18 @@ export default {
       const url = `${this.baseUrl}/api/v1/management/setting/domain/verify`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
+    },
+    getContracts() {
+      this.apiGetContracts().then((response) => {
+        response.data.forEach((contract) => {
+          if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
+            this.contractSettings.contracts[contract.network_type].address = contract.address
+          }
+        })
+        this.contractSettings.loaded = true
+      }).catch((error) => {
+        this.apiConnectionErrorHandler(error.response.status, error.response.data)
+      })
     },
     getPaymentSettings() {
       this.apiGetPaymentSettings().then((response) => {
@@ -302,14 +339,71 @@ export default {
           : this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
-    publishPaymentContract() {
-      // @todo Implemented the process of publishing Payment Contracts
+    publishMerchantContract(chainId) {
+      this.contractSettings.contracts[chainId].processing = true
+      const adminWalletAddress = this.$store.state.account.address
+      const merchantWalletAddress = this.$store.state.account.address
+      const marketingWalletAddress = this.$store.state.account.address
+      const donationWalletAddress = this.$store.state.account.address
+
+      this.$web3.publishMerchantContract(
+        this.$store.state.web3.instance,
+        chainId,
+        adminWalletAddress,
+        merchantWalletAddress,
+        marketingWalletAddress,
+        donationWalletAddress
+      ).then((contract) => {
+        this.apiRegistContract(
+          chainId,
+          contract.address,
+          contract.abi,
+        ).then(() => {
+          this.contractSettings.contracts[chainId].address = contract.address
+          this.contractSettings.contracts[chainId].processing = false
+        }).catch((error) => {
+          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+        })
+      }).catch((error) => {
+        this.$store.dispatch(
+          'openModal',
+          {
+            target: 'error-modal',
+            size: 'small',
+            message: error.message
+          }
+        )
+      })
     },
-    switchNetwork() {
-      // @todo Implement a network switching process for wallets
+    updateContract(chainId, contractAddress) {
+      this.contractSettings.contracts[chainId].processing = true
+      this.$web3.deleteMerchantContract().then(() => {
+        this.apiDeleteContract(chainId, contractAddress).then(() => {
+          this.publishMerchantContract(chainId)
+          this.contractSettings.contracts[chainId].processing = false
+        })
+      })
     },
-    copyPaymentContractUrl() {
-      // @todo Implement the process of copying the URL of the contract to the clipboard
+    switchNetwork(chainId) {
+      if (this.isMetamask) {
+        this.$web3.switchChain(
+          this.$store.state.web3.instance,
+          chainId
+        ).then(() => {
+          this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
+        })
+      } else {
+        this.$store.dispatch(
+          'openModal',
+          {
+            target: 'error-modal',
+            size: 'small',
+            message: 'You are using WalletConnect to connect to SlashApps, so you cannot switch networks from this screen. Please use the Wallet app to switch networks.'
+          })
+      }
+    },
+    copyPaymentContractUrl(chainId) {
+      this.$clipboard(this.contractUrl(chainId))
     },
     apiConnectionErrorHandler(statusCode, responseData) {
       if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
@@ -331,6 +425,16 @@ export default {
   },
   created() {
     this.currentTab = this.tabs.contractSetting
+    Object.values(AvailableNetworks).forEach((network) => {
+      this.$set(this.contractSettings.contracts, network.chainId, {
+        name: network.name,
+        address: null,
+        scanUrl: network.scanUrl,
+        icon: network.icon,
+        processing: false
+      })
+    })
+    this.getContracts()
     this.getPaymentSettings()
     this.getDomainSettings()
   }
@@ -392,10 +496,6 @@ export default {
           padding-bottom: 16px;
           border-bottom: 1px solid #78668D;
           margin-bottom: 16px;
-        }
-        .manage-contents_btn{
-          opacity: .6;
-          cursor: unset;
         }
       }
       &_network{
