@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import { LOGIN_TOKEN } from '@/constants'
   import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
   export default {
@@ -54,13 +55,7 @@
             connectRes.chainId
           ).then((accountRes) =>{
             this.$store.dispatch('account/update', accountRes)
-            const pathRegPattern = /^\/payment\//
-            let nextPath
-            if (pathRegPattern.test(this.$route.path)) {
-              nextPath = '/payment/token/' + this.$route.params.token
-            }
-            this.closeModal()
-            this.$router.push({ path: nextPath })
+            this.connected(accountRes.address)
           })
         }).catch((error) => {
           if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
@@ -78,17 +73,36 @@
             connectRes.chainId
           ).then((accountRes) =>{
             this.$store.dispatch('account/update', accountRes)
-            const pathRegPattern = /^\/payment\//
-            let nextPath
-            if (pathRegPattern.test(this.$route.path)) {
-              nextPath = '/payment/token/' + this.$route.params.token
-            }
-            this.closeModal()
-            this.$router.push({ path: nextPath })
+            this.connected(accountRes.address)
           })
         }).catch(() => {
           this.openModal('error-wallet-modal', 'small')
         })
+      },
+      apiConnectAuthentification(walletAddress) {
+        const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
+        const params = {
+          address: walletAddress,
+          token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null
+        }
+        return this.axios.post(url, params)
+      },
+      connected(walletAddress) {
+        const adminPathPattern = /^\/admin$/
+        const paymentPathPattern = /^\/payment\//
+
+        if (adminPathPattern.test(this.$route.path)) {
+          this.apiConnectAuthentification(walletAddress).then((authed) => {
+            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+            this.closeModal()
+            this.$router.push({ path: '/admin/dashboard' })
+          })
+        } else if(paymentPathPattern.test(this.$route.path)) {
+          this.closeModal()
+          this.$router.push({
+            path: '/payment/token/' + this.$route.params.token
+          })
+        }
       }
     }
   }
