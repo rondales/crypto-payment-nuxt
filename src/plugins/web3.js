@@ -1,8 +1,6 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
-import { AlphaRouter } from '@uniswap/smart-order-router'
-import { Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import MerchantContract from '@/contracts/merchant'
@@ -203,44 +201,8 @@ const switchChain = async function(web3, chainId) {
   }
 }
 
-const checkTokenBalance = async function(
-  web3,
-  chainId,
-  tokenSymbol,
-  tokenDecimal,
-  tokenAddress
-) {
-  const usdtContract = new web3.eth.Contract(
-    EthereumTokens.USDT.abi,
-    EthereumTokens.USDT.address
-  )
-  const usdtDecimal = parseInt(await usdtContract.methods.decimals().call())
-  const usdt = new Token(
-    chainId,
-    EthereumTokens.USDT.address,
-    usdtDecimal,
-    EthereumTokens.USDT.symbol
-  )
-  const swapToken = new Token(
-    chainId,
-    tokenAddress,
-    tokenDecimal,
-    tokenSymbol
-  )
-  const provider = new ethers.providers.JsonRpcProvider(
-    NETWORKS[chainId].rpcUrl
-  )
-  const router = new AlphaRouter({
-    chainId: chainId,
-    provider: provider
-  })
-  const usdtAmount = CurrencyAmount.fromRawAmount(usdt, 1)
-  const route = await router.route(usdtAmount, swapToken, TradeType.EXACT_INPUT)
-
-  console.log(route)
-  console.log(`Quote Exact In: ${route.quote.toFixed(16)}`)
-  console.log(`Gas Adjusted Quote In: ${route.quoteGasAdjusted.toFixed(2)}`)
-  console.log(`Gas Used USD: ${route.estimatedGasUsedUSD.toFixed(6)}`)
+const checkTokenBalance = function() {
+  //
 }
 
 const publishMerchantContract = async function(
