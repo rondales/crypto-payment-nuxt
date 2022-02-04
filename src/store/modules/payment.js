@@ -5,8 +5,16 @@ const store = {
     orderCode: null,
     amount: null,
     symbol: null,
-    paySymbol: null,
-    payAmount: null
+    fee: null,
+    token: {
+      name: null,
+      symbol: null,
+      decimal: null,
+      address: null,
+      balance: null,
+      amount: null,
+      rate: null
+    }
   },
   actions: {
     update({ commit }, payload) {
@@ -15,11 +23,11 @@ const store = {
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
     },
-    updatePaySymbol({ commit }, payload) {
-      commit('updatePaySymbol', payload)
+    updateFee({ commit }, payload) {
+      commit('updateFee', payload)
     },
-    updatePayAmount({ commit }, payload) {
-      commit('updatePaySymbol', payload)
+    updateToken({ commit }, payload) {
+      commit('updateToken', payload)
     }
   },
   mutations: {
@@ -31,11 +39,13 @@ const store = {
     updateAmount(state, payload) {
       state.amount = payload
     },
-    updatePaySymbol(state, payload) {
-      state.paySymbol = payload
+    updateFee(state, payload) {
+      state.fee = payload
     },
-    updatePayAmount(state, payload) {
-      state.payAmount = payload
+    updateToken(state, payload) {
+      Object.entries(payload).forEach(([key, value]) => {
+        state.token[key] = value
+      })
     }
   }
 }

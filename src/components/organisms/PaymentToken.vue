@@ -125,6 +125,7 @@
 </template>
 
 <script>
+import NumberFormat from 'number-format.js'
 import { NETWORKS } from '@/constants'
 
 export default {
@@ -141,17 +142,10 @@ export default {
   },
   filters: {
     balanceFormat(balance) {
-      const pattern = /^[0-9]+.[0-9]+$/
-      if (pattern.test(balance)) {
-        let balanceSplit = balance.toString().split('.')
-        if (balanceSplit[1].length > 4) {
-          balanceSplit[1] = balanceSplit[1].substr(0, 4)
-        } else {
-          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
-        }
-        balance = balanceSplit[0] + '.' + balanceSplit[1]
-      }
-      return balance
+      return NumberFormat(
+        '0.0000',
+        balance
+      )
     }
   },
   watch: {
@@ -203,6 +197,9 @@ export default {
       this.validAddress = false
     },
     searchToken(event) {
+      this.tokenIdList = []
+      this.tokenCount = 0;
+      this.validAddress = false
       this.$web3.searchToken(
         this.$store.state.web3.instance,
         event.target.value,
@@ -211,8 +208,9 @@ export default {
         this.tokenIdList.push({
           name: response.name,
           symbol: response.symbol,
-          balance: response.balance,
+          decimal: response.decimal,
           address: response.address,
+          balance: response.balance,
           icon: response.icon
         })
         this.tokenCount = this.tokenIdList.length
@@ -228,6 +226,8 @@ export default {
       this.tokenList.unshift({
         name: token.name,
         symbol: token.symbol,
+        decimal: token.decimal,
+        address: token.address,
         balance: token.balance,
         icon: token.icon
       })
@@ -235,7 +235,14 @@ export default {
       this.tab = 'list'
     },
     selectedToken(token) {
-      this.$store.dispatch('payment/updatePaySymbol', { paySymbol: token.symbol })
+      this.$store.dispatch('payment/updateToken', {
+        name: token.name,
+        symbol: token.symbol,
+        decimal: token.decimal,
+        address: token.address,
+        balance: token.balance,
+        amount: null,
+      })
       this.$router.push({
         path: '/payment/exchange/' + this.$route.params.token,
         query: {
