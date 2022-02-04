@@ -5,6 +5,7 @@ const store = {
     orderCode: null,
     amount: null,
     symbol: null,
+    fee: null,
     token: {
       name: null,
       symbol: null,
@@ -12,6 +13,7 @@ const store = {
       address: null,
       balance: null,
       amount: null,
+      rate: null
     }
   },
   actions: {
@@ -20,6 +22,9 @@ const store = {
     },
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
+    },
+    updateFee({ commit }, payload) {
+      commit('updateFee', payload)
     },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
@@ -33,6 +38,9 @@ const store = {
     },
     updateAmount(state, payload) {
       state.amount = payload
+    },
+    updateFee(state, payload) {
+      state.fee = payload
     },
     updateToken(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {

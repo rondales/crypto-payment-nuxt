@@ -125,6 +125,7 @@
 </template>
 
 <script>
+import NumberFormat from 'number-format.js'
 import { NETWORKS } from '@/constants'
 
 export default {
@@ -141,17 +142,10 @@ export default {
   },
   filters: {
     balanceFormat(balance) {
-      const pattern = /^[0-9]+.[0-9]+$/
-      if (pattern.test(balance)) {
-        let balanceSplit = balance.toString().split('.')
-        if (balanceSplit[1].length > 4) {
-          balanceSplit[1] = balanceSplit[1].substr(0, 4)
-        } else {
-          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
-        }
-        balance = balanceSplit[0] + '.' + balanceSplit[1]
-      }
-      return balance
+      return NumberFormat(
+        '0.0000',
+        balance
+      )
     }
   },
   watch: {

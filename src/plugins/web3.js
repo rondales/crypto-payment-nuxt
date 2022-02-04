@@ -20,11 +20,12 @@ export default {
           getAccounts: getAccounts,
           getAccountData: getAccountData,
           getDefaultTokens: getDefaultTokens,
+          getTokenContract: getTokenContract,
           getBalance: getBalance,
           searchToken: searchToken,
           importToken: importToken,
           switchChain: switchChain,
-          checkTokenBalance: checkTokenBalance,
+          getTokenExchangeData: getTokenExchangeData,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract
         }
@@ -102,7 +103,7 @@ const getAccountData = async function(web3, chainId) {
 }
 
 const getDefaultTokens = async function(web3, chainId, walletAddress) {
-  const defaultTokens = getTokenAbis(chainId)
+  const defaultTokens = getNetworkDefaultTokens(chainId)
   const userTokens = Promise.all(
     Object.values(defaultTokens).map(async (defaultToken) => {
       const tokenContract = defaultToken.address === null
@@ -166,6 +167,22 @@ const importToken = async function(web3, contractAddress, walletAddress) {
   }
 }
 
+const getTokenContract = function(web3, chainId, tokenAddress) {
+  if (tokenAddress) {
+    const defaultTokens = getNetworkDefaultTokens(chainId)
+    let abi = null
+    Object.values(defaultTokens).forEach((token) => {
+      if (tokenAddress === token.address) {
+        abi = token.abi
+      }
+    })
+    if (!abi) abi = Erc20Abi
+    return new web3.eth.Contract(abi, tokenAddress)
+  } else {
+    return null
+  }
+}
+
 const getBalance = async function(web3, walletAddress, tokenContract = null) {
   let unit
   let balance = `${0}`
@@ -175,12 +192,7 @@ const getBalance = async function(web3, walletAddress, tokenContract = null) {
     balance = await web3.eth.getBalance(walletAddress)
   } else {
     const decimal = await tokenContract.methods.decimals().call()
-    const weiValue = (10 ** decimal).toString()
-    const unitMap = web3.utils.unitMap
-    const units = Object.keys(unitMap).filter((key) => {
-      return unitMap[key] === weiValue
-    })
-    unit = units.length > 0 ? units[0] : 'ether'
+    unit = getTokenUnit(decimal)
     balance = await tokenContract.methods
       .balanceOf(walletAddress)
       .call({ from: walletAddress })
@@ -201,8 +213,53 @@ const switchChain = async function(web3, chainId) {
   }
 }
 
-const checkTokenBalance = function() {
-  //
+const getTokenExchangeData = async function(
+  web3,
+  chainId,
+  walletAddress,
+  contract,
+  token,
+  paymentRequestAmount
+) {
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  const requestToken = defaultTokens.USDT
+  const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
+  const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
+  const requestTokenWeiUnit = getTokenUnit(requestTokenDecimal)
+  const userTokenWeiUnit = getTokenUnit(token.decimal)
+  const userTokenBalanceWei = web3.utils.toWei(token.balance, userTokenWeiUnit)
+  const perRequestTokenWei = web3.utils.toWei(`${1}`, requestTokenWeiUnit)
+  const requestAmountWei = web3.utils.toWei(`${paymentRequestAmount}`, requestTokenWeiUnit)
+  const nativeToken = getWrappedToken(chainId)
+  const feePath = token.address === nativeToken.address
+    ? [nativeToken.address, requestToken.address]
+    : [token.address, nativeToken.address, requestToken.address]
+
+  const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
+      token.address,
+      userTokenBalanceWei
+    ).call({ from: walletAddress })
+  const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
+      token.address,
+      requestAmountWei
+    ).call({ from: walletAddress })
+  const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
+      token.address,
+      perRequestTokenWei
+    ).call({ from: walletAddress })
+  const platformFee = await merchantContract.methods.getFeeAmount(
+      token.address,
+      requestTokenToUserToken,
+      feePath
+    ).call({ from: walletAddress })
+
+  return {
+    requireAmount: web3.utils.fromWei(requestTokenToUserToken, requestTokenWeiUnit),
+    equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, userTokenWeiUnit),
+    rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
+    fee: web3.utils.fromWei(platformFee, 'ether')
+  }
 }
 
 const publishMerchantContract = async function(
@@ -253,7 +310,7 @@ const deleteMerchantContract = function() {
   throw new Error('deleteMerchantContract function is not yet implemented')
 }
 
-function getTokenAbis(chainId) {
+function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
     case NETWORKS[3].chainId:
@@ -262,6 +319,25 @@ function getTokenAbis(chainId) {
     case NETWORKS[97].chainId:
       return BscTokens
   }
+}
+
+function getTokenUnit(decimal) {
+  const wei = (10 ** decimal).toString()
+  const unitMap = Web3.utils.unitMap
+  const units = Object.keys(unitMap).filter((key) => {
+    return unitMap[key] === wei
+  })
+  return units.length > 0 ? units[0] : 'ether'
+}
+
+function getWrappedToken(chainId) {
+  const wrappedTokenSymbols = ['WETH', 'WBNB', 'WMATIC', 'WAVAX']
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let wrappedToken = null
+  wrappedTokenSymbols.forEach((symbol) => {
+    if (symbol in defaultTokens) wrappedToken = defaultTokens[symbol]
+  })
+  return wrappedToken
 }
 
 class MetamaskNotInstalledError extends Error {
