@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
+import { Decimal as BigJs } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import MerchantContract from '@/contracts/merchant'
@@ -26,6 +27,10 @@ export default {
           importToken: importToken,
           switchChain: switchChain,
           getTokenExchangeData: getTokenExchangeData,
+          checkTokenApproved: checkTokenApproved,
+          tokenApprove: tokenApprove,
+          sendPaymentTransaction: sendPaymentTransaction,
+          monitoringPaymentTransaction: monitoringPaymentTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract
         }
@@ -260,6 +265,81 @@ const getTokenExchangeData = async function(
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
     fee: web3.utils.fromWei(platformFee, 'ether')
   }
+}
+
+const checkTokenApproved = async function(web3, chainId, walletAddress, contract, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+
+  try {
+    const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+    const allowance = await tokenContract.methods.allowance(
+      walletAddress,
+      contract.address
+    ).call({ from: walletAddress })
+    return Number(allowance) !== 0
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+const tokenApprove = function(web3, chainId, walletAddress, contract, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+  const uint256 = new BigJs(2).pow(256).minus(1).toFixed(0)
+  const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+
+  return tokenContract.methods
+    .approve(contract.address, uint256)
+    .send({ from: walletAddress })
+}
+
+const sendPaymentTransaction = function(
+  web3,
+  chainId,
+  walletAddress,
+  contract,
+  token,
+  paymentAmount,
+  platformFee
+) {
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  const requestToken = defaultTokens.USDT
+  const userTokenWeiUnit = getTokenUnit(token.decimal)
+  const userTokenAmountWei = web3.utils.toWei(paymentAmount, userTokenWeiUnit)
+  const nativeToken = getWrappedToken(chainId)
+  const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
+  const path = token.address === nativeToken.address
+    ? [nativeToken.address, requestToken.address]
+    : [token.address, nativeToken.address, requestToken.address]
+  const feePath = token.address === nativeToken.address
+    ? [nativeToken.address, requestToken.address]
+    : [token.address, nativeToken.address, requestToken.address]
+
+  return merchantContract.methods.submitTransaction(
+    token.address,
+    userTokenAmountWei,
+    path,
+    feePath
+  ).send({
+    from: walletAddress,
+    to: contract.address,
+    value: platformFeeWei
+  })
+}
+
+const monitoringPaymentTransaction = function(web3, transactionHash) {
+  return web3.eth.getTransactionReceipt(transactionHash)
 }
 
 const publishMerchantContract = async function(

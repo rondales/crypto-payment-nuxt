@@ -6,6 +6,7 @@ const store = {
     amount: null,
     symbol: null,
     fee: null,
+    transactionHash: null,
     token: {
       name: null,
       symbol: null,
@@ -26,6 +27,9 @@ const store = {
     updateFee({ commit }, payload) {
       commit('updateFee', payload)
     },
+    updateTransactionHash({ commit }, payload) {
+      commit('updateTransactionHash', payload)
+    },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
     }
@@ -41,6 +45,9 @@ const store = {
     },
     updateFee(state, payload) {
       state.fee = payload
+    },
+    updateTransactionHash(state, payload) {
+      state.transactionHash = payload
     },
     updateToken(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {

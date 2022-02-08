@@ -11,13 +11,13 @@
               Amount billed
             </dt>
             <dd>
-              {{ symbol }}
+              {{ paymentRequestSymbol }}
             </dd>
           </dl>
         </div>
-        <div class="usdt-price" :class="{'inactive': changedPrice && !processing}">
+        <div class="usdt-price">
           <p>
-            {{ amount }}
+            {{ paymentRequestAmount }}
           </p>
         </div>
       </div>
@@ -34,19 +34,19 @@
         <div class="payment_detail add-flex j-between mb-1">
           <div class="payment_detail-name add-flex a-center mb-1">
             <figure>
-              <img :src="tokenIcon">
+              <img :src="userTokenIcon">
             </figure>
             <p>
-              {{ selectedSymbol }}
+              {{ userTokenSymbol }}
             </p>
           </div>
           <div class="payment_detail-value">
             <p>
-              {{ payAmount }}
+              {{ userTokenPaymentAmount }}
             </p>
           </div>
         </div>
-        <div class="payment-box" v-if="changedPrice && !processing">
+        <div class="payment-box" v-if="isDetailState && isExpiredExchange">
           <div class="add-flex a-center j-between">
             <div class="add-flex a-center">
               <img src="@/assets/images/warning.svg" alt="">
@@ -56,20 +56,22 @@
                 </p>
               </div>
             </div>
-            <div class="payment-box_btn" @click="updatePrice">
+            <div class="payment-box_btn" @click="updateExchange">
               Accept
             </div>
           </div>
         </div>
-        <div class="dattail-lists mt-1" v-if="!processing">
+        <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
             <p>Exchange Eate</p>
-            <p>1USDT＝ 1USDT<img src="@/assets/images/exchange.svg" alt=""></p>
+            <p>1USDT＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
             <p>Route</p>
-            <p>BNB ⇨ BUSD</p>
+            <p>{{ tradeRoute }}</p>
           </div>
+          <!--
+          @todo Implement it when you are able to get various data from the contract
           <div class="dattail-list add-flex j-between mb-1">
             <p>Minimum received</p>
             <p>388.213 BUSD</p>
@@ -83,61 +85,64 @@
             <p>0.002367 BNB</p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
-            <p>xSUSHI Fee</p>
-            <p>0.0004735 BNB%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
             <p>Slippage tolerance</p>
             <p>0.50%</p>
           </div>
+          -->
           <div class="dattail-list add-flex j-between mb-2">
             <p>Platform Fee</p>
-            <p>0.0004735 BNB</p>
+            <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
           </div>
           <p class="dattail-list_desc">
-            Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert.
+            Output is estimated. You will receive at least {{ paymentRequestAmount }} {{ paymentRequestSymbol }} or the transaction will revert.
           </p>
         </div>
-        <div class="payment-status mt-3 mb-3" v-if="processing">
-          <img class="mb-2 spin" src="@/assets/images/loading.svg" v-if="processing && status === 0" alt="">
-          <p class="payment-status_title" v-if="processing && status === 0">
-            Waiting for Confimation
-          </p>
-          <p class="payment-status_desc mb-2" v-if="processing && status === 0">
-            Pay 1000.00 USDT for 1000.00 USDT
-          </p>
-
-          <img class="mb-2" src="@/assets/images/check.svg" v-if="processing && status === 1" alt="">
-          <p class="payment-status_title mb-1" v-if="processing && status === 1">
-            Transaction Submitted
-          </p>
-
-          <img class="mb-2" src="@/assets/images/multiply.svg" v-if="processing && status === 2" alt="">
-          <p class="payment-status_desc mb-2" v-if="processing && status === 2">
-            The transaction cannot succeed due to error: execution 
-            <br>
-            reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT.
-          </p>
-
-          <a href="/" class="payment-status_btn">
+        <div class="payment-status mt-3 mb-3" v-if="!isDetailState">
+          <div v-if="isProcessingState">
+            <img class="mb-2 spin" src="@/assets/images/loading.svg" alt="processing">
+            <p class="payment-status_title">
+              Waiting for Confimation
+            </p>
+            <p class="payment-status_desc mb-2">
+              Pay {{ userTokenPaymentAmount }} {{ userTokenSymbol }} for {{ paymentRequestAmount }} {{ paymentRequestSymbol }}
+            </p>
+          </div>
+          <div v-else-if="isSuccessedState">
+            <img class="mb-2" src="@/assets/images/check.svg" alt="success">
+            <p class="payment-status_title mb-1">
+              Transaction Submitted
+            </p>
+          </div>
+          <div v-else>
+            <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure">
+            <p class="payment-status_desc mb-2">
+              The transaction cannot succeed due to error: execution
+              <br>
+              Check the reason for the reverted from Explorer.
+            </p>
+          </div>
+          <a class="payment-status_btn" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
         </div>
-        <button :class="{'inactive': changedPrice}" class="btn __g __l mb-2" @click="pushData" v-if="!processing">
+        <button :class="{inactive: isExpiredExchange || isWaitingWallet}" class="btn __g __l mb-2" @click="payment" v-if="isDetailState">
           Confirm Wallet
+          <div class="loading-wrap" :class="{active: isWaitingWallet}">
+            <img class="spin" src="@/assets/images/loading.svg">
+          </div>
         </button>
-        <button class="btn __g __l mb-2 inactive" v-if="processing && status === 0">
+        <button class="btn __g __l mb-2 inactive" v-else-if="isProcessingState">
           processing…
         </button>
-        <button class="btn __g __l mb-2" @click="pushData" v-if="processing && status === 1">
+        <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState">
           Back to Payee’s Services
         </button>
-        <button class="btn __g __l mb-2" @click="pushData" v-if="processing && status === 2">
+        <button class="btn __g __l mb-2" @click="retry" v-else>
           Try again
         </button>
-        <p class="via">
-          via Uniswap：Slash Payment 
+        <p class="via" v-if="isDetailState || isProcessingState">
+          via Uniswap：Slash Payment
           <span>
             <img src="@/assets/images/slash-s.svg" alt="">
           </span>
@@ -148,152 +153,333 @@
 </template>
 
 <script>
-/*
-@todo Web3ConnectTeam
-
-In this page, you need to implement the following process or function.
-
-1. Obtaining and displaying information on gas bills and other items related to payment
-2. Transaction approval on the wallet side(clicked confirm wallet button)
-3. Sending transactions to smart contracts
-4. Transaction transmission result reception
-
-* Since the contract address to send the transaction is stored in the DB, implement the process to get it by API (Web App Team)
-
-*/
-import { networkList } from '@/enum/network'
-import { errorCodeList } from '@/enum/error_code'
+import { NETWORKS } from '@/constants'
+import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 
 export default {
   name: 'PaymentDetail',
   data() {
     return{
-      changedPrice: false,
-      tokenIcon: "",
-      processing: false,
-      status: 0,
-      contractAddress: null
+      pageStateList: {
+        detail: 1,
+        processing: 2,
+        successed: 3,
+        failured: 4
+      },
+      pageState: 1,
+      monitoringInterval: null,
+      exchangeTimer: null,
+      expiredExchange: false,
+      waitingWallet: false,
+      contract: {
+        address: null,
+        abi: null
+      },
+      returnUrls: {
+        succeed: null,
+        failured: null
+      }
     }
   },
   computed: {
-    symbol() {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
+    transactionUrl() {
+      const chainId = this.$store.state.web3.chainId
+      const transactionHash = this.$store.state.payment.transactionHash
+      const scanSiteUrl = NETWORKS[chainId].scanUrl
+      if (transactionHash) {
+        return `${scanSiteUrl}/tx/${transactionHash}`
+      } else {
+        return ''
+      }
+    },
+    nativeTokenSymbol() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].symbol
+    },
+    paymentRequestSymbol() {
       return this.$store.state.payment.symbol
     },
-    amount() {
+    paymentRequestAmount() {
       return this.$store.state.payment.amount
     },
-    selectedSymbol() {
+    userTokenSymbol() {
       return this.$store.state.payment.token.symbol
     },
-    payAmount() {
+    userTokenPaymentAmount() {
       return this.$store.state.payment.token.amount
+    },
+    userTokenExchangeRate() {
+      return this.$store.state.payment.token.rate
+    },
+    userTokenIcon() {
+      const chainId = this.$store.state.web3.chainId
+      const symbol = this.$store.state.payment.token.symbol
+      const tokens =
+        NETWORKS[1].chainId === chainId || NETWORKS[3].chainId === chainId
+        ? EthereumTokens
+        : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
+        ? BscTokens
+        : null
+      if (tokens !== null) {
+        return symbol in tokens
+          ? tokens[symbol].icon
+          : require('@/assets/images/symbol/unknown.svg')
+      } else {
+        return require('@/assets/images/symbol/unknown.svg')
+      }
+    },
+    tradeRoute() {
+      const chainId = this.$store.state.web3.chainId
+      const nativeTokenSymbols = [
+        'ETH', 'BNB', 'MATIC', 'AVAX',
+        'WETH', 'WBNB', 'WMATIC', 'WAVAX'
+      ]
+      let route = ''
+      switch(chainId) {
+        case NETWORKS[1].chainId:
+        case NETWORKS[3].chainId:
+          route = nativeTokenSymbols.includes(this.userTokenSymbol)
+            ? `WETH ⇨ ${this.paymentRequestSymbol}`
+            : `${this.userTokenSymbol} ⇨ WETH ⇨ ${this.paymentRequestSymbol}`
+          break
+        case NETWORKS[56].chainId:
+        case NETWORKS[97].chainId:
+          route = nativeTokenSymbols.includes(this.userTokenSymbol)
+            ? `WBNB ⇨ ${this.paymentRequestSymbol}`
+            : `${this.userTokenSymbol} ⇨ WBNB ⇨ ${this.paymentRequestSymbol}`
+          break
+        case NETWORKS[137].chainId:
+        case NETWORKS[80001].chainId:
+          route = nativeTokenSymbols.includes(this.userTokenSymbol)
+            ? `WMATIC ⇨ ${this.paymentRequestSymbol}`
+            : `${this.userTokenSymbol} ⇨ WMATIC ⇨ ${this.paymentRequestSymbol}`
+          break
+        case NETWORKS[43114].chainId:
+        case NETWORKS[43113].chainId:
+          route = nativeTokenSymbols.includes(this.userTokenSymbol)
+            ? `WAVAX ⇨ ${this.paymentRequestSymbol}`
+            : `${this.userTokenSymbol} ⇨ WAVAX ⇨ ${this.paymentRequestSymbol}`
+          break
+      }
+      return route
+    },
+    platformFee() {
+      return this.$store.state.payment.fee
+    },
+    isDetailState() {
+      return this.pageState === this.pageStateList.detail
+    },
+    isProcessingState() {
+      return this.pageState === this.pageStateList.processing
+    },
+    isSuccessedState() {
+      return this.pageState === this.pageStateList.successed
+    },
+    isFailuredState() {
+      return this.pageState === this.pageStateList.failured
+    },
+    isExpiredExchange() {
+      return this.expiredExchange
+    },
+    isWaitingWallet() {
+      return this.waitingWallet
     }
   },
   methods: {
-    reload(){
-      location.reload();
-    },
-    pushData(){
-      // @todo Update the transaction after approval in Metamask
-      const params = {
-        payment_token: this.$route.params.token,
-        network_type: networkList[this.$store.state.connection.networkId].type,
-        contract_address: this.contractAddress,
-        wallet_address: this.$store.state.connection.walletAddress,
-        pay_symbol: this.$store.state.payment.token.symbol,
-        pay_amount: this.$store.state.payment.token.amount
-      }
-      this.apiUpdateTransaction(params).then(() => {
-        this.processing = true;
-        setTimeout(() => {
-          this.status = 2;
-        }, 3000);
-      }).catch((error) => {
-        let message
-        if ('errors' in error.response.data) {
-          message = errorCodeList[error.response.data.errors.shift()].msg
-        } else {
-          message = 'Please reapply for payment again.'
-        }
-        this.showErrorModal(message)
-      })
-    },
-    updatePrice(){
-      this.changedPrice = false;
-      setTimeout(() => {
-        this.changedPrice = true;
-      }, 3000);
-    },
     apiGetContract() {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/contract'
-      const params = new URLSearchParams([
+      const url = `${this.baseUrl}/api/v1/payment/contract`
+      const request = { params: new URLSearchParams([
         ['payment_token', this.$route.params.token],
-        ['network_type', networkList[this.$store.state.connection.networkId].type]
-      ])
-      return this.axios.get(url, { params })
+        ['network_type', this.$store.state.web3.chainId]
+      ])}
+      return this.axios.get(url, request)
+    },
+    apiGetPaymentCompletedUrl() {
+      const url = `${this.baseUrl}/api/v1/payment/setting`
+      const request = { params: new URLSearchParams([
+        ['payment_token', this.$route.params.token]
+      ])}
+      return this.axios.get(url, request)
     },
     apiUpdateTransaction(params) {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
       return this.axios.patch(url, params)
     },
-    updateTransactionForComplete() {
-      // @todo Set the transaction address returned from the blockchain to "transaction_address" in "params"
-      const params = {
-        payment_token: this.$route.params.token,
-        transaction_address: 'test_transaction_address'
-      }
-
-      this.apiUpdateTransaction(params).then(() => {
-        // @todo Change the status according to the result of sending a transaction to the blockchain
-        this.processing = true;
-        setTimeout(() => {
-          this.status = 2;
-        }, 3000);
-      }).catch((error) => {
-        let message
-        if ('errors' in error.response.data) {
-          message = errorCodeList[error.response.data.errors.shift()].msg
-        } else {
-          message = 'Please reapply for payment again.'
-        }
-        this.showErrorModal(message)
+    reload() {
+      const tokenContract = this.$web3.getTokenContract(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.payment.token.address
+      )
+      this.$web3.getBalance(
+        this.$store.state.web3.instance,
+        this.$store.state.account.address,
+        tokenContract
+      ).then((balance) => {
+        this.$store.dispatch('payment/updateToken', {
+          balance: balance
+        })
+        this.updateExchange()
       })
     },
-    showErrorModal(message) {
-      this.$store.dispatch('openModal', {
-        target: 'error-modal',
-        size: 'small',
-        message: message
+    retry() {
+      this.updateExchange()
+      this.pageState = this.pageStateList.detail
+    },
+    exchangeExpireTimer() {
+      this.exchangeTimer = setTimeout(() => {
+        this.expiredExchange = true;
+      }, 300000);
+    },
+    updateExchange() {
+      this.$web3.getTokenExchangeData(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token,
+        this.paymentRequestAmount
+      ).then((exchange) => {
+        this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateToken', {
+          amount: exchange.requireAmount,
+          rate: exchange.rate
+        })
+        this.equivalent = exchange.equivalentAmount
+        this.requireAmount = exchange.requireAmount
+        this.exchangeRate = exchange.rate
+        if (!this.timer) clearTimeout(this.timer)
+        this.expiredExchange = false
+        this.loadedExchange = true
+        this.exchangeExpireTimer()
       })
+    },
+    transitionSucceedUrl() {
+      window.location = this.returnUrls.succeed
+    },
+    payment() {
+      this.waitingWallet = true
+      clearTimeout(this.exchangeTimer)
+      this.checkContractApproved().then((approved) => {
+        if (approved) {
+          this.sendTransaction().on('transactionHash', (transactionHash) => {
+            this.pageState = this.pageStateList.processing
+            this.waitingWallet = false
+            this.$store.dispatch('payment/updateTransactionHash', transactionHash)
+            this.apiUpdateTransaction({
+              payment_token: this.$route.params.token,
+              network_type: this.$store.state.web3.chainId,
+              contract_address: this.contract.address,
+              transaction_address: transactionHash,
+              wallet_address: this.$store.state.account.address,
+              pay_symbol: this.userTokenSymbol,
+              pay_amount: this.userTokenPaymentAmount
+            }).then(() => {
+              this.checkTransactionStatus(transactionHash)
+            })
+          }).on('error', () => {
+            this.pageState = this.pageStateList.failured
+          })
+        } else {
+          this.contractApprove().on('transactionHash', () => {
+            this.sendTransaction().on('transactionHash', (transactionHash) => {
+              this.pageState = this.pageStateList.processing
+              this.waitingWallet = false
+              this.$store.dispatch('payment/updateTransactionHash', transactionHash)
+              this.apiUpdateTransaction({
+                payment_token: this.$route.params.token,
+                network_type: this.$store.state.web3.chainId,
+                contract_address: this.contract.address,
+                transaction_address: transactionHash,
+                wallet_address: this.$store.state.account.address,
+                pay_symbol: this.userTokenSymbol,
+                pay_amount: this.userTokenPaymentAmount
+              }).then(() => {
+                this.checkTransactionStatus(transactionHash)
+              })
+            }).on('error', () => {
+              this.pageState = this.pageStateList.failured
+            })
+          }).on('error', () => {
+            this.pageState = this.pageStateList.failured
+          })
+        }
+      })
+    },
+    checkContractApproved() {
+      return this.$web3.checkTokenApproved(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
+    },
+    contractApprove() {
+      return this.$web3.tokenApprove(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
+    },
+    sendTransaction() {
+      return this.$web3.sendPaymentTransaction(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token,
+        this.userTokenPaymentAmount,
+        this.$store.state.payment.fee
+      )
+    },
+    checkTransactionStatus(transactionHash) {
+      this.monitoringInterval = setInterval(() => {
+        this.$web3.monitoringPaymentTransaction(
+          this.$store.state.web3.instance,
+          transactionHash
+        ).then((receipt) => {
+          if (receipt) {
+            clearInterval(this.monitoringInterval)
+            this.apiUpdateTransaction({
+              payment_token: this.$route.params.token,
+              result: receipt.status
+            }).then(() => {
+              this.pageState = receipt.status
+                ? this.pageStateList.successed
+                : this.pageStateList.failured
+            })
+          }
+        })
+      }, 3000)
     }
   },
   created(){
-    this.apiGetContract().then((response) => {
-      this.contractAddress = response.data.address
-    }).catch((error) => {
-      let message
-      if ('errors' in error.response.data) {
-        message = errorCodeList[error.response.data.errors.shift()].msg
-      } else {
-        message = 'Please reapply for payment again.'
-      }
-      this.showErrorModal(message)
-    })
-
     this.$store.dispatch('payment/update', {
       domain: this.$route.query.receiver,
       orderCode: this.$route.query.code,
       symbol: this.$route.query.symbol,
       amount: this.$route.query.amount
     })
-    this.$store.dispatch('payment/updateToken', {
-      symbol: this.$route.query.token,
-      amount: this.$route.query.token.token_amount
+    this.apiGetPaymentCompletedUrl().then((response) => {
+      this.returnUrls.succeed = response.data.succeeded_return_url
+      this.returnUrls.failured = response.data.failured_return_url
     })
-
-    setTimeout(() => {
-      this.changedPrice = true;
-    }, 3000);
+    this.apiGetContract().then((response) => {
+      this.contract.address = response.data.address
+      this.contract.abi = JSON.parse(response.data.args)
+      this.exchangeExpireTimer()
+    })
+  },
+  beforeDestroy() {
+    clearInterval(this.monitoringInterval)
+    clearTimeout(this.exchangeTimer)
   }
 }
 </script>
@@ -370,13 +556,21 @@ export default {
   }
   .reload{
     cursor: pointer;
+    img{
+      vertical-align: middle;
+    }
   }
   .payment_detail{
     &-name{
       p{
         font-size: 16px;
         font-weight: 100;
-        margin-left: 16px;
+        line-height: 25px;
+        margin-left: 7px;
+      }
+      figure {
+        width: 25px;
+        height: 25px;
       }
     }
     &-value{
@@ -402,9 +596,10 @@ export default {
       cursor: pointer;
       background: $gradation-pale;
       padding: 4px 16px;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #fff;
       img{
+        margin-left: 4px;
         vertical-align: middle;
       }
     }
@@ -413,9 +608,11 @@ export default {
     font-size: 12px;
     font-weight: 100;
     text-align: center;
+    line-height: 20px;
     img{
       width: 20px;
       height: 20px;
+      margin-left: 5px;
     }
   }
 }
