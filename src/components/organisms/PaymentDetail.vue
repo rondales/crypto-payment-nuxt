@@ -94,7 +94,7 @@
             <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
           </div>
           <p class="dattail-list_desc">
-            Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert.
+            Output is estimated. You will receive at least {{ paymentRequestAmount }} {{ paymentRequestSymbol }} or the transaction will revert.
           </p>
         </div>
         <div class="payment-status mt-3 mb-3" v-if="!isDetailState">
@@ -104,7 +104,7 @@
               Waiting for Confimation
             </p>
             <p class="payment-status_desc mb-2">
-              Pay 1000.00 USDT for 1000.00 USDT
+              Pay {{ userTokenPaymentAmount }} {{ userTokenSymbol }} for {{ paymentRequestAmount }} {{ paymentRequestSymbol }}
             </p>
           </div>
           <div v-else-if="isSuccessedState">
@@ -118,16 +118,19 @@
             <p class="payment-status_desc mb-2">
               The transaction cannot succeed due to error: execution
               <br>
-              reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT.
+              Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a href="/" class="payment-status_btn">
+          <a class="payment-status_btn" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
         </div>
-        <button :class="{inactive: isExpiredExchange}" class="btn __g __l mb-2" @click="pushData" v-if="isDetailState">
+        <button :class="{inactive: isExpiredExchange || isWaitingWallet}" class="btn __g __l mb-2" @click="payment" v-if="isDetailState">
           Confirm Wallet
+          <div class="loading-wrap" :class="{active: isWaitingWallet}">
+            <img class="spin" src="@/assets/images/loading.svg">
+          </div>
         </button>
         <button class="btn __g __l mb-2 inactive" v-else-if="isProcessingState">
           processing…
@@ -135,10 +138,10 @@
         <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState">
           Back to Payee’s Services
         </button>
-        <button class="btn __g __l mb-2" @click="pushData" v-else>
+        <button class="btn __g __l mb-2" @click="retry" v-else>
           Try again
         </button>
-        <p class="via">
+        <p class="via" v-if="isDetailState || isProcessingState">
           via Uniswap：Slash Payment
           <span>
             <img src="@/assets/images/slash-s.svg" alt="">
@@ -152,8 +155,6 @@
 <script>
 import { NETWORKS } from '@/constants'
 import { BscTokens, EthereumTokens } from '@/contracts/tokens'
-import { networkList } from '@/enum/network'
-import { errorCodeList } from '@/enum/error_code'
 
 export default {
   name: 'PaymentDetail',
@@ -166,7 +167,10 @@ export default {
         failured: 4
       },
       pageState: 1,
+      monitoringInterval: null,
+      exchangeTimer: null,
       expiredExchange: false,
+      waitingWallet: false,
       contract: {
         address: null,
         abi: null
@@ -180,6 +184,16 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    transactionUrl() {
+      const chainId = this.$store.state.web3.chainId
+      const transactionHash = this.$store.state.payment.transactionHash
+      const scanSiteUrl = NETWORKS[chainId].scanUrl
+      if (transactionHash) {
+        return `${scanSiteUrl}/tx/${transactionHash}`
+      } else {
+        return ''
+      }
     },
     nativeTokenSymbol() {
       return NETWORKS[
@@ -271,6 +285,9 @@ export default {
     isExpiredExchange() {
       return this.expiredExchange
     },
+    isWaitingWallet() {
+      return this.waitingWallet
+    }
   },
   methods: {
     apiGetContract() {
@@ -288,13 +305,35 @@ export default {
       ])}
       return this.axios.get(url, request)
     },
-    reload(){
-      location.reload();
+    apiUpdateTransaction(params) {
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
+      return this.axios.patch(url, params)
+    },
+    reload() {
+      const tokenContract = this.$web3.getTokenContract(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.payment.token.address
+      )
+      this.$web3.getBalance(
+        this.$store.state.web3.instance,
+        this.$store.state.account.address,
+        tokenContract
+      ).then((balance) => {
+        this.$store.dispatch('payment/updateToken', {
+          balance: balance
+        })
+        this.updateExchange()
+      })
+    },
+    retry() {
+      this.updateExchange()
+      this.pageState = this.pageStateList.detail
     },
     exchangeExpireTimer() {
-      this.timer = setTimeout(() => {
+      this.exchangeTimer = setTimeout(() => {
         this.expiredExchange = true;
-      }, 60000);
+      }, 300000);
     },
     updateExchange() {
       this.$web3.getTokenExchangeData(
@@ -303,7 +342,7 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
-        this.paymentRequestTokenAmount
+        this.paymentRequestAmount
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
         this.$store.dispatch('payment/updateToken', {
@@ -322,53 +361,103 @@ export default {
     transitionSucceedUrl() {
       window.location = this.returnUrls.succeed
     },
-    pushData(){
-      // @todo Update the transaction after approval in Metamask
-      const params = {
-        payment_token: this.$route.params.token,
-        network_type: networkList[this.$store.state.connection.networkId].type,
-        contract_address: this.contract.address,
-        wallet_address: this.$store.state.connection.walletAddress,
-        pay_symbol: this.$store.state.payment.token.symbol,
-        pay_amount: this.$store.state.payment.token.amount
-      }
-      this.apiUpdateTransaction(params).catch((error) => {
-        let message
-        if ('errors' in error.response.data) {
-          message = errorCodeList[error.response.data.errors.shift()].msg
+    payment() {
+      this.waitingWallet = true
+      clearTimeout(this.exchangeTimer)
+      this.checkContractApproved().then((approved) => {
+        if (approved) {
+          this.sendTransaction().on('transactionHash', (transactionHash) => {
+            this.pageState = this.pageStateList.processing
+            this.waitingWallet = false
+            this.$store.dispatch('payment/updateTransactionHash', transactionHash)
+            this.apiUpdateTransaction({
+              payment_token: this.$route.params.token,
+              network_type: this.$store.state.web3.chainId,
+              contract_address: this.contract.address,
+              transaction_address: transactionHash,
+              wallet_address: this.$store.state.account.address,
+              pay_symbol: this.userTokenSymbol,
+              pay_amount: this.userTokenPaymentAmount
+            }).then(() => {
+              this.checkTransactionStatus(transactionHash)
+            })
+          }).on('error', () => {
+            this.pageState = this.pageStateList.failured
+          })
         } else {
-          message = 'Please reapply for payment again.'
+          this.contractApprove().on('transactionHash', () => {
+            this.sendTransaction().on('transactionHash', (transactionHash) => {
+              this.pageState = this.pageStateList.processing
+              this.waitingWallet = false
+              this.$store.dispatch('payment/updateTransactionHash', transactionHash)
+              this.apiUpdateTransaction({
+                payment_token: this.$route.params.token,
+                network_type: this.$store.state.web3.chainId,
+                contract_address: this.contract.address,
+                transaction_address: transactionHash,
+                wallet_address: this.$store.state.account.address,
+                pay_symbol: this.userTokenSymbol,
+                pay_amount: this.userTokenPaymentAmount
+              }).then(() => {
+                this.checkTransactionStatus(transactionHash)
+              })
+            }).on('error', () => {
+              this.pageState = this.pageStateList.failured
+            })
+          }).on('error', () => {
+            this.pageState = this.pageStateList.failured
+          })
         }
-        this.showErrorModal(message)
       })
     },
-    apiUpdateTransaction(params) {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
-      return this.axios.patch(url, params)
+    checkContractApproved() {
+      return this.$web3.checkTokenApproved(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
     },
-    updateTransactionForComplete() {
-      // @todo Set the transaction address returned from the blockchain to "transaction_address" in "params"
-      const params = {
-        payment_token: this.$route.params.token,
-        transaction_address: 'test_transaction_address'
-      }
-
-      this.apiUpdateTransaction(params).catch((error) => {
-        let message
-        if ('errors' in error.response.data) {
-          message = errorCodeList[error.response.data.errors.shift()].msg
-        } else {
-          message = 'Please reapply for payment again.'
-        }
-        this.showErrorModal(message)
-      })
+    contractApprove() {
+      return this.$web3.tokenApprove(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
     },
-    showErrorModal(message) {
-      this.$store.dispatch('openModal', {
-        target: 'error-modal',
-        size: 'small',
-        message: message
-      })
+    sendTransaction() {
+      return this.$web3.sendPaymentTransaction(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token,
+        this.userTokenPaymentAmount,
+        this.$store.state.payment.fee
+      )
+    },
+    checkTransactionStatus(transactionHash) {
+      this.monitoringInterval = setInterval(() => {
+        this.$web3.monitoringPaymentTransaction(
+          this.$store.state.web3.instance,
+          transactionHash
+        ).then((receipt) => {
+          if (receipt) {
+            clearInterval(this.monitoringInterval)
+            this.apiUpdateTransaction({
+              payment_token: this.$route.params.token,
+              result: receipt.status
+            }).then(() => {
+              this.pageState = receipt.status
+                ? this.pageStateList.successed
+                : this.pageStateList.failured
+            })
+          }
+        })
+      }, 3000)
     }
   },
   created(){
@@ -387,6 +476,10 @@ export default {
       this.contract.abi = JSON.parse(response.data.args)
       this.exchangeExpireTimer()
     })
+  },
+  beforeDestroy() {
+    clearInterval(this.monitoringInterval)
+    clearTimeout(this.exchangeTimer)
   }
 }
 </script>
@@ -503,9 +596,10 @@ export default {
       cursor: pointer;
       background: $gradation-pale;
       padding: 4px 16px;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #fff;
       img{
+        margin-left: 4px;
         vertical-align: middle;
       }
     }
