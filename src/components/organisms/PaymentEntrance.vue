@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import NumberFormat from 'number-format.js'
 import PaymentAmount from '@/components/organisms/PaymentAmount'
 import PaymentEmail from '@/components/organisms/PaymentEmail'
 import { errorCodeList } from '@/enum/error_code'
@@ -18,19 +19,24 @@ export default {
       showComponent: null
     }
   },
+  computed: {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    }
+  },
   methods: {
     apiReceiveData() {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment'
+      const url = `${this.baseUrl}/api/v1/payment`
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
       return this.axios.get(url, { params })
     },
     apiPublishTransaction() {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
       return this.axios.post(url, params)
     },
     apiGetTransactionState() {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction/state'
+      const url = `${this.baseUrl}/api/v1/payment/transaction/state`
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
       return this.axios.get(url, { params })
     },
@@ -45,13 +51,15 @@ export default {
   created() {
     this.apiReceiveData().then((response) => {
       const responseData = response.data
+      // @todo If symbols other than USDT are allowed, the amount format specification needs to be reviewed
+      const formatedAmount = NumberFormat('0.00', responseData.amount)
 
       this.$store.dispatch('changeTheme', responseData.display_theme)
       this.$store.dispatch('payment/update', {
         domain: responseData.domain,
         orderCode: responseData.order_code,
         symbol: (responseData.symbol === null) ? 'USDT' : responseData.symbol,
-        amount: responseData.amount
+        amount: formatedAmount
       })
 
       this.apiPublishTransaction().then(() => {

@@ -16,10 +16,10 @@
             </div>
             <select v-model="searchParams.status.value">
               <option value="0">All</option>
-              <option value="1">Payment start</option>
-              <option value="2">Sent transaction</option>
-              <option value="3">Mining transaction</option>
-              <option value="4">Payment complete</option>
+              <option value="1">System Received</option>
+              <option value="2">Result Pending</option>
+              <option value="3">Cancelled</option>
+              <option value="4">Completed</option>
             </select>
           </div>
           <div class="select-date-wrap add-flex">
@@ -96,34 +96,36 @@
               >
                 <td>
                   <div v-if="record.status === 1" class="received">
-                    Payment start
+                    System Received
                   </div>
                   <div v-if="record.status === 2" class="received">
-                    Sent transaction
+                    Result Pending
                   </div>
-                  <div v-if="record.status === 3" class="received">
-                    Mining transaction
+                  <div v-if="record.status === 3" class="cancelled">
+                    Cancelled
                   </div>
                   <div v-if="record.status === 4" class="received">
-                    Payment complete
+                    Completed
                   </div>
                 </td>
                 <td>
-                  {{record.order_code}}
+                  {{ record.order_code }}
                 </td>
                 <td>
-                  {{record.updated_at | convertResultTime}}
+                  {{ record.updated_at }}
                 </td>
                 <td>
-                  {{record.transaction_address | omittedText}}
-                </td>
-                <td v-if="record.network_type === 1">
-                  BNB
-                <td v-else>
-                  ETH
+                  <a
+                    :href="scanSiteUrl(record.network_type, record.transaction_address)"
+                    v-html="wrapScanSiteUrl(record.network_type, record.transaction_address)"
+                    target="_blank"
+                  ></a>
                 </td>
                 <td>
-                  {{record.user_amount}} USTD
+                  {{ network(record.network_type) }}
+                </td>
+                <td>
+                  {{ record.base_amount | decimalFormat }} USTD
                 </td>
               </tr>
             </tbody>
@@ -157,11 +159,12 @@
 import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import DatetimePicker from 'vue-ctk-date-time-picker'
 import Paginate from 'vuejs-paginate'
-import { HTTP_CODES, LOGIN_TOKEN } from '@/constants'
+import { NETWORKS, HTTP_CODES, LOGIN_TOKEN } from '@/constants'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 import moment from 'moment'
 import { saveAs } from 'file-saver';
+import NumberFormat from 'number-format.js'
 
 export default {
   name: 'AdminTransactionHistory',
@@ -194,20 +197,39 @@ export default {
     }
   },
   filters: {
-    omittedText(text) {
-      return window.innerWidth > 768
-        ? text
-        : text.length > 32
-        ? text.slice(0, 32) + '…'
-        : text
-    },
-    convertResultTime(dateTime){
-      return moment(dateTime).format('DD/MM/YYYY hh:mm');
+    decimalFormat(amount) {
+      return NumberFormat('0.00', amount)
     }
   },
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    network() {
+      return (chainId) => {
+        return chainId ? NETWORKS[chainId].symbol : ''
+      }
+    },
+    scanSiteUrl() {
+      return (chainId, transactionHash) => {
+        if (chainId && transactionHash) {
+          return `${NETWORKS[chainId].scanUrl}/tx/${transactionHash}`
+        } else {
+          return ''
+        }
+      }
+    },
+    wrapScanSiteUrl() {
+      return (chainId, transactionHash) => {
+        const url = this.scanSiteUrl(chainId, transactionHash)
+        if (url.length >= 50) {
+          const prefix = url.slice(0, 50)
+          const sufix = url.slice(50)
+          return `${prefix}<br>${sufix}`
+        } else {
+          return url
+        }
+      }
     }
   },
   methods: {
@@ -282,7 +304,7 @@ export default {
           this.$router.push({ path: '/admin' })
         }
       })
-    }
+    },
   },
   created() {
     this.searchHistory()
@@ -366,7 +388,7 @@ export default {
       width: 20px;
       height: 20px;
       top: 50%;
-      right: 2%;
+      left: 95%;
       transform: translate(-50%, -50%);
       z-index: 0;
     }
@@ -565,6 +587,11 @@ export default {
             }
           }
           .cancelled,.cancelled-refund{
+            border: 1px solid #F75D68;
+            color: #F75D68;
+            padding: 16px 16px;
+          }
+          .cancelled-refund{
             border: 1px solid #F75D68;
             color: #F75D68;
             padding: 4px;
