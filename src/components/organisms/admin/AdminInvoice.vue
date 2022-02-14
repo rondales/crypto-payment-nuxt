@@ -185,7 +185,7 @@
             </div>
             <div class="manage-contents_body">
               <div class="manage-contents_items">
-                <div class="manage-contents_item" :class="{'created': createdAdress === true && $store.state.network.abbriviation === 'eth'}">
+                <div class="manage-contents_item" :class="{ created: true }">
                   <div class="manage-contents_network add-flex a-center j-between">
                     <div class="manage-contents_logo add-flex a-center">
                       <figure>
@@ -195,21 +195,21 @@
                         Ethereum Main net
                       </p>
                     </div>
-                    <div @click="createAddress()" v-if="$store.state.network.abbriviation === 'eth'" class="manage-contents_btn">
+                    <div @click="createAddress()" v-if="true" class="manage-contents_btn">
                       Create
                     </div>
                     <div @click="networkValue('eth')" v-else class="manage-contents_btn other">
                       switch network
                     </div>
                   </div>
-                  <div class="manage-contents_address-wrap"  v-if="this.createdAdress && $store.state.network.abbriviation === 'eth'">
+                  <div class="manage-contents_address-wrap"  v-if="true">
                     <div class="manage-contents_address">
                       {{address.eth}}
                     </div>
                     <div class="manage-contents_copy" @click="copy(address.eth)">Copy Address</div>
                   </div>
                 </div>
-                <div class="manage-contents_item" :class="{'created': createdAdress === true && $store.state.network.abbriviation === 'bsc'}">
+                <div class="manage-contents_item" :class="{ created: true }">
                   <div class="manage-contents_network add-flex a-center j-between">
                     <div class="manage-contents_logo add-flex a-center">
                       <figure>
@@ -219,14 +219,14 @@
                         Binance Smart Chain Mainnet
                       </p>
                     </div>
-                    <div @click="createAddress()" v-if="$store.state.network.abbriviation === 'bsc'" class="manage-contents_btn">
+                    <div @click="createAddress()" v-if="true" class="manage-contents_btn">
                       Create
                     </div>
                     <div @click="networkValue('bsc')" v-else class="manage-contents_btn other">
                       switch network
                     </div>
                   </div>
-                  <div class="manage-contents_address-wrap" v-if="this.createdAdress && $store.state.network.abbriviation === 'bsc'">
+                  <div class="manage-contents_address-wrap" v-if="true">
                     <div class="manage-contents_address">
                       {{address.bsc}}
                     </div>
@@ -455,8 +455,7 @@ export default {
     next(){
     },
     networkValue(currency) {
-      this.$store.dispatch('selectNetwork', currency)
-      this.createdAdress = false
+      // @todo Implemented network switching process
     },
     createAddress(){
       this.createdAdress = true
