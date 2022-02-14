@@ -454,7 +454,7 @@ export default {
     },
     next(){
     },
-    networkValue(currency) {
+    networkValue() {
       // @todo Implemented network switching process
     },
     createAddress(){
