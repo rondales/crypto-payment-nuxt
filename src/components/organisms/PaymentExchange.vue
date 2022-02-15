@@ -104,9 +104,11 @@
 import { NETWORKS } from '@/constants'
 import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 import NumberFormat from 'number-format.js'
+import VuexRestore from '@/components/mixins/VuexRestore'
 
 export default {
   name: 'PaymentExchange',
+  mixins: [VuexRestore],
   data() {
     return{
       loading: false,
@@ -187,6 +189,9 @@ export default {
         ? 'USD'
         : 'USDT'
     },
+    paymentToken() {
+      return this.$route.params.token
+    },
     isBalanceEnough() {
       return parseFloat(this.tokenBalance) >= parseFloat(this.requireAmount)
     },
@@ -256,36 +261,23 @@ export default {
     },
     sendTokenItems(){
       this.loading = true;
-      this.$router.push(
-        {
-          path: '/payment/detail/' + this.$route.params.token,
-          query: {
-            receiver: this.$store.state.payment.domain,
-            code: this.$store.state.payment.orderCode,
-            symbol: this.$store.state.payment.symbol,
-            amount: this.$store.state.payment.amount,
-            token: this.$store.state.payment.token.symbol,
-            token_amount: 1000.11,
-          }
-        }
-      );
+      this.$router.push({
+        path: `/payment/detail/${this.paymentToken}`
+      });
     },
   },
   created(){
-    this.$store.dispatch('payment/update', {
-      domain: this.$route.query.receiver,
-      orderCode: this.$route.query.code,
-      symbol: this.$route.query.symbol,
-      amount: this.$route.query.amount
-    })
-    this.$store.dispatch('payment/updateToken', {
-      symbol: this.$route.query.token
-    })
-    this.apiGetContract().then((response) => {
-      this.contract.address = response.data.address
-      this.contract.abi = JSON.parse(response.data.args)
-      this.updateExchange()
-    })
+    if (this.isNeedRestore) {
+      this.$router.push({
+        path: `/payment/wallets/${this.paymentToken}`
+      })
+    } else {
+      this.apiGetContract().then((response) => {
+        this.contract.address = response.data.address
+        this.contract.abi = JSON.parse(response.data.args)
+        this.updateExchange()
+      })
+    }
   }
 }
 </script>

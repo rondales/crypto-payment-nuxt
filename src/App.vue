@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
   components: {
@@ -23,9 +22,9 @@ export default {
       return [
         `theme--${this.$store.state.theme}`,
       ];
-    },
+    }
   },
-  updated(){
+  updated() {
     if(!(this.$route.path == "/payment")){
       this.$store.dispatch("currentPath", {invoicePage: true});
     }

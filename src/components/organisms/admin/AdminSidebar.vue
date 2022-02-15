@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="side-bar" :class="{'active': $store.state.humberger === true}">
+    <div class="side-bar" :class="{'active': $store.state.hamberger === true}">
       <div class="side-bar--top"></div>
       <div class="side-bar--content">
         <div class="side-bar--inner">
@@ -48,9 +48,9 @@ export default {
   },
   methods: {
     close(){
-      this.$store.state.humberger = false
+      this.$store.state.hamberger = false
     }
-  }  
+  }
 }
 </script>
 

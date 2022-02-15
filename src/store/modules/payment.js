@@ -7,6 +7,7 @@ const store = {
     symbol: null,
     fee: null,
     transactionHash: null,
+    status: 1,
     token: {
       name: null,
       symbol: null,
@@ -30,6 +31,9 @@ const store = {
     updateTransactionHash({ commit }, payload) {
       commit('updateTransactionHash', payload)
     },
+    updateStatus({ commit }, payload) {
+      commit('updateStatus', payload)
+    },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
     }
@@ -45,6 +49,9 @@ const store = {
     },
     updateFee(state, payload) {
       state.fee = payload
+    },
+    updateStatus(state, payload) {
+      state.status = payload
     },
     updateTransactionHash(state, payload) {
       state.transactionHash = payload

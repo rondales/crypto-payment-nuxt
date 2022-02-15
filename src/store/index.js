@@ -16,9 +16,7 @@ const store = new Vuex.Store({
     VuexPersistedState({
       key: 'state',
       paths: [
-        'web3.chainId',
         'web3.provider',
-        'account',
         'payment',
         'humberger',
         'modal',
@@ -38,7 +36,7 @@ const store = new Vuex.Store({
     payment
   },
   state: {
-    humberger: false,
+    hamberger: false,
     modal: {
       isShow: false,
       target: '',
@@ -60,8 +58,8 @@ const store = new Vuex.Store({
     closeModal({ commit }) {
       commit('closeModal')
     },
-    humberger({ commit }) {
-      commit('humberger')
+    hamberger({ commit }) {
+      commit('hamberger')
     },
     changeTheme({ commit }, theme) {
       commit('changeTheme', { theme: theme });
@@ -81,8 +79,8 @@ const store = new Vuex.Store({
       state.modal.isShow = false
       state.modal.target = ''
     },
-    humberger(state) {
-      state.humberger = !state.humberger
+    hamberger(state) {
+      state.hamberger = !state.hamberger
     },
     changeTheme(state, { theme }) {
       state.theme = theme;

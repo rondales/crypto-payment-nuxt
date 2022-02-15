@@ -121,7 +121,7 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a class="payment-status_btn" :href="transactionUrl">
+          <a v-if="isPublishedTransactionHash" class="payment-status_btn" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
@@ -153,11 +153,19 @@
 </template>
 
 <script>
-import { NETWORKS } from '@/constants'
+import VuexRestore from '@/components/mixins/VuexRestore'
+import {
+  NETWORKS,
+  STATUS_PUBLISHED,
+  STATUS_PROCESSING,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS
+} from '@/constants'
 import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 
 export default {
   name: 'PaymentDetail',
+  mixins: [VuexRestore],
   data() {
     return{
       pageStateList: {
@@ -196,9 +204,9 @@ export default {
       }
     },
     nativeTokenSymbol() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].symbol
+      return this.$store.state.web3.chainId
+        ? NETWORKS[this.$store.state.web3.chainId].symbol
+        : ''
     },
     paymentRequestSymbol() {
       return this.$store.state.payment.symbol
@@ -270,6 +278,15 @@ export default {
     platformFee() {
       return this.$store.state.payment.fee
     },
+    paymentToken() {
+      return this.$route.params.token
+    },
+    paymentStatus() {
+      return this.$store.state.payment.status
+    },
+    transactionHash() {
+      return this.$store.state.payment.transactionHash
+    },
     isDetailState() {
       return this.pageState === this.pageStateList.detail
     },
@@ -287,6 +304,9 @@ export default {
     },
     isWaitingWallet() {
       return this.waitingWallet
+    },
+    isPublishedTransactionHash() {
+      return (this.transactionHash)
     }
   },
   methods: {
@@ -328,6 +348,7 @@ export default {
     },
     retry() {
       this.updateExchange()
+      this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
       this.pageState = this.pageStateList.detail
     },
     exchangeExpireTimer() {
@@ -367,6 +388,7 @@ export default {
       this.checkContractApproved().then((approved) => {
         if (approved) {
           this.sendTransaction().on('transactionHash', (transactionHash) => {
+            this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
             this.pageState = this.pageStateList.processing
             this.waitingWallet = false
             this.$store.dispatch('payment/updateTransactionHash', transactionHash)
@@ -382,11 +404,13 @@ export default {
               this.checkTransactionStatus(transactionHash)
             })
           }).on('error', () => {
+            this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
             this.pageState = this.pageStateList.failured
           })
         } else {
           this.contractApprove().on('transactionHash', () => {
             this.sendTransaction().on('transactionHash', (transactionHash) => {
+              this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
               this.pageState = this.pageStateList.processing
               this.waitingWallet = false
               this.$store.dispatch('payment/updateTransactionHash', transactionHash)
@@ -402,9 +426,11 @@ export default {
                 this.checkTransactionStatus(transactionHash)
               })
             }).on('error', () => {
+              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
               this.pageState = this.pageStateList.failured
             })
           }).on('error', () => {
+            this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
             this.pageState = this.pageStateList.failured
           })
         }
@@ -451,9 +477,13 @@ export default {
               payment_token: this.$route.params.token,
               result: receipt.status
             }).then(() => {
-              this.pageState = receipt.status
-                ? this.pageStateList.successed
-                : this.pageStateList.failured
+              if (receipt.status) {
+                this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
+                this.pageState = this.pageStateList.successed
+              } else {
+                this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
+                this.pageState = this.pageStateList.failured
+              }
             })
           }
         })
@@ -461,21 +491,38 @@ export default {
     }
   },
   created(){
-    this.$store.dispatch('payment/update', {
-      domain: this.$route.query.receiver,
-      orderCode: this.$route.query.code,
-      symbol: this.$route.query.symbol,
-      amount: this.$route.query.amount
-    })
-    this.apiGetPaymentCompletedUrl().then((response) => {
-      this.returnUrls.succeed = response.data.succeeded_return_url
-      this.returnUrls.failured = response.data.failured_return_url
-    })
-    this.apiGetContract().then((response) => {
-      this.contract.address = response.data.address
-      this.contract.abi = JSON.parse(response.data.args)
-      this.exchangeExpireTimer()
-    })
+    if (this.isNeedRestore) {
+      this.$router.push({
+        path: `/payment/wallets/${this.paymentToken}`
+      })
+    } else {
+      this.apiGetPaymentCompletedUrl().then((response) => {
+        this.returnUrls.succeed = response.data.succeeded_return_url
+        this.returnUrls.failured = response.data.failured_return_url
+      })
+      this.apiGetContract().then((response) => {
+        this.contract.address = response.data.address
+        this.contract.abi = JSON.parse(response.data.args)
+        this.exchangeExpireTimer()
+      })
+      switch(this.paymentStatus) {
+        case STATUS_PUBLISHED:
+          this.pageState = this.pageStateList.detail
+          break
+        case STATUS_PROCESSING:
+          this.pageState = this.pageStateList.processing
+          this.checkTransactionStatus(this.transactionHash)
+          break
+        case STATUS_RESULT_FAILURE:
+          this.pageState = this.pageStateList.failured
+          break
+        case STATUS_RESULT_SUCCESS:
+          this.pageState = this.pageStateList.successed
+          break
+        default:
+          this.pageState = this.pageStateList.detail
+      }
+    }
   },
   beforeDestroy() {
     clearInterval(this.monitoringInterval)

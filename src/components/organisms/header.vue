@@ -154,7 +154,7 @@ export default {
       return pathPattern.test(this.$route.path)
     },
     connected() {
-      return (this.$store.state.web3.provider)
+      return (this.$store.state.web3.instance && this.$store.state.web3.chainId)
     }
   },
   methods: {

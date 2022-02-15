@@ -127,9 +127,11 @@
 <script>
 import NumberFormat from 'number-format.js'
 import { NETWORKS } from '@/constants'
+import VuexRestore from '@/components/mixins/VuexRestore'
 
 export default {
   name: 'PaymentToken',
+  mixins: [VuexRestore],
   data() {
     return {
       tab: "list",
@@ -158,17 +160,20 @@ export default {
       return this.$store.state.payment.amount
     },
     networkIcon() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].icon
+      return this.chainId
+        ? NETWORKS[this.$store.state.web3.chainId].icon
+        : null
     },
     networkName() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].name
+      return this.chainId
+        ? NETWORKS[this.$store.state.web3.chainId].name
+        : ''
     },
     chainId() {
       return this.$store.state.web3.chainId
+    },
+    paymentToken() {
+      return this.$route.params.token
     }
   },
   methods: {
@@ -244,19 +249,18 @@ export default {
         amount: null,
       })
       this.$router.push({
-        path: '/payment/exchange/' + this.$route.params.token,
-        query: {
-          receiver: this.$store.state.payment.domain,
-          code: this.$store.state.payment.orderCode,
-          symbol: this.$store.state.payment.symbol,
-          amount: this.$store.state.payment.amount,
-          token: token.symbol
-        }
+        path: `/payment/exchange/${this.paymentToken}`,
       })
     }
   },
   created() {
-    this.getDefaultTokens()
+    if (this.isNeedRestore) {
+      this.$router.push({
+        path: `/payment/wallets/${this.paymentToken}`
+      })
+    } else {
+      this.getDefaultTokens()
+    }
   }
 }
 </script>
