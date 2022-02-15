@@ -47,13 +47,14 @@
 </template>
 
 <script>
-import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
+import {
+  STATUS_PROCESSING,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS
+} from '@/constants'
 
 export default {
   name: 'PaymentSelectWallets',
-  mixins: [
-    Web3ConnectorMixin
-  ],
   data() {
     return{
       loadingMeta: false,
@@ -63,6 +64,12 @@ export default {
   computed: {
     amount() {
       return this.$store.state.payment.amount
+    },
+    status() {
+      return this.$store.state.payment.status
+    },
+    paymentToken() {
+      return this.$route.params.token
     }
   },
   methods: {
@@ -74,12 +81,7 @@ export default {
           connectRes.chainId
         ).then((accountRes) =>{
           this.$store.dispatch('account/update', accountRes)
-          const pathRegPattern = /^\/payment\//
-          let nextPath
-          if (pathRegPattern.test(this.$route.path)) {
-            nextPath = '/payment/token/' + this.$route.params.token
-          }
-          this.$router.push({ path: nextPath })
+          this.pageTransition()
         })
       }).catch((error) => {
         if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
@@ -97,16 +99,24 @@ export default {
           connectRes.chainId
         ).then((accountRes) =>{
           this.$store.dispatch('account/update', accountRes)
-          const pathRegPattern = /^\/payment\//
-          let nextPath
-          if (pathRegPattern.test(this.$route.path)) {
-            nextPath = '/payment/token/' + this.$route.params.token
-          }
-          this.$router.push({ path: nextPath })
+          this.pageTransition()
         })
       }).catch(() => {
         this.$store.dispatch('openModal', { target: 'error-wallet-modal', size: 'small' })
       })
+    },
+    pageTransition() {
+      let nextPath
+      switch(this.status) {
+        case STATUS_PROCESSING:
+        case STATUS_RESULT_FAILURE:
+        case STATUS_RESULT_SUCCESS:
+          nextPath = `/payment/detail/${this.paymentToken}`
+          break
+        default:
+          nextPath = `/payment/token/${this.paymentToken}`
+      }
+      this.$router.push({ path: nextPath })
     }
   }
 }

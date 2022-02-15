@@ -2,7 +2,7 @@
   <div class="slash-bg">
     <Header />
     <div class="payment">
-      <div class="menu-nav" v-if="$store.state.humberger">
+      <div class="menu-nav" v-if="$store.state.hamberger">
         <div class="menu-nav_top">
           <img src="@/assets/images/menu.svg">
         </div>
@@ -87,19 +87,24 @@
 <script>
 import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
+import VuexRestore from '@/components/mixins/VuexRestore'
 
 export default {
   name: 'PaymentIndex',
+  mixins: [VuexRestore],
   components: {
     Header,
     PaymentTop,
   },
   computed: {
-    receiver: function() {
+    receiver() {
       return this.$store.state.payment.domain
     },
-    invoiceId: function() {
+    invoiceId() {
       return this.$store.state.payment.orderCode
+    },
+    restoreParam() {
+      return this.$route.query.vx
     }
   },
   methods: {
@@ -110,11 +115,10 @@ export default {
       this.$store.dispatch("changeTheme", theme);
     }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  created() {
+    if (this.restoreParam) {
+      this.restoreVuex(this.restoreParam)
+    }
   }
 }
 </script>

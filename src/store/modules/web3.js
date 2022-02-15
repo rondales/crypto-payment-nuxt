@@ -1,9 +1,7 @@
-import Web3 from 'web3'
-
 const store = {
   namespaced: true,
   state: {
-    instance: Web3,
+    instance: null,
     chainId: null,
     provider: null
   },
@@ -20,7 +18,7 @@ const store = {
   },
   mutations: {
     initialize(state) {
-      state.instance = Web3
+      state.instance = null
       state.chainId = null
       state.provider = null
     },

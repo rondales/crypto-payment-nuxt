@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
   components: {
@@ -16,10 +15,6 @@ export default {
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
-    detailModal: () => import('@/components/molecules/detailModal'),
-    waitingModal: () => import('@/components/molecules/waitingModal'),
-    submittedModal: () => import('@/components/molecules/submittedModal'),
-    dismissModal: () => import('@/components/molecules/dismissModal'),
     errorModal: () => import('@/components/molecules/errorModal')
   },
   computed: {
@@ -27,9 +22,9 @@ export default {
       return [
         `theme--${this.$store.state.theme}`,
       ];
-    },
+    }
   },
-  updated(){
+  updated() {
     if(!(this.$route.path == "/payment")){
       this.$store.dispatch("currentPath", {invoicePage: true});
     }

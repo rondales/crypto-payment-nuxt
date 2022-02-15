@@ -10,10 +10,14 @@
         </div>
       </div>
       <div class="add-flex a-end j-between" v-if="$store.state.invoicePage">
-        <div class="logo copy" @click="copyLink(address)">
+        <div v-if="prevMode" class="logo copy" @click="prevPage">
           <figure>
-            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/link.svg">
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/link-l.svg">
+            <img :src="prevIcon">
+          </figure>
+        </div>
+        <div v-else class="logo copy" @click="copyLink">
+          <figure>
+            <img :src="linkIcon">
           </figure>
         </div>
       </div>
@@ -24,10 +28,9 @@
           </figure>
         </div>
       </div>
-      <div class="hamburger" @click="open()" :class="{'active': $store.state.humberger === true}">
+      <div class="hamburger" @click="open()" :class="{'active': $store.state.hamberger === true}">
         <button type="button" class="menu-btn" >
-          <img v-if="$store.state.theme == 'dark'" src="@/assets/images/hamburger.svg" alt="">
-          <img v-if="$store.state.theme == 'light'" src="@/assets/images/hamburger-light.svg" alt="">
+          <img :src="hamburgerIcon" alt="">
         </button>
       </div>
     </div>
@@ -36,25 +39,66 @@
 
 
 <script>
+import VuexRestore from '@/components/mixins/VuexRestore'
+
 export default {
   name: 'PaymentTop',
+  mixins: [VuexRestore],
   data() {
     return{
       success: true,
       invoice: false,
-      address: "hogefugahogefuga"
+      address: "hogefugahogefuga",
+      currentRouteName: ''
+    }
+  },
+  watch: {
+    $route(route) {
+      this.currentRouteName = route.name
+    }
+  },
+  computed: {
+    linkIcon() {
+      return this.$store.state.theme === 'light'
+        ? require('@/assets/images/link-l.svg')
+        : require('@/assets/images/link.svg')
+    },
+    prevIcon() {
+      return this.$store.state.theme === 'light'
+        ? require('@/assets/images/left-arrow-l.svg')
+        : require('@/assets/images/left-arrow.svg')
+    },
+    hamburgerIcon() {
+      return this.$store.state.theme === 'light'
+        ? require('@/assets/images/hamburger-light.svg')
+        : require('@/assets/images/hamburger.svg')
+    },
+    prevMode() {
+      return ((this.currentRouteName === 'exchange' || this.currentRouteName === 'detail') && this.$store.state.payment.status === 1)
     }
   },
   methods: {
-    open(){
-      this.$store.dispatch("humberger", {humberger: true});
+    open() {
+      this.$store.dispatch("hamberger", {hamberger: true});
     },
-    copyLink(value){
-      this.$clipboard(value);
+    copyLink() {
+      const currentUrl = window.location.href
+      const restoreParam = this.generateRestoreParameter()
+      this.$clipboard(`${currentUrl}?vx=${restoreParam}`);
     },
-  },
-  components: {
-  },
+    prevPage() {
+      switch(this.currentRouteName) {
+        case 'detail':
+          this.$router.push({ path: `/payment/exchange/${this.$route.params.token}` })
+          break
+        case 'exchange':
+          this.$router.push({ path: `/payment/token/${this.$route.params.token}` })
+          break
+        default:
+          this.$router.back()
+      }
+    }
+  }
 }
 </script>
 

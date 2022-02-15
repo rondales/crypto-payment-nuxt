@@ -23,6 +23,7 @@
     "file-saver": "^2.0.5",
     "moment": "^2.29.1",
     "number-format.js": "^2.0.9",
+    "secure-ls": "^1.2.6",
     "v-clipboard": "^2.2.3",
     "vue": "^2.6.11",
     "vue-axios": "^3.4.0",
@@ -32,6 +33,7 @@
     "vuejs-datepicker": "^1.6.2",
     "vuejs-paginate": "^2.1.0",
     "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.1.0",
     "web3": "^1.5.3"
   },
   "devDependencies": {
