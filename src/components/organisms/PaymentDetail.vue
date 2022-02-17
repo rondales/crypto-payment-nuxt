@@ -154,6 +154,7 @@
 
 <script>
 import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 import {
   NETWORKS,
   STATUS_PUBLISHED,
@@ -165,7 +166,7 @@ import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 
 export default {
   name: 'PaymentDetail',
-  mixins: [VuexRestore],
+  mixins: [VuexRestore, Web3ProviderEvents],
   data() {
     return{
       pageStateList: {

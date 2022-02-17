@@ -45,6 +45,9 @@ export default {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
+    paymentAvailableNetworks() {
+      return this.$store.state.payment.availableNetworks
+    },
     isCurrentNetwork() {
       return (chainId) => {
         return chainId === this.$store.state.web3.chainId
@@ -66,7 +69,9 @@ export default {
     }
   },
   created() {
-    this.networks = Object.values(AvailableNetworks)
+    this.networks = Object.values(AvailableNetworks).filter(
+      network => this.paymentAvailableNetworks.includes(network.chainId)
+    )
   }
 }
 </script>

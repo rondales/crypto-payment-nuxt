@@ -6,18 +6,16 @@
 
 
 <script>
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
+
 export default {
   name: 'PaymentTop',
-    data() {
-      return{
-        success: true
-      }
-    },
-  methods: {
-
-  },
-  components: {
-  },
+  mixins: [Web3ProviderEvents],
+  data() {
+    return{
+      success: true
+    }
+  }
 }
 </script>
 

@@ -124,10 +124,11 @@
 import NumberFormat from 'number-format.js'
 import { NETWORKS } from '@/constants'
 import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
   name: 'PaymentToken',
-  mixins: [VuexRestore],
+  mixins: [VuexRestore, Web3ProviderEvents],
   data() {
     return {
       tab: "list",

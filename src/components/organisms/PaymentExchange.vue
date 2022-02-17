@@ -105,10 +105,11 @@ import { NETWORKS } from '@/constants'
 import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 import NumberFormat from 'number-format.js'
 import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
   name: 'PaymentExchange',
-  mixins: [VuexRestore],
+  mixins: [VuexRestore, Web3ProviderEvents],
   data() {
     return{
       loading: false,

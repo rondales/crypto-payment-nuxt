@@ -8,6 +8,7 @@ const store = {
     symbol: null,
     fee: null,
     transactionHash: null,
+    availableNetworks: [],
     status: 1,
     token: {
       name: null,
@@ -34,6 +35,9 @@ const store = {
     },
     updateTransactionHash({ commit }, payload) {
       commit('updateTransactionHash', payload)
+    },
+    updateAvailableNetworks({ commit }, payload) {
+      commit('updateAvailableNetworks', payload)
     },
     updateStatus({ commit }, payload) {
       commit('updateStatus', payload)
@@ -62,6 +66,9 @@ const store = {
     },
     updateTransactionHash(state, payload) {
       state.transactionHash = payload
+    },
+    updateAvailableNetworks(state, payload) {
+      state.availableNetworks = payload
     },
     updateToken(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {

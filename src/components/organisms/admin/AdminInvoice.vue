@@ -322,8 +322,11 @@
 <script>
 import DatetimePicker from 'vue-ctk-date-time-picker'
 import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
+
 export default {
   name: 'PaymentTop',
+  mixins: [Web3ProviderEvents],
   components: {
     DatetimePicker
   },
