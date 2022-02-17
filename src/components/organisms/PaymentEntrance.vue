@@ -35,6 +35,11 @@ export default {
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
       return this.axios.post(url, params)
     },
+    apiGetTransactionData() {
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
+      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+      return this.axios.get(url, { params })
+    },
     apiGetTransactionState() {
       const url = `${this.baseUrl}/api/v1/payment/transaction/state`
       const params = new URLSearchParams([['payment_token', this.$route.params.token]])
@@ -50,40 +55,41 @@ export default {
   },
   created() {
     this.$store.dispatch('payment/updateHeaderInvoice', false)
-    this.apiReceiveData().then((response) => {
-      const responseData = response.data
-      // @todo If symbols other than USDT are allowed, the amount format specification needs to be reviewed
-      const formatedAmount = NumberFormat('0.00', responseData.amount)
-
-      this.$store.dispatch('changeTheme', responseData.display_theme)
-      this.$store.dispatch('payment/update', {
-        domain: responseData.domain,
-        orderCode: responseData.order_code,
-        symbol: (responseData.symbol === null) ? 'USDT' : responseData.symbol,
-        amount: formatedAmount
-      })
-
+    this.apiReceiveData().then((receiveResponse) => {
+      this.$store.dispatch('changeTheme', receiveResponse.data.display_theme)
       this.apiPublishTransaction().then(() => {
-        this.showComponent = (responseData.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
+        // @todo If symbols other than USDT are allowed, the amount format specification needs to be reviewed
+        this.$store.dispatch('payment/update', {
+          domain: receiveResponse.data.domain,
+          orderCode: receiveResponse.data.order_code,
+          symbol: (receiveResponse.data.symbol === null) ? 'USDT' : receiveResponse.data.symbol,
+          amount: NumberFormat('0.00', receiveResponse.data.amount)
+        })
+        this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
-            this.apiGetTransactionState().then((response) => {
-              switch(response.data.state) {
-                case 'unset_base_amount':
-                  this.showComponent = 'PaymentAmount'
-                  break;
-                case 'unset_email':
-                  this.showComponent = 'PaymentEmail'
-                  break;
-                case 'unset_token':
-                  this.$router.push({
-                    path: '/payment/wallets/' + this.$route.params.token
-                  })
-                  break;
-                case 'close':
-                  this.showErrorModal('This transaction is closed.')
-              }
+            this.apiGetTransactionData().then((transactionResponse) => {
+              this.$store.dispatch('payment/updateAmount', NumberFormat('0.00', transactionResponse.data.base_amount))
+              this.apiGetTransactionState().then((response) => {
+                switch(response.data.state) {
+                  case 'unset_base_amount':
+                    this.showComponent = 'PaymentAmount'
+                    break;
+                  case 'unset_email':
+                    this.showComponent = 'PaymentEmail'
+                    break;
+                  case 'unset_token':
+                    this.$router.push({
+                      path: '/payment/wallets/' + this.$route.params.token
+                    })
+                    break;
+                  case 'close':
+                    this.showErrorModal('This transaction is closed.')
+                }
+              }).catch(() => {
+                this.showErrorModal('Please try again after a while.')
+              })
             }).catch(() => {
               this.showErrorModal('Please try again after a while.')
             })
