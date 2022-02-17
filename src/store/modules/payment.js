@@ -1,6 +1,7 @@
 const store = {
   namespaced: true,
   state: {
+    headerInvoice: false,
     domain: null,
     orderCode: null,
     amount: null,
@@ -21,6 +22,9 @@ const store = {
   actions: {
     update({ commit }, payload) {
       commit('update', payload)
+    },
+    updateHeaderInvoice({ commit }, payload) {
+      commit('updateHeaderInvoice', payload)
     },
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
@@ -43,6 +47,9 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
+    },
+    updateHeaderInvoice(state, payload) {
+      state.headerInvoice = payload
     },
     updateAmount(state, payload) {
       state.amount = payload

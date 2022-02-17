@@ -49,6 +49,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', false)
     this.apiReceiveData().then((response) => {
       const responseData = response.data
       // @todo If symbols other than USDT are allowed, the amount format specification needs to be reviewed
@@ -63,7 +64,7 @@ export default {
       })
 
       this.apiPublishTransaction().then(() => {
-        this.showComponent = (this.$store.state.payment.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
+        this.showComponent = (responseData.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {

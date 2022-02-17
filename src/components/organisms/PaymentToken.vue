@@ -87,19 +87,15 @@
             <div class="manage-warning" v-if="validAddress">
               Enter valid token address
             </div>
-            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(token, key) in tokenIdList" :key="key">
+            <ul class="manage-item add-flex a-center mb-2" v-for="(token, key) in tokenIdList" :key="key">
               <li>
                 <img :src="token.icon">
               </li>
               <li class="token-name">
                 {{ token.symbol }}
-                <br>
-                <span>
-                  {{ token.name }}
-                </span>
               </li>
               <li class="manage-item--right add-flex a-center j-between">
-                <a href="https://sauna.finance/" target="_brank">
+                <a :href="token.url" target="_brank">
                   <figure>
                     <img src="@/assets/images/link-icon.svg">
                   </figure>
@@ -210,13 +206,17 @@ export default {
         event.target.value,
         this.$store.state.account.address
       ).then((response) => {
+        const scanUrl = NETWORKS[
+          this.$store.state.web3.chainId
+        ].scanUrl
         this.tokenIdList.push({
           name: response.name,
           symbol: response.symbol,
           decimal: response.decimal,
           address: response.address,
           balance: response.balance,
-          icon: response.icon
+          icon: response.icon,
+          url: `${scanUrl}/token/${response.address}`
         })
         this.tokenCount = this.tokenIdList.length
       }).catch((error) => {
@@ -254,6 +254,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
     if (this.isNeedRestore) {
       this.$router.push({
         path: `/payment/wallets/${this.paymentToken}`
@@ -423,7 +424,7 @@ export default {
       font-weight: 200;
       background: $gradation-pale;
       padding: 4px 12px;
-      border-radius: 20px;
+      border-radius: 10px;
     }
   }
   .payment_receiptwrap{
@@ -513,19 +514,19 @@ export default {
         font-size: 14px;
         width: 100%;
         .token-name{
+          width: 60%;
           font-weight: 100;
-          margin-right: 5%;
-          span{
-            font-size: 12px;
-          }
+          padding-left: 17px;
         }
       }
       .manage-item--right{
-        width: 32%;
+        margin-left: auto;
+        width: 100px;
         .manage-import{
+          height: 27px;
           background: $gradation-pale;
           padding: 4px 16px;
-          border-radius: 12px;
+          border-radius: 10px;
           font-size: 12px;
           font-weight: 100;
           cursor: pointer;

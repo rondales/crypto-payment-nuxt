@@ -354,7 +354,7 @@ export default {
     exchangeExpireTimer() {
       this.exchangeTimer = setTimeout(() => {
         this.expiredExchange = true;
-      }, 300000);
+      }, 30000);
     },
     updateExchange() {
       this.$web3.getTokenExchangeData(
@@ -491,6 +491,7 @@ export default {
     }
   },
   created(){
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
     if (this.isNeedRestore) {
       this.$router.push({
         path: `/payment/wallets/${this.paymentToken}`

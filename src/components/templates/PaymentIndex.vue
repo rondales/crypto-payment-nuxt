@@ -1,6 +1,6 @@
 <template>
   <div class="slash-bg">
-    <Header />
+    <Header :width="windowWidth" />
     <div class="payment">
       <div class="menu-nav" v-if="$store.state.hamberger">
         <div class="menu-nav_top">
@@ -31,16 +31,16 @@
       <div class="add-flex j-between">
         <div>
           <p class="payment_Receiver mb-1">
-            Receiver：{{ receiver }}
+            Payee：{{ receiver }}
           </p>
           <p class="payment_invoice-id">
-            Invoice ID: {{ invoiceId }}
+            Invoice ID：{{ invoiceId }}
           </p>
         </div>
           <router-view />
       </div>
     </div>
-    <div class="sp">
+    <div v-if="isShowFooterMenu" class="sp">
       <div class="fixed add-flex j-between a-center">
         <button class="btn __pg __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
           <span class="icon-wrap">
@@ -48,7 +48,7 @@
           </span>
           Connect to a wallet
         </button>
-        <button class="btn __pg __s sp-fixed">
+        <button class="btn __pg __s sp-fixed" @click="copyLink">
           <span class="icon-wrap">
             <img src="@/assets/images/link.svg">
           </span>
@@ -96,6 +96,11 @@ export default {
     Header,
     PaymentTop,
   },
+  data() {
+    return {
+      windowWidth: window.innerWidth
+    }
+  },
   computed: {
     receiver() {
       return this.$store.state.payment.domain
@@ -105,6 +110,12 @@ export default {
     },
     restoreParam() {
       return this.$route.query.vx
+    },
+    connected() {
+      return (this.$store.state.web3.instance && this.$store.state.web3.chainId)
+    },
+    isShowFooterMenu() {
+      return this.$route.name === 'wallets'
     }
   },
   methods: {
@@ -113,12 +124,26 @@ export default {
     },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
+    },
+    copyLink() {
+      const currentUrl = window.location.href
+      const restoreParam = this.generateRestoreParameter()
+      this.$clipboard(`${currentUrl}?vx=${restoreParam}`);
+    },
+    handleWindowResize() {
+      this.windowWidth = window.innerWidth
     }
   },
   created() {
     if (this.restoreParam) {
       this.restoreVuex(this.restoreParam)
     }
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleWindowResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>
@@ -202,6 +227,7 @@ export default {
   }
   .payment_Receiver,
   .payment_invoice-id{
+    font-weight: 400;
     font-size: 15px;
   }
 }
@@ -211,7 +237,7 @@ export default {
   left: 50%;
   transform: translate(-50%, 0);
   width: 100%;
-  padding: 16px 8px;
+  padding: 16px;
   background: var(--color_darken);
   .btn{
     font-size: 12px;

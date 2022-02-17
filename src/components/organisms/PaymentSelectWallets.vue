@@ -118,6 +118,9 @@ export default {
       }
       this.$router.push({ path: nextPath })
     }
+  },
+  created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
   }
 }
 </script>
@@ -249,5 +252,4 @@ export default {
     }
   }
 }
-
 </style>

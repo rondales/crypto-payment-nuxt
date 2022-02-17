@@ -98,7 +98,7 @@ export default {
 .contents{
   padding: 48px;
   margin-left: 170px;
-  margin-top: 100px;
+  margin-top: 80px;
   @include media(sp) {
     padding: 0 24px;
     margin-left: 0;

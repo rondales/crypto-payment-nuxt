@@ -1,7 +1,7 @@
 <template>
   <div class="payment_top">
     <div class="payment_headbox add-flex j-between a-center">
-      <div v-if="!$store.state.invoicePage" class="logo add-flex a-end">
+      <div v-if="!isInvoiceHeaderMode" class="logo add-flex a-end">
         <figure>
           <img src="@/assets/images/slash.svg">
         </figure>
@@ -9,7 +9,7 @@
           Web3 Payment
         </div>
       </div>
-      <div class="add-flex a-end j-between" v-if="$store.state.invoicePage">
+      <div v-if="isInvoiceHeaderMode" class="add-flex a-end j-between">
         <div v-if="prevMode" class="logo copy" @click="prevPage">
           <figure>
             <img :src="prevIcon">
@@ -21,7 +21,7 @@
           </figure>
         </div>
       </div>
-      <div v-if="$store.state.invoicePage">
+      <div v-if="isInvoiceHeaderMode">
         <div class="logo">
           <figure>
             <img src="@/assets/images/invoice.svg">
@@ -75,6 +75,9 @@ export default {
     },
     prevMode() {
       return ((this.currentRouteName === 'exchange' || this.currentRouteName === 'detail') && this.$store.state.payment.status === 1)
+    },
+    isInvoiceHeaderMode() {
+      return this.$store.state.payment.headerInvoice
     }
   },
   methods: {
