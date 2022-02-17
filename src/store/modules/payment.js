@@ -1,12 +1,14 @@
 const store = {
   namespaced: true,
   state: {
+    headerInvoice: false,
     domain: null,
     orderCode: null,
     amount: null,
     symbol: null,
     fee: null,
     transactionHash: null,
+    availableNetworks: [],
     status: 1,
     token: {
       name: null,
@@ -22,6 +24,9 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
+    updateHeaderInvoice({ commit }, payload) {
+      commit('updateHeaderInvoice', payload)
+    },
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
     },
@@ -30,6 +35,9 @@ const store = {
     },
     updateTransactionHash({ commit }, payload) {
       commit('updateTransactionHash', payload)
+    },
+    updateAvailableNetworks({ commit }, payload) {
+      commit('updateAvailableNetworks', payload)
     },
     updateStatus({ commit }, payload) {
       commit('updateStatus', payload)
@@ -44,6 +52,9 @@ const store = {
         state[key] = value
       })
     },
+    updateHeaderInvoice(state, payload) {
+      state.headerInvoice = payload
+    },
     updateAmount(state, payload) {
       state.amount = payload
     },
@@ -55,6 +66,9 @@ const store = {
     },
     updateTransactionHash(state, payload) {
       state.transactionHash = payload
+    },
+    updateAvailableNetworks(state, payload) {
+      state.availableNetworks = payload
     },
     updateToken(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {

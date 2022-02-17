@@ -52,6 +52,7 @@ import {
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
 } from '@/constants'
+import AvailableNetworks from '@/network'
 
 export default {
   name: 'PaymentSelectWallets',
@@ -62,6 +63,9 @@ export default {
     }
   },
   computed: {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
     amount() {
       return this.$store.state.payment.amount
     },
@@ -73,6 +77,11 @@ export default {
     }
   },
   methods: {
+    apiGetAvailableNetworks() {
+      const url = `${this.baseUrl}/api/v1/payment/contract/network`
+      const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
+      return this.axios.get(url, request)
+    },
     useMetamask() {
       this.$web3.connectByMetamask().then((connectRes) => {
         this.$store.dispatch('web3/update', connectRes)
@@ -118,6 +127,15 @@ export default {
       }
       this.$router.push({ path: nextPath })
     }
+  },
+  created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
+    this.apiGetAvailableNetworks().then((response) => {
+      const networks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      }).filter(item => response.data.networks.includes(item))
+      this.$store.dispatch('payment/updateAvailableNetworks', networks)
+    })
   }
 }
 </script>
@@ -249,5 +267,4 @@ export default {
     }
   }
 }
-
 </style>

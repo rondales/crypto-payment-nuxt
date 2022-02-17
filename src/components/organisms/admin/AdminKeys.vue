@@ -33,8 +33,11 @@
 
 
 <script>
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
+
 export default {
   name: 'PaymentTop',
+  mixins: [Web3ProviderEvents],
   data() {
     return{
       orderToken: '',

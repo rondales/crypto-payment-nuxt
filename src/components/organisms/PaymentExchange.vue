@@ -105,10 +105,11 @@ import { NETWORKS } from '@/constants'
 import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 import NumberFormat from 'number-format.js'
 import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
   name: 'PaymentExchange',
-  mixins: [VuexRestore],
+  mixins: [VuexRestore, Web3ProviderEvents],
   data() {
     return{
       loading: false,
@@ -217,7 +218,7 @@ export default {
     exchangeExpireTimer() {
       this.timer = setTimeout(() => {
         this.expiredExchange = true;
-      }, 60000);
+      }, 30000);
     },
     reload() {
       const tokenContract = this.$web3.getTokenContract(
@@ -267,6 +268,7 @@ export default {
     },
   },
   created(){
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
     if (this.isNeedRestore) {
       this.$router.push({
         path: `/payment/wallets/${this.paymentToken}`

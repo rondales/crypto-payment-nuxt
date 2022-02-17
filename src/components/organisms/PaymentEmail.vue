@@ -101,6 +101,9 @@ export default {
         path: '/payment/wallets/' + this.$route.params.token
       })
     },
+  },
+  created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', false)
   }
 }
 </script>
@@ -218,6 +221,7 @@ export default {
   .payment_receipt{
     p{
       font-size: 15px;
+      font-weight: 400;
     }
     &_form{
       height: 56px;

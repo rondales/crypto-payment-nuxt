@@ -58,9 +58,9 @@ export default {
 @import '@/assets/scss/style.scss';
 .side-bar{
   position: fixed;
-  top: 100px;
+  top: 80px;
   bottom: 0;
-  left: 0;  
+  left: 0;
   width: 170px;
   border-right: 1px solid #58466E;
   @include media(sp) {
@@ -81,17 +81,17 @@ export default {
     overflow-y: auto;
     &::-webkit-scrollbar{
       display: none;
-    }      
+    }
   }
   &--inner{
     width: 170px;
     ul{
       li{
-        padding: 8px 24px;    
+        padding: 8px 24px;
         margin-bottom: 20px;
         font-size: 15px;
         a{
-          color: #fff;  
+          color: #fff;
           text-decoration: none;
         }
       }

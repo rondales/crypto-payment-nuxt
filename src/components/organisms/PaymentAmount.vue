@@ -1,13 +1,13 @@
 <template>
   <div class="payment_handleprice">
-    <div class="payment_desc mb-3">
+    <div class="payment_desc mb-3 mt-3">
       <p>
         Enter the payment amount
       </p>
       <span>&#128591;</span>
     </div>
     <div class="payment_handleprice-pricewrap">
-      <p class="mb-3">How much would you pay?</p>
+      <p class="payment_handleprice-desc mb-1">How much would you pay?</p>
       <div class="payment_handleprice-price add-flex border j-between">
         <input v-model="legalCurrencyAmount" class="price" type="text" placeholder="0">
         <div class="add-flex currency a-center">
@@ -217,6 +217,11 @@ export default {
 
   .payment_handleprice-pricewrap{
     width: 100%;
+  }
+
+  .payment_handleprice-desc{
+    font-size: 15px;
+    font-weight: 400;
   }
 
   .payment_handleprice-price{

@@ -154,6 +154,7 @@
 
 <script>
 import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 import {
   NETWORKS,
   STATUS_PUBLISHED,
@@ -165,7 +166,7 @@ import { BscTokens, EthereumTokens } from '@/contracts/tokens'
 
 export default {
   name: 'PaymentDetail',
-  mixins: [VuexRestore],
+  mixins: [VuexRestore, Web3ProviderEvents],
   data() {
     return{
       pageStateList: {
@@ -354,7 +355,7 @@ export default {
     exchangeExpireTimer() {
       this.exchangeTimer = setTimeout(() => {
         this.expiredExchange = true;
-      }, 300000);
+      }, 30000);
     },
     updateExchange() {
       this.$web3.getTokenExchangeData(
@@ -491,6 +492,7 @@ export default {
     }
   },
   created(){
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
     if (this.isNeedRestore) {
       this.$router.push({
         path: `/payment/wallets/${this.paymentToken}`

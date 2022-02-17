@@ -6,15 +6,15 @@
       </h3>
     </div>
     <div class="body">
-      <button class="btn __m full" @click="useMetamask">
+      <button class="btn __m __pg icon-right full" @click="useMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
-      <button class="btn __m full" @click="useWalletConnect">
+      <button class="btn __m __pg icon-right full" @click="useWalletConnect">
         <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect.svg">
+          <img src="@/assets/images/wallet-connect_w.svg">
         </span>
           WalletConnect
       </button>
@@ -177,6 +177,11 @@
     @include media(sp) {
       padding: 16px 12px 48px;
     }
+    // .btn {
+    //   &.__m {
+    //     background: $gradation-pale;
+    //   }
+    // }
   }
   .footer {
     text-align: center;

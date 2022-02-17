@@ -9,7 +9,13 @@
       </p>
     </div>
     <div class="body add-flex j-between">
-      <button v-for="(network, key) in networks" :key="key" class="btn __m half" @click="switchNetwork(network.chainId)">
+      <button
+        v-for="(network, key) in networks"
+        :key="key"
+        class="btn __m half"
+        :class="{ __pg: isCurrentNetwork(network.chainId) }"
+        @click="switchNetwork(network.chainId)"
+      >
         <span class="btn-icon">
           <img :src="network.icon">
         </span>
@@ -38,6 +44,14 @@ export default {
     classes() {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
+    },
+    paymentAvailableNetworks() {
+      return this.$store.state.payment.availableNetworks
+    },
+    isCurrentNetwork() {
+      return (chainId) => {
+        return chainId === this.$store.state.web3.chainId
+      }
     }
   },
   methods: {
@@ -55,7 +69,9 @@ export default {
     }
   },
   created() {
-    this.networks = Object.values(AvailableNetworks)
+    this.networks = Object.values(AvailableNetworks).filter(
+      network => this.paymentAvailableNetworks.includes(network.chainId)
+    )
   }
 }
 </script>
