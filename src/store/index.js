@@ -18,7 +18,7 @@ const store = new Vuex.Store({
       paths: [
         'web3.provider',
         'payment',
-        'humberger',
+        'hamberger',
         'modal',
         'theme',
         'invoicePage'
