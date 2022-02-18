@@ -1,19 +1,19 @@
 <template>
-  <header class="lp-header" :class="{'active': $store.state.humberger === true}">
+  <header class="lp-header" :class="{'active': $store.state.hamberger === true}">
     <div class="lp-header__inner">
       <div class="logo-wrap add-flex a-center">
         <div class="lp-header__head">
           <div class="logo">
             <img src="@/assets/images/lp/lp-logo.svg" alt="Web3 Payment">
           </div>
-          <div class="hamburger sp" @click="open()" :class="{'active': $store.state.humberger === true}">
+          <div class="hamburger sp" @click="open()" :class="{'active': $store.state.hamberger === true}">
             <button type="button" class="menu-btn" >
               <img v-if="$store.state.theme == 'dark'" src="@/assets/images/hamburger.svg" alt="">
               <img v-if="$store.state.theme == 'light'" src="@/assets/images/hamburger-light.svg" alt="">
-            </button> 
+            </button>
           </div>
         </div>
-        <div class="link-wrap add-flex j-between" :class="{'active': $store.state.humberger === true}">
+        <div class="link-wrap add-flex j-between" :class="{'active': $store.state.hamberger === true}">
           <span class="toggle-theme sp">
             <button
               :class="[
@@ -37,7 +37,7 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="">
             </button>
-          </span>          
+          </span>
           <span>
             <a href="#about">
               About us
@@ -59,10 +59,10 @@
             </a>
           </span>
           <span class="app-link btn __pg sp">
-            <a href="/">
+            <a href="/admin">
               Enter App
             </a>
-          </span> 
+          </span>
         </div>
       </div>
       <div class="lp-header__actions add-flex a-center">
@@ -91,7 +91,7 @@
           </button>
         </span>
         <span class="app-link btn __pg pc">
-          <a href="/">
+          <a href="/admin">
             Enter App
           </a>
         </span>
@@ -104,23 +104,13 @@
 
   export default {
     name: 'Header',
-    data(){
-      return{
-        humberger: false,
-      }
-    },
-    mounted(){
-      
-    },
-    computed: {
-    },
     methods: {
       changeTheme(theme) {
         this.$store.dispatch("changeTheme", theme);
       },
       open(){
-        this.$store.dispatch("humberger", {humberger: true});
-      },      
+        this.$store.dispatch("hamberger", {hamberger: true});
+      }
     },
   }
 </script>
@@ -189,18 +179,18 @@
         }
         &.active{
           display: block !important;
-        }        
+        }
         span{
           @include media(sp) {
             width: 100%;
             display: block !important;
             margin-bottom: 32px;
-          }          
+          }
           a{
             font-size: 18px;
             font-weight: 400;
           }
-        }        
+        }
       }
     }
     @include media(pc) {
@@ -241,7 +231,7 @@
       }
     }
   }
-  
+
 .toggle-theme {
   text-align: center;
   @include media(pc) {
@@ -291,5 +281,5 @@
     position: absolute;
     top: -23px;
   }
-} 
+}
 </style>
