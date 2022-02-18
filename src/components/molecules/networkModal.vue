@@ -9,11 +9,17 @@
       </p>
     </div>
     <div class="body add-flex j-between">
-      <button v-for="(networkItem, key) in networkItems" :key="key" class="btn __m half" @click="networkValue(networkItem)">
+      <button
+        v-for="(network, key) in networks"
+        :key="key"
+        class="btn __m half"
+        :class="{ __pg: isCurrentNetwork(network.chainId) }"
+        @click="switchNetwork(network.chainId)"
+      >
         <span class="btn-icon">
-          <img :src="networkItem.icon">
+          <img :src="network.icon">
         </span>
-          {{networkItem.name}}
+          {{network.name}}
       </button>
     </div>
     <button class="close" @click="closeModal">
@@ -25,52 +31,64 @@
 </template>
 
 <script>
+import AvailableNetworks from '@/network'
 
-  export default {
-    name: 'networkModal',
-    components: {
+export default {
+  name: 'networkModal',
+  data() {
+    return {
+      networks: []
+    };
+  },
+  computed: {
+    classes() {
+      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      return classes
     },
-    data() {
-      return {
-        num: "",
-        networkItems: [
-          {
-            name: "Ethereum Main net",
-            icon:  require('@/assets/images/eth.svg'),
-            abbriviation: 'eth',
-          },
-          {
-            name: "Binance Smart Chain Mainnet",
-            icon:  require('@/assets/images/bsc.svg'),
-            abbriviation: 'bsc',
-          },
-        ]
-      };
+    paymentAvailableNetworks() {
+      return this.$store.state.payment.availableNetworks
     },
-    computed: {
-      classes() {
-        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-        return classes
+    isCurrentNetwork() {
+      return (chainId) => {
+        return chainId === this.$store.state.web3.chainId
       }
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$store.dispatch('closeModal')
     },
-    methods: {
-      closeModal() {
-        this.$store.dispatch('closeModal')
-      },
-      networkValue(e) {
-        this.$store.dispatch('selectNetwork', {
-          name: e.name,
-          icon: e.icon,
-          abbriviation: e.abbriviation
-        })
-      }
-    },
-    mounted() {}
+    switchNetwork(chainId) {
+      this.$web3.switchChain(
+        this.$store.state.web3.instance,
+        chainId
+      ).then(() => {
+        this.$store.dispatch('web3/updateChainId', chainId)
+        this.closeModal()
+      })
+    }
+  },
+  created() {
+    this.networks = Object.values(AvailableNetworks).filter(
+      network => this.paymentAvailableNetworks.includes(network.chainId)
+    )
   }
+}
 </script>
 
 <style lang="scss" scoped>
   @import '@/assets/scss/style.scss';
+
+  @include media(pc) {
+    .btn:nth-child(n + 3) {
+      margin-top: 25px;
+    }
+  }
+  @include media(sp) {
+    .btn:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
 
   .modal-box {
     border-radius: 10px;

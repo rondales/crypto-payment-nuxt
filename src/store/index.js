@@ -1,101 +1,93 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VuexPersistedState from 'vuex-persistedstate'
+import SecureLS from 'secure-ls'
+
+import web3 from './modules/web3'
+import account from './modules/account'
+import payment from './modules/payment'
 
 Vue.use(Vuex);
 
+var ls = new SecureLS({ isCompression: false })
+
 const store = new Vuex.Store({
+  plugins: [
+    VuexPersistedState({
+      key: 'state',
+      paths: [
+        'web3.provider',
+        'payment',
+        'humberger',
+        'modal',
+        'theme',
+        'invoicePage'
+      ],
+      storage: {
+        getItem: (key) => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: (key) => ls.remove(key)
+      }
+    })
+  ],
+  modules: {
+    web3,
+    account,
+    payment
+  },
   state: {
-    isLogin: false,
-    network: {
-      name: '',
-      icon: '',
-      abbriviation: ''
-    },
-    bases: "",
-    humberger: false,
+    hamberger: false,
     modal: {
       isShow: false,
       target: '',
-      size: ''
+      size: '',
+      message: ''
     },
-    web3: {
-      provider: null,
-      walletAddress: '',
-    },
-    theme: "dark",
+    theme: 'dark',
     invoicePage: true
   },
   actions: {
-    onLogin({ commit }, payload) {
-      commit('onLogin', payload)
-    },
-    onLogout({ commit }) {
-      commit('onLogout')
-    },
-    openModal({ commit }, {target, size}) {
+    openModal({ commit }, {target, size, message = ''}) {
       const modalData = {
         target: target,
-        size: size
+        size: size,
+        message: message
       }
       commit('openModal', modalData)
     },
     closeModal({ commit }) {
       commit('closeModal')
     },
-    selectNetwork({ commit }, currency) {
-      commit('selectNetwork', currency)
-    },
-    selectBases({ commit }, bases) {
-      commit('selectBases', bases)
-    },
-    humberger({ commit }) {
-      commit('humberger')
+    hamberger({ commit }) {
+      commit('hamberger')
     },
     changeTheme({ commit }, theme) {
-      commit("changeTheme", { theme: theme });
+      commit('changeTheme', { theme: theme });
     },
     currentPath({ commit }, invoicePage){
-      commit("currentPath", invoicePage);
+      commit('currentPath', invoicePage);
     }
   },
   mutations: {
-    onLogin(state, payload) {
-      state.isLogin = true
-      state.web3.provider = payload.provider
-      state.web3.walletAddress = payload.walletAddress
-      state.modal.isShow = false
-    },
-    onLogout(state) {
-      state.isLogin = false
-    },
-    openModal(state, { target, size }) {
+    openModal(state, { target, size, message }) {
       state.modal.isShow = true
       state.modal.target = target
       state.modal.size = size
+      state.modal.message = message
     },
     closeModal(state) {
       state.modal.isShow = false
       state.modal.target = ''
     },
-    selectNetwork(state, { name, icon, abbriviation }) {
-      state.modal.isShow = false
-      state.modal.target = ''
-      state.network.name = name
-      state.network.icon = icon
-      state.network.abbriviation = abbriviation
-    },
-    selectBases(state, bases) {
-      state.bases = bases
-    },
-    humberger(state) {
-      state.humberger = !state.humberger
+    hamberger(state) {
+      state.hamberger = !state.hamberger
     },
     changeTheme(state, { theme }) {
       state.theme = theme;
     },
     currentPath(state, { invoicePage }) {
       state.invoicePage = invoicePage;
-    },
+    }
   }
 })
 

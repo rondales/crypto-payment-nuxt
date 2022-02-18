@@ -15,141 +15,127 @@
             </dd>
           </dl>
         </div>
-        <div class="usdt-price" :class="{'inactive': changedPrice}">
+        <div class="usdt-price">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
       <div class="payment-with">
         Connect Web3 wallet to make a payment
       </div>
-      <button class="btn __m __pg icon-right full" @click="connectWithMetamask">
+      <button class="btn __m __pg icon-right full" @click="useMetamask">
         <div class="loading-wrap" :class="{'active': loadingMeta}">
           <img class="spin mt" src="@/assets/images/loading.svg">
-        </div>        
+        </div>
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="connectWithWalletConnect">
+      <button class="btn __m __pg icon-right full" @click="useWalletConnect">
         <div class="loading-wrap" :class="{'active': loadingWallet}">
           <img class="spin mt" src="@/assets/images/loading.svg">
-        </div>        
+        </div>
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect_w.svg">
         </span>
           WalletConnect
-      </button>      
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import Web3 from 'web3';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+import {
+  STATUS_PROCESSING,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS
+} from '@/constants'
+import AvailableNetworks from '@/network'
 
 export default {
-  name: 'PaymentPriceHandler',
-    data() {
-      return{
-        success: false,
-        Receiver: "E-check.online",
-        mail: "",
-        paid: false,
-        changedPrice: false,
-        selected: {name: "JPY", images: require('@/assets/images/JPY.svg')},
-        price: 1000.00,
-        invoiceId: "hogehogefugafuga",
-        loadingMeta: false,
-        loadingWallet: false,
-        currencys: [
-          {
-            name: "JPY",
-            images: require('@/assets/images/JPY.svg'),
-          },          
-          {
-            name: "USD",
-            images: require('@/assets/images/USD.svg'),
-          },
-          {
-            name: "EUR",
-            images: require('@/assets/images/EUR.svg'),
-          }          
-        ]
-      }
-    },
-  components: {
+  name: 'PaymentSelectWallets',
+  data() {
+    return{
+      loadingMeta: false,
+      loadingWallet: false
+    }
   },
-  mounted(){
-
+  computed: {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
+    amount() {
+      return this.$store.state.payment.amount
+    },
+    status() {
+      return this.$store.state.payment.status
+    },
+    paymentToken() {
+      return this.$route.params.token
+    }
   },
   methods: {
-    updatePrice(){
-      location.reload();
+    apiGetAvailableNetworks() {
+      const url = `${this.baseUrl}/api/v1/payment/contract/network`
+      const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
+      return this.axios.get(url, request)
     },
-    handlePayment(){
-      this.paid = true;
+    useMetamask() {
+      this.$web3.connectByMetamask().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          this.pageTransition()
+        })
+      }).catch((error) => {
+        if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
+          this.$store.dispatch('openModal', { target: 'error-modal', size: 'small', message: error.message })
+        } else {
+          this.$store.dispatch('openModal', { target: 'error-metamask-modal', size: 'small' })
+        }
+      })
     },
-    connectWithMetamask() {
-      this.$store.dispatch('onLogin', {});
-      this.$router.push(
-        {
-          path: 'token',
-          query: {
-            id: this.invoiceId,
-            price: this.price
-          }
-        }
-      );
-      this.loadingMeta = true;
-      /////////// connect metamask
-      // if (typeof window.ethereum !== 'undefined') {
-      //   const web3 = new Web3(window.ethereum);
-      //   web3.eth.requestAccounts().then((accounts) => {
-      //     sessionStorage.setItem('provider', 'metamask');
-      //     this.$store.dispatch('onLogin', {
-      //       provider: web3,
-      //       walletAddress: accounts[0]
-      //     });
-      //   }).catch(() => {
-      //     this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-      //   });
-      // } else {
-      //   this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-      // }
-    },    
-    async connectWithWalletConnect() {
-      this.loadingWallet = true;
-      const provider = new WalletConnectProvider({
-        infuraId: process.env.VUE_APP_INFURA_ID,
-        rpc: {
-          56: 'https://bsc-dataseed.binance.org',
-          97: 'https://data-seed-prebsc-1-s1.binance.org:8545'
-        }
-      });
-
-      let accounts;
-      try {
-        accounts = await provider.enable()
-      } catch {
-        this.$store.dispatch('openModal', {target: 'error-wallet-modal', size: 'small'});
-        return;
+    useWalletConnect() {
+      this.$web3.connectByWalletConnect().then((connectRes) => {
+        this.$store.dispatch('web3/update', connectRes)
+        this.$web3.getAccountData(
+          connectRes.instance,
+          connectRes.chainId
+        ).then((accountRes) =>{
+          this.$store.dispatch('account/update', accountRes)
+          this.pageTransition()
+        })
+      }).catch(() => {
+        this.$store.dispatch('openModal', { target: 'error-wallet-modal', size: 'small' })
+      })
+    },
+    pageTransition() {
+      let nextPath
+      switch(this.status) {
+        case STATUS_PROCESSING:
+        case STATUS_RESULT_FAILURE:
+        case STATUS_RESULT_SUCCESS:
+          nextPath = `/payment/detail/${this.paymentToken}`
+          break
+        default:
+          nextPath = `/payment/token/${this.paymentToken}`
       }
-      const web3 = new Web3(provider);
-      sessionStorage.setItem("provider", "wallet_connect");
-      this.$store.dispatch("onLogin", {
-        provider: web3,
-        walletAddress: accounts[0]
-      });
-    },    
+      this.$router.push({ path: nextPath })
+    }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
+    this.apiGetAvailableNetworks().then((response) => {
+      const networks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      }).filter(item => response.data.networks.includes(item))
+      this.$store.dispatch('payment/updateAvailableNetworks', networks)
+    })
   }
 }
 </script>
@@ -164,14 +150,14 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
@@ -191,7 +177,7 @@ export default {
       padding-left: 16px;
       @include media(sp) {
         width: 55%;
-      }          
+      }
     }
     .currency{
       width: 35%;
@@ -225,8 +211,8 @@ export default {
         font-weight: 400;
         width: 100%;
         border: none;
-        outline: none;        
-      }      
+        outline: none;
+      }
     }
     span{
       vertical-align: middle;
@@ -279,7 +265,6 @@ export default {
         width: 100%;
       }
     }
-  }  
+  }
 }
-
 </style>

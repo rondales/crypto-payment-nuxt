@@ -17,7 +17,7 @@
         </div>
         <div class="usdt-price">
           <p>
-            {{ price }}
+            {{ amount }}
           </p>
         </div>
       </div>
@@ -27,16 +27,16 @@
       <div class="payment-box network">
         <div class="add-flex a-center j-between">
           <div class="add-flex a-center">
-            <img :src="$store.state.network.icon">
+            <img :src="networkIcon">
             <div class="payment-box_desc">
               <p>
-                {{$store.state.network.name}}
+                {{ networkName }}
               </p>
             </div>
           </div>
           <div class="payment-box_btn" @click="networkModal('network-modal')">
             Change
-          </div>          
+          </div>
         </div>
       </div>
       <div class="body">
@@ -53,26 +53,26 @@
             Select token
           </p>
           <div class="token-items">
-            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="importToken(token)">
+            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="selectedToken(token)">
               <div class="add-flex j-between a-center">
                 <figure>
                   <img :src="token.icon" alt="">
                 </figure>
                 <dl>
                   <dt>
-                    {{token.abbriviation}}
+                    {{ token.symbol }}
                   </dt>
                   <dd>
-                    {{token.name}}
+                    {{ token.name }}
                   </dd>
                 </dl>
               </div>
               <div class="usdt-price">
                 <p>
-                  {{token.price}}
+                  {{ token.balance | balanceFormat }}
                 </p>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
         <div class="manage-content" v-else-if="tab === 'tokens'">
@@ -82,42 +82,38 @@
           <div class="manage-desc">
             *Does not support tokenomics tokens, which have the property that transactions are subject to TAX 🙅‍♂️
           </div>
-          <input class="token-dsc border" type="text" value="" placeholder="0x0000" @keyup.enter="pushTokenId">
+          <input class="token-dsc border" type="text" placeholder="0x0000" v-model="tokenAddress" @keyup.enter="searchToken">
           <div class="manage-wrap">
             <div class="manage-warning" v-if="validAddress">
               Enter valid token address
             </div>
-            <ul class="manage-item add-flex a-center j-between mb-2" v-for="(tokenId, key) in tokenIdList" :key="key">
+            <ul class="manage-item add-flex a-center mb-2" v-for="(token, key) in tokenIdList" :key="key">
               <li>
-                <img :src="tokenId.icon">
+                <img :src="token.icon">
               </li>
               <li class="token-name">
-                {{tokenId.abbriviation}}
-                <br>
-                <span>
-                  {{tokenId.tokenName}}
-                </span>
+                {{ token.symbol }}
               </li>
               <li class="manage-item--right add-flex a-center j-between">
-                <a href="https://sauna.finance/" target="_brank">
+                <a :href="token.url" target="_brank">
                   <figure>
                     <img src="@/assets/images/link-icon.svg">
                   </figure>
                 </a>
-                <div class="manage-import" @click="importToken(tokenId)">
+                <div class="manage-import" @click="importToken(key)">
                   Import
                 </div>
               </li>
             </ul>
             <div class="add-flex j-between a-center">
               <div class="manage-none">
-                {{tokenCount}} Custom Token
+                {{ tokenCount }} Custom Token
               </div>
               <div class="manage-clear" v-if="tokenCount" @click="clearToken">
                 Clear all
               </div>
-            </div>          
-          </div>        
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,66 +121,61 @@
 </template>
 
 <script>
+import NumberFormat from 'number-format.js'
+import { NETWORKS } from '@/constants'
+import VuexRestore from '@/components/mixins/VuexRestore'
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
-  name: 'PaymentPriceHandler',
-    data() {
-      return{
-        price: 0,
-        invoiceId: "",
-        tab: "list",
-        tokenCount: 1,
-        tokenList: [
-          {
-            name: 'Tether USD',
-            abbriviation: 'USDT',
-            icon: require('@/assets/images/icon/usdt.svg'),
-            price: 0.4959
-          },
-          {
-            name: 'USD Coin',
-            abbriviation: 'USDC',
-            icon: require('@/assets/images/icon/usdc.svg'),
-            price: 0.5011
-          },
-          {
-            name: 'Dai stablecoin',
-            abbriviation: 'DAI',
-            icon: require('@/assets/images/icon/dai.svg'),
-            price: 0.6129
-          },
-          {
-            name: 'Ethereum',
-            abbriviation: 'ETH',
-            icon: require('@/assets/images/icon/eth.svg'),
-            price: 0.7129
-          },
-        ],
-        tokenIdList: [
-          {
-            icon:  require('@/assets/images/icon/sauna.svg'),
-            abbriviation: "SAUNA",
-            tokenName: "SaunaFinance Token",
-          }
-        ],
-        validAddress: false,
-      }
-    },
-  components: {
+  name: 'PaymentToken',
+  mixins: [VuexRestore, Web3ProviderEvents],
+  data() {
+    return {
+      tab: "list",
+      tokenAddress: '',
+      tokenCount: 0,
+      tokenList: [],
+      tokenIdList: [],
+      validAddress: false,
+    }
   },
-  mounted(){
-    this.price = this.$route.query.price;
-    this.invoiceId = this.$route.query.id;
+  filters: {
+    balanceFormat(balance) {
+      return NumberFormat(
+        '0.0000',
+        balance
+      )
+    }
+  },
+  watch: {
+    chainId() {
+      this.getDefaultTokens()
+    }
+  },
+  computed: {
+    amount() {
+      return this.$store.state.payment.amount
+    },
+    networkIcon() {
+      return this.chainId
+        ? NETWORKS[this.$store.state.web3.chainId].icon
+        : null
+    },
+    networkName() {
+      return this.chainId
+        ? NETWORKS[this.$store.state.web3.chainId].name
+        : ''
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    paymentToken() {
+      return this.$route.params.token
+    }
   },
   methods: {
-    updatePrice(){
-      location.reload();
-    },
     networkModal(target) {
       this.$store.dispatch("openModal", {target: target, size: "medium"});
-    },    
-    handlePayment(){
-      this.paid = true;
     },
     leftTab(){
       this.tab = "list"
@@ -194,38 +185,84 @@ export default {
       this.tab = "tokens"
       this.isActive = true
     },
-    pushTokenId(e){
-      this.tokenId = e.target.value;
-      this.validAddress = true;
-      if(this.validAddress === false) {
-        this.tokenCount += 1;
-      }
-      e.target.value = "";
+    getDefaultTokens() {
+      this.$web3.getDefaultTokens(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address
+      ).then((tokens) => { this.tokenList = tokens })
     },
     clearToken(){
+      this.tokenAddress = ''
       this.tokenIdList = []
       this.tokenCount = 0;
+      this.validAddress = false
     },
-    importToken(data){
-      this.$router.push(
-        {
-          path: 'exchange',
-          query: {
-            abbriviation: data.abbriviation,
-            icon: data.icon,
-            name: data.tokenName,
-            id: this.invoiceId,
-            price: this.price,
-          }
-        }
-      );      
+    searchToken(event) {
+      this.tokenIdList = []
+      this.tokenCount = 0;
+      this.validAddress = false
+      this.$web3.searchToken(
+        this.$store.state.web3.instance,
+        event.target.value,
+        this.$store.state.account.address
+      ).then((response) => {
+        const scanUrl = NETWORKS[
+          this.$store.state.web3.chainId
+        ].scanUrl
+        this.tokenIdList.push({
+          name: response.name,
+          symbol: response.symbol,
+          decimal: response.decimal,
+          address: response.address,
+          balance: response.balance,
+          icon: response.icon,
+          url: `${scanUrl}/token/${response.address}`
+        })
+        this.tokenCount = this.tokenIdList.length
+      }).catch((error) => {
+        console.log(error)
+        this.tokenCount = 0
+        this.tokenIdList = []
+        this.validAddress = true
+      })
+    },
+    importToken(index){
+      const token = this.tokenIdList[index]
+      this.tokenList.unshift({
+        name: token.name,
+        symbol: token.symbol,
+        decimal: token.decimal,
+        address: token.address,
+        balance: token.balance,
+        icon: token.icon
+      })
+      this.clearToken()
+      this.tab = 'list'
+    },
+    selectedToken(token) {
+      this.$store.dispatch('payment/updateToken', {
+        name: token.name,
+        symbol: token.symbol,
+        decimal: token.decimal,
+        address: token.address,
+        balance: token.balance,
+        amount: null,
+      })
+      this.$router.push({
+        path: `/payment/exchange/${this.paymentToken}`,
+      })
     }
   },
-  filters: {
-    maskText(text) {
-      text = "*************";
-      return text;
-    },
+  created() {
+    this.$store.dispatch('payment/updateHeaderInvoice', true)
+    if (this.isNeedRestore) {
+      this.$router.push({
+        path: `/payment/wallets/${this.paymentToken}`
+      })
+    } else {
+      this.getDefaultTokens()
+    }
   }
 }
 </script>
@@ -240,14 +277,14 @@ export default {
       font-weight: 400;
       font-size: 15px;
     }
-  }  
+  }
 
   .payment_desc{
     p{
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;   
+      background-size: 150% 150%;
       display: inline;
     }
   }
@@ -267,7 +304,7 @@ export default {
       padding-left: 16px;
       @include media(sp) {
         width: 55%;
-      }          
+      }
     }
     .currency{
       width: 35%;
@@ -301,8 +338,8 @@ export default {
         font-weight: 400;
         width: 100%;
         border: none;
-        outline: none;        
-      }      
+        outline: none;
+      }
     }
     span{
       vertical-align: middle;
@@ -388,7 +425,7 @@ export default {
       font-weight: 200;
       background: $gradation-pale;
       padding: 4px 12px;
-      border-radius: 20px;
+      border-radius: 10px;
     }
   }
   .payment_receiptwrap{
@@ -407,7 +444,7 @@ export default {
         width: 100%;
       }
     }
-  }  
+  }
   .body {
     .toggle-btn{
       background: var(--color_darken);
@@ -442,7 +479,7 @@ export default {
       height: 20vh;
       &::-webkit-scrollbar{
         display: none;
-      }        
+      }
       .token-item{
         cursor: pointer;
       }
@@ -478,19 +515,19 @@ export default {
         font-size: 14px;
         width: 100%;
         .token-name{
+          width: 60%;
           font-weight: 100;
-          margin-right: 5%;
-          span{
-            font-size: 12px;
-          }
+          padding-left: 17px;
         }
       }
       .manage-item--right{
-        width: 32%;
+        margin-left: auto;
+        width: 100px;
         .manage-import{
+          height: 27px;
           background: $gradation-pale;
           padding: 4px 16px;
-          border-radius: 12px;
+          border-radius: 10px;
           font-size: 12px;
           font-weight: 100;
           cursor: pointer;
@@ -501,9 +538,8 @@ export default {
             vertical-align: inherit;
           }
         }
-      }      
+      }
     }
-  }  
+  }
 }
-
 </style>

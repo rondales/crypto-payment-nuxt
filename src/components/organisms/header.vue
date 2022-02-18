@@ -4,17 +4,18 @@
       <div class="add-flex a-center">
         <h1 class="logo">
           <img class="pc" src="@/assets/images/logo.svg" alt="Web3 Payment">
-          <img class="sp" src="@/assets/images/logo-icon.svg" alt="Web3 Payment">
+          <img v-if="connected" class="sp" src="@/assets/images/logo-icon.svg" alt="Web3 Payment">
+          <img v-else class="sp" src="@/assets/images/logo-sp.svg" alt="Web3 Payment">
         </h1>
         <p class="logo-sub">
-          Web3 Payment
+          {{ subTitle }}
         </p>
-        <div class="user-status" :class="{'is-admin': $route.name === 'admin'}">
+        <div class="user-status" :class="{'is-admin': isAdminPage}">
           merchant
         </div>
       </div>
       <div class="global-header__actions add-flex a-center">
-        <span class="toggle-theme pc">
+        <span class="toggle-theme" v-if="isShowSwitchThemeButton">
           <button
             :class="[
               'theme-button',
@@ -39,30 +40,19 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'eth'" class="btn __s sp-fixed">
+          <button v-if="connected" class="btn __s sp-fixed">
             <span class="btn-icon">
-              <img src="@/assets/images/h-eth.svg" alt="Web3 Payment">
+              <img :src="networkIcon" alt="Web3 Payment">
             </span>
-            Ethereum
-          </button>
-
-          <button v-else-if="$store.state.network.abbriviation && $store.state.network.abbriviation === 'bsc'" class="btn __s sp-fixed">
-            <span class="btn-icon">
-              <img src="@/assets/images/h-bsc.svg" alt="Web3 Payment">
-            </span>
-            BSC
+            {{ networkName }}
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="$store.state.isLogin && $store.state.network.abbriviation === 'eth'" class="account-wallet">
-            <span class="price">0.04247ETH</span>
-            <span class="id">{{ formatWalletAddress }}</span>
+          <button v-if="connected" class="account-wallet">
+            <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
+            <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
           </button>
-          <button v-else-if="$store.state.isLogin && $store.state.network.abbriviation === 'bsc'" class="account-wallet">
-            <span class="price">0.04247BNB</span>
-            <span class="id">{{ formatWalletAddress }}</span>
-          </button>
-          <button v-else class="btn __g __s sp-fixed"  @click="walletModal('wallet-modal')">
+          <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="openModal('wallet-modal', 'small')">
             Connect to a wallet
           </button>
         </div>
@@ -72,185 +62,285 @@
 </template>
 
 <script>
+import { NETWORKS } from '@/constants'
 
-  export default {
-    name: 'Header',
-    data(){
-      return{
-        humberger: false,
-        show: false,
+export default {
+  name: 'Header',
+  props: ['width'],
+  watch: {
+    $route(to, from) {
+      if(from.fullPath === "/payment") {
+        this.show = true
       }
     },
-    mounted(){
-      
-    },
-    watch: {
-      $route(to, from) {
-        if(from.fullPath === "/payment") {
-          this.show = true
-        }
+    chainId(id) {
+      if (id) {
+        this.$web3.getAccountData(
+          this.$store.state.web3.instance,
+          id
+        ).then((account) => {
+          this.$store.dispatch('account/update', account)
+        })
       }
-    },    
-    computed: {
-      formatWalletAddress() {
-        if ((this.$store.state.web3.walletAddress)) {
-          const prefix = this.$store.state.web3.walletAddress.substr(0, 6);
-          const sufix = this.$store.state.web3.walletAddress.slice(-4);
-          return prefix + '…' + sufix;
+    }
+  },
+  filters: {
+    balanceFormat(balance) {
+      const pattern = /^[0-9]+.[0-9]+$/
+      if (pattern.test(balance)) {
+        let balanceSplit = balance.toString().split('.')
+        if (balanceSplit[1].length > 4) {
+          balanceSplit[1] = balanceSplit[1].substr(0, 4)
         } else {
-          return '';
+          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
         }
-      },
+        balance = balanceSplit[0] + '.' + balanceSplit[1]
+      }
+      return balance
     },
-    methods: {
-      networkModal(target) {
-        this.$store.dispatch("openModal", {target: target, size: "medium"});
-      },
-      walletModal(target) {
-        this.$store.dispatch("openModal", {target: target, size: "small"});
-      },
-      changeTheme(theme) {
-        this.$store.dispatch("changeTheme", theme);
-      },      
+    walletAddressFormat(walletAddress) {
+      if ((walletAddress)) {
+        const prefix = walletAddress.substr(0, 6);
+        const sufix = walletAddress.slice(-4);
+        return prefix + '…' + sufix;
+      } else {
+        return '';
+      }
+    }
+  },
+  computed: {
+    subTitle() {
+      let subTitle = ''
+      if (this.$route.name === 'admin') {
+        subTitle = 'Apps'
+      } else {
+        subTitle = 'Web3 Payment'
+      }
+      return subTitle
     },
+    isShowSwitchThemeButton() {
+      return (this.$route.name !== 'admin' && ((this.width <= 768 && (this.$route.name === 'entrance' || this.$route.name === 'receipt')) || this.width > 768))
+    },
+    isAdminPage() {
+      return this.$route.name === 'admin'
+    },
+    walletAddress() {
+      return this.$store.state.account.address
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    networkName() {
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].name
+      } else {
+        return ''
+      }
+    },
+    networkIcon() {
+      if (this.$store.state.web3.chainId !== null) {
+        return NETWORKS[
+          this.$store.state.web3.chainId
+        ].icon
+      } else {
+        return ''
+      }
+    },
+    symbol() {
+      return this.$store.state.account.symbol
+    },
+    balance() {
+      return this.$store.state.account.balance
+    },
+    show() {
+      const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+      return pathPattern.test(this.$route.path)
+    },
+    connected() {
+      return (this.$store.state.web3.instance && this.$store.state.web3.chainId)
+    }
+  },
+  methods: {
+    changeTheme(theme) {
+      this.$store.dispatch("changeTheme", theme);
+    },
+    openModal(target, size) {
+      this.$store.dispatch('openModal', {target: target, size: size});
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-  .user-status{
-    display: none;
-    font-size: 14px;
-    font-weight: 200;
-    line-height: 24px;
-    background: $gradation-light;
-    padding: 2px 24px;
-    border-radius:50px;
-    margin-left: 32px;  
-    @include media(sp) {
-      font-size: 12px;
-      margin-left: 16px;
-      padding: 2px 12px;
-    }
+@import '@/assets/scss/style.scss';
+.user-status{
+  display: none;
+  font-size: 14px;
+  font-weight: 200;
+  line-height: 24px;
+  background: $gradation-light;
+  padding: 2px 24px;
+  border-radius:50px;
+  margin-left: 16px;
+  @include media(sp) {
+    font-size: 12px;
+    margin-left: 16px;
+    padding: 2px 12px;
   }
-  .is-admin{
-    display: block;
-  }
-  .global-header {
+}
+.is-admin{
+  display: block;
+}
+.global-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom:var(--color_border);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background: var(--color_bg);
+  z-index: 1000;
+  &__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom:var(--color_border);
+    margin: 0 auto;
     width: 100%;
-    position: fixed;
-    top: 0;
-    background: var(--color_bg);
-    z-index: 1000;
-    &__inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 0 auto;
-      width: 1110px;
-    }
-    @include media(pc) {
-      height: 100px;
-      padding: 0 80px;
-      .logo {
-        height: 36px;
-      }
-      .logo-sub{
-        margin-top: 10px;
-        margin-left: 16px;
-        font-size: 14px;
-      }      
-    }
-    @include media(sp) {
-      height: 72px;
-      padding: 0 24px;
-      bottom: 0;
-      .logo {
-        height: 36px;
-      }
-      .logo-sub{
-        display: none;
-      }      
-    }
+  }
+  &__actions {
+    margin-left: auto;
+  }
+  @include media(pc) {
+    height: 80px;
+    padding: 0 24px;
     .logo {
-      white-space: nowrap;
+      height: 36px;
     }
-    .sp-fixed{
-      @include media(sp) {
-        width: 100%;
-      }
-    }
-    .theme-button{
-      margin-right: 2rem;
-      width: 54px;
-      height: 54px;
-      vertical-align: middle;
-      @include media(sp) {
-        margin-right: 0;
-      }
-      span{
-        margin-right: 8px;
-      }
+    .logo-sub{
+      margin-top: 10px;
+      margin-left: 16px;
+      font-size: 14px;
     }
   }
-  .account-wallet {
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    background: var(--color_darken);
-    @include media(pc) {
-      height: 42px;
-      border-radius: 8px;
-      padding: 7px 0 7px 7px;
-      font-size: 1.2rem;
-      .price {
-        margin-left: 24px;
-      }
-      .id {
-        max-width: 192px;
-        height: 36px;
-        line-height: 36px;
-        border-radius: 8px;
-        padding: 0 16px;
-        margin-left: 16px;
-        margin-right: 0;
-        background: $gradation;
-        box-sizing: border-box;
-      }
+  @include media(sp) {
+    height: 55px;
+    padding: 0 20px;
+    bottom: 0;
+    .logo {
+      height: 29px;
     }
+    .logo-sub{
+      display: none;
+    }
+  }
+  .logo {
+    white-space: nowrap;
+  }
+  .sp-fixed{
     @include media(sp) {
-      border-radius: 8px;
-      padding: 4px;
-      font-size: 1rem;
       width: 100%;
-      .price{
-        width: 50%;
-        margin-right: 0;
-      }
-      .id {
-        max-width: 192px;
-        width: 50%;
-        height: 34px;
-        line-height: 34px;
-        border-radius: 8px;
-        padding: 0 16px;
-        margin-left: 0;
-        margin-right: 0;
-        background: $gradation;
-        box-sizing: border-box;
-      }
+    }
+  }
+  .theme-button{
+    margin-right: 2rem;
+    width: 54px;
+    height: 54px;
+    vertical-align: middle;
+    @include media(sp) {
+      width: 32px;
+      height: 32px;
+      margin-right: 0;
+    }
+    span{
+      margin-right: 8px;
+    }
+  }
+  .btn-icon img {
+    width: 26px;
+    height: 26px;
+  }
+}
+.account-wallet {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  background: var(--color_darken);
+  @include media(pc) {
+    height: 42px;
+    border-radius: 8px;
+    padding: 7px 0 7px 7px;
+    font-size: 1.2rem;
+    cursor: default;
+    .price {
+      margin-left: 24px;
+      color: #fff;
     }
     .id {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      display: block;
+      max-width: 192px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 8px;
+      padding: 0 16px;
+      margin-left: 16px;
+      margin-right: 3px;
+      color: #fff;
+      box-sizing: border-box;
+      &.__g {
+        background: $gradation;
+      }
+      &.__pg {
+        background: $gradation-pale;
+      }
     }
   }
+  @include media(sp) {
+    border-radius: 8px;
+    padding: 4px;
+    font-weight: 400;
+    font-size: 14px;
+    width: 100%;
+    letter-spacing: 0.05em;
+    .price{
+      max-width: 115px;
+      margin: 0 10px;
+      color: #fff;
+    }
+    .id {
+      max-width: 140px;
+      height: 2.5rem;
+      line-height: 2.5rem;
+      border-radius: 8px;
+      padding: 0 16px;
+      margin-left: 0;
+      margin-right: 0;
+      color: #fff;
+      box-sizing: border-box;
+      &.__g {
+        background: $gradation;
+      }
+      &.__pg {
+        background: $gradation-pale;
+      }
+    }
+  }
+  .id {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+  }
+}
+.btn {
+  cursor: default;
+  &.__s {
+    @include media(sp) {
+      height: 3rem;
+      font-size: 12px;
+    }
+  }
+}
 .toggle-theme {
   text-align: center;
   @include media(pc) {

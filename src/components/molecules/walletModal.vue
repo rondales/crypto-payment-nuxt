@@ -6,15 +6,15 @@
       </h3>
     </div>
     <div class="body">
-      <button class="btn __m full" @click="connectWithMetamask">
+      <button class="btn __m __pg icon-right full" @click="useMetamask">
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
-      <button class="btn __m full" @click="connectWithWalletConnect">
+      <button class="btn __m __pg icon-right full" @click="useWalletConnect">
         <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect.svg">
+          <img src="@/assets/images/wallet-connect_w.svg">
         </span>
           WalletConnect
       </button>
@@ -27,73 +27,83 @@
 </template>
 
 <script>
-  import Web3 from 'web3';
-  import WalletConnectProvider from '@walletconnect/web3-provider';
+  import { LOGIN_TOKEN } from '@/constants'
+  import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
 
   export default {
     name: 'walletModal',
-    components: {
-    },
-    data() {
-      return {
-        num: "",
-      };
-    },
+    mixins: [
+      Web3ConnectorMixin
+    ],
     computed: {
       classes() {
-        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-        return classes
+        return [ 'modal-box', `--${this.$store.state.modal.size}` ]
       }
     },
     methods: {
+      openModal(target, size, message = '') {
+        this.$store.dispatch('openModal', {target: target, size: size, message: message});
+      },
       closeModal() {
         this.$store.dispatch('closeModal')
       },
-      connectWithMetamask() {
-        if (typeof window.ethereum !== 'undefined') {
-          const web3 = new Web3(window.ethereum);
-          web3.eth.requestAccounts().then((accounts) => {
-            sessionStorage.setItem('provider', 'metamask');
-            this.$store.dispatch('onLogin', {
-              provider: web3,
-              walletAddress: accounts[0]
-            });
-          }).catch(() => {
-            this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-          });
-        } else {
-          this.$store.dispatch('openModal', {target: 'error-metamask-modal', size: 'small'});
-        }
-      },
-      async connectWithWalletConnect() {
-        const provider = new WalletConnectProvider({
-          infuraId: process.env.VUE_APP_INFURA_ID,
-          rpc: {
-            56: 'https://bsc-dataseed.binance.org',
-            97: 'https://data-seed-prebsc-1-s1.binance.org:8545'
+      useMetamask() {
+        this.$web3.connectByMetamask().then((connectRes) => {
+          this.$store.dispatch('web3/update', connectRes)
+          this.$web3.getAccountData(
+            connectRes.instance,
+            connectRes.chainId
+          ).then((accountRes) =>{
+            this.$store.dispatch('account/update', accountRes)
+            this.connected(accountRes.address)
+          })
+        }).catch((error) => {
+          if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
+            this.openModal('error-modal', 'small', error.message)
+          } else {
+            this.openModal('error-metamask-modal', 'small')
           }
-        });
-
-        let accounts;
-        try {
-          accounts = await provider.enable()
-        } catch {
-          this.$store.dispatch('openModal', {target: 'error-wallet-modal', size: 'small'});
-          return;
-        }
-        const web3 = new Web3(provider);
-        sessionStorage.setItem("provider", "wallet_connect");
-        this.$store.dispatch("onLogin", {
-          provider: web3,
-          walletAddress: accounts[0]
-        });
+        })
       },
-      isSelectedNetwork() {
-        return !!this.$store.state.network.abbriviation;
+      useWalletConnect() {
+        this.$web3.connectByWalletConnect().then((connectRes) => {
+          this.$store.dispatch('web3/update', connectRes)
+          this.$web3.getAccountData(
+            connectRes.instance,
+            connectRes.chainId
+          ).then((accountRes) =>{
+            this.$store.dispatch('account/update', accountRes)
+            this.connected(accountRes.address)
+          })
+        }).catch(() => {
+          this.openModal('error-wallet-modal', 'small')
+        })
+      },
+      apiConnectAuthentification(walletAddress) {
+        const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
+        const params = {
+          address: walletAddress,
+          token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null
+        }
+        return this.axios.post(url, params)
+      },
+      connected(walletAddress) {
+        const adminPathPattern = /^\/admin$/
+        const paymentPathPattern = /^\/payment\//
+
+        if (adminPathPattern.test(this.$route.path)) {
+          this.apiConnectAuthentification(walletAddress).then((authed) => {
+            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+            this.closeModal()
+            this.$router.push({ path: '/admin/dashboard' })
+          })
+        } else if(paymentPathPattern.test(this.$route.path)) {
+          this.closeModal()
+          this.$router.push({
+            path: '/payment/token/' + this.$route.params.token
+          })
+        }
       }
-    },
-    mounted() {
-      //
     }
   }
 </script>
@@ -167,6 +177,11 @@
     @include media(sp) {
       padding: 16px 12px 48px;
     }
+    // .btn {
+    //   &.__m {
+    //     background: $gradation-pale;
+    //   }
+    // }
   }
   .footer {
     text-align: center;

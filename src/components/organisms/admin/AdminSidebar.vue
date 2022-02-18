@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="side-bar" :class="{'active': $store.state.humberger === true}">
+    <div class="side-bar" :class="{'active': $store.state.hamberger === true}">
       <div class="side-bar--top"></div>
       <div class="side-bar--content">
         <div class="side-bar--inner">
@@ -15,11 +15,14 @@
                 web3 payment
               </router-link>
             </li>
+            <!--
+            @todo remove comment out when implementing invoice function
             <li @click="close()">
               <router-link to="/admin/invoice">
                 invoice
               </router-link>
             </li>
+            -->
             <li @click="close()">
               <router-link to="/admin/keys">
                 keys
@@ -45,9 +48,9 @@ export default {
   },
   methods: {
     close(){
-      this.$store.state.humberger = false
+      this.$store.state.hamberger = false
     }
-  }  
+  }
 }
 </script>
 
@@ -55,9 +58,9 @@ export default {
 @import '@/assets/scss/style.scss';
 .side-bar{
   position: fixed;
-  top: 100px;
+  top: 80px;
   bottom: 0;
-  left: 0;  
+  left: 0;
   width: 170px;
   border-right: 1px solid #58466E;
   @include media(sp) {
@@ -78,17 +81,17 @@ export default {
     overflow-y: auto;
     &::-webkit-scrollbar{
       display: none;
-    }      
+    }
   }
   &--inner{
     width: 170px;
     ul{
       li{
-        padding: 8px 24px;    
+        padding: 8px 24px;
         margin-bottom: 20px;
         font-size: 15px;
         a{
-          color: #fff;  
+          color: #fff;
           text-decoration: none;
         }
       }

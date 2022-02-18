@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
   components: {
@@ -16,24 +15,13 @@ export default {
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
-    detailModal: () => import('@/components/molecules/detailModal'),
-    waitingModal: () => import('@/components/molecules/waitingModal'),
-    submittedModal: () => import('@/components/molecules/submittedModal'),
-    dismissModal: () => import('@/components/molecules/dismissModal'),
+    errorModal: () => import('@/components/molecules/errorModal')
   },
   computed: {
     classes() {
       return [
         `theme--${this.$store.state.theme}`,
       ];
-    },
-  },
-  updated(){
-    if(!(this.$route.path == "/payment")){
-      this.$store.dispatch("currentPath", {invoicePage: true});
-    }
-    else{
-      this.$store.dispatch("currentPath", {invoicePage: false});
     }
   }
 }
@@ -41,7 +29,6 @@ export default {
 
 <style lang="scss">
 @import '@/assets/scss/style.scss';
-  
 
 body{
     background: var(--color_bg);
@@ -65,7 +52,7 @@ body{
   height: 100vh;
   left: 0;
   top: 0;
-  z-index: 100;
+  z-index: 9999;
 }
 .min-height{
   min-height: 120vh;

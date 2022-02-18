@@ -193,6 +193,9 @@ li {
     line-height:  3rem;   
     border-radius: 1rem;
     background: var(--color_darken);
+    .btn-icon {
+      margin-right: 12px;
+    }
   }
   &.__m{
     background: var(--color_darken);
@@ -339,12 +342,12 @@ li {
     font-weight: 200;
     background: $gradation-light;
     padding: 4px 24px;
-    border-radius: 20px;
+    border-radius: 10px;
   }
   &.network{
     border: 1px solid #fff;
     background: var(--color_box) !important;
-  }  
+  }
 }
 .usdt-price{
   font-size: 18px;

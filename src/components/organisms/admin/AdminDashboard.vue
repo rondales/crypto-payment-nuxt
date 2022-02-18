@@ -14,9 +14,11 @@
 
 <script>
 import DashItem from "@/components/organisms/admin/AdminDashItem"
+import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
   name: 'PaymentTop',
+  mixins: [Web3ProviderEvents],
   data() {
     return{
       success: true,
@@ -28,15 +30,12 @@ export default {
         {value: "0", text: "Pay-easy (ネット振込)"},
         {value: "0", text: "Pay-easy (ATM振込)"},
         {value: "0", text: "Saiwin"},
-      ]        
+      ]
     }
   },
   components: {
     DashItem
-  },    
-  methods: {
-
-  },
+  }
 }
 </script>
 
