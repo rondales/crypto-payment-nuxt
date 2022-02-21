@@ -54,11 +54,10 @@
                   </div>
                   <div v-if="contractLoaded">
                     <div
-                      v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
-                      @click="updateContract"
-                      class="manage-contents_btn"
+                      v-if="isPublishedContract(chainId)"
+                      class="manage-contents_btn inactive"
                     >
-                      Update
+                      Created
                     </div>
                     <div
                       v-else-if="isCurrentNetwork(chainId)"
@@ -474,10 +473,10 @@ export default {
       &_head{
         padding: 32px 0;
         h3{
-          font-weight: 100;
+          font-weight: 300;
         }
         p{
-          font-weight: 100;
+          font-weight: 300;
           font-size: 15px;
         }
       }
@@ -501,7 +500,7 @@ export default {
       &_network{
         p{
           margin-left: 16px;
-          font-weight: 100;
+          font-weight: 300;
           font-size: 15px;
           @include media(sp) {
             margin-left: 14px;
@@ -521,7 +520,7 @@ export default {
         }
       }
       &_btn{
-        font-weight: 100;
+        font-weight: 300;
         font-size: 15px;
         background: $gradation-light;
         padding: 6px 0;
@@ -531,6 +530,11 @@ export default {
         cursor: pointer;
         @include media(sp) {
           margin: auto;
+        }
+        &.inactive{
+          // background: var(--color_inactive) !important;
+          opacity: 0.6;
+          pointer-events: none !important;
         }
         &.other{
           background: #78668D;
@@ -553,7 +557,7 @@ export default {
       &_address{
         font-size: 15px;
         margin-bottom: 16px;
-        font-weight: 100;
+        font-weight: 300;
         word-break: break-all;
       }
       &_copy{
@@ -561,7 +565,7 @@ export default {
         font-size: 17px;
         position: relative;
         display: inline-block;
-        font-weight: 200;
+        font-weight: 300;
         cursor: pointer;
         &::after{
           content: "";
@@ -578,7 +582,7 @@ export default {
         margin-bottom: 32px;
         h4{
           font-size: 18px;
-          font-weight: 100;
+          font-weight: 300;
           margin-bottom: 16px;
           span{
             color: #B52828;
@@ -586,7 +590,7 @@ export default {
         }
         p{
           font-size: 14px;
-          font-weight: 100;
+          font-weight: 300;
           margin-bottom: 24px;
           width: 70%;
         }
@@ -596,13 +600,13 @@ export default {
           width: 70%;
           padding: 12px;
           font-size: 14px;
-          font-weight: 100;
+          font-weight: 300;
           margin-bottom: 24px;
         }
         .verify{
           margin-top: 24px;
           padding-left: 32px;
-          font-weight: 100;
+          font-weight: 300;
           font-size: 18px;
           color: #00FF4E;
           position: relative;
