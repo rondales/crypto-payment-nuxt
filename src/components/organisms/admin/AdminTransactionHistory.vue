@@ -185,7 +185,7 @@ export default {
       },
       paginateParams: {
         perPage: { key: 'per_page', value: '10' },
-        currentPage: { key: 'currentPage', value: '1' },
+        currentPage: { key: 'current_page', value: '1' },
       },
       summaries: {
         lastPageNumber: 0,
