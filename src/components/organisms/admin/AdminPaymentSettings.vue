@@ -54,7 +54,14 @@
                   </div>
                   <div v-if="contractLoaded">
                     <div
-                      v-if="isPublishedContract(chainId)"
+                      v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
+                      @click="updateContract(chainId)"
+                      class="manage-contents_btn"
+                    >
+                      Update
+                    </div>
+                    <div
+                      v-else-if="isPublishedContract(chainId) && !isContractUpdateRequest"
                       class="manage-contents_btn inactive"
                     >
                       Created
@@ -200,6 +207,9 @@ export default {
     },
     isDomainSettingTab() {
       return this.currentTab === this.tabs.domainSetting
+    },
+    isContractUpdateRequest() {
+      return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
     },
     isCurrentNetwork() {
       return (chainId) => {
@@ -374,13 +384,12 @@ export default {
         )
       })
     },
-    updateContract(chainId, contractAddress) {
+    updateContract(chainId) {
       this.contractSettings.contracts[chainId].processing = true
-      this.$web3.deleteMerchantContract().then(() => {
-        this.apiDeleteContract(chainId, contractAddress).then(() => {
-          this.publishMerchantContract(chainId)
-          this.contractSettings.contracts[chainId].processing = false
-        })
+      const contract = this.contractSettings.contracts[chainId]
+      this.apiDeleteContract(chainId, contract.address).then(() => {
+        this.publishMerchantContract(chainId)
+        this.contractSettings.contracts[chainId].processing = false
       })
     },
     switchNetwork(chainId) {
