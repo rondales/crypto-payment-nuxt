@@ -28,11 +28,14 @@
                 keys
               </router-link>
             </li>
+            <!--
+            @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
               <router-link to="/admin/documents">
                 Documents
               </router-link>
             </li>
+            -->
           </ul>
         </div>
       </div>
