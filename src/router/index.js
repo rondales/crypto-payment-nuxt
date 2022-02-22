@@ -120,6 +120,15 @@ const router = new Router({
   ]
 });
 
+if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development') {
+  router.addRoute({
+    name: "test",
+    path: "/test",
+    component: () => import("@/pages/test"),
+    meta: { title: 'Slash Payment' },
+  })
+}
+
 const DEFAULT_TITLE = 'Slash'
 
 router.afterEach((to) => {
