@@ -11,7 +11,7 @@ COPY package.json /work/package.json
 COPY package-lock.json /work/package-lock.json
 COPY yarn.lock /work/yarn.lock
 
-RUN apk add --update git
+RUN apk update && apk add git && apk upgrade npm
 
 WORKDIR /work
 
