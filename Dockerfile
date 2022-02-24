@@ -11,11 +11,11 @@ COPY package.json /work/package.json
 COPY package-lock.json /work/package-lock.json
 COPY yarn.lock /work/yarn.lock
 
-RUN apk add --update git
+RUN apk add --update-cache git
 
 WORKDIR /work
 
-RUN npm ci && npm run ${NPM_COMMAND}
+RUN npm install -g npm && npm ci && npm run ${NPM_COMMAND}
 
 FROM alpine
 
