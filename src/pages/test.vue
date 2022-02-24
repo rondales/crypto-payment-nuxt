@@ -155,12 +155,12 @@ export default {
   methods: {
     apiGetPaymentUrl(hash) {
       const url = `${this.baseUrl}/api/v1/payment/receive`
-      const data = {
+      let data = {
         identification_token: this.orderToken,
         order_code: this.orderCode,
-        amount: this.amount,
         verify_token: hash
       }
+      if (this.amount !== '') data.amount = this.amount
       return this.axios.post(url, data)
     },
     publishPaymentUrl() {
