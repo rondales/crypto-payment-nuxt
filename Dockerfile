@@ -15,7 +15,7 @@ RUN apk add --update-cache git
 
 WORKDIR /work
 
-RUN npm install -g npm && npm ci && npm run ${NPM_COMMAND}
+RUN npm install -g npm && npm install -g @vue/cli && npm ci && npm run ${NPM_COMMAND}
 
 FROM alpine
 
