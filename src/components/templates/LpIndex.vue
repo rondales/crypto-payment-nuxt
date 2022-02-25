@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lp-header />
+    <lp-header :appUrl="appUrl" />
     <article class="lp">
       <section class="lp-first">
         <div class="lp-first_bg"></div>
@@ -17,7 +17,7 @@
             the next generation of decentralized payment methods, to support any
             Token payment.
           </p>
-          <a href="/admin">
+          <a :href="appUrl">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -452,7 +452,7 @@
           </li>
           <li class="lp-cn5">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn6.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l.svg" />            
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l.svg" />
           </li>
           <li class="lp-cn6">
             <img src="@/assets/images/lp/cn1.png" />
@@ -465,15 +465,15 @@
           </li>
           <li class="lp-cn9">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn10.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l.svg" />     
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l.svg" />
           </li>
           <li class="lp-cn10">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn11.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l.svg" />                 
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l.svg" />
           </li>
           <li class="lp-cn11" id="roadmap">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l.svg" />     
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l.svg" />
           </li>
         </ul>
       </section>
@@ -497,7 +497,7 @@
             <div class="lp-fourth_donatetitle">
               <h4><span>Slash TOKEN</span>
                 <br>Additional Feature
-                <br>Open Source Plugins Ver.2 
+                <br>Open Source Plugins Ver.2
                 <br>Integration Requirements
               </h4>
             </div>
@@ -516,7 +516,7 @@
               </div>
             </div>
           </div>
-        </div>        
+        </div>
         <div class="lp-sixth_flex sp">
           <div class="box">
             <div class="cont" v-for="(item, index) in cont" :key="item.id" :class="{'active': show[index]}">
@@ -524,7 +524,7 @@
                 {{item.title}}
                 <span>
                   <img src="@/assets/images/lp/list-arrow.svg" alt="">
-                </span>                
+                </span>
               </h3>
               <div class="cont-item" v-show="show[index]">
                 <p v-for='(list,key) in item.lists' :key="key">
@@ -547,7 +547,7 @@
         <p>coming soon…</p>
       </div>
       <div class="lp-referral_inner">
-        <div class="box"> 
+        <div class="box">
           <div class="lp-referral_title lp-fourth_donatetitle">
             <h4>Referral Reward is 10% of Payment Gas Fee</h4>
           </div>
@@ -555,7 +555,7 @@
             Each time a merchant customer who has been invited by you makes a payment, you can expect a certain commission fee.The referral reward from Web3Payment will be sent to your balance immediately after the transaction is completed, and you will receive the reward by claiming it.
           </p>
         </div>
-        <div class="box"> 
+        <div class="box">
           <div class="lp-referral_title lp-fourth_donatetitle">
             <h4>Forms & Stake Referral Rewards 5%</h4>
           </div>
@@ -567,7 +567,7 @@
         </div>
         <div class="lp-center">
           <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br>Claim</h3>
-          <a href="/admin">
+          <a :href="appUrl">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -580,7 +580,7 @@
           <img src="@/assets/images/lp/mv-logo.svg" alt="" />
           <h4>Slash.fi</h4>
         </div>
-        <a href="/admin">
+        <a :href="appUrl">
           <div class="btn __pg lp-first_enter">Enter App</div>
         </a>
       </div>
@@ -595,9 +595,9 @@
         <div class="lp-footer_link"><p><a href="">Terms of Service</a> | <a href="">Privacy Terms</a></p></div>
         <div class="lp-footer_info pc">
           <p>SLASH FINTECH LIMITED<br>
-          3rd Floor, J & C Building, Road<br> 
+          3rd Floor, J & C Building, Road<br>
           Town, Tortola, British Virgin Islands, VG1110
-          </p>  
+          </p>
         </div>
       </div>
       <div class="lp-fotter_right">
@@ -634,9 +634,9 @@
       </div>
       <div class="lp-footer_info sp">
         <p>SLASH FINTECH LIMITED<br>
-        3rd Floor, J & C Building, Road<br> 
+        3rd Floor, J & C Building, Road<br>
         Town, Tortola, British Virgin Islands, VG1110
-        </p>  
+        </p>
       </div>
     </footer>
     </article>
@@ -664,7 +664,7 @@ export default {
             {text: "Merchant App"}
           ]
         },
-        { 
+        {
           id: 2,
           title: "Open Source Plugins Ver.1",
           lists: [
@@ -673,13 +673,13 @@ export default {
             {text: "EC CUBE"},
           ]
         },
-        { 
+        {
           id: 3,
           title: "Integration Requirements",
           lists: [
             {text: "Shopify"},
-            {text: "Wix"},            
-          ]              
+            {text: "Wix"},
+          ]
         },
         {
           id: 4,
@@ -689,7 +689,7 @@ export default {
             {text: "Single EC feature"},
             {text: "Store Payment feature"},
             {text: "Escrow feature"}
-          ] 
+          ]
         },
         {
           id: 5,
@@ -702,10 +702,10 @@ export default {
             {text: "Magento2"},
             {text: "WHMCS"},
             {text: "Drupal 8 Ubercart"},
-            {text: "Easy Digital Downloads"}            
-          ]      
+            {text: "Easy Digital Downloads"}
+          ]
         },
-        { 
+        {
           id: 6,
           title: "Slash TOKEN",
           lists: [
@@ -715,13 +715,20 @@ export default {
             {text: "Coin Market Cap Listing"},
             {text: "CoinGecko Listing"},
             {text: "CEX Listing"},
-          ]          
+          ]
         },
       ],
     };
   },
   components: {
     LpHeader,
+  },
+  computed: {
+    appUrl() {
+      const protocol = window.location.protocol
+      const host = process.env.VUE_APP_APP_DOMAIN
+      return `${protocol}//${host}/admin`
+    }
   },
   methods: {
     openModal(target) {
@@ -849,7 +856,6 @@ section{
       -webkit-text-fill-color: transparent;
       background-size: 100% 10%;
       display: inline;
-      
       @include media(sp) {
         font-size: 46px;
         margin-bottom: 16px;
@@ -1437,7 +1443,7 @@ section{
           background-size: 100% 200%;
           font-size: 20px;
           color: #fff;
-          font-weight: 400;          
+          font-weight: 400;
         }
         span {
           font-size: 12px;
@@ -1795,7 +1801,7 @@ footer{
       margin-bottom:30px;
     }
   }
-  
+
   .lp-fotter_right{
     @include media(sp) {
       width:100%;
