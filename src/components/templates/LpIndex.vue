@@ -727,6 +727,9 @@ export default {
     appUrl() {
       const protocol = window.location.protocol
       const host = process.env.VUE_APP_APP_DOMAIN
+      console.log(`BASE_URL: ${process.env.VUE_APP_API_BASE_URL}`)
+      console.log(`LP_DOMAIN: ${process.env.VUE_APP_LP_DOMAIN}`)
+      console.log(`APP_DOMAIN: ${process.env.VUE_APP_APP_DOMAIN}`)
       return `${protocol}//${host}/admin`
     }
   },
