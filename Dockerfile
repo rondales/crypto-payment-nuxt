@@ -19,30 +19,30 @@ WORKDIR /work
 
 RUN npm install -g npm && npm ci && npm run ${NPM_COMMAND}
 
-# FROM alpine
+FROM alpine
 
-# ARG pip_installer="https://bootstrap.pypa.io/get-pip.py"
-# ARG AWS_ACCESS_KEY_ID
-# ARG AWS_SECRET_ACCESS_KEY
-# ARG AWS_DEFAULT_REGION
-# ARG AWS_S3_BUCKET
+ARG pip_installer="https://bootstrap.pypa.io/get-pip.py"
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_DEFAULT_REGION
+ARG AWS_S3_BUCKET
 
-# ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
-# ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
-# ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
+ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
+ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
+ENV AWS_DEFAULT_REGION $AWS_DEFAULT_REGION
 
-# COPY --from=builder /work/dist /usr/local/src
+COPY --from=builder /work/dist /usr/local/src
 
-# # Install aws cli
-# RUN apk --no-cache add binutils curl && \
-#   curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub && \
-#   curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk && \
-#   curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-bin-2.33-r0.apk && \
-#   apk add --no-cache glibc-2.33-r0.apk glibc-bin-2.33-r0.apk && \
-#   curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
-#   unzip -q awscliv2.zip && \
-#   aws/install
+# Install aws cli
+RUN apk --no-cache add binutils curl && \
+  curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub && \
+  curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk && \
+  curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-bin-2.33-r0.apk && \
+  apk add --no-cache glibc-2.33-r0.apk glibc-bin-2.33-r0.apk && \
+  curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+  unzip -q awscliv2.zip && \
+  aws/install
 
-# WORKDIR /usr/local/src
+WORKDIR /usr/local/src
 
-# RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --acl public-read --cache-control "max-age=3600"
+RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --acl public-read --cache-control "max-age=3600"
