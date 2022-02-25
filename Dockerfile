@@ -1,12 +1,14 @@
 FROM node:12.13.1-alpine3.9 as builder
 
 ARG NPM_COMMAND
-# ENV NODE_ENV development
+ENV NODE_ENV development
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 RUN mkdir /work
 COPY /src /work/src
 COPY /public /work/public
+COPY .env.production /work/.env.production
+COPY .env.staging /work/.env.staging
 COPY package.json /work/package.json
 COPY package-lock.json /work/package-lock.json
 COPY yarn.lock /work/yarn.lock
