@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lp-header :appUrl="appUrl" />
+    <lp-header />
     <article class="lp">
       <section class="lp-first">
         <div class="lp-first_bg"></div>
@@ -17,7 +17,7 @@
             the next generation of decentralized payment methods, to support any
             Token payment.
           </p>
-          <a :href="appUrl">
+          <a href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -567,7 +567,7 @@
         </div>
         <div class="lp-center">
           <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br>Claim</h3>
-          <a :href="appUrl">
+          <a href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -580,7 +580,7 @@
           <img src="@/assets/images/lp/mv-logo.svg" alt="" />
           <h4>Slash.fi</h4>
         </div>
-        <a :href="appUrl">
+        <a href="/admin">
           <div class="btn __pg lp-first_enter">Enter App</div>
         </a>
       </div>
@@ -722,13 +722,6 @@ export default {
   },
   components: {
     LpHeader,
-  },
-  computed: {
-    appUrl() {
-      const protocol = window.location.protocol
-      const host = process.env.VUE_APP_APP_DOMAIN
-      return `${protocol}//${host}/admin`
-    }
   },
   methods: {
     openModal(target) {

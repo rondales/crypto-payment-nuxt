@@ -59,7 +59,7 @@
             </a>
           </span>
           <span class="app-link btn __pg sp">
-            <a :href="appUrl">
+            <a href="/admin">
               Enter App
             </a>
           </span>
@@ -91,7 +91,7 @@
           </button>
         </span>
         <span class="app-link btn __pg pc">
-          <a :href="appUrl">
+          <a href="/admin">
             Enter App
           </a>
         </span>
@@ -104,7 +104,6 @@
 
   export default {
     name: 'Header',
-    props: ['appUrl'],
     methods: {
       changeTheme(theme) {
         this.$store.dispatch("changeTheme", theme);
