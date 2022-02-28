@@ -138,11 +138,11 @@ export default {
         case this.environmentList.local:
           return process.env.VUE_APP_API_BASE_URL
         case this.environmentList.staging:
-          return 'https://stg-app.slash.fi'
+          return 'https://stg.slash.fi'
         case this.environmentList.production:
-          return 'https://app.slash.fi'
+          return 'https://slash.fi'
         default:
-          return 'https://stg-app.slash.fi'
+          return 'https://stg.slash.fi'
       }
     },
     isProcessing() {
