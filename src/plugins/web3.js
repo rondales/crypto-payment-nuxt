@@ -359,12 +359,9 @@ const publishMerchantContract = async function(
   try {
     let contractAddress = null
     factoryContract.once('NewMerchant', {}, function(error, event) {
-      console.log('NewMerchantEvent')
       if (event) {
-        console.log(`NewMerchantEvent: ${event.returnValues.merchant}`)
         contractAddress = event.returnValues.merchant
       } else {
-        console.log('NewMerchantEvent: Error')
         throw new Error(error)
       }
     })
