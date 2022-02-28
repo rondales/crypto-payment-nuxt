@@ -345,10 +345,7 @@ const monitoringPaymentTransaction = function(web3, transactionHash) {
 const publishMerchantContract = async function(
   web3,
   chainId,
-  adminWalletAddress,
-  merchantWalletAddress,
-  marketingWalletAddress,
-  donationWalletAddress
+  merchantWalletAddress
 ) {
   if (!MerchantFactoryContract.addresses[chainId]) {
     throw new Error('Currently, this network has stopped issuing contracts.')
@@ -370,10 +367,7 @@ const publishMerchantContract = async function(
     })
 
     await factoryContract.methods.deployMerchant(
-      marketingWalletAddress,
-      merchantWalletAddress,
-      donationWalletAddress,
-      adminWalletAddress
+      merchantWalletAddress
     ).send({ from: merchantWalletAddress })
 
     return {

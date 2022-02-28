@@ -350,18 +350,13 @@ export default {
     },
     publishMerchantContract(chainId) {
       this.contractSettings.contracts[chainId].processing = true
-      const adminWalletAddress = this.$store.state.account.address
       const merchantWalletAddress = this.$store.state.account.address
-      const marketingWalletAddress = this.$store.state.account.address
-      const donationWalletAddress = this.$store.state.account.address
 
       this.$web3.publishMerchantContract(
         this.$store.state.web3.instance,
         chainId,
         adminWalletAddress,
-        merchantWalletAddress,
-        marketingWalletAddress,
-        donationWalletAddress
+        merchantWalletAddress
       ).then((contract) => {
         this.apiRegistContract(
           chainId,
