@@ -355,7 +355,6 @@ export default {
       this.$web3.publishMerchantContract(
         this.$store.state.web3.instance,
         chainId,
-        adminWalletAddress,
         merchantWalletAddress
       ).then((contract) => {
         this.apiRegistContract(
