@@ -37,16 +37,16 @@
             <div class="lp-second_dsc">
               <p>
                 Merchants can automatically accept online TOKEN payments
-                <br />
+                <br class="pc">
                 from customers using the Web3 wallet.Merchants can
-                <br />
+                <br class="pc">
                 automatically
               </p>
             </div>
           </div>
           <div class="lp-second_r">
             <figure>
-              <img src="@/assets/images/lp/card.png" />
+              <img src="@/assets/images/lp/card.svg" />
             </figure>
           </div>
         </div>
@@ -482,19 +482,19 @@
           <h2>Features & Road Map</h2>
         </div>
         <div class="lp-fourth_donate add-flex a-center j-between">
-          <div class="lp-fourth_donateitem">
+          <div class="lp-six_donateitem">
             <div class="lp-sixth_mintitle">
               <p>Phase 1</p>
             </div>
-            <div class="lp-fourth_donatetitle">
+            <div class="lp-six_donatetitle">
               <h4>Basic Features<br>Open Source Plugins Ver.1</h4>
             </div>
           </div>
-          <div class="lp-fourth_donateitem">
+          <div class="lp-six_donateitem">
             <div class="lp-sixth_mintitle">
               <p>Phase 2</p>
             </div>
-            <div class="lp-fourth_donatetitle">
+            <div class="lp-six_donatetitle">
               <h4><span>Slash TOKEN</span>
                 <br>Additional Feature
                 <br>Open Source Plugins Ver.2
@@ -548,7 +548,7 @@
       </div>
       <div class="lp-referral_inner">
         <div class="box">
-          <div class="lp-referral_title lp-fourth_donatetitle">
+          <div class="lp-referral_title lp-seven_donatetitle">
             <h4>Referral Reward is 10% of Payment Gas Fee</h4>
           </div>
           <p>
@@ -556,7 +556,7 @@
           </p>
         </div>
         <div class="box">
-          <div class="lp-referral_title lp-fourth_donatetitle">
+          <div class="lp-referral_title lp-seven_donatetitle">
             <h4>Forms & Stake Referral Rewards 5%</h4>
           </div>
           <p>
@@ -566,7 +566,7 @@
           </p>
         </div>
         <div class="lp-center">
-          <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br>Claim</h3>
+          <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br class="pc">Claim</h3>
           <a href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
@@ -737,6 +737,7 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 
@@ -745,6 +746,11 @@ export default {
 }
 section{
   width:92%;
+}
+.theme--dark{
+  .lp-first_bg{
+    opacity: 0.3;
+  }
 }
 .lp {
   &-first {
@@ -755,25 +761,38 @@ section{
       background-size: cover;
       width: 100%;
       height: calc(100vh - 100px);
-      opacity: 0.58;
+      opacity: 0.8;
+      @include media(sp) {
+        height: calc(100vh - 64px);
+      }
     }
     &_contents {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -48%);
       @include media(sp) {
         width: 80%;
       }
       h1,
       p {
-        font-size: 25px;
+        font-size: 26px;
         font-weight: 400;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
         color: #fff;
+        @include media(sp) {
+          font-size: 21px;
+        }
       }
       p{
         margin-bottom:32px;
+      }
+    }
+    &_icon {
+      width: 140px;
+      margin: 0 auto 16px;
+      @include media(sp) {
+        width: 110px;
       }
     }
     &_enter {
@@ -794,7 +813,7 @@ section{
       height: 540px;
       position: relative;
       @include media(sp) {
-        height: 880px;
+        height: 820px;
         align-items: flex-start;
         padding-top: 56px;
       }
@@ -810,14 +829,15 @@ section{
       figure {
         position: absolute;
         top: 40px;
-        right: 60px;
+        right: 16px;
         height: 440px;
         width: 360px;
         animation: fuwafuwa 1.2s ease-in-out infinite alternate;
         @include media(sp) {
           bottom: 0;
           top: auto;
-          right: 0;
+          right: 50%;
+          transform: translate(50%, 0);
           animation: fuwafuwa-sp 1.2s ease-in-out infinite alternate;
         }
         @keyframes fuwafuwa {
@@ -830,10 +850,10 @@ section{
         }
         @keyframes fuwafuwa-sp {
           0% {
-            bottom: 0px;
+            bottom: 20px;
           }
           100% {
-            bottom: 8px;
+            bottom: 28px;
           }
         }
       }
@@ -842,16 +862,19 @@ section{
       }
     }
     &_title {
-      font-size: 70px;
+      font-size: 64px;
       line-height: 1.25;
       background: $gradation-light;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 100% 10%;
-      display: inline;
+      display: inline-block;
+      span{
+        width: 70px;
+        display: inline-block;
+      }
       @include media(sp) {
-        font-size: 46px;
-        margin-bottom: 16px;
+        font-size: 42px;
         span {
           img {
             width: 46px;
@@ -860,22 +883,28 @@ section{
       }
     }
     &_dsc {
-      font-size: 20px;
+      font-size: 19px;
       margin-top:15px;
+      @include media(sp) {
+        font-size: 18px;
+      }
       p{
-        font-weight: 400;
+        font-weight: 300;
       }
       @include media(sp) {
-        padding-top: 24px;
+        padding-top: 0;
         margin-bottom: 32px;
       }
     }
     &_sub {
       margin-bottom: 100px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
     }
     &_subtitle {
       h3 {
-        font-size: 25px;
+        font-size: 24px;
         width: 50%;
         text-align: left;
         background: $gradation-light;
@@ -883,6 +912,9 @@ section{
         -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
         display: inline;
+        @include media(sp) {
+          font-size: 23px;
+        }
       }
       margin-bottom: 25px;
       @include media(sp) {
@@ -903,8 +935,11 @@ section{
       text-align: left;
       margin-bottom: 32px;
       p {
-        font-size: 20px;
-        font-weight: 400;
+        font-size: 19px;
+        font-weight: 300;
+        @include media(sp) {
+          font-size: 17px;
+        }
       }
     }
     &_link {
@@ -920,13 +955,16 @@ section{
     }
     &_cardlist {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 0;
+      }
     }
     &_cardwrap {
       margin-bottom: 40px;
     }
     &_card {
       width: 31.5%;
-      height: 440px;
+      height: 400px;
       background: var(--color_lp_box);
       padding: 40px 27px 32px;
       border-radius: 10px;
@@ -949,13 +987,16 @@ section{
     }
     &_carddsc {
       text-align: left;
-      font-size: 20px;
-      font-weight: 400;
+      font-size: 19px;
+      font-weight: 300;
     }
   }
   &-third {
     &_install {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_right {
         width: 67.5%;
         text-align: left;
@@ -965,11 +1006,14 @@ section{
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -30%);
+            transform: translate(0, -25%);
             line-height: 1.6;
+            padding: 0 5px;
+            font-size: 18.4px;
           }
           .sp-bg {
             background: url(/assets/images/lp/install-sp.jpg) no-repeat center
@@ -994,14 +1038,16 @@ section{
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 48px;
         font-weight: 500;
         margin-bottom: 56px;
       }
       @include media(sp) {
         text-align: left;
         h2 {
-          margin-bottom: 32px;
+          font-size: 40px;
+          margin-bottom: 16px;
+          line-height: 1.4;
         }
       }
     }
@@ -1022,22 +1068,25 @@ section{
     &_subtitle {
       h3 {
         font-size: 35px;
-      }
-      background: $gradation-light;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 80% 10%;
-      display: block;
-      margin-bottom: 32px;
-      @include media(sp) {
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
+        display: inline-block;
+        margin-bottom: 32px;
+        @include media(sp) {
+          font-size: 30px;
+          background-size: 100% 10%;
+          line-height: 1.4;
+          margin-bottom: 16px;
+        }
       }
     }
     &_subdsc {
       margin-bottom: 35px;
       p {
-        font-size: 20px;
-        font-weight: 400;
+        font-size: 19px;
+        font-weight: 300;
       }
       @include media(sp) {
         position: relative;
@@ -1049,6 +1098,9 @@ section{
       text-align: right;
       a{
         font-weight: 400;
+        @include media(sp) {
+          font-size: 18px;
+        }
       }
       &.inversion {
         span {
@@ -1061,10 +1113,17 @@ section{
         display: inline-block;
         vertical-align: middle;
         margin-left: 16px;
+        @include media(sp) {
+          width: 40px;
+          margin-left: 4px;
+        }
       }
     }
     &_integration {
       margin-bottom: 100px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
       }
@@ -1080,11 +1139,14 @@ section{
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -15%);
+            transform: translate(0, -10%);
             line-height: 1.6;
+            padding: 0 5px;
+            font-size: 18.4px;
           }
           .sp-bg {
             background: url(/assets/images/lp/integration-sp.jpg) no-repeat
@@ -1132,7 +1194,8 @@ section{
           background: $gradation-light;
           padding: 2px 16px;
           background-size: 100% 200%;
-          font-size: 20px;
+          font-size: 19px;
+          font-weight: 300;
         }
         span {
           font-size: 12px;
@@ -1142,13 +1205,17 @@ section{
     }
     &_physical {
       margin-bottom: 96px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
         text-align: left;
       }
       .lp-third_subdsc {
         text-align: left;
-        font-size: 20px;
+        font-size: 19px;
+        font-weight: 300;
         margin-bottom: 32px;
         @include media(sp) {
           position: relative;
@@ -1231,10 +1298,14 @@ section{
         width: 100%;
         padding: 0;
         p {
+          color: #fff;
           position: absolute;
           z-index: 2;
           top: 50%;
           transform: translate(0, -30%);
+          line-height: 1.6;
+          padding: 0 5px;
+          font-size: 18.4px;
         }
         .sp-bg {
           background: url(/assets/images/lp/fee-sp.jpg) no-repeat center center;
@@ -1251,6 +1322,7 @@ section{
     &_fee {
       margin-bottom: 80px;
       @include media(sp) {
+        margin-bottom: 60px;
         .lp-third_left {
           display: none !important;
         }
@@ -1268,6 +1340,13 @@ section{
     }
     &_logos {
       figure {
+        @include media(sp) {
+          width: 50%;
+          &:nth-child(2) {
+            width: 45%;
+            margin-left: 5% !important;
+          }
+        }
         &:nth-child(2) {
           margin-left: 24px;
         }
@@ -1279,13 +1358,15 @@ section{
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 48px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
+          font-size: 44px;
           text-align: left;
-          padding: 0 16px;
+          padding: 0;
           margin-bottom: 56px;
+          line-height:1.5;
         }
       }
     }
@@ -1296,7 +1377,7 @@ section{
       }
     }
     &_donate {
-      margin-bottom: 80px;
+      margin-bottom: 64px;
       @include media(sp) {
         margin-bottom: 0px;
       }
@@ -1324,7 +1405,8 @@ section{
           -webkit-text-fill-color: transparent;
         }
         @include media(sp) {
-          font-size: 24px;
+          font-size: 21px;
+          margin-bottom: 16px;
         }
       }
       dl {
@@ -1367,6 +1449,9 @@ section{
     }
     &_buyback {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
       }
@@ -1382,6 +1467,9 @@ section{
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
+            padding: 0 5px;
+            font-size: 18.4px;
             position: absolute;
             z-index: 2;
             top: 50%;
@@ -1434,7 +1522,7 @@ section{
           background: $gradation-light;
           padding: 2px 16px;
           background-size: 100% 200%;
-          font-size: 20px;
+          font-size: 19px;
           color: #fff;
           font-weight: 400;
         }
@@ -1448,16 +1536,16 @@ section{
   &-fifth {
     padding:60px 0;
     @include media(sp) {
-      padding:30px 16px;
+      padding:30px 16px 0;
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 48px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 20px;
         }
       }
     }
@@ -1521,16 +1609,16 @@ section{
   &-sixth {
     padding:60px 0;
     @include media(sp) {
-      padding:30px 16px;
+      padding:30px 16px 0;
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 48px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 32px;
         }
       }
     }
@@ -1541,27 +1629,55 @@ section{
       padding:4px 0;
       font-weight: 400;
       color: #fff;
+      border-radius: 4px 4px 0 0;
     }
     .lp-fourth_donate{
-
       align-items: inherit;
     }
-    .lp-fourth_donateitem{
+    .lp-six_donateitem{
+      width: calc(50% - 20px);
+      background: var(--color_lp_box);
+      border-radius: 4px;
+      padding: 56px;
+      @include media(sp) {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 24px;
+      }
       padding:0;
       p{
         margin-bottom: 0;
       }
-      .lp-fourth_donatetitle{
+      .lp-six_donatetitle{
         display:flex;
         justify-content: center;
         align-items: center;
         padding:35px;
         height: calc(100% - 35px);
         margin-bottom:0;
-        font-size: 24px;
+        @include media(sp) {
+          padding: 24px;
+          height: 260px;
+          margin-bottom: 0;
+        }
         h4{
+          font-size: 24px;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 100% 10%;
+          display: block;
+          margin-bottom: 32px;
           line-height:2;
           font-weight:600;
+          @include media(sp) {
+            font-size: 22px;
+          }
+          span{
+            background:$gradation-orange;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
         }
       }
     }
@@ -1627,20 +1743,26 @@ section{
         }
         p{
           padding:10px 0;
+          @include media(sp) {
+            font-size: 17px;
+          }
         }
       }
     }
   }
   &-seventh {
     margin-bottom:150px;
+    @include media(sp) {
+      margin-bottom: 60px;
+    }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 48px;
         font-weight: 500;
         margin-bottom: 20px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 24px;
         }
       }
     }
@@ -1659,6 +1781,9 @@ section{
         display:inline-block;
         color: #fff;
         font-weight: 400;
+        @include media(sp) {
+          margin-bottom: 8px;
+        }
       }
       p{
         font-size:12px;
@@ -1681,16 +1806,39 @@ section{
           -webkit-text-fill-color: transparent;
           margin-bottom:35px;
           font-size:40px;
+          @include media(sp) {
+            font-size: 35px;
+          }
         }
       }
       .box{
-        margin-bottom:55px;
+        margin-bottom: 32px;
         p{
-          font-weight: 400;
+          font-weight: 300;
+          font-size: 19px;
         }
       }
-      .lp-fourth_donatetitle{
-        margin-bottom:20px;
+      .lp-seven_donatetitle{
+        margin-bottom: 8px;
+        h4{
+          display: inline-block;
+          font-size: 26px;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 100% 10%;
+          line-height:2;
+          font-weight:600;
+          @include media(sp) {
+            line-height: 1.4;
+            font-size: 28px;
+          }
+          span{
+            background:$gradation-orange;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        }
       }
     }
 
@@ -1756,6 +1904,7 @@ footer{
     display:flex;
     align-items:center;
     margin-bottom:15px;
+    width: 100%;
     img{
       width:40px;
       margin-right:15px;
@@ -1819,11 +1968,13 @@ footer{
           margin-bottom:15px;
         }
         p{
-          font-weight:400;
+          font-weight:300;
           margin-bottom:11px;
+          font-size: 19px;
         }
       }
     }
   }
 }
 </style>
+
