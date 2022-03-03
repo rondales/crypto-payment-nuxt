@@ -46,7 +46,7 @@
           </div>
           <div class="lp-second_r">
             <figure>
-              <img src="@/assets/images/lp/card.svg" />
+              <img src="@/assets/images/lp/card.svg"/>
             </figure>
           </div>
         </div>
