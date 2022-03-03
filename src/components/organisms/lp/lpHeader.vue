@@ -175,7 +175,8 @@
         @include media(sp) {
           width: 100%;
           display: none !important;
-          margin: 0 24px;
+          margin: 0;
+          padding: 80px 60px 0;
         }
         &.active{
           display: block !important;
@@ -208,10 +209,14 @@
       }
     }
     .theme-button{
-      margin-right: 2rem;
-      width: 54px;
-      height: 54px;
+      margin-right: 3rem;
       vertical-align: middle;
+      width: 32px;
+      height: 32px;
+      img{
+        width: 32px;
+        height: 32px;
+      }
       span{
         margin-right: 8px;
       }
@@ -222,7 +227,10 @@
       height: 4.2rem;
       line-height: 4.2rem;
       @include media(sp) {
-        width: 50% !important;
+        width: 100% !important;
+        margin: auto;
+        height: 6rem;
+        line-height: 6rem;
       }
       a{
         display: block;

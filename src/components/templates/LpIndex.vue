@@ -239,7 +239,7 @@
               TOKEN payments from customers
             </p>
           </div>
-          <div class="lp-third_app add-flex a-center">
+          <div class="lp-third_app add-flex">
             <div class="lp-third_appleft">
               <div class="lp-third_applogos add-flex a-center">
                 <a href="/" :class="{ active: nativeApp }">
@@ -300,8 +300,11 @@
         <div class="lp-third_subtitle">
           <h3>0.15% of the Payment Fee will be automatically donated.</h3>
         </div>
-        <div class="lp-third_image">
+        <div class="lp-third_image pc">
           <img src="@/assets/images/lp/donated.jpg" alt="" />
+        </div>
+        <div class="lp-third_image sp">
+          <img src="@/assets/images/lp/donated-sp.svg" alt="" />
         </div>
         <div class="lp-fourth_subdsc">
           <p>
@@ -402,7 +405,7 @@
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
-                Dnate Now
+                Donate Now
               </a>
             </div>
           </div>
@@ -424,7 +427,7 @@
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
-                Dnate Now
+                Donate Now
               </a>
             </div>
           </div>
@@ -435,45 +438,85 @@
           <h2>Connected network</h2>
         </div>
         <ul>
-          <li class="lp-cn1">
+          <li class="lp-cn1 pc">
             <img src="@/assets/images/lp/cn2.png" />
           </li>
-          <li class="lp-cn2">
+          <li class="lp-cn1 sp">
+            <img src="@/assets/images/lp/cn2-sp.png" />
+          </li>
+          <li class="lp-cn2 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn3.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn3-l.svg" />
           </li>
-          <li class="lp-cn3">
+          <li class="lp-cn2 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn3-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn3-l-sp.png" />
+          </li>
+          <li class="lp-cn3 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn7.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn7-l.svg" />
           </li>
-          <li class="lp-cn4">
+          <li class="lp-cn3 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn7-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn7-l-sp.png" />
+          </li>
+          <li class="lp-cn4 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn5.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn5-l.svg" />
           </li>
-          <li class="lp-cn5">
+          <li class="lp-cn4 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn5-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn5-l-sp.png" />
+          </li>
+          <li class="lp-cn5 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn6.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l.svg" />
           </li>
-          <li class="lp-cn6">
+          <li class="lp-cn5 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn6-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l-sp.png" />
+          </li>
+          <li class="lp-cn6 pc">
             <img src="@/assets/images/lp/cn1.png" />
           </li>
-          <li class="lp-cn7">
+          <li class="lp-cn6 sp">
+            <img src="@/assets/images/lp/cn1-sp.png" />
+          </li>
+          <li class="lp-cn7 pc">
             <img src="@/assets/images/lp/cn8.png" />
           </li>
-          <li class="lp-cn8">
+          <li class="lp-cn7 sp">
+            <img src="@/assets/images/lp/cn8-sp.png" />
+          </li>
+          <li class="lp-cn8 pc">
             <img src="@/assets/images/lp/cn9.png" />
           </li>
-          <li class="lp-cn9">
+          <li class="lp-cn8 sp">
+            <img src="@/assets/images/lp/cn9-sp.png" />
+          </li>
+          <li class="lp-cn9 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn10.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l.svg" />
           </li>
-          <li class="lp-cn10">
+          <li class="lp-cn9 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn10-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l-sp.png" />
+          </li>
+          <li class="lp-cn10 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn11.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l.svg" />
           </li>
-          <li class="lp-cn11" id="roadmap">
+          <li class="lp-cn10 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn11-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l-sp.png" />
+          </li>
+          <li class="lp-cn11 pc" id="roadmap">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l.svg" />
+          </li>
+          <li class="lp-cn11 sp" id="roadmap">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l-sp.png" />
           </li>
         </ul>
       </section>
@@ -574,7 +617,11 @@
       </div>
     </section>
     <section class="lp-eighth display">
-      <h3>Install on your online service now!</h3>
+      <h3>
+        Install on your online
+        <br class="sp">
+        service now!
+      </h3>
       <div class="lp-b_back">
         <div class="lp-first_icon">
           <img src="@/assets/images/lp/mv-logo.svg" alt="" />
@@ -777,7 +824,7 @@ section{
       h1,
       p {
         font-size: 26px;
-        font-weight: 400;
+        font-weight: 500;
         margin-bottom: 16px;
         color: #fff;
         @include media(sp) {
@@ -1000,7 +1047,7 @@ section{
       .lp-third_right {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 0 36px 36px;
         @include media(sp) {
           display: block;
           width: 100%;
@@ -1060,7 +1107,7 @@ section{
     &_right {
       width: 67.5%;
       text-align: left;
-      padding: 36px;
+      padding: 36px 0 36px 36px;
       @include media(sp) {
         width: 100%;
       }
@@ -1078,7 +1125,7 @@ section{
           font-size: 30px;
           background-size: 100% 10%;
           line-height: 1.4;
-          margin-bottom: 16px;
+          margin-bottom: 24px;
         }
       }
     }
@@ -1133,7 +1180,7 @@ section{
       .lp-third_left {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 36px 36px 0;
         @include media(sp) {
           display: block;
           width: 100%;
@@ -1183,16 +1230,20 @@ section{
           margin-bottom: 16px;
           figure {
             margin-bottom: 16px;
+            width: 46%;
+            img{
+              width: 100%;
+            }
           }
         }
       }
       .phase-wrap {
         display: flex;
         align-items: center;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
         .phase {
-          background: $gradation-light;
-          padding: 2px 16px;
+          background: $gradation-double;
+          padding: 4px 30px;
           background-size: 100% 200%;
           font-size: 19px;
           font-weight: 300;
@@ -1226,6 +1277,9 @@ section{
     }
     &_image {
       margin-bottom: 40px;
+      @include media(sp) {
+        margin-bottom: 25px;
+      }
     }
     &_app {
       width: 100%;
@@ -1270,6 +1324,9 @@ section{
       p {
         font-size: 12px;
         font-weight: 300;
+        @include media(pc) {
+          margin-top: 20px;
+        }
       }
     }
   }
@@ -1385,10 +1442,10 @@ section{
         width: calc(50% - 20px);
         background: var(--color_lp_box);
         border-radius: 10px;
-        padding: 56px;
+        padding: 50px;
         @include media(sp) {
           width: 100%;
-          padding: 40px;
+          padding: 36px;
         }
       }
       &title {
@@ -1405,8 +1462,11 @@ section{
           -webkit-text-fill-color: transparent;
         }
         @include media(sp) {
-          font-size: 21px;
+          font-size: 23px;
           margin-bottom: 16px;
+          h4{
+            font-weight: 400;
+          }
         }
       }
       dl {
@@ -1461,7 +1521,7 @@ section{
       .lp-third_left {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 36px 36px 0;
         @include media(sp) {
           display: block;
           width: 100%;
@@ -1504,6 +1564,9 @@ section{
           margin-right: 16px;
         }
       }
+      .lp-third_subtitle{
+        margin-bottom: 24px;
+      }
       .lp-third_logos {
         margin-bottom: 40px;
         @include media(sp) {
@@ -1519,8 +1582,8 @@ section{
         align-items: center;
         margin-bottom: 24px;
         .phase {
-          background: $gradation-light;
-          padding: 2px 16px;
+          background: $gradation-double;
+          padding: 4px 30px;
           background-size: 100% 200%;
           font-size: 19px;
           color: #fff;
@@ -1555,18 +1618,20 @@ section{
       justify-content: center;
       align-items:center;
       @include media(sp) {
-        justify-content: flex-start;
+        justify-content: space-between;
       }
       li{
         width:auto;
         height:40px;
-        margin:25px 30px;
+        margin:25px 24px;
         @include media(sp) {
-          width:50%;
-          margin:10px 0;
-          text-align: left;
+          width:42%;
+          margin: 4px 0;
+          text-align: center;
+          height: 48px !important;
           img{
-            height:72%;
+            height:100%;
+            width: 100%;
           }
         }
         &.lp-cn1{
@@ -1630,9 +1695,13 @@ section{
       font-weight: 400;
       color: #fff;
       border-radius: 4px 4px 0 0;
+      p{
+        font-size: 17px;
+      }
     }
     .lp-fourth_donate{
       align-items: inherit;
+      margin-bottom: 32px;
     }
     .lp-six_donateitem{
       width: calc(50% - 20px);
@@ -1657,7 +1726,7 @@ section{
         margin-bottom:0;
         @include media(sp) {
           padding: 24px;
-          height: 260px;
+          height: auto;
           margin-bottom: 0;
         }
         h4{
@@ -1667,7 +1736,6 @@ section{
           -webkit-text-fill-color: transparent;
           background-size: 100% 10%;
           display: block;
-          margin-bottom: 32px;
           line-height:2;
           font-weight:600;
           @include media(sp) {
@@ -1729,6 +1797,9 @@ section{
               height: 12px;
             }
           }
+          .cont-item{
+            margin-top: 16px;
+          }
         }
         h3{
           background: $gradation-light;
@@ -1742,7 +1813,7 @@ section{
           }
         }
         p{
-          padding:10px 0;
+          padding: 6px 0;
           @include media(sp) {
             font-size: 17px;
           }
@@ -1773,8 +1844,8 @@ section{
         text-align: left;
       }
       .phase {
-        background: $gradation-light;
-        padding: 2px 16px;
+        background: $gradation-double;
+        padding: 4px 30px;
         background-size: 100% 200%;
         font-size: 20px;
         margin-bottom:20px;
