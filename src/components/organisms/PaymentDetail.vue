@@ -162,7 +162,12 @@ import {
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
 } from '@/constants'
-import { BscTokens, EthereumTokens } from '@/contracts/tokens'
+import {
+  BscTokens,
+  EthereumTokens,
+  MaticTokens,
+  AvalancheTokens
+} from '@/contracts/tokens'
 
 export default {
   name: 'PaymentDetail',
@@ -232,6 +237,10 @@ export default {
         ? EthereumTokens
         : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
         ? BscTokens
+        : NETWORKS[137].chainId === chainId || NETWORKS[80001].chainId === chainId
+        ? MaticTokens
+        : NETWORKS[43113].chainId === chainId || NETWORKS[43114].chainId === chainId
+        ? AvalancheTokens
         : null
       if (tokens !== null) {
         return symbol in tokens
