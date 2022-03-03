@@ -6,7 +6,7 @@
         <div class="lp-first_bg"></div>
         <div class="lp-first_contents">
           <div class="lp-first_icon">
-            <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+            <img src="@/assets/images/lp/logo.png" alt="" />
           </div>
           <h1>
             Slash
@@ -624,7 +624,7 @@
       </h3>
       <div class="lp-b_back">
         <div class="lp-first_icon">
-          <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+          <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash.fi</h4>
         </div>
         <a href="/admin">
@@ -635,7 +635,7 @@
     <footer>
       <div class="lp-fotter_left">
         <div class="lp-first_icon">
-          <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+          <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash Payment</h4>
         </div>
         <div class="lp-footer_copy"><p>© 2021 Web3Payment.com. All rights reserved.</p></div>
@@ -1287,6 +1287,9 @@ section{
     &_applogos {
       margin-bottom: 16px;
       flex-wrap: nowrap;
+      @include media(sp) {
+        justify-content: space-between;
+      }
     }
     &_appleft {
       width: 33%;
@@ -1396,6 +1399,9 @@ section{
       margin-bottom: 80px;
     }
     &_logos {
+      @include media(sp) {
+        width: 100%;
+      }
       figure {
         @include media(sp) {
           width: 50%;
