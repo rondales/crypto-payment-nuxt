@@ -58,7 +58,7 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43114,
     rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-    scanUrl: 'https://avascan.info',
+    scanUrl: 'https://snowtrace.io',
     icon: require('@/assets/images/network/avalanche.svg'),
     type: null
   },
@@ -67,7 +67,7 @@ export const NETWORKS = {
     symbol: 'AVAX',
     chainId: 43113,
     rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
-    scanUrl: 'https://testnet.avascan.info',
+    scanUrl: 'https://testnet.snowtrace.io',
     icon: require('@/assets/images/network/avalanche.svg'),
     type: null
   }

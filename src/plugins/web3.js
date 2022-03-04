@@ -6,7 +6,12 @@ import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
-import { EthereumTokens, BscTokens } from '@/contracts/tokens'
+import {
+  EthereumTokens,
+  BscTokens,
+  MaticTokens,
+  AvalancheTokens
+} from '@/contracts/tokens'
 
 export default {
   install(Vue) {
@@ -392,6 +397,12 @@ function getNetworkDefaultTokens(chainId) {
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
       return BscTokens
+    case NETWORKS[137].chainId:
+    case NETWORKS[80001].chainId:
+      return MaticTokens
+    case NETWORKS[43113].chainId:
+    case NETWORKS[43114].chainId:
+      return AvalancheTokens
   }
 }
 

@@ -53,7 +53,7 @@
               ></DatetimePicker>
             </div>
           </div>
-          <div class="search-btn" @click="searchHistory">
+          <div class="search-btn" @click="searchHistory()">
             Search
           </div>
         </div>
@@ -250,10 +250,11 @@ export default {
       const controlParams = Object.values(this.paginateParams).map((param) => {
         return [ param.key, param.value ]
       })
-      const convertedParams = new URLSearchParams(inputedParams.concat(controlParams))
+      const timezoneParam = [[ 'offset', moment().utcOffset() ]]
+      const convertedParams = new URLSearchParams(inputedParams.concat(controlParams, timezoneParam))
       const request = {
         headers: { Authorization: RequestUtility.getBearer() },
-        params: new URLSearchParams(convertedParams)
+        params: convertedParams
       }
       return this.axios.get(url, request)
     },
@@ -262,9 +263,11 @@ export default {
       const searchParams = Object.entries(this.csvParams).map(([key, value]) =>  {
         return [ key, value ]
       })
+      const timezoneParam = [[ 'offset', moment().utcOffset() ]]
+      const convertedParams = new URLSearchParams(searchParams.concat(timezoneParam))
       const request = {
         headers: { Authorization: RequestUtility.getBearer() },
-        params: new URLSearchParams(searchParams)
+        params: convertedParams
       }
       return this.axios.get(url, request)
     },
