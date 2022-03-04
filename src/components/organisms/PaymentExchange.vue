@@ -102,7 +102,12 @@
 
 <script>
 import { NETWORKS } from '@/constants'
-import { BscTokens, EthereumTokens } from '@/contracts/tokens'
+import {
+  BscTokens,
+  EthereumTokens,
+  MaticTokens,
+  AvalancheTokens
+} from '@/contracts/tokens'
 import NumberFormat from 'number-format.js'
 import VuexRestore from '@/components/mixins/VuexRestore'
 import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
@@ -152,6 +157,10 @@ export default {
         ? EthereumTokens
         : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
         ? BscTokens
+        : NETWORKS[137].chainId === chainId || NETWORKS[80001].chainId === chainId
+        ? MaticTokens
+        : NETWORKS[43113].chainId === chainId || NETWORKS[43114].chainId === chainId
+        ? AvalancheTokens
         : null
       if (tokens !== null) {
         return symbol in tokens
