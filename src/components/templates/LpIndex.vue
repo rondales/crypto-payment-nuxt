@@ -1015,7 +1015,7 @@ section{
       background: var(--color_lp_box);
       padding: 40px 27px 32px;
       border-radius: 10px;
-      @include media(sp) {
+      @include media(tb) {
         width: 100%;
         margin-bottom: 32px;
       }
@@ -1028,6 +1028,7 @@ section{
       background-size: 100% 10%;
       display: block;
       height: 100px;
+      line-height: 1.5;
     }
     &_cardicons {
       margin-bottom: 40px;
@@ -1039,6 +1040,9 @@ section{
     }
   }
   &-third {
+    @include media(sp) {
+      margin-bottom: 80px;
+    }
     &_install {
       margin-bottom: 80px;
       @include media(sp) {
@@ -1085,7 +1089,7 @@ section{
     }
     &_title {
       h2 {
-        font-size: 48px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 56px;
       }
@@ -1251,6 +1255,7 @@ section{
         span {
           font-size: 12px;
           margin-left: 24px;
+          font-weight: 400;
         }
       }
     }
@@ -1421,15 +1426,14 @@ section{
     }
     &_title {
       h2 {
-        font-size: 48px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
-          font-size: 44px;
           text-align: left;
           padding: 0;
           margin-bottom: 56px;
-          line-height:1.5;
+          line-height: 1.4;
         }
       }
     }
@@ -1467,12 +1471,12 @@ section{
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
+        h4{
+          font-weight: 500;
+        }
         @include media(sp) {
           font-size: 23px;
           margin-bottom: 16px;
-          h4{
-            font-weight: 400;
-          }
         }
       }
       dl {
@@ -1487,7 +1491,8 @@ section{
       }
       p {
         margin-bottom: 32px;
-        font-weight: 400;
+        font-weight: 500;
+        letter-spacing: .4px;
         @include media(sp) {
           font-size: 15px;
           margin-bottom: 24px;
@@ -1510,14 +1515,12 @@ section{
           font-size: 15px;
           display: block;
           color: #fff;
+          font-weight: 500;
         }
       }
     }
     &_buyback {
       margin-bottom: 80px;
-      @include media(sp) {
-        margin-bottom: 60px;
-      }
       .lp-third_subtitle {
         background-size: 100% 10%;
       }
@@ -1570,9 +1573,6 @@ section{
           margin-right: 16px;
         }
       }
-      .lp-third_subtitle{
-        margin-bottom: 24px;
-      }
       .lp-third_logos {
         margin-bottom: 40px;
         @include media(sp) {
@@ -1593,11 +1593,13 @@ section{
           background-size: 100% 200%;
           font-size: 19px;
           color: #fff;
-          font-weight: 400;
+          font-weight: 500;
+          letter-spacing: .4px;
         }
         span {
           font-size: 12px;
           margin-left: 24px;
+          font-weight: 400;
         }
       }
     }
@@ -1606,15 +1608,17 @@ section{
     padding:60px 0;
     @include media(sp) {
       padding:30px 16px 0;
+      margin-bottom: 40px;
     }
     &_title {
       h2 {
-        font-size: 48px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
           margin-bottom: 20px;
+          line-height: 1.4;
         }
       }
     }
@@ -1633,11 +1637,9 @@ section{
         @include media(sp) {
           width:42%;
           margin: 4px 0;
-          text-align: center;
           height: 48px !important;
           img{
             height:100%;
-            width: 100%;
           }
         }
         &.lp-cn1{
@@ -1681,15 +1683,17 @@ section{
     padding:60px 0;
     @include media(sp) {
       padding:30px 16px 0;
+      margin-bottom: 80px;
     }
     &_title {
       h2 {
-        font-size: 48px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
           margin-bottom: 32px;
+          line-height: 1.4;
         }
       }
     }
@@ -1732,7 +1736,7 @@ section{
         margin-bottom:0;
         @include media(sp) {
           padding: 24px;
-          height: auto;
+          height: calc(32vh - 30px);
           margin-bottom: 0;
         }
         h4{
@@ -1834,12 +1838,13 @@ section{
     }
     &_title {
       h2 {
-        font-size: 48px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 20px;
         @include media(sp) {
           text-align: left;
           margin-bottom: 24px;
+          line-height: 1.4;
         }
       }
     }
@@ -1857,7 +1862,8 @@ section{
         margin-bottom:20px;
         display:inline-block;
         color: #fff;
-        font-weight: 400;
+        font-weight: 500;
+        letter-spacing: .4px;
         @include media(sp) {
           margin-bottom: 8px;
         }
@@ -1926,9 +1932,13 @@ section{
     padding:60px 0 85px;
     max-width:inherit;
     width:100%;
+    @include media(sp) {
+      background: url(/assets/images/lp/last_back_m-sp.svg) no-repeat center center;
+    }
     h3{
-      font-weight: 400;
+      font-weight: 500;
       color: #fff;
+      font-size: 30px;
     }
     .lp-b_back{
       background: var(--color_lp_box);

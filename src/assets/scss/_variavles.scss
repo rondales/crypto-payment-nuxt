@@ -84,10 +84,10 @@ $sp-screen-size: 768px;
     @media screen and (max-width: $sp-screen-size) {
       @content;
     }
-  // } @else if($mode == tb) {
-  //   @media screen and (max-width: 1024px) {
-  //     @content;
-  //   }
+    } @else if($mode == tb) {
+    @media screen and (max-width: 1024px) {
+      @content;
+    }
   // } @else if($mode == pctb) {
   //   @media screen and (min-width: 768px) and (max-width: 1299px) {
   //     @content;
