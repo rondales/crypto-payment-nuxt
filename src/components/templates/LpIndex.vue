@@ -1628,14 +1628,15 @@ section{
       justify-content: center;
       align-items:center;
       @include media(sp) {
-        justify-content: space-between;
+        text-align: left;
+        justify-content: flex-start;
       }
       li{
         width:auto;
         height:40px;
         margin:25px 24px;
         @include media(sp) {
-          width:42%;
+          width: 50%;
           margin: 4px 0;
           height: 48px !important;
           img{
@@ -1675,7 +1676,6 @@ section{
         &.lp-cn11{
           height:35px;
         }
-
       }
     }
   }
