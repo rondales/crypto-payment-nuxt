@@ -17,6 +17,7 @@ const store = new Vuex.Store({
       key: 'state',
       paths: [
         'web3.provider',
+        'account',
         'payment',
         'hamberger',
         'modal',

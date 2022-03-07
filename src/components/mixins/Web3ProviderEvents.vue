@@ -63,12 +63,10 @@ export default {
   },
   created() {
     if (this.provider) {
-      console.log('exist provider')
       this.provider.on('accountsChanged', () => {
         this.handleAccountChanged()
       })
       this.provider.on('chainChanged', (chainId) => {
-        console.log('chain changed')
         chainId = (this.web3.utils.isHex(chainId))
           ? this.web3.utils.hexToNumber(chainId)
           : chainId

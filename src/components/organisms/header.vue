@@ -40,7 +40,7 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected" class="btn __s sp-fixed">
+          <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
             <span class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
             </span>
@@ -159,7 +159,10 @@ export default {
       return pathPattern.test(this.$route.path)
     },
     connected() {
-      return (this.$store.state.web3.instance && this.$store.state.web3.chainId)
+      return (this.$store.state.web3.provider)
+    },
+    fixedNetwork() {
+      return (this.$store.state.web3.chainId)
     }
   },
   methods: {
