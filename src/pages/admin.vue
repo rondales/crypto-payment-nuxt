@@ -103,6 +103,10 @@ export default {
           }
         })
       }
+    } else {
+      if (localStorage.getItem(LOGIN_TOKEN)) {
+        localStorage.removeItem(LOGIN_TOKEN)
+      }
     }
   }
 }
