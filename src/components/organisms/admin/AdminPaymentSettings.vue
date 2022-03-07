@@ -367,13 +367,13 @@ export default {
         }).catch((error) => {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
         })
-      }).catch((error) => {
+      }).catch(() => {
         this.$store.dispatch(
           'openModal',
           {
             target: 'error-modal',
             size: 'small',
-            message: error.message
+            message: 'Failed to create a contract.'
           }
         )
       })
