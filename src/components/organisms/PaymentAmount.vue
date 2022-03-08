@@ -85,7 +85,7 @@ export default {
     return {
       loading: false,
       requireUpdateExchange: false,
-      legalCurrencyAmount: 0,
+      legalCurrencyAmount: null,
       selectedCurrency: currencyList['JPY'].name,
       exchangedAmount: 0,
       exchangeRate: 100,

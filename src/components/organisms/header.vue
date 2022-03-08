@@ -20,10 +20,10 @@
             :class="[
               'theme-button',
               '--light',
-              { 'is-active': $store.state.theme == 'light' },
+              { 'is-active': isLightTheme },
             ]"
-            @click="changeTheme('light')"
-            v-if="$store.state.theme == 'dark'"
+            @click="switchColorTheme(lightTheme)"
+            v-if="isDarkTheme"
           >
             <img src="@/assets/images/light.svg" alt="">
           </button>
@@ -31,10 +31,10 @@
             :class="[
               'theme-button',
               '--dark',
-              { 'is-active': $store.state.theme == 'dark' },
+              { 'is-active': isDarkTheme },
             ]"
-            @click="changeTheme('dark')"
-            v-if="$store.state.theme == 'light'"
+            @click="switchColorTheme(darkTheme)"
+            v-if="isLightTheme"
           >
             <img src="@/assets/images/dark.svg" alt="">
           </button>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { NETWORKS } from '@/constants'
+import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 
 export default {
   name: 'Header',
@@ -109,6 +109,12 @@ export default {
     }
   },
   computed: {
+    darkTheme() {
+      return DARK_THEME
+    },
+    lightTheme() {
+      return LIGHT_THEME
+    },
     subTitle() {
       let subTitle = ''
       if (this.$route.name === 'admin') {
@@ -117,6 +123,12 @@ export default {
         subTitle = 'Web3 Payment'
       }
       return subTitle
+    },
+    isDarkTheme() {
+      return this.$store.state.theme === this.darkTheme
+    },
+    isLightTheme() {
+      return this.$store.state.theme === this.lightTheme
     },
     isShowSwitchThemeButton() {
       return (this.$route.name !== 'admin' && ((this.width <= 768 && (this.$route.name === 'entrance' || this.$route.name === 'receipt')) || this.width > 768))
@@ -166,11 +178,11 @@ export default {
     }
   },
   methods: {
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
     openModal(target, size) {
       this.$store.dispatch('openModal', {target: target, size: size});
+    },
+    switchColorTheme(color) {
+      this.$emit('switchColorTheme', color)
     }
   }
 }

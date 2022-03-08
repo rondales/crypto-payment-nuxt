@@ -1,6 +1,7 @@
 const store = {
   namespaced: true,
   state: {
+    id: null,
     headerInvoice: false,
     domain: null,
     orderCode: null,
@@ -21,6 +22,9 @@ const store = {
     }
   },
   actions: {
+    initialize({ commit }) {
+      commit('initialize')
+    },
     update({ commit }, payload) {
       commit('update', payload)
     },
@@ -47,6 +51,27 @@ const store = {
     }
   },
   mutations: {
+    initialize(state) {
+      state.id = null
+      state.headerInvoice = false
+      state.domain = null
+      state.orderCode = null
+      state.amount = null
+      state.symbol = null
+      state.fee = null
+      state.transactionHash = null
+      state.availableNetworks = []
+      state.status = 1
+      state.token = {
+        name: null,
+        symbol: null,
+        decimal: null,
+        address: null,
+        balance: null,
+        amount: null,
+        rate: null
+      }
+    },
     update(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
