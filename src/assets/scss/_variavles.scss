@@ -10,6 +10,7 @@ $gradation: linear-gradient(90.25deg, #1D4C65 5.43%,#313067 59.32%,#431769 98.19
 $gradation-light: linear-gradient(90.25deg, #3EB9FC 5.43%,#6A68ED 59.32%,#8B2AE1 98.19%);
 $gradation-pale: linear-gradient(90.25deg, #7BC8FC 5.43%,#9695F2 40.32%,#A677EC 98.19%);
 $gradation-orange: linear-gradient(90.25deg, #D97C87 5.43%,#8A2CE1 98.19%);
+$gradation-double: linear-gradient(90.25deg, #49A4F8 5.43%,#803DE4 98.19%);
 
 $box-shadow: 0 0 15px #ccc;
 
@@ -83,10 +84,10 @@ $sp-screen-size: 768px;
     @media screen and (max-width: $sp-screen-size) {
       @content;
     }
-  // } @else if($mode == tb) {
-  //   @media screen and (max-width: 1024px) {
-  //     @content;
-  //   }
+    } @else if($mode == tb) {
+    @media screen and (max-width: 1024px) {
+      @content;
+    }
   // } @else if($mode == pctb) {
   //   @media screen and (min-width: 768px) and (max-width: 1299px) {
   //     @content;

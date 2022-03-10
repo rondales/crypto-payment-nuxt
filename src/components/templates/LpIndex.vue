@@ -6,7 +6,7 @@
         <div class="lp-first_bg"></div>
         <div class="lp-first_contents">
           <div class="lp-first_icon">
-            <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+            <img src="@/assets/images/lp/logo.png" alt="" />
           </div>
           <h1>
             Slash
@@ -37,16 +37,16 @@
             <div class="lp-second_dsc">
               <p>
                 Merchants can automatically accept online TOKEN payments
-                <br />
+                <br class="pc">
                 from customers using the Web3 wallet.Merchants can
-                <br />
+                <br class="pc">
                 automatically
               </p>
             </div>
           </div>
           <div class="lp-second_r">
             <figure>
-              <img src="@/assets/images/lp/card.png" />
+              <img src="@/assets/images/lp/card.svg"/>
             </figure>
           </div>
         </div>
@@ -239,7 +239,7 @@
               TOKEN payments from customers
             </p>
           </div>
-          <div class="lp-third_app add-flex a-center">
+          <div class="lp-third_app add-flex">
             <div class="lp-third_appleft">
               <div class="lp-third_applogos add-flex a-center">
                 <a href="/" :class="{ active: nativeApp }">
@@ -300,8 +300,11 @@
         <div class="lp-third_subtitle">
           <h3>0.15% of the Payment Fee will be automatically donated.</h3>
         </div>
-        <div class="lp-third_image">
+        <div class="lp-third_image pc">
           <img src="@/assets/images/lp/donated.jpg" alt="" />
+        </div>
+        <div class="lp-third_image sp">
+          <img src="@/assets/images/lp/donated-sp.svg" alt="" />
         </div>
         <div class="lp-fourth_subdsc">
           <p>
@@ -402,7 +405,7 @@
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
-                Dnate Now
+                Donate Now
               </a>
             </div>
           </div>
@@ -424,7 +427,7 @@
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
-                Dnate Now
+                Donate Now
               </a>
             </div>
           </div>
@@ -435,45 +438,85 @@
           <h2>Connected network</h2>
         </div>
         <ul>
-          <li class="lp-cn1">
+          <li class="lp-cn1 pc">
             <img src="@/assets/images/lp/cn2.png" />
           </li>
-          <li class="lp-cn2">
+          <li class="lp-cn1 sp">
+            <img src="@/assets/images/lp/cn2-sp.png" />
+          </li>
+          <li class="lp-cn2 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn3.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn3-l.svg" />
           </li>
-          <li class="lp-cn3">
+          <li class="lp-cn2 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn3-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn3-l-sp.png" />
+          </li>
+          <li class="lp-cn3 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn7.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn7-l.svg" />
           </li>
-          <li class="lp-cn4">
+          <li class="lp-cn3 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn7-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn7-l-sp.png" />
+          </li>
+          <li class="lp-cn4 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn5.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn5-l.svg" />
           </li>
-          <li class="lp-cn5">
+          <li class="lp-cn4 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn5-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn5-l-sp.png" />
+          </li>
+          <li class="lp-cn5 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn6.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l.svg" />
           </li>
-          <li class="lp-cn6">
+          <li class="lp-cn5 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn6-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn6-l-sp.png" />
+          </li>
+          <li class="lp-cn6 pc">
             <img src="@/assets/images/lp/cn1.png" />
           </li>
-          <li class="lp-cn7">
+          <li class="lp-cn6 sp">
+            <img src="@/assets/images/lp/cn1-sp.png" />
+          </li>
+          <li class="lp-cn7 pc">
             <img src="@/assets/images/lp/cn8.png" />
           </li>
-          <li class="lp-cn8">
+          <li class="lp-cn7 sp">
+            <img src="@/assets/images/lp/cn8-sp.png" />
+          </li>
+          <li class="lp-cn8 pc">
             <img src="@/assets/images/lp/cn9.png" />
           </li>
-          <li class="lp-cn9">
+          <li class="lp-cn8 sp">
+            <img src="@/assets/images/lp/cn9-sp.png" />
+          </li>
+          <li class="lp-cn9 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn10.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l.svg" />
           </li>
-          <li class="lp-cn10">
+          <li class="lp-cn9 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn10-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn10-l-sp.png" />
+          </li>
+          <li class="lp-cn10 pc">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn11.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l.svg" />
           </li>
-          <li class="lp-cn11" id="roadmap">
+          <li class="lp-cn10 sp">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn11-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn11-l-sp.png" />
+          </li>
+          <li class="lp-cn11 pc" id="roadmap">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4.png" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l.svg" />
+          </li>
+          <li class="lp-cn11 sp" id="roadmap">
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4-sp.png" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l-sp.png" />
           </li>
         </ul>
       </section>
@@ -482,19 +525,19 @@
           <h2>Features & Road Map</h2>
         </div>
         <div class="lp-fourth_donate add-flex a-center j-between">
-          <div class="lp-fourth_donateitem">
+          <div class="lp-six_donateitem">
             <div class="lp-sixth_mintitle">
               <p>Phase 1</p>
             </div>
-            <div class="lp-fourth_donatetitle">
+            <div class="lp-six_donatetitle">
               <h4>Basic Features<br>Open Source Plugins Ver.1</h4>
             </div>
           </div>
-          <div class="lp-fourth_donateitem">
+          <div class="lp-six_donateitem">
             <div class="lp-sixth_mintitle">
               <p>Phase 2</p>
             </div>
-            <div class="lp-fourth_donatetitle">
+            <div class="lp-six_donatetitle">
               <h4><span>Slash TOKEN</span>
                 <br>Additional Feature
                 <br>Open Source Plugins Ver.2
@@ -548,7 +591,7 @@
       </div>
       <div class="lp-referral_inner">
         <div class="box">
-          <div class="lp-referral_title lp-fourth_donatetitle">
+          <div class="lp-referral_title lp-seven_donatetitle">
             <h4>Referral Reward is 10% of Payment Gas Fee</h4>
           </div>
           <p>
@@ -556,7 +599,7 @@
           </p>
         </div>
         <div class="box">
-          <div class="lp-referral_title lp-fourth_donatetitle">
+          <div class="lp-referral_title lp-seven_donatetitle">
             <h4>Forms & Stake Referral Rewards 5%</h4>
           </div>
           <p>
@@ -566,7 +609,7 @@
           </p>
         </div>
         <div class="lp-center">
-          <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br>Claim</h3>
+          <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br class="pc">Claim</h3>
           <a href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
@@ -574,10 +617,14 @@
       </div>
     </section>
     <section class="lp-eighth display">
-      <h3>Install on your online service now!</h3>
+      <h3>
+        Install on your online
+        <br class="sp">
+        service now!
+      </h3>
       <div class="lp-b_back">
         <div class="lp-first_icon">
-          <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+          <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash.fi</h4>
         </div>
         <a href="/admin">
@@ -588,7 +635,7 @@
     <footer>
       <div class="lp-fotter_left">
         <div class="lp-first_icon">
-          <img src="@/assets/images/lp/mv-logo.svg" alt="" />
+          <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash Payment</h4>
         </div>
         <div class="lp-footer_copy"><p>© 2021 Web3Payment.com. All rights reserved.</p></div>
@@ -737,6 +784,7 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 
@@ -745,6 +793,11 @@ export default {
 }
 section{
   width:92%;
+}
+.theme--dark{
+  .lp-first_bg{
+    opacity: 0.3;
+  }
 }
 .lp {
   &-first {
@@ -755,25 +808,38 @@ section{
       background-size: cover;
       width: 100%;
       height: calc(100vh - 100px);
-      opacity: 0.58;
+      opacity: 0.8;
+      @include media(sp) {
+        height: calc(100vh - 64px);
+      }
     }
     &_contents {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -48%);
       @include media(sp) {
         width: 80%;
       }
       h1,
       p {
-        font-size: 25px;
-        font-weight: 400;
-        margin-bottom: 24px;
+        font-size: 26px;
+        font-weight: 500;
+        margin-bottom: 16px;
         color: #fff;
+        @include media(sp) {
+          font-size: 21px;
+        }
       }
       p{
         margin-bottom:32px;
+      }
+    }
+    &_icon {
+      width: 140px;
+      margin: 0 auto 16px;
+      @include media(sp) {
+        width: 110px;
       }
     }
     &_enter {
@@ -794,7 +860,7 @@ section{
       height: 540px;
       position: relative;
       @include media(sp) {
-        height: 880px;
+        height: 820px;
         align-items: flex-start;
         padding-top: 56px;
       }
@@ -810,14 +876,15 @@ section{
       figure {
         position: absolute;
         top: 40px;
-        right: 60px;
+        right: 16px;
         height: 440px;
         width: 360px;
         animation: fuwafuwa 1.2s ease-in-out infinite alternate;
         @include media(sp) {
           bottom: 0;
           top: auto;
-          right: 0;
+          right: 50%;
+          transform: translate(50%, 0);
           animation: fuwafuwa-sp 1.2s ease-in-out infinite alternate;
         }
         @keyframes fuwafuwa {
@@ -830,10 +897,10 @@ section{
         }
         @keyframes fuwafuwa-sp {
           0% {
-            bottom: 0px;
+            bottom: 20px;
           }
           100% {
-            bottom: 8px;
+            bottom: 28px;
           }
         }
       }
@@ -842,16 +909,19 @@ section{
       }
     }
     &_title {
-      font-size: 70px;
+      font-size: 64px;
       line-height: 1.25;
       background: $gradation-light;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 100% 10%;
-      display: inline;
+      display: inline-block;
+      span{
+        width: 70px;
+        display: inline-block;
+      }
       @include media(sp) {
-        font-size: 46px;
-        margin-bottom: 16px;
+        font-size: 42px;
         span {
           img {
             width: 46px;
@@ -860,22 +930,28 @@ section{
       }
     }
     &_dsc {
-      font-size: 20px;
+      font-size: 19px;
       margin-top:15px;
+      @include media(sp) {
+        font-size: 18px;
+      }
       p{
-        font-weight: 400;
+        font-weight: 300;
       }
       @include media(sp) {
-        padding-top: 24px;
+        padding-top: 0;
         margin-bottom: 32px;
       }
     }
     &_sub {
       margin-bottom: 100px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
     }
     &_subtitle {
       h3 {
-        font-size: 25px;
+        font-size: 24px;
         width: 50%;
         text-align: left;
         background: $gradation-light;
@@ -883,6 +959,9 @@ section{
         -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
         display: inline;
+        @include media(sp) {
+          font-size: 23px;
+        }
       }
       margin-bottom: 25px;
       @include media(sp) {
@@ -903,8 +982,11 @@ section{
       text-align: left;
       margin-bottom: 32px;
       p {
-        font-size: 20px;
-        font-weight: 400;
+        font-size: 19px;
+        font-weight: 300;
+        @include media(sp) {
+          font-size: 17px;
+        }
       }
     }
     &_link {
@@ -920,17 +1002,20 @@ section{
     }
     &_cardlist {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 0;
+      }
     }
     &_cardwrap {
       margin-bottom: 40px;
     }
     &_card {
       width: 31.5%;
-      height: 440px;
+      height: 400px;
       background: var(--color_lp_box);
       padding: 40px 27px 32px;
       border-radius: 10px;
-      @include media(sp) {
+      @include media(tb) {
         width: 100%;
         margin-bottom: 32px;
       }
@@ -943,33 +1028,43 @@ section{
       background-size: 100% 10%;
       display: block;
       height: 100px;
+      line-height: 1.5;
     }
     &_cardicons {
       margin-bottom: 40px;
     }
     &_carddsc {
       text-align: left;
-      font-size: 20px;
-      font-weight: 400;
+      font-size: 19px;
+      font-weight: 300;
     }
   }
   &-third {
+    @include media(sp) {
+      margin-bottom: 80px;
+    }
     &_install {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_right {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 0 36px 36px;
         @include media(sp) {
           display: block;
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -30%);
+            transform: translate(0, -25%);
             line-height: 1.6;
+            padding: 0 5px;
+            font-size: 18.4px;
           }
           .sp-bg {
             background: url(/assets/images/lp/install-sp.jpg) no-repeat center
@@ -994,14 +1089,16 @@ section{
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 56px;
       }
       @include media(sp) {
         text-align: left;
         h2 {
-          margin-bottom: 32px;
+          font-size: 40px;
+          margin-bottom: 16px;
+          line-height: 1.4;
         }
       }
     }
@@ -1014,7 +1111,7 @@ section{
     &_right {
       width: 67.5%;
       text-align: left;
-      padding: 36px;
+      padding: 36px 0 36px 36px;
       @include media(sp) {
         width: 100%;
       }
@@ -1022,22 +1119,25 @@ section{
     &_subtitle {
       h3 {
         font-size: 35px;
-      }
-      background: $gradation-light;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 80% 10%;
-      display: block;
-      margin-bottom: 32px;
-      @include media(sp) {
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
+        display: inline-block;
+        margin-bottom: 32px;
+        @include media(sp) {
+          font-size: 30px;
+          background-size: 100% 10%;
+          line-height: 1.4;
+          margin-bottom: 24px;
+        }
       }
     }
     &_subdsc {
       margin-bottom: 35px;
       p {
-        font-size: 20px;
-        font-weight: 400;
+        font-size: 19px;
+        font-weight: 300;
       }
       @include media(sp) {
         position: relative;
@@ -1049,6 +1149,9 @@ section{
       text-align: right;
       a{
         font-weight: 400;
+        @include media(sp) {
+          font-size: 18px;
+        }
       }
       &.inversion {
         span {
@@ -1061,10 +1164,17 @@ section{
         display: inline-block;
         vertical-align: middle;
         margin-left: 16px;
+        @include media(sp) {
+          width: 40px;
+          margin-left: 4px;
+        }
       }
     }
     &_integration {
       margin-bottom: 100px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
       }
@@ -1074,17 +1184,20 @@ section{
       .lp-third_left {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 36px 36px 0;
         @include media(sp) {
           display: block;
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -15%);
+            transform: translate(0, -10%);
             line-height: 1.6;
+            padding: 0 5px;
+            font-size: 18.4px;
           }
           .sp-bg {
             background: url(/assets/images/lp/integration-sp.jpg) no-repeat
@@ -1121,34 +1234,44 @@ section{
           margin-bottom: 16px;
           figure {
             margin-bottom: 16px;
+            width: 46%;
+            img{
+              width: 100%;
+            }
           }
         }
       }
       .phase-wrap {
         display: flex;
         align-items: center;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
         .phase {
-          background: $gradation-light;
-          padding: 2px 16px;
+          background: $gradation-double;
+          padding: 4px 30px;
           background-size: 100% 200%;
-          font-size: 20px;
+          font-size: 19px;
+          font-weight: 300;
         }
         span {
           font-size: 12px;
           margin-left: 24px;
+          font-weight: 400;
         }
       }
     }
     &_physical {
       margin-bottom: 96px;
+      @include media(sp) {
+        margin-bottom: 60px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
         text-align: left;
       }
       .lp-third_subdsc {
         text-align: left;
-        font-size: 20px;
+        font-size: 19px;
+        font-weight: 300;
         margin-bottom: 32px;
         @include media(sp) {
           position: relative;
@@ -1159,6 +1282,9 @@ section{
     }
     &_image {
       margin-bottom: 40px;
+      @include media(sp) {
+        margin-bottom: 25px;
+      }
     }
     &_app {
       width: 100%;
@@ -1166,6 +1292,9 @@ section{
     &_applogos {
       margin-bottom: 16px;
       flex-wrap: nowrap;
+      @include media(sp) {
+        justify-content: space-between;
+      }
     }
     &_appleft {
       width: 33%;
@@ -1203,6 +1332,9 @@ section{
       p {
         font-size: 12px;
         font-weight: 300;
+        @include media(pc) {
+          margin-top: 20px;
+        }
       }
     }
   }
@@ -1231,10 +1363,14 @@ section{
         width: 100%;
         padding: 0;
         p {
+          color: #fff;
           position: absolute;
           z-index: 2;
           top: 50%;
           transform: translate(0, -30%);
+          line-height: 1.6;
+          padding: 0 5px;
+          font-size: 18.4px;
         }
         .sp-bg {
           background: url(/assets/images/lp/fee-sp.jpg) no-repeat center center;
@@ -1251,6 +1387,7 @@ section{
     &_fee {
       margin-bottom: 80px;
       @include media(sp) {
+        margin-bottom: 60px;
         .lp-third_left {
           display: none !important;
         }
@@ -1267,7 +1404,17 @@ section{
       margin-bottom: 80px;
     }
     &_logos {
+      @include media(sp) {
+        width: 100%;
+      }
       figure {
+        @include media(sp) {
+          width: 50%;
+          &:nth-child(2) {
+            width: 45%;
+            margin-left: 5% !important;
+          }
+        }
         &:nth-child(2) {
           margin-left: 24px;
         }
@@ -1279,13 +1426,14 @@ section{
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
-          padding: 0 16px;
+          padding: 0;
           margin-bottom: 56px;
+          line-height: 1.4;
         }
       }
     }
@@ -1296,7 +1444,7 @@ section{
       }
     }
     &_donate {
-      margin-bottom: 80px;
+      margin-bottom: 64px;
       @include media(sp) {
         margin-bottom: 0px;
       }
@@ -1304,10 +1452,10 @@ section{
         width: calc(50% - 20px);
         background: var(--color_lp_box);
         border-radius: 10px;
-        padding: 56px;
+        padding: 50px;
         @include media(sp) {
           width: 100%;
-          padding: 40px;
+          padding: 36px;
         }
       }
       &title {
@@ -1323,8 +1471,12 @@ section{
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
+        h4{
+          font-weight: 500;
+        }
         @include media(sp) {
-          font-size: 24px;
+          font-size: 23px;
+          margin-bottom: 16px;
         }
       }
       dl {
@@ -1339,7 +1491,8 @@ section{
       }
       p {
         margin-bottom: 32px;
-        font-weight: 400;
+        font-weight: 500;
+        letter-spacing: .4px;
         @include media(sp) {
           font-size: 15px;
           margin-bottom: 24px;
@@ -1362,6 +1515,7 @@ section{
           font-size: 15px;
           display: block;
           color: #fff;
+          font-weight: 500;
         }
       }
     }
@@ -1376,12 +1530,15 @@ section{
       .lp-third_left {
         width: 67.5%;
         text-align: left;
-        padding: 36px;
+        padding: 36px 36px 36px 0;
         @include media(sp) {
           display: block;
           width: 100%;
           padding: 0;
           p {
+            color: #fff;
+            padding: 0 5px;
+            font-size: 18.4px;
             position: absolute;
             z-index: 2;
             top: 50%;
@@ -1431,16 +1588,18 @@ section{
         align-items: center;
         margin-bottom: 24px;
         .phase {
-          background: $gradation-light;
-          padding: 2px 16px;
+          background: $gradation-double;
+          padding: 4px 30px;
           background-size: 100% 200%;
-          font-size: 20px;
+          font-size: 19px;
           color: #fff;
-          font-weight: 400;
+          font-weight: 500;
+          letter-spacing: .4px;
         }
         span {
           font-size: 12px;
           margin-left: 24px;
+          font-weight: 400;
         }
       }
     }
@@ -1448,16 +1607,18 @@ section{
   &-fifth {
     padding:60px 0;
     @include media(sp) {
-      padding:30px 16px;
+      padding:30px 16px 0;
+      margin-bottom: 40px;
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 20px;
+          line-height: 1.4;
         }
       }
     }
@@ -1467,18 +1628,19 @@ section{
       justify-content: center;
       align-items:center;
       @include media(sp) {
+        text-align: left;
         justify-content: flex-start;
       }
       li{
         width:auto;
         height:40px;
-        margin:25px 30px;
+        margin:25px 24px;
         @include media(sp) {
-          width:50%;
-          margin:10px 0;
-          text-align: left;
+          width: 50%;
+          margin: 4px 0;
+          height: 48px !important;
           img{
-            height:72%;
+            height:100%;
           }
         }
         &.lp-cn1{
@@ -1514,23 +1676,24 @@ section{
         &.lp-cn11{
           height:35px;
         }
-
       }
     }
   }
   &-sixth {
     padding:60px 0;
     @include media(sp) {
-      padding:30px 16px;
+      padding:30px 16px 0;
+      margin-bottom: 80px;
     }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 32px;
+          line-height: 1.4;
         }
       }
     }
@@ -1541,27 +1704,58 @@ section{
       padding:4px 0;
       font-weight: 400;
       color: #fff;
+      border-radius: 4px 4px 0 0;
+      p{
+        font-size: 17px;
+      }
     }
     .lp-fourth_donate{
-
       align-items: inherit;
+      margin-bottom: 32px;
     }
-    .lp-fourth_donateitem{
+    .lp-six_donateitem{
+      width: calc(50% - 20px);
+      background: var(--color_lp_box);
+      border-radius: 4px;
+      padding: 56px;
+      @include media(sp) {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 24px;
+      }
       padding:0;
       p{
         margin-bottom: 0;
       }
-      .lp-fourth_donatetitle{
+      .lp-six_donatetitle{
         display:flex;
         justify-content: center;
         align-items: center;
         padding:35px;
         height: calc(100% - 35px);
         margin-bottom:0;
-        font-size: 24px;
+        @include media(sp) {
+          padding: 24px;
+          height: calc(32vh - 30px);
+          margin-bottom: 0;
+        }
         h4{
+          font-size: 24px;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 100% 10%;
+          display: block;
           line-height:2;
           font-weight:600;
+          @include media(sp) {
+            font-size: 22px;
+          }
+          span{
+            background:$gradation-orange;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
         }
       }
     }
@@ -1613,6 +1807,9 @@ section{
               height: 12px;
             }
           }
+          .cont-item{
+            margin-top: 16px;
+          }
         }
         h3{
           background: $gradation-light;
@@ -1626,21 +1823,28 @@ section{
           }
         }
         p{
-          padding:10px 0;
+          padding: 6px 0;
+          @include media(sp) {
+            font-size: 17px;
+          }
         }
       }
     }
   }
   &-seventh {
     margin-bottom:150px;
+    @include media(sp) {
+      margin-bottom: 60px;
+    }
     &_title {
       h2 {
-        font-size: 50px;
+        font-size: 49px;
         font-weight: 500;
         margin-bottom: 20px;
         @include media(sp) {
           text-align: left;
-          margin-bottom: 56px;
+          margin-bottom: 24px;
+          line-height: 1.4;
         }
       }
     }
@@ -1651,14 +1855,18 @@ section{
         text-align: left;
       }
       .phase {
-        background: $gradation-light;
-        padding: 2px 16px;
+        background: $gradation-double;
+        padding: 4px 30px;
         background-size: 100% 200%;
         font-size: 20px;
         margin-bottom:20px;
         display:inline-block;
         color: #fff;
-        font-weight: 400;
+        font-weight: 500;
+        letter-spacing: .4px;
+        @include media(sp) {
+          margin-bottom: 8px;
+        }
       }
       p{
         font-size:12px;
@@ -1681,16 +1889,39 @@ section{
           -webkit-text-fill-color: transparent;
           margin-bottom:35px;
           font-size:40px;
+          @include media(sp) {
+            font-size: 35px;
+          }
         }
       }
       .box{
-        margin-bottom:55px;
+        margin-bottom: 32px;
         p{
-          font-weight: 400;
+          font-weight: 300;
+          font-size: 19px;
         }
       }
-      .lp-fourth_donatetitle{
-        margin-bottom:20px;
+      .lp-seven_donatetitle{
+        margin-bottom: 8px;
+        h4{
+          display: inline-block;
+          font-size: 26px;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 100% 10%;
+          line-height:2;
+          font-weight:600;
+          @include media(sp) {
+            line-height: 1.4;
+            font-size: 28px;
+          }
+          span{
+            background:$gradation-orange;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        }
       }
     }
 
@@ -1701,9 +1932,13 @@ section{
     padding:60px 0 85px;
     max-width:inherit;
     width:100%;
+    @include media(sp) {
+      background: url(/assets/images/lp/last_back_m-sp.svg) no-repeat center center;
+    }
     h3{
-      font-weight: 400;
+      font-weight: 500;
       color: #fff;
+      font-size: 30px;
     }
     .lp-b_back{
       background: var(--color_lp_box);
@@ -1756,6 +1991,7 @@ footer{
     display:flex;
     align-items:center;
     margin-bottom:15px;
+    width: 100%;
     img{
       width:40px;
       margin-right:15px;
@@ -1819,11 +2055,13 @@ footer{
           margin-bottom:15px;
         }
         p{
-          font-weight:400;
+          font-weight:300;
           margin-bottom:11px;
+          font-size: 19px;
         }
       }
     }
   }
 }
 </style>
+

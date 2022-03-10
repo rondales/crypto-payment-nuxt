@@ -6,7 +6,7 @@
           <div class="logo">
             <img src="@/assets/images/lp/lp-logo.svg" alt="Web3 Payment">
           </div>
-          <div class="hamburger sp" @click="open()" :class="{'active': $store.state.hamberger === true}">
+          <div class="hamburger tb" @click="open()" :class="{'active': $store.state.hamberger === true}">
             <button type="button" class="menu-btn" >
               <img v-if="$store.state.theme == 'dark'" src="@/assets/images/hamburger.svg" alt="">
               <img v-if="$store.state.theme == 'light'" src="@/assets/images/hamburger-light.svg" alt="">
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="link-wrap add-flex j-between" :class="{'active': $store.state.hamberger === true}">
-          <span class="toggle-theme sp">
+          <span class="toggle-theme tb">
             <button
               :class="[
                 'theme-button',
@@ -58,7 +58,7 @@
               Rood Map
             </a>
           </span>
-          <span class="app-link btn __pg sp">
+          <span class="app-link btn __pg tb">
             <a href="/admin">
               Enter App
             </a>
@@ -126,7 +126,7 @@
     top: 0;
     background: var(--color_lp_bg);
     z-index: 10;
-    @include media(sp) {
+    @include media(tb) {
       display: block;
       height: 0vh !important;
       text-align: left;
@@ -143,18 +143,18 @@
       align-items: center;
       margin: 0 auto;
       width: 1110px;
-      @include media(sp) {
+      @include media(tb) {
         display: block;
         width: 100%;
       }
     }
     &__actions{
-      @include media(sp) {
+      @include media(tb) {
         width: 100%;
       }
     }
     &__head{
-      @include media(sp) {
+      @include media(tb) {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -164,7 +164,7 @@
     }
     .logo-wrap{
       width: 75%;
-      @include media(sp) {
+      @include media(tb) {
         width: 100%;
         display: block !important;
       }
@@ -172,16 +172,17 @@
         width: 60%;
         margin-left: 40px;
         padding: 80px 0;
-        @include media(sp) {
+        @include media(tb) {
           width: 100%;
           display: none !important;
-          margin: 0 24px;
+          margin: 0;
+          padding: 80px 60px 0;
         }
         &.active{
           display: block !important;
         }
         span{
-          @include media(sp) {
+          @include media(tb) {
             width: 100%;
             display: block !important;
             margin-bottom: 32px;
@@ -203,15 +204,19 @@
     }
     .logo {
       white-space: nowrap;
-      @include media(sp) {
+      @include media(tb) {
         width: 50%;
       }
     }
     .theme-button{
-      margin-right: 2rem;
-      width: 54px;
-      height: 54px;
+      margin-right: 3rem;
       vertical-align: middle;
+      width: 32px;
+      height: 32px;
+      img{
+        width: 32px;
+        height: 32px;
+      }
       span{
         margin-right: 8px;
       }
@@ -221,8 +226,11 @@
       padding: 0;
       height: 4.2rem;
       line-height: 4.2rem;
-      @include media(sp) {
-        width: 50% !important;
+      @include media(tb) {
+        width: 100% !important;
+        margin: auto;
+        height: 6rem;
+        line-height: 6rem;
       }
       a{
         display: block;
@@ -237,7 +245,7 @@
   @include media(pc) {
     margin-left: 24px;
   }
-  @include media(sp) {
+  @include media(tb) {
     width: 10% !important;
   }
 }
@@ -248,7 +256,7 @@
       font-size: 28px;
     }
   }
-  @include media(sp) {
+  @include media(tb) {
     .emoji {
       font-size: 2rem;
     }

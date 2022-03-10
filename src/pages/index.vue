@@ -19,10 +19,10 @@ export default {
 
 .lp-wrapper{
   text-align: center;
-  padding-top: 10vh;
+  padding-top: 100px;
   background: var(--color_lp_bg);
   @include media(sp) {
-    padding-top: 8vh;
+    padding-top: 62px;
   }
   a{
     display: block;

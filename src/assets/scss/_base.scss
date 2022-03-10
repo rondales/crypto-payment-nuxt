@@ -283,9 +283,15 @@ li {
     display: block !important;
   }
 }
+.tb{
+  display: none !important;
+  @include media(tb) {
+    display: block !important;
+  }
+}
 .pc{
   display: block;
-  @include media(sp) {
+  @include media(tb) {
     display: none;
   }
 }
