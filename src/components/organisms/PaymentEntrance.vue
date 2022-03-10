@@ -22,49 +22,63 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    paymentToken() {
+      return this.$route.params.token
+    },
+    paymentData() {
+      return this.$store.state.payment
     }
   },
   methods: {
     apiReceiveData() {
       const url = `${this.baseUrl}/api/v1/payment`
-      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
       return this.axios.get(url, { params })
     },
     apiPublishTransaction() {
       const url = `${this.baseUrl}/api/v1/payment/transaction`
-      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
       return this.axios.post(url, params)
     },
     apiGetTransactionData() {
       const url = `${this.baseUrl}/api/v1/payment/transaction`
-      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
       return this.axios.get(url, { params })
     },
     apiGetTransactionState() {
       const url = `${this.baseUrl}/api/v1/payment/transaction/state`
-      const params = new URLSearchParams([['payment_token', this.$route.params.token]])
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
       return this.axios.get(url, { params })
     },
     showErrorModal(message) {
-      this.$store.dispatch('openModal', {
+      this.$store.dispatch('modal/show', {
         target: 'error-modal',
         size: 'small',
-        message: message
+        params: {
+          message: message
+        }
       })
     }
   },
   created() {
-    this.$store.dispatch('payment/updateHeaderInvoice', false)
+    if (this.paymentData.id !== null && this.paymentData.id !== this.paymentToken) {
+      this.$store.dispatch('web3/initialize')
+      this.$store.dispatch('account/initialize')
+      this.$store.dispatch('payment/initialize')
+    } else {
+      this.$store.dispatch('payment/updateHeaderInvoice', false)
+    }
     this.apiReceiveData().then((receiveResponse) => {
       this.$store.dispatch('changeTheme', receiveResponse.data.display_theme)
+      this.$store.dispatch('payment/update', {
+        id: this.paymentToken,
+        domain: receiveResponse.data.domain,
+        orderCode: receiveResponse.data.order_code,
+        symbol: (receiveResponse.data.symbol === null) ? 'USDT' : receiveResponse.data.symbol,
+        amount: NumberFormat('0.00', receiveResponse.data.amount)
+      })
       this.apiPublishTransaction().then(() => {
-        // @todo If symbols other than USDT are allowed, the amount format specification needs to be reviewed
-        this.$store.dispatch('payment/update', {
-          domain: receiveResponse.data.domain,
-          orderCode: receiveResponse.data.order_code,
-          symbol: (receiveResponse.data.symbol === null) ? 'USDT' : receiveResponse.data.symbol,
-          amount: NumberFormat('0.00', receiveResponse.data.amount)
-        })
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
         if (error.response.status === 400) {

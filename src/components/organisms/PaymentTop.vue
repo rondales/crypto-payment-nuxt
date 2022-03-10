@@ -28,7 +28,7 @@
           </figure>
         </div>
       </div>
-      <div class="hamburger" @click="open()" :class="{'active': $store.state.hamberger === true}">
+      <div class="hamburger" @click="hideMenu" :class="{active: showMenu}">
         <button type="button" class="menu-btn" >
           <img :src="hamburgerIcon" alt="">
         </button>
@@ -44,6 +44,7 @@ import VuexRestore from '@/components/mixins/VuexRestore'
 export default {
   name: 'PaymentTop',
   mixins: [VuexRestore],
+  props: ['showMenu'],
   data() {
     return{
       success: true,
@@ -84,10 +85,11 @@ export default {
     open() {
       this.$store.dispatch("hamberger", {hamberger: true});
     },
+    hideMenu() {
+      this.$emit('toggleMenu', !this.showMenu)
+    },
     copyLink() {
-      const currentUrl = window.location.href
-      const restoreParam = this.generateRestoreParameter()
-      this.$clipboard(`${currentUrl}?vx=${restoreParam}`);
+      this.$emit('copyLink')
     },
     prevPage() {
       switch(this.currentRouteName) {

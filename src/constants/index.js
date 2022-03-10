@@ -9,6 +9,7 @@ import {
   STATUS_RESULT_SUCCESS
 } from './modules/payment'
 import { METAMASK, WALLET_CONNECT } from './modules/provider'
+import { DARK_THEME, LIGHT_THEME } from './modules/color_theme'
 import { NETWORKS } from './modules/network'
 import { CURRENCIES } from './modules/currency'
 import { HTTP_CODES } from './modules/http_code'
@@ -24,6 +25,7 @@ export {
   STATUS_RESULT_SUCCESS
 }
 export { METAMASK, WALLET_CONNECT }
+export { DARK_THEME, LIGHT_THEME }
 export { NETWORKS }
 export { CURRENCIES }
 export { HTTP_CODES }

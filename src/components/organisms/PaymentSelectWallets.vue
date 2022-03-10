@@ -94,9 +94,15 @@ export default {
         })
       }).catch((error) => {
         if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
-          this.$store.dispatch('openModal', { target: 'error-modal', size: 'small', message: error.message })
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message: error.message
+            }
+          })
         } else {
-          this.$store.dispatch('openModal', { target: 'error-metamask-modal', size: 'small' })
+          this.$store.dispatch('modal/show', { target: 'error-metamask-modal', size: 'small' })
         }
       })
     },
@@ -111,7 +117,7 @@ export default {
           this.pageTransition()
         })
       }).catch(() => {
-        this.$store.dispatch('openModal', { target: 'error-wallet-modal', size: 'small' })
+        this.$store.dispatch('modal/show', { target: 'error-wallet-modal', size: 'small' })
       })
     },
     pageTransition() {

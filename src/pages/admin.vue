@@ -41,17 +41,23 @@ export default {
     Header
   },
   methods: {
-    walletModal(target) {
-      this.$store.dispatch("openModal", {target: target, size: "small"});
-    },
     useMetamask() {
       this.$web3.connectByMetamask().then((provider) => {
         this.walletConnected(provider)
       }).catch((error) => {
         if (error.name === 'MetamaskNotInstalledError') {
-          this.openModal('error-modal', 'small', error.message)
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message: error.message
+            }
+          })
         } else {
-          this.openModal('error-metamask-modal', 'small')
+          this.$store.dispatch('modal/show', {
+            target: 'error-metamask-modal',
+            size: 'small'
+          })
         }
       })
     },
@@ -59,7 +65,10 @@ export default {
       this.$web3.connectByWalletConnect().then((provider) => {
         this.walletConnected(provider)
       }).catch(() => {
-        this.openModal('error-wallet-modal', 'small')
+        this.$store.dispatch('modal/show', {
+          target: 'error-wallet-modal',
+          size: 'small'
+        })
       })
     },
     apiConnectAuthentification(walletAddress) {

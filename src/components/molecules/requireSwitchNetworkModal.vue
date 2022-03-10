@@ -2,69 +2,57 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Select a Wallet
+        Switch network
       </h3>
       <p class="header__desc">
-        Error connecting.
+        The current network does not support this transaction.
         <br>
-        Try Again
+        Please click the button below to switch to the corresponding network.
       </p>
     </div>
-    <div class="body">
-      <a class="btn __m __pg full hight add-flex a-center mb-0" @click="retry">
+    <div class="body add-flex j-between">
+      <button class="btn __m __pg full" @click="switchNetwork">
         <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect.svg">
+          <img :src="networkIcon">
         </span>
-        <div class="btn_content">
-          <h4>
-            WalletConnect.
-          </h4>
-          <p>
-            Connect Trust Wallet,Rainbow Wallet and more…
-          </p>
-        </div>
-      </a>
+          {{ networkName }}
+      </button>
     </div>
-    <button class="close" @click="hideModal">
-      <img src="@/assets/images/cross.svg">
-      閉じる
-    </button>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'walletModal',
-    computed: {
-      classes() {
-        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-        return classes
-      }
+import { NETWORKS } from '@/constants'
+
+export default {
+  name: 'networkModal',
+  computed: {
+    classes() {
+      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      return classes
     },
-    methods: {
-      hideModal() {
+    chainId() {
+      return this.$store.state.modal.params.chainId
+    },
+    networkName() {
+      return NETWORKS[this.chainId].name
+    },
+    networkIcon() {
+      return NETWORKS[this.chainId].icon
+    }
+  },
+  methods: {
+    switchNetwork() {
+      this.$web3.switchChain(
+        this.$store.state.web3.instance,
+        this.chainId
+      ).then(() => {
+        this.$store.dispatch('web3/updateChainId', this.chainId)
         this.$store.dispatch('modal/hide')
-      },
-      retry(){
-        this.$web3.connectByWalletConnect().then((connectRes) => {
-          this.$store.dispatch('web3/update', connectRes)
-          this.$web3.getAccountData(
-            connectRes.instance,
-            connectRes.chainId
-          ).then((accountRes) =>{
-            this.$store.dispatch('account/update', accountRes)
-            const pathRegPattern = /^\/payment\//
-            let nextPath
-            if (pathRegPattern.test(this.$route.path)) {
-              nextPath = '/payment/token/' + this.$route.params.token
-            }
-            this.hideModal()
-            this.$router.push({ path: nextPath })
-          })
-        })
-      }
+      })
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -88,6 +76,7 @@
     @include media(sp) {
       width: calc(100vw - 32px);
     }
+
   }
   .header {
     @include media(pc) {
@@ -122,6 +111,7 @@
     width: 16px;
     height: 16px;
     font-size: 0;
+
     @include media(pc) {
       top: 30px;
       right: 24px;
@@ -133,15 +123,13 @@
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px 40px;
+      padding: 24px 24px;
     }
     @include media(sp) {
       padding: 24px 12px 48px;
-      .btn_content{
-        margin-left: 0;
-        p{
-          font-size: 10px;
-        }
+      flex-wrap: wrap;
+      .btn{
+        width: 100% !important;
       }
     }
   }

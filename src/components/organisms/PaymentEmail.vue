@@ -89,10 +89,12 @@ export default {
           message = 'Please try again after a while.'
         }
         this.loading = false
-        this.$store.dispatch('openModal', {
+        this.$store.dispatch('modal/show', {
           target: 'error-modal',
           size: 'small',
-          message: message
+          params: {
+            message: message
+          }
         })
       })
     },

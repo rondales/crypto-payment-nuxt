@@ -85,7 +85,7 @@ export default {
     return {
       loading: false,
       requireUpdateExchange: false,
-      legalCurrencyAmount: 0,
+      legalCurrencyAmount: null,
       selectedCurrency: currencyList['JPY'].name,
       exchangedAmount: 0,
       exchangeRate: 100,
@@ -179,10 +179,12 @@ export default {
       })
     },
     showErrorModal(message) {
-      this.$store.dispatch('openModal', {
+      this.$store.dispatch('modal/show', {
         target: 'error-modal',
         size: 'small',
-        message: message
+        params: {
+          message: message
+        }
       })
     }
   },

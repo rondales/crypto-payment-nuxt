@@ -1,8 +1,11 @@
 <template>
   <div class="slash-bg">
-    <Header :width="windowWidth" />
+    <Header
+      :width="windowWidth"
+      @switchColorTheme="switchColorTheme"
+    />
     <div class="payment">
-      <div class="menu-nav" v-if="$store.state.hamberger">
+      <div class="menu-nav" v-if="showMenu">
         <div class="menu-nav_top">
           <img src="@/assets/images/menu.svg">
         </div>
@@ -27,7 +30,11 @@
           </a>
         </div>
       </div>
-      <payment-top />
+      <payment-top
+        :showMenu="showMenu"
+        @copyLink="copyLink"
+        @toggleMenu="toggleMenu"
+      />
       <div class="add-flex j-between">
         <div>
           <p class="payment_Receiver mb-1">
@@ -40,7 +47,7 @@
           <router-view />
       </div>
     </div>
-    <div v-if="isShowFooterMenu" class="sp">
+    <div v-if="showFooterMenu" class="sp">
       <div class="fixed add-flex j-between a-center">
         <button class="btn __pg __s sp-fixed"  @click="openModal('wallet-modal', 'small')">
           <span class="icon-wrap">
@@ -59,10 +66,10 @@
             :class="[
               'theme-button',
               '--light',
-              { 'is-active': $store.state.theme == 'light' },
+              { 'is-active': isLightTheme },
             ]"
-            @click="changeTheme('light')"
-            v-if="$store.state.theme == 'dark'"
+            @click="switchColorTheme(lightTheme)"
+            v-if="isDarkTheme"
           >
             <img src="@/assets/images/light.svg" alt="">
           </button>
@@ -70,10 +77,10 @@
             :class="[
               'theme-button',
               '--dark',
-              { 'is-active': $store.state.theme == 'dark' },
+              { 'is-active': isDarkTheme },
             ]"
-            @click="changeTheme('dark')"
-            v-if="$store.state.theme == 'light'"
+            @click="switchColorTheme(darkTheme)"
+            v-if="isLightTheme"
           >
             <img src="@/assets/images/dark.svg" alt="">
           </button>
@@ -87,56 +94,60 @@
 <script>
 import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
-import VuexRestore from '@/components/mixins/VuexRestore'
+import { DARK_THEME, LIGHT_THEME } from '@/constants'
 
 export default {
   name: 'PaymentIndex',
-  mixins: [VuexRestore],
   components: {
     Header,
     PaymentTop,
   },
+  props: [
+    'colorTheme',
+    'showFooterMenu',
+    'receiver',
+    'invoiceId',
+    'base64VuexData'
+  ],
   data() {
     return {
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      showMenu: false
     }
   },
   computed: {
-    receiver() {
-      return this.$store.state.payment.domain
+    darkTheme() {
+      return DARK_THEME
     },
-    invoiceId() {
-      return this.$store.state.payment.orderCode
+    lightTheme() {
+      return LIGHT_THEME
     },
-    restoreParam() {
-      return this.$route.query.vx
+    isDarkTheme() {
+      return this.colorTheme === this.darkTheme
     },
-    connected() {
-      return (this.$store.state.web3.instance && this.$store.state.web3.chainId)
+    isLightTheme() {
+      return this.colorTheme === this.lightTheme
     },
-    isShowFooterMenu() {
-      return this.$route.name === 'wallets'
+    isShowMenu() {
+      return this.showMenu
     }
   },
   methods: {
     openModal(target, size) {
-      this.$store.dispatch('openModal', { target: target, size: size });
+      this.$emit('openModal', target, size)
     },
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    copyLink() {
-      const currentUrl = window.location.href
-      const restoreParam = this.generateRestoreParameter()
-      this.$clipboard(`${currentUrl}?vx=${restoreParam}`);
+    switchColorTheme(color) {
+      this.$emit('switchColorTheme', color)
     },
     handleWindowResize() {
       this.windowWidth = window.innerWidth
-    }
-  },
-  created() {
-    if (this.restoreParam) {
-      this.restoreVuex(this.restoreParam)
+    },
+    copyLink() {
+      const currentUrl = window.location.href
+      this.$clipboard(`${currentUrl}?vx=${this.base64VuexData}`);
+    },
+    toggleMenu(state) {
+      this.showMenu = state
     }
   },
   mounted() {

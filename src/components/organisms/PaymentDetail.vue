@@ -26,7 +26,7 @@
           <p class="grd">
             Payment detail
           </p>
-          <figure class="reload" @click="reload">
+          <figure v-if="isDetailState" class="reload" @click="reload">
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
           </figure>
@@ -154,7 +154,6 @@
 
 <script>
 import VuexRestore from '@/components/mixins/VuexRestore'
-import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 import {
   NETWORKS,
   STATUS_PUBLISHED,
@@ -171,7 +170,7 @@ import {
 
 export default {
   name: 'PaymentDetail',
-  mixins: [VuexRestore, Web3ProviderEvents],
+  mixins: [VuexRestore],
   data() {
     return{
       pageStateList: {
@@ -198,6 +197,9 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    web3Instance() {
+      return this.$store.state.web3.instance
     },
     transactionUrl() {
       const chainId = this.$store.state.web3.chainId
@@ -320,6 +322,13 @@ export default {
     }
   },
   methods: {
+    apiGetTransaction() {
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
+      const request = { params: new URLSearchParams([
+        ['payment_token', this.$route.params.token]
+      ])}
+      return this.axios.get(url, request)
+    },
     apiGetContract() {
       const url = `${this.baseUrl}/api/v1/payment/contract`
       const request = { params: new URLSearchParams([
@@ -483,21 +492,49 @@ export default {
         ).then((receipt) => {
           if (receipt) {
             clearInterval(this.monitoringInterval)
-            this.apiUpdateTransaction({
-              payment_token: this.$route.params.token,
-              result: receipt.status
-            }).then(() => {
-              if (receipt.status) {
-                this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
-                this.pageState = this.pageStateList.successed
-              } else {
-                this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-                this.pageState = this.pageStateList.failured
-              }
-            })
+            if (receipt.status) {
+              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
+              this.pageState = this.pageStateList.successed
+            } else {
+              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
+              this.pageState = this.pageStateList.failured
+            }
           }
         })
       }, 3000)
+    },
+    checkCurrentNetwork(chainId) {
+      this.apiGetTransaction().then((response) => {
+        if (chainId !== response.data.network_type) {
+          this.$store.dispatch('modal/show', {
+            target: 'require-switch-network-modal',
+            size: 'small',
+            params: {
+              chainId: response.data.network_type
+            }
+          })
+        } else {
+          if (
+            this.$store.state.modal.show
+            && this.$store.state.modal.target === 'require-switch-network-modal'
+          ) {
+            this.$store.dispatch('modal/hide')
+          }
+        }
+      })
+    },
+    handleChainChanged(chainId) {
+      if (this.pageState === this.pageStateList.detail) {
+        this.$store.dispatch('web3/updateChainId', chainId)
+        this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+      } else {
+        this.checkCurrentNetwork(chainId)
+      }
+    },
+    handleAccountChanged() {
+      if (this.pageState === this.pageStateList.detail) {
+        this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+      }
     }
   },
   created(){
@@ -507,6 +544,9 @@ export default {
         path: `/payment/wallets/${this.paymentToken}`
       })
     } else {
+      if (this.paymentStatus !== STATUS_PUBLISHED) {
+        this.checkCurrentNetwork(this.$store.state.web3.chainId)
+      }
       this.apiGetPaymentCompletedUrl().then((response) => {
         this.returnUrls.succeed = response.data.succeeded_return_url
         this.returnUrls.failured = response.data.failured_return_url
@@ -533,11 +573,26 @@ export default {
         default:
           this.pageState = this.pageStateList.detail
       }
+      if (this.web3Instance) {
+        this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
+          chainId = (this.web3.utils.isHex(chainId))
+            ? this.web3.utils.hexToNumber(chainId)
+            : chainId
+          this.handleChainChanged(chainId)
+        })
+        this.web3Instance.currentProvider.on('accountChanged', () => {
+          this.handleAccountChanged()
+        })
+      }
     }
   },
   beforeDestroy() {
     clearInterval(this.monitoringInterval)
     clearTimeout(this.exchangeTimer)
+    if (this.web3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChanged)
+      this.web3Instance.currentProvider.removeListener('accountChanged', this.handleAccountChanged)
+    }
   }
 }
 </script>

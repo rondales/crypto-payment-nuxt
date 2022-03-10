@@ -368,14 +368,13 @@ export default {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
         })
       }).catch(() => {
-        this.$store.dispatch(
-          'openModal',
-          {
-            target: 'error-modal',
-            size: 'small',
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
             message: 'Failed to create a contract.'
           }
-        )
+        })
       })
     },
     updateContract(chainId) {
@@ -395,13 +394,13 @@ export default {
           this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
         })
       } else {
-        this.$store.dispatch(
-          'openModal',
-          {
-            target: 'error-modal',
-            size: 'small',
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
             message: 'You are using WalletConnect to connect to SlashApps, so you cannot switch networks from this screen. Please use the Wallet app to switch networks.'
-          })
+          }
+        })
       }
     },
     copyPaymentContractUrl(chainId) {
@@ -413,14 +412,13 @@ export default {
         this.$router.push({ path: '/admin' })
       } else {
         if ('errors' in responseData && responseData.errors.length) {
-          this.$store.dispatch(
-            'openModal',
-            {
-              target: 'error-modal',
-              size: 'small',
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
               message: errorCodeList[responseData.errors.shift()].msg
             }
-          )
+          })
         }
       }
     }

@@ -4,7 +4,12 @@
       <h3 class="header__title">
         Select a Network
       </h3>
-      <p class="header__desc">
+      <p v-if="unsupported" class="header__desc">
+        The current network is unsupported.
+        <br>
+        Select a network of tokens to pay for.
+      </p>
+      <p v-else class="header__desc">
         Select a network of tokens to pay for.
       </p>
     </div>
@@ -22,7 +27,7 @@
           {{network.name}}
       </button>
     </div>
-    <button class="close" @click="closeModal">
+    <button v-if="!require" class="close" @click="hideModal">
       <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
       <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
       閉じる
@@ -52,11 +57,21 @@ export default {
       return (chainId) => {
         return chainId === this.$store.state.web3.chainId
       }
+    },
+    unsupported() {
+      return 'unsupported' in this.$store.state.modal.params
+        ? this.$store.state.modal.params.unsupported
+        : false
+    },
+    require() {
+      return 'hideCloseButton' in this.$store.state.modal.params
+        ? this.$store.state.modal.params.hideCloseButton
+        : false
     }
   },
   methods: {
-    closeModal() {
-      this.$store.dispatch('closeModal')
+    hideModal() {
+      this.$store.dispatch('modal/hide')
     },
     switchNetwork(chainId) {
       this.$web3.switchChain(
@@ -64,7 +79,7 @@ export default {
         chainId
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', chainId)
-        this.closeModal()
+        this.hideModal()
       })
     }
   },

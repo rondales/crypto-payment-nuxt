@@ -53,10 +53,12 @@ export default {
           this.$store.dispatch('account/update', accountData)
         })
       } else {
-        this.$store.dispatch('openModal', {
+        this.$store.dispatch('modal/show', {
           target: 'error-modal',
           size: 'small',
-          message: 'The current network does not support it.'
+          params: {
+            message: 'The current network does not support it.'
+          }
         })
       }
     }

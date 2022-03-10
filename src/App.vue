@@ -1,8 +1,8 @@
 <template>
   <body class="scroll-lock min-height" :class="classes" >
     <router-view />
-    <div v-if="$store.state.modal.isShow" class="modal-base">
-      <component :is="$store.state.modal.target" />
+    <div v-if="modal.show" class="modal-base">
+      <component :is="modal.target" />
     </div>
   </body>
 </template>
@@ -15,13 +15,17 @@ export default {
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
-    errorModal: () => import('@/components/molecules/errorModal')
+    errorModal: () => import('@/components/molecules/errorModal'),
+    requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal')
   },
   computed: {
     classes() {
       return [
         `theme--${this.$store.state.theme}`,
       ];
+    },
+    modal() {
+      return this.$store.state.modal
     }
   }
 }

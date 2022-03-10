@@ -25,7 +25,7 @@
         </div>
       </a>
     </div>
-    <button class="close" @click="closeModal">
+    <button class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       閉じる
     </button>
@@ -42,8 +42,8 @@
       }
     },
     methods: {
-      closeModal() {
-        this.$store.dispatch('closeModal')
+      hideModal() {
+        this.$store.dispatch('modal/hide')
       },
       retry() {
         this.$web3.connectByMetamask().then((connectRes) => {
@@ -58,12 +58,18 @@
             if (pathRegPattern.test(this.$route.path)) {
               nextPath = '/payment/token/' + this.$route.params.token
             }
-            this.closeModal()
+            this.hideModal()
             this.$router.push({ path: nextPath })
           })
         }).catch((error) => {
           if (error.name === 'MetamaskNotInstalledError') {
-            this.openModal('error-modal', 'small', error.message)
+            this.$store.dispatch('modal/show',{
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message: error.message
+              }
+            })
           }
         })
       }

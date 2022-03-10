@@ -19,7 +19,7 @@
           WalletConnect
       </button>
     </div>
-    <button class="close" @click="closeModal">
+    <button class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       閉じる
     </button>
@@ -41,11 +41,8 @@
       }
     },
     methods: {
-      openModal(target, size, message = '') {
-        this.$store.dispatch('openModal', {target: target, size: size, message: message});
-      },
-      closeModal() {
-        this.$store.dispatch('closeModal')
+      hideModal() {
+        this.$store.dispatch('modal/hide')
       },
       useMetamask() {
         this.$web3.connectByMetamask().then((connectRes) => {
@@ -59,9 +56,18 @@
           })
         }).catch((error) => {
           if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
-            this.openModal('error-modal', 'small', error.message)
+            this.$store.dispatch('modal/show', {
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message: error.message
+              }
+            })
           } else {
-            this.openModal('error-metamask-modal', 'small')
+            this.$store.dispatch('modal/show', {
+              target: 'error-metamask-modal',
+              size: 'small',
+            })
           }
         })
       },
@@ -76,7 +82,10 @@
             this.connected(accountRes.address)
           })
         }).catch(() => {
-          this.openModal('error-wallet-modal', 'small')
+          this.$store.dispatch('modal/show', {
+            target: 'error-wallet-modal',
+            size: 'small'
+          })
         })
       },
       apiConnectAuthentification(walletAddress) {
@@ -94,11 +103,11 @@
         if (adminPathPattern.test(this.$route.path)) {
           this.apiConnectAuthentification(walletAddress).then((authed) => {
             localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-            this.closeModal()
+            this.hideModal()
             this.$router.push({ path: '/admin/dashboard' })
           })
         } else if(paymentPathPattern.test(this.$route.path)) {
-          this.closeModal()
+          this.hideModal()
           this.$router.push({
             path: '/payment/token/' + this.$route.params.token
           })
