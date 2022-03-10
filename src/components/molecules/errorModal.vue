@@ -8,7 +8,7 @@
         {{ message }}
       </p>
     </div>
-    <button class="close" @click="closeModal">
+    <button class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       閉じる
     </button>
@@ -27,12 +27,12 @@
         return classes
       },
       message() {
-        return this.$store.state.modal.message
+        return this.$store.state.modal.params.message
       }
     },
     methods: {
-      closeModal() {
-        this.$store.dispatch('closeModal')
+      hideModal() {
+        this.$store.dispatch('modal/hide')
       }
     }
   }

@@ -99,7 +99,7 @@
           </div>
           <div class="copy mt-2" @click="copyPaymentUrl">Copy Address</div>
         </div>
-        <button class="close" @click="closeModal">
+        <button class="close" @click="hideModal">
           <img src="@/assets/images/cross.svg">
           閉じる
         </button>
@@ -166,7 +166,6 @@ export default {
     publishPaymentUrl() {
       this.processing = true
       const hashRaw = `${this.orderCode}::${this.amount}::${this.hashToken}`
-      console.log(`RAW: ${hashRaw}`)
       const sha = new JsSHA('SHA-256', 'TEXT')
       sha.update(hashRaw)
       this.apiGetPaymentUrl(sha.getHash('HEX')).then((response) => {
@@ -174,15 +173,17 @@ export default {
         this.modalOpen = true
         this.processing = false
       }).catch(() => {
-        this.$store.dispatch('openModal', {
+        this.$store.dispatch('modal/show', {
           target: 'error-modal',
           size: 'small',
-          message: 'Failed to publish the Payment URL.'
+          params: {
+            message: 'Failed to publish the Payment URL.'
+          }
         })
         this.processing = false
       })
     },
-    closeModal() {
+    hideModal() {
       this.modalOpen = false
     },
     copyPaymentUrl() {

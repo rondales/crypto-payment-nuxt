@@ -52,7 +52,7 @@
             <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
           </button>
-          <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="openModal('wallet-modal', 'small')">
+          <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
             Connect to a wallet
           </button>
         </div>
@@ -171,15 +171,18 @@ export default {
       return pathPattern.test(this.$route.path)
     },
     connected() {
-      return (this.$store.state.web3.provider)
+      return (this.$store.state.web3.instance)
     },
     fixedNetwork() {
       return (this.$store.state.web3.chainId)
     }
   },
   methods: {
-    openModal(target, size) {
-      this.$store.dispatch('openModal', {target: target, size: size});
+    showWalletModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'wallet-modal',
+        size: 'small'
+      })
     },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)

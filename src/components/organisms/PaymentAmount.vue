@@ -179,10 +179,12 @@ export default {
       })
     },
     showErrorModal(message) {
-      this.$store.dispatch('openModal', {
+      this.$store.dispatch('modal/show', {
         target: 'error-modal',
         size: 'small',
-        message: message
+        params: {
+          message: message
+        }
       })
     }
   },

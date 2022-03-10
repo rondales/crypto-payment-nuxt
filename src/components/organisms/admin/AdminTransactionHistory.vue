@@ -284,7 +284,13 @@ export default {
           const message = 'errors' in error.response.data
             ? errorCodeList[error.response.data.errors.shift()].msg
             : 'Please try again.'
-          this.$store.dispatch('openModal', { target: 'error-modal', size: 'small', message: message })
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message: message
+            }
+          })
         } else {
           localStorage.removeItem(LOGIN_TOKEN)
           this.$router.push({ path: '/admin' })
@@ -301,7 +307,13 @@ export default {
           const message = 'errors' in error.response.data
             ? errorCodeList[error.response.data.errors.shift()].msg
             : 'Please try again.'
-          this.$store.dispatch('openModal', { target: 'error-modal', size: 'small', message: message })
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message: message
+            }
+          })
         } else {
           localStorage.removeItem(LOGIN_TOKEN)
           this.$router.push({ path: '/admin' })

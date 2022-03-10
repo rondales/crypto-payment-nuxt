@@ -23,6 +23,7 @@ export default {
           connectByWalletConnect: connectByWalletConnect,
           getWeb3Instance: getWeb3Instance,
           isConnectedByWalletConnect: isConnectedByWalletConnect,
+          getCurrentChainId: getCurrentChainId,
           getAccounts: getAccounts,
           getAccountData: getAccountData,
           getDefaultTokens: getDefaultTokens,
@@ -100,6 +101,10 @@ const getAccounts = async function(web3) {
   return await web3.currentProvider.request({
     method: 'eth_accounts'
   })
+}
+
+const getCurrentChainId = async function(web3) {
+  return await web3.eth.net.getId()
 }
 
 const getAccountData = async function(web3, chainId) {

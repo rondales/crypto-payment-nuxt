@@ -34,7 +34,7 @@
               </p>
             </div>
           </div>
-          <div class="payment-box_btn" @click="networkModal('network-modal')">
+          <div class="payment-box_btn" @click="networkModal">
             Change
           </div>
         </div>
@@ -122,13 +122,12 @@
 
 <script>
 import NumberFormat from 'number-format.js'
-import { NETWORKS } from '@/constants'
 import VuexRestore from '@/components/mixins/VuexRestore'
-import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
+import { NETWORKS } from '@/constants'
 
 export default {
   name: 'PaymentToken',
-  mixins: [VuexRestore, Web3ProviderEvents],
+  mixins: [VuexRestore],
   data() {
     return {
       tab: "list",
@@ -153,6 +152,9 @@ export default {
     }
   },
   computed: {
+    web3Instance() {
+      return this.$store.state.web3.instance
+    },
     amount() {
       return this.$store.state.payment.amount
     },
@@ -169,13 +171,16 @@ export default {
     chainId() {
       return this.$store.state.web3.chainId
     },
+    availableNetworks() {
+      return this.$store.state.payment.availableNetworks
+    },
     paymentToken() {
       return this.$route.params.token
     }
   },
   methods: {
-    networkModal(target) {
-      this.$store.dispatch("openModal", {target: target, size: "medium"});
+    networkModal() {
+      this.$store.dispatch("modal/show", {target: 'network-modal', size: "medium"});
     },
     leftTab(){
       this.tab = "list"
@@ -252,6 +257,27 @@ export default {
       this.$router.push({
         path: `/payment/exchange/${this.paymentToken}`,
       })
+    },
+    handleAccountChanged() {
+      this.$web3.getAccountData(this.web3Instance, this.chainId).then((account) => {
+        this.$store.dispatch('account/update', account)
+        this.getDefaultTokens()
+      })
+    },
+    handleChainChanged(chainId) {
+      if (this.availableNetworks.includes(chainId)) {
+        this.$store.dispatch('web3/updateChainId', chainId)
+      } else {
+        this.$store.dispatch('web3/updateChainId', null)
+        this.$store.dispatch('modal/show', {
+          target: 'network-modal',
+          size: 'medium',
+          params: {
+            unsupported: true,
+            hideCloseButton: true
+          }
+        })
+      }
     }
   },
   created() {
@@ -261,7 +287,44 @@ export default {
         path: `/payment/wallets/${this.paymentToken}`
       })
     } else {
-      this.getDefaultTokens()
+      if (this.availableNetworks.includes(this.chainId)) {
+        this.$web3.getAccountData(this.web3Instance, this.chainId).then((account) => {
+          this.$store.dispatch('account/update', account)
+          this.getDefaultTokens()
+        })
+      } else {
+        this.$store.dispatch('modal/show', {
+          target: 'network-modal',
+          size: 'medium',
+          params: {
+            unsupported: true,
+            hideCloseButton: true
+          }
+        })
+      }
+      if (this.web3Instance) {
+        this.web3Instance.currentProvider.on('accountsChanged', () => {
+          this.handleAccountChanged()
+        })
+        this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
+          chainId = (this.web3Instance.utils.isHex(chainId))
+            ? this.web3Instance.utils.hexToNumber(chainId)
+            : chainId
+          this.handleChainChanged(chainId)
+        })
+      }
+    }
+  },
+  beforeDestroy() {
+    if (this.web3Instance) {
+      this.web3Instance.currentProvider.removeListener(
+        'accountsChanged',
+        this.handleAccountChanged
+      )
+      this.web3Instance.currentProvider.removeListener(
+        'chainChanged',
+        this.handleChainChanged
+      )
     }
   }
 }

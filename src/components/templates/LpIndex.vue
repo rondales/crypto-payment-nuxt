@@ -725,7 +725,7 @@ export default {
   },
   methods: {
     openModal(target) {
-      this.$store.dispatch("openModal", { target: target, size: "small" });
+      this.$store.dispatch("modal/show", { target: target, size: "small" });
     },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);

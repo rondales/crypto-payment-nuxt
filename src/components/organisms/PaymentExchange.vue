@@ -110,11 +110,10 @@ import {
 } from '@/contracts/tokens'
 import NumberFormat from 'number-format.js'
 import VuexRestore from '@/components/mixins/VuexRestore'
-import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 
 export default {
   name: 'PaymentExchange',
-  mixins: [VuexRestore, Web3ProviderEvents],
+  mixins: [VuexRestore],
   data() {
     return{
       loading: false,
@@ -148,6 +147,9 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    web3Instance() {
+      return this.$store.state.web3.instance
     },
     tokenIcon() {
       const chainId = this.$store.state.web3.chainId
@@ -275,6 +277,24 @@ export default {
         path: `/payment/detail/${this.paymentToken}`
       });
     },
+    handleAccountChanged() {
+      this.$web3.getCurrentChainId(this.web3Instance).then((chainId) => {
+        this.$web3.getAccountData(this.web3Instance, chainId).then((account) => {
+            this.$store.dispatch('account/update', account)
+            this.$store.dispatch('web3/updateChainId', chainId)
+            this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+        })
+      })
+    },
+    handleChainChanged() {
+      this.$web3.getCurrentChainId(this.web3Instance).then((chainId) => {
+        this.$web3.getAccountData(this.web3Instance, chainId).then((account) => {
+            this.$store.dispatch('account/update', account)
+            this.$store.dispatch('web3/updateChainId', chainId)
+            this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+        })
+      })
+    }
   },
   created(){
     this.$store.dispatch('payment/updateHeaderInvoice', true)
@@ -288,6 +308,29 @@ export default {
         this.contract.abi = JSON.parse(response.data.args)
         this.updateExchange()
       })
+      if (this.web3Instance) {
+        this.web3Instance.currentProvider.on('accountsChanged', () => {
+          this.handleAccountChanged()
+        })
+        this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
+          chainId = (this.web3Instance.utils.isHex(chainId))
+            ? this.web3Instance.utils.hexToNumber(chainId)
+            : chainId
+          this.handleChainChanged(chainId)
+        })
+      }
+    }
+  },
+  beforeDestroy() {
+    if (this.web3Instance) {
+      this.web3Instance.currentProvider.removeListener(
+        'accountsChanged',
+        this.handleAccountChanged
+      )
+      this.web3Instance.currentProvider.removeListener(
+        'chainChanged',
+        this.handleChainChanged
+      )
     }
   }
 }
