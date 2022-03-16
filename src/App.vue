@@ -16,13 +16,17 @@ export default {
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
-    requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal')
+    requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
+    receiveModal: () => import('@/components/molecules/receiveModal')
   },
   computed: {
     classes() {
       return [
         `theme--${this.$store.state.theme}`,
       ];
+    },
+    isAdminPage() {
+      return this.$route.name === 'admin'
     },
     modal() {
       return this.$store.state.modal

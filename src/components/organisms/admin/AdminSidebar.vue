@@ -11,7 +11,7 @@
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/web3payment">
+              <router-link to="/admin/web3payment?id=1">
                 web3 payment
               </router-link>
             </li>
@@ -78,7 +78,7 @@ export default {
     }
   }
   &--top{
-    margin-top: 64px;
+    margin-top: 46px;
   }
   &--content{
     overflow-y: auto;

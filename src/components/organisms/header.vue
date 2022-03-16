@@ -11,7 +11,7 @@
           {{ subTitle }}
         </p>
         <div class="user-status" :class="{'is-admin': isAdminPage}">
-          merchant
+          ReceiveToken：<img  src="@/assets/images/symbol/usdt.svg"><span>USDT</span>
         </div>
       </div>
       <div class="global-header__actions add-flex a-center">
@@ -202,6 +202,11 @@ export default {
   padding: 2px 24px;
   border-radius:50px;
   margin-left: 16px;
+  align-items: center;
+  img{
+    width: 16px;
+    height: 16px;
+  }
   @include media(sp) {
     font-size: 12px;
     margin-left: 16px;
@@ -209,7 +214,10 @@ export default {
   }
 }
 .is-admin{
-  display: block;
+  display: flex;
+  @include media(sp) {
+    display: none;
+  }
 }
 .global-header {
   display: flex;
@@ -247,6 +255,7 @@ export default {
     height: 55px;
     padding: 0 20px;
     bottom: 0;
+    width: 100%;
     .logo {
       height: 29px;
     }

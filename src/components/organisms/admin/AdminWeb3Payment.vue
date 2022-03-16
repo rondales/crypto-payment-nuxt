@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="toggle-btn mb-3 add-flex j-around">
-      <div class="toggle-right" :class="{active: isHistoryTab}" @click="switchTab(tabs.history)">
+      <router-link :to="{query: {id: 1}}" class="toggle-right">
         History
-      </div>
-      <div class="toggle-left" :class="{active: isSettingsTab}" @click="switchTab(tabs.settings)">
+      </router-link>
+      <router-link :to="{query: {id: 2}}" class="toggle-left">
         settings
-      </div>
+      </router-link>
     </div>
     <div>
-      <TransactionHistory v-if="isHistoryTab" />
-      <PaymentSettings v-if="isSettingsTab" />
+      <TransactionHistory v-if="this.$route.query.id == 1"/>
+      <PaymentSettings v-if="this.$route.query.id == 2"/>
     </div>
   </div>
 </template>
@@ -30,29 +30,17 @@ export default {
   },
   data() {
     return {
-      currentTab: null,
-      tabs: {
-        history: 1,
-        settings: 2
-      }
+      isHistory: false,
+      id: "",
     }
   },
-  computed: {
-    isHistoryTab() {
-      return this.currentTab === this.tabs.history
-    },
-    isSettingsTab() {
-      return this.currentTab === this.tabs.settings
+  mounted() {
+    if(!this.$route.query.id){
+      this.isHistory = true;
     }
   },
   methods: {
-    switchTab(targetTab) {
-      this.currentTab = targetTab
-    }
   },
-  created() {
-    this.currentTab = this.tabs.history
-  }
 }
 </script>
 
@@ -73,7 +61,7 @@ export default {
   text-align: center;
   font-size: 18px;
   font-weight: 400;
-  &.active{
+  &.router-link-exact-active{
     border-bottom: 1px solid #78668D;
     &::after{
       content: "";

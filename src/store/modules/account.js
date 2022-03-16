@@ -3,9 +3,21 @@ const store = {
   state: {
     address: null,
     balance: 0,
-    symbol: null
+    symbol: null,
+    receive: {
+      isSelected: false,
+      isSettingComplete: false
+    },
   },
   actions: {
+    // トークン選択後の画面切り替え判定
+    selectReceiveToken({ commit }) {
+      commit('selectReceiveToken')
+    },
+    // 設定後の画面切り替え判定
+    settingComplete({ commit }){
+      commit('settingComplete')
+    },
     initialize({ commit }) {
       commit('initialize')
     },
@@ -19,6 +31,12 @@ const store = {
       state.balance = 0
       state.symbol = null
     },
+    selectReceiveToken(state){
+      state.receive.isSelected = true;
+    },
+    settingComplete(state) {
+      state.receive.isSettingComplete = true;
+    },    
     update(state, payload) {
       state.address = payload.address
       state.balance = payload.balance

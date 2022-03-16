@@ -59,7 +59,7 @@
             </a>
           </span>
           <span class="app-link btn __pg tb">
-            <a href="/admin">
+            <a @click="enterApp()" href="/admin">
               Enter App
             </a>
           </span>
@@ -91,7 +91,7 @@
           </button>
         </span>
         <span class="app-link btn __pg pc">
-          <a href="/admin">
+          <a @click="enterApp()" href="/admin">
             Enter App
           </a>
         </span>
@@ -110,6 +110,9 @@
       },
       open(){
         this.$store.dispatch("hamberger", {hamberger: true});
+      },
+      enterApp(){
+        this.$store.dispatch("changeTheme",  'dark');
       }
     },
   }

@@ -17,7 +17,7 @@
             the next generation of decentralized payment methods, to support any
             Token payment.
           </p>
-          <a href="/admin">
+          <a @click="enterApp()" href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -610,7 +610,7 @@
         </div>
         <div class="lp-center">
           <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br class="pc">Claim</h3>
-          <a href="/admin">
+          <a @click="enterApp()" href="/admin">
             <div class="btn __pg lp-first_enter">Enter App</div>
           </a>
         </div>
@@ -627,7 +627,7 @@
           <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash.fi</h4>
         </div>
-        <a href="/admin">
+        <a @click="enterApp()" href="/admin">
           <div class="btn __pg lp-first_enter">Enter App</div>
         </a>
       </div>
@@ -779,6 +779,9 @@ export default {
     },
     toggle(key){
       this.$set(this.show, key, !this.show[key])
+    },
+    enterApp(){
+      this.$store.dispatch("changeTheme",  'dark');
     }
   },
 };

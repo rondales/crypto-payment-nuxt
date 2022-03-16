@@ -564,6 +564,7 @@ export default {
   width: calc(100% - 228px);
   @include media(sp) {
     width: 100%;
+    overflow: hidden;
   }
   table{
     width: calc(100% - 40px);
@@ -627,27 +628,39 @@ export default {
           font-weight: 100;
           &:nth-child(1){
             width: 22.22vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
           &:nth-child(2){
             width: 11.111vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
           &:nth-child(3){
             width: 11.111vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
           &:nth-child(4){
             width: 27.77vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
           &:nth-child(5){
             width: 11.111vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
           &:nth-child(6){
             width: 16.666vw;
-            padding-right: 16px;
+            @include media(sp) {
+              width:200px;
+            }
           }
         }
       }

@@ -278,7 +278,9 @@ progress {
 svg:not(:root) {
   overflow: hidden; /* Internet Explorer 11- */
 }
-
+p,span,div{
+  font-weight: 500;
+}
 audio,
 canvas,
 progress,
