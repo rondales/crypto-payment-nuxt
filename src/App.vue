@@ -1,8 +1,14 @@
 <template>
-  <body class="scroll-lock min-height" :class="classes" >
+  <body :class="[classes, { contents_height: isAdminPage }]" >
     <router-view />
     <div v-if="modal.show" class="modal-base">
       <component :is="modal.target" />
+    </div>
+    <div class="copied" v-if="$store.state.account.isCopied">
+      <img src="@/assets/images/check-mark.svg">
+      <span>
+        copied
+      </span>
     </div>
   </body>
 </template>
@@ -30,7 +36,7 @@ export default {
     },
     modal() {
       return this.$store.state.modal
-    }
+    },
   }
 }
 </script>
@@ -62,7 +68,13 @@ body{
   top: 0;
   z-index: 9999;
 }
-.min-height{
-  min-height: 120vh;
+
+.contents_height{
+  min-height: calc(100vh - 50px);
+  margin-top: 80px;
+  position: relative;
+  @include media(sp) {
+    margin-top: 55px;
+  }
 }
 </style>

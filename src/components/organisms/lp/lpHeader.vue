@@ -40,22 +40,17 @@
           </span>
           <span>
             <a href="#about">
-              About us
+              Developers
             </a>
           </span>
           <span>
             <a href="#installation">
-              Installation
+              Fee & Ecosystem
             </a>
           </span>
           <span>
             <a href="#ecosystem">
-              Ecosystem
-            </a>
-          </span>
-          <span>
-            <a href="#roadmap">
-              Rood Map
+              Roadmap
             </a>
           </span>
           <span class="app-link btn __pg tb">
@@ -152,6 +147,7 @@
       }
     }
     &__actions{
+      width: 20%;
       @include media(tb) {
         width: 100%;
       }
@@ -166,15 +162,14 @@
       }
     }
     .logo-wrap{
-      width: 75%;
+      width: 80%;
       @include media(tb) {
         width: 100%;
         display: block !important;
       }
       .link-wrap{
-        width: 60%;
-        margin-left: 40px;
-        padding: 80px 0;
+        width: 50%;
+        margin-left: 20%;
         @include media(tb) {
           width: 100%;
           display: none !important;
@@ -246,7 +241,7 @@
 .toggle-theme {
   text-align: center;
   @include media(pc) {
-    margin-left: 24px;
+    margin-left: 0;
   }
   @include media(tb) {
     width: 10% !important;

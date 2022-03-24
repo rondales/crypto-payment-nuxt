@@ -4,6 +4,7 @@ const store = {
     address: null,
     balance: 0,
     symbol: null,
+    isCopied: false,
     receive: {
       isSelected: false,
       isSettingComplete: false
@@ -17,6 +18,13 @@ const store = {
     // 設定後の画面切り替え判定
     settingComplete({ commit }){
       commit('settingComplete')
+    },
+    // コピー判定した時のUI表示
+    copied({ commit }){
+      commit('copied')
+      setTimeout(() => {
+        commit('notCopy')
+      }, 1000)
     },
     initialize({ commit }) {
       commit('initialize')
@@ -36,7 +44,13 @@ const store = {
     },
     settingComplete(state) {
       state.receive.isSettingComplete = true;
-    },    
+    },  
+    copied(state){
+      state.isCopied = true;
+    },
+    notCopy(state){
+      state.isCopied = false;
+    },
     update(state, payload) {
       state.address = payload.address
       state.balance = payload.balance

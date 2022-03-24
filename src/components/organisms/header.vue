@@ -10,7 +10,7 @@
         <p class="logo-sub">
           {{ subTitle }}
         </p>
-        <div class="user-status" :class="{'is-admin': isAdminPage}">
+        <div class="user-status" :class="{'is-receive': this.$store.state.account.receive.isSelected}">
           ReceiveToken：<img  src="@/assets/images/symbol/usdt.svg"><span>USDT</span>
         </div>
       </div>
@@ -196,27 +196,29 @@ export default {
 .user-status{
   display: none;
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 400;
   line-height: 24px;
   background: $gradation-light;
   padding: 2px 24px;
   border-radius:50px;
   margin-left: 16px;
   align-items: center;
+  &.is-receive{
+    display: flex;
+    @include media(sp) {
+      display: none;
+    }
+  }
   img{
     width: 16px;
-    height: 16px;
+    height: 28px;
+    margin-left: 16px;
+    margin-right: 12px;
   }
   @include media(sp) {
     font-size: 12px;
     margin-left: 16px;
     padding: 2px 12px;
-  }
-}
-.is-admin{
-  display: flex;
-  @include media(sp) {
-    display: none;
   }
 }
 .global-header {

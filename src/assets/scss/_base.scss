@@ -72,6 +72,9 @@ small {
 .mb-5{
   margin-bottom: 5rem !important;
 }
+.mb-6{
+  margin-bottom: 6rem !important;
+}
 .mt-0{
   margin-top: 0 !important;
 }
@@ -358,5 +361,21 @@ li {
   &.inactive{
     color: $dark-gray;
     opacity: .5;
+  }
+}
+.copied{
+  animation : fadeOut 2.6s;
+  animation-fill-mode: both;
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translate(0, -50%);
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

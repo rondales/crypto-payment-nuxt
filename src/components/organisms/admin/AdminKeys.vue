@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="copied" v-if="copied">
+      copied
+    </div>
     <div class="keys-wrap">
       <div class="title">
         Authentication Token
@@ -42,6 +45,7 @@ export default {
     return{
       orderToken: '',
       hashToken: '',
+      copied: false
     }
   },
   methods: {
@@ -55,6 +59,7 @@ export default {
       return this.axios.get(url, data)
     },
     copy(value) {
+      this.$store.dispatch('account/copied')
       this.$clipboard(value);
     },
     logout() {
@@ -129,6 +134,15 @@ export default {
     transform: translate(-50%, -60%);
   }
 }
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .desc{
   font-size: 17px;
   font-weight: 100;

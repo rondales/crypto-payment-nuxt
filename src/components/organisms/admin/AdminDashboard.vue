@@ -133,71 +133,71 @@
             <p class="receive-more">
               More
             </p>
-            <img src="@/assets/images/next.svg">
-          </div>
-          <div class="tokens-wrapper" v-if="selectTokens">
-            <ul>
-              <li>
-                <img src="@/assets/images/icon/eth.svg">
-                <div class="tokens-name">
-                  <p>
-                    <span>{{tokenName}}</span>
-                    <span>{{tokenAddress | omittedText}}</span>
-                  </p>
-                </div>
-                <div class="tokens-copy">
-                  <img src="@/assets/images/copy.svg">
-                </div>
-                <div class="tokens-metamask" @click="addMetamask">
-                  <img src="@/assets/images/metamask-fox.svg">
-                </div>
-              </li>
-              <li>
-                <img src="@/assets/images/icon/dai.svg">
-                <div class="tokens-name">
-                  <p>
-                    <span>Tron20</span>
-                    <span>TR7NHq...zgjLj6t</span>
-                  </p>
-                </div>
-                <div class="tokens-copy">
-                  <img src="@/assets/images/copy.svg">
-                </div>
-                <div class="tokens-metamask" @click="addMetamask">
-                  <img src="@/assets/images/metamask-fox.svg">
-                </div>
-              </li>
-              <li>
-                <img src="@/assets/images/icon/dai.svg">
-                <div class="tokens-name">
-                  <p>
-                    <span>Tron20</span>
-                    <span>TR7NHq...zgjLj6t</span>
-                  </p>
-                </div>
-                <div class="tokens-copy">
-                  <img src="@/assets/images/copy.svg">
-                </div>
-                <div class="tokens-metamask" @click="addMetamask">
-                  <img src="@/assets/images/metamask-fox.svg">
-                </div>
-              </li>
-              <li>
-                <img src="@/assets/images/icon/dai.svg">
-                <div class="tokens-name">
-                  <p>
-                    <span>Tron20</span>
-                    <span>TR7NHq...zgjLj6t</span>
-                  </p>
-                </div>
-                <div class="tokens-copy">
-                  <img src="@/assets/images/copy.svg">
-                </div>
-                <div class="tokens-metamask" @click="addMetamask">
-                  <img src="@/assets/images/metamask-fox.svg">
-                </div>
-              </li>
-            </ul>
+            <img class="next" src="@/assets/images/next.svg">
+            <div class="tokens-wrapper" v-if="selectTokens">
+              <ul>
+                <li>
+                  <img src="@/assets/images/icon/eth.svg">
+                  <div class="tokens-name">
+                    <p>
+                      <span>{{tokenName}}</span>
+                      <span>{{tokenAddress | omittedText}}</span>
+                    </p>
+                  </div>
+                  <div class="tokens-copy" @click="copy(tokenAddress)">
+                    <img src="@/assets/images/copy.svg">
+                  </div>
+                  <div class="tokens-metamask" @click="addMetamask">
+                    <img src="@/assets/images/metamask-fox.svg">
+                  </div>
+                </li>
+                <li>
+                  <img src="@/assets/images/icon/dai.svg">
+                  <div class="tokens-name">
+                    <p>
+                      <span>Tron20</span>
+                      <span>TR7NHq...zgjLj6t</span>
+                    </p>
+                  </div>
+                  <div class="tokens-copy" @click="copy(tokenAddress)">
+                    <img src="@/assets/images/copy.svg">
+                  </div>
+                  <div class="tokens-metamask" @click="addMetamask">
+                    <img src="@/assets/images/metamask-fox.svg">
+                  </div>
+                </li>
+                <li>
+                  <img src="@/assets/images/icon/dai.svg">
+                  <div class="tokens-name">
+                    <p>
+                      <span>Tron20</span>
+                      <span>TR7NHq...zgjLj6t</span>
+                    </p>
+                  </div>
+                  <div class="tokens-copy" @click="copy(tokenAddress)">
+                    <img src="@/assets/images/copy.svg">
+                  </div>
+                  <div class="tokens-metamask" @click="addMetamask">
+                    <img src="@/assets/images/metamask-fox.svg">
+                  </div>
+                </li>
+                <li>
+                  <img src="@/assets/images/icon/dai.svg">
+                  <div class="tokens-name">
+                    <p>
+                      <span>Tron20</span>
+                      <span>TR7NHq...zgjLj6t</span>
+                    </p>
+                  </div>
+                  <div class="tokens-copy" @click="copy(tokenAddress)">
+                    <img src="@/assets/images/copy.svg">
+                  </div>
+                  <div class="tokens-metamask" @click="addMetamask">
+                    <img src="@/assets/images/metamask-fox.svg">
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <p class="receive-desc">
@@ -321,6 +321,7 @@ export default {
   },
   methods: {
     copy(value) {
+      this.$store.dispatch('account/copied')
       this.$clipboard(value);
     },
     // 受け取るトークンを選択中
@@ -384,10 +385,9 @@ export default {
     },
     omittedTextSp(value) {
       if (window.innerWidth <= 768) {
-        return value.length > 12 ? value.slice(0, 12) + "…" : value;
+        return value.length > 8 ? value.slice(0, 8) + "…" : value;
       } else {
-        // 画面幅が768以上の時に全文出力
-        return value;
+        return value.length > 20 ? value.slice(0, 20) + "…" : value;
       }
     },
   },
@@ -406,13 +406,13 @@ export default {
     background-size: 150% 150%;
     font-weight: 600;
     display: inline-block;
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 24px;
+    margin-bottom: 8px;
   }
   .welcome-desc{
-    font-size: 10px;
-    line-height: 2.3;
-    margin-bottom: 24px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 44px;
   }
   .welcome-image{
     width: fit-content;
@@ -421,7 +421,7 @@ export default {
       margin: auto;
     }
     figure{
-      width: 400px;
+      width: 500px;
       margin-bottom: 48px;
       @include media(sp) {
         width: 300px;
@@ -503,10 +503,10 @@ export default {
       background: $gradation-light;
       display: inline-block;
       text-align: center;
-      font-size: 11px;
-      width: 234px;
-      height: 42px;
-      line-height: 42px;
+      font-size: 14px;
+      width: 260px;
+      height: 54px;
+      line-height: 54px;
       border-radius: 8px;
       cursor: pointer;
     }
@@ -527,7 +527,7 @@ export default {
         right: 0px;
         top: 0px;
         margin: 0px;
-        transform: translate(-100px, 60px);
+        transform: translate(120px, 50px);
         background: #292536;
         width: 242px;
         max-height: 180px;
@@ -588,7 +588,7 @@ export default {
           margin: 0 16px;
           @include media(sp) {
             font-size: 12px;
-            margin: 0 12px;
+            margin: 0 8px;
           }
         }
         &::after{
@@ -634,14 +634,15 @@ export default {
           }
         }
         &.right{
+          margin-left: 16px;
+          position: relative;
           &.active{
-            img{
-              &:nth-last-child(1){
-                transform: rotate(-180deg);
-              }
+            .next{
+              transform: rotate(-180deg);
             }
           }
           @include media(sp) {
+            margin-left: 0;
             order: 1 !important;
             margin-bottom: 16px;
             width: auto;
@@ -684,9 +685,7 @@ export default {
   }
   .deployed{
     margin-bottom: 56px;
-    .deployed-wrapper{
-      margin-bottom: 24px;
-    }
+    max-width: 1000px;
     .btn{
       width: 214px;
       font-weight: 300;
@@ -695,6 +694,7 @@ export default {
       padding: 0 1rem;
       opacity: .5;
       cursor: auto;
+      margin-bottom: 16px;
       @include media(sp) {
         width: 100%;
         margin-bottom: 16px;
@@ -729,6 +729,7 @@ export default {
     }
   }
   .items{
+    max-width: 1000px;
     display: grid;
     grid-template:
     "item-1 ...... item-2 ...... item-3 ...... item-4" auto
