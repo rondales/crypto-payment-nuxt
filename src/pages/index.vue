@@ -21,7 +21,7 @@ export default {
   text-align: center;
   padding-top: 100px;
   background: var(--color_lp_bg);
-  @include media(sp) {
+  @include media(tb) {
     padding-top: 62px;
   }
   a{
