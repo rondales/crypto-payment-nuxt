@@ -1097,7 +1097,11 @@ section{
       transform: translate(-50%, -50%);
       width: 100%;
       @include media(sp) {
-        transform: translate(-50%, -25%);
+        transform: none;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: -480px;
       }
     }
     &_subtitle {
@@ -1541,7 +1545,7 @@ section{
     .lp-third_subdsc{
       margin-bottom: 32px;
       @include media(sp) {
-        margin-bottom: 120px;
+        margin-bottom: 160px;
         &.sp-mb{
           margin-bottom: 48px;
         }
@@ -1568,15 +1572,13 @@ section{
         width: 100%;
         padding: 0;
         p {
-          position: absolute;
           z-index: 2;
-          top: 50%;
-          transform: translate(0, 70%);
           line-height: 1.6;
           padding: 0 5px;
           font-size: 15px;
+          margin-top: -96px !important;
           &.sp-position{
-            transform: translate(0, 130%);
+            margin-top: -16px !important;
           }
         }
         .sp-bg {
@@ -1584,20 +1586,14 @@ section{
           background-size: cover;
           width: 100%;
           height: 425px;
-          position: absolute;
-          left: 0;
-          top: 0;
-          z-index: 1;
+
         }
         .sp-bg-l {
           background: url(/assets/images/lp/fee-sp-l.jpg) no-repeat center center;
           background-size: cover;
           width: 100%;
           height: 425px;
-          position: absolute;
-          left: 0;
-          top: 0;
-          z-index: 1;
+
         }
       }
     }
