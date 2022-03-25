@@ -1553,7 +1553,7 @@ section{
       @include media(sp) {
         margin-bottom: 160px;
         &.sp-mb{
-          margin-bottom: 56px;
+          margin-bottom: 260px;
         }
       }
     }
@@ -1776,7 +1776,7 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -20%);
+            transform: translate(0, 35%);
             line-height: 1.6;
           }
           .sp-bg {
