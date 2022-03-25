@@ -357,7 +357,7 @@
             </figure>
           </div>
         </div>
-        <div class="lp-fourth_buyback add-flex j-between">
+        <div class="lp-fourth_buyback add-flex j-between a-center">
           <div class="lp-third_left">
             <div class="phase-wrap">
               <div class="phase">Phase 2</div>
@@ -370,11 +370,17 @@
               <div v-if="$store.state.theme == 'dark'" class="sp-bg"></div>
               <div v-if="$store.state.theme == 'light'" class="sp-bg-l"></div>
               <p>
-                Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.
+                The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).
+                <br>
+                <br>
+                Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.
+                <br>
+                <br>
+                *Slash Token will be issued in Phase 2.
               </p>
             </div>
             <div class="lp-third_link">
-              <a class="pc" href="/">
+              <a class="pc-sp" href="/">
                 <span v-if="$store.state.theme == 'dark'">
                   <img src="@/assets/images/lp/right-arrow.svg" />
                 </span>
@@ -1547,7 +1553,7 @@ section{
       @include media(sp) {
         margin-bottom: 160px;
         &.sp-mb{
-          margin-bottom: 48px;
+          margin-bottom: 56px;
         }
       }
     }
@@ -1770,7 +1776,7 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, 65%);
+            transform: translate(0, -20%);
             line-height: 1.6;
           }
           .sp-bg {
