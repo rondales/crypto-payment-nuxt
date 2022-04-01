@@ -236,7 +236,8 @@
             </h3>
           </div>
           <div class="lp-third_image">
-            <img src="@/assets/images/lp/physical.jpg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/physical.jpg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/physical-l.jpg" alt="" />
           </div>
           <div class="lp-third_subdsc">
             <p>
@@ -279,7 +280,8 @@
               <h3>Slash Payment fee is 0.2〜0.6%</h3>
             </div>
             <div class="lp-third_subdsc">
-              <div class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'dark'" class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'light'" class="sp-bg-l"></div>
               <p class="mb-3">
                 There are no commissions paid to Merchants. The commission is 0.2-0.6% of the payment amount and is collected as a platform token along with the gas cost of the customer’s payment transaction.
               </p>
@@ -307,7 +309,8 @@
           <img src="@/assets/images/lp/donated.jpg" alt="" />
         </div>
         <div class="lp-third_image sp">
-          <img src="@/assets/images/lp/donated-sp.svg" alt="" />
+          <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/donated-sp.svg" alt="" />
+          <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/donated-sp-l.svg" alt="" />
         </div>
         <div class="lp-fourth_subdsc">
           <p class="mb-4">
@@ -354,7 +357,7 @@
             </figure>
           </div>
         </div>
-        <div class="lp-fourth_buyback add-flex j-between">
+        <div class="lp-fourth_buyback add-flex j-between a-center">
           <div class="lp-third_left">
             <div class="phase-wrap">
               <div class="phase">Phase 2</div>
@@ -364,13 +367,20 @@
               <h3>All fees Use buyback $Slash*</h3>
             </div>
             <div class="lp-third_subdsc sp-mb">
-              <div class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'dark'" class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'light'" class="sp-bg-l"></div>
               <p>
-                Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.
+                The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).
+                <br>
+                <br>
+                Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.
+                <br>
+                <br>
+                *Slash Token will be issued in Phase 2.
               </p>
             </div>
             <div class="lp-third_link">
-              <a class="pc" href="/">
+              <a class="pc-sp" href="/">
                 <span v-if="$store.state.theme == 'dark'">
                   <img src="@/assets/images/lp/right-arrow.svg" />
                 </span>
@@ -607,7 +617,8 @@
       <div class="lp-referral_inner mb-6">
         <a href="/" class="box add-flex a-center mb-3">
           <figure>
-            <img src="@/assets/images/lp/gitbook-icon.svg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/gitbook-icon.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/gitbook-icon-l.svg" alt="" />
           </figure>
           <p>
             Slash Payment Docs.
@@ -615,7 +626,8 @@
         </a>
         <a href="/" class="box add-flex a-center mb-3">
           <figure>
-            <img src="@/assets/images/lp/github.svg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/github.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/github-l.svg" alt="" />
           </figure>
           <p>
             Slash Payment github
@@ -655,7 +667,8 @@
         </a>
         <a href="/" class="box add-flex a-center mb-3">
           <figure>
-            <img src="@/assets/images/lp/recruit.svg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/recruit.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/recruit-l.svg" alt="" />
           </figure>
           <p>
             Slash Recruit Information
@@ -670,7 +683,8 @@
       <div class="lp-referral_inner">
         <a href="/" class="box add-flex a-center mb-3">
           <figure>
-            <img src="@/assets/images/lp/arroba.svg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/arroba.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/arroba-l.svg" alt="" />
           </figure>
           <p>
             Contact Email
@@ -678,7 +692,8 @@
         </a>
         <a href="/" class="box add-flex a-center mb-3">
           <figure>
-            <img src="@/assets/images/lp/twitter.svg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/twitter.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/twitter-l.svg" alt="" />
           </figure>
           <p>
             Twitter for DM
@@ -877,11 +892,11 @@ section{
       background: url(/assets/images/lp/mv.jpg) no-repeat center center;
       background-size: cover;
       width: 100%;
-      height: calc(100vh - 100px);
+      height: 820px;
       @include media(sp) {
         background: url(/assets/images/lp/mv-sp.jpg) no-repeat center center;
         background-size: cover;
-        height: calc(100vh - 200px);
+        height: 700px;
       }
     }
     &_contents {
@@ -891,9 +906,12 @@ section{
       transform: translate(-50%, -40%);
       @include media(sp) {
         width: 90%;
+        transform: translate(-50%, -45%);
       }
       h1{
         font-weight: 500;
+        color: #fff;
+        margin-bottom: 24px;
         @include media(sp) {
           font-size: 21px;
           margin-bottom: 16px;
@@ -901,7 +919,7 @@ section{
       }
       p {
         font-size: 26px;
-        margin-bottom: 16px;
+        margin-bottom: 40px;
         color: #fff;
         @include media(sp) {
           font-size: 18px;
@@ -915,7 +933,7 @@ section{
     }
     &_icon {
       width: 140px;
-      margin: 0 auto 16px;
+      margin: 0 auto 24px;
       @include media(sp) {
         width: 100px;
         margin: 0 auto 48px;
@@ -1064,13 +1082,14 @@ section{
         background-size: cover;
         min-height: 540px;
         width: 100%;
-        margin-bottom: 240px;
+        margin-bottom: 120px;
         opacity: .4;
         @include media(sp) {
           background: url(/assets/images/lp/lp-second_bg.jpg) no-repeat center center;
           background-size: cover;
-          min-height: 240px;
-          opacity: 1;
+          min-height: 260px;
+          margin-bottom: 240px;
+          opacity: .7;
         }
       }
       @include media(sp) {
@@ -1081,10 +1100,14 @@ section{
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -20%);
+      transform: translate(-50%, -50%);
       width: 100%;
       @include media(sp) {
-        transform: translate(-50%, -25%);
+        transform: none;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: -480px;
       }
     }
     &_subtitle {
@@ -1110,7 +1133,7 @@ section{
         display: block;
         margin: auto;
         @include media(sp) {
-          font-size: 18px;
+          font-size: 17px;
         }
       }
     }
@@ -1273,7 +1296,7 @@ section{
         text-align: center;
         h2 {
           font-size: 30px;
-          margin-bottom: 48px;
+          margin-bottom: 32px;
           line-height: 1.4;
         }
       }
@@ -1302,6 +1325,7 @@ section{
         display: inline-block;
         margin-bottom: 32px;
         @include media(sp) {
+          font-size: 32px;
           background-size: 100% 10%;
           line-height: 1.4;
           margin-bottom: 24px;
@@ -1527,9 +1551,9 @@ section{
     .lp-third_subdsc{
       margin-bottom: 32px;
       @include media(sp) {
-        margin-bottom: 120px;
+        margin-bottom: 160px;
         &.sp-mb{
-          margin-bottom: 32px;
+          margin-bottom: 260px;
         }
       }
     }
@@ -1554,16 +1578,13 @@ section{
         width: 100%;
         padding: 0;
         p {
-          color: #fff;
-          position: absolute;
           z-index: 2;
-          top: 50%;
-          transform: translate(0, 70%);
           line-height: 1.6;
           padding: 0 5px;
           font-size: 15px;
+          margin-top: -96px !important;
           &.sp-position{
-            transform: translate(0, 160%);
+            margin-top: -16px !important;
           }
         }
         .sp-bg {
@@ -1571,10 +1592,14 @@ section{
           background-size: cover;
           width: 100%;
           height: 425px;
-          position: absolute;
-          left: 0;
-          top: 0;
-          z-index: 1;
+
+        }
+        .sp-bg-l {
+          background: url(/assets/images/lp/fee-sp-l.jpg) no-repeat center center;
+          background-size: cover;
+          width: 100%;
+          height: 425px;
+
         }
       }
     }
@@ -1746,18 +1771,27 @@ section{
           width: 100%;
           padding: 0;
           p {
-            color: #fff;
             padding: 0 5px;
             font-size: 15px;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, 65%);
+            transform: translate(0, 35%);
             line-height: 1.6;
           }
           .sp-bg {
             background: url(/assets/images/lp/buyback-sp.jpg) no-repeat center
               center;
+            background-size: cover;
+            width: 100%;
+            height: 425px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+          }
+          .sp-bg-l {  
+            background: url(/assets/images/lp/buyback-sp-l.jpg) no-repeat center center;
             background-size: cover;
             width: 100%;
             height: 425px;
@@ -1911,7 +1945,7 @@ section{
         margin-bottom: 48px;
         @include media(sp) {
           text-align: center;
-          margin-bottom: 72px;
+          margin-bottom: 56px;
           line-height: 1.4;
           font-size: 25px;
         }
@@ -1972,7 +2006,7 @@ section{
           line-height:2;
           font-weight:600;
           @include media(sp) {
-            font-size: 22px;
+            font-size: 18px;
           }
           span{
             background:$gradation-orange;
@@ -2071,7 +2105,7 @@ section{
           text-align: center;
           margin-bottom: 56px;
           line-height: 1.4;
-          font-size: 25px;
+          font-size: 24px;
         }
       }
     }
@@ -2120,6 +2154,7 @@ section{
         }
         &.disable{
           pointer-events: none;
+          opacity: .7;
           p{
             color: #4E455A;
           }

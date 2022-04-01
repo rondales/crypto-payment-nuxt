@@ -295,6 +295,12 @@ li {
     display: none;
   }
 }
+.pc-sp{
+  display: block;
+  @include media(sp) {
+    display: none;
+  }
+}
 .spin{
   animation: 3s linear infinite spin;
 }

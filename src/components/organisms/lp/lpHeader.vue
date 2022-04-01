@@ -124,6 +124,17 @@
     top: 0;
     background: var(--color_lp_bg);
     z-index: 10;
+    @include media(pc) {
+      height: 100px;
+      padding: 0 36px;
+      .logo {
+        height: 36px;
+        width: 100%;
+      }
+    }
+    @include media(tb) {
+      padding: 0 !important;
+    }
     @include media(tb) {
       display: block;
       height: 0vh !important;
@@ -192,14 +203,7 @@
         }
       }
     }
-    @include media(pc) {
-      height: 100px;
-      padding: 0 36px;
-      .logo {
-        height: 36px;
-        width: 100%;
-      }
-    }
+
     .logo {
       white-space: nowrap;
       @include media(tb) {
