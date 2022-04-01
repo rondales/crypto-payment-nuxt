@@ -7,6 +7,8 @@
 <script>
 import { LOGIN_TOKEN, METAMASK, WALLET_CONNECT } from '@/constants'
 import AdminIndex from '@/components/templates/AdminIndex'
+import AvailableNetworks from '@/network'
+
 export default {
   name: 'adminPage',
   components: {
@@ -31,6 +33,24 @@ export default {
         token: localStorage.getItem(LOGIN_TOKEN)
       }
       return this.axios.post(url, params)
+    },
+    handleChainChanged(chainId) {
+      const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      })
+      if (!systemAvailableNetworks.includes(chainId)) {
+        return this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
+            message: 'The current network does not support it.'
+          }
+        })
+      }
+      this.$web3.getAccountData(this.web3.instance, chainId).then((accountData) => {
+        this.$store.dispatch('web3/updateChainId', chainId)
+        this.$store.dispatch('account/update', accountData)
+      })
     },
     forceLogout() {
       this.$router.push({ path: '/admin' })
@@ -84,6 +104,21 @@ export default {
       } else {
         this.forceLogout()
       }
+    } else {
+      this.web3.instance.currentProvider.on('chainChanged', (chainId) => {
+        chainId = (this.web3.instance.utils.isHex(chainId))
+          ? this.web3.instance.utils.hexToNumber(chainId)
+          : chainId
+        this.handleChainChanged(chainId)
+      })
+    }
+  },
+  beforeDestroy() {
+    if (this.web3.instance) {
+      this.web3.instance.currentProvider.removeListener(
+        'chainChanged',
+        this.handleChainChanged
+      )
     }
   }
 }

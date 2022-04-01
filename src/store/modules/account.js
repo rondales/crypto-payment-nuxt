@@ -5,6 +5,7 @@ const store = {
     balance: 0,
     symbol: null,
     isCopied: false,
+    receiveSymbol: null,
     receive: {
       isSelected: false,
       isSettingComplete: false
@@ -32,12 +33,16 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
+    updateReceiveSymbol({ commit }, payload) {
+      commit('updateReceiveSymbol', payload)
+    }
   },
   mutations: {
     initialize(state) {
       state.address = null
       state.balance = 0
       state.symbol = null
+      state.receiveSymbol = null
     },
     selectReceiveToken(state){
       state.receive.isSelected = true;
@@ -55,6 +60,9 @@ const store = {
       state.address = payload.address
       state.balance = payload.balance
       state.symbol = payload.symbol
+    },
+    updateReceiveSymbol(state, payload) {
+      state.receiveSymbol = payload
     }
   }
 }

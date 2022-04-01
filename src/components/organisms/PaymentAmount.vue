@@ -25,14 +25,14 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img src="@/assets/images/usdt.png" alt="">
+            <img :src="receiveTokenIcon" :alt="receiveTokenSymbol">
           </figure>
           <dl>
             <dt>
               Amount billed
             </dt>
             <dd>
-              USDT
+              {{ receiveTokenSymbol }}
             </dd>
           </dl>
         </div>
@@ -61,7 +61,7 @@
             </div>
           </div>
         </div>
-        <button :class="{'inactive': requireUpdateExchange}" class="btn __g __l" @click="next">
+        <button :class="{'inactive': requireUpdateExchange}" class="payment-btn btn __g __l" @click="next">
           <img v-if="requireUpdateExchange" src="@/assets/images/slash-s_inactive.svg" alt="">
           <img v-else src="@/assets/images/slash-s.svg" alt="">
           Go Payment
@@ -89,7 +89,13 @@ export default {
       selectedCurrency: currencyList['JPY'].name,
       exchangedAmount: 0,
       exchangeRate: 100,
-      exchangeMarginRate: 3.5
+      exchangeMarginRate: 3.5,
+      receiveTokenIcons: {
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
+      }
     }
   },
   watch: {
@@ -101,6 +107,14 @@ export default {
     }
   },
   computed: {
+    receiveTokenSymbol() {
+      return this.$store.state.payment.symbol
+    },
+    receiveTokenIcon() {
+      return this.receiveTokenIcons[
+        this.$store.state.payment.symbol
+      ]
+    },
     currencies() {
       return currencyList
     },
@@ -264,9 +278,6 @@ export default {
       figure{
         line-height: 53px;
         position: absolute;
-        img{
-          padding-top: 14px;
-        }
       }
       select{
         padding-left: 36px;
@@ -312,6 +323,12 @@ export default {
     font-weight: 200;
     padding-top: 8px;
     padding-bottom: 24px;
+  }
+
+  .payment-btn {
+    img {
+      padding-top: 0;
+    }
   }
 }
 </style>

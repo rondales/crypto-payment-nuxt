@@ -54,7 +54,13 @@
                   </div>
                   <div v-if="contractLoaded">
                     <div
-                      v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
+                      v-if="!contract.support"
+                      class="manage-contents_btn other inactive"
+                    >
+                      Not support
+                    </div>
+                    <div
+                      v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
                       @click="updateContract(chainId)"
                       class="manage-contents_btn"
                     >
@@ -162,6 +168,12 @@
 <script>
 import { METAMASK, LOGIN_TOKEN, HTTP_CODES, NORMAL_TYPE_PAYMENT } from '@/constants'
 import AvailableNetworks from '@/network'
+import {
+  BscTokens,
+  EthereumTokens,
+  MaticTokens,
+  AvalancheTokens
+} from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 
@@ -425,13 +437,21 @@ export default {
   },
   created() {
     this.currentTab = this.tabs.contractSetting
+    const receiveTokenSymbol = this.$store.state.account.receiveSymbol
+    const supportStatuses = {
+      [AvailableNetworks.ethereum.chainId]: (EthereumTokens[receiveTokenSymbol].address),
+      [AvailableNetworks.bsc.chainId]: (BscTokens[receiveTokenSymbol].address),
+      [AvailableNetworks.matic.chainId]: (MaticTokens[receiveTokenSymbol].address),
+      [AvailableNetworks.avalanche.chainId]: (AvalancheTokens[receiveTokenSymbol].address)
+    }
     Object.values(AvailableNetworks).forEach((network) => {
       this.$set(this.contractSettings.contracts, network.chainId, {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
         icon: network.icon,
-        processing: false
+        processing: false,
+        support: supportStatuses[network.chainId]
       })
     })
     this.getContracts()
