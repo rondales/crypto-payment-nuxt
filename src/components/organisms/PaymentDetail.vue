@@ -4,7 +4,7 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img src="@/assets/images/usdt.png" alt="">
+            <img :src="receiveTokenIcon" alt="">
           </figure>
           <dl>
             <dt>
@@ -64,7 +64,7 @@
         <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
             <p>Exchange Eate</p>
-            <p>1USDT＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
+            <p>1{{ paymentRequestSymbol }}＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
             <p>Route</p>
@@ -142,7 +142,7 @@
           Try again
         </button>
         <p class="via" v-if="isDetailState || isProcessingState">
-          via Uniswap：Slash Payment
+          via Slash Payment
           <span>
             <img src="@/assets/images/slash-s.svg" alt="">
           </span>
@@ -191,6 +191,12 @@ export default {
       returnUrls: {
         succeed: null,
         failured: null
+      },
+      receiveTokenIcons: {
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
       }
     }
   },
@@ -215,6 +221,11 @@ export default {
       return this.$store.state.web3.chainId
         ? NETWORKS[this.$store.state.web3.chainId].symbol
         : ''
+    },
+    receiveTokenIcon() {
+      return this.receiveTokenIcons[
+        this.$store.state.payment.symbol
+      ]
     },
     paymentRequestSymbol() {
       return this.$store.state.payment.symbol

@@ -163,7 +163,10 @@ export default {
 @import '@/assets/scss/style.scss';
   .slash-bg{
     width: 100%;
-    height: 100vh;
+    min-height: 120vh;
+    @include media(sp) {
+      min-height: 140vh;
+    }
     position: relative;
     &::before{
       content: "";

@@ -75,7 +75,7 @@ export default {
         id: this.paymentToken,
         domain: receiveResponse.data.domain,
         orderCode: receiveResponse.data.order_code,
-        symbol: (receiveResponse.data.symbol === null) ? 'USDT' : receiveResponse.data.symbol,
+        symbol: receiveResponse.data.symbol,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
       this.apiPublishTransaction().then(() => {

@@ -231,7 +231,7 @@ export default {
   }
   img{
     width: 18px;
-    height: 28px;
+    height: 24px;
     margin-left: 5px;
     margin-right: 5px;
   }

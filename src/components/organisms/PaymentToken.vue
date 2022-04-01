@@ -4,14 +4,14 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img src="@/assets/images/usdt.png" alt="">
+            <img :src="receiveTokenIcon" alt="">
           </figure>
           <dl>
             <dt>
               Amount billed
             </dt>
             <dd>
-              USDT
+              {{ receiveTokenSymbol }}
             </dd>
           </dl>
         </div>
@@ -136,6 +136,12 @@ export default {
       tokenList: [],
       tokenIdList: [],
       validAddress: false,
+      receiveTokenIcons: {
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
+      }
     }
   },
   filters: {
@@ -154,6 +160,14 @@ export default {
   computed: {
     web3Instance() {
       return this.$store.state.web3.instance
+    },
+    receiveTokenSymbol() {
+      return this.$store.state.payment.symbol
+    },
+    receiveTokenIcon() {
+      return this.receiveTokenIcons[
+        this.$store.state.payment.symbol
+      ]
     },
     amount() {
       return this.$store.state.payment.amount

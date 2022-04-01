@@ -196,6 +196,9 @@ export default {
     },
     isCurrentNetworkSupport() {
       return this.$store.state.web3.chainId in this.receiveTokens
+        && this.receiveTokens[
+          this.$store.state.web3.chainId
+        ].token.address
     },
   },
   methods: {
