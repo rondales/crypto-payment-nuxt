@@ -17,7 +17,7 @@
             the next generation of decentralized payment methods, to support any
             Token payment.
           </p>
-          <div class="btn-content mb-3">
+          <div class="btn-content mb-2">
             <a @click="enterApp()" href="/admin">
               <div class="btn __pg lp-first_enter">Enter App</div>
             </a>
@@ -43,9 +43,9 @@
             </h2>
             <div class="lp-second_dsc">
               <p>
-                Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.
+                Merchants can automatically accept online TOKEN payments
                 <br class="pc">
-                Merchants can automatically. 
+                from customers using the Web3 wallet.
               </p>
             </div>
           </div>
@@ -60,10 +60,10 @@
           <div class="lp-second_content">
             <div class="lp-second_subtitle add-flex a-center display">
               <h3>
-                Customers pay in a variety of tokens
+                Customers can choose
               </h3>
               <h3 class="mb-5">
-                You receive sales in stable tokens
+                any type of token they want to pay for
               </h3>
               <div class="lp-second_icons add-flex a-center display">
                 <figure>
@@ -241,7 +241,7 @@
           </div>
           <div class="lp-third_subdsc">
             <p>
-              If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We have an iOS/andoroid app that stores can use as a cash register as a means of doing so.
+              If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We are about to launch iOS/android app to make cryptocurrency payment more convenient.
             </p>
           </div>
           <div class="lp-third_app add-flex">
@@ -314,8 +314,7 @@
         </div>
         <div class="lp-fourth_subdsc">
           <p class="mb-4">
-            0.1% of the Slash Payment fee will be automatically sent to the
-            Slash Donation Wallet to be donated to social causes.
+            0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes.
           </p>
           <p class="mb-4">
             We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries.
@@ -718,58 +717,89 @@
       </div>
     </section>
     <footer>
-      <div class="lp-fotter_left">
-        <div class="lp-first_icon">
-          <img src="@/assets/images/lp/logo.png" alt="" />
-          <h4>Slash Payment</h4>
-        </div>
-        <div class="lp-footer_copy"><p>© 2021 Web3Payment.com. All rights reserved.</p></div>
-        <div class="lp-footer_link"><p><a href="">Terms of Service</a> | <a href="">Privacy Terms</a></p></div>
-        <div class="lp-footer_info pc">
-          <p>SLASH FINTECH LIMITED<br>
-          3rd Floor, J & C Building, Road<br>
-          Town, Tortola, British Virgin Islands, VG1110
-          </p>
-        </div>
-      </div>
-      <div class="lp-fotter_right">
-        <div class="lp-footer_rightbox">
-          <div class="box">
-            <h4>Developers</h4>
-            <p><a href="" target="_blank">Integrations</a></p>
-            <p><a href="" target="_blank">Plugins</a></p>
-            <p><a href="" target="_blank">FAQ</a></p>
-            <p><a href="" target="_blank">Docs</a></p>
-            <p><a href="" target="_blank">Telegram</a></p>
+      <div class="footer-wrap">
+        <div class="lp-footer_left">
+          <div class="lp-first_icon">
+            <img src="@/assets/images/lp/logo.png" alt="" />
+            <h4>Slash Payment</h4>
           </div>
-          <div class="box">
-            <h4>Referral Program</h4>
-            <p><a href="" target="_blank">FAQ</a></p>
+          <div class="lp-footer_link"><p><a href="">Terms of Service</a> | <a href="">Privacy Terms</a></p></div>
+          <div class="lp-footer_info">
+            <p>
+              <span>SLASH FINTECH LIMITED（BVI）</span>
+              <br>
+              3rd Floor, J & C Building, Road
+              <br>
+              Town, Tortola, British Virgin Islands, VG1110
+            </p>
           </div>
-          <div class="box end">
-            <h4>TOKEN</h4>
-            <p><a href="" target="_blank">$Slash</a></p>
-            <p><a href="" target="_blank">Earn</a></p>
+          <div class="lp-footer_info">
+            <p>
+              <span>SLASH FINTECH LIMITED（CANADA）</span>
+              <br>
+              1700-777 DUNSMUIR ST. 
+              <br>
+              VANCOUVER, BRITISH COLUMBIA V7Y1K4
+              <br>
+              Money Services Business (MSB) Registration number is M22785834
+            </p>
           </div>
         </div>
-        <div class="lp-third_link">
-          <a href="/">
-            $Slash TOKEN
-            <span v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/right-arrow.svg" />
-            </span>
-            <span v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/right-arrow-l.svg" />
-            </span>
-          </a>
+        <div class="lp-footer_right">
+          <div class="lp-footer_rightbox">
+            <div class="box start">
+              <h4>Developers</h4>
+              <p><a href="" target="_blank">Integrations</a></p>
+              <p><a href="" target="_blank">Plugins</a></p>
+              <p><a href="" target="_blank">Docs</a></p>
+              <p><a href="" target="_blank">Slash Developers</a></p>
+            </div>
+            <div class="box">
+              <h4>Fee & Ecosystem</h4>
+              <p><a href="" target="_blank">Fee& Ecosystem</a></p>
+              <p><a href="" target="_blank">Donation Program</a></p>
+              <p><a href="" target="_blank">Slash Token</a></p>
+            </div>
+            <div class="box end">
+              <h4>Other</h4>
+              <p><a href="" target="_blank">Rood Map</a></p>
+              <p><a href="" target="_blank">Referral</a></p>
+              <p><a href="" target="_blank">Contact</a></p>
+            </div>
+          </div>
+          <div class="footer_icon-wrap">
+            <div class="footer_icon">
+              <figure>
+                <a href="">
+                  <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/twitter.svg" alt="" />
+                  <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/twitter-l.svg" alt="" />
+                </a>
+              </figure>
+              <figure>
+                <a class="disable" href=""><img src="@/assets/images/lp/telegram.svg" alt="" /></a>
+              </figure>
+              <figure>
+                <a class="disable" href=""><img src="@/assets/images/lp/discord.svg" alt="" /></a>
+              </figure>
+              <figure>
+                <a href="">
+                  <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/arroba.svg" alt="" />
+                  <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/arroba-l.svg" alt="" />
+                </a>
+              </figure>
+              <figure>
+                <a href="">
+                  <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/gitbook-icon.svg" alt="" />
+                  <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/gitbook-icon-l.svg" alt="" />
+                </a>
+              </figure>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="lp-footer_info sp">
-        <p>SLASH FINTECH LIMITED<br>
-        3rd Floor, J & C Building, Road<br>
-        Town, Tortola, British Virgin Islands, VG1110
-        </p>
-      </div>
+      <p class="copy">
+        @ 2022 Copyrights by SLASH FINTECH LIMITED . All Rights Reserved.
+      </p>
     </footer>
     </article>
   </div>
@@ -911,9 +941,10 @@ section{
       h1{
         font-weight: 500;
         color: #fff;
+        font-size: 26px;
         margin-bottom: 24px;
         @include media(sp) {
-          font-size: 21px;
+          font-size: 20px;
           margin-bottom: 16px;
         }
       }
@@ -1039,16 +1070,23 @@ section{
       }
     }
     &_title {
-      font-size: 64px;
-      line-height: 1.35;
+      font-size: 72px;
+      letter-spacing: .035em;
+      line-height: 1.45;
       background: $gradation-light;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 100% 10%;
       display: inline-block;
+      @include media(sp) {
+        letter-spacing: .01em;
+      }
       span{
         width: 70px;
         display: inline-block;
+        img{
+          margin-bottom: 14px;
+        }
       }
       @include media(sp) {
         font-size: 42px;
@@ -1066,7 +1104,7 @@ section{
         font-size: 14px;
       }
       p{
-        font-weight: 300;
+        font-weight: 400;
       }
       @include media(sp) {
         padding-top: 0;
@@ -1124,8 +1162,10 @@ section{
         }
       }
       h3 {
-        font-size: 40px;
+        font-size: 42px;
         text-align: center;
+        letter-spacing: 0.03em;
+        line-height: 1.9;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -1133,7 +1173,7 @@ section{
         display: block;
         margin: auto;
         @include media(sp) {
-          font-size: 17px;
+          font-size: 16px;
         }
       }
     }
@@ -1166,9 +1206,11 @@ section{
       }
       p {
         font-size: 20px;
-        font-weight: 300;
+        font-weight: 400;
+        margin-bottom: 16px;
         @include media(sp) {
           font-size: 15px;
+          font-weight: 200;
         }
       }
     }
@@ -1177,6 +1219,7 @@ section{
       a{
         font-weight: 400;
         @include media(sp) {
+          font-weight: 500;
           font-size: 15px;
         }
       }
@@ -1230,7 +1273,7 @@ section{
     &_carddsc {
       text-align: left;
       font-size: 19px;
-      font-weight: 300;
+      font-weight: 400;
       letter-spacing: -.02rem;
       @include media(tb) {
         text-align: center;
@@ -1336,10 +1379,11 @@ section{
       margin-bottom: 35px;
       p {
         font-size: 20px;
-        font-weight: 300;
+        font-weight: 400;
         @include media(sp) {
           font-size: 15px;
           margin-top: -48px;
+          font-weight: 200;
         }
       }
       @include media(sp) {
@@ -1353,6 +1397,7 @@ section{
       a{
         font-weight: 400;
         @include media(sp) {
+          font-weight: 500;
           font-size: 15px;
         }
       }
@@ -1431,7 +1476,7 @@ section{
         }
       }
       .lp-third_logos {
-        margin-bottom: 40px;
+        margin-bottom: 62px;
         @include media(sp) {
           justify-content: space-around;
           margin-bottom: 32px;
@@ -1453,7 +1498,7 @@ section{
           padding: 4px 30px;
           background-size: 100% 200%;
           font-size: 19px;
-          font-weight: 300;
+          font-weight: 400;
         }
         span {
           font-size: 12px;
@@ -1474,7 +1519,7 @@ section{
       .lp-third_subdsc {
         text-align: left;
         font-size: 19px;
-        font-weight: 300;
+        font-weight: 400;
         margin-bottom: 56px;
         @include media(sp) {
           position: relative;
@@ -1521,7 +1566,7 @@ section{
       }
       p {
         font-size: 12px;
-        font-weight: 300;
+        font-weight: 400;
       }
     }
     &_appright {
@@ -1534,7 +1579,7 @@ section{
       }
       p {
         font-size: 12px;
-        font-weight: 300;
+        font-weight: 400;
         @include media(pc) {
           margin-top: 20px;
         }
@@ -1622,7 +1667,7 @@ section{
       p{
         font-weight: 400;
         @include media(sp) {
-          font-weight: 300;
+          font-weight: 200;
           font-size: 15px;
           &.mb-4{
             margin-bottom: 2rem !important;
@@ -2085,7 +2130,8 @@ section{
         p{
           padding: 6px 0;
           @include media(sp) {
-            font-size: 17px;
+            font-size: 15px;
+            font-weight: 200;
           }
         }
       }
@@ -2207,6 +2253,9 @@ section{
         align-items:center;
         justify-content:center;
         margin-bottom:15px;
+        @include media(sp) {
+          margin-bottom: 32px;
+        }
         img{
           width:40px;
           margin-right:15px;
@@ -2225,91 +2274,153 @@ section{
   }
 }
 footer{
-  padding:90px 0;
-  display:flex;
-  justify-content:space-between;
-  text-align:left;
-  max-width: 1030px;
-  width:90%;
-  margin:0 auto;
-  font-weight: 400;
-  @include media(sp) {
-    display:block;
-    padding:35px 0;
-  }
-  .lp-first_icon{
+  .footer-wrap{
+    padding:90px 0 62px;
     display:flex;
-    align-items:center;
-    margin-bottom:15px;
-    width: 100%;
-    img{
-      width:40px;
-      margin-right:15px;
-    }
-    h4{
-      font-size:30px;
-      background: $gradation-light;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-  }
-  .lp-fotter_left{
+    justify-content:space-between;
+    text-align:left;
+    max-width: 1030px;
+    width:90%;
+    margin:0 auto;
+    font-weight: 400;
     @include media(sp) {
-      width:100%;
+      display:block;
+      padding:35px 0;
     }
-    p{
-      font-size:15px;
-    }
-    .lp-footer_link{
-      margin-top:10px;
-      @include media(sp) {
-        margin-bottom:35px;
-      }
-    }
-    .lp-footer_info{
-      margin-top:60px;
-    }
-  }
-  @include media(sp) {
-    .lp-footer_info{
-      font-size:15px;
-      margin-top:25px;
-    }
-    .lp-third_link{
-      text-align:left;
-      margin-bottom:30px;
-    }
-  }
-
-  .lp-fotter_right{
-    @include media(sp) {
-      width:100%;
-    }
-    .lp-footer_rightbox{
+    .lp-first_icon{
       display:flex;
+      align-items:center;
+      margin-bottom:15px;
+      width: 100%;
       @include media(sp) {
-        display:block;
+        margin-bottom: 40px;
       }
-      .box{
-        margin-left:68px;
+      img{
+        width:40px;
+        margin-right:15px;
+      }
+      h4{
+        font-size:30px;
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    .lp-footer_left{
+      @include media(sp) {
+        width:100%;
+        margin-bottom: 40px;
+      }
+      p{
+        font-size:15px;
+      }
+      .lp-footer_link{
+        margin-top:10px;
         @include media(sp) {
-          margin-left:0;
-          border-bottom:1px solid #554B6A;
-          padding:15px 0;
-          &.end{
-            border-bottom:none;
-          }
+          margin-bottom:35px;
         }
-        h4{
-          font-weight:600;
-          margin-bottom:15px;
+      }
+      .lp-footer_info{
+        margin-top:60px;
+        @include media(sp) {
+          margin-top:24px;
         }
         p{
-          font-weight:300;
-          margin-bottom:11px;
-          font-size: 19px;
+          font-size: 12px;
+          font-weight: 200;
+          @include media(sp) {
+            font-size: 10px;
+          }
+        }
+        span{
+          font-size: 16px;
+          font-weight: 400;
+          margin-bottom: 8px;
+          display: inline-block;
+          @include media(sp) {
+            font-size: 14px;
+          }
         }
       }
+    }
+    @include media(sp) {
+      .lp-footer_info{
+        font-size:15px;
+        margin-top:25px;
+      }
+    }
+
+    .lp-footer_right{
+      width: 60%;
+      @include media(sp) {
+        width:100%;
+      }
+      .lp-footer_rightbox{
+        display:flex;
+        justify-content: space-between;
+        @include media(sp) {
+          display:block;
+        }
+        .box{
+          @include media(sp) {
+            margin-left:0;
+            border-bottom:1px solid #554B6A;
+            padding: 24px 0;
+            &.start{
+              border-top:1px solid #554B6A;
+            }
+            &.end{
+              margin-bottom: 62px;
+            }
+          }
+          h4{
+            font-weight:600;
+            margin-bottom:15px;
+          }
+          p{
+            font-weight:300;
+            margin-bottom:11px;
+            font-size: 19px;
+          }
+        }
+      }
+      .footer_icon-wrap{
+        width: 50%;
+        margin-top: 120px;
+        margin-right: 0;
+        margin-left: auto;
+        @include media(sp) {
+          width: 80%;
+          margin: 20px auto;
+        }
+      }
+      .footer_icon{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .disable{
+          opacity: .5;
+        }
+        figure{
+          width: 20%;
+          text-align: right;
+          @include media(sp) {
+            text-align: center;
+          }
+          img{
+            width: 30px;
+          }
+        }
+      }
+    }
+  }
+  .copy{
+    font-weight: 200;
+    font-size: 16px;
+    padding-bottom: 32px;
+    @include media(sp) {
+      font-size: 10px;
+      padding-bottom: 48px;
     }
   }
 }
