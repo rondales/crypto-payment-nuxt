@@ -32,6 +32,7 @@ export default {
           searchToken: searchToken,
           importToken: importToken,
           switchChain: switchChain,
+          addToken: addToken,
           getTokenExchangeData: getTokenExchangeData,
           checkTokenApproved: checkTokenApproved,
           tokenApprove: tokenApprove,
@@ -221,6 +222,28 @@ const switchChain = async function(web3, chainId) {
     await web3.currentProvider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: web3.utils.toHex(chainId) }]
+    })
+  } catch(e) {
+    console.log(e)
+    throw new Error(e.message)
+  }
+}
+
+const addToken = async function(web3, tokenAddress, tokenAbi) {
+  try {
+    const tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress)
+    const symbol = await tokenContract.methods.symbol().call()
+    const decimals = await tokenContract.methods.decimals().call()
+    await web3.currentProvider.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenAddress,
+          symbol: symbol,
+          decimals: decimals
+        }
+      }
     })
   } catch(e) {
     console.log(e)

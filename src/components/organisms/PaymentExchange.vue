@@ -4,14 +4,14 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img src="@/assets/images/usdt.png" alt="">
+            <img :src="receiveTokenIcon" alt="">
           </figure>
           <dl>
             <dt>
               Amount billed
             </dt>
             <dd>
-              {{ paymentRequestTokenSymbol }}
+              {{ receiveTokenSymbol }}
             </dd>
           </dl>
         </div>
@@ -55,7 +55,7 @@
               {{ tokenSymbol }}
             </p>
             <div class="payment_balance-equivalent" :class="{warning: !isBalanceEnough}">
-              {{ usd | usdFormat }} {{ equivalentSymbol }} equivalent
+              {{ usd | usdFormat }} {{ tokenSymbol }} equivalent
             </div>
           </div>
           <div class="payment_balance-price">
@@ -85,7 +85,7 @@
             </div>
           </button>
           <p class="via">
-            via Uniswap：Slash Payment
+            via Slash Payment
             <span>
               <img src="@/assets/images/slash-s.svg" alt="">
             </span>
@@ -127,6 +127,12 @@ export default {
       contract: {
         address: null,
         abi: null
+      },
+      receiveTokenIcons: {
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
       }
     }
   },
@@ -172,8 +178,13 @@ export default {
         return require('@/assets/images/symbol/unknown.svg')
       }
     },
-    paymentRequestTokenSymbol() {
+    receiveTokenSymbol() {
       return this.$store.state.payment.symbol
+    },
+    receiveTokenIcon() {
+      return this.receiveTokenIcons[
+        this.$store.state.payment.symbol
+      ]
     },
     paymentRequestTokenAmount() {
       return this.$store.state.payment.amount
@@ -197,9 +208,9 @@ export default {
         : this.equivalent
     },
     equivalentSymbol() {
-      return this.tokenSymbol === 'USDT'
+      return this.tokenSymbol === 'USDT' && this.receiveTokenSymbol === 'USDT'
         ? 'USD'
-        : 'USDT'
+        : this.receiveTokenSymbol
     },
     paymentToken() {
       return this.$route.params.token

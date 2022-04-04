@@ -9,9 +9,6 @@ html,
 body {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  @include media(sp) {
-    height: calc(100vh + 32rem);
-  }
 }
 html {
   font-size: 62.5%;
@@ -26,7 +23,7 @@ body {
 img {
   max-width: 100%;
   max-height: 100%;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 a {
@@ -74,6 +71,9 @@ small {
 }
 .mb-5{
   margin-bottom: 5rem !important;
+}
+.mb-6{
+  margin-bottom: 6rem !important;
 }
 .mt-0{
   margin-top: 0 !important;
@@ -295,6 +295,12 @@ li {
     display: none;
   }
 }
+.pc-sp{
+  display: block;
+  @include media(sp) {
+    display: none;
+  }
+}
 .spin{
   animation: 3s linear infinite spin;
 }
@@ -361,5 +367,21 @@ li {
   &.inactive{
     color: $dark-gray;
     opacity: .5;
+  }
+}
+.copied{
+  animation : fadeOut 2.6s;
+  animation-fill-mode: both;
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translate(0, -50%);
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

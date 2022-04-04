@@ -155,6 +155,7 @@ header{
         font-weight: 500;
         font-size: 30px;
         line-height: 30px;
+        color: #fff;
       img{
         width: 30px;
       }
@@ -163,11 +164,14 @@ header{
       text-align: center;
       font-size: 18px;
       font-weight: 400;
+      color: #fff;
       p{
         margin-bottom: 32px;
       }
-      .connect-buttons {
-        //
+      &.connect-buttons {
+        .btn{
+          background: #352D40 !important;
+        }
       }
       .btn-icon {
         text-align: right;

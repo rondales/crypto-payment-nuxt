@@ -14,13 +14,8 @@
 import NumberFormat from 'number-format.js'
 import PaymentIndex from '@/components/templates/PaymentIndex'
 import VuexRestore from '@/components/mixins/VuexRestore'
-import {
-  HTTP_CODES,
-  STATUS_PUBLISHED,
-  STATUS_PROCESSING,
-  STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS
-} from '@/constants'
+import { HTTP_CODES, STATUS_PUBLISHED } from '@/constants'
+import AvailableNetworks from '@/network'
 
 export default {
   name: 'payment',
@@ -68,7 +63,16 @@ export default {
     },
     showFooterMenu() {
       return this.$route.name === 'wallets'
-    }
+    },
+    currentRouteName() {
+      return this.$route.name
+    },
+    isRestorePayment() {
+      return (this.$route.query.vx)
+    },
+    isPaymentDifferent() {
+      return this.paymentId !== this.paymentToken
+    },
   },
   methods: {
     apiGetReceivedData() {
@@ -81,6 +85,114 @@ export default {
       const params = new URLSearchParams([['payment_token', this.paymentToken]])
       return this.axios.get(url, { params })
     },
+    apiGetAvailableNetworks() {
+      const url = `${this.baseUrl}/api/v1/payment/contract/network`
+      const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
+      return this.axios.get(url, request)
+    },
+    redirectToEntrancePage(currentRouteName, paymentToken) {
+      if (currentRouteName !== 'entrance') {
+        this.$router.push({ path: `/payment/${paymentToken}` })
+      }
+    },
+    redirectToInputEmailPage(currentRouteName, paymentToken) {
+      if (currentRouteName !== 'receipt') {
+        this.$router.push({ path: `/payment/receipt/${paymentToken}` })
+      }
+    },
+    redirectToConnectWalletPage(currentRouteName, paymentToken) {
+      if (currentRouteName !== 'wallets') {
+        this.$router.push({ path: `/payment/wallets/${paymentToken}` })
+      }
+    },
+    redirectByTransactionState(currentRouteName, paymentToken, transactionData) {
+      if (transactionData.base_amount === null) {
+        this.redirectToEntrancePage(currentRouteName, paymentToken)
+        return
+      }
+      this.apiGetReceivedData().then((receiveResponse) => {
+        const receiveData = receiveResponse.data
+        this.initializeVuex()
+        this.updatePaymentDataForVuex(
+          paymentToken,
+          receiveData.domain,
+          receiveData.order_code,
+          transactionData.base_symbol,
+          transactionData.base_amount
+        )
+        this.apiGetAvailableNetworks().then((networkResponse) => {
+          const networks = Object.values(AvailableNetworks).map((network) => {
+            return network.chainId
+          }).filter(item => networkResponse.data.networks.includes(item))
+          this.updatePaymentAvailableNetworksForVuex(networks)
+
+          if (
+            transactionData.email === null
+            && !['wallets', 'token', 'exchange', 'detail'].includes(currentRouteName)
+          ) {
+            this.redirectToInputEmailPage(currentRouteName, paymentToken)
+            return
+          }
+          this.redirectToConnectWalletPage(currentRouteName, paymentToken)
+        })
+      })
+    },
+    redirectForSentWeb3(currentRouteName, paymentToken, transactionData) {
+      this.apiGetReceiveData().then((response) => {
+        const receiveData = response.data
+        this.initializeVuex()
+        this.updatePaymentDataForVuex(
+          paymentToken,
+          receiveData.domain,
+          receiveData.order_code,
+          transactionData.base_symbol,
+          transactionData.base_amount
+        )
+        this.updatePaymentTokenForVuex(
+          transactionData.user_symbol,
+          transactionData.user_amount
+        )
+        this.updatePaymentTransactionAddressForVuex(transactionData.transaction_address)
+        this.redirectToConnectWalletPage(currentRouteName, paymentToken)
+      }).catch(() => {
+        this.redirectToEntrancePage(currentRouteName, paymentToken)
+      })
+    },
+    initializeVuex() {
+      this.$store.dispatch('web3/initialize')
+      this.$store.dispatch('account/initialize')
+      this.$store.dispatch('payment/initialize')
+    },
+    updatePaymentDataForVuex(
+      paymentToken,
+      merchantDomain,
+      merchantOrderCode,
+      merchantReceiveSymbol,
+      merchantReceiveAmount
+    ) {
+      this.$store.dispatch('payment/update', {
+        id: paymentToken,
+        domain: merchantDomain,
+        orderCode: merchantOrderCode,
+        symbol: merchantReceiveSymbol,
+        amount: NumberFormat('0.00', merchantReceiveAmount)
+      })
+    },
+    updatePaymentTokenForVuex(paidSymbol, paidAmount) {
+      this.$store.dispatch('payment/updateToken',{
+        symbol: paidSymbol,
+        amount: paidAmount
+      })
+    },
+    updatePaymentTransactionAddressForVuex(transactionAddress) {
+      this.$store.dispatch('payment/updateTransactionHash', transactionAddress)
+    },
+    updatePaymentAvailableNetworksForVuex(networks) {
+      this.$store.dispatch('payment/updateAvailableNetworks', networks)
+    },
+    updateTransactionStatusForVuex(status) {
+      this.$store.dispatch('payment/updateStatus', status)
+    },
     openModal(target, size) {
       this.$store.dispatch('modal/show', { target: target, size: size })
     },
@@ -89,90 +201,28 @@ export default {
     }
   },
   created() {
-    if (this.restoreParam) {
+    if (this.isRestorePayment) {
       this.restoreVuex(this.restoreParam)
-      this.$router.push({ path: `/payment/wallets/${this.paymentToken}` })
-    } else {
-      if (this.paymentId !== this.paymentToken && this.$route.name !== 'entrance') {
-        this.$router.push({ path: `/payment/${this.paymentToken}` })
-      } else {
-        this.apiGetTransactionData().then((transactionResponse) => {
-          const transactionData = transactionResponse.data
-          switch(transactionData.status) {
-            case this.transactionStatusList.published:
-              this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-              if (transactionData.base_amount === null && this.$route.name !== 'entrance') {
-                this.$router.push({ path: `/payment/${this.paymentToken}` })
-              } else {
-                this.apiGetReceivedData().then((receivedResponse) => {
-                  const receivedData = receivedResponse.data
-                  this.$store.dispatch('web3/initialize')
-                  this.$store.dispatch('account/initialize')
-                  this.$store.dispatch('payment/initialize')
-                  this.$store.dispatch('payment/update', {
-                    id: this.paymentToken,
-                    domain: receivedData.domain,
-                    orderCode: receivedData.order_code,
-                    symbol: transactionData.base_symbol,
-                    amount: NumberFormat('0.00', transactionData.base_amount)
-                  })
-                  if (transactionData.email === null && this.$route.name !== 'receipt') {
-                    this.$router.push({ path: `/payment/receipt/${this.paymentToken}` })
-                  } else if (this.$route.name !== 'wallets') {
-                    this.$router.push({ path: `/payment/wallets/${this.paymentToken}` })
-                  }
-                }).catch(() => {
-                  if (this.$route.name !== 'entrance') {
-                    this.$router.push({ path: `/payment/${this.paymentToken}` })
-                  }
-                })
-              }
-              break
-            case this.transactionStatusList.processing:
-              this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
-              this.$store.dispatch('payment/updateTransactionHash', transactionData.transaction_address)
-              break
-            case this.transactionStatusList.failed:
-              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-              this.$store.dispatch('payment/updateTransactionHash', transactionData.transaction_address)
-              break
-            case this.transactionStatusList.succeeded:
-              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
-              this.$store.dispatch('payment/updateTransactionHash', transactionData.transaction_address)
-          }
-          if (transactionData.status !== this.transactionStatusList.published && this.$route.name !== 'wallets') {
-            this.apiGetReceivedData().then((receivedResponse) => {
-              const receivedData = receivedResponse.data
-              this.$store.dispatch('web3/initialize')
-              this.$store.dispatch('account/initialize')
-              this.$store.dispatch('payment/initialize')
-              this.$store.dispatch('payment/update', {
-                id: this.paymentToken,
-                domain: receivedData.domain,
-                orderCode: receivedData.order_code,
-                symbol: transactionData.base_symbol,
-                amount: NumberFormat('0.00', transactionData.base_amount)
-              })
-              this.$store.dispatch('payment/updateToken',{
-                symbol: transactionData.user_symbol,
-                amount: transactionData.user_amount
-              })
-              this.$router.push({ path: `/payment/wallets/${this.paymentToken}` })
-            }).catch(() => {
-              if (this.$route.name !== 'entrance') {
-                this.$router.push({ path: `/payment/${this.paymentToken}` })
-              }
-            })
-          }
-        }).catch((error) => {
-          if (error.response.status === HTTP_CODES.BAD_REQUEST) {
-            if (this.$route.name !== 'entrance') {
-              this.$router.push({ path: `/payment/${this.paymentToken}` })
-            }
-          }
-        })
-      }
+      this.redirectToConnectWalletPage(this.currentRouteName, this.paymentToken)
+      return
     }
+    if (this.isPaymentDifferent) {
+      this.redirectToEntrancePage(this.currentRouteName, this.paymentToken)
+      return
+    }
+    this.apiGetTransactionData().then((response) => {
+      const transactionData = response.data
+      this.updateTransactionStatusForVuex(transactionData.status)
+      if (transactionData.status === STATUS_PUBLISHED) {
+        this.redirectByTransactionState(this.currentRouteName, this.paymentToken, transactionData)
+        return
+      }
+      this.redirectForSentWeb3(this.currentRouteName, this.paymentToken, transactionData)
+    }).catch((error) => {
+      if (error.response.status === HTTP_CODES.BAD_REQUEST) {
+        this.redirectToEntrancePage(this.currentRouteName, this.paymentToken)
+      }
+    })
   }
 }
 </script>

@@ -17,13 +17,20 @@
             the next generation of decentralized payment methods, to support any
             Token payment.
           </p>
-          <a href="/admin">
-            <div class="btn __pg lp-first_enter">Enter App</div>
-          </a>
+          <div class="btn-content mb-3">
+            <a @click="enterApp()" href="/admin">
+              <div class="btn __pg lp-first_enter">Enter App</div>
+            </a>
+          </div>
+          <div class="btn-content">
+            <a href="/">
+              <div class="btn lp-first_docs">Slash docs.</div>
+            </a>
+          </div>
         </div>
       </section>
-      <section class="lp-second display" id="about">
-        <div class="lp-secondrow add-flex a-center">
+      <section class="lp-second" id="about">
+        <div class="lp-secondrow add-flex a-center display">
           <div class="lp-second_l">
             <h2 class="lp-second_title">
               Hello
@@ -36,11 +43,9 @@
             </h2>
             <div class="lp-second_dsc">
               <p>
-                Merchants can automatically accept online TOKEN payments
+                Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.
                 <br class="pc">
-                from customers using the Web3 wallet.Merchants can
-                <br class="pc">
-                automatically
+                Merchants can automatically. 
               </p>
             </div>
           </div>
@@ -51,45 +56,49 @@
           </div>
         </div>
         <div class="lp-second_sub">
-          <div class="lp-second_subtitle add-flex a-center j-between">
-            <h3>
-              The Slash Payment contract provides an automatic connection to the
-              DEX.
-              <br />
-              Customers can pay with any token.
-            </h3>
-            <div class="lp-second_icons">
-              <figure>
-                <img src="@/assets/images/lp/dex.svg" alt="" />
-              </figure>
+          <div class="lp-second_bg"></div>
+          <div class="lp-second_content">
+            <div class="lp-second_subtitle add-flex a-center display">
+              <h3>
+                Customers pay in a variety of tokens
+              </h3>
+              <h3 class="mb-5">
+                You receive sales in stable tokens
+              </h3>
+              <div class="lp-second_icons add-flex a-center display">
+                <figure>
+                  <img src="@/assets/images/lp/dex.svg" alt="" />
+                </figure>
+              </div>
+            </div>
+            <div class="lp-second_subdsc add-flex a-center display">
+              <h4>
+                Exchanges at DEX automatically
+                <br class="sp">
+                at the best rate
+              </h4>
+              <p>
+                Slash Payment’s payment contracts and core contracts automatically connect to the best-rate DEX SWAP router when making payments for different tokens. This solution allows Customers can pay with any token.
+              </p>
+            </div>
+            <div class="lp-second_link display">
+              <a href="/">
+                Supported swap routers
+                <span v-if="$store.state.theme == 'dark'">
+                  <img src="@/assets/images/lp/right-arrow.svg" />
+                </span>
+                <span v-if="$store.state.theme == 'light'">
+                  <img src="@/assets/images/lp/right-arrow-l.svg" />
+                </span>
+              </a>
             </div>
           </div>
-          <div class="lp-second_subdsc">
-            <p>
-              Merchants can automatically accept online TOKEN payments from
-              customers using the Web3 wallet.Merchants can automatically accept
-              online TOKEN payments from customers using the Web3
-              wallet.Merchants can automatically accept online TOKEN payments
-              from customers using the Web3 wallet.
-            </p>
-          </div>
-          <div class="lp-second_link">
-            <a href="/">
-              How fees are waived
-              <span v-if="$store.state.theme == 'dark'">
-                <img src="@/assets/images/lp/right-arrow.svg" />
-              </span>
-              <span v-if="$store.state.theme == 'light'">
-                <img src="@/assets/images/lp/right-arrow-l.svg" />
-              </span>
-            </a>
-          </div>
         </div>
-        <div class="lp-second_cardlist">
+        <div class="lp-second_cardlist display">
           <div class="lp-second_cardwrap add-flex a-center j-between">
             <div class="lp-second_card">
               <h4 class="lp-second_cardtitle">Web3 connect</h4>
-              <div class="lp-second_cardicons">
+              <div class="lp-second_cardicons mb-6">
                 <img src="@/assets/images/lp/connect-icons.svg" alt="" />
               </div>
               <div class="lp-second_carddsc">
@@ -107,8 +116,7 @@
                 <img src="@/assets/images/lp/card-dex.svg" alt="" />
               </div>
               <div class="lp-second_carddsc">
-                customer’s payment will reach the merchant instantly in exchange
-                for Stable Token（USDT） via a decentralized exchange.
+                customer’s payment will reach the merchant instantly in exchange for Stable Token（USDT.USDC.DAI…） via a decentralized exchange.
               </div>
             </div>
             <div class="lp-second_card">
@@ -117,17 +125,18 @@
                 <img
                   v-if="$store.state.theme == 'dark'"
                   src="@/assets/images/lp/chain.svg"
-                  alt=""
                 />
                 <img
                   v-if="$store.state.theme == 'light'"
                   src="@/assets/images/lp/chain-l.svg"
-                  alt=""
                 />
               </div>
               <div class="lp-second_carddsc" id="installation">
-                Accept Bitcoin on your smartphone or tablet at your retail store
-                or restaurant.
+                ETH and EVM-based
+                <br class="sp">
+                (Ethereum Virtual Machine)
+                <br class="sp">
+                networks are supported.
               </div>
             </div>
           </div>
@@ -135,7 +144,7 @@
       </section>
       <section class="lp-third display">
         <div class="lp-third_title">
-          <h2>Easy system installation</h2>
+          <h2>Easy system <br class="sp">installation</h2>
         </div>
         <div class="lp-third_install add-flex j-between">
           <div class="lp-third_left">
@@ -146,24 +155,22 @@
           <div class="lp-third_right">
             <div class="lp-third_subtitle">
               <h3>
-                Install Slash Web3 payment
-                <br />
-                like a credit card Payment
+                Slash makes it extremely easy and
+                <br>
+                safe to introduce cryptocurrency
+                <br>
+                payments.
               </h3>
             </div>
             <div class="lp-third_subdsc">
               <div class="sp-bg"></div>
               <p>
-                Merchants can automatically accept online TOKEN payments from
-                customers using the Web3 wallet.Merchants can automatically
-                accept online TOKEN payments from customers using the Web3
-                wallet.Merchants can automatically accept online TOKEN payments
-                from customers using the Web3 wallet.
+                To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.
               </p>
             </div>
             <div class="lp-third_link">
               <a href="/">
-                Web3Payment Install Docs.
+                Slash Payment Install Docs.
                 <span v-if="$store.state.theme == 'dark'">
                   <img src="@/assets/images/lp/right-arrow.svg" />
                 </span>
@@ -182,12 +189,10 @@
             <div class="lp-third_subdsc">
               <div class="sp-bg"></div>
               <p>
-                Merchants can automatically accept online TOKEN payments from
-                customers using the Web3 wallet.Merchants can automatically
-                accept online TOKEN payments from customers
+                Slash-specific plugin is available to simplify integration with various open platforms. Because of the ease of implementing payments, Slash Payments may be the first transaction that occurs when you launch your e-commerce site. 
               </p>
             </div>
-            <div class="lp-third_logos add-flex j-around">
+            <div class="lp-third_logos add-flex j-evenly">
               <figure v-if="$store.state.theme == 'dark'">
                 <img src="@/assets/images/lp/woocommerce.svg" alt="" />
               </figure>
@@ -225,18 +230,18 @@
         <div class="lp-third_physical">
           <div class="lp-third_subtitle">
             <h3>
-              The best way for Accepting Web3 Wallet Payments at Physical Stores
+              The best way for Accepting Web3
+              <br class="sp">
+              Wallet Payments at Physical Stores
             </h3>
           </div>
           <div class="lp-third_image">
-            <img src="@/assets/images/lp/physical.jpg" alt="" />
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/physical.jpg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/physical-l.jpg" alt="" />
           </div>
           <div class="lp-third_subdsc">
             <p>
-              Merchants can automatically accept online TOKEN payments from
-              customers using the Web3 wallet.Merchants can automatically accept
-              online TOKEN payments fromMerchantscanautomatically accept online
-              TOKEN payments from customers
+              If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We have an iOS/andoroid app that stores can use as a cash register as a means of doing so.
             </p>
           </div>
           <div class="lp-third_app add-flex">
@@ -272,21 +277,21 @@
           </div>
           <div class="lp-third_right">
             <div class="lp-third_subtitle">
-              <h3>Slash Payment fee is 0.25〜0.65%</h3>
+              <h3>Slash Payment fee is 0.2〜0.6%</h3>
             </div>
             <div class="lp-third_subdsc">
-              <div class="sp-bg"></div>
-              <p>
-                Merchants can automatically accept online TOKEN payments from
-                customers using the Web3 wallet.Merchants can automatically
-                accept online TOKEN payments from customers using the Web3
-                wallet.Merchants can automatically accept online TOKEN payments
-                from customers using the Web3 wallet.
+              <div v-if="$store.state.theme == 'dark'" class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'light'" class="sp-bg-l"></div>
+              <p class="mb-3">
+                There are no commissions paid to Merchants. The commission is 0.2-0.6% of the payment amount and is collected as a platform token along with the gas cost of the customer’s payment transaction.
+              </p>
+              <p class="sp-position">
+                The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.
               </p>
             </div>
             <div class="lp-third_link inversion">
               <a href="/">
-                How fees are waived
+                Fee Structure
                 <span v-if="$store.state.theme == 'dark'">
                   <img src="@/assets/images/lp/right-arrow.svg" />
                 </span>
@@ -298,18 +303,28 @@
           </div>
         </div>
         <div class="lp-third_subtitle">
-          <h3>0.15% of the Payment Fee will be automatically donated.</h3>
+          <h3>Slash  automatically donation program</h3>
         </div>
         <div class="lp-third_image pc">
           <img src="@/assets/images/lp/donated.jpg" alt="" />
         </div>
         <div class="lp-third_image sp">
-          <img src="@/assets/images/lp/donated-sp.svg" alt="" />
+          <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/donated-sp.svg" alt="" />
+          <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/donated-sp-l.svg" alt="" />
         </div>
         <div class="lp-fourth_subdsc">
-          <p>
+          <p class="mb-4">
             0.1% of the Slash Payment fee will be automatically sent to the
             Slash Donation Wallet to be donated to social causes.
+          </p>
+          <p class="mb-4">
+            We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries.
+          </p>
+          <p class="mb-4">
+            In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment.
+          </p>
+          <p class="mb-4">
+            In the future, we will form a community so that people can decide where to donate by voting on slash tokens.
           </p>
         </div>
         <div class="lp-fourth_linkwrap add-flex a-center j-between">
@@ -321,7 +336,7 @@
               <span v-if="$store.state.theme == 'light'">
                 <img src="@/assets/images/lp/right-arrow-l.svg" />
               </span>
-              How fees are waived
+              donation program
             </a>
           </div>
           <div class="lp-fourth_logos add-flex j-around">
@@ -342,7 +357,7 @@
             </figure>
           </div>
         </div>
-        <div class="lp-fourth_buyback add-flex j-between">
+        <div class="lp-fourth_buyback add-flex j-between a-center">
           <div class="lp-third_left">
             <div class="phase-wrap">
               <div class="phase">Phase 2</div>
@@ -351,25 +366,37 @@
             <div class="lp-third_subtitle">
               <h3>All fees Use buyback $Slash*</h3>
             </div>
-            <div class="lp-third_subdsc">
-              <div class="sp-bg"></div>
+            <div class="lp-third_subdsc sp-mb">
+              <div v-if="$store.state.theme == 'dark'" class="sp-bg"></div>
+              <div v-if="$store.state.theme == 'light'" class="sp-bg-l"></div>
               <p>
-                Merchants can automatically accept online TOKEN payments from
-                customers using the Web3 wallet.Merchants can automatically
-                accept online TOKEN payments from customers using the Web3
-                wallet.Merchants can automatically accept online TOKEN payments
-                from customers using the Web3 wallet.
+                The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).
+                <br>
+                <br>
+                Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.
+                <br>
+                <br>
+                *Slash Token will be issued in Phase 2.
               </p>
             </div>
             <div class="lp-third_link">
-              <a href="/">
+              <a class="pc-sp" href="/">
                 <span v-if="$store.state.theme == 'dark'">
                   <img src="@/assets/images/lp/right-arrow.svg" />
                 </span>
                 <span v-if="$store.state.theme == 'light'">
                   <img src="@/assets/images/lp/right-arrow-l.svg" />
                 </span>
-                Details of Integrations
+                Details of $Slash
+              </a>
+              <a class="sp" href="/">
+                Details of $Slash
+                <span v-if="$store.state.theme == 'dark'">
+                  <img src="@/assets/images/lp/right-arrow.svg" />
+                </span>
+                <span v-if="$store.state.theme == 'light'">
+                  <img src="@/assets/images/lp/right-arrow-l.svg" />
+                </span>
               </a>
             </div>
           </div>
@@ -581,39 +608,97 @@
 
       <section class="lp-seventh display">
       <div class="lp-seventh_title">
-        <h2>Referral Program</h2>
+        <h2>
+          Welcome⚡
+          <br>
+          Slash Developers💻
+        </h2>
       </div>
-      <div class="phase-wrap">
-        <div class="phase">
-          Phase 2
-        </div>
-        <p>coming soon…</p>
+      <div class="lp-referral_inner mb-6">
+        <a href="/" class="box add-flex a-center mb-3">
+          <figure>
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/gitbook-icon.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/gitbook-icon-l.svg" alt="" />
+          </figure>
+          <p>
+            Slash Payment Docs.
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3">
+          <figure>
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/github.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/github-l.svg" alt="" />
+          </figure>
+          <p>
+            Slash Payment github
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3 disable">
+          <figure>
+            <img src="@/assets/images/lp/save-instagram.svg" alt="" />
+          </figure>
+          <p>
+            Media kit
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3 disable">
+          <figure>
+            <img src="@/assets/images/lp/telegram.svg" alt="" />
+          </figure>
+          <p>
+            Support for Slash Payment System
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3 disable">
+          <figure>
+            <img src="@/assets/images/lp/discord.svg" alt="" />
+          </figure>
+          <p>
+            Slash Developer Community
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3 disable">
+          <figure>
+            <img src="@/assets/images/lp/help.svg" alt="" />
+          </figure>
+          <p>
+            FAQ about system implementation
+          </p>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3">
+          <figure>
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/recruit.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/recruit-l.svg" alt="" />
+          </figure>
+          <p>
+            Slash Recruit Information
+          </p>
+        </a>
+      </div>
+      <div class="lp-seventh_title">
+        <h2>
+          Contact us
+        </h2>
       </div>
       <div class="lp-referral_inner">
-        <div class="box">
-          <div class="lp-referral_title lp-seven_donatetitle">
-            <h4>Referral Reward is 10% of Payment Gas Fee</h4>
-          </div>
+        <a href="/" class="box add-flex a-center mb-3">
+          <figure>
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/arroba.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/arroba-l.svg" alt="" />
+          </figure>
           <p>
-            Each time a merchant customer who has been invited by you makes a payment, you can expect a certain commission fee.The referral reward from Web3Payment will be sent to your balance immediately after the transaction is completed, and you will receive the reward by claiming it.
+            Contact Email
           </p>
-        </div>
-        <div class="box">
-          <div class="lp-referral_title lp-seven_donatetitle">
-            <h4>Forms & Stake Referral Rewards 5%</h4>
-          </div>
+        </a>
+        <a href="/" class="box add-flex a-center mb-3">
+          <figure>
+            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/twitter.svg" alt="" />
+            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/twitter-l.svg" alt="" />
+          </figure>
           <p>
-            You can expect 5% return from your friends’ earnings. Your referral rewards will be visible and ready for claim from your referral accounts when your invited friends will  claim Slash tokens to the wallet. Let’s say, you invited a friend and he/she earned 5 Slash from either “Farms” or “Stake”. As a result, you will receive 5% from 5 Slash, which accounts for 0.25 Slash.
-            <br>
-            All your referral rewards will be sent to your referral balances in WPAY tokens. All the fees will also be charged in Slash tokens.
+            Twitter for DM
           </p>
-        </div>
-        <div class="lp-center">
-          <h3 class="lp-seventh_bottitle">Get Referral Link & Reward<br class="pc">Claim</h3>
-          <a href="/admin">
-            <div class="btn __pg lp-first_enter">Enter App</div>
-          </a>
-        </div>
+        </a>
       </div>
     </section>
     <section class="lp-eighth display">
@@ -627,7 +712,7 @@
           <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash.fi</h4>
         </div>
-        <a href="/admin">
+        <a @click="enterApp()" href="/admin">
           <div class="btn __pg lp-first_enter">Enter App</div>
         </a>
       </div>
@@ -779,6 +864,9 @@ export default {
     },
     toggle(key){
       this.$set(this.show, key, !this.show[key])
+    },
+    enterApp(){
+      this.$store.dispatch("changeTheme",  'dark');
     }
   },
 };
@@ -792,13 +880,10 @@ export default {
   text-align: center;
 }
 section{
-  width:92%;
+  width:100%;
+  margin: auto;
 }
-.theme--dark{
-  .lp-first_bg{
-    opacity: 0.3;
-  }
-}
+
 .lp {
   &-first {
     width:100%;
@@ -807,39 +892,51 @@ section{
       background: url(/assets/images/lp/mv.jpg) no-repeat center center;
       background-size: cover;
       width: 100%;
-      height: calc(100vh - 100px);
-      opacity: 0.8;
+      height: 820px;
       @include media(sp) {
-        height: calc(100vh - 64px);
+        background: url(/assets/images/lp/mv-sp.jpg) no-repeat center center;
+        background-size: cover;
+        height: 700px;
       }
     }
     &_contents {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -48%);
+      transform: translate(-50%, -40%);
       @include media(sp) {
-        width: 80%;
+        width: 90%;
+        transform: translate(-50%, -45%);
       }
-      h1,
-      p {
-        font-size: 26px;
+      h1{
         font-weight: 500;
-        margin-bottom: 16px;
         color: #fff;
+        margin-bottom: 24px;
         @include media(sp) {
           font-size: 21px;
+          margin-bottom: 16px;
         }
       }
-      p{
-        margin-bottom:32px;
+      p {
+        font-size: 26px;
+        margin-bottom: 40px;
+        color: #fff;
+        @include media(sp) {
+          font-size: 18px;
+          font-weight: 300;
+          margin-bottom: 48px;
+        }
+      }
+      .btn-content{
+        display: block;
       }
     }
     &_icon {
       width: 140px;
-      margin: 0 auto 16px;
+      margin: 0 auto 24px;
       @include media(sp) {
-        width: 110px;
+        width: 100px;
+        margin: 0 auto 48px;
       }
     }
     &_enter {
@@ -848,10 +945,43 @@ section{
       height: 6.2rem;
       line-height: 6.2rem;
       display: inline-block;
-      padding: 0 9rem;
       font-size: 18px;
       box-shadow: 0 0 25px #fff;
       color: #fff;
+      width: 40%;
+      @include media(sp) {
+        width: 80%;
+      }
+    }
+    &_docs{
+      position: relative;
+      border-radius: 1.2rem;
+      padding: 0;
+      height: 6.2rem;
+      line-height: 6.2rem;
+      display: inline-block;
+      font-size: 18px;
+      color: #fff;
+      background: #55476B;
+      width: 40%;
+      padding-left: 4.4rem;
+      @include media(sp) {
+        width: 80%;
+      }
+      &::after{
+        position: absolute;
+        top: 50%;
+        left: 30%;
+        transform: translate(-50%, -50%);
+        content: "";
+        background: url(/assets/images/lp/gitbook-icon.svg) no-repeat center center;
+        background-size: cover;
+        width: 34px;
+        height: 24px;
+        @include media(sp) {
+          left: 28%;
+        }
+      }
     }
   }
   &-second {
@@ -862,7 +992,7 @@ section{
       @include media(sp) {
         height: 820px;
         align-items: flex-start;
-        padding-top: 56px;
+        padding-top: 48px;
       }
     }
     &_l {
@@ -897,10 +1027,10 @@ section{
         }
         @keyframes fuwafuwa-sp {
           0% {
-            bottom: 20px;
+            bottom: 16px;
           }
           100% {
-            bottom: 28px;
+            bottom: 24px;
           }
         }
       }
@@ -910,7 +1040,7 @@ section{
     }
     &_title {
       font-size: 64px;
-      line-height: 1.25;
+      line-height: 1.35;
       background: $gradation-light;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -933,7 +1063,7 @@ section{
       font-size: 19px;
       margin-top:15px;
       @include media(sp) {
-        font-size: 18px;
+        font-size: 14px;
       }
       p{
         font-weight: 300;
@@ -945,47 +1075,100 @@ section{
     }
     &_sub {
       margin-bottom: 100px;
+      position: relative;
+      .lp-second_bg{
+        z-index: 0;
+        background: url(/assets/images/lp/lp-second_bg.jpg) no-repeat center center;
+        background-size: cover;
+        min-height: 540px;
+        width: 100%;
+        margin-bottom: 120px;
+        opacity: .4;
+        @include media(sp) {
+          background: url(/assets/images/lp/lp-second_bg.jpg) no-repeat center center;
+          background-size: cover;
+          min-height: 260px;
+          margin-bottom: 240px;
+          opacity: .7;
+        }
+      }
       @include media(sp) {
         margin-bottom: 60px;
       }
     }
+    &_content{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      @include media(sp) {
+        transform: none;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: -480px;
+      }
+    }
     &_subtitle {
+      margin-bottom: 52px;
+      @include media(sp) {
+        width: 100%;
+        margin-bottom: 0;
+        h3 {
+          width: 100%;
+          order: 2;
+          &.mb-5{
+            margin-bottom: 7rem;
+          }
+        }
+      }
       h3 {
-        font-size: 24px;
-        width: 50%;
-        text-align: left;
+        font-size: 40px;
+        text-align: center;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
-        display: inline;
+        display: block;
+        margin: auto;
         @include media(sp) {
-          font-size: 23px;
-        }
-      }
-      margin-bottom: 25px;
-      @include media(sp) {
-        width: 100%;
-        h3 {
-          width: 100%;
-          order: 2;
+          font-size: 17px;
         }
       }
     }
     &_icons {
+      width: 50%;
       @include media(sp) {
-        order: 1;
+        width: 90%;
+        order: 2;
         margin-bottom: 32px;
       }
     }
     &_subdsc {
       text-align: left;
-      margin-bottom: 32px;
+      @include media(sp) {
+        margin: 0 auto 24px;
+      }
+      h4{
+        font-size: 30px;
+        text-align: center;
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 100% 10%;
+        display: block;
+        margin: 0 auto 40px;
+        @include media(sp) {
+          font-size: 18px;
+          margin: 0 auto 24px;
+        }
+      }
       p {
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 300;
         @include media(sp) {
-          font-size: 17px;
+          font-size: 15px;
         }
       }
     }
@@ -993,11 +1176,18 @@ section{
       text-align: right;
       a{
         font-weight: 400;
+        @include media(sp) {
+          font-size: 15px;
+        }
       }
       span {
         display: inline-block;
         vertical-align: middle;
         margin-left: 16px;
+        @include media(sp) {
+          margin-left: 8px;
+          width: 26px;
+        }
       }
     }
     &_cardlist {
@@ -1008,16 +1198,20 @@ section{
     }
     &_cardwrap {
       margin-bottom: 40px;
+      @include media(tb) {
+        margin-bottom: 8px;
+      }
     }
     &_card {
       width: 31.5%;
-      height: 400px;
+      height: 460px;
       background: var(--color_lp_box);
       padding: 40px 27px 32px;
       border-radius: 10px;
       @include media(tb) {
         width: 100%;
         margin-bottom: 32px;
+        height: 400px;
       }
     }
     &_cardtitle {
@@ -1031,12 +1225,17 @@ section{
       line-height: 1.5;
     }
     &_cardicons {
-      margin-bottom: 40px;
+      margin-bottom: 24px;
     }
     &_carddsc {
       text-align: left;
       font-size: 19px;
       font-weight: 300;
+      letter-spacing: -.02rem;
+      @include media(tb) {
+        text-align: center;
+        font-size: 17px;
+      }
     }
   }
   &-third {
@@ -1046,12 +1245,12 @@ section{
     &_install {
       margin-bottom: 80px;
       @include media(sp) {
-        margin-bottom: 60px;
+        margin-bottom: 48px;
       }
       .lp-third_right {
         width: 67.5%;
         text-align: left;
-        padding: 36px 0 36px 36px;
+        padding: 0 0 36px 36px;
         @include media(sp) {
           display: block;
           width: 100%;
@@ -1061,10 +1260,10 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -25%);
+            transform: translate(0, 40%);
             line-height: 1.6;
-            padding: 0 5px;
-            font-size: 18.4px;
+            padding: 0;
+            font-size: 15px;
           }
           .sp-bg {
             background: url(/assets/images/lp/install-sp.jpg) no-repeat center
@@ -1094,10 +1293,10 @@ section{
         margin-bottom: 56px;
       }
       @include media(sp) {
-        text-align: left;
+        text-align: center;
         h2 {
-          font-size: 40px;
-          margin-bottom: 16px;
+          font-size: 30px;
+          margin-bottom: 32px;
           line-height: 1.4;
         }
       }
@@ -1111,7 +1310,7 @@ section{
     &_right {
       width: 67.5%;
       text-align: left;
-      padding: 36px 0 36px 36px;
+      padding: 0 0 36px 36px;
       @include media(sp) {
         width: 100%;
       }
@@ -1126,7 +1325,7 @@ section{
         display: inline-block;
         margin-bottom: 32px;
         @include media(sp) {
-          font-size: 30px;
+          font-size: 32px;
           background-size: 100% 10%;
           line-height: 1.4;
           margin-bottom: 24px;
@@ -1136,13 +1335,17 @@ section{
     &_subdsc {
       margin-bottom: 35px;
       p {
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 300;
+        @include media(sp) {
+          font-size: 15px;
+          margin-top: -48px;
+        }
       }
       @include media(sp) {
         position: relative;
         height: 460px;
-        margin-bottom: 0;
+        margin-bottom: 16px;
       }
     }
     &_link {
@@ -1150,13 +1353,13 @@ section{
       a{
         font-weight: 400;
         @include media(sp) {
-          font-size: 18px;
+          font-size: 15px;
         }
       }
       &.inversion {
         span {
           transform: rotate(0deg) !important;
-          margin-left: 16px !important;
+          margin-left: 8px !important;
           margin-right: 0;
         }
       }
@@ -1165,8 +1368,8 @@ section{
         vertical-align: middle;
         margin-left: 16px;
         @include media(sp) {
-          width: 40px;
-          margin-left: 4px;
+          margin-left: 8px;
+          width: 26px;
         }
       }
     }
@@ -1194,10 +1397,10 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -10%);
+            transform: translate(0, 75%);
             line-height: 1.6;
-            padding: 0 5px;
-            font-size: 18.4px;
+            padding: 0;
+            font-size: 15px;
           }
           .sp-bg {
             background: url(/assets/images/lp/integration-sp.jpg) no-repeat
@@ -1224,17 +1427,17 @@ section{
         span {
           transform: rotate(180deg);
           margin-left: 0;
-          margin-right: 16px;
+          margin-right: 8px;
         }
       }
       .lp-third_logos {
         margin-bottom: 40px;
         @include media(sp) {
-          justify-content: space-between;
-          margin-bottom: 16px;
+          justify-content: space-around;
+          margin-bottom: 32px;
           figure {
             margin-bottom: 16px;
-            width: 46%;
+            width: 40%;
             img{
               width: 100%;
             }
@@ -1272,7 +1475,7 @@ section{
         text-align: left;
         font-size: 19px;
         font-weight: 300;
-        margin-bottom: 32px;
+        margin-bottom: 56px;
         @include media(sp) {
           position: relative;
           margin-bottom: 40px;
@@ -1281,7 +1484,7 @@ section{
       }
     }
     &_image {
-      margin-bottom: 40px;
+      margin-bottom: 0;
       @include media(sp) {
         margin-bottom: 25px;
       }
@@ -1345,11 +1548,23 @@ section{
         text-align: left;
       }
     }
+    .lp-third_subdsc{
+      margin-bottom: 32px;
+      @include media(sp) {
+        margin-bottom: 160px;
+        &.sp-mb{
+          margin-bottom: 260px;
+        }
+      }
+    }
     .lp-third_link {
       span {
         transform: rotate(180deg);
         margin-left: 0;
         margin-right: 16px;
+        @include media(sp) {
+          transform: rotate(180deg);
+        }
       }
       @include media(sp) {
         order: 2;
@@ -1363,24 +1578,28 @@ section{
         width: 100%;
         padding: 0;
         p {
-          color: #fff;
-          position: absolute;
           z-index: 2;
-          top: 50%;
-          transform: translate(0, -30%);
           line-height: 1.6;
           padding: 0 5px;
-          font-size: 18.4px;
+          font-size: 15px;
+          margin-top: -96px !important;
+          &.sp-position{
+            margin-top: -16px !important;
+          }
         }
         .sp-bg {
           background: url(/assets/images/lp/fee-sp.jpg) no-repeat center center;
           background-size: cover;
           width: 100%;
           height: 425px;
-          position: absolute;
-          left: 0;
-          top: 0;
-          z-index: 1;
+
+        }
+        .sp-bg-l {
+          background: url(/assets/images/lp/fee-sp-l.jpg) no-repeat center center;
+          background-size: cover;
+          width: 100%;
+          height: 425px;
+
         }
       }
     }
@@ -1396,8 +1615,19 @@ section{
     &_subdsc {
       text-align: left;
       margin-bottom: 24px;
+      @include media(sp) {
+        margin-top: -64px;
+        margin-bottom: 48px;
+      }
       p{
         font-weight: 400;
+        @include media(sp) {
+          font-weight: 300;
+          font-size: 15px;
+          &.mb-4{
+            margin-bottom: 2rem !important;
+          }
+        }
       }
     }
     &_linkwrap {
@@ -1406,12 +1636,13 @@ section{
     &_logos {
       @include media(sp) {
         width: 100%;
+        justify-content: space-evenly !important;
       }
       figure {
         @include media(sp) {
-          width: 50%;
+          width: 40%;
           &:nth-child(2) {
-            width: 45%;
+            width: 35%;
             margin-left: 5% !important;
           }
         }
@@ -1421,7 +1652,7 @@ section{
       }
       @include media(sp) {
         order: 1;
-        margin-bottom: 32px;
+        margin-bottom: 48px;
       }
     }
     &_title {
@@ -1430,7 +1661,8 @@ section{
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
-          text-align: left;
+          font-size: 25px;
+          text-align: center;
           padding: 0;
           margin-bottom: 56px;
           line-height: 1.4;
@@ -1521,6 +1753,9 @@ section{
     }
     &_buyback {
       margin-bottom: 80px;
+      @include media(sp) {
+        margin-bottom: 64px;
+      }
       .lp-third_subtitle {
         background-size: 100% 10%;
       }
@@ -1536,18 +1771,27 @@ section{
           width: 100%;
           padding: 0;
           p {
-            color: #fff;
             padding: 0 5px;
-            font-size: 18.4px;
+            font-size: 15px;
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, -30%);
+            transform: translate(0, 35%);
             line-height: 1.6;
           }
           .sp-bg {
             background: url(/assets/images/lp/buyback-sp.jpg) no-repeat center
               center;
+            background-size: cover;
+            width: 100%;
+            height: 425px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+          }
+          .sp-bg-l {  
+            background: url(/assets/images/lp/buyback-sp-l.jpg) no-repeat center center;
             background-size: cover;
             width: 100%;
             height: 425px;
@@ -1567,10 +1811,17 @@ section{
       }
       .lp-third_link {
         text-align: left;
+        @include media(sp) {
+          text-align: right;
+        }
         span {
           transform: rotate(180deg);
           margin-left: 0;
           margin-right: 16px;
+          @include media(sp) {
+            transform: rotate(0deg);
+            margin-left: 8px;
+          }
         }
       }
       .lp-third_logos {
@@ -1608,7 +1859,7 @@ section{
     padding:60px 0;
     @include media(sp) {
       padding:30px 16px 0;
-      margin-bottom: 40px;
+      margin-bottom: 16px;
     }
     &_title {
       h2 {
@@ -1616,9 +1867,10 @@ section{
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
-          text-align: left;
-          margin-bottom: 20px;
+          text-align: center;
+          margin-bottom: 48px;
           line-height: 1.4;
+          font-size: 25px;
         }
       }
     }
@@ -1638,7 +1890,8 @@ section{
         @include media(sp) {
           width: 50%;
           margin: 4px 0;
-          height: 48px !important;
+          height: 50px !important;
+          text-align: center;
           img{
             height:100%;
           }
@@ -1691,9 +1944,10 @@ section{
         font-weight: 500;
         margin-bottom: 48px;
         @include media(sp) {
-          text-align: left;
-          margin-bottom: 32px;
+          text-align: center;
+          margin-bottom: 56px;
           line-height: 1.4;
+          font-size: 25px;
         }
       }
     }
@@ -1711,7 +1965,10 @@ section{
     }
     .lp-fourth_donate{
       align-items: inherit;
-      margin-bottom: 32px;
+      margin-bottom: 88px;
+      @include media(sp) {
+        margin-bottom: 32px;
+      }
     }
     .lp-six_donateitem{
       width: calc(50% - 20px);
@@ -1749,7 +2006,7 @@ section{
           line-height:2;
           font-weight:600;
           @include media(sp) {
-            font-size: 22px;
+            font-size: 18px;
           }
           span{
             background:$gradation-orange;
@@ -1805,6 +2062,9 @@ section{
               background: url(/assets/images/lp/list-arrow.svg);
               width: 20px;
               height: 12px;
+              img{
+                vertical-align: text-top;
+              }
             }
           }
           .cont-item{
@@ -1840,91 +2100,76 @@ section{
       h2 {
         font-size: 49px;
         font-weight: 500;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
         @include media(sp) {
-          text-align: left;
-          margin-bottom: 24px;
+          text-align: center;
+          margin-bottom: 56px;
           line-height: 1.4;
+          font-size: 24px;
         }
       }
     }
-    .phase-wrap {
-      margin-bottom: 30px;
-      text-align:center;
-      @include media(sp) {
-        text-align: left;
-      }
-      .phase {
-        background: $gradation-double;
-        padding: 4px 30px;
-        background-size: 100% 200%;
-        font-size: 20px;
-        margin-bottom:20px;
-        display:inline-block;
-        color: #fff;
-        font-weight: 500;
-        letter-spacing: .4px;
-        @include media(sp) {
-          margin-bottom: 8px;
-        }
-      }
-      p{
-        font-size:12px;
-      }
-    }
-
     .lp-referral_inner{
-      background: var(--color_lp_box);
-      border-radius: 10px;
-      padding: 56px;
-      text-align: left;
-      @include media(sp) {
-        padding:25px 25px 50px 25px;
-      }
-      .lp-center{
-        text-align:center;
-        h3.lp-seventh_bottitle{
-          background: $gradation-light;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          margin-bottom:35px;
-          font-size:40px;
-          @include media(sp) {
-            font-size: 35px;
-          }
-        }
-      }
       .box{
-        margin-bottom: 32px;
-        p{
-          font-weight: 300;
-          font-size: 19px;
+        background: var(--color_lp_box);
+        border-radius: 10px;
+        padding: 0 64px;
+        text-align: left;
+        max-width: 700px;
+        height: 110px;
+        line-height: 110px;
+        margin: auto;
+        @include media(sp) {
+          padding: 0 64px;
+          line-height: 1;
+          height: auto;
         }
-      }
-      .lp-seven_donatetitle{
-        margin-bottom: 8px;
-        h4{
-          display: inline-block;
-          font-size: 26px;
-          background: $gradation-light;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-size: 100% 10%;
-          line-height:2;
-          font-weight:600;
+        &:nth-child(1){
+          figure{
+            img{
+              width: 52px;
+            }
+          }
+        }
+        &:nth-child(2){
+          figure{
+            img{
+              width: 48px;
+            }
+          }
+        }
+        &:nth-child(3){
+          figure{
+            img{
+              width: 27px;
+            }
+          }
+        }
+        figure{
+          width: 48px;
+          text-align: center;
+          img{
+            width: 100%;
+          }
+        }
+        &.disable{
+          pointer-events: none;
+          opacity: .7;
+          p{
+            color: #4E455A;
+          }
+        }
+        p{
+          margin-left: 48px;
           @include media(sp) {
-            line-height: 1.4;
-            font-size: 28px;
+            width: 60%;
           }
-          span{
-            background:$gradation-orange;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-          }
+        }
+        @include media(sp) {
+          padding: 32px;
         }
       }
     }
-
   }
   &-eighth {
     background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
@@ -1947,7 +2192,12 @@ section{
       width:400px;
       text-align:center;
       margin:30px auto 0;
-
+      .btn{
+        width: 100%;
+        @include media(sp) {
+          width: 80%;
+        }
+      }
       @include media(sp) {
         width: 85%;
         padding: 30px 10px;

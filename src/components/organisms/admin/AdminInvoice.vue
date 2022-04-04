@@ -464,6 +464,7 @@ export default {
       this.createdAdress = true
     },
     copy(value) {
+      this.$store.dispatch('account/copied')
       this.$clipboard(value);
     },
   },
@@ -484,7 +485,7 @@ export default {
 
 .select-date::v-deep {
   .date-time-picker {
-    $base-bg-color: #191820;
+    $base-bg-color: #161421;
     $base-font-color: #FFFFFF;
     .field-input {
       height: 35px;

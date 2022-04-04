@@ -10,8 +10,8 @@
         <p class="logo-sub">
           {{ subTitle }}
         </p>
-        <div class="user-status" :class="{'is-admin': isAdminPage}">
-          merchant
+        <div v-if="isAdminPage && isConnected && isFixedReceiveToken" class="user-status">
+          ReceiveToken：<img :src="receiveTokenIcon"><span>{{ receiveTokenSymbol }}</span>
         </div>
       </div>
       <div class="global-header__actions add-flex a-center">
@@ -67,6 +67,16 @@ import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 export default {
   name: 'Header',
   props: ['width'],
+  data() {
+    return {
+      receiveTokenIcons: {
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
+      }
+    }
+  },
   watch: {
     $route(to, from) {
       if(from.fullPath === "/payment") {
@@ -136,6 +146,20 @@ export default {
     isAdminPage() {
       return this.$route.name === 'admin'
     },
+    isConnected() {
+      return (this.$store.state.web3.instance)
+    },
+    isFixedReceiveToken() {
+      return (this.$store.state.account.receiveSymbol)
+    },
+    receiveTokenSymbol() {
+      return this.$store.state.account.receiveSymbol
+    },
+    receiveTokenIcon() {
+      return this.receiveTokenIcons[
+        this.$store.state.account.receiveSymbol
+      ]
+    },
     walletAddress() {
       return this.$store.state.account.address
     },
@@ -194,22 +218,28 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
 .user-status{
-  display: none;
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 400;
   line-height: 24px;
   background: $gradation-light;
   padding: 2px 24px;
   border-radius:50px;
   margin-left: 16px;
+  align-items: center;
+  @include media(sp) {
+    display: none;
+  }
+  img{
+    width: 18px;
+    height: 24px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
   @include media(sp) {
     font-size: 12px;
     margin-left: 16px;
     padding: 2px 12px;
   }
-}
-.is-admin{
-  display: block;
 }
 .global-header {
   display: flex;
@@ -247,6 +277,7 @@ export default {
     height: 55px;
     padding: 0 20px;
     bottom: 0;
+    width: 100%;
     .logo {
       height: 29px;
     }

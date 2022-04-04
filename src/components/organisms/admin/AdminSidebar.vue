@@ -11,7 +11,7 @@
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/web3payment">
+              <router-link to="/admin/web3payment?id=1" :class="{ inactive: isUnselectedReceiveToken }">
                 web3 payment
               </router-link>
             </li>
@@ -24,7 +24,7 @@
             </li>
             -->
             <li @click="close()">
-              <router-link to="/admin/keys">
+              <router-link to="/admin/keys" :class="{ inactive: isUnselectedReceiveToken }">
                 keys
               </router-link>
             </li>
@@ -47,7 +47,10 @@
 
 export default {
   name: 'payment',
-  components: {
+  computed: {
+    isUnselectedReceiveToken() {
+      return !(this.$store.state.account.receiveSymbol)
+    }
   },
   methods: {
     close(){
@@ -78,7 +81,7 @@ export default {
     }
   }
   &--top{
-    margin-top: 64px;
+    margin-top: 46px;
   }
   &--content{
     overflow-y: auto;
@@ -96,6 +99,10 @@ export default {
         a{
           color: #fff;
           text-decoration: none;
+          &.inactive{
+            pointer-events: none;
+            color: #838383;
+          }
         }
       }
     }
