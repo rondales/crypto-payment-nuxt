@@ -944,7 +944,7 @@ section{
         font-size: 26px;
         margin-bottom: 24px;
         @include media(sp) {
-          font-size: 20px;
+          font-size: 23px;
           margin-bottom: 16px;
         }
       }
@@ -1127,7 +1127,7 @@ section{
           background-size: cover;
           min-height: 260px;
           margin-bottom: 240px;
-          opacity: .7;
+          opacity: .55;
         }
       }
       @include media(sp) {
@@ -1209,6 +1209,7 @@ section{
         font-weight: 400;
         margin-bottom: 16px;
         @include media(sp) {
+          margin-bottom: 0;
           font-size: 15px;
           font-weight: 200;
         }
@@ -1303,7 +1304,7 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, 40%);
+            transform: translate(0, 70%);
             line-height: 1.6;
             padding: 0;
             font-size: 15px;
@@ -1821,7 +1822,7 @@ section{
             position: absolute;
             z-index: 2;
             top: 50%;
-            transform: translate(0, 35%);
+            transform: translate(0, 55%);
             line-height: 1.6;
           }
           .sp-bg {
