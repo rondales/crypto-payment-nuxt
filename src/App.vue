@@ -73,6 +73,7 @@ body{
   min-height: calc(100vh - 50px);
   margin-top: 80px;
   position: relative;
+  height: 140vh;
   @include media(sp) {
     margin-top: 55px;
   }

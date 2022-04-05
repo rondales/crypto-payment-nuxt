@@ -12,7 +12,7 @@
             </li>
             <li @click="close()">
               <router-link to="/admin/web3payment?id=1" :class="{ inactive: isUnselectedReceiveToken }">
-                web3 payment
+                Slash payment
               </router-link>
             </li>
             <!--
@@ -25,9 +25,14 @@
             -->
             <li @click="close()">
               <router-link to="/admin/keys" :class="{ inactive: isUnselectedReceiveToken }">
-                keys
+                Keys
               </router-link>
             </li>
+            <li @click="close()">
+              <router-link to="/admin/store" :class="{ inactive: isUnselectedReceiveToken }">
+                Store apps
+              </router-link>
+            </li>            
             <!--
             @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
