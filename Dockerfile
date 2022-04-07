@@ -1,7 +1,6 @@
 FROM node:12.13.1-alpine3.9 as builder
 
 ARG NPM_COMMAND
-ENV NODE_ENV development
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 RUN mkdir /work
