@@ -10,8 +10,10 @@
       </span>
     </p>
     <div class="store-copy">
-      {{$store.state.account.address}}
-      <img src="@/assets/images/copy.svg">
+      <span>
+        {{currentAddres | omittedTextSp}}
+      </span>
+      <img class="copy" @click="copy(currentAddres)" src="@/assets/images/copy.svg">
     </div>
     <p class="store-desc">
       Slash Store Apps Login Deeplink Issuance
@@ -102,27 +104,63 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr
+              v-for="(record, index) in summaries.records"
+              :key="index"
+            >
               <td>
-                <img class="qricon" src="@/assets/images/store-qricon.png">
+                <img @click="openQr" class="qricon" src="@/assets/images/store-qricon.png">
                 <span>
-                  https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43
+                  {{record.linkUrl}}
                 </span>
-                <img src="@/assets/images/copy.svg">
+                <img class="copy" @click="copy(record.linkUrl)" src="@/assets/images/copy.svg">
               </td>
               <td>
-                <div class="status-active">
+                <div v-if="record.status === 0" class="status-active">
                   Active
+                </div>
+                <div v-if="record.status === 1" class="status-invalid">
+                  invalid
+                </div>
+                <div v-if="record.status === 2" class="status-invitation">
+                  invitation
                 </div>
               </td>
               <td>
-                30/9/2021 00:00
+                {{record.lastLogin | empty}}
               </td>
               <td>
-                In order to activate the Slash Store Apps, you must issue a deep link to activate your…. 
+                <p>
+                  {{record.note}}
+                  <br>
+                  <span>
+                    Terminal info：{{record.info}}
+                  </span>
+                </p>
+                <img @click="editNote()" src="@/assets/images/edit.svg">
               </td>
               <td>
-                aaaaaaaaaaaaaaaaaaaa
+                <div class="option add-flex a-center j-between">
+                  <div class="toggle_switch" v-if="record.status === 0">
+                    <input type="checkbox" v-bind:id="record.id" checked>
+                    <label v-bind:for="record.id"></label>
+                  </div>
+                  <div class="toggle_switch" v-if="record.status === 1">
+                    <input type="checkbox" v-bind:id="record.id">
+                    <label v-bind:for="record.id"></label>
+                  </div>
+                  <div class="switch-empty" v-if="record.status === 2">
+                    -
+                  </div>
+                  <button class="btn refresh" @click="urlRefresh()">
+                    <img src="@/assets/images/url-refresh.svg">
+                    Url refresh
+                  </button>
+                  <button class="btn delete" @click="deleteRow()">
+                    <img src="@/assets/images/trash-box.svg">
+                    delete
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -136,11 +174,6 @@
 <script>
 import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 import DatetimePicker from 'vue-ctk-date-time-picker'
-import { NETWORKS, HTTP_CODES, LOGIN_TOKEN } from '@/constants'
-import { errorCodeList } from '@/enum/error_code'
-import RequestUtility from '@/utils/request'
-import moment from 'moment'
-import NumberFormat from 'number-format.js'
 
 export default {
   name: 'AdminTransactionHistory',
@@ -166,89 +199,83 @@ export default {
         toItemNumber: null,
         total: null,
         records: [
-          {}
+          {
+            id: 0,
+            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
+            status: 0,
+            lastLogin: "30/9/2021 00:00",
+            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
+            info: "IOS3161613162626",
+          },
+          {
+            id: 1,
+            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
+            status: 1,
+            lastLogin: "30/9/2021 00:00",
+            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
+            info: "IOS3161613162626",
+          },
+          {
+            id: 2,
+            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
+            status: 2,
+            lastLogin: "",
+            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
+            info: "IOS3161613162626",
+          },
+          {
+            id: 3,
+            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
+            status: 0,
+            lastLogin: "30/9/2021 00:00",
+            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
+            info: "IOS3161613162626",
+          },
         ]
-      }
+      },
+      checkbox: []
     }
   },
   filters: {
-    decimalFormat(amount) {
-      return NumberFormat('0.00', amount)
-    }
+    empty(value){
+      if (!(value)) {
+        return "-";
+      } else {
+        return value;
+      }
+    },
+    omittedTextSp(value) {
+      if (window.innerWidth <= 768) {
+        return value.length > 25 ? value.slice(0, 25) + "…" : value;
+      } else {
+        return value.length > 40 ? value.slice(0, 40) + "…" : value;
+      }
+    },
   },
   computed: {
-    baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL
-    },
-    network() {
-      return (chainId) => {
-        return chainId ? NETWORKS[chainId].symbol : ''
-      }
-    },
-    scanSiteUrl() {
-      return (chainId, transactionHash) => {
-        if (chainId && transactionHash) {
-          return `${NETWORKS[chainId].scanUrl}/tx/${transactionHash}`
-        } else {
-          return ''
-        }
-      }
-    },
+    currentAddres(){
+      return this.$store.state.account.address;
+    }
   },
   methods: {
-    apiGetHistory() {
-      const url = `${this.baseUrl}/api/v1/management/transaction/normal`
-      const inputedParams = Object.entries(this.searchParams).map(([key, param]) => {
-          if (
-            (param.key !== 'status' && param.value) ||
-            (param.key === 'status' && param.value !== '0')
-          ) {
-            const value = key === 'datetimeFrom' || key === 'datetimeTo'
-              ? String(moment(param.value).unix())
-              : param.value
-            this.csvParams[param.key] = value
-            return [ param.key, value ]
-          }
-        }).filter(param => param)
-      const controlParams = Object.values(this.paginateParams).map((param) => {
-        return [ param.key, param.value ]
-      })
-      const timezoneParam = [[ 'offset', moment().utcOffset() ]]
-      const convertedParams = new URLSearchParams(inputedParams.concat(controlParams, timezoneParam))
-      const request = {
-        headers: { Authorization: RequestUtility.getBearer() },
-        params: convertedParams
-      }
-      return this.axios.get(url, request)
+    copy(value) {
+      this.$store.dispatch('account/copied')
+      this.$clipboard(value);
     },
-    searchHistory() {
-      this.apiGetHistory().then((response) => {
-        this.summaries.records = response.data.data
-        this.summaries.total = response.data.total
-        this.summaries.fromItemNumber = response.data.from
-        this.summaries.toItemNumber = response.data.to
-        this.summaries.lastPageNumber = response.data.last_page
-      }).catch((error) => {
-        if (error.response.status !== HTTP_CODES.UN_AUTHORIZED) {
-          const message = 'errors' in error.response.data
-            ? errorCodeList[error.response.data.errors.shift()].msg
-            : 'Please try again.'
-          this.$store.dispatch('modal/show', {
-            target: 'error-modal',
-            size: 'small',
-            params: {
-              message: message
-            }
-          })
-        } else {
-          localStorage.removeItem(LOGIN_TOKEN)
-          this.$router.push({ path: '/admin' })
-        }
-      })
+    openQr(){
+      this.$store.dispatch("modal/show", {target: 'open-qr-modal', size: "small"});
     },
+    deleteRow(){
+      this.$store.dispatch("modal/show", {target: 'delete-row-modal', size: "small"});
+    },
+    urlRefresh(){
+      this.$store.dispatch("modal/show", {target: 'url-refresh-modal', size: "small"});
+    },
+    editNote(){
+      this.$store.dispatch("modal/show", {target: 'edit-note-modal', size: "small"});
+    }
   },
   created() {
-    this.searchHistory()
   }
 }
 </script>
@@ -275,12 +302,19 @@ export default {
 }
 .store-copy{
   background: #292536;
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
   padding: 12px 16px;
   font-size: 13px;
   width: 60%;
   border-radius: 8px;
   margin-bottom: 32px;
+  @include media(tb) {
+    width: 100%;
+  }
+  span{
+    display: inline-block;
+  }
   img{
     float: right;
   }
@@ -289,10 +323,20 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   padding: 24px;
   background: #292536;
   border-radius: 8px;
   margin-bottom: 48px;
+  @include media(tb) {
+    .confirm-btn{
+      order: 2;
+      width: 100%;
+    }
+    p{
+      margin-bottom: 32px;
+    }
+  }
   p{
     font-size: 12px;
     font-weight: 300;
@@ -471,6 +515,40 @@ export default {
     }
   }
 }
+.toggle_switch {
+  display: table;
+  font-size: 60px;
+  input {
+    display: none;
+  }
+  label {
+    display: block;
+    position: relative;
+    width: 0.6em;
+    height: 0.35em;
+    border-radius: 0.35em;
+    background-color: #B0BEC5;
+    cursor: pointer;
+    &::before {
+      position: absolute;
+      top: 0.03em;
+      left: 0.04em;
+      width: calc(0.35em - 0.06em);
+      height: calc(0.35em - 0.06em);
+      border-radius: calc(0.35em - 0.06em);
+      background-color: #fff;
+      transition: 0.5s;
+      content: "";
+    }
+  }
+  input:checked + label {
+    background-color: #2dcb45;
+  }
+}
+
+.toggle_switch > input:checked + label::before {
+    left: calc(100% - 0.35em + 0.04em);
+}
 
 .select-date::v-deep {
   .date-time-picker {
@@ -532,12 +610,12 @@ export default {
 }
 
 .manage-table{
-  position: absolute;
   z-index: 10;
-  width: calc(100% - 228px);
-  @include media(sp) {
+  width: 100%;
+  @include media(tb) {
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
+    position: unset;
   }
   table{
     width: calc(100% - 40px);
@@ -549,52 +627,43 @@ export default {
     &::-webkit-scrollbar{
       display: none;
     }
-    @include media(sp) {
-      width: 100%;
+    @include media(tb) {
+      width: 1100px;
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;
+      @include media(tb) {
+        width: 1100px;
+      }
       tr{
         border-bottom: 2px solid #58466E;
         th{
           font-size: 16px;
           text-align: left;
           padding-bottom: 8px;
+          padding: 0 8px 8px 8px;
         }
         td{
           font-size: 10px;
-          padding: 16px 0;
+          padding: 16px 8px;
+          height: 90px;
+          &:nth-child(2){
+            font-size: 12px;
+          }
+          &:nth-child(4){
+            margin-top: -16px;
+          }
           div{
             text-align: left;
             border-radius: 8px;
-            width: 160px;
             font-weight: 300;
             span{
               font-size: 12px;
             }
-          }
-          .cancelled,.cancelled-refund{
-            border: 1px solid #F75D68;
-            color: #F75D68;
-            padding: 16px 16px;
-          }
-          .cancelled-refund{
-            border: 1px solid #F75D68;
-            color: #F75D68;
-            padding: 4px;
-          }
-          .received{
-            border: 1px solid #00FF3B;
-            color: #00FF3B;
-            padding: 16px 16px;
-          }
-          .received-refund{
-            border: 1px solid #00FF3B;
-            color: #00FF3B;
-            padding: 4px 16px;
           }
         }
         th,td{
@@ -603,51 +672,92 @@ export default {
           &:nth-child(1){
             display: flex;
             align-items: center;
-            width: 25vw;
+            width: 20vw;
+            @include media(tb) {
+              width: 300px;
+            }
             .qricon{
               widows: 30px;
               height: 30px;
+              cursor: pointer;
             }
             span{
-              width: 220px;
-              padding: 0 16px;
+              width: 200px;
+              padding: 0px 8px;
               font-weight: 300;
-            }
-            @include media(sp) {
-              width:200px;
             }
           }
           &:nth-child(2){
-            width: 11.111vw;
+            width: 8vw;
+            @include media(tb) {
+              width: 96px;
+            }
             .status-active{
               color: #4CAF50;
             }
-            @include media(sp) {
-              width:200px;
+            .status-invalid{
+              color: #CE3A3A;
+            }
+            .status-invitation{
+              color: #FEDC90;
             }
           }
           &:nth-child(3){
-            width: 11.111vw;
-            @include media(sp) {
-              width:200px;
+            width: 10vw;
+            text-align: center;
+            @include media(tb) {
+              width: 120px;
             }
           }
           &:nth-child(4){
-            width: 27.77vw;
-            @include media(sp) {
-              width:200px;
+            width: 22vw;
+            display: inline-flex;
+            align-items: center;
+            @include media(tb) {
+              width: 264px;
+            }
+            p{
+              span{
+                color: #707070;
+              }
+            }
+            img{
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
             }
           }
           &:nth-child(5){
-            width: 11.111vw;
-            @include media(sp) {
-              width:200px;
+            width: 30vw;
+            @include media(tb) {
+              width: 400px;
             }
-          }
-          &:nth-child(6){
-            width: 16.666vw;
-            @include media(sp) {
-              width:200px;
+            .switch-empty{
+              width: 40px;
+              text-align: center;
+            }
+            .option{
+              .btn{
+                font-size: 10px;
+                font-weight: 300;
+                padding: 0 1.5rem 0 1.5rem;
+                img{
+                  width: 14px;
+                  margin-right: .5em;
+                }
+              }
+              .refresh{
+                background: #4E455A;
+                img{
+                  margin-top: -4px;
+                }
+              }
+              .delete{
+                background: #707070;
+                img{
+                  margin-top: -3px;
+                }
+              }
             }
           }
         }

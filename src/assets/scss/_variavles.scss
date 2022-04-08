@@ -85,7 +85,7 @@ $sp-screen-size: 768px;
       @content;
     }
     } @else if($mode == tb) {
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 1200px) {
       @content;
     }
   // } @else if($mode == pctb) {

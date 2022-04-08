@@ -23,7 +23,11 @@ export default {
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
-    receiveModal: () => import('@/components/molecules/receiveModal')
+    receiveModal: () => import('@/components/molecules/receiveModal'),
+    editNoteModal: () => import('@/components/molecules/editNoteModal'),
+    urlRefreshModal: () => import('@/components/molecules/urlRefreshModal'),
+    deleteRowModal: () => import('@/components/molecules/deleteRowModal'),
+    openQrModal: () => import('@/components/molecules/openQrModal'),
   },
   computed: {
     classes() {
@@ -73,7 +77,6 @@ body{
   min-height: calc(100vh - 50px);
   margin-top: 80px;
   position: relative;
-  height: 140vh;
   @include media(sp) {
     margin-top: 55px;
   }
