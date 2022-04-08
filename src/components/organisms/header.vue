@@ -48,7 +48,7 @@
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="connected" class="account-wallet">
+          <button v-if="connected" class="account-wallet" @click="openMenu">
             <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
           </button>
@@ -57,6 +57,57 @@
           </button>
         </div>
       </div>
+    </div>
+    <div v-if="this.$store.state.accountMenu" class="account-menu">
+      <ul>
+        <li @click="openAccountModal()">
+          <p>
+            Account
+          </p>
+          <img src="@/assets/images/account.svg" alt="">
+        </li>
+        <li @click="editNote()" >
+          <p>
+            Account Note
+          </p>
+          <img src="@/assets/images/edit.svg" alt="">
+        </li>
+        <li>
+          <div class="account-note">
+            {{accountNote}}
+          </div>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/web3payment?id=1">
+            <p>
+              History
+            </p>
+            <img src="@/assets/images/history.svg" alt="">
+          </router-link>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/web3payment?id=2">
+            <p>
+              Settings
+            </p>
+            <img src="@/assets/images/settings.svg" alt="">
+          </router-link>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/store">
+            <p>
+              Store apps
+            </p>
+            <img src="@/assets/images/scan.svg" alt="">
+          </router-link>
+        </li>
+        <li @click="disconnect()">
+          <p>
+            Disconnect
+          </p>
+          <img src="@/assets/images/logout.svg" alt="">
+        </li>
+      </ul>
     </div>
   </header>
 </template>
@@ -74,7 +125,8 @@ export default {
         USDC: require('@/assets/images/symbol/usdc.svg'),
         DAI: require('@/assets/images/symbol/dai.svg'),
         JPYC: require('@/assets/images/symbol/jpyc.svg')
-      }
+      },
+      accountNote: "The account note will be written here The account note will be written here The account note will be written here"
     }
   },
   watch: {
@@ -210,6 +262,18 @@ export default {
     },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
+    },
+    openMenu(){
+      this.$store.dispatch("accountMenu", {accountMenu: true});
+    },
+    openAccountModal(){
+      this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
+    },
+    editNote(){
+      this.$store.dispatch("modal/show", {target: 'edit-account-note-modal', size: "small"});
+    },
+    disconnect(){
+      alert("disconnectAccount")
     }
   }
 }
@@ -317,12 +381,12 @@ export default {
   display: flex;
   align-items: center;
   background: var(--color_darken);
+  cursor: pointer;
   @include media(pc) {
     height: 42px;
     border-radius: 8px;
     padding: 7px 0 7px 7px;
     font-size: 1.2rem;
-    cursor: default;
     .price {
       margin-left: 24px;
       color: #fff;
@@ -401,7 +465,6 @@ export default {
 }
 .theme-button {
   font-size: 0;
-
   @include media(pc) {
     .emoji {
       font-size: 28px;
@@ -425,6 +488,60 @@ export default {
   &--dark {
     grid-row: 1;
     grid-column: 3;
+  }
+}
+.account-menu{
+  position: absolute;
+  right: 24px;
+  top: 70px;
+  background: #292536;
+  padding: 24px 16px;
+  border-radius: 10px;
+  @include media(sp) {
+    width: 90%;
+  }
+  ul{
+    li{
+      font-size: 15px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      cursor: pointer;
+      &:hover{
+        opacity: 0.8;
+      }
+      a{
+        width: 100%;
+      }
+      &:nth-child(2){
+        img{
+          cursor: pointer;
+        }
+      }
+      &:nth-child(3){
+        cursor: unset;
+        &:hover{
+          opacity: 1;
+        }
+      }
+      &:last-child{
+        margin-bottom: 0;
+      }
+      .account-note{
+        overflow: scroll;
+        background: #171522;
+        border-radius: 8px;
+        padding: 8px;
+        resize: none;
+        width: 200px;
+        height: 100px;
+        font-size: 11px;
+        @include media(sp) {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 </style>
