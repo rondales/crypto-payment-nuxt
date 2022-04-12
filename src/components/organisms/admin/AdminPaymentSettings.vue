@@ -120,12 +120,49 @@
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.failureReturnUrl">
           </div>
-          <div class="manage-contents_clm">
+          <div class="manage-contents_clm mb-6">
             <h4><span>*</span>Exchange margin rate</h4>
             <p>
               The margin rate to be added to the actual exchange rate.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.exchangeMarginRate">
+          </div>
+          <div class="manage-contents_clm">
+            <h4>
+              *******Supported Currencies
+            </h4>
+            <div class="bases-wrap">
+              <div class="bases mb-1">
+                <input type="checkbox" :checked="isAllSelected" @click="selectAllCats">
+                <label for="item1">
+                  All Currencies 
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" :checked="isAllSelected">
+                <label for="item2">
+                  USD
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" :checked="isAllSelected">
+                <label for="item3">
+                  JPY
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" :checked="isAllSelected">
+                <label for="item4">
+                  EUR
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" :checked="isAllSelected">
+                <label for="item5">
+                  AED
+                </label>
+              </div>
+            </div>
           </div>
           <div class="manage-contents_creat-url" @click="updatePaymentSettings">
             Save
@@ -201,7 +238,8 @@ export default {
         domain: '',
         txt: '',
         verified: false
-      }
+      },
+      isAllSelected: false
     }
   },
   computed: {
@@ -433,6 +471,13 @@ export default {
           })
         }
       }
+    },
+    selectAllCats () {
+      if (this.isAllSelected) {
+        this.isAllSelected = false
+      } else {
+        this.isAllSelected = true
+      }
     }
   },
   created() {
@@ -653,6 +698,81 @@ export default {
         padding: 12px 40px;
         border-radius: 8px;
         cursor: pointer;
+      }
+    }
+    .bases-wrap{
+      display: flex;
+      flex-wrap: wrap;
+      width: 50%;
+    }
+    .bases{
+      position: relative;
+      margin-right: 16px;
+      @include media(sp) {
+        width: 100%;
+      }
+      input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        font-size: 14px;
+        z-index: 1;
+        width: 2rem;
+        padding-top: 4px;
+        height: 2rem;
+        top: 6px;
+        + label {
+          &:before {
+            content: '';
+            background: #292536;
+            border-radius: 6px;
+            border: 1px solid darken(#f4f4f4, 25%);
+            display: inline-block;
+            width: 1.4em;
+            height: 1.4em;
+            position: relative;
+            top: 4px;
+            margin-right: 2px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 250ms ease;
+          }
+        }
+        &:checked {
+          + label {
+            &:before {
+              border-radius: 6px;
+              background-color: #fff;
+              box-shadow: inset 0 0 0 3px #292536;
+            }
+          }
+        }
+        &:focus {
+          + label {
+            &:before {
+              border-radius: 6px;
+              outline: none;
+              border-color: #fff;
+            }
+          }
+        }
+        &:disabled {
+          + label {
+            &:before {
+              box-shadow: inset 0 0 0 4px #f4f4f4;
+              border-color:#292536;
+              background:#292536;
+            }
+          }
+        }
+        + label {
+          font-size: 14px;
+          cursor: pointer;
+          &:empty {
+            &:before {
+              margin-right: 0;
+            }
+          }
+        }
       }
     }
   }
