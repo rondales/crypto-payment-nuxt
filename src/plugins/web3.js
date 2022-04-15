@@ -39,7 +39,8 @@ export default {
           sendPaymentTransaction: sendPaymentTransaction,
           monitoringPaymentTransaction: monitoringPaymentTransaction,
           publishMerchantContract: publishMerchantContract,
-          deleteMerchantContract: deleteMerchantContract
+          deleteMerchantContract: deleteMerchantContract,
+          signWithPrivateKey: signWithPrivateKey
         }
       }
     })
@@ -415,6 +416,10 @@ const publishMerchantContract = async function(
 const deleteMerchantContract = function() {
   // @todo Implement functions for deletion inside smart contracts as soon as they are known
   throw new Error('deleteMerchantContract function is not yet implemented')
+}
+
+const signWithPrivateKey = function(web3, address) {
+  return web3.eth.personal.sign('Signature for login authentication', address)
 }
 
 function getNetworkDefaultTokens(chainId) {
