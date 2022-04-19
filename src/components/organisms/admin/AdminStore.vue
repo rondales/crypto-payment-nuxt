@@ -1,7 +1,7 @@
 <template>
   <div class="store">
     <div class="title-gradation">
-      Slash Store Apps 
+      Slash Store Apps
     </div>
     <p class="store-desc">
       Your sales deposit address
@@ -11,7 +11,7 @@
     </p>
     <div class="store-copy">
       <span>
-        {{currentAddres | omittedTextSp}}
+        {{ currentAddres }}
       </span>
       <img class="copy" @click="copy(currentAddres)" src="@/assets/images/copy.svg">
     </div>
@@ -20,7 +20,7 @@
     </p>
     <div class="comfirm-wrap">
       <div class="confirm-btn">
-        Confirm
+        Create
       </div>
       <p>
         In order to activate the Slash Store Apps, you must issue a deep link to activate your account. If you are using the same account on multiple devices, please issue multiple deeplinks.
@@ -243,14 +243,7 @@ export default {
       } else {
         return value;
       }
-    },
-    omittedTextSp(value) {
-      if (window.innerWidth <= 768) {
-        return value.length > 25 ? value.slice(0, 25) + "…" : value;
-      } else {
-        return value.length > 40 ? value.slice(0, 40) + "…" : value;
-      }
-    },
+    }
   },
   computed: {
     currentAddres(){
@@ -273,10 +266,10 @@ export default {
     },
     editNote(){
       this.$store.dispatch("modal/show", {target: 'edit-note-modal', size: "small"});
-    }
+    },
+    searchHistory(){}
   },
-  created() {
-  }
+  created() {}
 }
 </script>
 
@@ -501,7 +494,7 @@ export default {
   .search-btn{
     font-weight: 200;
     font-size: 14px;
-    line-height: 32px;
+    line-height: 35px;
     background: $gradation-light;
     padding: 2px 12px;
     border-radius: 8px;
