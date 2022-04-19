@@ -71,12 +71,13 @@ export default {
         })
       })
     },
-    apiConnectAuthentification(walletAddress) {
+    apiConnectAuthentification(walletAddress, signature) {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
       const params = {
         address: walletAddress,
         token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null,
-        direct_token: this.$route.query.token ? this.$route.query.token : null
+        direct_token: this.$route.query.token ? this.$route.query.token : null,
+        signature: signature
       }
       return this.axios.post(url, params)
     },
@@ -85,11 +86,19 @@ export default {
         provider.instance,
         provider.chainId
       ).then((account) =>{
-        this.apiConnectAuthentification(account.address).then((authed) => {
-          this.$store.dispatch('web3/update', provider)
-          this.$store.dispatch('account/update', account)
-          localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-          this.$router.push({ path: '/admin/dashboard' })
+        this.$web3.signWithPrivateKey(
+          provider.instance,
+          account.address
+        ).then((signature) => {
+          this.apiConnectAuthentification(
+            account.address,
+            signature
+          ).then((authed) => {
+            this.$store.dispatch('web3/update', provider)
+            this.$store.dispatch('account/update', account)
+            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+            this.$router.push({ path: '/admin/dashboard' })
+          })
         })
       })
     }
