@@ -27,6 +27,7 @@ export default {
     editNoteModal: () => import('@/components/molecules/editNoteModal'),
     urlRefreshModal: () => import('@/components/molecules/urlRefreshModal'),
     deleteRowModal: () => import('@/components/molecules/deleteRowModal'),
+    createDeeplinkModal: () => import('@/components/molecules/createDeeplinkModal'),
     openQrModal: () => import('@/components/molecules/openQrModal'),
   },
   computed: {

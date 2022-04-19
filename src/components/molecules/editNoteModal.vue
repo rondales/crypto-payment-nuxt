@@ -2,21 +2,16 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Deeplink Create
+        Apps terminal Note
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Apps terminal Note</p>
       <div class="text-wrap">
         <textarea name="" id="" cols="30" rows="10"></textarea>
       </div>
-      <div class="dsc-wrap">
-        <span class="dsc">
-          ※ This Note can be changed later.
-        </span>
-      </div>
-      <button @click="confirm" class="btn __l">
-        Create
+      <button @click="saveNote" class="save">
+        Save Note
+        <img src="@/assets/images/edit.svg">
       </button>
     </div>
     <button class="close" @click="hideModal">
@@ -39,9 +34,9 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      // send to Note in storeAppTable
-      confirm(){
-        alert("send to Note")
+      // save the Terminal info note
+      saveNote(){
+        alert("save the Terminal info note")
       }
     }
   }
@@ -75,7 +70,7 @@
       padding: 24px 24px 0 24px;
       &__title {
         font-size: 2.5rem;
-        margin-bottom: 4rem;
+        margin-bottom: 2rem;
       }
       &__desc {
         font-size: 2rem;
@@ -84,7 +79,7 @@
     @include media(sp) {
       padding: 18px;
       &__title {
-        font-size: 1.7rem;
+        font-size: 2.3rem;
       }
     }
     &__title {
@@ -111,10 +106,10 @@
   }
   .body {
     @include media(pc) {
-      padding: 0 24px 40px;
+      padding: 0 24px 24px;
     }
     @include media(sp) {
-      padding: 0 12px 48px;
+      padding: 0 12px 24px;
     }
     .sub-title{
       font-size: 18px;
@@ -131,7 +126,7 @@
         padding: 16px;
         border-radius: 10px;
         outline: none;
-        margin-bottom: 4px;
+        margin-bottom: 16px;
       }
     }
     .dsc-wrap{
@@ -142,9 +137,14 @@
       font-size: 12px;
       font-weight: 200;
     }
-    .btn{
-      width: 70%;
-      margin: auto;
+    .save{
+      text-align: center;
+      width: 100%;
+      font-size: 18px;
+      img{
+        margin-left: 8px;
+        width: 20px;
+      }
     }
   }
   .footer {

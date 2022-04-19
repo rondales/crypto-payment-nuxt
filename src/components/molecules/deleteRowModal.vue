@@ -22,7 +22,7 @@
           The device currently linked will be logged out and a new linkage will be required.
         </span>
       </div>
-      <button @click="confirm" class="btn __l add-flex j-center a-center">
+      <button @click="deleteClm" class="btn __l add-flex j-center a-center">
         <img src="@/assets/images/trash-box.svg">
         <span>
           Delete
@@ -61,7 +61,7 @@
         this.$clipboard(value);
       },
       // remove the linkage URL
-      delete(){
+      deleteClm(){
         alert("delete")
       }
     }
@@ -105,7 +105,7 @@
     @include media(sp) {
       padding: 18px;
       &__title {
-        font-size: 1.7rem;
+        font-size: 2.3rem;
       }
     }
     &__title {

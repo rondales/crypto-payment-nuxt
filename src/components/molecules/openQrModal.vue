@@ -63,9 +63,8 @@
         this.$store.dispatch('account/copied')
         this.$clipboard(value);
       },
-      // remove the linkage URL
-      delete(){
-        alert("delete")
+      confirm(){
+        this.$store.dispatch('modal/hide')
       }
     }
   }
@@ -108,7 +107,7 @@
     @include media(sp) {
       padding: 18px;
       &__title {
-        font-size: 1.7rem;
+        font-size: 2.3rem;
       }
     }
     &__title {

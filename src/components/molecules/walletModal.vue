@@ -160,7 +160,7 @@
     @include media(sp) {
       padding: 18px;
       &__title {
-        font-size: 1.7rem;
+        font-size: 2.3rem;
       }
     }
     &__title {

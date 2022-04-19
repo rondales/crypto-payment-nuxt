@@ -2,38 +2,26 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        <img src="@/assets/images/url-refresh.svg">
-        URL Refresh
+        Deeplink Create
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current URL</p>
+      <p class="sub-title">Apps terminal Note</p>
       <div class="text-wrap">
-        <p>
-          {{url}}
-        </p>
-        <img class="copy" @click="copy(url)" src="@/assets/images/copy.svg">
+        <textarea name="" id="" cols="30" rows="10"></textarea>
       </div>
       <div class="dsc-wrap">
-        <span class="mb-3">
-          Would you like to Refresh this URL and QR code?
-        </span>
-        <span>
-          The device currently linked will be logged out and a new linkage will be required.
+        <span class="dsc">
+          ※ This Note can be changed later.
         </span>
       </div>
-      <button @click="confirm" class="btn __l add-flex j-center a-center">
-        <img src="@/assets/images/url-refresh.svg">
-        <span>
-          Create
-        </span>
+      <button @click="confirm" class="btn __l">
+        Create
       </button>
     </div>
     <button class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
-      <span>
-        閉じる
-      </span>
+      閉じる
     </button>
   </div>
 </template>
@@ -42,11 +30,6 @@
 
   export default {
     name: 'walletModal',
-    data(){
-      return{
-        url: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43"
-      }
-    },
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -56,13 +39,9 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      copy(value) {
-        this.$store.dispatch('account/copied')
-        this.$clipboard(value);
-      },
-      // Refresh this URL and QR code
+      // send to Note in storeAppTable
       confirm(){
-        alert("Refresh this URL and QR code")
+        alert("send to Note")
       }
     }
   }
@@ -97,9 +76,6 @@
       &__title {
         font-size: 2.5rem;
         margin-bottom: 4rem;
-        img{
-          width: 20px;
-        }
       }
       &__desc {
         font-size: 2rem;
@@ -109,18 +85,10 @@
       padding: 18px;
       &__title {
         font-size: 2.3rem;
-        img{
-          width: 20px;
-        }
       }
     }
     &__title {
       font-weight: 500;
-      img{
-        width: 20px;
-        margin-right: 8px;
-        vertical-align: baseline;
-      }
     }
     &__desc {
       font-weight: 100;
@@ -153,24 +121,22 @@
       margin-bottom: 16px;
     }
     .text-wrap{
-      padding: 16px;
-      background: #171522;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 32px;
-      p{
-        width: 70%;
-        font-size: 11px;
-        word-break: break-word;
+      text-align: center;
+      textarea{
+        font-size: 16px;
+        resize: none;
+        width:100%;
+        height:160px;
+        background: #171522;
+        padding: 16px;
+        border-radius: 10px;
+        outline: none;
+        margin-bottom: 4px;
       }
     }
     .dsc-wrap{
+      text-align: center;
       margin-bottom: 32px;
-      span{
-        display: block;
-        font-size: 16px;
-      }
     }
     .dsc{
       font-size: 12px;
@@ -179,10 +145,6 @@
     .btn{
       width: 70%;
       margin: auto;
-      img{
-        padding: 0 12px 0 0 !important;
-        width: 34px;
-      }
     }
   }
   .footer {

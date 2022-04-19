@@ -19,7 +19,7 @@
       Slash Store Apps Login Deeplink Issuance
     </p>
     <div class="comfirm-wrap">
-      <div class="confirm-btn">
+      <div @click="create()" class="confirm-btn">
         Create
       </div>
       <p>
@@ -263,6 +263,9 @@ export default {
     },
     urlRefresh(){
       this.$store.dispatch("modal/show", {target: 'url-refresh-modal', size: "small"});
+    },
+    create(){
+      this.$store.dispatch("modal/show", {target: 'create-deeplink-modal', size: "small"});
     },
     editNote(){
       this.$store.dispatch("modal/show", {target: 'edit-note-modal', size: "small"});
@@ -611,7 +614,7 @@ export default {
     position: unset;
   }
   table{
-    width: calc(100% - 40px);
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 32px;
     display: block;
