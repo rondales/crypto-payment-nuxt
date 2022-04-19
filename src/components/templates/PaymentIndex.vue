@@ -173,7 +173,7 @@ export default {
       background: url(/assets/images/slash-bg.png) no-repeat center center;
       width: 100%;
       height: 100vh;
-      position: absolute;
+      position: fixed;
       top: 100px;
       z-index: 0;
       @include media(sp) {
