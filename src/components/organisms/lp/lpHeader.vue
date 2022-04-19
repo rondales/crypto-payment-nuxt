@@ -39,17 +39,17 @@
             </button>
           </span>
           <span>
-            <a href="#about">
+            <a href="#developers">
               Developers
             </a>
           </span>
           <span>
-            <a href="#installation">
+            <a href="#fee-ecosystem">
               Fee & Ecosystem
             </a>
           </span>
           <span>
-            <a href="#ecosystem">
+            <a href="#roadmap">
               Roadmap
             </a>
           </span>

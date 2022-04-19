@@ -29,7 +29,7 @@
           </div>
         </div>
       </section>
-      <section class="lp-second" id="about">
+      <section class="lp-second">
         <div class="lp-secondrow add-flex a-center display">
           <div class="lp-second_l">
             <h2 class="lp-second_title">
@@ -131,7 +131,7 @@
                   src="@/assets/images/lp/chain-l.svg"
                 />
               </div>
-              <div class="lp-second_carddsc" id="installation">
+              <div class="lp-second_carddsc">
                 ETH and EVM-based
                 <br class="sp">
                 (Ethereum Virtual Machine)
@@ -256,7 +256,7 @@
               </div>
               <p v-if="!nativeApp">coming soon…</p>
             </div>
-            <div class="lp-third_appright" id="ecosystem">
+            <div class="lp-third_appright" id="fee-ecosystem">
               <p>
                 *In order to start using the Merchant App, you need to issue a
                 one-time login code on SlashApp.
@@ -289,7 +289,7 @@
                 The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.
               </p>
             </div>
-            <div class="lp-third_link inversion">
+            <div class="lp-third_link inversion" id="donation">
               <a href="/">
                 Fee Structure
                 <span v-if="$store.state.theme == 'dark'">
@@ -338,7 +338,7 @@
               donation program
             </a>
           </div>
-          <div class="lp-fourth_logos add-flex j-around">
+          <div class="lp-fourth_logos add-flex j-around" id="token">
             <figure>
               <img
                 v-if="$store.state.theme == 'dark'"
@@ -584,6 +584,7 @@
                 </p>
               </div>
             </div>
+            <div id="developers"></div>
           </div>
         </div>
         <div class="lp-sixth_flex sp">
@@ -602,6 +603,7 @@
               </div>
             </div>
           </div>
+          <div id="developers"></div>
         </div>
       </section>
 
@@ -664,7 +666,7 @@
             FAQ about system implementation
           </p>
         </a>
-        <a href="/" class="box add-flex a-center mb-3">
+        <a href="/" class="box add-flex a-center mb-3" id="contact">
           <figure>
             <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/recruit.svg" alt="" />
             <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/recruit-l.svg" alt="" />
@@ -756,15 +758,15 @@
             </div>
             <div class="box">
               <h4>Fee & Ecosystem</h4>
-              <p><a href="" target="_blank">Fee& Ecosystem</a></p>
-              <p><a href="" target="_blank">Donation Program</a></p>
-              <p><a href="" target="_blank">Slash Token</a></p>
+              <p><a href="#fee-ecosystem">Fee & Ecosystem</a></p>
+              <p><a href="#donation">Donation Program</a></p>
+              <p><a href="#token">Slash Token</a></p>
             </div>
             <div class="box end">
               <h4>Other</h4>
-              <p><a href="" target="_blank">Rood Map</a></p>
-              <p><a href="" target="_blank">Referral</a></p>
-              <p><a href="" target="_blank">Contact</a></p>
+              <p><a href="#roadmap">Road Map</a></p>
+              <p><a href="#developers">Referral</a></p>
+              <p><a href="#contact">Contact</a></p>
             </div>
           </div>
           <div class="footer_icon-wrap">

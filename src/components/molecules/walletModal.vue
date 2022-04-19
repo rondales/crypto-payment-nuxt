@@ -52,7 +52,7 @@
             connectRes.chainId
           ).then((accountRes) =>{
             this.$store.dispatch('account/update', accountRes)
-            this.connected(accountRes.address)
+            this.connected(connectRes.instance, accountRes.address)
           })
         }).catch((error) => {
           if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
@@ -79,7 +79,7 @@
             connectRes.chainId
           ).then((accountRes) =>{
             this.$store.dispatch('account/update', accountRes)
-            this.connected(accountRes.address)
+            this.connected(connectRes.instance, accountRes.address)
           })
         }).catch(() => {
           this.$store.dispatch('modal/show', {
@@ -88,23 +88,29 @@
           })
         })
       },
-      apiConnectAuthentification(walletAddress) {
+      apiConnectAuthentification(walletAddress, signature) {
         const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
         const params = {
           address: walletAddress,
-          token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null
+          token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null,
+          signature: signature
         }
         return this.axios.post(url, params)
       },
-      connected(walletAddress) {
+      connected(web3Instance, walletAddress) {
         const adminPathPattern = /^\/admin$/
         const paymentPathPattern = /^\/payment\//
 
         if (adminPathPattern.test(this.$route.path)) {
-          this.apiConnectAuthentification(walletAddress).then((authed) => {
-            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-            this.hideModal()
-            this.$router.push({ path: '/admin/dashboard' })
+          this.$web3.signWithPrivateKey(
+            web3Instance,
+            walletAddress
+          ).then((signature) => {
+            this.apiConnectAuthentification(walletAddress, signature).then((authed) => {
+              localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
+              this.hideModal()
+              this.$router.push({ path: '/admin/dashboard' })
+            })
           })
         } else if(paymentPathPattern.test(this.$route.path)) {
           this.hideModal()
