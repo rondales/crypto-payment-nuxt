@@ -120,17 +120,18 @@
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.failureReturnUrl">
           </div>
-          <div class="manage-contents_clm mb-6">
+          <div class="manage-contents_clm">
             <h4><span>*</span>Exchange margin rate</h4>
             <p>
               The margin rate to be added to the actual exchange rate.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.exchangeMarginRate">
           </div>
-          <div class="manage-contents_clm">
-            <h4>
-              *******Supported Currencies
-            </h4>
+          <div class="manage-contents_clm mb-6">
+            <h4><span>*</span>Supported Currencies</h4>
+            <p>
+              The fiat currencies that can be selected when the user enters the settlement amount.
+            </p>
             <div class="bases-wrap">
               <div class="bases mb-1">
                 <input type="checkbox" :checked="isAllSelected" @click="selectAllCats">
