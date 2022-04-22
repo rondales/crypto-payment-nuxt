@@ -134,31 +134,31 @@
             </p>
             <div class="bases-wrap">
               <div class="bases mb-1">
-                <input type="checkbox" :checked="isAllSelected" @click="selectAllCats">
+                <input type="checkbox" @click="selectAllCurrency" :checked="isAllowAllCurrency">
                 <label for="item1">
-                  All Currencies 
+                  All Currencies
                 </label>
               </div>
               <div class="bases mb-1">
-                <input type="checkbox" :checked="isAllSelected">
+                <input type="checkbox" @click="selectCurrency($event, 'USD')" :checked="isAllowUsd">
                 <label for="item2">
                   USD
                 </label>
               </div>
               <div class="bases mb-1">
-                <input type="checkbox" :checked="isAllSelected">
+                <input type="checkbox" @click="selectCurrency($event, 'JPY')" :checked="isAllowJpy">
                 <label for="item3">
                   JPY
                 </label>
               </div>
               <div class="bases mb-1">
-                <input type="checkbox" :checked="isAllSelected">
+                <input type="checkbox" @click="selectCurrency($event, 'EUR')" :checked="isAllowEur">
                 <label for="item4">
                   EUR
                 </label>
               </div>
               <div class="bases mb-1">
-                <input type="checkbox" :checked="isAllSelected">
+                <input type="checkbox" @click="selectCurrency($event, 'AED')" :checked="isAllowAed">
                 <label for="item5">
                   AED
                 </label>
@@ -233,14 +233,19 @@ export default {
         successNotifyUrl: '',
         successReturnUrl: '',
         failureReturnUrl: '',
-        exchangeMarginRate: '0.0'
+        exchangeMarginRate: '0.0',
+        allowCurrencies: {
+          USD: false,
+          JPY: false,
+          EUR: false,
+          AED: false
+        }
       },
       domainSettings: {
         domain: '',
         txt: '',
         verified: false
-      },
-      isAllSelected: false
+      }
     }
   },
   computed: {
@@ -274,6 +279,22 @@ export default {
     },
     isMetamask() {
       return this.$store.state.web3.provider === METAMASK
+    },
+    isAllowAllCurrency() {
+      const denyCurrencies = Object.values(this.paymentSettings.allowCurrencies).filter((setting) => !setting)
+      return denyCurrencies.length === 0
+    },
+    isAllowUsd() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.USD
+    },
+    isAllowJpy() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.JPY
+    },
+    isAllowEur() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.EUR
+    },
+    isAllowAed() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
     },
     contractLoaded() {
       return this.contractSettings.loaded
@@ -327,7 +348,8 @@ export default {
         complete_kickback_url: this.paymentSettings.successNotifyUrl,
         succeeded_return_url: this.paymentSettings.successReturnUrl,
         failured_return_url: this.paymentSettings.failureReturnUrl,
-        exchange_margin_rate: this.paymentSettings.exchangeMarginRate
+        exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
+        allow_currencies: this.paymentSettings.allowCurrencies
       }
       return this.axios.patch(url, data, options)
     },
@@ -365,6 +387,7 @@ export default {
         this.paymentSettings.successReturnUrl = response.data.succeeded_return_url
         this.paymentSettings.failureReturnUrl = response.data.failured_return_url
         this.paymentSettings.exchangeMarginRate = response.data.exchange_margin_rate
+        this.paymentSettings.allowCurrencies = response.data.allow_currencies
       }).catch((error) => {
         this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
@@ -473,12 +496,14 @@ export default {
         }
       }
     },
-    selectAllCats () {
-      if (this.isAllSelected) {
-        this.isAllSelected = false
-      } else {
-        this.isAllSelected = true
-      }
+    selectAllCurrency($event) {
+      const settingValue = $event.target.checked
+      Object.keys(this.paymentSettings.allowCurrencies).forEach((currency) => {
+        this.paymentSettings.allowCurrencies[currency] = settingValue
+      })
+    },
+    selectCurrency(event, currency) {
+      this.paymentSettings.allowCurrencies[currency] = event.target.checked
     }
   },
   created() {
