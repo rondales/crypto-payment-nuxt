@@ -274,30 +274,32 @@ const getTokenExchangeData = async function(
   const feePath = token.address === nativeToken.address
     ? [nativeToken.address, requestToken.address]
     : [token.address, nativeToken.address, requestToken.address]
-
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
       token.address,
-      userTokenBalanceWei
+      userTokenBalanceWei,  
+      feePath
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
       token.address,
-      requestAmountWei
+      requestAmountWei,
+      feePath
     ).call({ from: walletAddress })
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       token.address,
-      perRequestTokenWei
+      perRequestTokenWei,
+      feePath
     ).call({ from: walletAddress })
-  const platformFee = await merchantContract.methods.getFeeAmount(
+  const feeArray = await merchantContract.methods.getFeeAmount(
       token.address,
       requestTokenToUserToken,
       feePath
     ).call({ from: walletAddress })
-
+  const totalFee = String(Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0))
   return {
-    requireAmount: web3.utils.fromWei(requestTokenToUserToken, requestTokenWeiUnit),
-    equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, userTokenWeiUnit),
+    requireAmount: web3.utils.fromWei(requestTokenToUserToken, userTokenWeiUnit),
+    equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
-    fee: web3.utils.fromWei(platformFee, 'ether')
+    fee: web3.utils.fromWei(totalFee, 'ether')
   }
 }
 
@@ -311,9 +313,11 @@ const checkTokenApproved = async function(web3, chainId, walletAddress, contract
 
   try {
     const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+    const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+    const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
     const allowance = await tokenContract.methods.allowance(
       walletAddress,
-      contract.address
+      slashCoreContractAddress
     ).call({ from: walletAddress })
     return Number(allowance) !== 0
   } catch (error) {
@@ -331,9 +335,10 @@ const tokenApprove = function(web3, chainId, walletAddress, contract, token) {
   if (!tokenAbi) tokenAbi = Erc20Abi
   const uint256 = new BigJs(2).pow(256).minus(1).toFixed(0)
   const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
-
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  const slashCoreContractAddress = merchantContract.methods.viewSlashCore().call()
   return tokenContract.methods
-    .approve(contract.address, uint256)
+    .approve(slashCoreContractAddress, uint256)
     .send({ from: walletAddress })
 }
 
@@ -379,7 +384,8 @@ const monitoringPaymentTransaction = function(web3, transactionHash) {
 const publishMerchantContract = async function(
   web3,
   chainId,
-  merchantWalletAddress
+  merchantWalletAddress,
+  receiveTokenAddress
 ) {
   if (!MerchantFactoryContract.addresses[chainId]) {
     throw new Error('Currently, this network has stopped issuing contracts.')
@@ -392,18 +398,13 @@ const publishMerchantContract = async function(
 
   try {
     let contractAddress = null
-    factoryContract.once('NewMerchant', {}, function(error, event) {
-      if (event) {
-        contractAddress = event.returnValues.merchant
-      } else {
-        throw new Error(error)
-      }
-    })
 
-    await factoryContract.methods.deployMerchant(
-      merchantWalletAddress
+     const transaction = await factoryContract.methods.deployMerchant(
+      merchantWalletAddress,
+      receiveTokenAddress
     ).send({ from: merchantWalletAddress })
 
+    contractAddress = transaction.events['NewMerchantDeployed'].returnValues.merchantAddress_
     return {
       abi: MerchantContract.abi,
       address: contractAddress
