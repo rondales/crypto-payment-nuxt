@@ -14,6 +14,12 @@
           <figure>
             <img :src="selectedCurrencyIcon">
           </figure>
+          <!-- <select name="currency" v-model="selectedCurrency">
+            <option disabled value="">{{ selectedCurrencyName }}</option>
+            <option v-for="(currency, key) in currencies" :value="currency.name" :key="key">
+              {{ currency.name }}
+            </option>
+          </select> -->
           <select name="currency" v-model="selectedCurrency">
             <option disabled value="">{{ selectedCurrencyName }}</option>
             <option v-for="(currency, key) in currencies" :value="currency.name" :key="key">
@@ -76,8 +82,8 @@
 
 <script>
 import MathExtend from '@/utils/math_extend'
-import { currencyList } from '@/enum/currency'
 import { errorCodeList } from '@/enum/error_code'
+import { CURRENCIES } from '@/constants'
 
 export default {
   name: 'PaymentAmount',
@@ -86,7 +92,7 @@ export default {
       loading: false,
       requireUpdateExchange: false,
       legalCurrencyAmount: null,
-      selectedCurrency: currencyList['JPY'].name,
+      selectedCurrency: CURRENCIES.JPY.name,
       exchangedAmount: 0,
       exchangeRate: 100,
       exchangeMarginRate: 3.5,
@@ -116,13 +122,21 @@ export default {
       ]
     },
     currencies() {
-      return currencyList
+      let list = {}
+      Object.entries(
+        this.$store.state.payment.allowCurrencies
+      ).forEach(([key, value]) => {
+        if (value) {
+          list[key] = CURRENCIES[key]
+        }
+      })
+      return list
     },
     selectedCurrencyName() {
-      return currencyList[this.selectedCurrency].name
+      return CURRENCIES[this.selectedCurrency].name
     },
     selectedCurrencyIcon() {
-      return currencyList[this.selectedCurrency].icon
+      return CURRENCIES[this.selectedCurrency].icon
     }
   },
   methods: {
@@ -163,7 +177,7 @@ export default {
       const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
       const params = {
         payment_token: this.$route.params.token,
-        base_currency: currencyList[this.selectedCurrency].name,
+        base_currency: CURRENCIES[this.selectedCurrency].name,
         base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,

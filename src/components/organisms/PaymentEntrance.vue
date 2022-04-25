@@ -78,6 +78,7 @@ export default {
         symbol: receiveResponse.data.symbol,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
+      this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
