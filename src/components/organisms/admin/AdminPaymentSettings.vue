@@ -127,6 +127,44 @@
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.exchangeMarginRate">
           </div>
+          <div class="manage-contents_clm mb-6">
+            <h4><span>*</span>Supported Currencies</h4>
+            <p>
+              The fiat currencies that can be selected when the user enters the settlement amount.
+            </p>
+            <div class="bases-wrap">
+              <div class="bases mb-1">
+                <input type="checkbox" @click="selectAllCurrency" :checked="isAllowAllCurrency">
+                <label for="item1">
+                  All Currencies
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" @click="selectCurrency($event, 'USD')" :checked="isAllowUsd">
+                <label for="item2">
+                  USD
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" @click="selectCurrency($event, 'JPY')" :checked="isAllowJpy">
+                <label for="item3">
+                  JPY
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" @click="selectCurrency($event, 'EUR')" :checked="isAllowEur">
+                <label for="item4">
+                  EUR
+                </label>
+              </div>
+              <div class="bases mb-1">
+                <input type="checkbox" @click="selectCurrency($event, 'AED')" :checked="isAllowAed">
+                <label for="item5">
+                  AED
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="manage-contents_creat-url" @click="updatePaymentSettings">
             Save
           </div>
@@ -195,7 +233,13 @@ export default {
         successNotifyUrl: '',
         successReturnUrl: '',
         failureReturnUrl: '',
-        exchangeMarginRate: '0.0'
+        exchangeMarginRate: '0.0',
+        allowCurrencies: {
+          USD: false,
+          JPY: false,
+          EUR: false,
+          AED: false
+        }
       },
       domainSettings: {
         domain: '',
@@ -235,6 +279,22 @@ export default {
     },
     isMetamask() {
       return this.$store.state.web3.provider === METAMASK
+    },
+    isAllowAllCurrency() {
+      const denyCurrencies = Object.values(this.paymentSettings.allowCurrencies).filter((setting) => !setting)
+      return denyCurrencies.length === 0
+    },
+    isAllowUsd() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.USD
+    },
+    isAllowJpy() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.JPY
+    },
+    isAllowEur() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.EUR
+    },
+    isAllowAed() {
+      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
     },
     contractLoaded() {
       return this.contractSettings.loaded
@@ -288,7 +348,8 @@ export default {
         complete_kickback_url: this.paymentSettings.successNotifyUrl,
         succeeded_return_url: this.paymentSettings.successReturnUrl,
         failured_return_url: this.paymentSettings.failureReturnUrl,
-        exchange_margin_rate: this.paymentSettings.exchangeMarginRate
+        exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
+        allow_currencies: this.paymentSettings.allowCurrencies
       }
       return this.axios.patch(url, data, options)
     },
@@ -326,6 +387,7 @@ export default {
         this.paymentSettings.successReturnUrl = response.data.succeeded_return_url
         this.paymentSettings.failureReturnUrl = response.data.failured_return_url
         this.paymentSettings.exchangeMarginRate = response.data.exchange_margin_rate
+        this.paymentSettings.allowCurrencies = response.data.allow_currencies
       }).catch((error) => {
         this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
@@ -433,6 +495,15 @@ export default {
           })
         }
       }
+    },
+    selectAllCurrency($event) {
+      const settingValue = $event.target.checked
+      Object.keys(this.paymentSettings.allowCurrencies).forEach((currency) => {
+        this.paymentSettings.allowCurrencies[currency] = settingValue
+      })
+    },
+    selectCurrency(event, currency) {
+      this.paymentSettings.allowCurrencies[currency] = event.target.checked
     }
   },
   created() {
@@ -653,6 +724,81 @@ export default {
         padding: 12px 40px;
         border-radius: 8px;
         cursor: pointer;
+      }
+    }
+    .bases-wrap{
+      display: flex;
+      flex-wrap: wrap;
+      width: 50%;
+    }
+    .bases{
+      position: relative;
+      margin-right: 16px;
+      @include media(sp) {
+        width: 100%;
+      }
+      input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        font-size: 14px;
+        z-index: 1;
+        width: 2rem;
+        padding-top: 4px;
+        height: 2rem;
+        top: 6px;
+        + label {
+          &:before {
+            content: '';
+            background: #292536;
+            border-radius: 6px;
+            border: 1px solid darken(#f4f4f4, 25%);
+            display: inline-block;
+            width: 1.4em;
+            height: 1.4em;
+            position: relative;
+            top: 4px;
+            margin-right: 2px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 250ms ease;
+          }
+        }
+        &:checked {
+          + label {
+            &:before {
+              border-radius: 6px;
+              background-color: #fff;
+              box-shadow: inset 0 0 0 3px #292536;
+            }
+          }
+        }
+        &:focus {
+          + label {
+            &:before {
+              border-radius: 6px;
+              outline: none;
+              border-color: #fff;
+            }
+          }
+        }
+        &:disabled {
+          + label {
+            &:before {
+              box-shadow: inset 0 0 0 4px #f4f4f4;
+              border-color:#292536;
+              background:#292536;
+            }
+          }
+        }
+        + label {
+          font-size: 14px;
+          cursor: pointer;
+          &:empty {
+            &:before {
+              margin-right: 0;
+            }
+          }
+        }
       }
     }
   }
