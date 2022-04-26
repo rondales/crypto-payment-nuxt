@@ -11,6 +11,12 @@ const store = {
     transactionHash: null,
     availableNetworks: [],
     status: 1,
+    allowCurrencies: {
+      USD: false,
+      JPY: false,
+      EUR: false,
+      AED: false
+    },
     token: {
       name: null,
       symbol: null,
@@ -46,6 +52,9 @@ const store = {
     updateStatus({ commit }, payload) {
       commit('updateStatus', payload)
     },
+    updateAllowCurrencies({ commit }, payload) {
+      commit('updateAllowCurrencies', payload)
+    },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
     }
@@ -62,6 +71,12 @@ const store = {
       state.transactionHash = null
       state.availableNetworks = []
       state.status = 1
+      state.allowCurrencies = {
+        USD: false,
+        JPY: false,
+        EUR: false,
+        AED: false
+      },
       state.token = {
         name: null,
         symbol: null,
@@ -94,6 +109,11 @@ const store = {
     },
     updateAvailableNetworks(state, payload) {
       state.availableNetworks = payload
+    },
+    updateAllowCurrencies(state, payload) {
+      Object.entries(payload).forEach(([key, value]) => {
+        state.allowCurrencies[key] = value
+      })
     },
     updateToken(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {
