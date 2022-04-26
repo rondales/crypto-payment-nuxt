@@ -25,7 +25,7 @@
       <button @click="confirm" class="btn __l add-flex j-center a-center">
         <img src="@/assets/images/url-refresh.svg">
         <span>
-          Create
+          Refresh
         </span>
       </button>
     </div>

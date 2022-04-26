@@ -41,7 +41,7 @@
       },
       // send to Note in storeAppTable
       confirm(){
-        alert("send to Note")
+        this.$store.dispatch('modal/show', { target: 'open-qr-modal', size: 'small' })
       }
     }
   }

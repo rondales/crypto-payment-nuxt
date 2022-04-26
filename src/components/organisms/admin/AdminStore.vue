@@ -317,9 +317,10 @@ export default {
 }
 .comfirm-wrap{
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
+  gap: 35px;
   padding: 24px;
   background: #292536;
   border-radius: 8px;
