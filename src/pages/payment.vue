@@ -117,6 +117,7 @@ export default {
           paymentToken,
           receiveData.domain,
           receiveData.order_code,
+          receiveData.allow_currencies,
           transactionData.base_symbol,
           transactionData.base_amount
         )
@@ -167,6 +168,7 @@ export default {
       paymentToken,
       merchantDomain,
       merchantOrderCode,
+      merchantAllowCurrencies,
       merchantReceiveSymbol,
       merchantReceiveAmount
     ) {
@@ -177,6 +179,7 @@ export default {
         symbol: merchantReceiveSymbol,
         amount: NumberFormat('0.00', merchantReceiveAmount)
       })
+      this.$store.dispatch('payment/updateAllowCurrencies', merchantAllowCurrencies)
     },
     updatePaymentTokenForVuex(paidSymbol, paidAmount) {
       this.$store.dispatch('payment/updateToken',{
