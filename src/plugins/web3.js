@@ -336,7 +336,7 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
   const uint256 = new BigJs(2).pow(256).minus(1).toFixed(0)
   const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
+  const slashCoreContractAddress = merchantContract.methods.viewSlashCore().call()
   return tokenContract.methods
     .approve(slashCoreContractAddress, uint256)
     .send({ from: walletAddress })
