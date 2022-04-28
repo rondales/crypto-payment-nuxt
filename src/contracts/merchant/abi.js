@@ -1,837 +1,1106 @@
 export default {
   abi: [
-    { inputs: [], stateMutability: "nonpayable", type: "constructor" },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: false,
-          internalType: "address",
-          name: "tokenRecovered",
-          type: "address"
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenAmount",
+          "type": "uint256"
         },
         {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256"
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "etherAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
         }
       ],
-      name: "AdminTokenRecovery",
-      type: "event"
+      "name": "AddLiquidityFailed",
+      "type": "event"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: false,
-          internalType: "contract IAffiliatePool",
-          name: "previousPool",
-          type: "address"
+          "indexed": false,
+          "internalType": "bytes16",
+          "name": "txId",
+          "type": "bytes16"
         },
         {
-          indexed: false,
-          internalType: "contract IAffiliatePool",
-          name: "newPool",
-          type: "address"
+          "indexed": false,
+          "internalType": "address",
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "payingToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timeStamp",
+          "type": "uint256"
         }
       ],
-      name: "AffiliatePoolUpdated",
-      type: "event"
+      "name": "NewTransaction",
+      "type": "event"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: false,
-          internalType: "address",
-          name: "oldWallet",
-          type: "address"
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
         },
         {
-          indexed: false,
-          internalType: "address",
-          name: "newWallet",
-          type: "address"
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
         }
       ],
-      name: "AffiliatorWalletUpdatd",
-      type: "event"
+      "name": "OwnershipTransferred",
+      "type": "event"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [],
+      "name": "Pause",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: false,
-          internalType: "uint256",
-          name: "previousFee",
-          type: "uint256"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "newFee",
-          type: "uint256"
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "etherAmount",
+          "type": "uint256"
         }
       ],
-      name: "DonationFeeUpdated",
-      type: "event"
+      "name": "SwapEtherToWeb3TokenFailed",
+      "type": "event"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [],
+      "name": "Unpause",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_TRANSACTION_FEE",
+      "outputs": [
         {
-          indexed: false,
-          internalType: "address payable",
-          name: "previousWallet",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "address payable",
-          name: "newWallet",
-          type: "address"
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
         }
       ],
-      name: "DonationWalletUpdated",
-      type: "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [],
+      "name": "_totalTxCount",
+      "outputs": [
         {
-          indexed: false,
-          internalType: "uint256",
-          name: "previousFee",
-          type: "uint256"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "newFee",
-          type: "uint256"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      name: "FeeMaxPercentUpdated",
-      type: "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "uint256",
-          name: "previousFee",
-          type: "uint256"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "newFee",
-          type: "uint256"
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
-      name: "FeeMinPercentUpdated",
-      type: "event"
-    },
-    {
-      anonymous: false,
-      inputs: [
+      "name": "_userTxCount",
+      "outputs": [
         {
-          indexed: false,
-          internalType: "enum Merchant.FeeMethod",
-          name: "oldMethod",
-          type: "uint8"
-        },
-        {
-          indexed: false,
-          internalType: "enum Merchant.FeeMethod",
-          name: "newMethod",
-          type: "uint8"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      name: "FeeProcessingMethodUpdated",
-      type: "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "address payable",
-          name: "previousWallet",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "address payable",
-          name: "newWallet",
-          type: "address"
+          "internalType": "address",
+          "name": "router_",
+          "type": "address"
         }
       ],
-      name: "MarketingWalletUpdated",
-      type: "event"
+      "name": "addSwapRouter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "address payable",
-          name: "previousWallet",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "address payable",
-          name: "newWallet",
-          type: "address"
+          "internalType": "enum MerchantProperty.Property",
+          "name": "property_",
+          "type": "uint8"
         }
       ],
-      name: "MerchantWalletUpdated",
-      type: "event"
+      "name": "disableSpecificProp",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "bytes16",
-          name: "txId",
-          type: "bytes16"
-        },
-        {
-          indexed: false,
-          internalType: "address",
-          name: "userAddress",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "address",
-          name: "payingToken",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "timeStamp",
-          type: "uint256"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         }
       ],
-      name: "NewTransaction",
-      type: "event",
+      "name": "excludeFromPayTokenBlacklist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: true,
-          internalType: "address",
-          name: "previousOwner",
-          type: "address"
-        },
-        {
-          indexed: true,
-          internalType: "address",
-          name: "newOwner",
-          type: "address"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         }
       ],
-      name: "OwnershipTransferred",
-      type: "event"
+      "name": "excludeFromRecTokenWhitelist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: true,
-          internalType: "address",
-          name: "operator",
-          type: "address"
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
         },
         {
-          indexed: true,
-          internalType: "address",
-          name: "router",
-          type: "address"
+          "internalType": "uint256",
+          "name": "amountOut_",
+          "type": "uint256"
         },
         {
-          indexed: true,
-          internalType: "address",
-          name: "pair",
-          type: "address"
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
         }
       ],
-      name: "PancakeRouterUpdated",
-      type: "event"
-    },
-    { anonymous: false, inputs: [], name: "Pause", type: "event" },
-    {
-      anonymous: false,
-      inputs: [
+      "name": "getAmountIn",
+      "outputs": [
         {
-          indexed: false,
-          internalType: "contract IStakingContract",
-          name: "previousContract",
-          type: "address"
-        },
-        {
-          indexed: false,
-          internalType: "contract IStakingContract",
-          name: "newContract",
-          type: "address"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      name: "StakingContractUpdated",
-      type: "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "uint16",
-          name: "previousFee",
-          type: "uint16"
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
         },
         {
-          indexed: false,
-          internalType: "uint16",
-          name: "newFee",
-          type: "uint16"
+          "internalType": "uint256",
+          "name": "amountIn_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
         }
       ],
-      name: "TransactionFeeUpdated",
-      type: "event"
-    },
-    { anonymous: false, inputs: [], name: "Unpause", type: "event" },
-    {
-      anonymous: false,
-      inputs: [
+      "name": "getAmountOut",
+      "outputs": [
         {
-          indexed: false,
-          internalType: "uint256",
-          name: "previousBalance",
-          type: "uint256"
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "newBalance",
-          type: "uint256"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
-      name: "Web3BalanceForFreeTransactionUpdated",
-      type: "event"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: false,
-          internalType: "address",
-          name: "oldToken",
-          type: "address"
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
         },
         {
-          indexed: false,
-          internalType: "address",
-          name: "newToken",
-          type: "address"
+          "internalType": "uint256",
+          "name": "amountIn_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "feePath_",
+          "type": "address[]"
         }
       ],
-      name: "Web3TokenUpdated",
-      type: "event"
-    },
-    {
-      inputs: [],
-      name: "MAX_TRANSACTION_FEE",
-      outputs: [{ internalType: "uint16", name: "", type: "uint16" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "MERCHANT_FACTORY",
-      outputs: [{ internalType: "address", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "USDT",
-      outputs: [{ internalType: "contract IBEP20", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "WEB3_TOKEN",
-      outputs: [{ internalType: "contract IBEP20", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "affiliatePool",
-      outputs: [{ internalType: "contract IAffiliatePool", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "affiliatorWallet",
-      outputs: [{ internalType: "address", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "donationFee",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "donationWallet",
-      outputs: [{ internalType: "address payable", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "feeMaxPercent",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "feeMinPercent",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "feeProcessingMethod",
-      outputs: [{ internalType: "enum Merchant.FeeMethod", name: "", type: "uint8" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
+      "name": "getFeeAmount",
+      "outputs": [
         {
-          internalType: "address",
-          name: "_payingTokenAddress",
-          type: "address"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         },
-        { internalType: "uint256", name: "amountOut", type: "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
       ],
-      name: "getAmountIn",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "_payingTokenAddress",
-          type: "address"
-        },
-        { internalType: "uint256", name: "amountIn", type: "uint256" }
+          "internalType": "bytes16",
+          "name": "txNumber_",
+          "type": "bytes16"
+        }
       ],
-      name: "getAmountOut",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
+      "name": "getTxDetailById",
+      "outputs": [
         {
-          internalType: "address",
-          name: "_payingTokenAddress",
-          type: "address"
-        },
-        { internalType: "uint256", name: "amountIn", type: "uint256" },
-        { internalType: "address[]", name: "feePath", type: "address[]" }
-      ],
-      name: "getFeeAmount",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ internalType: "bytes16", name: "_txNumber", type: "bytes16" }],
-      name: "getTxDetailById",
-      outputs: [
-        {
-          components: [
-            { internalType: "bytes16", name: "txId", type: "bytes16" },
-            { internalType: "address", name: "userAddress", type: "address" },
-            { internalType: "address", name: "payingToken", type: "address" },
-            { internalType: "uint256", name: "amount", type: "uint256" },
-            { internalType: "uint256", name: "timeStamp", type: "uint256" }
+          "components": [
+            {
+              "internalType": "bytes16",
+              "name": "txId",
+              "type": "bytes16"
+            },
+            {
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "payingToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            }
           ],
-          internalType: "struct Merchant.TransctionInfo",
-          name: "",
-          type: "tuple"
+          "internalType": "struct Merchant.TransctionInfo",
+          "name": "",
+          "type": "tuple"
         }
       ],
-      stateMutability: "view",
-      type: "function",
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
-        { internalType: "address", name: "_userAddress", type: "address" }
-      ],
-      name: "getUserAllTxDetails",
-      outputs: [
-        { internalType: "uint256", name: "", type: "uint256" },
-        { internalType: "bytes16[]", name: "", type: "bytes16[]" }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_userAddress", type: "address" }
-      ],
-      name: "getUserTxCount",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_marketingWallet", type: "address" },
-        { internalType: "address", name: "_merchantWallet", type: "address" },
-        { internalType: "address", name: "_donationWallet", type: "address" },
-        { internalType: "address", name: "_admin", type: "address" }
-      ],
-      name: "initialize",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "isInitialized",
-      outputs: [{ internalType: "bool", name: "", type: "bool" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "marketingWallet",
-      outputs: [{ internalType: "address payable", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "merchantWallet",
-      outputs: [{ internalType: "address", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "minAmountToProcessFee",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "owner",
-      outputs: [{ internalType: "address", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "pancakeV2Router",
-      outputs: [
+      "inputs": [
         {
-          internalType: "contract IUniswapV2Router02",
-          name: "",
-          type: "address"
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
         }
       ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "pause",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "paused",
-      outputs: [{ internalType: "bool", name: "", type: "bool" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_tokenAddress", type: "address" },
-        { internalType: "uint256", name: "_tokenAmount", type: "uint256" }
-      ],
-      name: "recoverWrongTokens",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "renounceOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "stakingContract",
-      outputs: [
+      "name": "getUserAllTxDetails",
+      "outputs": [
         {
-          internalType: "contract IStakingContract",
-          name: "",
-          type: "address"
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         },
+        {
+          "internalType": "bytes16[]",
+          "name": "",
+          "type": "bytes16[]"
+        }
       ],
-      stateMutability: "view",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "_payingTokenAddress",
-          type: "address"
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "getUserTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "includeInPayTokenBlacklist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "includeInRecTokenWhitelist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "slashController_",
+          "type": "address"
         },
-        { internalType: "uint256", name: "_amountIn", type: "uint256" },
-        { internalType: "address[]", name: "path", type: "address[]" },
-        { internalType: "address[]", name: "feePath", type: "address[]" }
-      ],
-      name: "submitTransaction",
-      outputs: [{ internalType: "bytes16", name: "txNumber", type: "bytes16" }],
-      stateMutability: "payable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "totalTxCount",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "transactionFee",
-      outputs: [{ internalType: "uint16", name: "", type: "uint16" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_userAddress", type: "address" },
-        { internalType: "uint256", name: "_offset", type: "uint256" },
-        { internalType: "uint256", name: "_length", type: "uint256" }
-      ],
-      name: "transactionPagination",
-      outputs: [
-        { internalType: "bytes16[]", name: "_txIds", type: "bytes16[]" }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
-      name: "transferOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "unpause",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_walletAddress", type: "address" },
-      ],
-      name: "updateAffiliatorWalletAddress",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [{ internalType: "uint256", name: "_percent", type: "uint256" }],
-      name: "updateDonationFee",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
         {
-          internalType: "address payable",
-          name: "_donationWallet",
-          type: "address"
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "receiveToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merchantOwner_",
+          "type": "address"
         }
       ],
-      name: "updateDonationWallet",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [
-        { internalType: "uint256", name: "_maxPercent", type: "uint256" }
-      ],
-      name: "updateFeeMaxPercent",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "uint256", name: "_minPercent", type: "uint256" }
-      ],
-      name: "updateFeeMinPercent",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
+      "inputs": [
         {
-          internalType: "enum Merchant.FeeMethod",
-          name: "_method",
-          type: "uint8"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         }
       ],
-      name: "updateFeeProcessingMethod",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
+      "name": "isBlacklistedFromPayToken",
+      "outputs": [
         {
-          internalType: "address payable",
-          name: "_marketingWallet",
-          type: "address"
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
-      name: "updateMarketingWallet",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
-        { internalType: "address", name: "_merchantWallet", type: "address" }
-      ],
-      name: "updateMerchantWallet",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [{ internalType: "address", name: "_router", type: "address" }],
-      name: "updatePancakeRouter",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
+      "inputs": [
         {
-          internalType: "contract IStakingContract",
-          name: "_stakingContract",
-          type: "address"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         }
       ],
-      name: "updateStakingContract",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [{ internalType: "uint16", name: "_fee", type: "uint16" }],
-      name: "updateTransactionFee",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "uint256", name: "_web3Balance", type: "uint256" }
-      ],
-      name: "updateWeb3BalanceForFreeTransaction",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
-        { internalType: "address", name: "_tokenAddress", type: "address" }
-      ],
-      name: "updateWeb3TokenAddress",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
+      "name": "isWhitelistedForRecToken",
+      "outputs": [
         {
-          internalType: "contract IAffiliatePool",
-          name: "_affiliatePool",
-          type: "address"
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
-      name: "updateaffiliatePool",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [{ internalType: "address", name: "", type: "address" }],
-      name: "userTxCount",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "web3BalanceForFreeTransaction",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "web3BnbPair",
-      outputs: [{ internalType: "address", name: "", type: "address" }],
-      stateMutability: "view",
-      type: "function"
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
-  ],
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "recoverWrongTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index_",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeSwapRouter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountIn_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "feePath_",
+          "type": "address[]"
+        }
+      ],
+      "name": "submitTransaction",
+      "outputs": [
+        {
+          "internalType": "bytes16",
+          "name": "txNumber",
+          "type": "bytes16"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "offset_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length_",
+          "type": "uint256"
+        }
+      ],
+      "name": "transactionPagination",
+      "outputs": [
+        {
+          "internalType": "bytes16[]",
+          "name": "txIds",
+          "type": "bytes16[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "affiliatorWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateAffiliatorWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "fee_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateDonationFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "fee_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateDonationFeeCollected",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "donationWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateDonationWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "maxPercent_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateFeeMaxPercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "minPercent_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateFeeMinPercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "method_",
+          "type": "uint8"
+        }
+      ],
+      "name": "updateFeeProcessingMethod",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "router_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMainSwapRouter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "marketingWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMarketingWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMerchantWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "minAmount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateMinAmountToProcessFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "slashController_",
+          "type": "address"
+        }
+      ],
+      "name": "updateSlashController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "stakingPool_",
+          "type": "address"
+        }
+      ],
+      "name": "updateStakingPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "fee_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateTransactionFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "web3Balance_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateWeb3BalanceForFreeTx",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "updateWeb3TokenAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "affiliatePool_",
+          "type": "address"
+        }
+      ],
+      "name": "updateaffiliatePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewAffiliatePool",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewAffiliatorWallet",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewDonationFee",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewDonationFeeCollected",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewDonationWallet",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewFeeMaxPercent",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewFeeMinPercent",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewFeeProcessingMethod",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMainSwapRouter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMarketingWallet",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMerchantWallet",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMinAmountToProcessFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReceiveToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewSlashCore",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewStakingPool",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewSwapRouters",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewTransactionFee",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewWeb3BalanceForFreeTx",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewWeb3Token",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ]
 }
