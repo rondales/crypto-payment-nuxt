@@ -436,10 +436,11 @@ export default {
           }).on('error', () => {
             this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
             this.pageState = this.pageStateList.failured
+            this.waitingWallet = false
           })
         } else {
-          this.contractApprove().then((transaction) => {
-            transaction.on('transactionHash', () => {
+          this.contractApprove().then((receipt) => {
+            if (receipt.status == true) {
               this.sendTransaction().on('transactionHash', (transactionHash) => {
                 this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
                 this.pageState = this.pageStateList.processing
@@ -459,12 +460,16 @@ export default {
               }).on('error', () => {
                 this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
                 this.pageState = this.pageStateList.failured
+                this.waitingWallet = false
               })
-            }).on('error', () => {
+            } else {
               this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
               this.pageState = this.pageStateList.failured
-            })
-          })
+              this.waitingWallet = false
+            }
+          }).catch(error => {
+            if(error.code == '4001') {this.waitingWallet = false}
+          }) 
         }
       })
     },
