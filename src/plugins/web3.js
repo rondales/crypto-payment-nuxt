@@ -4,7 +4,6 @@ import Erc20Abi from 'erc-20-abi'
 import { Decimal as BigJs } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
-import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
   EthereumTokens,
@@ -381,7 +380,7 @@ const monitoringPaymentTransaction = function(web3, transactionHash) {
   return web3.eth.getTransactionReceipt(transactionHash)
 }
 
-const publishMerchantContract = async function(
+const publishMerchantContract = function(
   web3,
   chainId,
   merchantWalletAddress,
@@ -397,18 +396,10 @@ const publishMerchantContract = async function(
   )
 
   try {
-    let contractAddress = null
-
-     const transaction = await factoryContract.methods.deployMerchant(
-      merchantWalletAddress,
-      receiveTokenAddress
-    ).send({ from: merchantWalletAddress })
-
-    contractAddress = transaction.events['NewMerchantDeployed'].returnValues.merchantAddress_
-    return {
-      abi: MerchantContract.abi,
-      address: contractAddress
-    }
+      return factoryContract.methods.deployMerchant(
+          merchantWalletAddress,
+          receiveTokenAddress
+        ).send({ from: merchantWalletAddress })
   } catch(error) {
     throw new Error(error)
   }

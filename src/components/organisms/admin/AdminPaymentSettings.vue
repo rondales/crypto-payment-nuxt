@@ -73,11 +73,20 @@
                       Created
                     </div>
                     <div
-                      v-else-if="isCurrentNetwork(chainId)"
+                      v-else-if="isCurrentNetwork(chainId) && !contractSettings.contracts[chainId].processing"
                       @click="publishMerchantContract(chainId)"
                       class="manage-contents_btn"
                     >
                       Create
+                    </div>
+                    <div 
+                      v-else-if="isCurrentNetwork(chainId) && contractSettings.contracts[chainId].processing"
+                      class="manage-contents_btn inactive"
+                    >
+                    Creating...
+                      <div class="contract-deploying-wrap active">
+                        <img class="spin" src="@/assets/images/loading.svg">
+                      </div>
                     </div>
                     <div
                       v-else
@@ -214,6 +223,7 @@ import {
 } from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'AdminPaymentSetting',
@@ -369,6 +379,15 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
+    apiRegistTransaction(chainId, transactionAddress) {
+      const url = `${this.baseUrl}/api/v1/management/contract/deploy/transaction`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = {
+        network_type: parseInt(chainId, 10),
+        transaction_address: transactionAddress
+      }
+      return this.axios.post(url, data, options)
+    },
     getContracts() {
       this.apiGetContracts().then((response) => {
         response.data.forEach((contract) => {
@@ -432,16 +451,24 @@ export default {
         chainId,
         merchantWalletAddress,
         receiveTokenAddress
-      ).then((contract) => {
+      ).on('transactionHash', (hash) => {
+        this.apiRegistTransaction(chainId,hash).catch((error) => {
+          console.log(error)
+        })
+      }).
+      then((receipt) => {
+        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
+        const merchantContractAbi = MerchantContract.abi
         this.apiRegistContract(
           chainId,
-          contract.address,
-          contract.abi,
+          merchantContractAddess,
+          merchantContractAbi,
         ).then(() => {
-          this.contractSettings.contracts[chainId].address = contract.address
+          this.contractSettings.contracts[chainId].address = merchantContractAddess
           this.contractSettings.contracts[chainId].processing = false
         }).catch((error) => {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          this.contractSettings.contracts[chainId].processing = false
         })
       }).catch(() => {
         this.$store.dispatch('modal/show', {
@@ -451,6 +478,7 @@ export default {
             message: 'Failed to create a contract.'
           }
         })
+        this.contractSettings.contracts[chainId].processing = false
       })
     },
     updateContract(chainId) {
