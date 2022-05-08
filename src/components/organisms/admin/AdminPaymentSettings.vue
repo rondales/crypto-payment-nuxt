@@ -255,7 +255,8 @@ export default {
         domain: '',
         txt: '',
         verified: false
-      }
+      },
+      monitoringInterval: null
     }
   },
   computed: {
@@ -387,6 +388,28 @@ export default {
         transaction_address: transactionAddress
       }
       return this.axios.post(url, data, options)
+    },
+    apiGetPendingTransactions() {
+      const url = `${this.baseUrl}/api/v1/management/contract/deploy/status`
+      const request = { headers: { Authorization: RequestUtility.getBearer() } }
+      return this.axios.get(url, request)
+    },
+    getPendingTransactions() {
+      this.apiGetPendingTransactions().then((response) => {
+          if (response === undefined || response.length == 0) {
+            clearTimeout(this.monitoringInterval)
+          } else {
+            response.data.forEach((transaction) => {
+              if(transaction.network_type in this.contractSettings.contracts) {
+                this.contractSettings.contracts[transaction.network_type].processing = true
+              }
+            })
+            this.getContracts()
+          }
+        }).catch((error) => {
+          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+        })
+      this.monitoringInterval = setTimeout(this.getPendingTransactions, 3000)
     },
     getContracts() {
       this.apiGetContracts().then((response) => {
@@ -556,8 +579,12 @@ export default {
       })
     })
     this.getContracts()
+    this.getPendingTransactions()
     this.getPaymentSettings()
     this.getDomainSettings()
+  },
+  beforeDestroy() {
+    clearTimeout(this.monitoringInterval)
   }
 }
 </script>
