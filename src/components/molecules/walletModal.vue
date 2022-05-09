@@ -6,13 +6,13 @@
       </h3>
     </div>
     <div class="body">
-      <button class="btn __m __pg icon-right full" @click="useMetamask">
+      <button class="btn __m __pg icon-right full" @click="connector(METAMASK)">
         <span class="btn-icon">
           <img src="@/assets/images/metamask-fox.svg">
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="useWalletConnect">
+      <button class="btn __m __pg icon-right full" @click="connector(WALLET_CONNECT)">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect_w.svg">
         </span>
@@ -27,96 +27,49 @@
 </template>
 
 <script>
-  import { LOGIN_TOKEN } from '@/constants'
-  import Web3ConnectorMixin from '@/components/mixins/Web3Connector';
+  import { METAMASK, WALLET_CONNECT } from '@/constants'
+  import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
+  import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
+  import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
 
   export default {
     name: 'walletModal',
     mixins: [
-      Web3ConnectorMixin
+      ConnectWalletMixin,
+      PaymentWalletConnectorMixin,
+      MerchantAdminAuthentificationMixin,
     ],
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      }
+      },
+      METAMASK() {
+        return METAMASK
+      },
+      WALLET_CONNECT() {
+        return WALLET_CONNECT
+      },
+      isAdminLoginMode() {
+        const path = /^\/admin$/
+        return path.test(this.$route.path)
+      },
+      isPaymentMode() {
+        const path = /^\/payment\//
+        return path.test(this.$route.path)
+      },
     },
     methods: {
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      useMetamask() {
-        this.$web3.connectByMetamask().then((connectRes) => {
-          this.$store.dispatch('web3/update', connectRes)
-          this.$web3.getAccountData(
-            connectRes.instance,
-            connectRes.chainId
-          ).then((accountRes) =>{
-            this.$store.dispatch('account/update', accountRes)
-            this.connected(connectRes.instance, accountRes.address)
-          })
-        }).catch((error) => {
-          if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
-            this.$store.dispatch('modal/show', {
-              target: 'error-modal',
-              size: 'small',
-              params: {
-                message: error.message
-              }
-            })
-          } else {
-            this.$store.dispatch('modal/show', {
-              target: 'error-metamask-modal',
-              size: 'small',
-            })
-          }
-        })
-      },
-      useWalletConnect() {
-        this.$web3.connectByWalletConnect().then((connectRes) => {
-          this.$store.dispatch('web3/update', connectRes)
-          this.$web3.getAccountData(
-            connectRes.instance,
-            connectRes.chainId
-          ).then((accountRes) =>{
-            this.$store.dispatch('account/update', accountRes)
-            this.connected(connectRes.instance, accountRes.address)
-          })
-        }).catch(() => {
-          this.$store.dispatch('modal/show', {
-            target: 'error-wallet-modal',
-            size: 'small'
-          })
-        })
-      },
-      apiConnectAuthentification(walletAddress, signature) {
-        const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
-        const params = {
-          address: walletAddress,
-          token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null,
-          signature: signature
+      connector(useProvider) {
+        if (this.isAdminLoginMode) {
+          this.authentification(useProvider, true, true)
+          return
         }
-        return this.axios.post(url, params)
-      },
-      connected(web3Instance, walletAddress) {
-        const adminPathPattern = /^\/admin$/
-        const paymentPathPattern = /^\/payment\//
-
-        if (adminPathPattern.test(this.$route.path)) {
-          this.$web3.signWithPrivateKey(
-            web3Instance,
-            walletAddress
-          ).then((signature) => {
-            this.apiConnectAuthentification(walletAddress, signature).then((authed) => {
-              localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-              this.hideModal()
-              this.$router.push({ path: '/admin/dashboard' })
-            })
-          })
-        } else if(paymentPathPattern.test(this.$route.path)) {
-          this.hideModal()
-          this.$router.push({
-            path: '/payment/token/' + this.$route.params.token
-          })
+        if (this.isPaymentMode) {
+          this.connect(useProvider, true)
+          return
         }
       }
     }
