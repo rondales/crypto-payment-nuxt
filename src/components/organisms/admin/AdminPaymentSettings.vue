@@ -326,11 +326,12 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
-    apiRegistContract(chainId, contractAddress, contractAbi) {
-      const url = `${this.baseUrl}/api/v1/management/contract`
+    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
+      const url = `${this.baseUrl}/api/v1/management/contract/deploy/update`
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
         address: contractAddress,
+        transaction_address: transactionAddress,
         args: JSON.stringify(contractAbi),
         network_type: parseInt(chainId, 10),
         payment_type: NORMAL_TYPE_PAYMENT
@@ -385,6 +386,7 @@ export default {
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
         network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT,
         transaction_address: transactionAddress
       }
       return this.axios.post(url, data, options)
@@ -396,7 +398,7 @@ export default {
     },
     getPendingTransactions() {
       this.apiGetPendingTransactions().then((response) => {
-          if (response === undefined || response.length == 0) {
+          if (response.data === undefined || response.data.length == 0) {
             clearTimeout(this.monitoringInterval)
           } else {
             response.data.forEach((transaction) => {
@@ -404,8 +406,8 @@ export default {
                 this.contractSettings.contracts[transaction.network_type].processing = true
               }
             })
-            this.getContracts()
           }
+          this.getContracts()
         }).catch((error) => {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
         })
@@ -481,9 +483,11 @@ export default {
       }).
       then((receipt) => {
         const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
+        const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
-        this.apiRegistContract(
+        this.apiUpdateContract(
           chainId,
+          transactionAddress,
           merchantContractAddess,
           merchantContractAbi,
         ).then(() => {
