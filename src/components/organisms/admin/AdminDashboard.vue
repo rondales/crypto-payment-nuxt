@@ -32,11 +32,6 @@ export default {
     }
   },
   methods: {
-    apiGetMerchantReceiveSymbol() {
-      const url = `${this.baseUrl}/api/v1/management/setting/token`
-      const request = { headers: { Authorization: RequestUtility.getBearer() } }
-      return this.axios.get(url, request)
-    },
     apiGetContractPublishedStatus() {
       const url = `${this.baseUrl}/api/v1/management/contract/status`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
@@ -44,15 +39,8 @@ export default {
     }
   },
   created() {
-    Promise.all([
-      this.apiGetMerchantReceiveSymbol(),
-      this.apiGetContractPublishedStatus()
-    ]).then((responses) => {
-      const getMerchantReceiveSymbolApiResponse = responses[0].data
-      const getContractPublishedStatusApiResponse = responses[1].data
-
-      this.$store.dispatch('account/updateReceiveSymbol', getMerchantReceiveSymbolApiResponse.symbol)
-      getContractPublishedStatusApiResponse.forEach((network) => {
+    this.apiGetContractPublishedStatus().then((response) => {
+      response.data.forEach((network) => {
         this.contractsStatus[network.chain_id] = network.published
         if (network.published && !this.contractPublished) {
           this.contractPublished = !this.contractPublished

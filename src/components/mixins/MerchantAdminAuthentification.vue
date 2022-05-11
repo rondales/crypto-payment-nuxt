@@ -1,5 +1,6 @@
 <script>
 import { METAMASK, WALLET_CONNECT, LOGIN_TOKEN } from '@/constants'
+import RequestUtility from '@/utils/request'
 
 export default {
   name: 'MerchantAdminAuthentification',
@@ -32,6 +33,7 @@ export default {
         this.$_merchantAdminAuthentification_getAcountData(connectInfo)
           .then(this.$_merchantAdminAuthentification_signWithPrivateKey)
           .then(this.$_merchantAdminAuthentification_apiLoginAuthentification)
+          .then(this.$_merchantAdminAuthentification_apiGetMerchantReceiveSymbol)
           .then((authorized) => {
             this.$_merchantAdminAuthentification_authorizedAfrer(authorized, loginMode, modalMode)
           })
@@ -94,9 +96,18 @@ export default {
         return connectInfo
       })
     },
+    $_merchantAdminAuthentification_apiGetMerchantReceiveSymbol(connectInfo) {
+      const url = `${this.$_merchantAdminAuthentification_API_BASE_URL}/api/v1/management/setting/token`
+      const request = { headers: { Authorization: RequestUtility.getBearer(connectInfo.authorized.login_token) } }
+      return this.axios.get(url, request).then((apiResponse) => {
+        connectInfo.account.receiveSymbol = apiResponse.data.symbol
+        return connectInfo
+      })
+    },
     $_merchantAdminAuthentification_authorizedAfrer(authorizedData, loginMode, modalMode) {
       localStorage.setItem(LOGIN_TOKEN, authorizedData.authorized.login_token)
       this.$store.dispatch('account/update', authorizedData.account)
+      this.$store.dispatch('account/updateReceiveSymbol', authorizedData.account.receiveSymbol)
       if (loginMode) {
         this.$store.dispatch('web3/update', authorizedData.web3)
         if (modalMode) {
@@ -104,7 +115,11 @@ export default {
         }
         this.$router.push({ path: '/admin/dashboard' })
       } else {
-        this.$router.go({ path: this.$router.currentRoute.path, force: true })
+        if (authorizedData.authorized.initialized || this.$router.currentRoute.path === '/admin/dashboard') {
+          this.$router.go({ path: this.$router.currentRoute.path, force: true })
+        } else {
+          this.$router.push({ path: '/admin/dashboard' })
+        }
       }
     }
   }
