@@ -12,15 +12,19 @@ export default {
     authentification(useProvider, loginMode, modalMode) {
       const successFunc = this.$_merchantAdminAuthentification_getConnectSucceededFunction(loginMode, modalMode)
       const failureFunc = this.$_merchantAdminAuthentification_getConnectFailuredFunction(useProvider, loginMode)
-      switch(useProvider) {
-        case METAMASK:
-          this.useMetaMask(successFunc, failureFunc)
-          break
-        case WALLET_CONNECT:
-          this.useWalletConnect(successFunc, failureFunc)
-          break
-        default:
-          throw new Error('This provider is not supported.')
+      if (loginMode) {
+        switch(useProvider) {
+          case METAMASK:
+            this.useMetaMask(successFunc, failureFunc)
+            break
+          case WALLET_CONNECT:
+            this.useWalletConnect(successFunc, failureFunc)
+            break
+          default:
+            throw new Error('This provider is not supported.')
+        }
+      } else {
+        successFunc(this.$store.state.web3)
       }
     },
     $_merchantAdminAuthentification_getConnectSucceededFunction(loginMode, modalMode) {
@@ -99,6 +103,8 @@ export default {
           this.$store.dispatch('modal/hide')
         }
         this.$router.push({ path: '/admin/dashboard' })
+      } else {
+        this.$router.go({ path: this.$router.currentRoute.path, force: true })
       }
     }
   }

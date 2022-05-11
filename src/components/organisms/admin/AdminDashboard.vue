@@ -44,18 +44,22 @@ export default {
     }
   },
   created() {
-    this.apiGetMerchantReceiveSymbol().then((response) => {
-      this.$store.dispatch('account/updateReceiveSymbol', response.data.symbol)
-      this.apiGetContractPublishedStatus().then((response) => {
-        response.data.forEach((network) => {
-          this.contractsStatus[network.chain_id] = network.published
-          if (network.published && !this.contractPublished) {
-            this.contractPublished = !this.contractPublished
-          }
-        })
-        this.loaded = true
+    Promise.all([
+      this.apiGetMerchantReceiveSymbol(),
+      this.apiGetContractPublishedStatus()
+    ]).then((responses) => {
+      const getMerchantReceiveSymbolApiResponse = responses[0].data
+      const getContractPublishedStatusApiResponse = responses[1].data
+
+      this.$store.dispatch('account/updateReceiveSymbol', getMerchantReceiveSymbolApiResponse.symbol)
+      getContractPublishedStatusApiResponse.forEach((network) => {
+        this.contractsStatus[network.chain_id] = network.published
+        if (network.published && !this.contractPublished) {
+          this.contractPublished = !this.contractPublished
+        }
       })
+      this.loaded = true
     })
-  },
+  }
 }
 </script>
