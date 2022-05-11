@@ -17,13 +17,11 @@
 
 
 <script>
-import Web3ProviderEvents from '@/components/mixins/Web3ProviderEvents'
 import TransactionHistory from '@/components/organisms/admin/AdminTransactionHistory'
 import PaymentSettings from '@/components/organisms/admin/AdminPaymentSettings'
 
 export default {
   name: 'AdminWeb3Payment',
-  mixins: [Web3ProviderEvents],
   components: {
     TransactionHistory,
     PaymentSettings
@@ -38,9 +36,7 @@ export default {
     if(!this.$route.query.id){
       this.isHistory = true;
     }
-  },
-  methods: {
-  },
+  }
 }
 </script>
 

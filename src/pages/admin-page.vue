@@ -6,7 +6,7 @@
 
 <script>
 import Web3 from 'web3'
-import { LOGIN_TOKEN, METAMASK, WALLET_CONNECT } from '@/constants'
+import { METAMASK, WALLET_CONNECT } from '@/constants'
 import AvailableNetworks from '@/network'
 import AdminIndex from '@/components/templates/AdminIndex'
 import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
@@ -18,9 +18,6 @@ export default {
   },
   mixins: [MerchantAdminAuthentificationMixin],
   computed: {
-    baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL
-    },
     web3() {
       return this.$store.state.web3
     },
@@ -41,14 +38,6 @@ export default {
     }
   },
   methods: {
-    apiConnectAuthentification(walletAddress) {
-      const url = `${this.baseUrl}/api/v1/management/connect`
-      const params = {
-        address: walletAddress,
-        token: localStorage.getItem(LOGIN_TOKEN)
-      }
-      return this.axios.post(url, params)
-    },
     handleChainChanged(chainId) {
       const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
         return network.chainId
