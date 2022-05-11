@@ -415,55 +415,49 @@ export default {
     payment() {
       this.waitingWallet = true
       clearTimeout(this.exchangeTimer)
-      this.checkContractApproved().then((approved) => {
-        if (approved) {
-          this.sendTransaction().on('transactionHash', (transactionHash) => {
-            this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
-            this.pageState = this.pageStateList.processing
-            this.waitingWallet = false
-            this.$store.dispatch('payment/updateTransactionHash', transactionHash)
-            this.apiUpdateTransaction({
-              payment_token: this.$route.params.token,
-              network_type: this.$store.state.web3.chainId,
-              contract_address: this.contract.address,
-              transaction_address: transactionHash,
-              wallet_address: this.$store.state.account.address,
-              pay_symbol: this.userTokenSymbol,
-              pay_amount: this.userTokenPaymentAmount
-            }).then(() => {
-              this.checkTransactionStatus(transactionHash)
-            })
-          }).on('error', () => {
-            this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-            this.pageState = this.pageStateList.failured
-          })
-        } else {
-          this.contractApprove().on('transactionHash', () => {
-            this.sendTransaction().on('transactionHash', (transactionHash) => {
-              this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
-              this.pageState = this.pageStateList.processing
-              this.waitingWallet = false
-              this.$store.dispatch('payment/updateTransactionHash', transactionHash)
-              this.apiUpdateTransaction({
-                payment_token: this.$route.params.token,
-                network_type: this.$store.state.web3.chainId,
-                contract_address: this.contract.address,
-                transaction_address: transactionHash,
-                wallet_address: this.$store.state.account.address,
-                pay_symbol: this.userTokenSymbol,
-                pay_amount: this.userTokenPaymentAmount
-              }).then(() => {
-                this.checkTransactionStatus(transactionHash)
-              })
-            }).on('error', () => {
-              this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-              this.pageState = this.pageStateList.failured
-            })
-          }).on('error', () => {
-            this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-            this.pageState = this.pageStateList.failured
-          })
-        }
+      if(this.$store.state.payment.token.address == null) {
+        this.handleSendTransaction()
+      } else {
+        this.checkContractApproved().then((approved) => {
+          if (approved) {
+            this.handleSendTransaction()
+          } else {
+            this.contractApprove().then((receipt) => {
+              if (receipt.status == true) {
+                this.handleSendTransaction()
+              } else {
+                this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
+                this.pageState = this.pageStateList.failured
+                this.waitingWallet = false
+              }
+            }).catch(error => {
+              if(error.code == '4001') {this.waitingWallet = false}
+            }) 
+          }
+        })
+      }
+    },
+    handleSendTransaction(){
+      this.sendTransaction().on('transactionHash', (transactionHash) => {
+        this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
+        this.pageState = this.pageStateList.processing
+        this.waitingWallet = false
+        this.$store.dispatch('payment/updateTransactionHash', transactionHash)
+        this.apiUpdateTransaction({
+          payment_token: this.$route.params.token,
+          network_type: this.$store.state.web3.chainId,
+          contract_address: this.contract.address,
+          transaction_address: transactionHash,
+          wallet_address: this.$store.state.account.address,
+          pay_symbol: this.userTokenSymbol,
+          pay_amount: this.userTokenPaymentAmount
+        }).then(() => {
+          this.checkTransactionStatus(transactionHash)
+        })
+      }).on('error', () => {
+        this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
+        this.pageState = this.pageStateList.failured
+        this.waitingWallet = false
       })
     },
     checkContractApproved() {

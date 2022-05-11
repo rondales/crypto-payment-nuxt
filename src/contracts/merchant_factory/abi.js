@@ -1,196 +1,166 @@
 export default {
   abi: [
     {
-      inputs: [],
-      stateMutability: "nonpayable",
-      type: "constructor"
-    },
-    {
-      anonymous: false,
-      inputs: [
+      "inputs": [
         {
-          indexed: true,
-          internalType: "address",
-          name: "merchant",
-          type: "address"
+          "internalType": "address",
+          "name": "slashAddressResolver_",
+          "type": "address"
         }
       ],
-      name: "NewMerchant",
-      type: "event"
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
-      anonymous: false,
-      inputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          indexed: true,
-          internalType: "address",
-          name: "previousOwner",
-          type: "address"
+          "indexed": false,
+          "internalType": "address",
+          "name": "merchantAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "NewMerchantDeployed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
         },
         {
-          indexed: true,
-          internalType: "address",
-          name: "newOwner",
-          type: "address"
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
         }
       ],
-      name: "OwnershipTransferred",
-      type: "event"
+      "name": "OwnershipTransferred",
+      "type": "event"
     },
     {
-      inputs: [],
-      name: "BURN_ADDRESS",
-      outputs: [
+      "anonymous": false,
+      "inputs": [
         {
-          internalType: "address",
-          name: "",
-          type: "address"
-        }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "admin",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address"
-        }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_merchantWallet",
-          type: "address"
-        }
-      ],
-      name: "deployMerchant",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "donationWallet",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address"
-        }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_marketingWallet",
-          type: "address"
+          "indexed": false,
+          "internalType": "address",
+          "name": "oldResolver_",
+          "type": "address"
         },
         {
-          internalType: "address",
-          name: "_donationWallet",
-          type: "address"
+          "indexed": false,
+          "internalType": "address",
+          "name": "newResolver_",
+          "type": "address"
         }
       ],
-      name: "initialized",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "name": "SlashAddressResolverUpdated",
+      "type": "event"
     },
     {
-      inputs: [],
-      name: "isInitialized",
-      outputs: [
+      "inputs": [],
+      "name": "_slashAddressResolver",
+      "outputs": [
         {
-          internalType: "bool",
-          name: "",
-          type: "bool"
+          "internalType": "contract ISlashAddressResolver",
+          "name": "",
+          "type": "address"
         }
       ],
-      stateMutability: "view",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "marketingWallet",
-      outputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "",
-          type: "address"
-        }
-      ],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [],
-      name: "owner",
-      outputs: [
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        },
         {
-          internalType: "address",
-          name: "",
-          type: "address"
+          "internalType": "address",
+          "name": "receiveToken_",
+          "type": "address"
         }
       ],
-      stateMutability: "view",
-      type: "function"
+      "name": "deployMerchant",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [],
-      name: "renounceOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
-    },
-    {
-      inputs: [
+      "inputs": [
         {
-          internalType: "address",
-          name: "newOwner",
-          type: "address"
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "receiveToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "slashController_",
+          "type": "address"
         }
       ],
-      name: "transferOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "name": "deployMerchantWithSpecificController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
         {
-          internalType: "address",
-          name: "_donationWallet",
-          type: "address"
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
-      name: "updateDonationWallet",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      inputs: [
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
-          internalType: "address",
-          name: "_marketingWallet",
-          type: "address"
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
         }
       ],
-      name: "updateMarketingWallet",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function"
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "slashAddressResolver_",
+          "type": "address"
+        }
+      ],
+      "name": "updateAddressResolver",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ]
 }
