@@ -427,7 +427,7 @@
             </dl>
             <p>https://donate.savethechildren.org</p>
             <div class="btn __lg">
-              <a href="">
+              <a href="" @click.prevent.stop="paymentForDonate(SAFE_THE_CHILDREN)">
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
@@ -449,7 +449,7 @@
             </dl>
             <p>https://www.unicef.org/</p>
             <div class="btn __lg">
-              <a href="">
+              <a href="" @click.prevent.stop="paymentForDonate(UNICEF)">
                 <span>
                   <img src="@/assets/images/lp/connect.svg" alt="" />
                 </span>
@@ -809,6 +809,8 @@
 
 
 <script>
+import JsSHA from 'jssha'
+import { SAFE_THE_CHILDREN, UNICEF } from '@/constants'
 import LpHeader from "@/components/organisms/lp/lpHeader";
 
 export default {
@@ -887,6 +889,29 @@ export default {
   components: {
     LpHeader,
   },
+  computed: {
+    API_BASE_URL() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
+    SAFE_THE_CHILDREN() {
+      return SAFE_THE_CHILDREN
+    },
+    UNICEF() {
+      return UNICEF
+    },
+    SAFE_THE_CHILDREN_MERCAHNT_IDENTIFICATION_TOKEN() {
+      return process.env.VUE_APP_SAFE_THE_CHILDREN_MERCHANT_IDENTIFICATION_TOKEN
+    },
+    SAFE_THE_CHILDREN_MERCAHNT_HASH_TOKEN() {
+      return process.env.VUE_APP_SAFE_THE_CHILDREN_MERCHANT_HASH_TOKEN
+    },
+    UNICEF_MERCAHNT_IDENTIFICATION_TOKEN() {
+      return process.env.VUE_APP_UNICEF_MERCHANT_IDENTIFICATION_TOKEN
+    },
+    UNICEF_MERCAHNT_HASH_TOKEN() {
+      return process.env.VUE_APP_UNICEF_MERCHANT_HASH_TOKEN
+    }
+  },
   methods: {
     openModal(target) {
       this.$store.dispatch("modal/show", { target: target, size: "small" });
@@ -899,6 +924,67 @@ export default {
     },
     enterApp(){
       this.$store.dispatch("changeTheme",  'dark');
+    },
+    apiGetDonateOrderCode(identificationToken, donationFor) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/donation/code`
+      const params = new URLSearchParams([
+        ['identification_token', identificationToken],
+        ['donation_for', donationFor]
+      ])
+      return this.axios.get(url, { params })
+    },
+    apiGetPaymentUrl(submitData) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/receive`
+      return this.axios.post(url, submitData)
+    },
+    paymentForDonate(donationFor) {
+      if (donationFor !== SAFE_THE_CHILDREN && donationFor !== UNICEF) {
+        return
+      }
+      const tokens = this.getDonationPaymentTokens(donationFor)
+      this.apiGetDonateOrderCode(tokens.identification, donationFor)
+        .then((apiResponse) => {
+          const orderCode = apiResponse.data.order_code
+          const raw = `${orderCode}::::${tokens.hash}`
+          const hash = this.getDonationPaymentHash(raw)
+          return {
+            identification_token: tokens.identification,
+            order_code: orderCode,
+            verify_token: hash
+          }
+        })
+        .then(this.apiGetPaymentUrl)
+        .then((apiResponse) => {
+          location.href = apiResponse.data.url
+        })
+        .catch(() => {
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: { message: 'Please try again because an error occurred during processing.' }
+          })
+        })
+
+    },
+    getDonationPaymentTokens(donationFor) {
+      const tokens = { identification: null, hash: null }
+
+      switch(donationFor) {
+        case SAFE_THE_CHILDREN:
+          tokens.identification = this.SAFE_THE_CHILDREN_MERCAHNT_IDENTIFICATION_TOKEN
+          tokens.hash = this.SAFE_THE_CHILDREN_MERCAHNT_HASH_TOKEN
+          break
+        case UNICEF:
+          tokens.identification = this.UNICEF_MERCAHNT_IDENTIFICATION_TOKEN
+          tokens.hash = this.UNICEF_MERCAHNT_HASH_TOKEN
+      }
+
+      return tokens
+    },
+    getDonationPaymentHash(str) {
+      const sha = new JsSHA('SHA-256', 'TEXT')
+      sha.update(str)
+      return sha.getHash('HEX')
     }
   },
 };
