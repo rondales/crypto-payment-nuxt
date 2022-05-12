@@ -269,27 +269,32 @@ const getTokenExchangeData = async function(
   const userTokenBalanceWei = web3.utils.toWei(token.balance, userTokenWeiUnit)
   const perRequestTokenWei = web3.utils.toWei(`${1}`, requestTokenWeiUnit)
   const requestAmountWei = web3.utils.toWei(`${paymentRequestAmount}`, requestTokenWeiUnit)
-  const nativeToken = getWrappedToken(chainId)
-  const feePath = token.address === nativeToken.address
-    ? [nativeToken.address, requestToken.address]
-    : [token.address, nativeToken.address, requestToken.address]
+  const wrappedToken = getWrappedToken(chainId)
+  const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+
+  const feePath = token.address === null
+    ? [wrappedToken.address, requestToken.address]
+    : [token.address, wrappedToken.address, requestToken.address]
+  const payingTokenAddress = token.address === null
+    ? nativeTokenAddress
+    : token.address
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
-      token.address,
+      payingTokenAddress,
       userTokenBalanceWei,  
       feePath
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
-      token.address,
+      payingTokenAddress,
       requestAmountWei,
       feePath
     ).call({ from: walletAddress })
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
-      token.address,
+      payingTokenAddress,
       perRequestTokenWei,
       feePath
     ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
-      token.address,
+      payingTokenAddress,
       requestTokenToUserToken,
       feePath
     ).call({ from: walletAddress })
@@ -355,24 +360,31 @@ const sendPaymentTransaction = function(
   const requestToken = defaultTokens.USDT
   const userTokenWeiUnit = getTokenUnit(token.decimal)
   const userTokenAmountWei = web3.utils.toWei(paymentAmount, userTokenWeiUnit)
-  const nativeToken = getWrappedToken(chainId)
+  const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
-  const path = token.address === nativeToken.address
-    ? [nativeToken.address, requestToken.address]
-    : [token.address, nativeToken.address, requestToken.address]
-  const feePath = token.address === nativeToken.address
-    ? [nativeToken.address, requestToken.address]
-    : [token.address, nativeToken.address, requestToken.address]
+  const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
 
+  const path = token.address === null
+    ? [wrappedToken.address, requestToken.address]
+    : [token.address, wrappedToken.address, requestToken.address]
+  const feePath = token.address === null
+    ? [wrappedToken.address, requestToken.address]
+    : [token.address, wrappedToken.address, requestToken.address]
+  const paymentTokenAddress = token.address === null
+    ? nativeTokenAddress
+    : token.address
+  const msgValue = token.address === null
+    ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
+    : platformFeeWei
   return merchantContract.methods.submitTransaction(
-    token.address,
+    paymentTokenAddress,
     userTokenAmountWei,
     path,
     feePath
   ).send({
     from: walletAddress,
     to: contract.address,
-    value: platformFeeWei
+    value: msgValue
   })
 }
 

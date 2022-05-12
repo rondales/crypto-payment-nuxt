@@ -12,6 +12,9 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
+    updateInstance({ commit }, payload) {
+      commit('updateInstance', payload)
+    },
     updateChainId({ commit }, payload) {
       commit('updateChainId', payload)
     }
@@ -26,6 +29,9 @@ const store = {
       state.instance = payload.instance
       state.chainId = payload.chainId
       state.provider = payload.provider
+    },
+    updateInstance(state, payload) {
+      state.instance = payload
     },
     updateChainId(state, payload) {
       state.chainId = payload
