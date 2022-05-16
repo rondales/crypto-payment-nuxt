@@ -12,13 +12,13 @@
             <p>Apps</p>
           </dd>
           <dd class="connect-buttons">
-            <button class="btn __m icon-right full" @click="useMetamask">
+            <button class="btn __m icon-right full" @click="authentification(METAMASK, true, false)">
               <span class="btn-icon">
                 <img src="@/assets/images/metamask-fox.svg">
               </span>
               MetaMask
             </button>
-            <button class="btn __m icon-right full" @click="useWalletConnect">
+            <button class="btn __m icon-right full" @click="authentification(WALLET_CONNECT, true, false)">
               <span class="btn-icon">
                 <img src="@/assets/images/wallet-connect.svg">
               </span>
@@ -32,100 +32,32 @@
 </template>
 
 <script>
-import { LOGIN_TOKEN } from '@/constants'
+import { METAMASK, WALLET_CONNECT, LOGIN_TOKEN } from '@/constants'
 import Header from "@/components/organisms/header"
+import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
+import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
 
 export default {
   name: 'MerchantLogin',
   components: {
     Header
   },
-  methods: {
-    useMetamask() {
-      this.$web3.connectByMetamask().then((provider) => {
-        this.walletConnected(provider)
-      }).catch((error) => {
-        if (error.name === 'MetamaskNotInstalledError') {
-          this.$store.dispatch('modal/show', {
-            target: 'error-modal',
-            size: 'small',
-            params: {
-              message: error.message
-            }
-          })
-        } else {
-          this.$store.dispatch('modal/show', {
-            target: 'error-metamask-modal',
-            size: 'small'
-          })
-        }
-      })
+  mixins: [
+    ConnectWalletMixin,
+    MerchantAdminAuthentificationMixin
+  ],
+  computed: {
+    METAMASK() {
+      return METAMASK
     },
-    useWalletConnect() {
-      this.$web3.connectByWalletConnect().then((provider) => {
-        this.walletConnected(provider)
-      }).catch(() => {
-        this.$store.dispatch('modal/show', {
-          target: 'error-wallet-modal',
-          size: 'small'
-        })
-      })
-    },
-    apiConnectAuthentification(walletAddress, signature) {
-      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/management/connect'
-      const params = {
-        address: walletAddress,
-        token: localStorage.getItem(LOGIN_TOKEN) ? localStorage.getItem(LOGIN_TOKEN) : null,
-        direct_token: this.$route.query.token ? this.$route.query.token : null,
-        signature: signature
-      }
-      return this.axios.post(url, params)
-    },
-    walletConnected(provider) {
-      this.$web3.getAccountData(
-        provider.instance,
-        provider.chainId
-      ).then((account) =>{
-        this.$web3.signWithPrivateKey(
-          provider.instance,
-          account.address
-        ).then((signature) => {
-          this.apiConnectAuthentification(
-            account.address,
-            signature
-          ).then((authed) => {
-            this.$store.dispatch('web3/update', provider)
-            this.$store.dispatch('account/update', account)
-            localStorage.setItem(LOGIN_TOKEN, authed.data[LOGIN_TOKEN])
-            this.$router.push({ path: '/admin/dashboard' })
-          })
-        })
-      })
+    WALLET_CONNECT() {
+      return WALLET_CONNECT
     }
   },
   created() {
+    localStorage.removeItem(LOGIN_TOKEN)
     this.$store.dispatch('web3/initialize')
     this.$store.dispatch('account/initialize')
-    if (process.env.VUE_APP_MANAGEMENT_AUTO_LOGIN === 'true') {
-      if (this.$web3.isConnectedByWalletConnect()) {
-        this.$web3.connectByWalletConnect().then((provider) => {
-          this.walletConnected(provider)
-        })
-      } else {
-        const web3 = this.$web3.getWeb3Instance()
-        this.$web3.getAccounts(web3).then((accounts) => {
-          if (accounts.length > 0) {
-            this.$web3.connectByMetamask().then((provider) => {
-              this.walletConnected(provider)
-            })
-          }
-        })
-      }
-    } else {
-      if (localStorage.getItem(LOGIN_TOKEN)) {
-        localStorage.removeItem(LOGIN_TOKEN)
-      }
-    }
   }
 }
 </script>

@@ -24,7 +24,7 @@
       <div class="payment-with">
         Connect Web3 wallet to make a payment
       </div>
-      <button class="btn __m __pg icon-right full" @click="useMetamask">
+      <button class="btn __m __pg icon-right full" @click="connect(METAMASK, false)">
         <div class="loading-wrap" :class="{'active': loadingMeta}">
           <img class="spin mt" src="@/assets/images/loading.svg">
         </div>
@@ -33,7 +33,7 @@
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="useWalletConnect">
+      <button class="btn __m __pg icon-right full" @click="connect(WALLET_CONNECT, false)">
         <div class="loading-wrap" :class="{'active': loadingWallet}">
           <img class="spin mt" src="@/assets/images/loading.svg">
         </div>
@@ -48,14 +48,22 @@
 
 <script>
 import {
+  METAMASK,
+  WALLET_CONNECT,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
 } from '@/constants'
 import AvailableNetworks from '@/network'
+import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
+import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
 
 export default {
   name: 'PaymentSelectWallets',
+  mixins: [
+    ConnectWalletMixin,
+    PaymentWalletConnectorMixin
+  ],
   data() {
     return{
       loadingMeta: false,
@@ -69,6 +77,12 @@ export default {
     }
   },
   computed: {
+    METAMASK() {
+      return METAMASK
+    },
+    WALLET_CONNECT() {
+      return WALLET_CONNECT
+    },
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
     },
@@ -95,44 +109,6 @@ export default {
       const url = `${this.baseUrl}/api/v1/payment/contract/network`
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
-    },
-    useMetamask() {
-      this.$web3.connectByMetamask().then((connectRes) => {
-        this.$store.dispatch('web3/update', connectRes)
-        this.$web3.getAccountData(
-          connectRes.instance,
-          connectRes.chainId
-        ).then((accountRes) =>{
-          this.$store.dispatch('account/update', accountRes)
-          this.pageTransition()
-        })
-      }).catch((error) => {
-        if (error.name === 'MetamaskNotInstalledError' ||  error.name === 'ProviderChainConnectError') {
-          this.$store.dispatch('modal/show', {
-            target: 'error-modal',
-            size: 'small',
-            params: {
-              message: error.message
-            }
-          })
-        } else {
-          this.$store.dispatch('modal/show', { target: 'error-metamask-modal', size: 'small' })
-        }
-      })
-    },
-    useWalletConnect() {
-      this.$web3.connectByWalletConnect().then((connectRes) => {
-        this.$store.dispatch('web3/update', connectRes)
-        this.$web3.getAccountData(
-          connectRes.instance,
-          connectRes.chainId
-        ).then((accountRes) =>{
-          this.$store.dispatch('account/update', accountRes)
-          this.pageTransition()
-        })
-      }).catch(() => {
-        this.$store.dispatch('modal/show', { target: 'error-wallet-modal', size: 'small' })
-      })
     },
     pageTransition() {
       let nextPath
