@@ -6,11 +6,16 @@
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Apps terminal Note</p>
+      <p class="sub-title">Apps terminal Note 
+        <span v-if="isUpdateSuccess">
+          <img src="/assets/images/check-mark.svg" class="check-wrap">
+          Note Saved!
+        </span>
+      </p>
       <div class="text-wrap">
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <textarea name="" id="" cols="30" rows="10" maxlength="255" v-model="note"></textarea>
       </div>
-      <button @click="confirm" class="save-note">
+      <button @click="updateNote" class="save-note">
         Save Note
         <img src="@/assets/images/edit.svg" alt="">
       </button>
@@ -23,20 +28,61 @@
 </template>
 
 <script>
+  import RequestUtility from '@/utils/request'
+  import { LOGIN_TOKEN, HTTP_CODES } from '@/constants'
+  import { errorCodeList } from '@/enum/error_code'
   export default {
     name: 'walletModal',
+    data() {
+      return {
+        updateSuccess: false,
+        note: this.$store.state.account.note
+      }
+    },
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      },
+      baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+      },
+      isUpdateSuccess() {
+        return this.updateSuccess
       }
     },
     methods: {
+      apiConnectionErrorHandler(statusCode, responseData) {
+        if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
+          localStorage.removeItem(LOGIN_TOKEN)
+          this.$router.push({ path: '/admin' })
+        } else {
+          if ('errors' in responseData && responseData.errors.length) {
+            this.$store.dispatch('modal/show', {
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message: errorCodeList[responseData.errors.shift()].msg
+              }
+            })
+          }
+        }
+      },
+      apiUpdateNote(data) {
+        const url = `${this.baseUrl}/api/v1/management/setting/note`
+        const options = { headers: { Authorization: RequestUtility.getBearer() } }
+        return this.axios.patch(url, data, options)
+      },
+      updateNote() {
+        const data = {note: this.note.trim()}
+        this.apiUpdateNote(data).then(() => {
+          this.updateSuccess = true
+          this.$store.dispatch('account/updateNote', data.note)
+        }).catch((error) => {
+          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+        })
+      },
       hideModal() {
         this.$store.dispatch('modal/hide')
-      },
-      // edit AccountNote
-      confirm(){
-        alert("edit AccountNote")
       }
     }
   }
@@ -111,6 +157,15 @@
     .sub-title{
       font-size: 18px;
       margin-bottom: 16px;
+    }
+    .check-wrap{
+      padding: 0;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      top: 15%;
+      left: 10px;
+      margin-right: 10px;
     }
     .text-wrap{
       text-align: center;
