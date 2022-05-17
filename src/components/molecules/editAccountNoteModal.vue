@@ -75,8 +75,8 @@
       updateNote() {
         const data = {note: this.note.trim()}
         this.apiUpdateNote(data).then(() => {
-        this.updateSuccess = true
-        this.$store.dispatch('account/updateNote', data.note)
+          this.updateSuccess = true
+          this.$store.dispatch('account/updateNote', data.note)
         }).catch((error) => {
           this.apiConnectionErrorHandler(error.response.status, error.response.data)
         })
