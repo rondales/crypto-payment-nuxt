@@ -77,9 +77,9 @@
         this.apiUpdateNote(data).then(() => {
         this.updateSuccess = true
         this.$store.dispatch('account/updateNote', data.note)
-      }).catch((error) => {
-        this.apiConnectionErrorHandler(error.response.status, error.response.data)
-      })
+        }).catch((error) => {
+          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+        })
       },
       hideModal() {
         this.$store.dispatch('modal/hide')
