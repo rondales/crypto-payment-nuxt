@@ -125,8 +125,7 @@ export default {
         USDC: require('@/assets/images/symbol/usdc.svg'),
         DAI: require('@/assets/images/symbol/dai.svg'),
         JPYC: require('@/assets/images/symbol/jpyc.svg')
-      },
-      accountNote: "The account note will be written here The account note will be written here The account note will be written here"
+      }
     }
   },
   watch: {
@@ -251,6 +250,9 @@ export default {
     },
     fixedNetwork() {
       return (this.$store.state.web3.chainId)
+    },
+    accountNote() {
+      return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
     }
   },
   methods: {
@@ -535,7 +537,8 @@ export default {
         padding: 8px;
         resize: none;
         width: 200px;
-        height: 100px;
+        height: 100%;
+        max-height: 100px;
         font-size: 11px;
         @include media(sp) {
           width: 100%;
