@@ -108,6 +108,7 @@ export default {
       localStorage.setItem(LOGIN_TOKEN, authorizedData.authorized.login_token)
       this.$store.dispatch('account/update', authorizedData.account)
       this.$store.dispatch('account/updateReceiveSymbol', authorizedData.account.receiveSymbol)
+      this.$store.dispatch('account/updateNote', authorizedData.authorized.note)
       if (loginMode) {
         this.$store.dispatch('web3/update', authorizedData.web3)
         if (modalMode) {
