@@ -188,10 +188,7 @@ export default {
         address: null,
         abi: null
       },
-      returnUrls: {
-        succeed: null,
-        failured: null
-      },
+      returnUrls: { succeed: null },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -554,7 +551,6 @@ export default {
       }
       this.apiGetPaymentCompletedUrl().then((response) => {
         this.returnUrls.succeed = response.data.succeeded_return_url
-        this.returnUrls.failured = response.data.failured_return_url
       })
       this.apiGetContract().then((response) => {
         this.contract.address = response.data.address

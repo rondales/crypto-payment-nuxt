@@ -117,13 +117,6 @@
             <input class="text-box" type="text" v-model="paymentSettings.successReturnUrl">
           </div>
           <div class="manage-contents_clm">
-            <h4>Payment faliure return URL</h4>
-            <p>
-              A URL for the user to go from SlashPayment to the merchant's website after a failure payment.
-            </p>
-            <input class="text-box" type="text" v-model="paymentSettings.failureReturnUrl">
-          </div>
-          <div class="manage-contents_clm">
             <h4><span>*</span>Exchange margin rate</h4>
             <p>
               The margin rate to be added to the actual exchange rate.
@@ -230,7 +223,6 @@ export default {
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
-        failureReturnUrl: '',
         exchangeMarginRate: '0.0',
         allowCurrencies: {
           USD: false,
@@ -348,7 +340,6 @@ export default {
       const data = {
         complete_kickback_url: this.paymentSettings.successNotifyUrl,
         succeeded_return_url: this.paymentSettings.successReturnUrl,
-        failured_return_url: this.paymentSettings.failureReturnUrl,
         exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
         allow_currencies: this.paymentSettings.allowCurrencies
       }
@@ -386,7 +377,6 @@ export default {
       this.apiGetPaymentSettings().then((response) => {
         this.paymentSettings.successNotifyUrl = response.data.complete_kickback_url
         this.paymentSettings.successReturnUrl = response.data.succeeded_return_url
-        this.paymentSettings.failureReturnUrl = response.data.failured_return_url
         this.paymentSettings.exchangeMarginRate = response.data.exchange_margin_rate
         this.paymentSettings.allowCurrencies = response.data.allow_currencies
       }).catch((error) => {
