@@ -85,11 +85,10 @@
             <p>0.002367 BNB</p>
           </div>
           -->
-          <div class="dattail-list add-flex j-between mb-1">
+          <div v-if="isDifferentToken" class="dattail-list add-flex j-between mb-1">
             <p>Slippage tolerance</p>
             <p>{{ slippageTolerance }}%</p>
           </div>
-          
           <div class="dattail-list add-flex j-between mb-2">
             <p>Platform Fee</p>
             <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
@@ -168,6 +167,12 @@ import {
   MaticTokens,
   AvalancheTokens
 } from '@/contracts/tokens'
+import {
+  BscTokens as BscReceiveTokens,
+  EthereumTokens as EthereumReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
   name: 'PaymentDetail',
@@ -331,6 +336,31 @@ export default {
     },
     isPublishedTransactionHash() {
       return (this.transactionHash)
+    },
+    isDifferentToken() {
+      let receiveToken
+      switch(this.$store.state.web3.chainId) {
+        case NETWORKS[1].chainId:
+        case NETWORKS[3].chainId:
+          receiveToken = EthereumReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[56].chainId:
+        case NETWORKS[97].chainId:
+          receiveToken = BscReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[137].chainId:
+        case NETWORKS[80001].chainId:
+          receiveToken = MaticReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[43113].chainId:
+        case NETWORKS[43114].chainId:
+          receiveToken = AvalacheReceiveTokens[this.paymentRequestSymbol]
+      }
+      const receiveTokenAddress = receiveToken.address.toLowerCase()
+      const paymentTokenAddress = this.$store.state.payment.token.address
+        ? this.$store.state.payment.token.address.toLowerCase()
+        : ''
+      return receiveTokenAddress !== paymentTokenAddress
     }
   },
   methods: {
@@ -394,6 +424,7 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
+        this.paymentRequestSymbol,
         this.paymentRequestAmount,
         this.slippageTolerance
       ).then((exchange) => {

@@ -258,12 +258,13 @@ const getTokenExchangeData = async function(
   walletAddress,
   contract,
   token,
+  paymentRequestSymbol,
   paymentRequestAmount,
   slippageTolerance
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getNetworkDefaultTokens(chainId)
-  const requestToken = defaultTokens.USDT
+  const requestToken = defaultTokens[paymentRequestSymbol]
   const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
   const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
   const requestTokenWeiUnit = getTokenUnit(requestTokenDecimal)

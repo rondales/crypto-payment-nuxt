@@ -269,6 +269,7 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
+        this.receiveTokenSymbol,
         this.paymentRequestTokenAmount,
         this.slippageTolerance
       ).then((exchange) => {
