@@ -42,6 +42,8 @@
 </template>
 
 <script>
+  import { LOGIN_TOKEN } from '@/constants'
+
   export default {
     name: 'walletModal',
     computed: {
@@ -56,8 +58,14 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
+      showHideMenu(){
+      this.$store.dispatch("accountMenu", {accountMenu: true});
+      },
       disconnect(){
-        alert("disconnect Account")
+        localStorage.removeItem(LOGIN_TOKEN)
+        this.hideModal()
+        this.showHideMenu()
+        this.$router.push({ path: '/admin' })
       },
       switchMyWallet(){
         alert("switch metamask")
