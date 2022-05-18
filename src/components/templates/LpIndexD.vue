@@ -84,7 +84,7 @@
             >
           </h2>
           <ul :class="section.token.class + '__iconlist'">
-            <li v-for="icon in section.token.icons" :key="icon.text">
+            <li v-for="icon in section.token.icons" :key="icon.path">
               <figure>
                 <img
                   :src="
@@ -123,7 +123,7 @@
                   <span v-html="card.title"></span>
                 </h4>
                 <ul :class="section.token.class + '__card__iconlist'">
-                  <li v-for="icon in card.icons" :key="icon.text">
+                  <li v-for="icon in card.icons" :key="icon.path">
                     <figure>
                       <img
                         :src="
@@ -280,7 +280,7 @@
             >
           </h2>
           <ul :class="section.trial.class + '__feature'">
-            <li v-for="list in section.trial.lists" :key="list.title">
+            <li v-for="list in section.trial.lists" :key="list.logo">
               <div :class="section.trial.class + '__feature__list'">
                 <figure :class="section.trial.class + '__feature__image'">
                   <img
@@ -474,7 +474,6 @@ import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
 
 export default {
-  name: "payment",
   data() {
     return {
       section: {
@@ -763,7 +762,7 @@ export default {
               path: "cn8",
             },
             {
-              path: "cn8",
+              path: "cn9",
             },
             {
               path: "cn10",
@@ -864,38 +863,43 @@ export default {
             {
               title: "Slash Payment Docs.",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: true,
             },
             {
               title: "Slash Payment github",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: true,
             },
-            { title: "Media kit", icon: "twitter", link: {}, status: false },
+            {
+              title: "Media kit",
+              icon: "twitter",
+              //  link: {},
+              status: false,
+            },
             {
               title: "Support for Slash Payment System",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: false,
             },
             {
               title: "Slash Developer Community",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: false,
             },
             {
               title: "FAQ about system implementation",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: false,
             },
             {
               title: "Slash Recruit information",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: true,
             },
           ],
@@ -907,11 +911,16 @@ export default {
             subtitle: "",
           },
           list: [
-            { title: "Contact Email", icon: "twitter", link: {}, status: true },
+            {
+              title: "Contact Email",
+              icon: "twitter",
+              // link: {},
+              status: true,
+            },
             {
               title: "Twitter for DM",
               icon: "twitter",
-              link: {},
+              // link: {},
               status: true,
             },
           ],

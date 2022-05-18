@@ -1,45 +1,28 @@
 <template>
-  <canvas :class="canvasClass + '__canvas'"></canvas>
+  <div :class="canvasClass + '__canvas'">
+    <vue-p5 v-on="this"></vue-p5>
+  </div>
 </template>
+
+
+<script src="https://unpkg.com/vue-p5"></script>
 <script>
+// import Vue from "vue";
+import VueP5 from "vue-p5";
 export default {
   props: {
     canvasClass: {
       type: String,
     },
   },
-  data() {
-    // return {
-    //   ShapesNum: 0,
-    //   shapes: [],
-    //   curTime: 0.0,
-    //   speed: 50.0,
-    //   SizeMin: 0,
-    //   SizeMax: 0,
-    //   windowWidth: 0,
-    //   windowHeight: 0,
-    // };
+  methods: {
+    setup(sketch) {
+      sketch.background("green");
+      sketch.text("Hello p5!", 20, 20);
+    },
   },
-  watch: {},
-  methods: {},
-  mounted() {
-    // let p5Script = document.createElement("script");
-    // p5Script.setAttribute(
-    //   "src",
-    //   "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js"
-    // );
-    // p5Script.setAttribute(
-    //   "integrity",
-    //   "https://cdnjs.sha512-NxocnqsXP3zm0Xb42zqVMvjQIktKEpTIbCXXyhBPxqGZHqhcOXHs4pXI/GoZ8lE+2NJONRifuBpi9DxC58L0Lw==.com/ajax/libs/p5.js/1.4.1/p5.min.js"
-    // );
-    // p5Script.setAttribute("crossorigin", "anonymous");
-    // p5Script.setAttribute("referrerpolicy", "no-referrer");
-    // document.head.appendChild(p5Script);
-    // // mounted 以降で canvas の DOM にアクセスできる
-    // // CreateJS などを使うときにも、ここで canvas と紐付ける
-    // // console.log(this.$el)
-    // this.ctx = this.$el.getContext("2d");
-    // this.draw(this.radius);
+  render(h) {
+    return h(VueP5, { on: this });
   },
 };
 </script>
