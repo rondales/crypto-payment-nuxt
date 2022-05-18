@@ -6,6 +6,7 @@ const store = {
     domain: null,
     orderCode: null,
     amount: null,
+    amountWei: null,
     symbol: null,
     fee: null,
     transactionHash: null,
@@ -40,6 +41,9 @@ const store = {
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
     },
+    updateAmountWei({ commit }, payload) {
+      commit('updateAmountWei', payload)
+    },
     updateFee({ commit }, payload) {
       commit('updateFee', payload)
     },
@@ -66,6 +70,7 @@ const store = {
       state.domain = null
       state.orderCode = null
       state.amount = null
+      state.amountWei = null
       state.symbol = null
       state.fee = null
       state.transactionHash = null
@@ -97,6 +102,9 @@ const store = {
     },
     updateAmount(state, payload) {
       state.amount = payload
+    },
+    updateAmountWei(state, payload) {
+      state.amountWei = payload
     },
     updateFee(state, payload) {
       state.fee = payload

@@ -48,8 +48,20 @@ export default {
         },
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "receiveToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "amountIn",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountOut",
           "type": "uint256"
         },
         {
@@ -155,11 +167,16 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "router_",
+          "name": "exchange_",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "flag_",
+          "type": "uint256"
         }
       ],
-      "name": "addSwapRouter",
+      "name": "addExchange",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -219,6 +236,11 @@ export default {
           "internalType": "address[]",
           "name": "path_",
           "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "getAmountIn",
@@ -248,6 +270,11 @@ export default {
           "internalType": "address[]",
           "name": "path_",
           "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "getAmountOut",
@@ -264,19 +291,19 @@ export default {
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "payingToken_",
-          "type": "address"
-        },
-        {
           "internalType": "uint256",
-          "name": "amountIn_",
+          "name": "amountOut_",
           "type": "uint256"
         },
         {
           "internalType": "address[]",
           "name": "feePath_",
           "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "getFeeAmount",
@@ -323,8 +350,18 @@ export default {
               "type": "address"
             },
             {
+              "internalType": "address",
+              "name": "receiveToken",
+              "type": "address"
+            },
+            {
               "internalType": "uint256",
-              "name": "amount",
+              "name": "amountIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountOut",
               "type": "uint256"
             },
             {
@@ -535,7 +572,7 @@ export default {
           "type": "uint256"
         }
       ],
-      "name": "removeSwapRouter",
+      "name": "removeExchange",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -560,6 +597,11 @@ export default {
           "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "requiredAmountOut_",
+          "type": "uint256"
+        },
+        {
           "internalType": "address[]",
           "name": "path_",
           "type": "address[]"
@@ -568,6 +610,11 @@ export default {
           "internalType": "address[]",
           "name": "feePath_",
           "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "submitTransaction",
@@ -725,11 +772,16 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "router_",
+          "name": "exchange_",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "flag_",
+          "type": "uint256"
         }
       ],
-      "name": "updateMainSwapRouter",
+      "name": "updateMainExchange",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -918,6 +970,24 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewExchanges",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewFeeMaxPercent",
       "outputs": [
         {
@@ -957,12 +1027,17 @@ export default {
     },
     {
       "inputs": [],
-      "name": "viewMainSwapRouter",
+      "name": "viewMainExchange",
       "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1041,19 +1116,6 @@ export default {
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "viewSwapRouters",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
         }
       ],
       "stateMutability": "view",

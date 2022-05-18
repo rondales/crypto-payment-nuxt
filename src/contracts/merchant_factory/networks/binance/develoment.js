@@ -2,5 +2,5 @@ import { NETWORKS } from '@/constants'
 
 export default {
   chainId: NETWORKS[97].chainId,
-  address: '0x0d3C36Dd7E349e7e20D45e652E819b1EEeb6a335'
+  address: '0xC82e3DC2fa0FA77DAFc70Dd68067B2D0b836B769'
 }
