@@ -8,7 +8,7 @@
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class">
-        <canvas :class="section.mv.class + '__canvas'"></canvas>
+        <LpAnimation :canvasClass="section.mv.class" />
         <div :class="section.mv.class + '__title'">
           <!-- [TODO] アイコンぼやけるので画像が欲しい -->
           <img
@@ -471,6 +471,7 @@
 <script>
 import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
+import LpAnimation from "@/components/templates/LpAnimation";
 
 export default {
   name: "payment",
@@ -985,6 +986,7 @@ export default {
   components: {
     LpHeader,
     LpFooter,
+    LpAnimation,
   },
   methods: {
     openModal(target) {
