@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
 import { Decimal as BigJs } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS, SLIPPAGE_TOLERANCE } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
@@ -258,7 +258,8 @@ const getTokenExchangeData = async function(
   walletAddress,
   contract,
   token,
-  paymentRequestAmount
+  paymentRequestAmount,
+  slippageTolerance
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getNetworkDefaultTokens(chainId)
@@ -297,7 +298,8 @@ const getTokenExchangeData = async function(
     : String(
         Math.round(
           parseInt(requestTokenToUserToken) 
-          + parseInt(requestTokenToUserToken) * SLIPPAGE_TOLERANCE)
+          + parseInt(requestTokenToUserToken) * slippageTolerance
+        )
       )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       payingTokenAddress,

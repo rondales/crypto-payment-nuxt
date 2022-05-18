@@ -154,6 +154,9 @@ export default {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
     },
+    slippageTolerance() {
+      return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
+    },
     web3Instance() {
       return this.$store.state.web3.instance
     },
@@ -266,7 +269,8 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
-        this.paymentRequestTokenAmount
+        this.paymentRequestTokenAmount,
+        this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
         this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)

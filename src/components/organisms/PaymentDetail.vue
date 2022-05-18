@@ -84,11 +84,12 @@
             <p>Liquidity Provider Fee</p>
             <p>0.002367 BNB</p>
           </div>
+          -->
           <div class="dattail-list add-flex j-between mb-1">
             <p>Slippage tolerance</p>
-            <p>0.50%</p>
+            <p>{{ slippageToleranceInPercentage }}</p>
           </div>
-          -->
+          
           <div class="dattail-list add-flex j-between mb-2">
             <p>Platform Fee</p>
             <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
@@ -121,7 +122,7 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="blank" :href="transactionUrl">
+          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="_blank" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
@@ -200,6 +201,12 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    slippageTolerance() {
+      return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
+    },
+    slippageToleranceInPercentage() {
+      return this.slippageTolerance * 100 + '%';
     },
     web3Instance() {
       return this.$store.state.web3.instance
@@ -390,7 +397,8 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
-        this.paymentRequestAmount
+        this.paymentRequestAmount,
+        this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
         this.$store.dispatch('payment/updateToken', {
