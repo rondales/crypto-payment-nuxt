@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="toggle-btn mb-3 add-flex j-around">
-      <router-link :to="{query: {id: 1}}" class="toggle-right">
+      <router-link to="/admin/payment/history" class="toggle-right">
         History
       </router-link>
-      <router-link :to="{query: {id: 2}}" class="toggle-left">
-        settings
+      <router-link to="/admin/payment/settings/contract" class="toggle-left" :class="{'router-link-exact-active': isSettingsPage}">
+        Settings
       </router-link>
     </div>
     <div>
-      <TransactionHistory v-if="this.$route.query.id == 1"/>
-      <PaymentSettings v-if="this.$route.query.id == 2"/>
+      <TransactionHistory v-if="isHistoryPage"/>
+      <PaymentSettings v-if="isSettingsPage"/>
     </div>
   </div>
 </template>
@@ -32,7 +32,22 @@ export default {
       id: "",
     }
   },
+  computed: {
+    isHistoryPage() {
+      const targetPath = '/admin/payment/history'
+      return this.$route.path === targetPath
+    },
+    isSettingsPage() {
+      const targetPaths = [
+        '/admin/payment/settings/basic',
+        '/admin/payment/settings/contract',
+        '/admin/payment/settings/domain'
+      ]
+      return targetPaths.includes(this.$route.path)
+    }
+  },
   mounted() {
+    console.log(this.$route.path)
     if(!this.$route.query.id){
       this.isHistory = true;
     }
