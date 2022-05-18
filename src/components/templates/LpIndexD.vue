@@ -313,6 +313,7 @@
           </ul>
         </div>
       </section>
+
       <!-- SECTION network -->
       <section :class="section.network.class">
         <div class="section__wrap">
@@ -1267,6 +1268,17 @@ export default {
   }
   &-install {
     @include rem_padding(6, 0, 6, 0);
+    &__feature {
+      &__list {
+        @include flex(flex-start, flex-start);
+      }
+      &__image {
+        width: 50%;
+      }
+      &__textwrap {
+        width: 50%;
+      }
+    }
   }
   &-fee {
     @include rem_padding(6, 0, 6, 0);
@@ -1287,18 +1299,53 @@ export default {
         @include font(rem(3), 700, 0em, 1.5, $ff);
       }
     }
+    &__feature {
+      &__list {
+        @include flex(flex-start, flex-start);
+      }
+      &__image {
+        width: 50%;
+      }
+      &__textwrap {
+        width: 50%;
+      }
+    }
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
+    &__feature {
+      &__list {
+        @include flex(flex-start, flex-start);
+        @include list(2, 2rem);
+      }
+      &__image {
+      }
+      &__textwrap {
+      }
+    }
   }
   &-network {
     @include rem_padding(6, 0, 6, 0);
+    &__logos {
+      @include flex(center, center);
+      @include list(4, 2rem);
+    }
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
+    &__phase {
+      @include flex(center, center);
+      @include list(2, 2rem);
+    }
+    &__feature {
+      @include flex(center, center);
+      @include list(3, 2rem);
+    }
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
+    &__list {
+    }
   }
   &-contact {
     @include rem_padding(6, 0, 6, 0);
