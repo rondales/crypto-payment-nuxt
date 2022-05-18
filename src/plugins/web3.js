@@ -297,8 +297,7 @@ const getTokenExchangeData = async function(
     ? requestTokenToUserToken
     : String(
         Math.round(
-          parseInt(requestTokenToUserToken) 
-          + parseInt(requestTokenToUserToken) * slippageTolerance
+          parseInt(requestTokenToUserToken, 10) * (1 + (slippageTolerance / 100))
         )
       )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(

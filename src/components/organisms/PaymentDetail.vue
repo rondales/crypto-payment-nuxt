@@ -87,7 +87,7 @@
           -->
           <div class="dattail-list add-flex j-between mb-1">
             <p>Slippage tolerance</p>
-            <p>{{ slippageToleranceInPercentage }}</p>
+            <p>{{ slippageTolerance }}%</p>
           </div>
           
           <div class="dattail-list add-flex j-between mb-2">
@@ -204,9 +204,6 @@ export default {
     },
     slippageTolerance() {
       return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
-    },
-    slippageToleranceInPercentage() {
-      return this.slippageTolerance * 100 + '%';
     },
     web3Instance() {
       return this.$store.state.web3.instance
