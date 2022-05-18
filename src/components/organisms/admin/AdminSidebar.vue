@@ -33,14 +33,14 @@
                 Keys
               </router-link>
             </li>
-            <!--
-            @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
-              <router-link to="/admin/documents">
+              <a
+                target="_blank"
+                href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
+              >
                 Documents
-              </router-link>
+              </a>
             </li>
-            -->
           </ul>
         </div>
       </div>
