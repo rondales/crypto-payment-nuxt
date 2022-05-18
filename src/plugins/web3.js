@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
 import { Decimal as BigJs } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS, SLIPPAGE_TOLERANCE } from '@/constants'
 import AvailableNetworks from '@/network'
 import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
@@ -272,6 +272,7 @@ const getTokenExchangeData = async function(
   const requestAmountWei = web3.utils.toWei(`${paymentRequestAmount}`, requestTokenWeiUnit)
   const wrappedToken = getWrappedToken(chainId)
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const reservedParam = '0x'
 
   const feePath = token.address === null
     ? [wrappedToken.address, requestToken.address]
@@ -282,26 +283,37 @@ const getTokenExchangeData = async function(
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
       payingTokenAddress,
       userTokenBalanceWei,  
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       requestAmountWei,
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
+  const requireAmountWithSlippage = token.address == requestToken.address 
+    ? requestTokenToUserToken
+    : String(
+        Math.round(
+          parseInt(requestTokenToUserToken) 
+          + parseInt(requestTokenToUserToken) * SLIPPAGE_TOLERANCE)
+      )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       perRequestTokenWei,
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
-      payingTokenAddress,
-      requestTokenToUserToken,
-      feePath
+      requestAmountWei,
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
   const totalFee = String(Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0))
   return {
-    requireAmount: web3.utils.fromWei(requestTokenToUserToken, userTokenWeiUnit),
+    requireAmount: web3.utils.fromWei(requireAmountWithSlippage, userTokenWeiUnit),
+    requestAmountWei: requestAmountWei,
     equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
     fee: web3.utils.fromWei(totalFee, 'ether')
@@ -354,7 +366,8 @@ const sendPaymentTransaction = function(
   contract,
   token,
   paymentAmount,
-  platformFee
+  platformFee,
+  requestAmountWei
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getNetworkDefaultTokens(chainId)
@@ -364,6 +377,7 @@ const sendPaymentTransaction = function(
   const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const reservedParam = '0x'
 
   const path = token.address === null
     ? [wrappedToken.address, requestToken.address]
@@ -380,8 +394,10 @@ const sendPaymentTransaction = function(
   return merchantContract.methods.submitTransaction(
     paymentTokenAddress,
     userTokenAmountWei,
+    requestAmountWei,
     path,
-    feePath
+    feePath,
+    reservedParam
   ).send({
     from: walletAddress,
     to: contract.address,

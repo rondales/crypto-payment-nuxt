@@ -63,7 +63,7 @@
         </div>
         <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Eate</p>
+            <p>Exchange Rate</p>
             <p>1{{ paymentRequestSymbol }}＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
@@ -121,7 +121,7 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="isPublishedTransactionHash" class="payment-status_btn" :href="transactionUrl">
+          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="blank" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
@@ -397,6 +397,7 @@ export default {
           amount: exchange.requireAmount,
           rate: exchange.rate
         })
+        this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
         this.equivalent = exchange.equivalentAmount
         this.requireAmount = exchange.requireAmount
         this.exchangeRate = exchange.rate
@@ -483,7 +484,8 @@ export default {
         this.contract,
         this.$store.state.payment.token,
         this.userTokenPaymentAmount,
-        this.$store.state.payment.fee
+        this.$store.state.payment.fee,
+        this.$store.state.payment.amountWei
       )
     },
     checkTransactionStatus(transactionHash) {

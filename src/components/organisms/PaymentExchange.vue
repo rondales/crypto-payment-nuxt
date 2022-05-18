@@ -55,7 +55,7 @@
               {{ tokenSymbol }}
             </p>
             <div class="payment_balance-equivalent" :class="{warning: !isBalanceEnough}">
-              {{ usd | usdFormat }} {{ tokenSymbol }} equivalent
+              {{ usd | usdFormat }} {{ equivalentSymbol }} equivalent
             </div>
           </div>
           <div class="payment_balance-price">
@@ -269,6 +269,7 @@ export default {
         this.paymentRequestTokenAmount
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,
           rate: exchange.rate
