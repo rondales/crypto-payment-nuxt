@@ -11,8 +11,13 @@
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/web3payment?id=1" :class="{ inactive: isUnselectedReceiveToken }">
-                web3 payment
+              <router-link to="/admin/payment/history" :class="{ inactive: isUnselectedReceiveToken }">
+                History
+              </router-link>
+            </li>
+            <li @click="close()">
+              <router-link to="/admin/payment/settings/contract" :class="{ inactive: isUnselectedReceiveToken, 'router-link-active': isSettingsPage }">
+                Settings
               </router-link>
             </li>
             <!--
@@ -25,17 +30,17 @@
             -->
             <li @click="close()">
               <router-link to="/admin/keys" :class="{ inactive: isUnselectedReceiveToken }">
-                keys
+                Keys
               </router-link>
             </li>
-            <!--
-            @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
-              <router-link to="/admin/documents">
+              <a
+                target="_blank"
+                href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
+              >
                 Documents
-              </router-link>
+              </a>
             </li>
-            -->
           </ul>
         </div>
       </div>
@@ -50,6 +55,14 @@ export default {
   computed: {
     isUnselectedReceiveToken() {
       return !(this.$store.state.account.receiveSymbol)
+    },
+    isSettingsPage() {
+      const targetPaths = [
+        '/admin/payment/settings/basic',
+        '/admin/payment/settings/contract',
+        '/admin/payment/settings/domain'
+      ]
+      return targetPaths.includes(this.$route.path)
     }
   },
   methods: {
