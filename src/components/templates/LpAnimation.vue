@@ -6,9 +6,7 @@
         <div id="SubCanvas3"></div>
     </div>
 </template>
-
 <script src="https://unpkg.com/vue-p5"></script>
-
 <script>
 export default {
     props: {
@@ -30,10 +28,10 @@ export default {
             let ShapesNum;
             let shapes = [];
             let curTime = 0.0;
-            let speed = 50.0;
+            let speed = 40.0;
             let SizeMin, SizeMax;
 
-            
+
 
             mv.setup = (_) => {
                 // p5.disableFriendlyErrors = true;
@@ -47,7 +45,7 @@ export default {
                 var canvas = mv.createCanvas(SizeMax, SizeMax, mv.WEBGL);
                 canvas.parent("MvCanvas");
                 // ShapesNum = floor(mySize/6);
-                ShapesNum = 200;
+                ShapesNum = 250;
                 // print(ShapesNum)
                 mv.colorMode(mv.HSB, 360, 100, 100, 100);
 
@@ -104,23 +102,27 @@ export default {
                     mv.noFill();
                     let maxid = this.maxnum * 0.1;
                     let thresh = mv.map(mv.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-                    mv.strokeWeight(mv.map(mv.max(thresh, 0.0), 0.0, 1.0, 0.3, 2.0));
+                    mv.strokeWeight(mv.map(mv.max(thresh, 0.5), 0.5, 1.0, 0.3, 2.0));
                     mv.push();
-                    let angrange = mv.map(mv.sin(mv.radians(curTime * 10.0)), -1.0, 1.0, 60.0, 360.0);
+                    let angrange = mv.map(mv.sin(mv.radians(curTime * 5.0)), -1.0, 1.0, 60.0, 360.0);
                     let addang = curTime * speed + angrange * this.id / (this.maxnum - 1.0);
                     let ang = mv.radians(45.0 + addang);
 
                     mv.rotateX(ang);
                     mv.rotateY(ang);
                     mv.rotateZ(ang);
-
+                    // mv.translate(mv.width/2, 0, 0);
                     let scaleval = (1.0 - this.id / this.maxnum);
-                    let addscale = mv.map(mv.sin(mv.radians(curTime * 10.0)), -1.0, 1.0, 0.0, 0.02);
+                    let addscale = mv.map(mv.sin(mv.radians(curTime * 5.0)), -1.0, 1.0, 0.0, 0.02);
                     scaleval = mv.map(scaleval, 0.0, 1.0, addscale, 1.0 + addscale);
 
                     let Hue = (195 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 75;
                     let Saturation = (20 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
-                    let Brightness = (10 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
+                    let Brightness = (10 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 70;
+                    if (store.state.theme == 'light') {
+                        Saturation = (20 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 40;
+                        Brightness = (10 * mv.abs(mv.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
+                    };
 
                     mv.stroke(Hue, Saturation, Brightness, 100);
                     // mv.smooth(2);
@@ -149,7 +151,7 @@ export default {
                 var canvas = s1.createCanvas(SizeMax, SizeMax, s1.WEBGL);
                 canvas.parent("SubCanvas1");
                 // ShapesNum = floor(mySize/6);
-                ShapesNum = 10;
+                ShapesNum = 100;
                 // print(ShapesNum)
                 s1.colorMode(s1.HSB, 360, 100, 100, 100);
 
@@ -160,7 +162,7 @@ export default {
                 }
 
                 for (let i = 0; i < ShapesNum; i++) {
-                    let shape = new Shape(i, ShapesNum, SizeMin * 0.40);
+                    let shape = new Shape(i, ShapesNum, SizeMin * 1.0);
                     shapes.push(shape);
                 }
             };
@@ -172,7 +174,7 @@ export default {
                 s1.resizeCanvas(SizeMax, SizeMax);
                 for (let i = 0; i < shapes.length; i++) {
                     let shape = shapes[i];
-                    shape.resize(SizeMin * 0.40);
+                    shape.resize(SizeMin * 1.0);
                 }
             };
 
@@ -204,9 +206,9 @@ export default {
                     s1.noFill();
                     let maxid = this.maxnum * 0.1;
                     let thresh = s1.map(s1.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-                    s1.strokeWeight(s1.map(s1.max(thresh, 0.0), 0.0, 1.0, 0.2, 1.0));
+                    s1.strokeWeight(s1.map(s1.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
                     s1.push();
-                    let angrange = s1.map(s1.sin(s1.radians(curTime * 10.0)), -1.0, 1.0, 60.0, 180.0);
+                    let angrange = s1.map(s1.sin(s1.radians(curTime * 10.0)), -1.0, 1.0, 60.0, 90.0);
                     let addang = curTime * speed + angrange * this.id / (this.maxnum - 1.0);
                     let ang = s1.radians(45.0 + addang);
 
@@ -215,15 +217,24 @@ export default {
                     s1.rotateZ(ang);
 
                     let scaleval = (1.0 - this.id / this.maxnum);
-                    let addscale = s1.map(s1.sin(s1.radians(curTime * 10.0)), -1.0, 1.0, 0.0, 0.02);
+                    let addscale = s1.map(s1.sin(s1.radians(curTime * 10.0)), -1.0, 1.0, 0.0, 0.1);
                     scaleval = s1.map(scaleval, 0.0, 1.0, addscale, 1.0 + addscale);
+
+                    let movex = s1.map(this.id, 0, this.maxnum, -s1.width/2, s1.width/2);
+                    s1.translate(movex, movex, movex);
 
                     let Hue = (195 * s1.abs(s1.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 75;
                     let Saturation = (20 * s1.abs(s1.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
                     let Brightness = (10 * s1.abs(s1.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 50;
+                    if (store.state.theme == 'light') {
+                        Saturation = (20 * s1.abs(s1.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 60;
+                        Brightness = (10 * s1.abs(s1.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
+                    };
 
                     s1.stroke(Hue, Saturation, Brightness, 100);
-                    s1.ellipsoid(this.size * scaleval, this.size * scaleval, this.size * scaleval);
+                    s1.box(this.size * scaleval, 0.2, 0.2);
+                    // s1.ellipsoid(this.size * scaleval);
+                    // s1.box(this.size * scaleval);
                     s1.pop()
                 }
             }
@@ -234,7 +245,7 @@ export default {
             let ShapesNum;
             let shapes = [];
             let curTime = 0.0;
-            let speed = 50.0;
+            let speed = 25.0;
             let SizeMin, SizeMax;
             // s2.disableFriendlyErrors = true;
 
@@ -247,7 +258,7 @@ export default {
                 var canvas = s2.createCanvas(SizeMax, SizeMax, s2.WEBGL);
                 canvas.parent("SubCanvas2");
                 // ShapesNum = floor(mySize/6);
-                ShapesNum = 80;
+                ShapesNum = 150;
                 // print(ShapesNum)
                 s2.colorMode(s2.HSB, 360, 100, 100, 100);
 
@@ -258,7 +269,7 @@ export default {
                 }
 
                 for (let i = 0; i < ShapesNum; i++) {
-                    let shape = new Shape(i, ShapesNum, SizeMin * 0.60);
+                    let shape = new Shape(i, ShapesNum, SizeMin * 0.4);
                     shapes.push(shape);
                 }
             };
@@ -270,7 +281,7 @@ export default {
                 s2.resizeCanvas(SizeMax, SizeMax);
                 for (let i = 0; i < shapes.length; i++) {
                     let shape = shapes[i];
-                    shape.resize(SizeMin * 0.60);
+                    shape.resize(SizeMin * 0.4);
                 }
             };
 
@@ -302,27 +313,31 @@ export default {
                     s2.noFill();
                     let maxid = this.maxnum * 0.1;
                     let thresh = s2.map(s2.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-                    s2.strokeWeight(s2.map(s2.max(thresh, 0.0), 0.0, 1.0, 0.1, 2.0));
+                    s2.strokeWeight(s2.map(s2.max(thresh, 0.0), 0.0, 1.0, 0.3, 2.0));
                     s2.push();
-                    let angrange = s2.map(s2.sin(s2.radians(curTime * 10.0)), -1.0, 1.0, 0.0, 270.0);
+                    let angrange = s2.map(s2.sin(s2.radians(curTime * 5.0)), -1.0, 1.0, 60.0, 360.0);
                     let addang = curTime * speed + angrange * this.id / (this.maxnum - 1.0);
-                    let ang = s2.radians(0.0 + addang);
+                    let ang = s2.radians(45.0 + addang);
 
                     s2.rotateX(ang);
                     s2.rotateY(ang);
                     s2.rotateZ(ang);
-
+                    // s2.translate(s2.width/2, 0, 0);
                     let scaleval = (1.0 - this.id / this.maxnum);
                     let addscale = s2.map(s2.sin(s2.radians(curTime * 10.0)), -1.0, 1.0, 0.0, 0.02);
                     scaleval = s2.map(scaleval, 0.0, 1.0, addscale, 1.0 + addscale);
 
                     let Hue = (195 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 75;
                     let Saturation = (20 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
-                    let Brightness = (10 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 50;
+                    let Brightness = (10 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 60;
+                    if (store.state.theme == 'light') {
+                        Saturation = (20 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 40;
+                        Brightness = (10 * s2.abs(s2.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
+                    };
 
                     s2.stroke(Hue, Saturation, Brightness, 100);
+                    // s2.smooth(2);
                     s2.box(this.size * scaleval);
-                    // s2.plane(this.size * scaleval,this.size * scaleval / 2);
                     s2.pop()
                 }
             }
@@ -346,7 +361,7 @@ export default {
                 var canvas = s3.createCanvas(SizeMax, SizeMax, s3.WEBGL);
                 canvas.parent("SubCanvas3");
                 // ShapesNum = floor(mySize/6);
-                ShapesNum = 50;
+                ShapesNum = 30;
                 // print(ShapesNum)
                 s3.colorMode(s3.HSB, 360, 100, 100, 100);
 
@@ -379,6 +394,7 @@ export default {
                     s3.background(DarkColor);
                 } else {
                     s3.background(LightColor);
+                    // s3.background("#EFEFEF");
                 }
 
                 for (let i = 0; i < shapes.length; i++) {
@@ -401,9 +417,9 @@ export default {
                 draw() {
                     s3.noFill();
                     let maxid = this.maxnum * 0.1;
-                    s3.strokeWeight(0.8);
+                    s3.strokeWeight(0.5);
                     // let thresh = s3.map(s3.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-                    // s3.strokeWeight(s3.map(s3.max(thresh, 0.0), 0.0, 1.0, 0.2, 1.0));
+                    // s3.strokeWeight(s3.map(s3.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
                     s3.push();
                     let angrange = s3.map(s3.sin(s3.radians(curTime * 10.0)), -1.0, 1.0, 45.0, 90.0);
                     let addang = curTime * speed + angrange * this.id / (this.maxnum - 1.0);
@@ -413,21 +429,25 @@ export default {
                     // s3.rotateX(4.5+(curTime * 0.1));
                     // s3.rotateY(4.5-(curTime * 0.1));
                     // s3.rotateZ(4.5+(curTime * 0.1));
-                    // s3.rotateZ(4.5+(curTime * 0.1));
-                    s3.rotateZ(curTime * 0.1);
-                    // s3.rotateY(curTime * 0.2);
+                    s3.rotateZ(45);
+                    // s3.rotateZ(curTime * 0.1);
+                    // s3.rotateY(curTime * 0.1);
                     // s3.rotateZ(curTime * 0.1);
 
 
-                    let movex = s3.map(this.id, 0, this.maxnum, -s3.width*0.8, s3.width*0.8);
+                    let movex = s3.map(this.id, 0, this.maxnum, -s3.width/2, s3.width/2);
                     s3.translate(movex, 0, movex);
 
-                    let Hue = (195 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 75;
+                    let Hue = (195 * s3.abs(s3.sin((curTime) - ((this.id * 10.0) / (this.maxnum - 1.0))))) + 75;
                     let Saturation = (20 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 100;
-                    let Brightness = (10 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 100;
+                    let Brightness = (10 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 80;
+                    if (store.state.theme == 'light') {
+                        Saturation = (20 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 100;
+                        Brightness = (10 * s3.abs(s3.sin((curTime) - ((this.id * 5.0) / (this.maxnum - 1.0))))) + 100;
+                    };
 
                     s3.stroke(Hue, Saturation, Brightness, 100);
-                    s3.box(this.size * 2.0);
+                    s3.box(this.size * 1.5);
                     s3.pop()
                 }
             }
@@ -467,8 +487,8 @@ export default {
 #SubCanvas2 {
     position: relative;
     overflow: hidden;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
 
     ::v-deep {
         canvas {
