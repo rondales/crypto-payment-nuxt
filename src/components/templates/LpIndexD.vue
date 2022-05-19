@@ -3,7 +3,7 @@
     <!-- [TODO] レスポンシブ -->
     <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] 日本語のチェック -->
-    <!-- [TODO] header/footer -->
+    <!-- [TODO] header -->
     <LpHeader />
     <main>
       <!-- SECTION MV -->
