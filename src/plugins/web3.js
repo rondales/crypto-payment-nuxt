@@ -313,13 +313,13 @@ const getTokenExchangeData = async function(
       reservedParam
     ).call({ from: walletAddress })
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
-  const totakFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
+  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
   return {
     requireAmount: web3.utils.fromWei(requireAmountWithSlippage, userTokenWeiUnit),
     requestAmountWei: requestAmountWei,
     equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
-    fee: web3.utils.fromWei(totakFeeWithSlippage, 'ether')
+    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether')
   }
 }
 
