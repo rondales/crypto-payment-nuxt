@@ -11,21 +11,20 @@
           <p class="sub-title">
             Connected  with Metamask
           </p>
-          <span @click="switchMyWallet()">
-            Change
-          </span>
         </div>
         <p class="current-address">
-          {{currentAddres | omittedText}}
+          {{currentAddress | omittedText}}
         </p>
         <div class="add-flex j-left">
-          <div class="copy" @click="copy(currentAddres)">
+          <div class="copy" @click="copy(currentAddress)">
             <img src="@/assets/images/copy.svg">
             Copy Address
           </div>
           <div class="view-explorer">
-            <img src="@/assets/images/explore.svg">
-            View on the Explorer
+            <a target="_blank" :href="accountUrl">
+              <img src="@/assets/images/explore.svg">
+              View on the Explorer
+            </a>
           </div>
         </div>
       </div>
@@ -42,14 +41,20 @@
 </template>
 
 <script>
+  import { NETWORKS } from '@/constants'
   export default {
     name: 'walletModal',
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
       },
-      currentAddres(){
+      currentAddress(){
         return this.$store.state.account.address;
+      },
+      accountUrl() {
+        const chainId = this.$store.state.web3.chainId
+        const scanSiteUrl = NETWORKS[chainId].scanUrl
+        return `${scanSiteUrl}/address/${this.currentAddress}`
       }
     },
     methods: {
@@ -180,6 +185,7 @@
       }
       .copy,
       .view-explorer{
+        cursor: pointer;
         img{
           width: 18px;
           height: 18px;
