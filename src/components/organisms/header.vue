@@ -48,7 +48,7 @@
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="connected" class="account-wallet" @click="showHideMenu">
+          <button v-if="connected" class="account-wallet" @click="toggleSubMenu">
             <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
           </button>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { DARK_THEME, LIGHT_THEME, NETWORKS, LOGIN_TOKEN } from '@/constants'
+import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 
 export default {
   name: 'Header',
@@ -265,8 +265,8 @@ export default {
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
     },
-    showHideMenu(){
-      this.$store.dispatch("accountMenu", {accountMenu: true});
+    toggleSubMenu(){
+      this.$store.dispatch("toggleAccountMenu");
     },
     openAccountModal(){
       this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
@@ -275,8 +275,7 @@ export default {
       this.$store.dispatch("modal/show", {target: 'edit-account-note-modal', size: "small"});
     },
     disconnect(){
-      localStorage.removeItem(LOGIN_TOKEN)
-      this.showHideMenu()
+      this.toggleSubMenu()
       this.$router.push({ path: '/admin' })
     }
   }

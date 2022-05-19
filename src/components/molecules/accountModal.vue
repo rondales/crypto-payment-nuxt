@@ -42,8 +42,6 @@
 </template>
 
 <script>
-  import { LOGIN_TOKEN } from '@/constants'
-
   export default {
     name: 'walletModal',
     computed: {
@@ -58,13 +56,12 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      showHideMenu(){
-      this.$store.dispatch("accountMenu", {accountMenu: true});
+      toggleSubMenu(){
+        this.$store.dispatch("toggleAccountMenu");
       },
       disconnect(){
-        localStorage.removeItem(LOGIN_TOKEN)
         this.hideModal()
-        this.showHideMenu()
+        this.toggleSubMenu()
         this.$router.push({ path: '/admin' })
       },
       switchMyWallet(){
