@@ -1012,17 +1012,17 @@ export default {
       this.$store.dispatch("changeTheme", "dark");
     },
     scrollAction() {
-      const scrollActions = document.querySelectorAll(".scrollAction");
-      for (let i = 0; i < scrollActions.length; i++) {
-        const windowHeight = window.innerHeight;
-        const elTop = scrollActions[i].getBoundingClientRect().top;
-        const elVisible = 150;
-        if (elTop < windowHeight - elVisible) {
-          scrollActions[i].classList.add("active");
-        } else {
-          scrollActions[i].classList.remove("active");
-        }
-      }
+      // const scrollActions = document.querySelectorAll(".scrollAction");
+      // for (let i = 0; i < scrollActions.length; i++) {
+      //   const windowHeight = window.innerHeight;
+      //   const elTop = scrollActions[i].getBoundingClientRect().top;
+      //   const elVisible = 150;
+      //   if (elTop < windowHeight - elVisible) {
+      //     scrollActions[i].classList.add("active");
+      //   } else {
+      //     scrollActions[i].classList.remove("active");
+      //   }
+      // }
     },
   },
   created() {
@@ -1044,14 +1044,14 @@ export default {
 }
 
 .scrollAction {
-  position: relative;
-  transform: translateY(150px);
-  opacity: 0;
-  transition: 2s all ease;
-  &.active {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  // position: relative;
+  // transform: translateY(150px);
+  // opacity: 0;
+  // transition: 2s all ease;
+  // &.active {
+  //   transform: translateY(0);
+  //   opacity: 1;
+  // }
 }
 
 .dlp {
@@ -1311,22 +1311,40 @@ export default {
   &-install {
     @include rem_padding(6, 0, 6, 0);
     &__feature {
+      li {
+        &:nth-child(2) {
+          [class$="__image"] {
+            order: 2;
+          }
+        }
+        &:nth-child(3) {
+          [class$="__list"] {
+            grid-template-columns: repeat(1, 1fr);
+          }
+        }
+      }
       &__list {
-        @include flex(flex-start, flex-start);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: rem(4);
+        margin-bottom: rem(4);
       }
       &__image {
-        width: 50%;
+        grid-column: span 1;
       }
       &__textwrap {
-        width: 50%;
+        grid-column: span 1;
+        align-self: center;
       }
       &__title {
+        @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
       }
       &__text {
         @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+        margin-top: 2rem;
       }
       &__link {
-        margin-top: 1rem;
+        margin-top: 2rem;
       }
     }
   }
@@ -1350,23 +1368,49 @@ export default {
       }
     }
     &__feature {
+      li {
+        &:nth-child(2) {
+          [class$="__image"] {
+            order: 2;
+          }
+        }
+        &:nth-child(3) {
+          [class$="__list"] {
+            grid-template-columns: repeat(1, 1fr);
+          }
+        }
+      }
       &__list {
-        @include flex(flex-start, flex-start);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: rem(4);
+        margin-bottom: rem(4);
       }
       &__image {
-        width: 50%;
+        grid-column: span 1;
       }
       &__textwrap {
-        width: 50%;
+        grid-column: span 1;
+        align-self: center;
+      }
+      &__title {
+        @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
+      }
+      &__text {
+        @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+        margin-top: 2rem;
+      }
+      &__link {
+        margin-top: 2rem;
       }
     }
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
     &__feature {
+      @include flex(flex-start, flex-start);
+      @include list(2, rem(4));
       &__list {
-        @include flex(flex-start, flex-start);
-        @include list(2, 2rem);
       }
       &__image {
       }
