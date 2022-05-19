@@ -32,86 +32,47 @@
       </div>
       <div class="lp-footer_right">
         <div class="lp-footer_rightbox">
-          <div class="box start">
-            <h4>Developers</h4>
-            <p><a href="" target="_blank">Integrations</a></p>
-            <p><a href="" target="_blank">Plugins</a></p>
-            <p><a href="" target="_blank">Docs</a></p>
-            <p><a href="" target="_blank">Slash Developers</a></p>
-          </div>
-          <div class="box">
-            <h4>Fee & Ecosystem</h4>
-            <p><a href="#fee-ecosystem">Fee & Ecosystem</a></p>
-            <p><a href="#donation">Donation Program</a></p>
-            <p><a href="#token">Slash Token</a></p>
-          </div>
-          <div class="box end">
-            <h4>Other</h4>
-            <p><a href="#roadmap">Road Map</a></p>
-            <p><a href="#developers">Referral</a></p>
-            <p><a href="#contact">Contact</a></p>
+          <div class="box" v-for="footmenu in nav" :key="footmenu.title">
+            <h4>
+              <span>{{ footmenu.title }}</span>
+            </h4>
+            <ul>
+              <li v-for="navlink in footmenu.list" :key="navlink.title">
+                <a :href="navlink.url">
+                  <span>{{ navlink.title }}</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="footer_icon-wrap">
           <div class="footer_icon">
-            <figure>
-              <a href="">
-                <img
-                  v-if="$store.state.theme == 'dark'"
-                  src="@/assets/images/lp/twitter.svg"
-                  alt=""
-                />
-                <img
-                  v-if="$store.state.theme == 'light'"
-                  src="@/assets/images/lp/twitter-l.svg"
-                  alt=""
-                />
-              </a>
-            </figure>
-            <figure>
-              <a class="disable" href=""
-                ><img src="@/assets/images/lp/telegram.svg" alt=""
-              /></a>
-            </figure>
-            <figure>
-              <a class="disable" href=""
-                ><img src="@/assets/images/lp/discord.svg" alt=""
-              /></a>
-            </figure>
-            <figure>
-              <a href="">
-                <img
-                  v-if="$store.state.theme == 'dark'"
-                  src="@/assets/images/lp/arroba.svg"
-                  alt=""
-                />
-                <img
-                  v-if="$store.state.theme == 'light'"
-                  src="@/assets/images/lp/arroba-l.svg"
-                  alt=""
-                />
-              </a>
-            </figure>
-            <figure>
-              <a href="">
-                <img
-                  v-if="$store.state.theme == 'dark'"
-                  src="@/assets/images/lp/gitbook-icon.svg"
-                  alt=""
-                />
-                <img
-                  v-if="$store.state.theme == 'light'"
-                  src="@/assets/images/lp/gitbook-icon-l.svg"
-                  alt=""
-                />
-              </a>
-            </figure>
+            <ul>
+              <li v-for="thisSns in sns" :key="thisSns.icon">
+                <a
+                  :href="thisSns.link"
+                  target="_blank"
+                  :class="[thisSns.status ? 'active' : 'disable']"
+                >
+                  <figure>
+                    <img
+                      :src="
+                        require('@/assets/images/lp/' + thisSns.icon + '.svg')
+                      "
+                      alt=""
+                    />
+                  </figure>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
     <p class="copy">
-      @ 2022 Copyrights by SLASH FINTECH LIMITED . All Rights Reserved.
+      <span
+        >@ 2022 Copyrights by SLASH FINTECH LIMITED . All Rights Reserved.</span
+      >
     </p>
   </footer>
 </template>
@@ -119,6 +80,94 @@
 <script>
 export default {
   name: "Footer",
+  data() {
+    return {
+      nav: [
+        {
+          title: "Developers",
+          list: [
+            {
+              title: "Integrations",
+              url: "",
+            },
+            {
+              title: "Plugins",
+              url: "",
+            },
+            {
+              title: "Docs",
+              url: "",
+            },
+            {
+              title: "Slash Developers",
+              url: "",
+            },
+          ],
+        },
+        {
+          title: "Fee & Ecosystem",
+          list: [
+            {
+              title: "Fee & Ecosystem",
+              url: "",
+            },
+            {
+              title: "Donation Program",
+              url: "",
+            },
+            {
+              title: "Slash Token",
+              url: "",
+            },
+          ],
+        },
+        {
+          title: "Other",
+          list: [
+            {
+              title: "RoadMap",
+              url: "#roadmap",
+            },
+            {
+              title: "Referral",
+              url: "",
+            },
+            {
+              title: "Contact",
+              url: "",
+            },
+          ],
+        },
+      ],
+      sns: [
+        {
+          icon: "twitter",
+          link: "",
+          status: true,
+        },
+        {
+          icon: "telegram",
+          link: "",
+          status: false,
+        },
+        {
+          icon: "discord",
+          link: "",
+          status: false,
+        },
+        {
+          icon: "arroba",
+          link: "",
+          status: true,
+        },
+        {
+          icon: "gitbook-icon",
+          link: "",
+          status: true,
+        },
+      ],
+    };
+  },
   methods: {
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
@@ -135,6 +184,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
 footer {
   .footer-wrap {
     padding: 90px 0 62px;
@@ -277,13 +327,9 @@ footer {
     }
   }
   .copy {
-    font-weight: 200;
-    font-size: 16px;
-    padding-bottom: 32px;
-    @include media(sp) {
-      font-size: 10px;
-      padding-bottom: 48px;
-    }
+    @include rem_padding(2, 0, 2, 0);
+    text-align: center;
+    @include font(rem(pow(-1)), 400, 0.06em, $lh, $en_go);
   }
 }
 </style>

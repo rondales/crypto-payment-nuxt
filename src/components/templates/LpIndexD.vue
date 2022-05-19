@@ -68,21 +68,11 @@
       <!-- SECTION token -->
       <section :class="section.token.class">
         <div class="section__wrap">
-          <h2 :class="section.token.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.token.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.token.title.title }}</span
-            >
-            <span
-              :class="
-                section.token.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.token.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.token.class + '__title'"
+            :title="section.token.title"
+            color="g"
+          />
           <ul :class="section.token.class + '__iconlist'">
             <li v-for="icon in section.token.icons" :key="icon.path">
               <figure>
@@ -148,56 +138,24 @@
       <!-- SECTION install -->
       <section :class="section.install.class">
         <div class="section__wrap">
-          <h2 :class="section.install.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.install.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.install.title.title }}</span
-            >
-            <span
-              :class="
-                section.install.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.install.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.install.class + '__title'"
+            :title="section.install.title"
+          />
           <ul :class="section.install.class + '__feature'">
             <li
               v-for="feature in section.install.features"
               :key="feature.title"
             >
               <div :class="section.install.class + '__feature__list'">
-                <figure :class="section.install.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + feature.image)"
-                    :alt="feature.title"
-                  />
-                </figure>
-                <div :class="section.install.class + '__feature__textwrap'">
-                  <h3 :class="section.install.class + '__feature__title'">
-                    <span v-html="feature.title"></span>
-                  </h3>
-                  <p :class="section.install.class + '__feature__text'">
-                    <span v-html="feature.text"></span>
-                  </p>
-                  <div
-                    v-if="feature.link"
-                    :class="section.install.class + '__feature__link'"
-                  >
-                    <a :href="feature.link.url" class="dlp-btn__main m">
-                      <span>{{ feature.link.title }}</span>
-                      <span v-if="$store.state.theme == 'dark'">
-                        <img src="@/assets/images/lp/right-arrow.svg" />
-                      </span>
-                      <span v-if="$store.state.theme == 'light'">
-                        <img src="@/assets/images/lp/right-arrow-l.svg" />
-                      </span>
-                    </a>
-                  </div>
-                  <!-- [TODO] app logo -->
-                </div>
+                <LpImage
+                  :imgData="feature.image"
+                  :class="section.install.class + '__feature__image'"
+                />
+                <LpTextwrap
+                  :class="section.install.class + '__feature__textwrap'"
+                  :textData="feature"
+                />
               </div>
             </li>
           </ul>
@@ -207,54 +165,21 @@
       <!-- SECTION fee -->
       <section :class="section.fee.class">
         <div class="section__wrap">
-          <h2 :class="section.fee.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.fee.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.fee.title.title }}</span
-            >
-            <span
-              :class="
-                section.fee.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.fee.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.fee.class + '__title'"
+            :title="section.fee.title"
+          />
           <ul :class="section.fee.class + '__feature'">
             <li v-for="feature in section.fee.features" :key="feature.title">
               <div :class="section.fee.class + '__feature__list'">
-                <figure :class="section.fee.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + feature.image)"
-                    :alt="feature.title"
-                  />
-                </figure>
-                <div :class="section.fee.class + '__feature__textwrap'">
-                  <h3 :class="section.fee.class + '__feature__title'">
-                    <span v-html="feature.title"></span>
-                  </h3>
-                  <p :class="section.fee.class + '__feature__text'">
-                    <span v-html="feature.text"></span>
-                  </p>
-                  <div
-                    v-if="feature.link"
-                    :class="section.fee.class + '__feature__link'"
-                  >
-                    <a :href="feature.link.url" class="dlp-btn__main m">
-                      <span>{{ feature.link.title }}</span>
-                      <span v-if="$store.state.theme == 'dark'">
-                        <img src="@/assets/images/lp/right-arrow.svg" />
-                      </span>
-                      <span v-if="$store.state.theme == 'light'">
-                        <img src="@/assets/images/lp/right-arrow-l.svg" />
-                      </span>
-                    </a>
-                  </div>
-                  <!-- [TODO] tag -->
-                  <!-- [TODO] app logo -->
-                </div>
+                <LpImage
+                  :imgData="feature.image"
+                  :class="section.fee.class + '__feature__image'"
+                />
+                <LpTextwrap
+                  :class="section.install.class + '__feature__textwrap'"
+                  :textData="feature"
+                />
               </div>
             </li>
           </ul>
@@ -264,50 +189,25 @@
       <!-- SECTION trial -->
       <section :class="section.trial.class">
         <div class="section__wrap">
-          <h2 :class="section.trial.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.trial.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.trial.title.title }}</span
-            >
-            <span
-              :class="
-                section.trial.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.trial.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.trial.class + '__title'"
+            :title="section.trial.title"
+          />
           <ul :class="section.trial.class + '__feature'">
             <li v-for="list in section.trial.lists" :key="list.logo">
               <div :class="section.trial.class + '__feature__list'">
-                <figure :class="section.trial.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + list.image)"
-                    :alt="list.title"
-                  />
-                  <img
-                    :src="require('@/assets/images/' + list.logo)"
-                    :alt="list.title"
-                  />
-                </figure>
-                <div :class="section.trial.class + '__feature__textwrap'">
-                  <h3 :class="section.trial.class + '__feature__title'">
-                    <span v-html="list.title"></span>
-                  </h3>
-                  <p :class="section.trial.class + '__feature__text'">
-                    <span v-html="list.url"></span>
-                  </p>
-                  <div
-                    v-if="list.link"
-                    :class="section.trial.class + '__feature__link'"
-                  >
-                    <a :href="list.link.url" class="dlp-btn__main m">
-                      <span>{{ list.link.title }}</span>
-                    </a>
-                  </div>
-                </div>
+                <LpImage
+                  :imgData="list.image"
+                  :class="section.trial.class + '__feature__image'"
+                />
+                <img
+                  :src="require('@/assets/images/' + list.logo)"
+                  :alt="list.title"
+                />
+                <LpTextwrap
+                  :class="section.trial.class + '__feature__textwrap'"
+                  :textData="list"
+                />
               </div>
             </li>
           </ul>
@@ -317,21 +217,10 @@
       <!-- SECTION network -->
       <section :class="section.network.class">
         <div class="section__wrap">
-          <h2 :class="section.network.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.network.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.network.title.title }}</span
-            >
-            <span
-              :class="
-                section.network.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.network.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.network.class + '__title'"
+            :title="section.network.title"
+          />
           <ul :class="section.network.class + '__logos'">
             <li v-for="logo in section.network.logos" :key="logo.path">
               <figure>
@@ -339,30 +228,18 @@
                   :src="require('@/assets/images/lp/' + logo.path + '.png')"
                 />
               </figure>
-              <!-- <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4-sp.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l-sp.png" /> -->
             </li>
           </ul>
         </div>
       </section>
+
       <!-- SECTION roadmap -->
       <section :class="section.roadmap.class">
         <div class="section__wrap">
-          <h2 :class="section.roadmap.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.roadmap.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.roadmap.title.title }}</span
-            >
-            <span
-              :class="
-                section.roadmap.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.roadmap.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.roadmap.class + '__title'"
+            :title="section.roadmap.title"
+          />
           <ul :class="section.roadmap.class + '__phase'">
             <li v-for="phase in section.roadmap.phases" :key="phase.title">
               <div :class="section.roadmap.class + '__phase__list'">
@@ -396,24 +273,14 @@
           </ul>
         </div>
       </section>
+
       <!-- SECTION welcome -->
       <section :class="section.welcome.class">
         <div class="section__wrap">
-          <h2 :class="section.welcome.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.welcome.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.welcome.title.title }}</span
-            >
-            <span
-              :class="
-                section.welcome.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.welcome.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.welcome.class + '__title'"
+            :title="section.welcome.title"
+          />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
               <div :class="section.welcome.class + '__list__list'">
@@ -423,28 +290,18 @@
           </ul>
         </div>
       </section>
+
       <!-- SECTION contact -->
       <section :class="section.contact.class">
         <div class="section__wrap">
-          <h2 :class="section.contact.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.contact.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.contact.title.title }}</span
-            >
-            <span
-              :class="
-                section.contact.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.contact.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.contact.class + '__title'"
+            :title="section.contact.title"
+          />
           <ul :class="section.contact.class + '__list'">
             <li v-for="list in section.contact.list" :key="list.title">
               <div :class="section.contact.class + '__list__list'">
-                <LpButton :link="list" type="main" size="m"/>
+                <!-- <LpButton :link="list" type="main" size="m"/> -->
               </div>
             </li>
           </ul>
@@ -461,9 +318,10 @@ import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
 // import LpIcon from "@/components/templates/LpParts/Icon";
-import LpButton from "@/components/templates/LpParts/Button";
-// import LpTitle from "@/components/templates/LpParts/Title";
-// import LpImage from "@/components/templates/LpParts/Image";
+// import LpButton from "@/components/templates/LpParts/Button";
+import LpTitle from "@/components/templates/LpParts/Title";
+import LpImage from "@/components/templates/LpParts/Image";
+import LpTextwrap from "@/components/templates/LpParts/Textwrap";
 
 export default {
   data() {
@@ -611,7 +469,11 @@ export default {
             {
               title:
                 "Slash makes it extremely easy and<br>safe to introduce cryptocurrency<br>payments.",
-              image: "lp/install-image.jpg",
+              image: {
+                src: "lp/install-image.jpg",
+                alt: "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
+                lightSrc: "",
+              },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
               link: {
                 url: "/",
@@ -621,7 +483,11 @@ export default {
             },
             {
               title: "Integration with any platform",
-              image: "lp/integration.jpg",
+              image: {
+                src: "lp/integration.jpg",
+                alt: "Integration with any platform",
+                lightSrc: "",
+              },
               text: "Slash-specific plugin is available to simplify integration with various open platforms. Because of the ease of implementing payments, Slash Payments may be the first transaction that occurs when you launch your e-commerce site.",
               logos: [
                 {
@@ -643,7 +509,11 @@ export default {
             {
               title:
                 'The best way for Accepting Web3<br class="sp"> Wallet Payments at Physical Stores',
-              image: "lp/physical.jpg",
+              image: {
+                src: "lp/physical.jpg",
+                alt: "The best way for Accepting Web3 Wallet Payments at Physical Stores",
+                lightSrc: "lp/physical-l.jpg",
+              },
               text: "If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We are about to launch iOS/android app to make cryptocurrency payment more convenient.",
             },
           ],
@@ -657,7 +527,11 @@ export default {
           features: [
             {
               title: "Slash Payment fee is 0.2〜0.6%",
-              image: "lp/fee.jpg",
+              image: {
+                src: "lp/fee.jpg",
+                alt: "Slash Payment fee is 0.2〜0.6%",
+                lightSrc: "",
+              },
               text: "There are no commissions paid to Merchants. The commission is 0.2-0.6% of the payment amount and is collected as a platform token along with the gas cost of the customer’s payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.",
               link: {
                 url: "/",
@@ -667,7 +541,11 @@ export default {
             },
             {
               title: "Slash automatically donation program",
-              image: "lp/donated.jpg",
+              image: {
+                src: "lp/donated.jpg",
+                alt: "Slash automatically donation program",
+                lightSrc: "",
+              },
               text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes.<br><br>We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries.<br><br>In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment.<br><br>In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
@@ -689,7 +567,11 @@ export default {
                 text: "coming soon…",
               },
               title: "The All fees Use buyback $Slash*",
-              image: "lp/physical.jpg",
+              image: {
+                src: "lp/buyback.jpg",
+                alt: "The All fees Use buyback $Slash*",
+                lightSrc: "",
+              },
               text: " The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
               link: {
                 url: "/",
@@ -708,14 +590,22 @@ export default {
           lists: [
             {
               title: "Experience it first hand.",
-              image: "lp/donate-image01.jpg",
+              image: {
+                src: "lp/donate-image01.jpg",
+                alt: "Experience it first hand.",
+                lightSrc: "",
+              },
               logo: "lp/donate01.svg",
               url: "https://donate.savethechildren.org",
               link: '@click.prevent.stop="paymentForDonate(SAFE_THE_CHILDREN)',
             },
             {
               title: "Experience it first hand.",
-              image: "lp/donate-image02.jpg",
+              image: {
+                src: "lp/donate-image02.jpg",
+                alt: "Experience it first hand.",
+                lightSrc: "",
+              },
               logo: "lp/donate02.svg",
               url: "https://www.unicef.org/",
               link: '@click.prevent.stop="paymentForDonate(UNICEF)',
@@ -991,9 +881,10 @@ export default {
     LpFooter,
     LpAnimation,
     // LpIcon,
-    // LpTitle,
-    LpButton,
-    // LpImage,
+    // LpButton,
+    LpTitle,
+    LpImage,
+    LpTextwrap,
   },
 
   methods: {
@@ -1110,23 +1001,6 @@ export default {
       pointer-events: none;
     }
   }
-  &-sectitle {
-    margin-bottom: rem(3);
-    text-align: center;
-    // * {
-    //   background: $gradation-light;
-    //   -webkit-background-clip: text;
-    //   -webkit-text-fill-color: transparent;
-    //   // background-size: 100% 10%;
-    // }
-    &__title {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
-      display: block;
-    }
-    &__subtitle {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
-    }
-  }
   &-mv {
     height: 100vh;
     position: relative;
@@ -1224,23 +1098,6 @@ export default {
   }
   &-token {
     @include rem_padding(6, 0, 6, 0);
-    &__sectitle {
-      margin-bottom: rem(3);
-      text-align: center;
-      * {
-        background: $gradation-light;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        // background-size: 100% 10%;
-      }
-      &__title {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-        display: block;
-      }
-      &__subtitle {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-      }
-    }
     &__iconlist {
       @include flex(center, flex-start);
       margin-bottom: rem(5);
