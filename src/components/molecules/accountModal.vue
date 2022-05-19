@@ -56,8 +56,13 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
+      toggleSubMenu(){
+        this.$store.dispatch("toggleAccountMenu");
+      },
       disconnect(){
-        alert("disconnect Account")
+        this.hideModal()
+        this.toggleSubMenu()
+        this.$router.push({ path: '/admin' })
       },
       switchMyWallet(){
         alert("switch metamask")

@@ -53,8 +53,8 @@ const store = new Vuex.Store({
     currentPath({ commit }, invoicePage){
       commit('currentPath', invoicePage);
     },
-    accountMenu({ commit }) {
-      commit('accountMenu')
+    toggleAccountMenu({ commit }) {
+      commit('toggleAccountMenu')
     }
   },
   mutations: {
@@ -67,7 +67,7 @@ const store = new Vuex.Store({
     currentPath(state, { invoicePage }) {
       state.invoicePage = invoicePage;
     },
-    accountMenu(state) {
+    toggleAccountMenu(state) {
       state.accountMenu = !state.accountMenu
     }
   }
