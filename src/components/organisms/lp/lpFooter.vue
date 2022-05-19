@@ -6,24 +6,26 @@
           <img src="@/assets/images/lp/logo.png" alt="" />
           <h4>Slash Payment</h4>
         </div>
-        <div class="lp-footer_link"><p><a href="">Terms of Service</a> | <a href="">Privacy Terms</a></p></div>
+        <div class="lp-footer_link">
+          <p><a href="">Terms of Service</a> | <a href="">Privacy Terms</a></p>
+        </div>
         <div class="lp-footer_info">
           <p>
             <span>SLASH FINTECH LIMITED（BVI）</span>
-            <br>
+            <br />
             3rd Floor, J & C Building, Road
-            <br>
+            <br />
             Town, Tortola, British Virgin Islands, VG1110
           </p>
         </div>
         <div class="lp-footer_info">
           <p>
             <span>SLASH FINTECH LIMITED（CANADA）</span>
-            <br>
-            1700-777 DUNSMUIR ST. 
-            <br>
+            <br />
+            1700-777 DUNSMUIR ST.
+            <br />
             VANCOUVER, BRITISH COLUMBIA V7Y1K4
-            <br>
+            <br />
             Money Services Business (MSB) Registration number is M22785834
           </p>
         </div>
@@ -54,26 +56,54 @@
           <div class="footer_icon">
             <figure>
               <a href="">
-                <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/twitter.svg" alt="" />
-                <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/twitter-l.svg" alt="" />
+                <img
+                  v-if="$store.state.theme == 'dark'"
+                  src="@/assets/images/lp/twitter.svg"
+                  alt=""
+                />
+                <img
+                  v-if="$store.state.theme == 'light'"
+                  src="@/assets/images/lp/twitter-l.svg"
+                  alt=""
+                />
               </a>
             </figure>
             <figure>
-              <a class="disable" href=""><img src="@/assets/images/lp/telegram.svg" alt="" /></a>
+              <a class="disable" href=""
+                ><img src="@/assets/images/lp/telegram.svg" alt=""
+              /></a>
             </figure>
             <figure>
-              <a class="disable" href=""><img src="@/assets/images/lp/discord.svg" alt="" /></a>
+              <a class="disable" href=""
+                ><img src="@/assets/images/lp/discord.svg" alt=""
+              /></a>
             </figure>
             <figure>
               <a href="">
-                <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/arroba.svg" alt="" />
-                <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/arroba-l.svg" alt="" />
+                <img
+                  v-if="$store.state.theme == 'dark'"
+                  src="@/assets/images/lp/arroba.svg"
+                  alt=""
+                />
+                <img
+                  v-if="$store.state.theme == 'light'"
+                  src="@/assets/images/lp/arroba-l.svg"
+                  alt=""
+                />
               </a>
             </figure>
             <figure>
               <a href="">
-                <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/gitbook-icon.svg" alt="" />
-                <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/gitbook-icon-l.svg" alt="" />
+                <img
+                  v-if="$store.state.theme == 'dark'"
+                  src="@/assets/images/lp/gitbook-icon.svg"
+                  alt=""
+                />
+                <img
+                  v-if="$store.state.theme == 'light'"
+                  src="@/assets/images/lp/gitbook-icon-l.svg"
+                  alt=""
+                />
               </a>
             </figure>
           </div>
@@ -87,78 +117,84 @@
 </template>
 
 <script>
-
-  export default {
-    name: 'lpFooter',
-    methods: {
-
+export default {
+  name: "Footer",
+  methods: {
+    changeTheme(theme) {
+      this.$store.dispatch("changeTheme", theme);
     },
-  }
+    open() {
+      this.$store.dispatch("hamberger", { hamberger: true });
+    },
+    enterApp() {
+      this.$store.dispatch("changeTheme", "dark");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-
-footer{
-  .footer-wrap{
-    padding:90px 0 62px;
-    display:flex;
-    justify-content:space-between;
-    text-align:left;
+@import "@/assets/scss/style.scss";
+footer {
+  .footer-wrap {
+    padding: 90px 0 62px;
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
     max-width: 1030px;
-    width:90%;
-    margin:0 auto;
+    width: 90%;
+    margin: 0 auto;
     font-weight: 400;
     @include media(sp) {
-      display:block;
-      padding:35px 0;
+      display: block;
+      padding: 35px 0;
     }
-    .lp-first_icon{
-      display:flex;
-      align-items:center;
-      margin-bottom:15px;
+    .lp-first_icon {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
       width: 100%;
       @include media(sp) {
         margin-bottom: 40px;
       }
-      img{
-        width:40px;
-        margin-right:15px;
+      img {
+        width: 40px;
+        margin-right: 15px;
       }
-      h4{
-        font-size:30px;
+      h4 {
+        font-size: 30px;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
     }
-    .lp-footer_left{
+    .lp-footer_left {
       @include media(sp) {
-        width:100%;
+        width: 100%;
         margin-bottom: 40px;
       }
-      p{
-        font-size:15px;
+      p {
+        font-size: 15px;
       }
-      .lp-footer_link{
-        margin-top:10px;
+      .lp-footer_link {
+        margin-top: 10px;
         @include media(sp) {
-          margin-bottom:35px;
+          margin-bottom: 35px;
         }
       }
-      .lp-footer_info{
-        margin-top:60px;
+      .lp-footer_info {
+        margin-top: 60px;
         @include media(sp) {
-          margin-top:24px;
+          margin-top: 24px;
         }
-        p{
+        p {
           font-size: 12px;
           font-weight: 200;
           @include media(sp) {
             font-size: 10px;
           }
         }
-        span{
+        span {
           font-size: 16px;
           font-weight: 400;
           margin-bottom: 8px;
@@ -170,47 +206,47 @@ footer{
       }
     }
     @include media(sp) {
-      .lp-footer_info{
-        font-size:15px;
-        margin-top:25px;
+      .lp-footer_info {
+        font-size: 15px;
+        margin-top: 25px;
       }
     }
 
-    .lp-footer_right{
+    .lp-footer_right {
       width: 60%;
       @include media(sp) {
-        width:100%;
+        width: 100%;
       }
-      .lp-footer_rightbox{
-        display:flex;
+      .lp-footer_rightbox {
+        display: flex;
         justify-content: space-between;
         @include media(sp) {
-          display:block;
+          display: block;
         }
-        .box{
+        .box {
           @include media(sp) {
-            margin-left:0;
-            border-bottom:1px solid #554B6A;
+            margin-left: 0;
+            border-bottom: 1px solid #554b6a;
             padding: 24px 0;
-            &.start{
-              border-top:1px solid #554B6A;
+            &.start {
+              border-top: 1px solid #554b6a;
             }
-            &.end{
+            &.end {
               margin-bottom: 62px;
             }
           }
-          h4{
-            font-weight:600;
-            margin-bottom:15px;
+          h4 {
+            font-weight: 600;
+            margin-bottom: 15px;
           }
-          p{
-            font-weight:300;
-            margin-bottom:11px;
+          p {
+            font-weight: 300;
+            margin-bottom: 11px;
             font-size: 19px;
           }
         }
       }
-      .footer_icon-wrap{
+      .footer_icon-wrap {
         width: 50%;
         margin-top: 120px;
         margin-right: 0;
@@ -220,27 +256,27 @@ footer{
           margin: 20px auto;
         }
       }
-      .footer_icon{
+      .footer_icon {
         display: flex;
         justify-content: space-between;
         width: 100%;
-        .disable{
-          opacity: .5;
+        .disable {
+          opacity: 0.5;
         }
-        figure{
+        figure {
           width: 20%;
           text-align: right;
           @include media(sp) {
             text-align: center;
           }
-          img{
+          img {
             width: 30px;
           }
         }
       }
     }
   }
-  .copy{
+  .copy {
     font-weight: 200;
     font-size: 16px;
     padding-bottom: 32px;
