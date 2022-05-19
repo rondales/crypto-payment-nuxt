@@ -1,28 +1,20 @@
 <template>
-  <component :class="iconClass" :is="svg" />
+  <div>
+    <component :is="svg" />
+  </div>
 </template>
 
 <script>
 export default {
-  components: {},
   props: {
     path: {
       type: String,
     },
   },
-  data: function () {
-    return {
-      iconClass: this.path.indexOf("stroke") !== -1 ? "p-icon__stroke" : "",
-    };
-  },
   computed: {
     svg() {
-      return () => import(`~/assets/icon/${this.path}.svg`);
+      return () => import(`@/assets/images/lp/${this.path}.svg`);
     },
   },
-  methods: {},
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

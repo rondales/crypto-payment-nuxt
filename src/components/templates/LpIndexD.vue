@@ -417,13 +417,7 @@
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
               <div :class="section.welcome.class + '__list__list'">
-                <a :href="list.link" :class="'dlp-btn__main m ' + list.status">
-                  <img
-                    :src="require('@/assets/images/lp/' + list.icon + '.svg')"
-                    alt=""
-                  />
-                  <span v-html="list.title"></span>
-                </a>
+                <!-- <LpButton :link="list" type="main" size="m" /> -->
               </div>
             </li>
           </ul>
@@ -450,13 +444,7 @@
           <ul :class="section.contact.class + '__list'">
             <li v-for="list in section.contact.list" :key="list.title">
               <div :class="section.contact.class + '__list__list'">
-                <a :href="list.link" :class="'dlp-btn__main m ' + list.status">
-                  <img
-                    :src="require('@/assets/images/lp/' + list.icon + '.svg')"
-                    alt=""
-                  />
-                  <span v-html="list.title"></span>
-                </a>
+                <LpButton :link="list" type="main" size="m"/>
               </div>
             </li>
           </ul>
@@ -472,6 +460,10 @@
 import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
+// import LpIcon from "@/components/templates/LpParts/Icon";
+import LpButton from "@/components/templates/LpParts/Button";
+// import LpTitle from "@/components/templates/LpParts/Title";
+// import LpImage from "@/components/templates/LpParts/Image";
 
 export default {
   data() {
@@ -913,15 +905,17 @@ export default {
           list: [
             {
               title: "Contact Email",
-              icon: "twitter",
-              // link: {},
+              icon: "arroba",
+              link: "",
               status: true,
+              light: true,
             },
             {
               title: "Twitter for DM",
               icon: "twitter",
-              // link: {},
+              link: "",
               status: true,
+              light: true,
             },
           ],
         },
@@ -996,6 +990,10 @@ export default {
     LpHeader,
     LpFooter,
     LpAnimation,
+    // LpIcon,
+    // LpTitle,
+    LpButton,
+    // LpImage,
   },
 
   methods: {
@@ -1422,11 +1420,15 @@ export default {
     @include rem_padding(6, 0, 6, 0);
     &__logos {
       @include flex(center, center);
-      @include list(4, 2rem);
+      @include list(4, rem(4));
+      li {
+        margin-bottom: rem(2);
+      }
     }
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
+    display: none;
     &__phase {
       @include flex(center, center);
       @include list(2, 2rem);
