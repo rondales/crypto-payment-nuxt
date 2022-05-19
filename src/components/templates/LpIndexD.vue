@@ -1026,7 +1026,7 @@ export default {
     },
   },
   created() {
-    window.addEventListener("scroll", this.scrollAction);
+    // window.addEventListener("scroll", this.scrollAction);
   },
 };
 </script>
