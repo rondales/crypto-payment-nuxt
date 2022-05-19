@@ -1,8 +1,8 @@
 <template>
   <h2 :class="setClass">
-		<span class="title">{{ title.title }}</span>
-		<span class="subtitle">{{ title.subtitle }}</span>
-	</h2>
+    <span class="title">{{ title.title }}</span>
+    <span class="subtitle">{{ title.subtitle }}</span>
+  </h2>
 </template>
 
 <script>
@@ -15,45 +15,51 @@ export default {
     title: {
       type: Object,
       required: true,
-      default:  () => ({
+      default: () => ({
         title: "",
         subtitle: "",
         lead: "",
         text: "",
       }),
     },
-		color:{
-			type:String,
-			default:'w'
-		}
+    color: {
+      type: String,
+      default: "w",
+    },
   },
-	computed:{
-		setClass(){
-			return 'titlewrap '+this.color;
-		}
-	}
+  computed: {
+    setClass() {
+      return "titlewrap " + this.color;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
-.titlewrap{
-	margin-bottom: rem(3);
-    text-align: center;
-		&.g{
-			* {
-				background: $gradation-light;
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-			}
-		}
-    .title {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
-      display: block;
+.titlewrap {
+  margin-bottom: rem(3);
+  text-align: center;
+  &.g {
+    * {
+      background: $gradation-light;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .subtitle {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
+  }
+  .title {
+    @include font(rem(3), 700, 0em, 1.5, $ff);
+    display: block;
+    @include media(sp) {
+      @include font(rem(2), 700, 0em, 1.5, $ff);
     }
+  }
+  .subtitle {
+    @include font(rem(3), 700, 0em, 1.5, $ff);
+    @include media(sp) {
+      @include font(rem(2), 700, 0em, 1.5, $ff);
+    }
+  }
 }
 // h1 {
 //   @include font(pow(4) + rem, $fw, $ls, $lh, $en_go);

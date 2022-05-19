@@ -4,11 +4,12 @@
     <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] 日本語のチェック -->
     <!-- [TODO] header -->
+    <!-- [TODO] scroll action -->
     <LpHeader />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' scrollAction'">
-        <LpAnimation :canvasClass="section.mv.class" />
+        <LpAnimation :canvasClass="section.mv.class" type="MvCanvas" />
         <div :class="section.mv.class + '__title'">
           <!-- [TODO] アイコンぼやけるので画像が欲しい -->
           <img
@@ -28,14 +29,8 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <a @click="enterApp()" href="/admin" class="dlp-btn__main l">
-              <img src="@/assets/images/lp/pointing-up.svg" />
-              <span>Enter App</span>
-            </a>
-            <a href="/" class="dlp-btn__sub l">
-              <img src="@/assets/images/lp/gitbook-icon.svg" />
-              <span>Slash docs.</span>
-            </a>
+            <LpButton :link="section.mv.link" type="main" size="m" />
+            <LpButton :link="section.mv.link2" type="sub" size="m" />
           </div>
         </div>
       </section>
@@ -67,6 +62,7 @@
 
       <!-- SECTION token -->
       <section :class="section.token.class">
+        <LpAnimation :canvasClass="section.token.class" type="SubCanvas3" />
         <div class="section__wrap">
           <LpTitle
             :class="section.token.class + '__title'"
@@ -93,17 +89,7 @@
               <span>{{ section.token.sub.text }}</span>
             </p>
             <div :class="section.token.class + '__subbox__link'">
-              <a href="/" class="dlp-btn__main m">
-                <span>Supported swap routers</span>
-                <img
-                  v-if="$store.state.theme == 'dark'"
-                  src="@/assets/images/lp/right-arrow.svg"
-                />
-                <img
-                  v-if="$store.state.theme == 'light'"
-                  src="@/assets/images/lp/right-arrow-l.svg"
-                />
-              </a>
+              <LpButton :link="section.token.sub.link" type="main" size="s" />
             </div>
           </div>
           <ul :class="section.token.class + '__card'">
@@ -146,6 +132,7 @@
             <li
               v-for="feature in section.install.features"
               :key="feature.title"
+              :class="feature.layout"
             >
               <div :class="section.install.class + '__feature__list'">
                 <LpImage
@@ -170,7 +157,11 @@
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
-            <li v-for="feature in section.fee.features" :key="feature.title">
+            <li
+              v-for="feature in section.fee.features"
+              :key="feature.title"
+              :class="feature.layout"
+            >
               <div :class="section.fee.class + '__feature__list'">
                 <LpImage
                   :imgData="feature.image"
@@ -201,13 +192,18 @@
                   :class="section.trial.class + '__feature__image'"
                 />
                 <img
+                  :class="section.trial.class + '__feature__logo'"
                   :src="require('@/assets/images/' + list.logo)"
                   :alt="list.title"
                 />
-                <LpTextwrap
-                  :class="section.trial.class + '__feature__textwrap'"
-                  :textData="list"
-                />
+                <div :class="section.trial.class + '__feature__textwrap'">
+                  <h3 class="title"><span v-html="list.title"></span></h3>
+                  <p class="text"><span v-html="list.text"></span></p>
+                  <div v-if="list.link" class="link">
+                    <LpButton :link="list.link" type="main" size="m" />
+                  </div>
+                </div>
+                <!-- [TODO リンクのfunction確認する] -->
               </div>
             </li>
           </ul>
@@ -240,23 +236,32 @@
             :class="section.roadmap.class + '__title'"
             :title="section.roadmap.title"
           />
-          <ul :class="section.roadmap.class + '__phase'">
-            <li v-for="phase in section.roadmap.phases" :key="phase.title">
-              <div :class="section.roadmap.class + '__phase__list'">
-                <div :class="section.roadmap.class + '__phase__textwrap'">
-                  <h3 :class="section.roadmap.class + '__phase__title'">
-                    <span v-html="phase.title"></span>
-                  </h3>
-                  <ul :class="section.roadmap.class + '__phase'">
-                    <li v-for="list in phase.list" :key="list.text">
-                      {{ list.text }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <ul :class="section.roadmap.class + '__feature'">
+          <div :class="section.roadmap.class + '__phase'">
+            <div
+              :class="section.roadmap.class + '__phase__box'"
+              v-for="phase in section.roadmap.phases"
+              :key="phase.title"
+            >
+              <h3 :class="section.roadmap.class + '__phase__title'">
+                <span v-html="phase.title"></span>
+              </h3>
+              <ul :class="section.roadmap.class + '__phase__list'">
+                <li v-for="list in phase.list" :key="list.text">
+                  <div :class="section.roadmap.class + '__phase__listwrap'">
+                    <h4 :class="section.roadmap.class + '__phase__subtitle'">
+                      <span>{{ list.title }}</span>
+                    </h4>
+                    <ul :class="section.roadmap.class + '__phase__sublist'">
+                      <li v-for="li in list.list" :key="li.text">
+                        {{ li.text }}
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- <ul :class="section.roadmap.class + '__feature'">
             <li
               v-for="feature in section.roadmap.features"
               :key="feature.title"
@@ -270,7 +275,7 @@
                 </li>
               </ul>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </section>
 
@@ -283,9 +288,11 @@
           />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
-              <div :class="section.welcome.class + '__list__list'">
-                <!-- <LpButton :link="list" type="main" size="m" /> -->
-              </div>
+              <LpButton
+                :link="list"
+                :type="list.status ? 'main' : 'noactive'"
+                size="l"
+              />
             </li>
           </ul>
         </div>
@@ -300,11 +307,27 @@
           />
           <ul :class="section.contact.class + '__list'">
             <li v-for="list in section.contact.list" :key="list.title">
-              <div :class="section.contact.class + '__list__list'">
-                <!-- <LpButton :link="list" type="main" size="m"/> -->
-              </div>
+              <LpButton :link="list" type="main" size="l" />
             </li>
           </ul>
+        </div>
+      </section>
+
+      <!-- [TODO]  CV section-->
+      <section class="lp-eighth">
+        <h3>
+          Install on your online
+          <br class="sp" />
+          service now!
+        </h3>
+        <div class="lp-b_back">
+          <div class="lp-first_icon">
+            <img src="@/assets/images/lp/logo.png" alt="" />
+            <h4>Slash.fi</h4>
+          </div>
+          <a @click="enterApp()" href="/admin">
+            <div class="btn __pg lp-first_enter">Enter App</div>
+          </a>
         </div>
       </section>
     </main>
@@ -318,7 +341,7 @@ import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
 // import LpIcon from "@/components/templates/LpParts/Icon";
-// import LpButton from "@/components/templates/LpParts/Button";
+import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImage from "@/components/templates/LpParts/Image";
 import LpTextwrap from "@/components/templates/LpParts/Textwrap";
@@ -334,6 +357,17 @@ export default {
             subtitle: "Web3 payment",
           },
           lead: "the next generation of decentralized payment methods,<br>to support any Token payment.",
+          link: {
+            url: "/",
+            title: "Enter App",
+            icon: "pointing-up",
+            func: "enterApp()",
+          },
+          link2: {
+            url: "/",
+            title: "Slash docs.",
+            icon: "gitbook-icon",
+          },
         },
         hello: {
           class: "dlp-hello",
@@ -381,6 +415,12 @@ export default {
             title:
               'Exchanges at DEX automatically <br class="sp" />at the best rate',
             text: "Slash Payment’s payment contracts and core contractsautomatically connect to the best-rate DEX SWAP router whenmaking payments for different tokens. This solution allowsCustomers can pay with any token.",
+            link: {
+              url: "/",
+              title: "Slash Payment Install Docs.",
+              icon: "right-arrow",
+              iconAfter: true,
+            },
           },
           cards: [
             {
@@ -467,6 +507,7 @@ export default {
           },
           features: [
             {
+              layout: "l",
               title:
                 "Slash makes it extremely easy and<br>safe to introduce cryptocurrency<br>payments.",
               image: {
@@ -479,9 +520,11 @@ export default {
                 url: "/",
                 title: "Slash Payment Install Docs.",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "r",
               title: "Integration with any platform",
               image: {
                 src: "lp/integration.jpg",
@@ -504,9 +547,11 @@ export default {
                 url: "/",
                 title: "Details of Integrations",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "c",
               title:
                 'The best way for Accepting Web3<br class="sp"> Wallet Payments at Physical Stores',
               image: {
@@ -526,6 +571,7 @@ export default {
           },
           features: [
             {
+              layout: "r",
               title: "Slash Payment fee is 0.2〜0.6%",
               image: {
                 src: "lp/fee.jpg",
@@ -537,9 +583,11 @@ export default {
                 url: "/",
                 title: "Fee Structure",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "c",
               title: "Slash automatically donation program",
               image: {
                 src: "lp/donated.jpg",
@@ -559,9 +607,11 @@ export default {
                 url: "/",
                 title: "donation program",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "l",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
@@ -577,6 +627,7 @@ export default {
                 url: "/",
                 title: "Details of $Slash",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
           ],
@@ -596,8 +647,13 @@ export default {
                 lightSrc: "",
               },
               logo: "lp/donate01.svg",
-              url: "https://donate.savethechildren.org",
-              link: '@click.prevent.stop="paymentForDonate(SAFE_THE_CHILDREN)',
+              text: "https://donate.savethechildren.org",
+              link: {
+                title: "Donate Now",
+                func: "paymentForDonate(SAFE_THE_CHILDREN)",
+                icon: "connect",
+                status: true,
+              },
             },
             {
               title: "Experience it first hand.",
@@ -607,8 +663,13 @@ export default {
                 lightSrc: "",
               },
               logo: "lp/donate02.svg",
-              url: "https://www.unicef.org/",
-              link: '@click.prevent.stop="paymentForDonate(UNICEF)',
+              text: "https://www.unicef.org/",
+              link: {
+                title: "Donate Now",
+                func: "paymentForDonate(UNICEF)",
+                icon: "connect",
+                status: true,
+              },
             },
           ],
         },
@@ -664,17 +725,65 @@ export default {
             {
               title: "Phase 1",
               list: [
-                { text: "Basic Features" },
-                { text: "Open Source Plugin Ver.1" },
+                {
+                  title: "Basic Features",
+                  list: [
+                    { text: "Web3Payment BSC" },
+                    { text: "Web3Payment ETH" },
+                    { text: "Web3Payment Polygon" },
+                    { text: "Merchant App" },
+                  ],
+                },
+                {
+                  title: "Open Source Plugins Ver.1",
+                  list: [
+                    { text: "Woocommerce" },
+                    { text: "Wellcart" },
+                    { text: "EC CUBE" },
+                  ],
+                },
               ],
             },
             {
               title: "Phase 2",
               list: [
-                { text: "Slash TOKEN" },
-                { text: "Additional Features" },
-                { text: "Open Source Plugins Ver.2" },
-                { text: "Integration Requirements" },
+                {
+                  title: "Slash TOKEN",
+                  list: [
+                    { text: "TOKEN SALE" },
+                    { text: "Staking pool" },
+                    { text: "Referral feature" },
+                    { text: "Coin Market Cap Listing" },
+                    { text: "CoinGecko Listing" },
+                    { text: "CEX Listing" },
+                  ],
+                },
+                {
+                  title: "Additional Features",
+                  list: [
+                    { text: "Online tipping feature" },
+                    { text: "Single EC feature" },
+                    { text: "Store Payment feature" },
+                    { text: "Escrow feature" },
+                  ],
+                },
+                {
+                  title: "OpenSource Plugins Ver.2",
+                  list: [
+                    { text: "OpenCart" },
+                    { text: "Zencart" },
+                    { text: "Drupal-Commerce" },
+                    { text: "Magento" },
+                    { text: "Magento2" },
+                    { text: "WHMCS" },
+                    { text: "Drupal 8 Ubercart" },
+                    { text: "Easy Digital Downloads" },
+                  ],
+                },
+                {
+                  title: "Integration Requirements",
+                  list: [{ text: "Shopify" }, { text: "Wix" }],
+                },
               ],
             },
           ],
@@ -744,45 +853,45 @@ export default {
           list: [
             {
               title: "Slash Payment Docs.",
-              icon: "twitter",
-              // link: {},
+              icon: "gitbook-icon",
+              url: "",
               status: true,
             },
             {
               title: "Slash Payment github",
-              icon: "twitter",
-              // link: {},
+              icon: "github",
+              url: "",
+              status: true,
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "recruit",
+              url: "",
               status: true,
             },
             {
               title: "Media kit",
-              icon: "twitter",
-              //  link: {},
+              icon: "save-instagram",
+              url: "",
               status: false,
             },
             {
               title: "Support for Slash Payment System",
-              icon: "twitter",
-              // link: {},
+              icon: "telegram",
+              url: "",
               status: false,
             },
             {
               title: "Slash Developer Community",
-              icon: "twitter",
-              // link: {},
+              icon: "discord",
+              url: "",
               status: false,
             },
             {
               title: "FAQ about system implementation",
-              icon: "twitter",
-              // link: {},
+              icon: "help",
+              url: "",
               status: false,
-            },
-            {
-              title: "Slash Recruit information",
-              icon: "twitter",
-              // link: {},
-              status: true,
             },
           ],
         },
@@ -796,16 +905,14 @@ export default {
             {
               title: "Contact Email",
               icon: "arroba",
-              link: "",
+              url: "",
               status: true,
-              light: true,
             },
             {
               title: "Twitter for DM",
               icon: "twitter",
-              link: "",
+              url: "",
               status: true,
-              light: true,
             },
           ],
         },
@@ -881,7 +988,7 @@ export default {
     LpFooter,
     LpAnimation,
     // LpIcon,
-    // LpButton,
+    LpButton,
     LpTitle,
     LpImage,
     LpTextwrap,
@@ -990,7 +1097,7 @@ export default {
 
     &__sub {
       @extend .dlp-btn;
-      background: #55476b;
+      background: var(--color_inner);
       // &::after {
       //   background-image: url(/assets/images/lp/gitbook-icon.svg);
       // }
@@ -1053,7 +1160,7 @@ export default {
   }
   &-hello {
     position: relative;
-    @include rem_padding(2, 0, 6, 0);
+    @include rem_padding(8, 0, 8, 0);
     &__h2 {
       position: relative;
       z-index: 10;
@@ -1098,6 +1205,20 @@ export default {
   }
   &-token {
     @include rem_padding(6, 0, 6, 0);
+    position: relative;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
     &__iconlist {
       @include flex(center, flex-start);
       margin-bottom: rem(5);
@@ -1167,12 +1288,13 @@ export default {
     @include rem_padding(6, 0, 6, 0);
     &__feature {
       li {
-        &:nth-child(2) {
+        &.r {
           [class$="__image"] {
             order: 2;
           }
         }
-        &:nth-child(3) {
+
+        &.c {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
@@ -1224,12 +1346,13 @@ export default {
     }
     &__feature {
       li {
-        &:nth-child(2) {
+        &.r {
           [class$="__image"] {
             order: 2;
           }
         }
-        &:nth-child(3) {
+
+        &.c {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
@@ -1266,10 +1389,35 @@ export default {
       @include flex(flex-start, flex-start);
       @include list(2, rem(4));
       &__list {
+        position: relative;
+        padding-top: rem(4);
       }
       &__image {
       }
+      &__logo {
+        width: 70%;
+        margin: rem(1) auto;
+      }
       &__textwrap {
+        &::v-deep {
+          text-align: center;
+          .title {
+            @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: $gradation-light;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+          .link {
+            margin-top: rem(2);
+            .lpButton.m .icon {
+              width: rem(4);
+            }
+          }
+        }
       }
     }
   }
@@ -1278,6 +1426,9 @@ export default {
     &__logos {
       @include flex(center, center);
       @include list(4, rem(4));
+      @include media(sp) {
+        @include list(3, rem(1));
+      }
       li {
         margin-bottom: rem(2);
       }
@@ -1285,23 +1436,139 @@ export default {
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
-    display: none;
     &__phase {
-      @include flex(center, center);
-      @include list(2, 2rem);
+      // @include list(2, 2rem);
+      &__box {
+        @include flex(flex-start, flex-start);
+        margin-bottom: rem(4);
+      }
+      &__title {
+        width: 30%;
+        @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      &__list {
+        @include flex(flex-start, stretch);
+        @include list(2, rem(2));
+        width: 70%;
+        & > li {
+          margin-bottom: rem(2);
+        }
+      }
+      &__listwrap {
+        height: 100%;
+
+        border-radius: rem(1);
+        overflow: hidden;
+        border: 1px solid var(--color_font);
+      }
+      &__subtitle {
+        @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
+
+        background: $gradation-light;
+        text-align: center;
+        padding: rem(0.5);
+        // -webkit-background-clip: text;
+        // -webkit-text-fill-color: transparent;
+      }
+      &__sublist {
+        padding: rem(1);
+        li {
+          @include font(rem(pow(0)), 400, $ls, $lh, $en_go);
+          text-align: center;
+        }
+      }
     }
-    &__feature {
-      @include flex(center, center);
-      @include list(3, 2rem);
-    }
+    // &__feature {
+    //   @include flex(center, center);
+    //   @include list(3, 2rem);
+    // }
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
     &__list {
+      // @include flex(flex-start, flex-start);
+      // @include list(2, 2rem);
+      text-align: center;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      @include media(sp) {
+        width: 100%;
+      }
     }
   }
   &-contact {
     @include rem_padding(6, 0, 6, 0);
+    &__list {
+      text-align: center;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      @include media(sp) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.lp-eighth {
+  background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
+  background-size: cover;
+  padding: 60px 0 85px;
+  max-width: inherit;
+  width: 100%;
+  @include media(sp) {
+    background: url(/assets/images/lp/last_back_m-sp.svg) no-repeat center
+      center;
+  }
+  h3 {
+    font-weight: 500;
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+  }
+  .lp-b_back {
+    background: var(--color_lp_box);
+    border-radius: 10px;
+    padding: 40px 60px;
+    width: 400px;
+    text-align: center;
+    margin: 30px auto 0;
+    .btn {
+      width: 100%;
+      @include media(sp) {
+        width: 80%;
+      }
+    }
+    @include media(sp) {
+      width: 85%;
+      padding: 30px 10px;
+    }
+    .lp-first_icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      @include media(sp) {
+        margin-bottom: 32px;
+      }
+      img {
+        width: 40px;
+        margin-right: 15px;
+      }
+      h4 {
+        font-size: 30px;
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+  .lp-first_enter {
+    box-shadow: none;
   }
 }
 </style>
