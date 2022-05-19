@@ -7,7 +7,7 @@
     <LpHeader />
     <main>
       <!-- SECTION MV -->
-      <section :class="section.mv.class">
+      <section :class="section.mv.class + ' scrollAction'">
         <LpAnimation :canvasClass="section.mv.class" />
         <div :class="section.mv.class + '__title'">
           <!-- [TODO] アイコンぼやけるので画像が欲しい -->
@@ -997,6 +997,7 @@ export default {
     LpFooter,
     LpAnimation,
   },
+
   methods: {
     openModal(target) {
       this.$store.dispatch("modal/show", { target: target, size: "small" });
@@ -1010,6 +1011,22 @@ export default {
     enterApp() {
       this.$store.dispatch("changeTheme", "dark");
     },
+    scrollAction() {
+      const scrollActions = document.querySelectorAll(".scrollAction");
+      for (let i = 0; i < scrollActions.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elTop = scrollActions[i].getBoundingClientRect().top;
+        const elVisible = 150;
+        if (elTop < windowHeight - elVisible) {
+          scrollActions[i].classList.add("active");
+        } else {
+          scrollActions[i].classList.remove("active");
+        }
+      }
+    },
+  },
+  created() {
+    window.addEventListener("scroll", this.scrollAction);
   },
 };
 </script>
@@ -1023,6 +1040,17 @@ export default {
   main {
     position: relative;
     z-index: 1;
+  }
+}
+
+.scrollAction {
+  position: relative;
+  transform: translateY(150px);
+  opacity: 0;
+  transition: 2s all ease;
+  &.active {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -1079,6 +1107,9 @@ export default {
       // }
     }
     &__noactive {
+      @extend .dlp-btn;
+      background: #55476b;
+      pointer-events: none;
     }
   }
   &-sectitle {
@@ -1288,6 +1319,14 @@ export default {
       }
       &__textwrap {
         width: 50%;
+      }
+      &__title {
+      }
+      &__text {
+        @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+      }
+      &__link {
+        margin-top: 1rem;
       }
     }
   }
