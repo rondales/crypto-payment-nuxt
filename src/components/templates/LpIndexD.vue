@@ -3,17 +3,16 @@
     <!-- [TODO] レスポンシブ -->
     <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] 日本語のチェック -->
-    <!-- [TODO] header/footer -->
+    <!-- [TODO] scroll action -->
     <LpHeader />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' scrollAction'">
-        <LpAnimation :canvasClass="section.mv.class" />
+        <LpAnimation :canvasClass="section.mv.class" type="MvCanvas" />
         <div :class="section.mv.class + '__title'">
-          <!-- [TODO] アイコンぼやけるので画像が欲しい -->
           <img
             :class="section.mv.class + '__icon'"
-            src="@/assets/images/lp/logo.png"
+            src="@/assets/images/logo-icon.svg"
             alt="Slash payment"
           />
           <h1 :class="section.mv.class + '__h1'">
@@ -28,14 +27,8 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <a @click="enterApp()" href="/admin" class="dlp-btn__main l">
-              <img src="@/assets/images/lp/pointing-up.svg" />
-              <span>Enter App</span>
-            </a>
-            <a href="/" class="dlp-btn__sub l">
-              <img src="@/assets/images/lp/gitbook-icon.svg" />
-              <span>Slash docs.</span>
-            </a>
+            <LpButton :link="section.mv.link" type="main" size="m" />
+            <LpButton :link="section.mv.link2" type="sub" size="m" />
           </div>
         </div>
       </section>
@@ -43,46 +36,42 @@
       <!-- SECTION HELLO web3 -->
       <section :class="section.hello.class">
         <div class="section__wrap">
-          <h2 :class="section.hello.class + '__h2'">
-            <span :class="section.hello.class + '__h2__title'">{{
-              section.hello.title.title
-            }}</span>
-            <span :class="section.hello.class + '__h2__subtitle'"
-              >{{ section.hello.title.subtitle
-              }}<img src="@/assets/images/lp/pointing-up.svg"
-            /></span>
-            <span :class="section.hello.class + '__h2__text'">{{
-              section.hello.title.text
-            }}</span>
-          </h2>
-          <p :class="section.hello.class + '__lead'">
-            <span v-html="section.hello.lead"></span>
-          </p>
-          <!-- [TODO] 画像書き出し直し / shadowをつける -->
-          <figure :class="section.hello.class + '__image'">
-            <img src="@/assets/images/lp/card.svg" />
-          </figure>
+          <div :class="section.hello.class + '__textwrap'">
+            <h2 :class="section.hello.class + '__h2'">
+              <span :class="section.hello.class + '__h2__title'">{{
+                section.hello.title.title
+              }}</span>
+              <span :class="section.hello.class + '__h2__subtitle'"
+                >{{ section.hello.title.subtitle
+                }}<img src="@/assets/images/lp/pointing-up.svg"
+              /></span>
+              <span :class="section.hello.class + '__h2__text'">{{
+                section.hello.title.text
+              }}</span>
+            </h2>
+            <p :class="section.hello.class + '__lead'">
+              <span v-html="section.hello.lead"></span>
+            </p>
+          </div>
+          <div :class="section.hello.class + '__imagewrap'">
+            <figure :class="section.hello.class + '__image'">
+              <img src="@/assets/images/lp/capcha-1.png" />
+            </figure>
+            <figure :class="section.hello.class + '__image r'">
+              <img src="@/assets/images/lp/capcha-2.png" />
+            </figure>
+          </div>
         </div>
       </section>
 
       <!-- SECTION token -->
       <section :class="section.token.class">
         <div class="section__wrap">
-          <h2 :class="section.token.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.token.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.token.title.title }}</span
-            >
-            <span
-              :class="
-                section.token.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.token.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.token.class + '__title'"
+            :title="section.token.title"
+            color="g"
+          />
           <ul :class="section.token.class + '__iconlist'">
             <li v-for="icon in section.token.icons" :key="icon.path">
               <figure>
@@ -103,17 +92,7 @@
               <span>{{ section.token.sub.text }}</span>
             </p>
             <div :class="section.token.class + '__subbox__link'">
-              <a href="/" class="dlp-btn__main m">
-                <span>Supported swap routers</span>
-                <img
-                  v-if="$store.state.theme == 'dark'"
-                  src="@/assets/images/lp/right-arrow.svg"
-                />
-                <img
-                  v-if="$store.state.theme == 'light'"
-                  src="@/assets/images/lp/right-arrow-l.svg"
-                />
-              </a>
+              <LpButton :link="section.token.sub.link" type="main" size="s" />
             </div>
           </div>
           <ul :class="section.token.class + '__card'">
@@ -148,56 +127,31 @@
       <!-- SECTION install -->
       <section :class="section.install.class">
         <div class="section__wrap">
-          <h2 :class="section.install.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.install.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.install.title.title }}</span
-            >
-            <span
-              :class="
-                section.install.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.install.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.install.class + '__title'"
+            :title="section.install.title"
+          />
           <ul :class="section.install.class + '__feature'">
             <li
               v-for="feature in section.install.features"
               :key="feature.title"
+              :class="feature.layout"
             >
               <div :class="section.install.class + '__feature__list'">
-                <figure :class="section.install.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + feature.image)"
-                    :alt="feature.title"
-                  />
-                </figure>
-                <div :class="section.install.class + '__feature__textwrap'">
-                  <h3 :class="section.install.class + '__feature__title'">
-                    <span v-html="feature.title"></span>
-                  </h3>
-                  <p :class="section.install.class + '__feature__text'">
-                    <span v-html="feature.text"></span>
-                  </p>
-                  <div
-                    v-if="feature.link"
-                    :class="section.install.class + '__feature__link'"
-                  >
-                    <a :href="feature.link.url" class="dlp-btn__main m">
-                      <span>{{ feature.link.title }}</span>
-                      <span v-if="$store.state.theme == 'dark'">
-                        <img src="@/assets/images/lp/right-arrow.svg" />
-                      </span>
-                      <span v-if="$store.state.theme == 'light'">
-                        <img src="@/assets/images/lp/right-arrow-l.svg" />
-                      </span>
-                    </a>
-                  </div>
-                  <!-- [TODO] app logo -->
-                </div>
+                <LpAnimation
+                  v-if="feature.canvas"
+                  :canvasClass="section.install.class"
+                  type="SubCanvas1"
+                />
+                <LpImage
+                  v-if="!feature.canvas"
+                  :imgData="feature.image"
+                  :class="section.install.class + '__feature__image'"
+                />
+                <LpTextwrap
+                  :class="section.install.class + '__feature__textwrap'"
+                  :textData="feature"
+                />
               </div>
             </li>
           </ul>
@@ -207,54 +161,31 @@
       <!-- SECTION fee -->
       <section :class="section.fee.class">
         <div class="section__wrap">
-          <h2 :class="section.fee.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.fee.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.fee.title.title }}</span
-            >
-            <span
-              :class="
-                section.fee.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.fee.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.fee.class + '__title'"
+            :title="section.fee.title"
+          />
           <ul :class="section.fee.class + '__feature'">
-            <li v-for="feature in section.fee.features" :key="feature.title">
+            <li
+              v-for="feature in section.fee.features"
+              :key="feature.title"
+              :class="feature.layout"
+            >
               <div :class="section.fee.class + '__feature__list'">
-                <figure :class="section.fee.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + feature.image)"
-                    :alt="feature.title"
-                  />
-                </figure>
-                <div :class="section.fee.class + '__feature__textwrap'">
-                  <h3 :class="section.fee.class + '__feature__title'">
-                    <span v-html="feature.title"></span>
-                  </h3>
-                  <p :class="section.fee.class + '__feature__text'">
-                    <span v-html="feature.text"></span>
-                  </p>
-                  <div
-                    v-if="feature.link"
-                    :class="section.fee.class + '__feature__link'"
-                  >
-                    <a :href="feature.link.url" class="dlp-btn__main m">
-                      <span>{{ feature.link.title }}</span>
-                      <span v-if="$store.state.theme == 'dark'">
-                        <img src="@/assets/images/lp/right-arrow.svg" />
-                      </span>
-                      <span v-if="$store.state.theme == 'light'">
-                        <img src="@/assets/images/lp/right-arrow-l.svg" />
-                      </span>
-                    </a>
-                  </div>
-                  <!-- [TODO] tag -->
-                  <!-- [TODO] app logo -->
-                </div>
+                <LpAnimation
+                  v-if="feature.canvas"
+                  :canvasClass="section.fee.class"
+                  type="SubCanvas2"
+                />
+                <LpImage
+                  v-if="!feature.canvas"
+                  :imgData="feature.image"
+                  :class="section.fee.class + '__feature__image'"
+                />
+                <LpTextwrap
+                  :class="section.install.class + '__feature__textwrap'"
+                  :textData="feature"
+                />
               </div>
             </li>
           </ul>
@@ -264,48 +195,27 @@
       <!-- SECTION trial -->
       <section :class="section.trial.class">
         <div class="section__wrap">
-          <h2 :class="section.trial.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.trial.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.trial.title.title }}</span
-            >
-            <span
-              :class="
-                section.trial.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.trial.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.trial.class + '__title'"
+            :title="section.trial.title"
+          />
           <ul :class="section.trial.class + '__feature'">
             <li v-for="list in section.trial.lists" :key="list.logo">
               <div :class="section.trial.class + '__feature__list'">
-                <figure :class="section.trial.class + '__feature__image'">
-                  <img
-                    :src="require('@/assets/images/' + list.image)"
-                    :alt="list.title"
-                  />
-                  <img
-                    :src="require('@/assets/images/' + list.logo)"
-                    :alt="list.title"
-                  />
-                </figure>
+                <LpImage
+                  :imgData="list.image"
+                  :class="section.trial.class + '__feature__image'"
+                />
+                <img
+                  :class="section.trial.class + '__feature__logo'"
+                  :src="require('@/assets/images/' + list.logo)"
+                  :alt="list.title"
+                />
                 <div :class="section.trial.class + '__feature__textwrap'">
-                  <h3 :class="section.trial.class + '__feature__title'">
-                    <span v-html="list.title"></span>
-                  </h3>
-                  <p :class="section.trial.class + '__feature__text'">
-                    <span v-html="list.url"></span>
-                  </p>
-                  <div
-                    v-if="list.link"
-                    :class="section.trial.class + '__feature__link'"
-                  >
-                    <a :href="list.link.url" class="dlp-btn__main m">
-                      <span>{{ list.link.title }}</span>
-                    </a>
+                  <h3 class="title"><span v-html="list.title"></span></h3>
+                  <p class="text"><span v-html="list.text"></span></p>
+                  <div v-if="list.link" class="link">
+                    <LpButton :link="list.link" type="main" size="m" />
                   </div>
                 </div>
               </div>
@@ -317,21 +227,10 @@
       <!-- SECTION network -->
       <section :class="section.network.class">
         <div class="section__wrap">
-          <h2 :class="section.network.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.network.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.network.title.title }}</span
-            >
-            <span
-              :class="
-                section.network.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.network.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.network.class + '__title'"
+            :title="section.network.title"
+          />
           <ul :class="section.network.class + '__logos'">
             <li v-for="logo in section.network.logos" :key="logo.path">
               <figure>
@@ -339,115 +238,95 @@
                   :src="require('@/assets/images/lp/' + logo.path + '.png')"
                 />
               </figure>
-              <!-- <img v-if="$store.state.theme == 'dark'" src="@/assets/images/lp/cn4-sp.png" />
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/lp/cn4-l-sp.png" /> -->
             </li>
           </ul>
         </div>
       </section>
+
       <!-- SECTION roadmap -->
       <section :class="section.roadmap.class">
         <div class="section__wrap">
-          <h2 :class="section.roadmap.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.roadmap.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.roadmap.title.title }}</span
+          <LpTitle
+            :class="section.roadmap.class + '__title'"
+            :title="section.roadmap.title"
+          />
+          <div :class="section.roadmap.class + '__phase'">
+            <div
+              :class="section.roadmap.class + '__phase__box'"
+              v-for="phase in section.roadmap.phases"
+              :key="phase.title"
             >
-            <span
-              :class="
-                section.roadmap.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.roadmap.title.subtitle }}</span
-            >
-          </h2>
-          <ul :class="section.roadmap.class + '__phase'">
-            <li v-for="phase in section.roadmap.phases" :key="phase.title">
-              <div :class="section.roadmap.class + '__phase__list'">
-                <div :class="section.roadmap.class + '__phase__textwrap'">
-                  <h3 :class="section.roadmap.class + '__phase__title'">
-                    <span v-html="phase.title"></span>
-                  </h3>
-                  <ul :class="section.roadmap.class + '__phase'">
-                    <li v-for="list in phase.list" :key="list.text">
-                      {{ list.text }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <ul :class="section.roadmap.class + '__feature'">
-            <li
-              v-for="feature in section.roadmap.features"
-              :key="feature.title"
-            >
-              <h3 :class="section.roadmap.class + '__feature__title'">
-                <span v-html="feature.title"></span>
+              <h3 :class="section.roadmap.class + '__phase__title'">
+                <span v-html="phase.title"></span>
               </h3>
-              <ul :class="section.roadmap.class + '__feature'">
-                <li v-for="list in feature.list" :key="list.text">
-                  {{ list.text }}
+              <ul :class="section.roadmap.class + '__phase__list'">
+                <li v-for="list in phase.list" :key="list.text">
+                  <div :class="section.roadmap.class + '__phase__listwrap'">
+                    <h4 :class="section.roadmap.class + '__phase__subtitle'">
+                      <span>{{ list.title }}</span>
+                    </h4>
+                    <ul :class="section.roadmap.class + '__phase__sublist'">
+                      <li v-for="li in list.list" :key="li.text">
+                        {{ li.text }}
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </ul>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </section>
+
       <!-- SECTION welcome -->
       <section :class="section.welcome.class">
         <div class="section__wrap">
-          <h2 :class="section.welcome.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.welcome.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.welcome.title.title }}</span
-            >
-            <span
-              :class="
-                section.welcome.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.welcome.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.welcome.class + '__title'"
+            :title="section.welcome.title"
+          />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
-              <div :class="section.welcome.class + '__list__list'">
-                <!-- <LpButton :link="list" type="main" size="m" /> -->
-              </div>
+              <LpButton
+                :link="list"
+                :type="list.status ? 'main' : 'noactive'"
+                size="l"
+              />
             </li>
           </ul>
         </div>
       </section>
+
       <!-- SECTION contact -->
       <section :class="section.contact.class">
         <div class="section__wrap">
-          <h2 :class="section.contact.class + '__sectitle dlp-sectitle'">
-            <span
-              :class="
-                section.contact.class + '__sectitle__title dlp-sectitle__title'
-              "
-              >{{ section.contact.title.title }}</span
-            >
-            <span
-              :class="
-                section.contact.class +
-                '__sectitle__subtitle dlp-sectitle__subtitle'
-              "
-              >{{ section.contact.title.subtitle }}</span
-            >
-          </h2>
+          <LpTitle
+            :class="section.contact.class + '__title'"
+            :title="section.contact.title"
+          />
           <ul :class="section.contact.class + '__list'">
             <li v-for="list in section.contact.list" :key="list.title">
-              <div :class="section.contact.class + '__list__list'">
-                <LpButton :link="list" type="main" size="m"/>
-              </div>
+              <LpButton :link="list" type="main" size="l" />
             </li>
           </ul>
+        </div>
+      </section>
+
+      <!-- SECTION CV -->
+      <section :class="section.cv.class">
+        <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" />
+        <div class="section__wrap">
+          <LpTitle
+            :class="section.cv.class + '__title'"
+            :title="section.cv.title"
+          />
+          <div :class="section.cv.class + '__textwrap'">
+            <div :class="section.cv.class + '__logo'">
+              <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
+              <h4>Slash.fi</h4>
+            </div>
+            <LpButton :link="section.cv.link" type="main" size="m" />
+          </div>
         </div>
       </section>
     </main>
@@ -462,8 +341,9 @@ import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
 // import LpIcon from "@/components/templates/LpParts/Icon";
 import LpButton from "@/components/templates/LpParts/Button";
-// import LpTitle from "@/components/templates/LpParts/Title";
-// import LpImage from "@/components/templates/LpParts/Image";
+import LpTitle from "@/components/templates/LpParts/Title";
+import LpImage from "@/components/templates/LpParts/Image";
+import LpTextwrap from "@/components/templates/LpParts/Textwrap";
 
 export default {
   data() {
@@ -476,6 +356,17 @@ export default {
             subtitle: "Web3 payment",
           },
           lead: "the next generation of decentralized payment methods,<br>to support any Token payment.",
+          link: {
+            url: "/",
+            title: "Enter App",
+            icon: "pointing-up",
+            func: "enterApp()",
+          },
+          link2: {
+            url: "/",
+            title: "Slash docs.",
+            icon: "gitbook-icon",
+          },
         },
         hello: {
           class: "dlp-hello",
@@ -523,6 +414,12 @@ export default {
             title:
               'Exchanges at DEX automatically <br class="sp" />at the best rate',
             text: "Slash Payment’s payment contracts and core contractsautomatically connect to the best-rate DEX SWAP router whenmaking payments for different tokens. This solution allowsCustomers can pay with any token.",
+            link: {
+              url: "/",
+              title: "Slash Payment Install Docs.",
+              icon: "right-arrow",
+              iconAfter: true,
+            },
           },
           cards: [
             {
@@ -609,19 +506,31 @@ export default {
           },
           features: [
             {
+              layout: "r",
               title:
-                "Slash makes it extremely easy and<br>safe to introduce cryptocurrency<br>payments.",
-              image: "lp/install-image.jpg",
+                "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
+              image: {
+                src: "lp/install-image.jpg",
+                alt: "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
+                lightSrc: "",
+              },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
               link: {
                 url: "/",
                 title: "Slash Payment Install Docs.",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
-              title: "Integration with any platform",
-              image: "lp/integration.jpg",
+              layout: "l",
+              title: "Integration with <br>any platform",
+              canvas: "SubCanvas1",
+              image: {
+                src: "lp/integration.jpg",
+                alt: "Integration with any platform",
+                lightSrc: "",
+              },
               text: "Slash-specific plugin is available to simplify integration with various open platforms. Because of the ease of implementing payments, Slash Payments may be the first transaction that occurs when you launch your e-commerce site.",
               logos: [
                 {
@@ -638,12 +547,18 @@ export default {
                 url: "/",
                 title: "Details of Integrations",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "c",
               title:
                 'The best way for Accepting Web3<br class="sp"> Wallet Payments at Physical Stores',
-              image: "lp/physical.jpg",
+              image: {
+                src: "lp/physical.jpg",
+                alt: "The best way for Accepting Web3 Wallet Payments at Physical Stores",
+                lightSrc: "lp/physical-l.jpg",
+              },
               text: "If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We are about to launch iOS/android app to make cryptocurrency payment more convenient.",
             },
           ],
@@ -656,18 +571,30 @@ export default {
           },
           features: [
             {
-              title: "Slash Payment fee is 0.2〜0.6%",
-              image: "lp/fee.jpg",
+              layout: "l",
+              title: "Slash Payment fee is <br>0.2〜0.6%",
+              canvas: "SubCanvas2",
+              image: {
+                src: "lp/fee.jpg",
+                alt: "Slash Payment fee is 0.2〜0.6%",
+                lightSrc: "",
+              },
               text: "There are no commissions paid to Merchants. The commission is 0.2-0.6% of the payment amount and is collected as a platform token along with the gas cost of the customer’s payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.",
               link: {
                 url: "/",
                 title: "Fee Structure",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "c",
               title: "Slash automatically donation program",
-              image: "lp/donated.jpg",
+              image: {
+                src: "lp/donated.jpg",
+                alt: "Slash automatically donation program",
+                lightSrc: "",
+              },
               text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes.<br><br>We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries.<br><br>In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment.<br><br>In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
@@ -681,20 +608,27 @@ export default {
                 url: "/",
                 title: "donation program",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
             {
+              layout: "r",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
               },
-              title: "The All fees Use buyback $Slash*",
-              image: "lp/physical.jpg",
+              title: "The All fees Use <br>buyback $Slash*",
+              image: {
+                src: "lp/buyback.jpg",
+                alt: "The All fees Use buyback $Slash*",
+                lightSrc: "",
+              },
               text: " The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
               link: {
                 url: "/",
                 title: "Details of $Slash",
                 icon: "right-arrow",
+                iconAfter: true,
               },
             },
           ],
@@ -708,17 +642,36 @@ export default {
           lists: [
             {
               title: "Experience it first hand.",
-              image: "lp/donate-image01.jpg",
+              image: {
+                src: "lp/donate-image01.jpg",
+                alt: "Experience it first hand.",
+                lightSrc: "",
+              },
               logo: "lp/donate01.svg",
-              url: "https://donate.savethechildren.org",
-              link: '@click.prevent.stop="paymentForDonate(SAFE_THE_CHILDREN)',
+              text: "https://donate.savethechildren.org",
+              link: {
+                title: "Donate Now",
+                func: "testfunc",
+                // func: "paymentForDonate(SAFE_THE_CHILDREN)",
+                icon: "connect",
+                status: true,
+              },
             },
             {
               title: "Experience it first hand.",
-              image: "lp/donate-image02.jpg",
+              image: {
+                src: "lp/donate-image02.jpg",
+                alt: "Experience it first hand.",
+                lightSrc: "",
+              },
               logo: "lp/donate02.svg",
-              url: "https://www.unicef.org/",
-              link: '@click.prevent.stop="paymentForDonate(UNICEF)',
+              text: "https://www.unicef.org/",
+              link: {
+                title: "Donate Now",
+                func: "paymentForDonate(UNICEF)",
+                icon: "connect",
+                status: true,
+              },
             },
           ],
         },
@@ -774,17 +727,65 @@ export default {
             {
               title: "Phase 1",
               list: [
-                { text: "Basic Features" },
-                { text: "Open Source Plugin Ver.1" },
+                {
+                  title: "Basic Features",
+                  list: [
+                    { text: "Web3Payment BSC" },
+                    { text: "Web3Payment ETH" },
+                    { text: "Web3Payment Polygon" },
+                    { text: "Merchant App" },
+                  ],
+                },
+                {
+                  title: "Open Source Plugins Ver.1",
+                  list: [
+                    { text: "Woocommerce" },
+                    { text: "Wellcart" },
+                    { text: "EC CUBE" },
+                  ],
+                },
               ],
             },
             {
               title: "Phase 2",
               list: [
-                { text: "Slash TOKEN" },
-                { text: "Additional Features" },
-                { text: "Open Source Plugins Ver.2" },
-                { text: "Integration Requirements" },
+                {
+                  title: "Slash TOKEN",
+                  list: [
+                    { text: "TOKEN SALE" },
+                    { text: "Staking pool" },
+                    { text: "Referral feature" },
+                    { text: "Coin Market Cap Listing" },
+                    { text: "CoinGecko Listing" },
+                    { text: "CEX Listing" },
+                  ],
+                },
+                {
+                  title: "Additional Features",
+                  list: [
+                    { text: "Online tipping feature" },
+                    { text: "Single EC feature" },
+                    { text: "Store Payment feature" },
+                    { text: "Escrow feature" },
+                  ],
+                },
+                {
+                  title: "OpenSource Plugins Ver.2",
+                  list: [
+                    { text: "OpenCart" },
+                    { text: "Zencart" },
+                    { text: "Drupal-Commerce" },
+                    { text: "Magento" },
+                    { text: "Magento2" },
+                    { text: "WHMCS" },
+                    { text: "Drupal 8 Ubercart" },
+                    { text: "Easy Digital Downloads" },
+                  ],
+                },
+                {
+                  title: "Integration Requirements",
+                  list: [{ text: "Shopify" }, { text: "Wix" }],
+                },
               ],
             },
           ],
@@ -854,45 +855,45 @@ export default {
           list: [
             {
               title: "Slash Payment Docs.",
-              icon: "twitter",
-              // link: {},
+              icon: "gitbook-icon",
+              url: "",
               status: true,
             },
             {
               title: "Slash Payment github",
-              icon: "twitter",
-              // link: {},
+              icon: "github",
+              url: "",
+              status: true,
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "recruit",
+              url: "",
               status: true,
             },
             {
               title: "Media kit",
-              icon: "twitter",
-              //  link: {},
+              icon: "save-instagram",
+              url: "",
               status: false,
             },
             {
               title: "Support for Slash Payment System",
-              icon: "twitter",
-              // link: {},
+              icon: "telegram",
+              url: "",
               status: false,
             },
             {
               title: "Slash Developer Community",
-              icon: "twitter",
-              // link: {},
+              icon: "discord",
+              url: "",
               status: false,
             },
             {
               title: "FAQ about system implementation",
-              icon: "twitter",
-              // link: {},
+              icon: "help",
+              url: "",
               status: false,
-            },
-            {
-              title: "Slash Recruit information",
-              icon: "twitter",
-              // link: {},
-              status: true,
             },
           ],
         },
@@ -906,18 +907,30 @@ export default {
             {
               title: "Contact Email",
               icon: "arroba",
-              link: "",
+              url: "",
               status: true,
-              light: true,
             },
             {
               title: "Twitter for DM",
               icon: "twitter",
-              link: "",
+              url: "",
               status: true,
-              light: true,
             },
           ],
+        },
+        cv: {
+          class: "dlp-cv",
+          title: {
+            title: "Install on your online service now!",
+            subtitle: "",
+          },
+          link: {
+            title: "Enter App",
+            icon: "",
+            url: "",
+            func: "enterApp()",
+            status: true,
+          },
         },
       },
       nativeApp: false,
@@ -991,9 +1004,10 @@ export default {
     LpFooter,
     LpAnimation,
     // LpIcon,
-    // LpTitle,
     LpButton,
-    // LpImage,
+    LpTitle,
+    LpImage,
+    LpTextwrap,
   },
 
   methods: {
@@ -1053,80 +1067,6 @@ export default {
 }
 
 .dlp {
-  &-btn {
-    cursor: pointer;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    border-radius: rem(8);
-    margin: rem(0.5);
-    color: #fff;
-    &.l {
-      @include font(rem(1.5), 500, 0.02em, 1, $ff);
-      height: rem(4);
-      padding: 0 rem(4);
-      img,
-      svg {
-        width: rem(2.2);
-      }
-      * + * {
-        margin-left: rem(0.5);
-      }
-    }
-    &.m {
-      @include font(rem(1), 500, 0.02em, 1, $ff);
-      height: rem(3);
-      padding: 0 rem(2);
-      img,
-      svg {
-        width: rem(2);
-      }
-      * + * {
-        margin-left: rem(0.5);
-      }
-    }
-    &.s {
-    }
-    &__main {
-      @extend .dlp-btn;
-      background: $gradation;
-      background: $gradation-pale;
-      background: $gradation-light;
-      // background-color: red;
-    }
-
-    &__sub {
-      @extend .dlp-btn;
-      background: #55476b;
-      // &::after {
-      //   background-image: url(/assets/images/lp/gitbook-icon.svg);
-      // }
-    }
-    &__noactive {
-      @extend .dlp-btn;
-      background: #55476b;
-      pointer-events: none;
-    }
-  }
-  &-sectitle {
-    margin-bottom: rem(3);
-    text-align: center;
-    // * {
-    //   background: $gradation-light;
-    //   -webkit-background-clip: text;
-    //   -webkit-text-fill-color: transparent;
-    //   // background-size: 100% 10%;
-    // }
-    &__title {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
-      display: block;
-    }
-    &__subtitle {
-      @include font(rem(3), 700, 0em, 1.5, $ff);
-    }
-  }
   &-mv {
     height: 100vh;
     position: relative;
@@ -1137,7 +1077,6 @@ export default {
       height: 100%;
       top: 0;
       left: 0;
-      // background-color: red;
     }
     &__title {
       position: absolute;
@@ -1148,14 +1087,14 @@ export default {
       transform: translate(-50%, -50%);
     }
     &__icon {
-      width: rem(8);
+      width: rem(6);
       margin-left: auto;
       margin-right: auto;
       margin-bottom: rem(1);
     }
     &__h1 {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: rem(3);
       &__title {
         @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
         display: block;
@@ -1179,12 +1118,17 @@ export default {
   }
   &-hello {
     position: relative;
-    @include rem_padding(2, 0, 6, 0);
+    @include rem_padding(8, 0, 8, 0);
+    .section__wrap {
+      @include flex(flex-start, center);
+    }
+    &__textwrap {
+      width: 65%;
+    }
     &__h2 {
       position: relative;
       z-index: 10;
       margin-bottom: rem(2);
-      width: 65%;
       * {
         background: $gradation-light;
         -webkit-background-clip: text;
@@ -1210,36 +1154,43 @@ export default {
     &__lead {
       position: relative;
       z-index: 10;
-      width: 65%;
       @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
+    }
+    &__imagewrap {
+      width: 35%;
+      position: relative;
     }
     &__image {
       position: absolute;
-      right: 0;
+      width: 75%;
       top: 50%;
-      width: 35%;
+      left: 50%;
       transform-origin: center center;
-      transform: translate(0%, -50%);
+      transform: translate(-50%, -50%);
+      margin-top: -10%;
+      margin-left: 20%;
+      box-shadow: var(--color_shadow);
+      &.r {
+        margin-top: 10%;
+        margin-left: -20%;
+      }
     }
   }
   &-token {
     @include rem_padding(6, 0, 6, 0);
-    &__sectitle {
-      margin-bottom: rem(3);
-      text-align: center;
-      * {
-        background: $gradation-light;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        // background-size: 100% 10%;
-      }
-      &__title {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-        display: block;
-      }
-      &__subtitle {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-      }
+    position: relative;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
     }
     &__iconlist {
       @include flex(center, flex-start);
@@ -1273,24 +1224,31 @@ export default {
     &__card {
       @include flex(flex-start, stretch);
       @include list(3, rem(0.5));
-      // [TODO] タイル
       &__list {
         height: 100%;
         background-color: var(--color_lp_box);
         @include rem_padding(2, 2, 2, 2);
         border-radius: rem(1);
+        display: flex;
+        flex-direction: column;
       }
       &__title {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
         @include font(rem(1.5), 700, 0em, 1.5, $ff);
         display: block;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: rem(1.5);
+        margin-bottom: rem(1);
       }
       &__iconlist {
-        @include flex(center, flex-start);
+        flex: 2;
+        height: 100%;
+        min-height: 0%;
+        @include flex(center, center);
         @include list(3, rem(2));
         width: 90%;
         margin-left: auto;
@@ -1302,6 +1260,10 @@ export default {
         }
       }
       &__text {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
+        overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
       }
     }
@@ -1310,12 +1272,13 @@ export default {
     @include rem_padding(6, 0, 6, 0);
     &__feature {
       li {
-        &:nth-child(2) {
+        &.r {
           [class$="__image"] {
             order: 2;
           }
         }
-        &:nth-child(3) {
+
+        &.c {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
@@ -1367,12 +1330,13 @@ export default {
     }
     &__feature {
       li {
-        &:nth-child(2) {
+        &.r {
           [class$="__image"] {
             order: 2;
           }
         }
-        &:nth-child(3) {
+
+        &.c {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
@@ -1409,10 +1373,35 @@ export default {
       @include flex(flex-start, flex-start);
       @include list(2, rem(4));
       &__list {
+        position: relative;
+        padding-top: rem(4);
       }
       &__image {
       }
+      &__logo {
+        width: 70%;
+        margin: rem(1) auto;
+      }
       &__textwrap {
+        &::v-deep {
+          text-align: center;
+          .title {
+            @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: $gradation-light;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+          .link {
+            margin-top: rem(2);
+            .lpButton.m .icon {
+              width: rem(4);
+            }
+          }
+        }
       }
     }
   }
@@ -1421,6 +1410,9 @@ export default {
     &__logos {
       @include flex(center, center);
       @include list(4, rem(4));
+      @include media(sp) {
+        @include list(3, rem(1));
+      }
       li {
         margin-bottom: rem(2);
       }
@@ -1428,23 +1420,129 @@ export default {
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
-    display: none;
     &__phase {
-      @include flex(center, center);
-      @include list(2, 2rem);
+      // @include list(2, 2rem);
+      &__box {
+        @include flex(flex-start, flex-start);
+        margin-bottom: rem(4);
+      }
+      &__title {
+        width: 30%;
+        @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      &__list {
+        @include flex(flex-start, stretch);
+        @include list(2, rem(2));
+        width: 70%;
+        & > li {
+          margin-bottom: rem(2);
+        }
+      }
+      &__listwrap {
+        height: 100%;
+        border-radius: rem(1);
+        overflow: hidden;
+        border: 1px solid var(--color_border);
+      }
+      &__subtitle {
+        @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
+
+        background: $gradation-light;
+        text-align: center;
+        padding: rem(0.5);
+        // -webkit-background-clip: text;
+        // -webkit-text-fill-color: transparent;
+      }
+      &__sublist {
+        padding: rem(1);
+        li {
+          @include font(rem(pow(0)), 400, $ls, $lh, $en_go);
+          text-align: center;
+        }
+      }
     }
-    &__feature {
-      @include flex(center, center);
-      @include list(3, 2rem);
-    }
+    // &__feature {
+    //   @include flex(center, center);
+    //   @include list(3, 2rem);
+    // }
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
     &__list {
+      // @include flex(flex-start, flex-start);
+      // @include list(2, 2rem);
+      text-align: center;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      @include media(sp) {
+        width: 100%;
+      }
     }
   }
   &-contact {
     @include rem_padding(6, 0, 6, 0);
+    &__list {
+      text-align: center;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      @include media(sp) {
+        width: 100%;
+      }
+    }
+  }
+  &-cv {
+    // background-image: url(/assets/images/lp/last_back_m.jpg);
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // background-size: cover;
+    @include rem_padding(4, 0, 5, 0);
+    position: relative;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    &__textwrap {
+      background: var(--color_lp_box);
+      border-radius: 10px;
+      @include rem_padding(3, 4, 3, 4);
+      max-width: 600px;
+      text-align: center;
+      margin: rem(2) auto;
+    }
+    &__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include flex(center, center);
+      margin-bottom: rem(1);
+      @include media(sp) {
+        margin-bottom: rem(2);
+      }
+      img {
+        width: rem(3);
+        margin-right: rem(1);
+      }
+      h4 {
+        @include font(rem(pow(4)), 600, $ls, $lh, $en_go);
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
   }
 }
 </style>

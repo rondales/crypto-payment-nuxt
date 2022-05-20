@@ -1,26 +1,32 @@
 <template>
-  <component :class="iconClass" :is="svg" />
+  <figure>
+    <img :src="setImgPath" :alt="imgData.alt" />
+  </figure>
 </template>
 
 <script>
 export default {
   components: {},
   props: {
-    path: {
-      type: String,
+    imgData: {
+      type: Object,
+      required: true,
+      default: () => ({
+        src: "",
+        alt: "",
+        lightSrc: "",
+      }),
     },
-  },
-  data: function () {
-    return {
-      iconClass: this.path.indexOf("stroke") !== -1 ? "p-icon__stroke" : "",
-    };
   },
   computed: {
-    svg() {
-      return () => import(`~/assets/icon/${this.path}.svg`);
+    setImgPath() {
+      if (this.imgData.lightSrc != "" && this.$store.state.theme == "light") {
+        return require("@/assets/images/" + this.imgData.lightSrc);
+      } else {
+        return require("@/assets/images/" + this.imgData.src);
+      }
     },
   },
-  methods: {},
 };
 </script>
 
