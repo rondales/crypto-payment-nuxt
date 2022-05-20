@@ -781,7 +781,7 @@ export default {
           let Brightness =
             10 *
               s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            80;
+            60;
           if (store.state.theme == "light") {
             Saturation =
               20 *

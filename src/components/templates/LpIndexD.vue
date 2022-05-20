@@ -514,7 +514,7 @@ export default {
               title:
                 "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
               image: {
-                src: "lp/install-image.jpg",
+                src: "lp/hand-neon2.jpg",
                 alt: "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
                 lightSrc: "",
               },
