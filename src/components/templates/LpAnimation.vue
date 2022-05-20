@@ -318,7 +318,7 @@ export default {
           let Brightness =
             10 *
               s1.abs(s1.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            50;
+            80;
           if (store.state.theme == "light") {
             Saturation =
               20 *
@@ -367,7 +367,7 @@ export default {
         var canvas = s2.createCanvas(SizeMax, SizeMax, s2.WEBGL);
         canvas.parent("SubCanvas2");
         // ShapesNum = floor(mySize/6);
-        ShapesNum = 150;
+        ShapesNum = 100;
         // print(ShapesNum)
         s2.colorMode(s2.HSB, 360, 100, 100, 100);
 
@@ -378,7 +378,7 @@ export default {
         }
 
         for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 0.4);
+          let shape = new Shape(i, ShapesNum, SizeMin * 0.6);
           shapes.push(shape);
         }
       };
@@ -396,7 +396,7 @@ export default {
         s2.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
-          shape.resize(SizeMin * 0.4);
+          shape.resize(SizeMin * 0.6);
         }
       };
 
@@ -434,7 +434,7 @@ export default {
             0,
             1.0
           );
-          s2.strokeWeight(s2.map(s2.max(thresh, 0.0), 0.0, 1.0, 0.3, 2.0));
+          s2.strokeWeight(s2.map(s2.max(thresh, 0.0), 0.0, 1.0, 0.3, 1.0));
           s2.push();
           let angrange = s2.map(
             s2.sin(s2.radians(curTime * 5.0)),
@@ -445,19 +445,20 @@ export default {
           );
           let addang =
             curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
-          let ang = s2.radians(45.0 + addang);
+          let ang = s2.radians(0.0 + addang);
 
           s2.rotateX(ang);
           s2.rotateY(ang);
           s2.rotateZ(ang);
           // s2.translate(s2.width/2, 0, 0);
+    
           let scaleval = 1.0 - this.id / this.maxnum;
           let addscale = s2.map(
             s2.sin(s2.radians(curTime * 10.0)),
             -1.0,
             1.0,
             0.0,
-            0.02
+            0.05
           );
           scaleval = s2.map(scaleval, 0.0, 1.0, addscale, 1.0 + addscale);
 
@@ -472,7 +473,7 @@ export default {
           let Brightness =
             10 *
               s2.abs(s2.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            60;
+            80;
           if (store.state.theme == "light") {
             Saturation =
               20 *
@@ -489,8 +490,11 @@ export default {
           }
 
           s2.stroke(Hue, Saturation, Brightness, 100);
+          // s2.fill(Hue, Saturation, Brightness, 10);
           // s2.smooth(2);
-          s2.box(this.size * scaleval);
+          // s2.box(this.size * scaleval);
+          s2.plane(this.size * scaleval);
+          // s2.sphere(this.size * scaleval, 24, 24);
           s2.pop();
         }
       }
@@ -647,6 +651,158 @@ export default {
         }
       }
     };
+    const SubCanvas4 = function (s4) {
+      //ShapesSetting
+      let ShapesNum;
+      let shapes = [];
+      let curTime = 0.0;
+      let speed = 50.0;
+      let SizeMin, SizeMax;
+      // s4.disableFriendlyErrors = true;
+
+      s4.setup = (_) => {
+        // p5.disableFriendlyErrors = true;
+        s4.frameRate(30);
+        SizeMin = s4.min(
+          document.getElementById("SubCanvas4").clientWidth,
+          document.getElementById("SubCanvas4").clientHeight
+        );
+        SizeMax = s4.max(
+          document.getElementById("SubCanvas4").clientWidth,
+          document.getElementById("SubCanvas4").clientHeight
+        );
+        // mySize = 500;
+        var canvas = s4.createCanvas(SizeMax, SizeMax, s4.WEBGL);
+        canvas.parent("SubCanvas4");
+        // ShapesNum = floor(mySize/6);
+        ShapesNum = 30;
+        // print(ShapesNum)
+        s4.colorMode(s4.HSB, 360, 100, 100, 100);
+
+        if (store.state.theme == "dark") {
+          s4.background(DarkColor);
+        } else {
+          s4.background(LightColor);
+        }
+
+        for (let i = 0; i < ShapesNum; i++) {
+          let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
+          shapes.push(shape);
+        }
+      };
+
+      s4.windowResized = (_) => {
+        SizeMin = s4.min(
+          document.getElementById("SubCanvas4").clientWidth,
+          document.getElementById("SubCanvas4").clientHeight
+        );
+        SizeMax = s4.max(
+          document.getElementById("SubCanvas4").clientWidth,
+          document.getElementById("SubCanvas4").clientHeight
+        );
+
+        s4.resizeCanvas(SizeMax, SizeMax);
+        for (let i = 0; i < shapes.length; i++) {
+          let shape = shapes[i];
+          shape.resize(SizeMin * 1.414);
+        }
+      };
+
+      s4.draw = (_) => {
+        if (store.state.theme == "dark") {
+          s4.background(DarkColor);
+        } else {
+          s4.background(LightColor);
+          // s4.background("#EFEFEF");
+        }
+
+        for (let i = 0; i < shapes.length; i++) {
+          let shape = shapes[i];
+          shape.draw();
+        }
+        curTime += s4.deltaTime * 0.001;
+      };
+      class Shape {
+        constructor(id, maxnum, size) {
+          this.id = id;
+          this.maxnum = maxnum;
+          this.size = size;
+        }
+
+        resize(size) {
+          this.size = size;
+        }
+
+        draw() {
+          s4.noFill();
+          let maxid = this.maxnum * 0.1;
+          s4.strokeWeight(0.5);
+          // let thresh = s4.map(s4.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
+          // s4.strokeWeight(s4.map(s4.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
+          s4.push();
+          let angrange = s4.map(
+            s4.sin(s4.radians(curTime * 10.0)),
+            -1.0,
+            1.0,
+            45.0,
+            90.0
+          );
+          let addang =
+            curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
+          let ang = s4.radians(0 + addang);
+          // s4.rotateX(ang);
+          // s4.rotateY(ang);
+          // s4.rotateX(4.5+(curTime * 0.1));
+          // s4.rotateY(4.5-(curTime * 0.1));
+          // s4.rotateZ(4.5+(curTime * 0.1));
+          s4.rotateZ(45);
+          // s4.rotateZ(curTime * 0.1);
+          // s4.rotateY(curTime * 0.1);
+          // s4.rotateZ(curTime * 0.1);
+
+          let movex = s4.map(
+            this.id,
+            0,
+            this.maxnum,
+            -s4.width / 2,
+            s4.width / 2
+          );
+          s4.translate(movex, 0, movex);
+
+          let Hue =
+            195 *
+              s4.abs(s4.sin(curTime - (this.id * 10.0) / (this.maxnum - 1.0))) +
+            75;
+          let Saturation =
+            20 *
+              s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+            100;
+          let Brightness =
+            10 *
+              s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+            80;
+          if (store.state.theme == "light") {
+            Saturation =
+              20 *
+                s4.abs(
+                  s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+                ) +
+              100;
+            Brightness =
+              10 *
+                s4.abs(
+                  s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+                ) +
+              100;
+          }
+
+          s4.stroke(Hue, Saturation, Brightness, 100);
+          s4.box(this.size * 1.5);
+          s4.pop();
+        }
+      }
+    };
+
 
     new P5(eval(this.type));
     // new P5(SubCanvas1);
