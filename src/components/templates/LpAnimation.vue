@@ -21,7 +21,9 @@ export default {
 
     //ColroSetting
     let DarkColor = "#171421";
+    let DarkColorDeep = "#000000";
     let LightColor = "#FFFFFF";
+    let LightColorDeep = "#f9f9f9";
     P5.disableFriendlyErrors = true;
     const MvCanvas = function (mv) {
       //ShapesSetting
@@ -215,7 +217,7 @@ export default {
         }
 
         for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 1.0);
+          let shape = new Shape(i, ShapesNum, SizeMin * 0.8);
           shapes.push(shape);
         }
       };
@@ -233,7 +235,7 @@ export default {
         s1.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
-          shape.resize(SizeMin * 1.0);
+          shape.resize(SizeMin * 0.8);
         }
       };
 
@@ -335,7 +337,8 @@ export default {
           }
 
           s1.stroke(Hue, Saturation, Brightness, 100);
-          s1.box(this.size * scaleval, 0.2, 0.2);
+          // s1.box(this.size * scaleval, 0.2, 0.2);
+          s1.plane(this.size * scaleval);
           // s1.ellipsoid(this.size * scaleval);
           // s1.box(this.size * scaleval);
           s1.pop();
@@ -367,7 +370,7 @@ export default {
         var canvas = s2.createCanvas(SizeMax, SizeMax, s2.WEBGL);
         canvas.parent("SubCanvas2");
         // ShapesNum = floor(mySize/6);
-        ShapesNum = 100;
+        ShapesNum = 150;
         // print(ShapesNum)
         s2.colorMode(s2.HSB, 360, 100, 100, 100);
 
@@ -378,7 +381,7 @@ export default {
         }
 
         for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 0.6);
+          let shape = new Shape(i, ShapesNum, SizeMin * 1.25);
           shapes.push(shape);
         }
       };
@@ -396,7 +399,7 @@ export default {
         s2.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
-          shape.resize(SizeMin * 0.6);
+          shape.resize(SizeMin * 1.25);
         }
       };
 
@@ -434,7 +437,7 @@ export default {
             0,
             1.0
           );
-          s2.strokeWeight(s2.map(s2.max(thresh, 0.0), 0.0, 1.0, 0.3, 1.0));
+          s2.strokeWeight(s2.map(s2.max(thresh, 0.5), 0.5, 1.0, 0.0, 1.0));
           s2.push();
           let angrange = s2.map(
             s2.sin(s2.radians(curTime * 5.0)),
@@ -492,8 +495,8 @@ export default {
           s2.stroke(Hue, Saturation, Brightness, 100);
           // s2.fill(Hue, Saturation, Brightness, 10);
           // s2.smooth(2);
-          // s2.box(this.size * scaleval);
-          s2.plane(this.size * scaleval);
+          s2.box(this.size * scaleval);
+          // s2.plane(this.size * scaleval);
           // s2.sphere(this.size * scaleval, 24, 24);
           s2.pop();
         }
@@ -529,9 +532,9 @@ export default {
         s3.colorMode(s3.HSB, 360, 100, 100, 100);
 
         if (store.state.theme == "dark") {
-          s3.background(DarkColor);
+          s3.background(DarkColorDeep);
         } else {
-          s3.background(LightColor);
+          s3.background(LightColorDeep);
         }
 
         for (let i = 0; i < ShapesNum; i++) {
@@ -559,10 +562,9 @@ export default {
 
       s3.draw = (_) => {
         if (store.state.theme == "dark") {
-          s3.background(DarkColor);
+          s3.background(DarkColorDeep);
         } else {
-          s3.background(LightColor);
-          // s3.background("#EFEFEF");
+          s3.background(LightColorDeep);
         }
 
         for (let i = 0; i < shapes.length; i++) {
@@ -680,15 +682,16 @@ export default {
         s4.colorMode(s4.HSB, 360, 100, 100, 100);
 
         if (store.state.theme == "dark") {
-          s4.background(DarkColor);
+          s4.background(DarkColorDeep);
         } else {
-          s4.background(LightColor);
+          s4.background(LightColorDeep);
         }
 
         for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
+          let shape = new Shape(i, ShapesNum, SizeMin * 0.5);
           shapes.push(shape);
         }
+        noLoop;
       };
 
       s4.windowResized = (_) => {
@@ -704,23 +707,22 @@ export default {
         s4.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
-          shape.resize(SizeMin * 1.414);
+          shape.resize(SizeMin * 0.5);
         }
       };
 
       s4.draw = (_) => {
         if (store.state.theme == "dark") {
-          s4.background(DarkColor);
+          s4.background(DarkColorDeep);
         } else {
-          s4.background(LightColor);
-          // s4.background("#EFEFEF");
+          s4.background(LightColorDeep);
         }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
-        }
-        curTime += s4.deltaTime * 0.001;
+        // for (let i = 0; i < shapes.length; i++) {
+        //   let shape = shapes[i];
+        //   shape.draw();
+        // }
+        // curTime += s4.deltaTime * 0.001;
       };
       class Shape {
         constructor(id, maxnum, size) {
@@ -754,9 +756,10 @@ export default {
           // s4.rotateY(ang);
           // s4.rotateX(4.5+(curTime * 0.1));
           // s4.rotateY(4.5-(curTime * 0.1));
-          // s4.rotateZ(4.5+(curTime * 0.1));
-          s4.rotateZ(45);
-          // s4.rotateZ(curTime * 0.1);
+          // s4.rotateZ(45);
+          // s4.rotateX(0);
+          // s4.rotateY(0);
+          // s4.rotateX(curTime * 0.1);
           // s4.rotateY(curTime * 0.1);
           // s4.rotateZ(curTime * 0.1);
 
@@ -767,7 +770,8 @@ export default {
             -s4.width / 2,
             s4.width / 2
           );
-          s4.translate(movex, 0, movex);
+
+          s4.translate(movex, 0, 0);
 
           let Hue =
             195 *
@@ -780,7 +784,7 @@ export default {
           let Brightness =
             10 *
               s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            80;
+            60;
           if (store.state.theme == "light") {
             Saturation =
               20 *
@@ -797,7 +801,7 @@ export default {
           }
 
           s4.stroke(Hue, Saturation, Brightness, 100);
-          s4.box(this.size * 1.5);
+          s4.box(this.size);
           s4.pop();
         }
       }
