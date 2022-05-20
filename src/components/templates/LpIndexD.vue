@@ -1591,6 +1591,30 @@ export default {
       top: 0;
       left: 0;
       z-index: 1;
+      &::v-deep {
+        div {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          // height: 100px @;
+          // &::before {
+          //   content: "";
+          //   display: block;
+          //   width: 100%;
+          //   padding-top: 100%;
+          // }
+          canvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform-origin: center center;
+            transform: translate(0%, -50%);
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
     }
     &__textwrap {
       background: var(--color_lp_box);

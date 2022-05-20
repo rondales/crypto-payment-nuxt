@@ -8,6 +8,7 @@
   >
     <!-- [TODO] @clickの出力 -->
     <!-- [TODO] hoverのcss-->
+    <!-- [TODO] iconのサイズ-->
     <LpIcon
       v-if="!link.iconAfter && link.icon"
       class="icon"
