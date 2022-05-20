@@ -273,7 +273,7 @@ export default {
             0,
             1.0
           );
-          s1.strokeWeight(s1.map(s1.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
+          s1.strokeWeight(s1.map(s1.max(thresh, 0.0), 0.0, 1.0, 0.0, 0.8));
           s1.push();
           let angrange = s1.map(
             s1.sin(s1.radians(curTime * 10.0)),
@@ -688,10 +688,9 @@ export default {
         }
 
         for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 0.5);
+          let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
           shapes.push(shape);
         }
-        noLoop;
       };
 
       s4.windowResized = (_) => {
@@ -707,7 +706,7 @@ export default {
         s4.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
-          shape.resize(SizeMin * 0.5);
+          shape.resize(SizeMin * 1.414);
         }
       };
 
@@ -718,11 +717,11 @@ export default {
           s4.background(LightColorDeep);
         }
 
-        // for (let i = 0; i < shapes.length; i++) {
-        //   let shape = shapes[i];
-        //   shape.draw();
-        // }
-        // curTime += s4.deltaTime * 0.001;
+        for (let i = 0; i < shapes.length; i++) {
+          let shape = shapes[i];
+          shape.draw();
+        }
+        curTime += s4.deltaTime * 0.001;
       };
       class Shape {
         constructor(id, maxnum, size) {
@@ -756,10 +755,9 @@ export default {
           // s4.rotateY(ang);
           // s4.rotateX(4.5+(curTime * 0.1));
           // s4.rotateY(4.5-(curTime * 0.1));
-          // s4.rotateZ(45);
-          // s4.rotateX(0);
-          // s4.rotateY(0);
-          // s4.rotateX(curTime * 0.1);
+          // s4.rotateZ(4.5+(curTime * 0.1));
+          s4.rotateZ(45);
+          // s4.rotateZ(curTime * 0.1);
           // s4.rotateY(curTime * 0.1);
           // s4.rotateZ(curTime * 0.1);
 
@@ -770,8 +768,7 @@ export default {
             -s4.width / 2,
             s4.width / 2
           );
-
-          s4.translate(movex, 0, 0);
+          s4.translate(movex, 0, movex);
 
           let Hue =
             195 *
@@ -784,7 +781,7 @@ export default {
           let Brightness =
             10 *
               s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            60;
+            80;
           if (store.state.theme == "light") {
             Saturation =
               20 *
@@ -801,7 +798,7 @@ export default {
           }
 
           s4.stroke(Hue, Saturation, Brightness, 100);
-          s4.box(this.size);
+          s4.box(this.size * 1.5);
           s4.pop();
         }
       }
