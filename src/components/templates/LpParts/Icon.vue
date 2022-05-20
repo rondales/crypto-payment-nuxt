@@ -1,19 +1,22 @@
 <template>
   <div>
-    <img :src="require(`@/assets/images/lp/${this.path}.svg`)">
+    <component :is="require(`@/assets/images/lp/${path}.svg?component`)"/>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return{
-    }
-  },
   props: {
     path: {
       type: String,
     },
   },
+  created(){
+  },
+  mounted(){
+    console.log(`@/assets/images/lp/${this.path}.svg?component`)
+  },
+  components: {
+  },  
 };
 </script>
