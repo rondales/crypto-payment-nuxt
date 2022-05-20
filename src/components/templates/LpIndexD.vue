@@ -66,6 +66,7 @@
 
       <!-- SECTION token -->
       <section :class="section.token.class">
+        <LpAnimation :canvasClass="section.cv.class" type="SubCanvas4" />
         <div class="section__wrap">
           <LpTitle
             :class="section.token.class + '__title'"
@@ -560,6 +561,24 @@ export default {
                 lightSrc: "lp/physical-l.jpg",
               },
               text: "If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We are about to launch iOS/android app to make cryptocurrency payment more convenient.",
+              app: {
+                links: [
+                  {
+                    image: "appStore",
+                    link: "",
+                    status: false,
+                    title: "",
+                  },
+                  {
+                    image: "googlePlay",
+                    link: "",
+                    status: false,
+                    title: "",
+                  },
+                ],
+                coming: "coming soon…",
+                cap: "*In order to start using the Merchant App, you need to issue a one-time login code on SlashApp.",
+              },
             },
           ],
         },
@@ -612,7 +631,7 @@ export default {
               },
             },
             {
-              layout: "r",
+              layout: "l",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
@@ -1287,7 +1306,7 @@ export default {
             padding-right: 60%;
             position: relative;
             &::v-deep {
-              .text {
+              .absTest {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -1383,7 +1402,7 @@ export default {
             padding-right: 60%;
             position: relative;
             &::v-deep {
-              .text {
+              .absTest {
                 position: absolute;
                 top: 0;
                 right: 0;

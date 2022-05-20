@@ -5,7 +5,30 @@
       <dd>{{ textData.tag.text }}</dd>
     </dl>
     <h3 class="title"><span v-html="textData.title"></span></h3>
-    <p class="text"><span v-html="textData.text"></span></p>
+    <div class="absTest">
+      <p class="text"><span v-html="textData.text"></span></p>
+      <div v-if="textData.app" class="app">
+        <div class="app_link">
+          <p v-if="textData.app.coming" class="app_title">
+            <span>{{ textData.app.coming }}</span>
+          </p>
+          <div class="app_link">
+            <a
+              v-for="appLink in textData.app.links"
+              :key="appLink.image"
+              :href="appLink.link"
+            >
+              <img
+                :src="require('@/assets/images/lp/' + appLink.image + '.svg')"
+                :alt="appLink.title"
+            /></a>
+          </div>
+          <p v-if="textData.app.cap" class="app_cap">
+            <span>{{ textData.app.cap }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
     <ul v-if="textData.logos" class="logos">
       <li v-for="icon in textData.logos" :key="icon.path">
         <figure>
@@ -19,7 +42,6 @@
     <div v-if="textData.link" class="link">
       <LpButton :link="textData.link" type="sub" size="s" />
     </div>
-    <!-- [TODO] app logo -->
   </div>
 </template>
 
@@ -58,6 +80,26 @@ export default {
   dd {
     padding-left: 2rem;
     @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+  }
+}
+.app {
+  margin-top: rem(3);
+  &_title {
+    @include font(rem(pow(1)), $fw, $ls, $lh, $en_go);
+    margin-bottom: rem(1);
+  }
+  &_link {
+    @include flex(flex-start, flex-start);
+    img {
+      width: rem(10);
+    }
+    a + a {
+      margin-left: rem(1);
+    }
+  }
+  &_cap {
+    margin-top: rem(1);
+    @include font(rem(pow(-1)), $fw, $ls, $lh, $en_go);
   }
 }
 .title {
