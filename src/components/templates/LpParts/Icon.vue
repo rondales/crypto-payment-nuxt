@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="require(`@/assets/images/lp/${path}.svg?component`)"/>
+    <component :is="require(`@/assets/images/lp/${path}.svg?component`)" />
   </div>
 </template>
 
@@ -11,12 +11,10 @@ export default {
       type: String,
     },
   },
-  created(){
+  created() {},
+  mounted() {
+    // console.log(`@/assets/images/lp/${this.path}.svg?component`);
   },
-  mounted(){
-    console.log(`@/assets/images/lp/${this.path}.svg?component`)
-  },
-  components: {
-  },  
+  components: {},
 };
 </script>

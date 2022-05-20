@@ -2,8 +2,8 @@
   <div id="wrapAll">
     <!-- [TODO] レスポンシブ -->
     <!-- [TODO] whiteの時のチェック -->
-    <!-- [TODO] 日本語のチェック -->
     <!-- [TODO] scroll action -->
+    <!-- [TODO] 日本語のチェック -->
     <LpHeader />
     <main>
       <!-- SECTION MV -->
@@ -66,7 +66,6 @@
 
       <!-- SECTION token -->
       <section :class="section.token.class">
-        <LpAnimation :canvasClass="section.cv.class" type="SubCanvas4" />
         <div class="section__wrap">
           <LpTitle
             :class="section.token.class + '__title'"
@@ -227,6 +226,7 @@
 
       <!-- SECTION network -->
       <section :class="section.network.class">
+        <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" />
         <div class="section__wrap">
           <LpTitle
             :class="section.network.class + '__title'"
@@ -360,13 +360,13 @@ export default {
           link: {
             url: "/",
             title: "Enter App",
-            icon: "pointing-up",
+            // icon: "pointing-up",
             func: "enterApp()",
           },
           link2: {
             url: "/",
             title: "Slash docs.",
-            icon: "gitbook-icon",
+            icon: "gitbook",
           },
         },
         hello: {
@@ -418,7 +418,7 @@ export default {
             link: {
               url: "/",
               title: "Slash Payment Install Docs.",
-              icon: "right-arrow",
+              icon: "arrow",
               iconAfter: true,
             },
           },
@@ -519,7 +519,7 @@ export default {
               link: {
                 url: "/",
                 title: "Slash Payment Install Docs.",
-                icon: "right-arrow",
+                icon: "arrow",
                 iconAfter: true,
               },
             },
@@ -547,7 +547,7 @@ export default {
               link: {
                 url: "/",
                 title: "Details of Integrations",
-                icon: "right-arrow",
+                icon: "arrow",
                 iconAfter: true,
               },
             },
@@ -602,7 +602,7 @@ export default {
               link: {
                 url: "/",
                 title: "Fee Structure",
-                icon: "right-arrow",
+                icon: "arrow",
                 iconAfter: true,
               },
             },
@@ -626,7 +626,7 @@ export default {
               link: {
                 url: "/",
                 title: "donation program",
-                icon: "right-arrow",
+                icon: "arrow",
                 iconAfter: true,
               },
             },
@@ -646,7 +646,7 @@ export default {
               link: {
                 url: "/",
                 title: "Details of $Slash",
-                icon: "right-arrow",
+                icon: "arrow",
                 iconAfter: true,
               },
             },
@@ -672,7 +672,7 @@ export default {
                 title: "Donate Now",
                 func: "testfunc",
                 // func: "paymentForDonate(SAFE_THE_CHILDREN)",
-                icon: "connect",
+                // icon: "connect",
                 status: true,
               },
             },
@@ -688,7 +688,7 @@ export default {
               link: {
                 title: "Donate Now",
                 func: "paymentForDonate(UNICEF)",
-                icon: "connect",
+                // icon: "connect",
                 status: true,
               },
             },
@@ -874,7 +874,7 @@ export default {
           list: [
             {
               title: "Slash Payment Docs.",
-              icon: "gitbook-icon",
+              icon: "gitbook",
               url: "",
               status: true,
             },
@@ -892,7 +892,7 @@ export default {
             },
             {
               title: "Media kit",
-              icon: "save-instagram",
+              icon: "mediakit",
               url: "",
               status: false,
             },
@@ -1502,6 +1502,44 @@ export default {
   }
   &-network {
     @include rem_padding(6, 0, 6, 0);
+    position: relative;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &::v-deep {
+        div {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          // height: 100px @;
+          // &::before {
+          //   content: "";
+          //   display: block;
+          //   width: 100%;
+          //   padding-top: 100%;
+          // }
+          canvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform-origin: center center;
+            transform: translate(0%, -50%);
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
     &__logos {
       @include flex(center, center);
       @include list(4, rem(4));

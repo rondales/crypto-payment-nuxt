@@ -40,7 +40,7 @@
       </li>
     </ul>
     <div v-if="textData.link" class="link">
-      <LpButton :link="textData.link" type="sub" size="s" />
+      <LpButton :link="textData.link" type="simple" size="s" />
     </div>
   </div>
 </template>

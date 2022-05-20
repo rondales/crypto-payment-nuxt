@@ -8,14 +8,17 @@
   >
     <!-- [TODO] @clickの出力 -->
     <!-- [TODO] hoverのcss-->
-    <!-- [TODO] iconのサイズ-->
     <LpIcon
       v-if="!link.iconAfter && link.icon"
       class="icon"
-      :path="link.icon"
+      :path="'icon/' + link.icon"
     />
     <span>{{ link.title }}</span>
-    <LpIcon v-if="link.iconAfter && link.icon" class="icon" :path="link.icon" />
+    <LpIcon
+      v-if="link.iconAfter && link.icon"
+      class="icon"
+      :path="'icon/' + link.icon"
+    />
   </a>
 </template>
 
@@ -87,6 +90,28 @@ export default {
       opacity: 1;
     }
   }
+  .icon {
+    &::v-deep {
+      // background-color: red;
+      position: relative;
+      // &::before {
+      //   content: "";
+      //   display: block;
+      //   width: 100%;
+      //   padding-top: 100%;
+      // }
+      svg {
+        //   width: 100% !important;
+        //   height: 100% !important;
+        //   position: absolute;
+        //   top: 50%;
+        //   left: 50%;
+        //   transform-origin: center center;
+        //   transform: translate(-50%, -50%);
+        fill: #fff;
+      }
+    }
+  }
 
   &.l {
     @include font(rem(2), 600, 0.02em, 1, $ff);
@@ -143,6 +168,12 @@ export default {
   &.sub {
     @extend .lpButton;
     background: var(--color_inner);
+  }
+  &.simple {
+    padding: 0 rem(0);
+    border-radius: 0;
+    border-bottom: 1px solid var(--color_font);
+    justify-content: space-between;
   }
   &.noactive {
     @extend .lpButton;
