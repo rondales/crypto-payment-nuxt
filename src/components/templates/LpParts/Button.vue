@@ -92,22 +92,9 @@ export default {
   }
   .icon {
     &::v-deep {
-      // background-color: red;
-      position: relative;
-      // &::before {
-      //   content: "";
-      //   display: block;
-      //   width: 100%;
-      //   padding-top: 100%;
-      // }
+      display: flex;
       svg {
-        //   width: 100% !important;
-        //   height: 100% !important;
-        //   position: absolute;
-        //   top: 50%;
-        //   left: 50%;
-        //   transform-origin: center center;
-        //   transform: translate(-50%, -50%);
+        align-self: center;
         fill: #fff;
       }
     }
@@ -125,9 +112,9 @@ export default {
       padding: 0 rem(1);
     }
     .icon {
-      width: rem(3);
+      width: rem(4);
       @include media(sp) {
-        width: rem(2);
+        width: rem(3);
       }
     }
     * + * {
@@ -140,7 +127,7 @@ export default {
     padding: 0 rem(4);
     border-radius: rem(3);
     .icon {
-      width: rem(2);
+      width: rem(3);
     }
     * + * {
       margin-left: rem(0.5);

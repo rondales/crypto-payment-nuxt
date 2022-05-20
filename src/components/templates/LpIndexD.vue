@@ -1,6 +1,5 @@
 <template>
   <div id="wrapAll">
-    <!-- [TODO] レスポンシブ -->
     <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] scroll action -->
     <!-- [TODO] 日本語のチェック -->
