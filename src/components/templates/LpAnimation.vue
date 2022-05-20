@@ -678,49 +678,49 @@ export default {
   }
 }
 
-#SubCanvas1,
-#SubCanvas2 {
-  position: relative;
-  overflow: hidden;
-  width: 600px;
-  height: 600px;
+// #SubCanvas1,
+// #SubCanvas2 {
+//   position: relative;
+//   overflow: hidden;
+//   width: 600px;
+//   height: 600px;
 
-  ::v-deep {
-    canvas {
-      // position: absolute;
-      // width: 100%;
-      // height: 100%;
-      // top: 50%;
-      // left: 50%;
-      // transform: translate(-50%, -50%);
-    }
-  }
-}
+//   ::v-deep {
+//     canvas {
+//       // position: absolute;
+//       // width: 100%;
+//       // height: 100%;
+//       // top: 50%;
+//       // left: 50%;
+//       // transform: translate(-50%, -50%);
+//     }
+//   }
+// }
 
-#SubCanvas3 {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  //   max-height: 500px;
-  height: 100%;
+// #SubCanvas3 {
+//   position: relative;
+//   width: 100%;
+//   overflow: hidden;
+//   //   max-height: 500px;
+//   height: 100%;
 
-  &:before {
-    content: "";
-    display: block;
-    padding-top: 50%;
+//   &:before {
+//     content: "";
+//     display: block;
+//     padding-top: 50%;
 
-    width: 100%;
-  }
+//     width: 100%;
+//   }
 
-  ::v-deep {
-    canvas {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-}
+//   ::v-deep {
+//     canvas {
+//       position: absolute;
+//       width: 100%;
+//       height: 100%;
+//       top: 50%;
+//       left: 50%;
+//       transform: translate(-50%, -50%);
+//     }
+//   }
+// }
 </style>
