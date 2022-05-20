@@ -140,7 +140,7 @@
               <div :class="section.install.class + '__feature__list'">
                 <LpAnimation
                   v-if="feature.canvas"
-                  :canvasClass="section.install.class"
+                  :canvasClass="section.install.class + '__feature'"
                   type="SubCanvas1"
                 />
                 <LpImage
@@ -174,7 +174,7 @@
               <div :class="section.fee.class + '__feature__list'">
                 <LpAnimation
                   v-if="feature.canvas"
-                  :canvasClass="section.fee.class"
+                  :canvasClass="section.fee.class + '__feature'"
                   type="SubCanvas2"
                 />
                 <LpImage
@@ -572,7 +572,7 @@ export default {
           features: [
             {
               layout: "l",
-              title: "Slash Payment fee is <br>0.2〜0.6%",
+              title: "Slash Payment fee is 0.2〜0.6%",
               canvas: "SubCanvas2",
               image: {
                 src: "lp/fee.jpg",
@@ -595,7 +595,7 @@ export default {
                 alt: "Slash automatically donation program",
                 lightSrc: "",
               },
-              text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes.<br><br>We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries.<br><br>In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment.<br><br>In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
+              text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
                   path: "save-the-children",
@@ -1282,20 +1282,58 @@ export default {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
+          [class$="__textwrap"] {
+            grid-column: span 2;
+            padding-right: 60%;
+            position: relative;
+            &::v-deep {
+              .text {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 55%;
+              }
+            }
+          }
         }
       }
       &__list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: rem(4);
-        margin-bottom: rem(4);
+        margin-bottom: rem(6);
+      }
+      &__canvas {
+        grid-column: span 2;
+        position: relative;
+        z-index: 1;
+        &::v-deep {
+          div {
+            position: relative;
+            width: 100%;
+            &::before {
+              content: "";
+              display: block;
+              width: 100%;
+              padding-top: 100%;
+            }
+            canvas {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+            }
+          }
+        }
       }
       &__image {
-        grid-column: span 1;
+        grid-column: span 2;
       }
       &__textwrap {
-        grid-column: span 1;
+        grid-column: span 3;
         align-self: center;
+        position: relative;
+        z-index: 10;
       }
       &__title {
         @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
@@ -1340,20 +1378,58 @@ export default {
           [class$="__list"] {
             grid-template-columns: repeat(1, 1fr);
           }
+          [class$="__textwrap"] {
+            grid-column: span 2;
+            padding-right: 60%;
+            position: relative;
+            &::v-deep {
+              .text {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 55%;
+              }
+            }
+          }
         }
       }
       &__list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: rem(4);
-        margin-bottom: rem(4);
+        margin-bottom: rem(6);
+      }
+      &__canvas {
+        grid-column: span 2;
+        position: relative;
+        z-index: 1;
+        &::v-deep {
+          div {
+            position: relative;
+            width: 100%;
+            &::before {
+              content: "";
+              display: block;
+              width: 100%;
+              padding-top: 100%;
+            }
+            canvas {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+            }
+          }
+        }
       }
       &__image {
-        grid-column: span 1;
+        grid-column: span 2;
       }
       &__textwrap {
-        grid-column: span 1;
+        grid-column: span 3;
         align-self: center;
+        position: relative;
+        z-index: 10;
       }
       &__title {
         @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
@@ -1411,7 +1487,8 @@ export default {
       @include flex(center, center);
       @include list(4, rem(4));
       @include media(sp) {
-        @include list(3, rem(1));
+        @include flex(flex-start, center);
+        @include list(2, rem(1));
       }
       li {
         margin-bottom: rem(2);
