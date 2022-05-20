@@ -87,9 +87,15 @@ export default {
   &_title {
     @include font(rem(pow(1)), $fw, $ls, $lh, $en_go);
     margin-bottom: rem(1);
+    @include media(sp) {
+      text-align: center;
+    }
   }
   &_link {
     @include flex(flex-start, flex-start);
+    @include media(sp) {
+      @include flex(center, flex-start);
+    }
     img {
       width: rem(10);
     }
@@ -110,6 +116,11 @@ export default {
   margin-bottom: rem(2);
   // word-break: break-all;
   overflow-wrap: break-word;
+  @include media(sp) {
+    @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+    margin-bottom: rem(1);
+    text-align: center;
+  }
 }
 .text {
   @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
@@ -123,5 +134,9 @@ export default {
   @include flex(flex-start, center);
   @include list(3, rem(2));
   margin-top: rem(2);
+  @include media(sp) {
+    @include flex(center, center);
+    @include list(3, rem(1));
+  }
 }
 </style>

@@ -36,30 +36,32 @@
       <!-- SECTION HELLO web3 -->
       <section :class="section.hello.class">
         <div class="section__wrap">
-          <div :class="section.hello.class + '__textwrap'">
-            <h2 :class="section.hello.class + '__h2'">
-              <span :class="section.hello.class + '__h2__title'">{{
-                section.hello.title.title
-              }}</span>
-              <span :class="section.hello.class + '__h2__subtitle'"
-                >{{ section.hello.title.subtitle
-                }}<img src="@/assets/images/lp/pointing-up.svg"
-              /></span>
-              <span :class="section.hello.class + '__h2__text'">{{
-                section.hello.title.text
-              }}</span>
-            </h2>
-            <p :class="section.hello.class + '__lead'">
-              <span v-html="section.hello.lead"></span>
-            </p>
-          </div>
-          <div :class="section.hello.class + '__imagewrap'">
-            <figure :class="section.hello.class + '__image'">
-              <img src="@/assets/images/lp/capcha-1.png" />
-            </figure>
-            <figure :class="section.hello.class + '__image r'">
-              <img src="@/assets/images/lp/capcha-2.png" />
-            </figure>
+          <div :class="section.hello.class + '__wrap'">
+            <div :class="section.hello.class + '__textwrap'">
+              <h2 :class="section.hello.class + '__h2'">
+                <span :class="section.hello.class + '__h2__title'">{{
+                  section.hello.title.title
+                }}</span>
+                <span :class="section.hello.class + '__h2__subtitle'"
+                  >{{ section.hello.title.subtitle
+                  }}<img src="@/assets/images/lp/pointing-up.svg"
+                /></span>
+                <span :class="section.hello.class + '__h2__text'">{{
+                  section.hello.title.text
+                }}</span>
+              </h2>
+              <p :class="section.hello.class + '__lead'">
+                <span v-html="section.hello.lead"></span>
+              </p>
+            </div>
+            <div :class="section.hello.class + '__imagewrap'">
+              <figure :class="section.hello.class + '__image'">
+                <img src="@/assets/images/lp/capcha-1.png" />
+              </figure>
+              <figure :class="section.hello.class + '__image r'">
+                <img src="@/assets/images/lp/capcha-2.png" />
+              </figure>
+            </div>
           </div>
         </div>
       </section>
@@ -376,7 +378,7 @@ export default {
             subtitle: "Web 3.0 ",
             text: "Slash Payment",
           },
-          lead: 'Merchants can automatically accept online TOKEN <br class="show_pc" />payments from customers using the Web3 wallet.',
+          lead: 'Merchants can automatically accept online TOKEN <br class="pc" />payments from customers using the Web3 wallet.',
         },
         token: {
           class: "dlp-token",
@@ -1104,6 +1106,9 @@ export default {
       left: 50%;
       transform-origin: center center;
       transform: translate(-50%, -50%);
+      @include media(sp) {
+        width: 80%;
+      }
     }
     &__icon {
       width: rem(6);
@@ -1117,10 +1122,16 @@ export default {
       &__title {
         @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
         display: block;
+        @include media(sp) {
+          @include font(rem(4), 500, 0.02em, 1.2, $ff);
+        }
       }
       &__subtitle {
         @include font(rem(1.8), 500, $ls, 1, $ff);
         display: block;
+        @include media(sp) {
+          @include font(rem(1.5), 500, 0.02em, 1.2, $ff);
+        }
       }
     }
     &__lead {
@@ -1129,25 +1140,53 @@ export default {
       white-space: nowrap;
       @include font(rem(1), $fw, $ls, $lh, $ff);
       // @include font(rem(pow(1)), $fw, $ls, $lh, $ff);
+      @include media(sp) {
+        white-space: normal;
+        br {
+          display: none;
+        }
+      }
     }
     &__button {
       @include flex(center, center);
       flex-wrap: nowrap;
+      @include media(sp) {
+        flex-direction: column;
+        &::v-deep {
+          .lpButton.m {
+            width: 100%;
+          }
+        }
+      }
     }
   }
   &-hello {
     position: relative;
     @include rem_padding(8, 0, 8, 0);
+    @include media(sp) {
+      @include rem_padding(2, 0, 8, 0);
+    }
     .section__wrap {
+    }
+    &__wrap {
       @include flex(flex-start, center);
+      @include media(sp) {
+        display: block;
+      }
     }
     &__textwrap {
       width: 65%;
+      @include media(sp) {
+        width: 100%;
+      }
     }
     &__h2 {
       position: relative;
       z-index: 10;
       margin-bottom: rem(2);
+      @include media(sp) {
+        text-align: center;
+      }
       * {
         background: $gradation-light;
         -webkit-background-clip: text;
@@ -1156,48 +1195,95 @@ export default {
       }
       img {
         width: rem(6);
+        @include media(sp) {
+          width: rem(3.5);
+        }
       }
       &__title {
         @include font(rem(8), 700, 0em, 1.2, $ff);
         display: block;
+        @include media(sp) {
+          text-align: center;
+          @include font(rem(6), 700, 0em, 1.2, $ff);
+        }
       }
       &__subtitle {
         @include font(rem(6), 700, 0em, 1.2, $ff);
         @include flex(flex-start, center);
+        @include media(sp) {
+          @include flex(center, center);
+          @include font(rem(3), 700, 0em, 1.2, $ff);
+        }
       }
       &__text {
         @include font(rem(4), 700, 0em, 1.5, $ff);
         display: block;
+        @include media(sp) {
+          @include font(rem(2), 700, 0em, 1.2, $ff);
+        }
       }
     }
     &__lead {
       position: relative;
       z-index: 10;
       @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
+      @include media(sp) {
+        span br {
+          display: none !important;
+        }
+      }
     }
     &__imagewrap {
       width: 35%;
       position: relative;
+      @include media(sp) {
+        width: 100%;
+        margin-top: rem(4);
+      }
     }
     &__image {
-      position: absolute;
+      // position: absolute;
+      // width: 75%;
+      // top: 50%;
+      // left: 50%;
+      // transform-origin: center center;
+      // transform: translate(-50%, -50%);
+      // margin-top: -10%;
+      // margin-left: 20%;
+      // box-shadow: var(--color_shadow);
       width: 75%;
-      top: 50%;
-      left: 50%;
-      transform-origin: center center;
-      transform: translate(-50%, -50%);
-      margin-top: -10%;
-      margin-left: 20%;
       box-shadow: var(--color_shadow);
+      margin-top: 10%;
+      margin-left: -20%;
+      @include media(sp) {
+        margin-left: auto;
+        margin-right: 0;
+        margin-top: 0;
+      }
       &.r {
         margin-top: 10%;
         margin-left: -20%;
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+        transform-origin: center center;
+        transform: translate(-50%, -50%);
+        margin-top: -10%;
+        margin-left: 20%;
+        @include media(sp) {
+          margin-left: -10%;
+          margin-top: 10%;
+        }
       }
     }
   }
   &-token {
     @include rem_padding(6, 0, 6, 0);
     position: relative;
+    @include media(sp) {
+      @include rem_padding(2, 0, 2, 0);
+    }
     .section__wrap {
       position: relative;
       z-index: 10;
@@ -1217,6 +1303,10 @@ export default {
       li {
         width: rem(6);
         margin: 0 rem(1);
+        @include media(sp) {
+          width: rem(4);
+          margin: rem(1);
+        }
       }
     }
     &__subbox {
@@ -1243,6 +1333,14 @@ export default {
     &__card {
       @include flex(flex-start, stretch);
       @include list(3, rem(0.5));
+      @include media(sp) {
+        @include list(1, rem(0.5));
+      }
+      & > li {
+        @include media(sp) {
+          margin-bottom: rem(2);
+        }
+      }
       &__list {
         height: 100%;
         background-color: var(--color_lp_box);
@@ -1250,6 +1348,9 @@ export default {
         border-radius: rem(1);
         display: flex;
         flex-direction: column;
+        @include media(sp) {
+          display: block;
+        }
       }
       &__title {
         flex: 1;
@@ -1262,6 +1363,11 @@ export default {
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: rem(1);
+        @include media(sp) {
+          flex: atuo;
+          height: auto;
+          min-height: initial;
+        }
       }
       &__iconlist {
         flex: 2;
@@ -1273,6 +1379,11 @@ export default {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: rem(1);
+        @include media(sp) {
+          flex: atuo;
+          height: auto;
+          min-height: initial;
+        }
         li {
           // width: rem(3);
           margin-bottom: rem(1);
@@ -1284,16 +1395,27 @@ export default {
         min-height: 0%;
         overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
+        @include media(sp) {
+          flex: atuo;
+          height: auto;
+          min-height: initial;
+        }
       }
     }
   }
   &-install {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     &__feature {
       li {
         &.r {
           [class$="__image"] {
             order: 2;
+            @include media(sp) {
+              order: 1;
+            }
           }
         }
 
@@ -1305,12 +1427,20 @@ export default {
             grid-column: span 2;
             padding-right: 60%;
             position: relative;
+            @include media(sp) {
+              grid-column: span 5;
+              padding-right: 0;
+            }
             &::v-deep {
               .absTest {
                 position: absolute;
                 top: 0;
                 right: 0;
                 width: 55%;
+                @include media(sp) {
+                  width: 100%;
+                  position: relative;
+                }
               }
             }
           }
@@ -1321,11 +1451,16 @@ export default {
         grid-template-columns: repeat(5, 1fr);
         gap: rem(4);
         margin-bottom: rem(6);
+        @include media(sp) {
+        }
       }
       &__canvas {
         grid-column: span 2;
         position: relative;
         z-index: 1;
+        @include media(sp) {
+          grid-column: span 5;
+        }
         &::v-deep {
           div {
             position: relative;
@@ -1347,12 +1482,18 @@ export default {
       }
       &__image {
         grid-column: span 2;
+        @include media(sp) {
+          grid-column: span 5;
+        }
       }
       &__textwrap {
         grid-column: span 3;
         align-self: center;
         position: relative;
         z-index: 10;
+        @include media(sp) {
+          grid-column: span 5;
+        }
       }
       &__title {
         @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
@@ -1368,6 +1509,9 @@ export default {
   }
   &-fee {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     &__sectitle {
       margin-bottom: rem(3);
       text-align: center;
@@ -1401,12 +1545,20 @@ export default {
             grid-column: span 2;
             padding-right: 60%;
             position: relative;
+            @include media(sp) {
+              padding-right: 0;
+              grid-column: span 5;
+            }
             &::v-deep {
               .absTest {
                 position: absolute;
                 top: 0;
                 right: 0;
                 width: 55%;
+                @include media(sp) {
+                  width: 100%;
+                  position: relative;
+                }
               }
             }
           }
@@ -1422,6 +1574,9 @@ export default {
         grid-column: span 2;
         position: relative;
         z-index: 1;
+        @include media(sp) {
+          grid-column: span 5;
+        }
         &::v-deep {
           div {
             position: relative;
@@ -1443,12 +1598,18 @@ export default {
       }
       &__image {
         grid-column: span 2;
+        @include media(sp) {
+          grid-column: span 5;
+        }
       }
       &__textwrap {
         grid-column: span 3;
         align-self: center;
         position: relative;
         z-index: 10;
+        @include media(sp) {
+          grid-column: span 5;
+        }
       }
       &__title {
         @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
@@ -1464,12 +1625,21 @@ export default {
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     &__feature {
       @include flex(flex-start, flex-start);
       @include list(2, rem(4));
+      @include media(sp) {
+        @include list(1, rem(4));
+      }
       &__list {
         position: relative;
         padding-top: rem(4);
+        @include media(sp) {
+          margin-bottom: rem(4);
+        }
       }
       &__image {
       }
@@ -1489,6 +1659,9 @@ export default {
             background: $gradation-light;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            @include media(sp) {
+              @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+            }
           }
           .link {
             margin-top: rem(2);
@@ -1502,6 +1675,9 @@ export default {
   }
   &-network {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     position: relative;
     .section__wrap {
       position: relative;
@@ -1545,7 +1721,7 @@ export default {
       @include list(4, rem(4));
       @include media(sp) {
         @include flex(flex-start, center);
-        @include list(2, rem(1));
+        @include list(2, rem(2));
       }
       li {
         margin-bottom: rem(2);
@@ -1554,11 +1730,17 @@ export default {
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     &__phase {
       // @include list(2, 2rem);
       &__box {
         @include flex(flex-start, flex-start);
         margin-bottom: rem(4);
+        @include media(sp) {
+          display: block;
+        }
       }
       &__title {
         width: 30%;
@@ -1566,11 +1748,20 @@ export default {
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        @include media(sp) {
+          width: 100%;
+          text-align: center;
+          margin-bottom: rem(2);
+        }
       }
       &__list {
         @include flex(flex-start, stretch);
         @include list(2, rem(2));
         width: 70%;
+        @include media(sp) {
+          width: 100%;
+          @include list(1, rem(2));
+        }
         & > li {
           margin-bottom: rem(2);
         }
@@ -1580,6 +1771,7 @@ export default {
         border-radius: rem(1);
         overflow: hidden;
         border: 1px solid var(--color_border);
+        background-color: var(--color_box);
       }
       &__subtitle {
         @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
@@ -1605,6 +1797,9 @@ export default {
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      @include rem_padding(3, 0, 3, 0);
+    }
     &__list {
       // @include flex(flex-start, flex-start);
       // @include list(2, 2rem);
@@ -1614,6 +1809,7 @@ export default {
       margin-right: auto;
       @include media(sp) {
         width: 100%;
+        max-width: 100%;
       }
     }
   }
@@ -1626,6 +1822,8 @@ export default {
       margin-right: auto;
       @include media(sp) {
         width: 100%;
+        max-width: 100%;
+        margin-left: -rem(1);
       }
     }
   }
