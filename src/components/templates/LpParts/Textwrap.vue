@@ -34,9 +34,13 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: rem(2);
+  // word-break: break-all;
+  overflow-wrap: break-word;
 }
 .text {
   @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+  // word-break: break-all;
+  overflow-wrap: break-word;
 }
 .link {
   margin-top: rem(2);

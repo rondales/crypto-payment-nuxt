@@ -8,9 +8,13 @@
   >
     <!-- [TODO] @clickの出力 -->
     <!-- [TODO] hoverのcss-->
-    <LpIcon v-if="!link.iconAfter" class="icon" :path="link.icon" />
+    <LpIcon
+      v-if="!link.iconAfter && link.icon"
+      class="icon"
+      :path="link.icon"
+    />
     <span>{{ link.title }}</span>
-    <LpIcon v-if="link.iconAfter" class="icon" :path="link.icon" />
+    <LpIcon v-if="link.iconAfter && link.icon" class="icon" :path="link.icon" />
   </a>
 </template>
 
@@ -51,6 +55,12 @@ export default {
     // 外部リンクかどうかチェック
     isExternalLink(link) {
       return /^https?:\/\//.test(link);
+    },
+    testfunc() {
+      console.log("click!");
+    },
+    enterApp() {
+      this.$store.dispatch("changeTheme", "dark");
     },
   },
 };

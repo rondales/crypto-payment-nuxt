@@ -3,7 +3,6 @@
     <!-- [TODO] レスポンシブ -->
     <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] 日本語のチェック -->
-    <!-- [TODO] header -->
     <!-- [TODO] scroll action -->
     <LpHeader />
     <main>
@@ -11,10 +10,9 @@
       <section :class="section.mv.class + ' scrollAction'">
         <LpAnimation :canvasClass="section.mv.class" type="MvCanvas" />
         <div :class="section.mv.class + '__title'">
-          <!-- [TODO] アイコンぼやけるので画像が欲しい -->
           <img
             :class="section.mv.class + '__icon'"
-            src="@/assets/images/lp/logo.png"
+            src="@/assets/images/logo-icon.svg"
             alt="Slash payment"
           />
           <h1 :class="section.mv.class + '__h1'">
@@ -38,25 +36,31 @@
       <!-- SECTION HELLO web3 -->
       <section :class="section.hello.class">
         <div class="section__wrap">
-          <h2 :class="section.hello.class + '__h2'">
-            <span :class="section.hello.class + '__h2__title'">{{
-              section.hello.title.title
-            }}</span>
-            <span :class="section.hello.class + '__h2__subtitle'"
-              >{{ section.hello.title.subtitle
-              }}<img src="@/assets/images/lp/pointing-up.svg"
-            /></span>
-            <span :class="section.hello.class + '__h2__text'">{{
-              section.hello.title.text
-            }}</span>
-          </h2>
-          <p :class="section.hello.class + '__lead'">
-            <span v-html="section.hello.lead"></span>
-          </p>
-          <!-- [TODO] 画像書き出し直し / shadowをつける -->
-          <figure :class="section.hello.class + '__image'">
-            <img src="@/assets/images/lp/card.svg" />
-          </figure>
+          <div :class="section.hello.class + '__textwrap'">
+            <h2 :class="section.hello.class + '__h2'">
+              <span :class="section.hello.class + '__h2__title'">{{
+                section.hello.title.title
+              }}</span>
+              <span :class="section.hello.class + '__h2__subtitle'"
+                >{{ section.hello.title.subtitle
+                }}<img src="@/assets/images/lp/pointing-up.svg"
+              /></span>
+              <span :class="section.hello.class + '__h2__text'">{{
+                section.hello.title.text
+              }}</span>
+            </h2>
+            <p :class="section.hello.class + '__lead'">
+              <span v-html="section.hello.lead"></span>
+            </p>
+          </div>
+          <div :class="section.hello.class + '__imagewrap'">
+            <figure :class="section.hello.class + '__image'">
+              <img src="@/assets/images/lp/capcha-1.png" />
+            </figure>
+            <figure :class="section.hello.class + '__image r'">
+              <img src="@/assets/images/lp/capcha-2.png" />
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -135,7 +139,13 @@
               :class="feature.layout"
             >
               <div :class="section.install.class + '__feature__list'">
+                <LpAnimation
+                  v-if="feature.canvas"
+                  :canvasClass="section.install.class"
+                  type="SubCanvas1"
+                />
                 <LpImage
+                  v-if="!feature.canvas"
                   :imgData="feature.image"
                   :class="section.install.class + '__feature__image'"
                 />
@@ -163,7 +173,13 @@
               :class="feature.layout"
             >
               <div :class="section.fee.class + '__feature__list'">
+                <LpAnimation
+                  v-if="feature.canvas"
+                  :canvasClass="section.fee.class"
+                  type="SubCanvas2"
+                />
                 <LpImage
+                  v-if="!feature.canvas"
                   :imgData="feature.image"
                   :class="section.fee.class + '__feature__image'"
                 />
@@ -203,7 +219,6 @@
                     <LpButton :link="list.link" type="main" size="m" />
                   </div>
                 </div>
-                <!-- [TODO リンクのfunction確認する] -->
               </div>
             </li>
           </ul>
@@ -261,21 +276,6 @@
               </ul>
             </div>
           </div>
-          <!-- <ul :class="section.roadmap.class + '__feature'">
-            <li
-              v-for="feature in section.roadmap.features"
-              :key="feature.title"
-            >
-              <h3 :class="section.roadmap.class + '__feature__title'">
-                <span v-html="feature.title"></span>
-              </h3>
-              <ul :class="section.roadmap.class + '__feature'">
-                <li v-for="list in feature.list" :key="list.text">
-                  {{ list.text }}
-                </li>
-              </ul>
-            </li>
-          </ul> -->
         </div>
       </section>
 
@@ -313,21 +313,21 @@
         </div>
       </section>
 
-      <!-- [TODO]  CV section-->
-      <section class="lp-eighth">
-        <h3>
-          Install on your online
-          <br class="sp" />
-          service now!
-        </h3>
-        <div class="lp-b_back">
-          <div class="lp-first_icon">
-            <img src="@/assets/images/lp/logo.png" alt="" />
-            <h4>Slash.fi</h4>
+      <!-- SECTION CV -->
+      <section :class="section.cv.class">
+        <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
+        <div class="section__wrap">
+          <LpTitle
+            :class="section.cv.class + '__title'"
+            :title="section.cv.title"
+          />
+          <div :class="section.cv.class + '__textwrap'">
+            <div :class="section.cv.class + '__logo'">
+              <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
+              <h4>Slash.fi</h4>
+            </div>
+            <LpButton :link="section.cv.link" type="main" size="m" />
           </div>
-          <a @click="enterApp()" href="/admin">
-            <div class="btn __pg lp-first_enter">Enter App</div>
-          </a>
         </div>
       </section>
     </main>
@@ -507,9 +507,9 @@ export default {
           },
           features: [
             {
-              layout: "l",
+              layout: "r",
               title:
-                "Slash makes it extremely easy and<br>safe to introduce cryptocurrency<br>payments.",
+                "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
               image: {
                 src: "lp/install-image.jpg",
                 alt: "Slash makes it extremely easy and safe to introduce cryptocurrency payments.",
@@ -524,8 +524,9 @@ export default {
               },
             },
             {
-              layout: "r",
-              title: "Integration with any platform",
+              layout: "l",
+              title: "Integration with <br>any platform",
+              canvas: "SubCanvas1",
               image: {
                 src: "lp/integration.jpg",
                 alt: "Integration with any platform",
@@ -571,8 +572,9 @@ export default {
           },
           features: [
             {
-              layout: "r",
-              title: "Slash Payment fee is 0.2〜0.6%",
+              layout: "l",
+              title: "Slash Payment fee is <br>0.2〜0.6%",
+              canvas: "SubCanvas2",
               image: {
                 src: "lp/fee.jpg",
                 alt: "Slash Payment fee is 0.2〜0.6%",
@@ -611,12 +613,12 @@ export default {
               },
             },
             {
-              layout: "l",
+              layout: "r",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
               },
-              title: "The All fees Use buyback $Slash*",
+              title: "The All fees Use <br>buyback $Slash*",
               image: {
                 src: "lp/buyback.jpg",
                 alt: "The All fees Use buyback $Slash*",
@@ -650,7 +652,8 @@ export default {
               text: "https://donate.savethechildren.org",
               link: {
                 title: "Donate Now",
-                func: "paymentForDonate(SAFE_THE_CHILDREN)",
+                func: "testfunc",
+                // func: "paymentForDonate(SAFE_THE_CHILDREN)",
                 icon: "connect",
                 status: true,
               },
@@ -916,6 +919,20 @@ export default {
             },
           ],
         },
+        cv: {
+          class: "dlp-cv",
+          title: {
+            title: "Install on your online service now!",
+            subtitle: "",
+          },
+          link: {
+            title: "Enter App",
+            icon: "",
+            url: "",
+            func: "enterApp()",
+            status: true,
+          },
+        },
       },
       nativeApp: false,
       show: {},
@@ -1051,63 +1068,6 @@ export default {
 }
 
 .dlp {
-  &-btn {
-    cursor: pointer;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    border-radius: rem(8);
-    margin: rem(0.5);
-    color: #fff;
-    &.l {
-      @include font(rem(1.5), 500, 0.02em, 1, $ff);
-      height: rem(4);
-      padding: 0 rem(4);
-      img,
-      svg {
-        width: rem(2.2);
-      }
-      * + * {
-        margin-left: rem(0.5);
-      }
-    }
-    &.m {
-      @include font(rem(1), 500, 0.02em, 1, $ff);
-      height: rem(3);
-      padding: 0 rem(2);
-      img,
-      svg {
-        width: rem(2);
-      }
-      * + * {
-        margin-left: rem(0.5);
-      }
-    }
-    &.s {
-    }
-    &__main {
-      @extend .dlp-btn;
-      background: $gradation;
-      background: $gradation-pale;
-      background: $gradation-light;
-      // background-color: red;
-    }
-
-    &__sub {
-      @extend .dlp-btn;
-      background: var(--color_inner);
-      // &::after {
-      //   background-image: url(/assets/images/lp/gitbook-icon.svg);
-      // }
-    }
-    &__noactive {
-      @extend .dlp-btn;
-      background: #55476b;
-      pointer-events: none;
-    }
-  }
   &-mv {
     height: 100vh;
     position: relative;
@@ -1118,7 +1078,6 @@ export default {
       height: 100%;
       top: 0;
       left: 0;
-      // background-color: red;
     }
     &__title {
       position: absolute;
@@ -1129,14 +1088,14 @@ export default {
       transform: translate(-50%, -50%);
     }
     &__icon {
-      width: rem(8);
+      width: rem(6);
       margin-left: auto;
       margin-right: auto;
       margin-bottom: rem(1);
     }
     &__h1 {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: rem(3);
       &__title {
         @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
         display: block;
@@ -1161,11 +1120,16 @@ export default {
   &-hello {
     position: relative;
     @include rem_padding(8, 0, 8, 0);
+    .section__wrap {
+      @include flex(flex-start, center);
+    }
+    &__textwrap {
+      width: 65%;
+    }
     &__h2 {
       position: relative;
       z-index: 10;
       margin-bottom: rem(2);
-      width: 65%;
       * {
         background: $gradation-light;
         -webkit-background-clip: text;
@@ -1191,16 +1155,26 @@ export default {
     &__lead {
       position: relative;
       z-index: 10;
-      width: 65%;
       @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
+    }
+    &__imagewrap {
+      width: 35%;
+      position: relative;
     }
     &__image {
       position: absolute;
-      right: 0;
+      width: 75%;
       top: 50%;
-      width: 35%;
+      left: 50%;
       transform-origin: center center;
-      transform: translate(0%, -50%);
+      transform: translate(-50%, -50%);
+      margin-top: -10%;
+      margin-left: 20%;
+      box-shadow: var(--color_shadow);
+      &.r {
+        margin-top: 10%;
+        margin-left: -20%;
+      }
     }
   }
   &-token {
@@ -1251,24 +1225,31 @@ export default {
     &__card {
       @include flex(flex-start, stretch);
       @include list(3, rem(0.5));
-      // [TODO] タイル
       &__list {
         height: 100%;
         background-color: var(--color_lp_box);
         @include rem_padding(2, 2, 2, 2);
         border-radius: rem(1);
+        display: flex;
+        flex-direction: column;
       }
       &__title {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
         @include font(rem(1.5), 700, 0em, 1.5, $ff);
         display: block;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: rem(1.5);
+        margin-bottom: rem(1);
       }
       &__iconlist {
-        @include flex(center, flex-start);
+        flex: 2;
+        height: 100%;
+        min-height: 0%;
+        @include flex(center, center);
         @include list(3, rem(2));
         width: 90%;
         margin-left: auto;
@@ -1280,6 +1261,10 @@ export default {
         }
       }
       &__text {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
+        overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
       }
     }
@@ -1459,10 +1444,9 @@ export default {
       }
       &__listwrap {
         height: 100%;
-
         border-radius: rem(1);
         overflow: hidden;
-        border: 1px solid var(--color_font);
+        border: 1px solid var(--color_border);
       }
       &__subtitle {
         @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
@@ -1512,63 +1496,50 @@ export default {
       }
     }
   }
-}
-
-.lp-eighth {
-  background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
-  background-size: cover;
-  padding: 60px 0 85px;
-  max-width: inherit;
-  width: 100%;
-  @include media(sp) {
-    background: url(/assets/images/lp/last_back_m-sp.svg) no-repeat center
-      center;
-  }
-  h3 {
-    font-weight: 500;
-    color: #fff;
-    font-size: 30px;
-    text-align: center;
-  }
-  .lp-b_back {
-    background: var(--color_lp_box);
-    border-radius: 10px;
-    padding: 40px 60px;
-    width: 400px;
-    text-align: center;
-    margin: 30px auto 0;
-    .btn {
+  &-cv {
+    background-image: url(/assets/images/lp/last_back_m.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    @include rem_padding(4, 0, 5, 0);
+    position: relative;
+    &__canvas {
+      position: absolute;
+      z-index: 1;
       width: 100%;
-      @include media(sp) {
-        width: 80%;
-      }
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
     }
-    @include media(sp) {
-      width: 85%;
-      padding: 30px 10px;
+    &__textwrap {
+      background: var(--color_lp_box);
+      border-radius: 10px;
+      @include rem_padding(3, 4, 3, 4);
+      max-width: 600px;
+      text-align: center;
+      margin: rem(2) auto;
     }
-    .lp-first_icon {
+    &__logo {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 15px;
+      @include flex(center, center);
+      margin-bottom: rem(1);
       @include media(sp) {
-        margin-bottom: 32px;
+        margin-bottom: rem(2);
       }
       img {
-        width: 40px;
-        margin-right: 15px;
+        width: rem(3);
+        margin-right: rem(1);
       }
       h4 {
-        font-size: 30px;
+        @include font(rem(pow(4)), 600, $ls, $lh, $en_go);
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
     }
-  }
-  .lp-first_enter {
-    box-shadow: none;
   }
 }
 </style>

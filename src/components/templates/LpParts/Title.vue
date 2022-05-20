@@ -38,7 +38,7 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .titlewrap {
-  margin-bottom: rem(3);
+  margin-bottom: rem(4);
   text-align: center;
   &.g {
     * {

@@ -2,8 +2,13 @@
   <footer>
     <div class="footer-wrap">
       <div class="lp-footer_logo">
-        <img src="@/assets/images/lp/logo.png" alt="" />
-        <h4>Slash Payment</h4>
+        <!-- <img src="@/assets/images/lp/logo.png" alt="" />
+        <h4>Slash Payment</h4> -->
+        <img
+          class="logoimage"
+          src="@/assets/images/lp/lp-logo.svg"
+          alt="Web3 Payment"
+        />
       </div>
       <div class="lp-footer_col">
         <div class="lp-footer_left">
@@ -202,6 +207,10 @@ footer {
         img {
           width: rem(3);
           margin-right: rem(1);
+          &.logoimage {
+            width: rem(23);
+            margin-right: 0;
+          }
         }
         h4 {
           @include font(rem(3), 600, $ls, $lh, $en_go);
