@@ -56,12 +56,7 @@
             target="_blank"
             :class="[thisSns.status ? 'active' : 'disable']"
           >
-            <figure>
-              <img
-                :src="require('@/assets/images/lp/' + thisSns.icon + '.svg')"
-                alt=""
-              />
-            </figure>
+            <LpIcon class="icon" :path="thisSns.icon" />
           </a>
         </li>
       </ul>
@@ -76,8 +71,12 @@
 </template>
 
 <script>
+import LpIcon from "@/components/templates/LpParts/Icon";
 export default {
   name: "Footer",
+  components: {
+    LpIcon,
+  },
   data() {
     return {
       nav: [
@@ -147,27 +146,27 @@ export default {
       ],
       sns: [
         {
-          icon: "twitter",
+          icon: "icon/twitter",
           link: "",
           status: true,
         },
         {
-          icon: "telegram",
+          icon: "icon/telegram",
           link: "",
           status: false,
         },
         {
-          icon: "discord",
+          icon: "icon/discord",
           link: "",
           status: false,
         },
         {
-          icon: "arroba",
+          icon: "icon/arroba",
           link: "",
           status: true,
         },
         {
-          icon: "gitbook-icon",
+          icon: "icon/gitbook",
           link: "",
           status: true,
         },
@@ -291,14 +290,30 @@ footer {
         @include media(sp) {
           margin-top: rem(4);
         }
+        a {
+          display: block;
+          width: rem(3);
+        }
+        .icon {
+          &::v-deep {
+            svg {
+              fill: var(--color_font);
+            }
+          }
+        }
         .disable {
-          opacity: 0.5;
+          // opacity: 0.5;
+          pointer-events: none;
+          .icon {
+            &::v-deep {
+              svg {
+                fill: var(--color_inactive);
+              }
+            }
+          }
         }
         li + li {
-          margin-left: rem(2);
-        }
-        figure {
-          width: rem(2);
+          margin-left: rem(1);
         }
       }
     }

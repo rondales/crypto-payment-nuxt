@@ -203,15 +203,17 @@
           <ul :class="section.trial.class + '__feature'">
             <li v-for="list in section.trial.lists" :key="list.logo">
               <div :class="section.trial.class + '__feature__list'">
-                <LpImage
-                  :imgData="list.image"
-                  :class="section.trial.class + '__feature__image'"
-                />
-                <img
-                  :class="section.trial.class + '__feature__logo'"
-                  :src="require('@/assets/images/' + list.logo)"
-                  :alt="list.title"
-                />
+                <div :class="section.trial.class + '__feature__imagewrap'">
+                  <LpImage
+                    :imgData="list.image"
+                    :class="section.trial.class + '__feature__image'"
+                  />
+                  <img
+                    :class="section.trial.class + '__feature__logo'"
+                    :src="require('@/assets/images/' + list.logo)"
+                    :alt="list.title"
+                  />
+                </div>
                 <div :class="section.trial.class + '__feature__textwrap'">
                   <h3 class="title"><span v-html="list.title"></span></h3>
                   <p class="text"><span v-html="list.text"></span></p>
@@ -367,7 +369,7 @@ export default {
           link2: {
             url: "/",
             title: "Slash docs.",
-            icon: "gitbook",
+            icon: "icon/gitbook",
           },
         },
         hello: {
@@ -419,7 +421,7 @@ export default {
             link: {
               url: "/",
               title: "Slash Payment Install Docs.",
-              icon: "arrow",
+              icon: "icon/arrow",
               iconAfter: true,
             },
           },
@@ -520,7 +522,7 @@ export default {
               link: {
                 url: "/",
                 title: "Slash Payment Install Docs.",
-                icon: "arrow",
+                icon: "icon/arrow",
                 iconAfter: true,
               },
             },
@@ -548,7 +550,7 @@ export default {
               link: {
                 url: "/",
                 title: "Details of Integrations",
-                icon: "arrow",
+                icon: "icon/arrow",
                 iconAfter: true,
               },
             },
@@ -603,7 +605,7 @@ export default {
               link: {
                 url: "/",
                 title: "Fee Structure",
-                icon: "arrow",
+                icon: "icon/arrow",
                 iconAfter: true,
               },
             },
@@ -627,7 +629,7 @@ export default {
               link: {
                 url: "/",
                 title: "donation program",
-                icon: "arrow",
+                icon: "icon/arrow",
                 iconAfter: true,
               },
             },
@@ -647,7 +649,7 @@ export default {
               link: {
                 url: "/",
                 title: "Details of $Slash",
-                icon: "arrow",
+                icon: "icon/arrow",
                 iconAfter: true,
               },
             },
@@ -673,7 +675,7 @@ export default {
                 title: "Donate Now",
                 func: "testfunc",
                 // func: "paymentForDonate(SAFE_THE_CHILDREN)",
-                // icon: "connect",
+                icon: "connect",
                 status: true,
               },
             },
@@ -689,7 +691,7 @@ export default {
               link: {
                 title: "Donate Now",
                 func: "paymentForDonate(UNICEF)",
-                // icon: "connect",
+                icon: "connect",
                 status: true,
               },
             },
@@ -875,43 +877,43 @@ export default {
           list: [
             {
               title: "Slash Payment Docs.",
-              icon: "gitbook",
+              icon: "icon/gitbook",
               url: "",
               status: true,
             },
             {
               title: "Slash Payment github",
-              icon: "github",
+              icon: "icon/github",
               url: "",
               status: true,
             },
             {
               title: "Slash Recruit information",
-              icon: "recruit",
+              icon: "icon/recruit",
               url: "",
               status: true,
             },
             {
               title: "Media kit",
-              icon: "mediakit",
+              icon: "icon/mediakit",
               url: "",
               status: false,
             },
             {
               title: "Support for Slash Payment System",
-              icon: "telegram",
+              icon: "icon/telegram",
               url: "",
               status: false,
             },
             {
               title: "Slash Developer Community",
-              icon: "discord",
+              icon: "icon/discord",
               url: "",
               status: false,
             },
             {
               title: "FAQ about system implementation",
-              icon: "help",
+              icon: "icon/help",
               url: "",
               status: false,
             },
@@ -926,13 +928,13 @@ export default {
           list: [
             {
               title: "Contact Email",
-              icon: "arroba",
+              icon: "icon/arroba",
               url: "",
               status: true,
             },
             {
               title: "Twitter for DM",
-              icon: "twitter",
+              icon: "icon/twitter",
               url: "",
               status: true,
             },

@@ -11,14 +11,10 @@
     <LpIcon
       v-if="!link.iconAfter && link.icon"
       class="icon"
-      :path="'icon/' + link.icon"
+      :path="link.icon"
     />
     <span>{{ link.title }}</span>
-    <LpIcon
-      v-if="link.iconAfter && link.icon"
-      class="icon"
-      :path="'icon/' + link.icon"
-    />
+    <LpIcon v-if="link.iconAfter && link.icon" class="icon" :path="link.icon" />
   </a>
 </template>
 
@@ -139,7 +135,7 @@ export default {
     padding: 0 rem(3);
     border-radius: rem(3);
     .icon {
-      width: rem(1.5);
+      width: rem(2);
     }
     * + * {
       margin-left: rem(1);
@@ -160,13 +156,29 @@ export default {
     padding: 0 rem(0);
     border-radius: 0;
     border-bottom: 1px solid var(--color_font);
-    justify-content: space-between;
+    color: var(--color_font);
+    .icon {
+      width: rem(2);
+      &::v-deep {
+        svg {
+          fill: var(--color_font);
+        }
+      }
+    }
   }
   &.noactive {
     @extend .lpButton;
     pointer-events: none;
     background: var(--color_bg_parts);
     border: 1px solid var(--color_border);
+    color: var(--color_inactive);
+    .icon {
+      &::v-deep {
+        svg {
+          fill: var(--color_inactive);
+        }
+      }
+    }
   }
 }
 </style>
