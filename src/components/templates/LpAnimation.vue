@@ -15,6 +15,7 @@ export default {
     },
   },
   mounted() {
+ 
     const P5 = require("p5");
     const store = this.$store;
 
@@ -647,10 +648,10 @@ export default {
       }
     };
 
-    new P5(MvCanvas);
-    new P5(SubCanvas1);
-    new P5(SubCanvas2);
-    new P5(SubCanvas3);
+    new P5(eval(this.type));
+    // new P5(SubCanvas1);
+    // new P5(SubCanvas2);
+    // new P5(SubCanvas3);
   },
 };
 </script>
