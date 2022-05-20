@@ -21,6 +21,9 @@
             </ul>
           </div>
           <div class="lp-header__nav">
+            <a href="#developers">Developers</a>
+            <a href="#fee-ecosystem">Fee & Ecosystem</a>
+            <a href="#roadmap">Roadmap</a>
             <button
               :class="[
                 'theme-button',
@@ -43,9 +46,6 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <a href="#developers">Developers</a>
-            <a href="#fee-ecosystem">Fee & Ecosystem</a>
-            <a href="#roadmap">Roadmap</a>
             <LpButton :link="cvLink" type="main" size="s" />
           </div>
         </div>

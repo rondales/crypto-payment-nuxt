@@ -66,7 +66,6 @@
 
       <!-- SECTION token -->
       <section :class="section.token.class">
-        <LpAnimation :canvasClass="section.token.class" type="SubCanvas3" />
         <div class="section__wrap">
           <LpTitle
             :class="section.token.class + '__title'"
@@ -315,7 +314,7 @@
 
       <!-- SECTION CV -->
       <section :class="section.cv.class">
-        <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
+        <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" />
         <div class="section__wrap">
           <LpTitle
             :class="section.cv.class + '__title'"
@@ -1497,12 +1496,16 @@ export default {
     }
   }
   &-cv {
-    background-image: url(/assets/images/lp/last_back_m.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    // background-image: url(/assets/images/lp/last_back_m.jpg);
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // background-size: cover;
     @include rem_padding(4, 0, 5, 0);
     position: relative;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
     &__canvas {
       position: absolute;
       z-index: 1;
