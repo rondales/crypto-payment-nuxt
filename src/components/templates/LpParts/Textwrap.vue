@@ -114,6 +114,9 @@ export default {
     }
     a + a {
       margin-left: rem(1);
+      @include media(sp) {
+        margin-left: rem(0);
+      }
     }
   }
   &_cap {
