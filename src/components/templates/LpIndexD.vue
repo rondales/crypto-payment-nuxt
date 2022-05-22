@@ -1339,6 +1339,9 @@ body.is-mounted {
       }
       img {
         width: rem(6);
+        @include media(tb) {
+          font-size: rem(4);
+        }
         @include media(sp) {
           width: rem(3.5);
         }
@@ -1346,14 +1349,19 @@ body.is-mounted {
       &__title {
         @include font(rem(8), 700, 0em, 1.2, $ff);
         display: block;
+        @include media(tb) {
+          font-size: rem(6);
+        }
         @include media(sp) {
           text-align: center;
-          @include font(rem(6), 700, 0em, 1.2, $ff);
         }
       }
       &__subtitle {
         @include font(rem(6), 700, 0em, 1.2, $ff);
         @include flex(flex-start, center);
+        @include media(tb) {
+          font-size: rem(4);
+        }
         @include media(sp) {
           @include flex(center, center);
           @include font(rem(3), 700, 0em, 1.2, $ff);
@@ -1362,6 +1370,9 @@ body.is-mounted {
       &__text {
         @include font(rem(4), 700, 0em, 1.5, $ff);
         display: block;
+        @include media(tb) {
+          font-size: rem(3);
+        }
         @include media(sp) {
           @include font(rem(2), 700, 0em, 1.2, $ff);
         }
@@ -1440,7 +1451,11 @@ body.is-mounted {
       li {
         width: rem(6);
         margin: 0 rem(1);
+        @include media(tb) {
+          flex: 1;
+        }
         @include media(sp) {
+          flex: auto;
           width: rem(4);
           margin: rem(1);
         }
@@ -1470,11 +1485,12 @@ body.is-mounted {
     &__card {
       @include flex(flex-start, stretch);
       @include list(3, rem(0.5));
-      @include media(sp) {
+
+      @include media(tb) {
         @include list(1, rem(0.5));
       }
       & > li {
-        @include media(sp) {
+        @include media(tb) {
           margin-bottom: rem(2);
         }
       }
@@ -1485,7 +1501,7 @@ body.is-mounted {
         border-radius: rem(1);
         display: flex;
         flex-direction: column;
-        @include media(sp) {
+        @include media(tb) {
           display: block;
         }
       }
@@ -1500,8 +1516,8 @@ body.is-mounted {
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: rem(1);
-        @include media(sp) {
-          flex: atuo;
+        @include media(tb) {
+          flex: auto;
           height: auto;
           min-height: initial;
         }
@@ -1516,14 +1532,28 @@ body.is-mounted {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: rem(1);
-        @include media(sp) {
-          flex: atuo;
+        // @include media(tb) {
+        //   width: 100%;
+        //   @include list(3, rem(0.8));
+        //   height: auto;
+        //   min-height: initial;
+        // }
+        @include media(tb) {
+          flex: auto;
           height: auto;
           min-height: initial;
+          @include list(6, rem(2));
+        }
+        @include media(sp) {
+          @include list(3, rem(2));
         }
         li {
           // width: rem(3);
           margin-bottom: rem(1);
+          @include media(tb) {
+            max-width: 200px;
+            // margin-bottom: rem(0);
+          }
         }
       }
       &__text {
@@ -1532,8 +1562,8 @@ body.is-mounted {
         min-height: 0%;
         overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
-        @include media(sp) {
-          flex: atuo;
+        @include media(tb) {
+          flex: auto;
           height: auto;
           min-height: initial;
         }
