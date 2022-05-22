@@ -1,3 +1,15 @@
+*{
+	&::selection {
+		color: var(--color_bg);
+		background: var(--color_inner);
+		text-decoration: underline;
+	}
+	&::-moz-selection {
+		color: var(--color_bg);
+		background: var(--color_inner);
+	}
+}
+
 /* -----------------------
 メディアクエリ
 @include media(pc) {} //860px以上

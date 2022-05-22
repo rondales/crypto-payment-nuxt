@@ -5,7 +5,7 @@
     <LpHeader />
     <main>
       <!-- SECTION MV -->
-      <section :class="section.mv.class + ' scrollAction'">
+      <section :class="section.mv.class + ' '">
         <LpAnimation :canvasClass="section.mv.class" type="MvCanvas" />
         <div :class="section.mv.class + '__title'">
           <img
@@ -36,7 +36,7 @@
         <div class="section__wrap">
           <div :class="section.hello.class + '__wrap'">
             <div :class="section.hello.class + '__textwrap'">
-              <h2 :class="section.hello.class + '__h2'">
+              <h2 :class="section.hello.class + '__h2 scrollAction textMove'">
                 <span :class="section.hello.class + '__h2__title'">{{
                   section.hello.title.title
                 }}</span>
@@ -52,7 +52,9 @@
                 <span v-html="section.hello.lead"></span>
               </p>
             </div>
-            <div :class="section.hello.class + '__imagewrap'">
+            <div
+              :class="section.hello.class + '__imagewrap scrollAction capcha'"
+            >
               <figure :class="section.hello.class + '__image'">
                 <img src="@/assets/images/lp/capcha-1.png" />
               </figure>
@@ -119,24 +121,11 @@
             <li
               v-for="feature in section.install.features"
               :key="feature.title"
-              :class="feature.layout"
             >
-              <div :class="section.install.class + '__feature__list'">
-                <LpAnimation
-                  v-if="feature.canvas"
-                  :canvasClass="section.install.class + '__feature'"
-                  :type="feature.canvas"
-                />
-                <LpImage
-                  v-if="!feature.canvas"
-                  :imgData="feature.image"
-                  :class="section.install.class + '__feature__image'"
-                />
-                <LpTextwrap
-                  :class="section.install.class + '__feature__textwrap'"
-                  :textData="feature"
-                />
-              </div>
+              <LpImageText
+                :data="feature"
+                :class="section.install.class + '__feature__list'"
+              />
             </li>
           </ul>
         </div>
@@ -150,27 +139,11 @@
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
-            <li
-              v-for="feature in section.fee.features"
-              :key="feature.title"
-              :class="feature.layout"
-            >
-              <div :class="section.fee.class + '__feature__list'">
-                <LpAnimation
-                  v-if="feature.canvas"
-                  :canvasClass="section.fee.class + '__feature'"
-                  type="SubCanvas2"
-                />
-                <LpImage
-                  v-if="!feature.canvas"
-                  :imgData="feature.image"
-                  :class="section.fee.class + '__feature__image'"
-                />
-                <LpTextwrap
-                  :class="section.install.class + '__feature__textwrap'"
-                  :textData="feature"
-                />
-              </div>
+            <li v-for="feature in section.fee.features" :key="feature.title">
+              <LpImageText
+                :data="feature"
+                :class="section.install.class + '__feature__list'"
+              />
             </li>
           </ul>
         </div>
@@ -183,30 +156,31 @@
             :class="section.trial.class + '__title'"
             :title="section.trial.title"
           />
-          <ul :class="section.trial.class + '__feature'">
-            <li v-for="list in section.trial.lists" :key="list.logo">
-              <div :class="section.trial.class + '__feature__list'">
-                <div :class="section.trial.class + '__feature__imagewrap'">
-                  <LpImage
-                    :imgData="list.image"
-                    :class="section.trial.class + '__feature__image'"
-                  />
-                  <LpIcon
-                    :class="section.trial.class + '__feature__logo'"
-                    :path="list.logo"
-                  />
-                </div>
-                <div :class="section.trial.class + '__feature__textwrap'">
-                  <h3 class="title"><span v-html="list.title"></span></h3>
-                  <p class="text"><span v-html="list.text"></span></p>
-                  <div v-if="list.link" class="link">
-                    <LpButton :link="list.link" type="main" size="m" />
-                  </div>
+        </div>
+        <ul :class="section.trial.class + '__feature'">
+          <li v-for="list in section.trial.lists" :key="list.logo">
+            <div :class="section.trial.class + '__feature__trapezoid'"></div>
+            <div :class="section.trial.class + '__feature__list'">
+              <div :class="section.trial.class + '__feature__imagewrap'">
+                <LpImage
+                  :imgData="list.image"
+                  :class="section.trial.class + '__feature__image'"
+                />
+              </div>
+              <div :class="section.trial.class + '__feature__textwrap'">
+                <LpIcon
+                  :class="section.trial.class + '__feature__logo'"
+                  :path="list.logo"
+                />
+                <h3 class="title"><span v-html="list.title"></span></h3>
+                <p class="text"><span v-html="list.text"></span></p>
+                <div v-if="list.link" class="link">
+                  <LpButton :link="list.link" type="main2" size="m" />
                 </div>
               </div>
-            </li>
-          </ul>
-        </div>
+            </div>
+          </li>
+        </ul>
       </section>
 
       <!-- SECTION network -->
@@ -217,7 +191,12 @@
             :class="section.network.class + '__title'"
             :title="section.network.title"
           />
-          <ul :class="section.network.class + '__logos'">
+          <ul :class="section.network.class + '__logos scrollAction listMove'">
+            <li v-for="logo in section.network.logos" :key="logo.src">
+              <LpImage :imgData="logo" />
+            </li>
+          </ul>
+          <ul :class="section.network.class + '__logos2'">
             <li v-for="logo in section.network.logos" :key="logo.src">
               <LpImage :imgData="logo" />
             </li>
@@ -249,7 +228,9 @@
                     </h4>
                     <ul :class="section.roadmap.class + '__phase__sublist'">
                       <li v-for="li in list.list" :key="li.text">
-                        {{ li.text }}
+                        <span>
+                          {{ li.text }}
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -269,18 +250,29 @@
           />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
+              <!-- <LpButton v-if="list.status" :link="list" type="main" size="m" /> -->
               <LpButton
                 :link="list"
                 :type="list.status ? 'main' : 'noactive'"
-                size="l"
+                size="s"
               />
             </li>
           </ul>
+          <!-- <ul :class="section.welcome.class + '__list'">
+            <li v-for="list in section.welcome.list" :key="list.title">
+              <LpButton
+                v-if="!list.status"
+                :link="list"
+                type="noactive"
+                size="m"
+              />
+            </li>
+          </ul> -->
         </div>
       </section>
 
       <!-- SECTION contact -->
-      <section :class="section.contact.class">
+      <!-- <section :class="section.contact.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.contact.class + '__title'"
@@ -292,7 +284,7 @@
             </li>
           </ul>
         </div>
-      </section>
+      </section> -->
 
       <!-- SECTION CV -->
       <section :class="section.cv.class">
@@ -302,12 +294,19 @@
             :class="section.cv.class + '__title'"
             :title="section.cv.title"
           />
-          <div :class="section.cv.class + '__textwrap'">
-            <div :class="section.cv.class + '__logo'">
-              <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
-              <h4>Slash.fi</h4>
+          <div :class="section.cv.class + '__wrap'">
+            <div :class="section.cv.class + '__textwrap'">
+              <div :class="section.cv.class + '__logo'">
+                <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
+                <h4>Slash.fi</h4>
+              </div>
+              <LpButton :link="section.cv.link" type="main" size="m" />
             </div>
-            <LpButton :link="section.cv.link" type="main" size="m" />
+            <ul :class="section.contact.class + '__list'">
+              <li v-for="list in section.contact.list" :key="list.title">
+                <LpButton :link="list" type="main" size="l" />
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -323,7 +322,7 @@ import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
 import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
-import LpTextwrap from "@/components/templates/LpParts/Textwrap";
+import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
 import LpIcon from "@/components/templates/LpParts/Icon";
 
@@ -342,7 +341,7 @@ export default {
             url: "/",
             title: "Enter App",
             // icon: "pointing-up",
-            func: "enterApp()",
+            func: "enterApp",
           },
           link2: {
             url: "/",
@@ -504,7 +503,7 @@ export default {
           class: "dlp-install",
           title: {
             title: "Easy system",
-            subtitle: "installation",
+            subtitle: "installation 🖥",
           },
           features: [
             {
@@ -600,12 +599,12 @@ export default {
         fee: {
           class: "dlp-fee",
           title: {
-            title: "Fee & Ecosystem",
+            title: "Fee & Ecosystem 🔁",
             subtitle: "",
           },
           features: [
             {
-              layout: "l",
+              layout: "r",
               title: "Slash Payment fee is 0.2〜0.6%",
               canvas: "SubCanvas2",
               image: {
@@ -689,8 +688,7 @@ export default {
               text: "https://donate.savethechildren.org",
               link: {
                 title: "Donate Now",
-                func: "testfunc",
-                // func: "paymentForDonate(SAFE_THE_CHILDREN)",
+                func: "paymentForDonate(SAFE_THE_CHILDREN)",
                 icon: "connect",
                 status: true,
               },
@@ -716,7 +714,7 @@ export default {
         network: {
           class: "dlp-network",
           title: {
-            title: "Connected network",
+            title: 'Connected <br class="sp">network 🌎',
             subtitle: "",
           },
           logos: [
@@ -780,7 +778,7 @@ export default {
         roadmap: {
           class: "dlp-roadmap",
           title: {
-            title: "Features & Rood Map",
+            title: 'Features <br class="sp">& Rood Map 🗺',
             subtitle: "",
           },
           phases: [
@@ -909,7 +907,7 @@ export default {
         welcome: {
           class: "dlp-welcome",
           title: {
-            title: "Welcome⚡",
+            title: "Welcome",
             subtitle: "Slash Developers💻",
           },
           list: [
@@ -981,14 +979,14 @@ export default {
         cv: {
           class: "dlp-cv",
           title: {
-            title: "Install on your online service now!",
+            title: "Install on your online service now!⚡",
             subtitle: "",
           },
           link: {
             title: "Enter App",
             icon: "",
             url: "",
-            func: "enterApp()",
+            func: "enterApp",
             status: true,
           },
         },
@@ -1065,9 +1063,12 @@ export default {
     LpAnimation,
     LpButton,
     LpTitle,
-    LpTextwrap,
     LpImage,
     LpIcon,
+    LpImageText,
+  },
+  mounted() {
+    document.body.classList.add("is-mounted");
   },
 
   methods: {
@@ -1084,21 +1085,21 @@ export default {
       this.$store.dispatch("changeTheme", "dark");
     },
     scrollAction() {
-      // const scrollActions = document.querySelectorAll(".scrollAction");
-      // for (let i = 0; i < scrollActions.length; i++) {
-      //   const windowHeight = window.innerHeight;
-      //   const elTop = scrollActions[i].getBoundingClientRect().top;
-      //   const elVisible = 150;
-      //   if (elTop < windowHeight - elVisible) {
-      //     scrollActions[i].classList.add("active");
-      //   } else {
-      //     scrollActions[i].classList.remove("active");
-      //   }
-      // }
+      const scrollActions = document.querySelectorAll(".scrollAction");
+      for (let i = 0; i < scrollActions.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elTop = scrollActions[i].getBoundingClientRect().top;
+        const elVisible = 150;
+        if (elTop < windowHeight - elVisible) {
+          scrollActions[i].classList.add("active");
+        } else {
+          scrollActions[i].classList.remove("active");
+        }
+      }
     },
   },
   created() {
-    // window.addEventListener("scroll", this.scrollAction);
+    window.addEventListener("scroll", this.scrollAction);
   },
 };
 </script>
@@ -1124,8 +1125,103 @@ export default {
   //   transform: translateY(0);
   //   opacity: 1;
   // }
+  &.op {
+    opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+      visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    &::v-deep {
+      opacity: 0;
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+        visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    &.active {
+      opacity: 1;
+      &::v-deep {
+        opacity: 1;
+      }
+    }
+  }
+  &.textMove {
+    // opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    span {
+      transform: translate(0, 105%);
+      transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 500ms;
+      &:nth-child(2) {
+        transition-delay: 120ms;
+      }
+      &:nth-child(3) {
+        transition-delay: 240ms;
+      }
+    }
+    &::v-deep {
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      span {
+        transform: translate(0, 105%);
+        transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 500ms;
+        &:nth-child(2) {
+          transition-delay: 120ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 240ms;
+        }
+      }
+    }
+    &.active {
+      // opacity: 1;
+      span {
+        transform: translate(0, 0);
+      }
+      &::v-deep {
+        span {
+          transform: translate(0, 0);
+        }
+      }
+    }
+  }
+  &.capcha {
+    figure {
+      opacity: 0;
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 800ms;
+      &:nth-child(2) {
+        transition-delay: 920ms;
+      }
+      &:nth-child(3) {
+        transition-delay: 1040ms;
+      }
+    }
+    &.active {
+      figure {
+        opacity: 1;
+      }
+    }
+  }
+  &.listMove {
+    li {
+      opacity: 0;
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      @for $i from 1 through 20 {
+        &:nth-child($i) {
+          transition-delay: 120ms * $i;
+        }
+      }
+    }
+    &.active {
+      li {
+        opacity: 1;
+      }
+    }
+  }
 }
-
+body.is-mounted {
+  .dlp {
+    &-mv {
+      &__title {
+        opacity: 1;
+      }
+    }
+  }
+}
 .dlp {
   &-mv {
     height: 100vh;
@@ -1141,6 +1237,9 @@ export default {
     &__title {
       position: absolute;
       z-index: 10;
+      opacity: 0;
+      transition: opacity 800ms cubic-bezier(0.25, 0.1, 0.25, 1) 400ms,
+        visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
       top: 50%;
       left: 50%;
       transform-origin: center center;
@@ -1281,19 +1380,12 @@ export default {
       }
     }
     &__image {
-      // position: absolute;
-      // width: 75%;
-      // top: 50%;
-      // left: 50%;
-      // transform-origin: center center;
-      // transform: translate(-50%, -50%);
-      // margin-top: -10%;
-      // margin-left: 20%;
-      // box-shadow: var(--color_shadow);
       width: 75%;
       box-shadow: var(--color_shadow);
       margin-top: 10%;
       margin-left: -20%;
+      border-radius: 8px;
+      overflow: hidden;
       @include media(sp) {
         margin-left: auto;
         margin-right: 0;
@@ -1447,104 +1539,6 @@ export default {
     @include media(sp) {
       @include rem_padding(3, 0, 3, 0);
     }
-    &__feature {
-      li {
-        &.r {
-          [class$="__image"] {
-            order: 2;
-            @include media(sp) {
-              order: 1;
-            }
-          }
-        }
-
-        &.c {
-          [class$="__list"] {
-            grid-template-columns: repeat(1, 1fr);
-          }
-          [class$="__textwrap"] {
-            grid-column: span 2;
-            padding-right: 60%;
-            position: relative;
-            @include media(sp) {
-              grid-column: span 5;
-              padding-right: 0;
-            }
-            &::v-deep {
-              .absTest {
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 55%;
-                @include media(sp) {
-                  width: 100%;
-                  position: relative;
-                }
-              }
-            }
-          }
-        }
-      }
-      &__list {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: rem(4);
-        margin-bottom: rem(6);
-        @include media(sp) {
-        }
-      }
-      &__canvas {
-        grid-column: span 2;
-        position: relative;
-        z-index: 1;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-        &::v-deep {
-          div {
-            position: relative;
-            width: 100%;
-            &::before {
-              content: "";
-              display: block;
-              width: 100%;
-              padding-top: 100%;
-            }
-            canvas {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-            }
-          }
-        }
-      }
-      &__image {
-        grid-column: span 2;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-      }
-      &__textwrap {
-        grid-column: span 3;
-        align-self: center;
-        position: relative;
-        z-index: 10;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-      }
-      &__title {
-        @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
-      }
-      &__text {
-        @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
-        margin-top: 2rem;
-      }
-      &__link {
-        margin-top: 2rem;
-      }
-    }
   }
   &-fee {
     @include rem_padding(6, 0, 6, 0);
@@ -1568,99 +1562,6 @@ export default {
         @include font(rem(3), 700, 0em, 1.5, $ff);
       }
     }
-    &__feature {
-      li {
-        &.r {
-          [class$="__image"] {
-            order: 2;
-          }
-        }
-
-        &.c {
-          [class$="__list"] {
-            grid-template-columns: repeat(1, 1fr);
-          }
-          [class$="__textwrap"] {
-            grid-column: span 2;
-            padding-right: 60%;
-            position: relative;
-            @include media(sp) {
-              padding-right: 0;
-              grid-column: span 5;
-            }
-            &::v-deep {
-              .absTest {
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 55%;
-                @include media(sp) {
-                  width: 100%;
-                  position: relative;
-                }
-              }
-            }
-          }
-        }
-      }
-      &__list {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: rem(4);
-        margin-bottom: rem(6);
-      }
-      &__canvas {
-        grid-column: span 2;
-        position: relative;
-        z-index: 1;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-        &::v-deep {
-          div {
-            position: relative;
-            width: 100%;
-            &::before {
-              content: "";
-              display: block;
-              width: 100%;
-              padding-top: 100%;
-            }
-            canvas {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-            }
-          }
-        }
-      }
-      &__image {
-        grid-column: span 2;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-      }
-      &__textwrap {
-        grid-column: span 3;
-        align-self: center;
-        position: relative;
-        z-index: 10;
-        @include media(sp) {
-          grid-column: span 5;
-        }
-      }
-      &__title {
-        @include font(rem(pow(2)), 500, $ls, 1.5, $en_go);
-      }
-      &__text {
-        @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
-        margin-top: 2rem;
-      }
-      &__link {
-        margin-top: 2rem;
-      }
-    }
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
@@ -1668,45 +1569,153 @@ export default {
       @include rem_padding(3, 0, 3, 0);
     }
     &__feature {
-      @include flex(flex-start, flex-start);
-      @include list(2, rem(4));
-      @include media(sp) {
-        @include list(1, rem(4));
+      // @include flex(flex-start, flex-start);
+      // @include list(2, rem(4));
+      // @include media(sp) {
+      //   @include list(1, rem(4));
+      // }
+      & > li {
+        position: relative;
+        padding: rem(6) 0;
+        & + li {
+          margin-top: rem(4);
+        }
+        &:nth-child(2n) {
+          [class$="list"] {
+            flex-direction: row;
+          }
+          [class$="__trapezoid"] {
+            transform-origin: center center;
+            transform: translate3d(0%, 0%, 0) rotate(180deg) scale(1, 1);
+            left: auto;
+            right: 0;
+          }
+        }
+        @include media(sp) {
+          padding: rem(0) 0;
+        }
+      }
+      &__trapezoid {
+        // background: $gradation-light;
+        background: linear-gradient(
+          90.25deg,
+          rgba(#3eb9fc, 1) 5.43%,
+          rgba(#6a68ed, 0.7) 59.32%,
+          rgba(#8b2ae1, 0.4) 98.19%
+        );
+        width: 60%;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+        top: 0%;
+        left: 0;
+        overflow: hidden;
+        @include media(sp) {
+          width: 100%;
+        }
+
+        &::before {
+          content: "";
+          width: 150%;
+          height: rem(5);
+          background-color: var(--color_lp_bg);
+          position: absolute;
+          top: 0%;
+          left: 50%;
+          z-index: 5;
+          transform-origin: center;
+          transform: translate3d(-50%, -50%, 0) rotate(2deg) scale(1, 1);
+        }
+        &::after {
+          content: "";
+          width: 150%;
+          height: rem(5);
+          background-color: var(--color_lp_bg);
+          position: absolute;
+          bottom: 0%;
+          left: 50%;
+          z-index: 5;
+          transform-origin: center;
+          transform: translate3d(-50%, 50%, 0) rotate(-2deg) scale(1, 1);
+        }
+        // transform-origin: center center;
+        // transform: translate(0%, -50%);
+        // &::before {
+        //   display: block;
+        //   width: 100%;
+        //   height: 100px;
+        //   content: "";
+        // }
       }
       &__list {
         position: relative;
-        padding-top: rem(4);
+        @include flex(flex-start, center);
+        flex-wrap: nowrap;
+        flex-direction: row-reverse;
+        @extend .section__wrap;
+        z-index: 10;
         @include media(sp) {
-          margin-bottom: rem(4);
+          display: block;
+        }
+        // padding-top: rem(4);
+        // @include media(sp) {
+        //   margin-bottom: rem(4);
+        // }
+      }
+
+      &__imagewrap {
+        flex: 1;
+        @include media(sp) {
+          width: 100%;
+          flex: auto;
+        }
+        &::v-deep {
+          img {
+            box-shadow: var(--color_shadow);
+          }
         }
       }
-      &__image {
-      }
       &__logo {
-        width: 50%;
+        width: 70%;
         margin: rem(2) auto rem(1);
+        @include media(sp) {
+          width: 90%;
+        }
         &::v-deep {
           svg {
             fill: var(--color_font);
+            fill: #fff;
           }
         }
       }
       &__textwrap {
+        flex: 1;
+        padding: 0 rem(4);
+        @include media(sp) {
+          padding: 0 rem(2);
+        }
         &::v-deep {
           text-align: center;
           .title {
-            @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: $gradation-light;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+            color: #fff;
+            // position: absolute;
+            // top: 0;
+            // left: 0;
+            // width: 100%;
+            // background: $gradation-light;
+            // -webkit-background-clip: text;
+            // -webkit-text-fill-color: transparent;
             @include media(sp) {
-              @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+              @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
+              margin-bottom: rem(1);
             }
           }
+          .text {
+            @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+            color: #fff;
+          }
+
           .link {
             margin-top: rem(2);
             .lpButton.m .icon {
@@ -1718,15 +1727,67 @@ export default {
     }
   }
   &-network {
-    @include rem_padding(6, 0, 6, 0);
-    @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
-    }
     position: relative;
+    // border-top: 1px solid var(--color_update);
+    @include rem_padding(6, 0, 6, 0);
+    position: relative;
+    @include media(sp) {
+      @include rem_padding(2, 0, 2, 0);
+    }
     .section__wrap {
       position: relative;
       z-index: 10;
+      // @include flex(flex-start, stretch);
+      // width: 100%;
+      // max-width: 100%;
+      // background: $gradation-pale;
+      // border-radius: rem(3);
+      // @include rem_padding(4, 4, 4, 4);
+      // &::before {
+      //   content: "";
+      //   display: block;
+      //   position: absolute;
+      //   width: calc(100% - 10px);
+      //   height: calc(100% - 10px);
+      //   position: absolute;
+      //   top: 50%;
+      //   left: 50%;
+      //   border-radius: rem(3);
+      //   transform-origin: center center;
+      //   transform: translate(-50%, -50%);
+      //   background-color: var(--color_bg);
+      // }
+      // * {
+      //   position: relative;
+      //   z-index: 10;
+      // }
     }
+    &__title {
+      // flex: 1;
+      // width: 360px;
+      // padding: 0 rem(3);
+      // text-align: left;
+      // border-bottom: 1px solid var(--color_update);
+      // margin-bottom: 0;
+      // position: absolute;
+      // left: 0;
+      // top: 0;
+      // background-color: var(--color_font);
+      // @include rem_padding(2, 0, 2, 0);
+      &::v-deep {
+        .title {
+          // text-align: right;
+          // transform-origin: top right;
+          // transform: translate3d(-100%, 0%, 0) rotate(-90deg) scale(1, 1);
+          //   color: var(--color_bg);
+          //   text-transform: uppercase;
+          //   text-shadow: 2px 2px 1px var(--color_font),
+          //     -2px 2px 1px var(--color_font), 2px -2px 1px var(--color_font),
+          //     -2px -2px 1px var(--color_font);
+        }
+      }
+    }
+
     &__canvas {
       position: absolute;
       z-index: 1;
@@ -1760,16 +1821,49 @@ export default {
         }
       }
     }
+
     &__logos {
-      @include flex(center, center);
-      @include list(4, rem(4));
+      flex: 4;
+      white-space: nowrap;
+      // border-left: 1px solid var(--color_update);
+      @include flex(flex-start, center);
+      @include list(4, rem(3));
       @include media(sp) {
         @include flex(flex-start, center);
-        @include list(2, rem(2));
+        @include list(2, rem(1));
       }
+      // animation: loop 30s linear infinite;
+      // transform: translateX(100%);
+
+      // @keyframes loop {
+      //   0% {
+      //     transform: translateX(100%);
+      //   }
+      //   to {
+      //     transform: translateX(-100%);
+      //   }
+      // }
+      // &:hover {
+      //   animation-play-state: paused;
+      // }
+
       li {
+        // display: inline-block;
+        // width: rem(20);
         margin-bottom: rem(2);
+        @include media(sp) {
+          margin-bottom: rem(1);
+        }
+        // border-right: 1px solid var(--color_update);
+        // border-bottom: 1px solid var(--color_update);
+
+        // &:nth-child(3n) {
+        //   border-right: 0px solid var(--color_update);
+        // }
       }
+    }
+    &__logos2 {
+      display: none;
     }
   }
   &-roadmap {
@@ -1780,57 +1874,130 @@ export default {
     &__phase {
       // @include list(2, 2rem);
       &__box {
-        @include flex(flex-start, flex-start);
+        @include flex(flex-start, stretch);
         margin-bottom: rem(4);
+        background-color: var(--color_darken);
+        // border-radius: rem(2);
+        overflow: hidden;
+        // box-shadow: var(--color_shadow);
         @include media(sp) {
           display: block;
         }
       }
       &__title {
-        width: 30%;
+        flex: 1;
+        // width: 30%;
         @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
         background: $gradation-light;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #fff;
+        // -webkit-background-clip: text;
+        // -webkit-text-fill-color: transparent;
+        @include flex(center, center);
         @include media(sp) {
-          width: 100%;
-          text-align: center;
-          margin-bottom: rem(2);
+          @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+          padding: rem(0.5);
+          //   width: 100%;
+          //   text-align: center;
+          //   margin-bottom: rem(2);
         }
       }
+
       &__list {
-        @include flex(flex-start, stretch);
-        @include list(2, rem(2));
-        width: 70%;
+        flex: 3;
+        @include flex(center, stretch);
+        @include list(2, 0);
+        // width: 70%;
         @include media(sp) {
           width: 100%;
           @include list(1, rem(2));
         }
         & > li {
-          margin-bottom: rem(2);
+          padding: rem(2);
+          position: relative;
+          &:nth-child(n + 3) {
+            &::after {
+              content: "";
+              display: block;
+              height: 1px;
+              width: 90%;
+              background-color: var(--color_update);
+              position: absolute;
+              top: 0%;
+              left: 50%;
+              transform-origin: center center;
+              transform: translate(-50%, 0%);
+            }
+          }
+          &:nth-child(2n) {
+            &::before {
+              content: "";
+              display: block;
+              width: 1px;
+              height: 80%;
+              background-color: var(--color_update);
+              position: absolute;
+              top: 50%;
+              left: 0;
+              transform-origin: center center;
+              transform: translate(0%, -50%);
+            }
+          }
+          &:nth-child(n + 2) {
+            @include media(sp) {
+              &::after {
+                content: "";
+                display: block;
+                height: 1px;
+                width: 80%;
+                background-color: var(--color_update);
+                position: absolute;
+                top: 0%;
+                left: 50%;
+                transform-origin: center center;
+                transform: translate(-50%, 0%);
+              }
+            }
+          }
         }
       }
       &__listwrap {
-        height: 100%;
-        border-radius: rem(1);
-        overflow: hidden;
-        border: 1px solid var(--color_border);
-        background-color: var(--color_box);
+        @include flex(center, center);
+        flex-direction: column;
+        // border-radius: rem(1);
+        // overflow: hidden;
       }
       &__subtitle {
-        @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
-
-        background: $gradation-light;
+        @include font(rem(pow(1)), 700, $ls, 1, $en_go);
         text-align: center;
-        padding: rem(0.5);
+        margin-bottom: rem(1);
+        // background: $gradation-light;
+        // padding: rem(0.5);
         // -webkit-background-clip: text;
         // -webkit-text-fill-color: transparent;
       }
       &__sublist {
-        padding: rem(1);
+        // padding: rem(1);
         li {
-          @include font(rem(pow(0)), 400, $ls, $lh, $en_go);
-          text-align: center;
+          @include font(rem(pow(0)), 400, $ls, 2, $en_go);
+          // text-align: center;
+          span {
+            display: inline-block;
+            padding-left: rem(2);
+            position: relative;
+            &:before {
+              content: "";
+              width: rem(1);
+              height: rem(1);
+              display: block;
+              position: absolute;
+              top: 50%;
+              left: 0;
+              background: $gradation-light;
+              transform-origin: center center;
+              transform: translate3d(0%, -50%, 0) rotate(0deg) scale(1, 1);
+              border-radius: 100%;
+            }
+          }
         }
       }
     }
@@ -1841,33 +2008,42 @@ export default {
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
+    background-color: var(--color_bg_parts);
     @include media(sp) {
       @include rem_padding(3, 0, 3, 0);
     }
     &__list {
-      // @include flex(flex-start, flex-start);
+      @include flex(center, flex-start);
       // @include list(2, 2rem);
-      text-align: center;
-      max-width: 80%;
-      margin-left: auto;
-      margin-right: auto;
-      @include media(sp) {
-        width: 100%;
-        max-width: 100%;
-      }
+      // text-align: center;
+      // max-width: 80%;
+      // margin-left: auto;
+      // margin-right: auto;
+      // @include media(sp) {
+      //   width: 100%;
+      //   max-width: 100%;
+      // }
     }
   }
   &-contact {
     @include rem_padding(6, 0, 6, 0);
     &__list {
-      text-align: center;
-      max-width: 80%;
-      margin-left: auto;
-      margin-right: auto;
+      flex: 1;
+      margin: auto rem(2);
+      // text-align: center;
+      // max-width: 80%;
+      // margin-left: auto;
+      // margin-right: auto;
+      // @include flex(flex-start, flex-start);
+      // @include list(2, 2rem);
       @include media(sp) {
-        width: 100%;
-        max-width: 100%;
-        margin-left: -rem(1);
+        margin: 0;
+        &::v-deep {
+          .lpButton.main {
+            margin: 0;
+            margin-bottom: rem(1);
+          }
+        }
       }
     }
   }
@@ -1878,9 +2054,18 @@ export default {
     // background-size: cover;
     @include rem_padding(4, 0, 5, 0);
     position: relative;
+
     .section__wrap {
       position: relative;
       z-index: 10;
+      // flex: 1;
+      // @include rem_padding(0, 4, 0, 4);
+    }
+    &__wrap {
+      @include flex(flex-start, stretch);
+      @include media(sp) {
+        flex-direction: column;
+      }
     }
     &__canvas {
       position: absolute;
@@ -1918,10 +2103,17 @@ export default {
     &__textwrap {
       background: var(--color_lp_box);
       border-radius: 10px;
+      height: 100%;
       @include rem_padding(3, 4, 3, 4);
-      max-width: 600px;
+      // max-width: 600px;
       text-align: center;
-      margin: rem(2) auto;
+      // margin: rem(2) auto;
+      margin: auto rem(2);
+      flex: 1;
+      @include media(sp) {
+        margin: 0;
+        margin-bottom: rem(2);
+      }
     }
     &__logo {
       display: flex;
@@ -1930,7 +2122,7 @@ export default {
       @include flex(center, center);
       margin-bottom: rem(1);
       @include media(sp) {
-        margin-bottom: rem(2);
+        margin-bottom: rem(0);
       }
       img {
         width: rem(3);

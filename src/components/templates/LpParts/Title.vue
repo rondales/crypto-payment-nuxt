@@ -1,7 +1,7 @@
 <template>
-  <h2 :class="setClass">
-    <span class="title">{{ title.title }}</span>
-    <span class="subtitle">{{ title.subtitle }}</span>
+  <h2 :class="setClass + ''">
+    <span class="title" v-html="title.title"></span>
+    <span class="subtitle" v-html="title.subtitle"></span>
   </h2>
 </template>
 
@@ -40,6 +40,9 @@ export default {
 .titlewrap {
   margin-bottom: rem(4);
   text-align: center;
+  @include media(sp) {
+    margin-bottom: rem(2);
+  }
   &.g {
     * {
       background: $gradation-light;

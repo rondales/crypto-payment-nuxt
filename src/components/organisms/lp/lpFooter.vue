@@ -21,7 +21,7 @@
               >
             </p>
           </div>
-          <div class="lp-footer_info">
+          <!-- <div class="lp-footer_info">
             <div><span>SLASH FINTECH LIMITED（CANADA）</span></div>
             <p>
               <span
@@ -30,7 +30,7 @@
                 M22785834</span
               >
             </p>
-          </div>
+          </div> -->
         </div>
         <div class="lp-footer_right">
           <div class="lp-footer_nav">

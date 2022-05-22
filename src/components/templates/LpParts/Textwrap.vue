@@ -4,10 +4,10 @@
       <dt>{{ textData.tag.title }}</dt>
       <dd>{{ textData.tag.text }}</dd>
     </dl>
-    <h3 class="title"><span v-html="textData.title"></span></h3>
+    <h3 class="title scrollAction op"><span v-html="textData.title"></span></h3>
 
     <div class="absTest">
-      <p class="text"><span v-html="textData.text"></span></p>
+      <p class="text scrollAction op"><span v-html="textData.text"></span></p>
       <div v-if="textData.app" class="app">
         <div class="app_link">
           <p v-if="textData.app.coming" class="app_title">
@@ -70,11 +70,10 @@ export default {
 @import "@/assets/scss/delaunay.scss";
 
 .tag {
-  display: table;
+  @include flex(flex-start, center);
   margin-bottom: rem(2);
-  dt,
-  dd {
-    display: table-cell;
+  @include media(sp) {
+    @include flex(center, center);
   }
   dt {
     background: $gradation-light;
@@ -87,25 +86,30 @@ export default {
     @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
   }
 }
+
 .app {
-  margin-top: rem(3);
+  margin-top: rem(2);
+  // background-color: var(--color_box);
+  // border-radius: rem(1);
+  @include rem_padding(2, 2, 2, 2);
+  border: 1px solid var(--color_update);
   &_title {
-    @include font(rem(pow(1)), $fw, $ls, $lh, $en_go);
+    @include font(rem(pow(2)), $fw, $ls, $lh, $en_go);
     margin-bottom: rem(1);
     @include media(sp) {
       text-align: center;
     }
   }
   &_link {
-    @include flex(flex-start, flex-start);
+    @include flex(center, flex-start);
     @include media(sp) {
       @include flex(center, flex-start);
     }
-    img {
-      width: rem(10);
+    a {
+      width: rem(15);
     }
     .disable {
-      opacity: 0.5;
+      opacity: 0.8;
       pointer-events: none;
     }
     a + a {
@@ -137,13 +141,17 @@ export default {
   overflow-wrap: break-word;
 }
 .link {
-  margin-top: rem(2);
+  margin-top: rem(1);
+  @include media(sp) {
+    text-align: center;
+  }
 }
 .logos {
   @include flex(flex-start, center);
   @include media(sp) {
     @include flex(center, center);
   }
+  margin-top: rem(1);
   & > * {
     flex: 1;
   }

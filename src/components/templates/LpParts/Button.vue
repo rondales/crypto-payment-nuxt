@@ -1,11 +1,6 @@
 <template>
-  <a
-    :class="linkClass"
-    :href="isExternalLink(link.url) ? link.url : ''"
-    :tabindex="!link.status ? -1 : ''"
-    :target="isExternalLink(link.url) ? '_blank' : ''"
-    @click.prevent.stop="link.func"
-  >
+  <a v-bind="aHref">
+    <!-- <a v-bind="aHref" @click.prevent.stop="handle_function_call(link.func)"> -->
     <!-- [TODO] @clickの出力 -->
     <LpIcon
       v-if="!link.iconAfter && link.icon"
@@ -50,17 +45,41 @@ export default {
   computed: {
     linkClass() {
       let classname = "lpButton " + this.type + " " + this.size;
-
       return classname;
+    },
+
+    aHref() {
+      let prop = {};
+      prop["class"] = this.linkClass;
+
+      if (!this.link.status) {
+        prop["tabindex"] = "-1";
+      } else {
+        if (typeof this.link.func != "undefined") {
+          this.$emit(this.link.func);
+          console.log(this.link.func);
+        } else {
+          prop["href"] = this.isExternalLink(this.link.url)
+            ? this.link.url
+            : "";
+          prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
+        }
+      }
+      return prop;
+    },
+    setFunc() {
+      return "";
+      // return { click.stop.prevent: this.testfunc() };
     },
   },
   methods: {
     // 外部リンクかどうかチェック
-    isExternalLink(link) {
-      return /^https?:\/\//.test(link);
+    isExternalLink(url) {
+      let reg = new RegExp("^(https?:)?//" + document.domain);
+      return url.match(reg) || url.charAt(0) === "/"; //boolean
     },
-    testfunc() {
-      console.log("click!");
+    handle_function_call(function_name) {
+      this[function_name]();
     },
     enterApp() {
       this.$store.dispatch("changeTheme", "dark");
@@ -92,7 +111,7 @@ export default {
   }
   .icon {
     &.before {
-      margin-left: -8%;
+      margin-left: -6%;
     }
     &::v-deep {
       display: flex;
@@ -128,6 +147,7 @@ export default {
     @include font(rem(pow(1)), 500, 0.02em, 1, $ff);
     height: rem(4);
     padding: 0 rem(4);
+    padding: 0 rem(3);
     border-radius: rem(3);
     .icon {
       width: rem(3);
@@ -139,13 +159,13 @@ export default {
   &.s {
     @include font(rem(1), 500, 0.02em, 1, $ff);
     height: rem(3);
-    padding: 0 rem(3);
+    padding: 0 rem(1.2);
     border-radius: rem(3);
     .icon {
       width: rem(2);
     }
     * + * {
-      margin-left: rem(1);
+      margin-left: rem(0.5);
     }
   }
   &.main {
@@ -175,6 +195,54 @@ export default {
     &::after {
       background: $gradation-pale;
       background: $gradation-orange;
+      opacity: 0;
+    }
+    .icon.after {
+      transform-origin: center center;
+      transform: translate(0%, 0%);
+      transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    @include media(pc) {
+      &:hover {
+        &::before {
+          opacity: 0;
+        }
+        &::after {
+          opacity: 1;
+        }
+        .icon.after {
+          transform: translate(5px, 0%);
+        }
+      }
+    }
+  }
+  &.main2 {
+    @extend .lpButton;
+    position: relative;
+    * {
+      position: relative;
+      z-index: 10;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      z-index: 5;
+    }
+    &::before {
+      background: $gradation-orange;
+
+      opacity: 1;
+    }
+    &::after {
+      background: $gradation-light;
       opacity: 0;
     }
     .icon.after {

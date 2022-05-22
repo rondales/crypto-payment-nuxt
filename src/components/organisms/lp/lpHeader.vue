@@ -112,7 +112,7 @@ export default {
         title: "Enter App",
         icon: "",
         url: "",
-        func: "enterApp()",
+        func: '@click.prevent.stop="enterApp"',
         status: true,
       },
     };
