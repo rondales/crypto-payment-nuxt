@@ -10,6 +10,9 @@
         <p class="logo-sub">
           {{ subTitle }}
         </p>
+        <div v-if="isUseTestnet" class="testnet">
+          Testnet
+        </div>
         <div v-if="isAdminPage && isConnected && isFixedReceiveToken" class="user-status">
           ReceiveToken：<img :src="receiveTokenIcon"><span>{{ receiveTokenSymbol }}</span>
         </div>
@@ -62,7 +65,7 @@
 </template>
 
 <script>
-import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { DEVELOPMENT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 
 export default {
   name: 'Header',
@@ -152,6 +155,9 @@ export default {
     isFixedReceiveToken() {
       return (this.$store.state.account.receiveSymbol)
     },
+    isUseTestnet() {
+      return process.env.NODE_ENV === DEVELOPMENT
+    },
     receiveTokenSymbol() {
       return this.$store.state.account.receiveSymbol
     },
@@ -217,6 +223,23 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+.testnet {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+  background: #de4437;
+  padding: 2px 10px;
+  border-radius:50px;
+  margin-top: 10px;
+  margin-left: 16px;
+  align-items: center;
+  @include media(sp) {
+    font-size: 12px;
+    margin-top: 0px;
+    margin-left: 5px;
+    padding: 2px 7px;
+  }
+}
 .user-status{
   font-size: 14px;
   font-weight: 400;
