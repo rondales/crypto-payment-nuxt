@@ -1,14 +1,4 @@
-*{
-	&::selection {
-		color: var(--color_bg);
-		background: var(--color_inner);
-		text-decoration: underline;
-	}
-	&::-moz-selection {
-		color: var(--color_bg);
-		background: var(--color_inner);
-	}
-}
+
 
 /* -----------------------
 メディアクエリ
@@ -569,16 +559,18 @@ Setting Content - コンテンツ設定
 	box-sizing: border-box;
 }
 
+
 ::selection {
-	color: var(--Title);
-	background: var(--Light);
+	color: #fff;
+	background: #6A68ED ;
 	text-decoration: underline;
 }
 
 ::-moz-selection {
-	color: var(--Title);
-	background: var(--Light);
+	color: #fff;
+	background: #6A68ED ;
 }
+
 
 img {
 	display: block;
