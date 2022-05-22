@@ -158,8 +158,12 @@
           />
         </div>
         <ul :class="section.trial.class + '__feature'">
-          <li v-for="list in section.trial.lists" :key="list.logo">
-            <div :class="section.trial.class + '__feature__trapezoid'"></div>
+          <li
+            v-for="list in section.trial.lists"
+            :key="list.logo"
+            class="scrollAction"
+          >
+            <!-- <div :class="section.trial.class + '__feature__trapezoid'"></div> -->
             <div :class="section.trial.class + '__feature__list'">
               <div :class="section.trial.class + '__feature__imagewrap'">
                 <LpImage
@@ -562,9 +566,10 @@ export default {
               title:
                 'The best way for Accepting Web3<br class="sp"> Wallet Payments at Physical Stores',
               image: {
-                src: "lp/physical.jpg",
+                src: "lp/app2.png",
                 alt: "The best way for Accepting Web3 Wallet Payments at Physical Stores",
-                lightSrc: "lp/physical-l.jpg",
+                // lightSrc: "lp/physical-l.jpg",
+                lightSrc: "",
               },
               text: "If you are running a store, such as a café or a retail store, how about incorporating cryptocurrency as another means of payment? We are about to launch iOS/android app to make cryptocurrency payment more convenient.",
               app: {
@@ -1147,12 +1152,12 @@ export default {
     transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
     span {
       transform: translate(0, 105%);
-      transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 500ms;
+      transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 800ms;
       &:nth-child(2) {
-        transition-delay: 120ms;
+        transition-delay: 920ms;
       }
       &:nth-child(3) {
-        transition-delay: 240ms;
+        transition-delay: 1040ms;
       }
     }
     &::v-deep {
@@ -1183,12 +1188,12 @@ export default {
   &.capcha {
     figure {
       opacity: 0;
-      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 800ms;
+      transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 1000ms;
       &:nth-child(2) {
-        transition-delay: 920ms;
+        transition-delay: 1200ms;
       }
       &:nth-child(3) {
-        transition-delay: 1040ms;
+        transition-delay: 1400ms;
       }
     }
     &.active {
@@ -1570,11 +1575,28 @@ body.is-mounted {
       @include rem_padding(3, 0, 3, 0);
     }
     &__feature {
-      // @include flex(flex-start, flex-start);
-      // @include list(2, rem(4));
-      // @include media(sp) {
-      //   @include list(1, rem(4));
-      // }
+      .scrollAction {
+        &.active {
+          [class$="__textwrap"] {
+            opacity: 1;
+            transform: perspective(500px) rotateY(12deg);
+            @include media(sp) {
+              transform: perspective(500px) rotateY(0deg);
+            }
+            * {
+              opacity: 1;
+            }
+          }
+          &:nth-child(2n) {
+            [class$="__textwrap"] {
+              transform: perspective(500px) rotateY(-12deg);
+              @include media(sp) {
+                transform: perspective(500px) rotateY(0deg);
+              }
+            }
+          }
+        }
+      }
       & > li {
         position: relative;
         padding: rem(6) 0;
@@ -1591,62 +1613,14 @@ body.is-mounted {
             left: auto;
             right: 0;
           }
+          [class$="__textwrap"] {
+            transform: perspective(500px) rotateY(-70deg);
+          }
         }
+
         @include media(sp) {
           padding: rem(0) 0;
         }
-      }
-      &__trapezoid {
-        // background: $gradation-light;
-        background: linear-gradient(
-          90.25deg,
-          rgba(#3eb9fc, 1) 5.43%,
-          rgba(#6a68ed, 0.7) 59.32%,
-          rgba(#8b2ae1, 0.4) 98.19%
-        );
-        width: 60%;
-        height: 100%;
-        position: absolute;
-        z-index: 1;
-        top: 0%;
-        left: 0;
-        overflow: hidden;
-        @include media(sp) {
-          width: 100%;
-        }
-
-        &::before {
-          content: "";
-          width: 150%;
-          height: rem(5);
-          background-color: var(--color_lp_bg);
-          position: absolute;
-          top: 0%;
-          left: 50%;
-          z-index: 5;
-          transform-origin: center;
-          transform: translate3d(-50%, -50%, 0) rotate(2deg) scale(1, 1);
-        }
-        &::after {
-          content: "";
-          width: 150%;
-          height: rem(5);
-          background-color: var(--color_lp_bg);
-          position: absolute;
-          bottom: 0%;
-          left: 50%;
-          z-index: 5;
-          transform-origin: center;
-          transform: translate3d(-50%, 50%, 0) rotate(-2deg) scale(1, 1);
-        }
-        // transform-origin: center center;
-        // transform: translate(0%, -50%);
-        // &::before {
-        //   display: block;
-        //   width: 100%;
-        //   height: 100px;
-        //   content: "";
-        // }
       }
       &__list {
         position: relative;
@@ -1655,24 +1629,24 @@ body.is-mounted {
         flex-direction: row-reverse;
         @extend .section__wrap;
         z-index: 10;
+        transform-style: preserve-3d;
         @include media(sp) {
           display: block;
         }
-        // padding-top: rem(4);
-        // @include media(sp) {
-        //   margin-bottom: rem(4);
-        // }
       }
 
       &__imagewrap {
         flex: 1;
+        position: relative;
+        z-index: 100;
+        // margin: 0 rem(4);
         @include media(sp) {
           width: 100%;
           flex: auto;
         }
         &::v-deep {
           img {
-            box-shadow: var(--color_shadow);
+            box-shadow: 0px 0px 20px 6px rgba(#000, 0.1);
           }
         }
       }
@@ -1691,22 +1665,46 @@ body.is-mounted {
       }
       &__textwrap {
         flex: 1;
-        padding: 0 rem(4);
+        padding: rem(4);
+        position: relative;
+        transform-origin: center center;
+        transform: perspective(500px) rotateY(70deg);
+        opacity: 0;
+        transition: transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+          opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
         @include media(sp) {
-          padding: 0 rem(2);
+          padding: rem(2);
+        }
+        * {
+          opacity: 0;
+          transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 800ms;
+        }
+        &::before {
+          content: "";
+          display: block;
+          width: 150%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          background: linear-gradient(
+            90.25deg,
+            rgba(#3eb9fc, 1) 5.43%,
+            rgba(#6a68ed, 0.7) 59.32%,
+            rgba(#8b2ae1, 0.4) 98.19%
+          );
+          transform-origin: center center;
+          transform: translate(-50%, 0%);
+        }
+        * {
+          position: relative;
+          z-index: 10;
         }
         &::v-deep {
           text-align: center;
           .title {
             @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
             color: #fff;
-            // position: absolute;
-            // top: 0;
-            // left: 0;
-            // width: 100%;
-            // background: $gradation-light;
-            // -webkit-background-clip: text;
-            // -webkit-text-fill-color: transparent;
             @include media(sp) {
               @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
               margin-bottom: rem(1);
@@ -1729,7 +1727,6 @@ body.is-mounted {
   }
   &-network {
     position: relative;
-    // border-top: 1px solid var(--color_update);
     @include rem_padding(6, 0, 6, 0);
     position: relative;
     @include media(sp) {
@@ -1738,53 +1735,10 @@ body.is-mounted {
     .section__wrap {
       position: relative;
       z-index: 10;
-      // @include flex(flex-start, stretch);
-      // width: 100%;
-      // max-width: 100%;
-      // background: $gradation-pale;
-      // border-radius: rem(3);
-      // @include rem_padding(4, 4, 4, 4);
-      // &::before {
-      //   content: "";
-      //   display: block;
-      //   position: absolute;
-      //   width: calc(100% - 10px);
-      //   height: calc(100% - 10px);
-      //   position: absolute;
-      //   top: 50%;
-      //   left: 50%;
-      //   border-radius: rem(3);
-      //   transform-origin: center center;
-      //   transform: translate(-50%, -50%);
-      //   background-color: var(--color_bg);
-      // }
-      // * {
-      //   position: relative;
-      //   z-index: 10;
-      // }
     }
     &__title {
-      // flex: 1;
-      // width: 360px;
-      // padding: 0 rem(3);
-      // text-align: left;
-      // border-bottom: 1px solid var(--color_update);
-      // margin-bottom: 0;
-      // position: absolute;
-      // left: 0;
-      // top: 0;
-      // background-color: var(--color_font);
-      // @include rem_padding(2, 0, 2, 0);
       &::v-deep {
         .title {
-          // text-align: right;
-          // transform-origin: top right;
-          // transform: translate3d(-100%, 0%, 0) rotate(-90deg) scale(1, 1);
-          //   color: var(--color_bg);
-          //   text-transform: uppercase;
-          //   text-shadow: 2px 2px 1px var(--color_font),
-          //     -2px 2px 1px var(--color_font), 2px -2px 1px var(--color_font),
-          //     -2px -2px 1px var(--color_font);
         }
       }
     }
@@ -1803,13 +1757,6 @@ body.is-mounted {
           width: 100%;
           height: 100%;
           overflow: hidden;
-          // height: 100px @;
-          // &::before {
-          //   content: "";
-          //   display: block;
-          //   width: 100%;
-          //   padding-top: 100%;
-          // }
           canvas {
             position: absolute;
             top: 50%;
@@ -1826,41 +1773,18 @@ body.is-mounted {
     &__logos {
       flex: 4;
       white-space: nowrap;
-      // border-left: 1px solid var(--color_update);
       @include flex(flex-start, center);
       @include list(4, rem(3));
       @include media(sp) {
         @include flex(flex-start, center);
         @include list(2, rem(1));
       }
-      // animation: loop 30s linear infinite;
-      // transform: translateX(100%);
-
-      // @keyframes loop {
-      //   0% {
-      //     transform: translateX(100%);
-      //   }
-      //   to {
-      //     transform: translateX(-100%);
-      //   }
-      // }
-      // &:hover {
-      //   animation-play-state: paused;
-      // }
 
       li {
-        // display: inline-block;
-        // width: rem(20);
         margin-bottom: rem(2);
         @include media(sp) {
           margin-bottom: rem(1);
         }
-        // border-right: 1px solid var(--color_update);
-        // border-bottom: 1px solid var(--color_update);
-
-        // &:nth-child(3n) {
-        //   border-right: 0px solid var(--color_update);
-        // }
       }
     }
     &__logos2 {
@@ -1873,33 +1797,24 @@ body.is-mounted {
       @include rem_padding(3, 0, 3, 0);
     }
     &__phase {
-      // @include list(2, 2rem);
       &__box {
         @include flex(flex-start, stretch);
         margin-bottom: rem(4);
         background-color: var(--color_darken);
-        // border-radius: rem(2);
         overflow: hidden;
-        // box-shadow: var(--color_shadow);
         @include media(sp) {
           display: block;
         }
       }
       &__title {
         flex: 1;
-        // width: 30%;
         @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
         background: $gradation-light;
         color: #fff;
-        // -webkit-background-clip: text;
-        // -webkit-text-fill-color: transparent;
         @include flex(center, center);
         @include media(sp) {
           @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
           padding: rem(0.5);
-          //   width: 100%;
-          //   text-align: center;
-          //   margin-bottom: rem(2);
         }
       }
 
@@ -1907,7 +1822,6 @@ body.is-mounted {
         flex: 3;
         @include flex(center, stretch);
         @include list(2, 0);
-        // width: 70%;
         @include media(sp) {
           width: 100%;
           @include list(1, rem(2));
@@ -2015,15 +1929,6 @@ body.is-mounted {
     }
     &__list {
       @include flex(center, flex-start);
-      // @include list(2, 2rem);
-      // text-align: center;
-      // max-width: 80%;
-      // margin-left: auto;
-      // margin-right: auto;
-      // @include media(sp) {
-      //   width: 100%;
-      //   max-width: 100%;
-      // }
     }
   }
   &-contact {
@@ -2031,12 +1936,7 @@ body.is-mounted {
     &__list {
       flex: 1;
       margin: auto rem(2);
-      // text-align: center;
-      // max-width: 80%;
-      // margin-left: auto;
-      // margin-right: auto;
-      // @include flex(flex-start, flex-start);
-      // @include list(2, 2rem);
+
       @include media(sp) {
         margin: 0;
         &::v-deep {
@@ -2049,18 +1949,12 @@ body.is-mounted {
     }
   }
   &-cv {
-    // background-image: url(/assets/images/lp/last_back_m.jpg);
-    // background-repeat: no-repeat;
-    // background-position: center;
-    // background-size: cover;
     @include rem_padding(4, 0, 5, 0);
     position: relative;
 
     .section__wrap {
       position: relative;
       z-index: 10;
-      // flex: 1;
-      // @include rem_padding(0, 4, 0, 4);
     }
     &__wrap {
       @include flex(flex-start, stretch);
@@ -2082,13 +1976,6 @@ body.is-mounted {
           width: 100%;
           height: 100%;
           overflow: hidden;
-          // height: 100px @;
-          // &::before {
-          //   content: "";
-          //   display: block;
-          //   width: 100%;
-          //   padding-top: 100%;
-          // }
           canvas {
             position: absolute;
             top: 50%;

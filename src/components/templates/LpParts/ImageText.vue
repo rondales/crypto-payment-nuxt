@@ -57,6 +57,11 @@ export default {
     }
     [class$="__canvas"] {
       order: 2;
+      margin-left: rem(4);
+      margin-right: 0;
+      @include media(sp) {
+        margin-left: 0;
+      }
     }
     [class$="__textwrap"] {
       // padding-left: 0;
@@ -100,10 +105,11 @@ export default {
     }
   }
   &__canvas {
-    flex: 3;
+    flex: 2;
     // grid-column: span 3;
     position: relative;
     z-index: 1;
+    margin-right: rem(4);
     @include media(sp) {
       margin-bottom: rem(2);
       // grid-column: span 5;
