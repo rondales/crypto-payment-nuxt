@@ -1545,6 +1545,17 @@ body.is-mounted {
     @include media(sp) {
       @include rem_padding(3, 0, 3, 0);
     }
+    &__feature {
+      li {
+        &:nth-child(3) {
+          &::v-deep {
+            .textimgwrap__image {
+              background-color: var(--color_lp_box);
+            }
+          }
+        }
+      }
+    }
   }
   &-fee {
     @include rem_padding(6, 0, 6, 0);
@@ -1578,6 +1589,9 @@ body.is-mounted {
       .scrollAction {
         &.active {
           [class$="__textwrap"] {
+            transition: transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)
+                300ms,
+              opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 300ms;
             opacity: 1;
             transform: perspective(500px) rotateY(12deg);
             @include media(sp) {
@@ -1586,6 +1600,10 @@ body.is-mounted {
             * {
               opacity: 1;
             }
+          }
+          [class$="__imagewrap"] {
+            transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+            opacity: 1;
           }
           &:nth-child(2n) {
             [class$="__textwrap"] {
@@ -1614,7 +1632,7 @@ body.is-mounted {
             right: 0;
           }
           [class$="__textwrap"] {
-            transform: perspective(500px) rotateY(-70deg);
+            transform: perspective(500px) rotateY(-30deg);
           }
         }
 
@@ -1639,7 +1657,9 @@ body.is-mounted {
         flex: 1;
         position: relative;
         z-index: 100;
-        // margin: 0 rem(4);
+        opacity: 0;
+        will-change: opacity;
+        transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
         @include media(sp) {
           width: 100%;
           flex: auto;
@@ -1668,9 +1688,10 @@ body.is-mounted {
         padding: rem(4);
         position: relative;
         transform-origin: center center;
-        transform: perspective(500px) rotateY(70deg);
+        transform: perspective(500px) rotateY(30deg);
         opacity: 0;
-        transition: transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+        will-change: opacity, transform;
+        transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 0ms,
           opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
         @include media(sp) {
           padding: rem(2);
