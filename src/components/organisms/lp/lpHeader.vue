@@ -112,7 +112,7 @@ export default {
         title: "Enter App",
         icon: "",
         url: "",
-        func: '@click.prevent.stop="enterApp"',
+        func: "enterApp",
         status: true,
       },
     };
@@ -124,9 +124,10 @@ export default {
     open() {
       this.$store.dispatch("hamberger", { hamberger: true });
     },
-    enterApp() {
-      this.$store.dispatch("changeTheme", "dark");
-    },
+    // enterApp() {
+    // Button.vueに記述
+    //   this.$store.dispatch("changeTheme", "dark");
+    // },
   },
 };
 </script>

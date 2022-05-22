@@ -688,7 +688,7 @@ export default {
               text: "https://donate.savethechildren.org",
               link: {
                 title: "Donate Now",
-                func: "paymentForDonate(SAFE_THE_CHILDREN)",
+                func: "paymentForDonate_SAFE_THE_CHILDREN",
                 icon: "connect",
                 status: true,
               },
@@ -704,7 +704,7 @@ export default {
               text: "https://www.unicef.org/",
               link: {
                 title: "Donate Now",
-                func: "paymentForDonate(UNICEF)",
+                func: "paymentForDonate_UNICEF",
                 icon: "connect",
                 status: true,
               },
@@ -1081,9 +1081,10 @@ export default {
     toggle(key) {
       this.$set(this.show, key, !this.show[key]);
     },
-    enterApp() {
-      this.$store.dispatch("changeTheme", "dark");
-    },
+    // enterApp() {
+    // Button.vueに記述
+    //   this.$store.dispatch("changeTheme", "dark");
+    // },
     scrollAction() {
       const scrollActions = document.querySelectorAll(".scrollAction");
       for (let i = 0; i < scrollActions.length; i++) {

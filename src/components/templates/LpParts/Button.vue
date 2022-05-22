@@ -1,19 +1,36 @@
 <template>
-  <a v-bind="aHref">
-    <!-- <a v-bind="aHref" @click.prevent.stop="handle_function_call(link.func)"> -->
-    <!-- [TODO] @clickの出力 -->
-    <LpIcon
-      v-if="!link.iconAfter && link.icon"
-      class="icon before"
-      :path="link.icon"
-    />
-    <span>{{ link.title }}</span>
-    <LpIcon
-      v-if="link.iconAfter && link.icon"
-      class="icon after"
-      :path="link.icon"
-    />
-  </a>
+  <div>
+    <button
+      v-if="link.func"
+      :class="linkClass"
+      @click.prevent.stop="handle_function_call(link.func)"
+    >
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </button>
+    <a v-if="!link.func" :class="linkClass" v-bind="aHref">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </a>
+  </div>
 </template>
 
 <script>
@@ -50,15 +67,12 @@ export default {
 
     aHref() {
       let prop = {};
-      prop["class"] = this.linkClass;
+      // prop["class"] = this.linkClass;
 
       if (!this.link.status) {
         prop["tabindex"] = "-1";
       } else {
-        if (typeof this.link.func != "undefined") {
-          this.$emit(this.link.func);
-          console.log(this.link.func);
-        } else {
+        if (typeof this.link.func == "undefined") {
           prop["href"] = this.isExternalLink(this.link.url)
             ? this.link.url
             : "";
@@ -66,10 +80,6 @@ export default {
         }
       }
       return prop;
-    },
-    setFunc() {
-      return "";
-      // return { click.stop.prevent: this.testfunc() };
     },
   },
   methods: {
@@ -79,10 +89,20 @@ export default {
       return url.match(reg) || url.charAt(0) === "/"; //boolean
     },
     handle_function_call(function_name) {
-      this[function_name]();
+      if (function_name == "enterApp") {
+        this.enterApp();
+      } else if (function_name == "paymentForDonate_SAFE_THE_CHILDREN") {
+        this.paymentForDonate("SAFE_THE_CHILDREN");
+      } else if (function_name == "paymentForDonate_UNICEF") {
+        this.paymentForDonate("UNICEF");
+      }
     },
     enterApp() {
+      console.log("click enter app");
       this.$store.dispatch("changeTheme", "dark");
+    },
+    paymentForDonate(method) {
+      console.log("Donate " + method);
     },
   },
 };
