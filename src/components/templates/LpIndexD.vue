@@ -1,6 +1,5 @@
 <template>
   <div id="wrapAll">
-    <!-- [TODO] whiteの時のチェック -->
     <!-- [TODO] scroll action -->
     <!-- [TODO] 日本語のチェック -->
     <LpHeader />
@@ -74,15 +73,8 @@
             color="g"
           />
           <ul :class="section.token.class + '__iconlist'">
-            <li v-for="icon in section.token.icons" :key="icon.path">
-              <figure>
-                <img
-                  :src="
-                    require('@/assets/images/lp/token/' + icon.path + '.svg')
-                  "
-                  :alt="icon.text"
-                />
-              </figure>
+            <li v-for="icon in section.token.icons" :key="icon.src">
+              <LpImage :imgData="icon" />
             </li>
           </ul>
           <div :class="section.token.class + '__subbox'">
@@ -103,17 +95,8 @@
                   <span v-html="card.title"></span>
                 </h4>
                 <ul :class="section.token.class + '__card__iconlist'">
-                  <li v-for="icon in card.icons" :key="icon.path">
-                    <figure>
-                      <img
-                        :src="
-                          require('@/assets/images/lp/token/' +
-                            icon.path +
-                            '.svg')
-                        "
-                        :alt="icon.text"
-                      />
-                    </figure>
+                  <li v-for="icon in card.icons" :key="icon.src">
+                    <LpImage :imgData="icon" />
                   </li>
                 </ul>
                 <p :class="section.token.class + '__card__text'">
@@ -142,7 +125,7 @@
                 <LpAnimation
                   v-if="feature.canvas"
                   :canvasClass="section.install.class + '__feature'"
-                  type="SubCanvas1"
+                  :type="feature.canvas"
                 />
                 <LpImage
                   v-if="!feature.canvas"
@@ -208,10 +191,9 @@
                     :imgData="list.image"
                     :class="section.trial.class + '__feature__image'"
                   />
-                  <img
+                  <LpIcon
                     :class="section.trial.class + '__feature__logo'"
-                    :src="require('@/assets/images/' + list.logo)"
-                    :alt="list.title"
+                    :path="list.logo"
                   />
                 </div>
                 <div :class="section.trial.class + '__feature__textwrap'">
@@ -236,12 +218,8 @@
             :title="section.network.title"
           />
           <ul :class="section.network.class + '__logos'">
-            <li v-for="logo in section.network.logos" :key="logo.path">
-              <figure>
-                <img
-                  :src="require('@/assets/images/lp/' + logo.path + '.png')"
-                />
-              </figure>
+            <li v-for="logo in section.network.logos" :key="logo.src">
+              <LpImage :imgData="logo" />
             </li>
           </ul>
         </div>
@@ -343,11 +321,11 @@
 import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
 import LpAnimation from "@/components/templates/LpAnimation";
-// import LpIcon from "@/components/templates/LpParts/Icon";
 import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
-import LpImage from "@/components/templates/LpParts/Image";
 import LpTextwrap from "@/components/templates/LpParts/Textwrap";
+import LpImage from "@/components/templates/LpParts/Image";
+import LpIcon from "@/components/templates/LpParts/Icon";
 
 export default {
   data() {
@@ -390,28 +368,34 @@ export default {
           },
           icons: [
             {
-              text: "",
-              path: "icon-crv",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-crv.svg",
             },
             {
-              text: "",
-              path: "icon-uni",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-uni.svg",
             },
             {
-              text: "",
-              path: "icon-sushi",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-sushi.svg",
             },
             {
-              text: "",
-              path: "icon-cake",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-cake.svg",
             },
             {
-              text: "",
-              path: "icon-quick",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-quick.svg",
             },
             {
-              text: "",
-              path: "icon-png",
+              alt: "",
+              lightSrc: "",
+              src: "lp/token/icon-png.svg",
             },
           ],
           sub: {
@@ -430,12 +414,14 @@ export default {
               title: "Web3 connect",
               icons: [
                 {
-                  text: "",
-                  path: "icon-metamask",
+                  alt: "",
+                  src: "lp/token/icon-metamask.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-walletconnect",
+                  alt: "",
+                  src: "lp/token/icon-walletconnect.svg",
+                  lightSrc: "",
                 },
               ],
               text: "Merchants can automatically accept online TOKEN payments from customers using the Web3 wallet.",
@@ -444,28 +430,34 @@ export default {
               title: " Auto-exchange <br> via DEX",
               icons: [
                 {
-                  text: "",
-                  path: "icon-crv",
+                  alt: "",
+                  src: "lp/token/icon-crv.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-uni",
+                  alt: "",
+                  src: "lp/token/icon-uni.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-sushi",
+                  alt: "",
+                  src: "lp/token/icon-sushi.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-cake",
+                  alt: "",
+                  src: "lp/token/icon-cake.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-quick",
+                  alt: "",
+                  src: "lp/token/icon-quick.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-png",
+                  alt: "",
+                  src: "lp/token/icon-png.svg",
+                  lightSrc: "",
                 },
               ],
               text: "customer’s payment will reach the merchant instantly in exchange for Stable Token（USDT.USDC.DAI…）via a decentralized exchange.",
@@ -474,28 +466,34 @@ export default {
               title: "Multiple chain",
               icons: [
                 {
-                  text: "",
-                  path: "icon-eth",
+                  alt: "",
+                  src: "lp/token/icon-eth.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-bnb",
+                  alt: "",
+                  src: "lp/token/icon-bnb.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-matic",
+                  alt: "",
+                  src: "lp/token/icon-matic.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-arbitrum",
+                  alt: "",
+                  src: "lp/token/icon-arbitrum.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-avax",
+                  alt: "",
+                  src: "lp/token/icon-avax.svg",
+                  lightSrc: "",
                 },
                 {
-                  text: "",
-                  path: "icon-ftm",
+                  alt: "",
+                  src: "lp/token/icon-ftm.svg",
+                  lightSrc: "",
                 },
               ],
               text: "ETH and EVM-based (Ethereum Virtual Machine)  networks are supported.",
@@ -538,13 +536,19 @@ export default {
               text: "Slash-specific plugin is available to simplify integration with various open platforms. Because of the ease of implementing payments, Slash Payments may be the first transaction that occurs when you launch your e-commerce site.",
               logos: [
                 {
-                  path: "woocommerce",
+                  alt: "woocommerce",
+                  src: "lp/logos/woocommerce.svg",
+                  lightSrc: "lp/logos/woocommerce_l.svg",
                 },
                 {
-                  path: "opencart",
+                  alt: "opencart",
+                  src: "lp/logos/opencart.svg",
+                  lightSrc: "",
                 },
                 {
-                  path: "eccube",
+                  alt: "eccube",
+                  src: "lp/logos/eccube.svg",
+                  lightSrc: "lp/logos/eccube_l.svg",
                 },
               ],
               link: {
@@ -567,13 +571,21 @@ export default {
               app: {
                 links: [
                   {
-                    image: "appStore",
+                    image: {
+                      src: "lp/logos/appstore.svg",
+                      alt: "Download on the Appstore",
+                      lightSrc: "",
+                    },
                     link: "",
                     status: false,
                     title: "",
                   },
                   {
-                    image: "googlePlay",
+                    image: {
+                      src: "lp/logos/googleplay.svg",
+                      alt: "Googleplay",
+                      lightSrc: "",
+                    },
                     link: "",
                     status: false,
                     title: "",
@@ -620,10 +632,14 @@ export default {
               text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
-                  path: "save-the-children",
+                  alt: "save-the-children",
+                  src: "lp/logos/savethechildren.svg",
+                  lightSrc: "lp/logos/savethechildren_l.svg",
                 },
                 {
-                  path: "unicef",
+                  alt: "unicef",
+                  src: "lp/logos/unicef.svg",
+                  lightSrc: "",
                 },
               ],
               link: {
@@ -669,7 +685,7 @@ export default {
                 alt: "Experience it first hand.",
                 lightSrc: "",
               },
-              logo: "lp/donate01.svg",
+              logo: "icon/donate-savethechildren",
               text: "https://donate.savethechildren.org",
               link: {
                 title: "Donate Now",
@@ -686,7 +702,7 @@ export default {
                 alt: "Experience it first hand.",
                 lightSrc: "",
               },
-              logo: "lp/donate02.svg",
+              logo: "icon/donate-unicef",
               text: "https://www.unicef.org/",
               link: {
                 title: "Donate Now",
@@ -705,37 +721,59 @@ export default {
           },
           logos: [
             {
-              path: "cn1",
+              alt: "UNISWAP",
+              src: "lp/logos/uniswap.svg",
+              lightSrc: "",
             },
             {
-              path: "cn2",
+              alt: "BINANCE SMART CHAIN",
+              src: "lp/logos/binance.svg",
+              lightSrc: "",
             },
             {
-              path: "cn3",
+              alt: "ethereum",
+              src: "lp/logos/ethereum.svg",
+              lightSrc: "lp/logos/ethereum_l.svg",
             },
             {
-              path: "cn4",
+              alt: "polygonscan",
+              src: "lp/logos/polygonscan.svg",
+              lightSrc: "lp/logos/polygonscan_l.svg",
             },
             {
-              path: "cn5",
+              alt: "METAMASK",
+              src: "lp/logos/metamask.svg",
+              lightSrc: "lp/logos/metamask_l.svg",
             },
             {
-              path: "cn6",
+              alt: "PancakeSwap",
+              src: "lp/logos/pancakeswap.svg",
+              lightSrc: "lp/logos/pancakeswap_l.svg",
             },
             {
-              path: "cn7",
+              alt: "polygon",
+              src: "lp/logos/polygon.svg",
+              lightSrc: "lp/logos/polygon_l.svg",
             },
             {
-              path: "cn8",
+              alt: "QUICKSWAP",
+              src: "lp/logos/quickswap.svg",
+              lightSrc: "",
             },
             {
-              path: "cn9",
+              alt: "WalletConnect",
+              src: "lp/logos/walletconnect.svg",
+              lightSrc: "",
             },
             {
-              path: "cn10",
+              alt: "BscScan",
+              src: "lp/logos/bscscan.svg",
+              lightSrc: "lp/logos/bscscan_l.svg",
             },
             {
-              path: "cn11",
+              alt: "etherscan",
+              src: "lp/logos/etherscan.svg",
+              lightSrc: "lp/logos/etherscan_l.svg",
             },
           ],
         },
@@ -1025,11 +1063,11 @@ export default {
     LpHeader,
     LpFooter,
     LpAnimation,
-    // LpIcon,
     LpButton,
     LpTitle,
-    LpImage,
     LpTextwrap,
+    LpImage,
+    LpIcon,
   },
 
   methods: {
@@ -1645,8 +1683,13 @@ export default {
       &__image {
       }
       &__logo {
-        width: 70%;
-        margin: rem(1) auto;
+        width: 50%;
+        margin: rem(2) auto rem(1);
+        &::v-deep {
+          svg {
+            fill: var(--color_font);
+          }
+        }
       }
       &__textwrap {
         &::v-deep {

@@ -5,6 +5,7 @@
       <dd>{{ textData.tag.text }}</dd>
     </dl>
     <h3 class="title"><span v-html="textData.title"></span></h3>
+
     <div class="absTest">
       <p class="text"><span v-html="textData.text"></span></p>
       <div v-if="textData.app" class="app">
@@ -17,11 +18,10 @@
               v-for="appLink in textData.app.links"
               :key="appLink.image"
               :href="appLink.link"
+              :class="appLink.status ? '' : 'disable'"
             >
-              <img
-                :src="require('@/assets/images/lp/' + appLink.image + '.svg')"
-                :alt="appLink.title"
-            /></a>
+              <LpImage :imgData="appLink.image" />
+            </a>
           </div>
           <p v-if="textData.app.cap" class="app_cap">
             <span>{{ textData.app.cap }}</span>
@@ -31,12 +31,7 @@
     </div>
     <ul v-if="textData.logos" class="logos">
       <li v-for="icon in textData.logos" :key="icon.path">
-        <figure>
-          <img
-            :src="require('@/assets/images/lp/' + icon.path + '.svg')"
-            :alt="icon.text"
-          />
-        </figure>
+        <LpImage :imgData="icon" />
       </li>
     </ul>
     <div v-if="textData.link" class="link">
@@ -47,9 +42,11 @@
 
 <script>
 import LpButton from "@/components/templates/LpParts/Button";
+import LpImage from "@/components/templates/LpParts/Image";
 export default {
   components: {
     LpButton,
+    LpImage,
   },
   props: {
     textData: {
@@ -57,7 +54,15 @@ export default {
       required: true,
     },
   },
-  computed: {},
+  computed: {
+    iconPath() {
+      if (this.imgData.lightSrc != "" && this.$store.state.theme == "light") {
+        return require("@/assets/images/" + this.imgData.lightSrc);
+      } else {
+        return require("@/assets/images/" + this.imgData.src);
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -99,6 +104,10 @@ export default {
     img {
       width: rem(10);
     }
+    .disable {
+      opacity: 0.5;
+      pointer-events: none;
+    }
     a + a {
       margin-left: rem(1);
     }
@@ -132,11 +141,11 @@ export default {
 }
 .logos {
   @include flex(flex-start, center);
-  @include list(3, rem(2));
-  margin-top: rem(2);
   @include media(sp) {
     @include flex(center, center);
-    @include list(3, rem(1));
+  }
+  & > * {
+    flex: 1;
   }
 }
 </style>

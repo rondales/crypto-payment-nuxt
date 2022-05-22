@@ -25,6 +25,7 @@ export default {
       } else {
         return require("@/assets/images/" + this.imgData.src);
       }
+      // return require("@/assets/images/" + this.imgData.src);
     },
   },
 };

@@ -7,14 +7,17 @@
     @click.prevent.stop="link.func"
   >
     <!-- [TODO] @clickの出力 -->
-    <!-- [TODO] hoverのcss-->
     <LpIcon
       v-if="!link.iconAfter && link.icon"
-      class="icon"
+      class="icon before"
       :path="link.icon"
     />
     <span>{{ link.title }}</span>
-    <LpIcon v-if="link.iconAfter && link.icon" class="icon" :path="link.icon" />
+    <LpIcon
+      v-if="link.iconAfter && link.icon"
+      class="icon after"
+      :path="link.icon"
+    />
   </a>
 </template>
 
@@ -76,6 +79,7 @@ export default {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  overflow: hidden;
 
   margin: rem(0.5);
   color: #fff;
@@ -87,6 +91,9 @@ export default {
     }
   }
   .icon {
+    &.before {
+      margin-left: -8%;
+    }
     &::v-deep {
       display: flex;
       svg {
@@ -143,20 +150,93 @@ export default {
   }
   &.main {
     @extend .lpButton;
-    background: $gradation;
-    background: $gradation-pale;
-    background: $gradation-light;
-    // background-color: red;
+    position: relative;
+    * {
+      position: relative;
+      z-index: 10;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      z-index: 5;
+    }
+    &::before {
+      background: $gradation-light;
+      opacity: 1;
+    }
+    &::after {
+      background: $gradation-pale;
+      background: $gradation-orange;
+      opacity: 0;
+    }
+    .icon.after {
+      transform-origin: center center;
+      transform: translate(0%, 0%);
+      transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    @include media(pc) {
+      &:hover {
+        &::before {
+          opacity: 0;
+        }
+        &::after {
+          opacity: 1;
+        }
+        .icon.after {
+          transform: translate(5px, 0%);
+        }
+      }
+    }
   }
   &.sub {
     @extend .lpButton;
-    background: var(--color_inner);
+    background-color: var(--color_update);
+    transition: background-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    @include media(pc) {
+      &:hover {
+        background-color: #6a68ed;
+      }
+    }
   }
   &.simple {
     padding: 0 rem(0);
     border-radius: 0;
-    border-bottom: 1px solid var(--color_font);
     color: var(--color_font);
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: var(--color_font);
+      bottom: 0;
+      right: 0;
+      transition: width 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    .icon {
+      transform-origin: center center;
+      transform: translate(0%, 0%);
+      transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    @include media(pc) {
+      &:hover {
+        &::before {
+          width: 0;
+        }
+        .icon {
+          transform: translate(5px, 0%);
+        }
+      }
+    }
     .icon {
       width: rem(2);
       &::v-deep {
@@ -169,16 +249,19 @@ export default {
   &.noactive {
     @extend .lpButton;
     pointer-events: none;
-    background: var(--color_bg_parts);
-    border: 1px solid var(--color_border);
-    color: var(--color_inactive);
-    .icon {
-      &::v-deep {
-        svg {
-          fill: var(--color_inactive);
-        }
-      }
+    background: var(--color_inactive);
+    border: 1px solid var(--color_inactive);
+    * {
+      opacity: 0.6;
     }
+    // color: var(--color_box);
+    // .icon {
+    //   &::v-deep {
+    //     svg {
+    //       fill: var(--color_box);
+    //     }
+    //   }
+    // }
   }
 }
 </style>
