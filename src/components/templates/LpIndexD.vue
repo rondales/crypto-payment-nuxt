@@ -578,7 +578,7 @@ export default {
                     },
                     link: "",
                     status: false,
-                    title: "",
+                    title: "Appstore",
                   },
                   {
                     image: {
@@ -588,7 +588,7 @@ export default {
                     },
                     link: "",
                     status: false,
-                    title: "",
+                    title: "Googleplay",
                   },
                 ],
                 coming: "coming soon…",

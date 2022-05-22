@@ -16,7 +16,7 @@
           <div class="app_link">
             <a
               v-for="appLink in textData.app.links"
-              :key="appLink.image"
+              :key="appLink.title"
               :href="appLink.link"
               :class="appLink.status ? '' : 'disable'"
             >
@@ -30,7 +30,7 @@
       </div>
     </div>
     <ul v-if="textData.logos" class="logos">
-      <li v-for="icon in textData.logos" :key="icon.path">
+      <li v-for="icon in textData.logos" :key="icon.src">
         <LpImage :imgData="icon" />
       </li>
     </ul>
