@@ -4,7 +4,7 @@
       <h3 class="header__title">
         Select a Network
       </h3>
-      <p v-if="isSpported" class="header__desc">
+      <p v-if="isSupportedNetwork" class="header__desc">
         Please select the network you wish to switch to.
       </p>
       <p v-else class="header__desc">
@@ -15,8 +15,8 @@
     </div>
     <div class="body add-flex j-between">
       <button
-        v-for="(network, key) in networks"
-        :key="key"
+        v-for="network in supportedNetworks"
+        :key="network.chainId"
         class="btn __m half"
         :class="{ __pg: isCurrentNetwork(network.chainId) }"
         @click="switchNetwork(network.chainId)"
@@ -27,7 +27,7 @@
           {{network.name}}
       </button>
     </div>
-    <button v-if="isSpported" class="close" @click="hideModal">
+    <button v-if="isSupportedNetwork" class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
     </button>
   </div>
@@ -38,41 +38,26 @@ import AvailableNetworks from '@/network'
 
 export default {
   name: 'networkModal',
-  data() {
-    return {
-      networks: []
-    };
-  },
   computed: {
     classes() {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
-    paymentAvailableNetworks() {
-      return this.$store.state.payment.availableNetworks
+    supportedNetworks() {
+      return AvailableNetworks
     },
     isCurrentNetwork() {
       return (chainId) => {
         return chainId === this.$store.state.web3.chainId
       }
     },
-    isSpported() {
+    isSupportedNetwork() {
       const systemAvailableNetworks =
         Object.values(AvailableNetworks)
           .map((network) => { return network.chainId })
       return systemAvailableNetworks.includes(
         this.$store.state.web3.chainId
       )
-    },
-    unsupported() {
-      return 'unsupported' in this.$store.state.modal.params
-        ? this.$store.state.modal.params.unsupported
-        : false
-    },
-    require() {
-      return 'hideCloseButton' in this.$store.state.modal.params
-        ? this.$store.state.modal.params.hideCloseButton
-        : false
     }
   },
   methods: {
@@ -88,11 +73,6 @@ export default {
         this.hideModal()
       })
     }
-  },
-  created() {
-    this.networks = Object.values(AvailableNetworks).filter(
-      network => this.paymentAvailableNetworks.includes(network.chainId)
-    )
   }
 }
 </script>
