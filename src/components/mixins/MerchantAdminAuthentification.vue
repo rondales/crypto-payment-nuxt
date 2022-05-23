@@ -40,7 +40,10 @@ export default {
             this.$_merchantAdminAuthentification_authorizedAfrer(authorized, loginMode, modalMode)
           })
           .catch((error) => {
-            if (error instanceof NotSupportedChainError) {
+            if (
+              error instanceof NotSupportedChainError
+              && /^(\/admin|\/admin\/)$/.test(this.$route.path)
+            ) {
               this.$store.dispatch('modal/show', {
                 target: 'error-current-network-modal',
                 size: 'small'
