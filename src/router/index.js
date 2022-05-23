@@ -91,7 +91,25 @@ const router = new Router({
             },
             {
               name: "admin",
-              path: "/admin/web3payment",
+              path: "/admin/payment/history",
+              component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/payment/settings/contract",
+              component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/payment/settings/basic",
+              component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/payment/settings/domain",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
               meta: { title: 'Slash Apps' }
             },

@@ -258,11 +258,13 @@ const getTokenExchangeData = async function(
   walletAddress,
   contract,
   token,
-  paymentRequestAmount
+  paymentRequestSymbol,
+  paymentRequestAmount,
+  slippageTolerance
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getNetworkDefaultTokens(chainId)
-  const requestToken = defaultTokens.USDT
+  const requestToken = defaultTokens[paymentRequestSymbol]
   const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
   const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
   const requestTokenWeiUnit = getTokenUnit(requestTokenDecimal)
@@ -272,6 +274,7 @@ const getTokenExchangeData = async function(
   const requestAmountWei = web3.utils.toWei(`${paymentRequestAmount}`, requestTokenWeiUnit)
   const wrappedToken = getWrappedToken(chainId)
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const reservedParam = '0x'
 
   const feePath = token.address === null
     ? [wrappedToken.address, requestToken.address]
@@ -282,29 +285,41 @@ const getTokenExchangeData = async function(
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
       payingTokenAddress,
       userTokenBalanceWei,  
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       requestAmountWei,
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
+  const requireAmountWithSlippage = token.address == requestToken.address 
+    ? requestTokenToUserToken
+    : String(
+        Math.round(
+          parseInt(requestTokenToUserToken, 10) * (1 + (slippageTolerance / 100))
+        )
+      )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       perRequestTokenWei,
-      feePath
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
-      payingTokenAddress,
-      requestTokenToUserToken,
-      feePath
+      requestAmountWei,
+      feePath,
+      reservedParam
     ).call({ from: walletAddress })
-  const totalFee = String(Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0))
+  const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
+  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
   return {
-    requireAmount: web3.utils.fromWei(requestTokenToUserToken, userTokenWeiUnit),
+    requireAmount: web3.utils.fromWei(requireAmountWithSlippage, userTokenWeiUnit),
+    requestAmountWei: requestAmountWei,
     equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
-    fee: web3.utils.fromWei(totalFee, 'ether')
+    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether')
   }
 }
 
@@ -354,7 +369,8 @@ const sendPaymentTransaction = function(
   contract,
   token,
   paymentAmount,
-  platformFee
+  platformFee,
+  requestAmountWei
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getNetworkDefaultTokens(chainId)
@@ -364,6 +380,7 @@ const sendPaymentTransaction = function(
   const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const reservedParam = '0x'
 
   const path = token.address === null
     ? [wrappedToken.address, requestToken.address]
@@ -380,8 +397,10 @@ const sendPaymentTransaction = function(
   return merchantContract.methods.submitTransaction(
     paymentTokenAddress,
     userTokenAmountWei,
+    requestAmountWei,
     path,
-    feePath
+    feePath,
+    reservedParam
   ).send({
     from: walletAddress,
     to: contract.address,
