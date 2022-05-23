@@ -38,10 +38,10 @@
                 <span :class="section.hello.class + '__h2__title'">{{
                   section.hello.title.title
                 }}</span>
-                <span :class="section.hello.class + '__h2__subtitle'"
-                  >{{ section.hello.title.subtitle
-                  }}<img src="@/assets/images/lp/pointing-up.svg"
-                /></span>
+                <span :class="section.hello.class + '__h2__subtitle'">
+                  <span>{{ section.hello.title.subtitle }}</span>
+                  <img src="@/assets/images/lp/pointing-up.svg" />
+                </span>
                 <span :class="section.hello.class + '__h2__text'">{{
                   section.hello.title.text
                 }}</span>
@@ -54,10 +54,10 @@
               :class="section.hello.class + '__imagewrap scrollAction capcha'"
             >
               <figure :class="section.hello.class + '__image'">
-                <img src="@/assets/images/lp/capcha-1.png" />
+                <img src="@/assets/images/lp/capcha-2.png" />
               </figure>
               <figure :class="section.hello.class + '__image r'">
-                <img src="@/assets/images/lp/capcha-2.png" />
+                <img src="@/assets/images/lp/capcha-1.png" />
               </figure>
             </div>
           </div>
@@ -1308,15 +1308,7 @@ body.is-mounted {
         -webkit-text-fill-color: transparent;
         background-size: 100% 10%;
       }
-      img {
-        width: rem(6);
-        @include media(tb) {
-          font-size: rem(4);
-        }
-        @include media(sp) {
-          width: rem(3.5);
-        }
-      }
+
       &__title {
         @include font(rem(8), 700, 0em, 1.2, $ff);
         display: block;
@@ -1328,14 +1320,31 @@ body.is-mounted {
         }
       }
       &__subtitle {
-        @include font(rem(6), 700, 0em, 1.2, $ff);
-        @include flex(flex-start, center);
-        @include media(tb) {
-          font-size: rem(4);
-        }
+        display: block;
         @include media(sp) {
-          @include flex(center, center);
-          @include font(rem(3), 700, 0em, 1.2, $ff);
+          text-align: center;
+        }
+        span {
+          @include font(rem(6), 700, 0em, 1.2, $ff);
+          display: inline-block;
+          vertical-align: middle;
+          @include media(tb) {
+            font-size: rem(4);
+          }
+          @include media(sp) {
+            font-size: rem(3.5);
+          }
+        }
+        img {
+          display: inline-block;
+          vertical-align: middle;
+          width: rem(6);
+          @include media(tb) {
+            font-size: rem(4);
+          }
+          @include media(sp) {
+            width: rem(3.5);
+          }
         }
       }
       &__text {

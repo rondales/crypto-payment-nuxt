@@ -18,3 +18,8 @@ export default {
   components: {},
 };
 </script>
+<style lang="scss" scoped>
+svg {
+  width: 100%;
+}
+</style>
