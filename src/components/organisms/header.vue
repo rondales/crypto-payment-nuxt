@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 
 export default {
   name: 'Header',
@@ -276,6 +276,11 @@ export default {
     },
     disconnect(){
       this.toggleSubMenu()
+      if (this.$store.state.web3.provider === WALLET_CONNECT) {
+        this.$web3.disconnectByWalletConnect(
+          this.$store.state.web3.instance
+        )
+      }
       this.$router.push({ path: '/admin' })
     }
   }

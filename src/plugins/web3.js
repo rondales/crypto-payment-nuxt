@@ -21,6 +21,7 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
+          disconnectByWalletConnect: disconnectByWalletConnect,
           getWeb3Instance: getWeb3Instance,
           isConnectedByWalletConnect: isConnectedByWalletConnect,
           getCurrentChainId: getCurrentChainId,
@@ -84,6 +85,10 @@ const connectByWalletConnect = async function() {
     instance: provider,
     chainId: chainId
   }
+}
+
+const disconnectByWalletConnect = async function(web3) {
+  await web3.currentProvider.disconnect()
 }
 
 const isConnectedByWalletConnect = function() {
