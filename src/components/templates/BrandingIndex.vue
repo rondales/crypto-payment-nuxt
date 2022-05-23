@@ -145,6 +145,17 @@
               Download Assets
             </h3>
           </div>
+          <div class="download-item">
+            <div class="download-item-left">
+              <p>Slash Logomark</p>
+              <button @click="downloadFile()">svg</button>
+            </div>
+            <div class="download-item-right">
+              <figure>
+                <img :src="{}" alt="">
+              </figure>
+            </div>
+          </div>
         </div>
       </section>
       <lp-footer />
@@ -161,6 +172,12 @@ export default {
   name: "payment",
   data() {
     return {
+      svgList: [
+        {svgName: "slash-logo"},
+        {svgName: "slash-mark"},
+        {svgName: "slash-text"},
+        {svgName: "slash-full"}
+      ],
     };
   },
   components: {
@@ -170,6 +187,12 @@ export default {
   computed: {
   },
   methods: {
+    downloadFile() {
+      let a = document.createElement('a');
+      a.href = `/assets/images/lp/fee-sp.jpg`;
+      a.download = 'fee-sp.jpg';
+      a.click();
+    }
   },
 };
 </script>
