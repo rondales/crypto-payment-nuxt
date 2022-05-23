@@ -106,15 +106,15 @@ export default {
           list: [
             {
               title: "Fee & Ecosystem",
-              url: "",
+              url: "#fee-ecosystem",
             },
             {
               title: "Donation Program",
-              url: "",
+              url: "#donation",
             },
             {
               title: "Slash Token",
-              url: "",
+              url: "#token",
             },
           ],
         },
@@ -127,11 +127,11 @@ export default {
             },
             {
               title: "Referral",
-              url: "",
+              url: "#developers",
             },
             {
               title: "Contact",
-              url: "",
+              url: "#contact",
             },
             {
               title: "Terms of Service",

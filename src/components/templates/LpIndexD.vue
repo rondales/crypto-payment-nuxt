@@ -1,7 +1,5 @@
 <template>
   <div id="wrapAll">
-    <!-- [TODO] scroll action -->
-    <!-- [TODO] 日本語のチェック -->
     <LpHeader />
     <main>
       <!-- SECTION MV -->
@@ -67,7 +65,7 @@
       </section>
 
       <!-- SECTION token -->
-      <section :class="section.token.class">
+      <section id="token" :class="section.token.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.token.class + '__title'"
@@ -132,7 +130,7 @@
       </section>
 
       <!-- SECTION fee -->
-      <section :class="section.fee.class">
+      <section id="fee-ecosystem" :class="section.fee.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.fee.class + '__title'"
@@ -150,7 +148,7 @@
       </section>
 
       <!-- SECTION trial -->
-      <section :class="section.trial.class">
+      <section id="donation" :class="section.trial.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.trial.class + '__title'"
@@ -163,7 +161,6 @@
             :key="list.logo"
             class="scrollAction"
           >
-            <!-- <div :class="section.trial.class + '__feature__trapezoid'"></div> -->
             <div :class="section.trial.class + '__feature__list'">
               <div :class="section.trial.class + '__feature__imagewrap'">
                 <LpImage
@@ -209,7 +206,7 @@
       </section>
 
       <!-- SECTION roadmap -->
-      <section :class="section.roadmap.class">
+      <section id="roadmap" :class="section.roadmap.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.roadmap.class + '__title'"
@@ -246,7 +243,7 @@
       </section>
 
       <!-- SECTION welcome -->
-      <section :class="section.welcome.class">
+      <section id="developers" :class="section.welcome.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.welcome.class + '__title'"
@@ -254,7 +251,6 @@
           />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
-              <!-- <LpButton v-if="list.status" :link="list" type="main" size="m" /> -->
               <LpButton
                 :link="list"
                 :type="list.status ? 'main' : 'noactive'"
@@ -262,36 +258,11 @@
               />
             </li>
           </ul>
-          <!-- <ul :class="section.welcome.class + '__list'">
-            <li v-for="list in section.welcome.list" :key="list.title">
-              <LpButton
-                v-if="!list.status"
-                :link="list"
-                type="noactive"
-                size="m"
-              />
-            </li>
-          </ul> -->
         </div>
       </section>
 
-      <!-- SECTION contact -->
-      <!-- <section :class="section.contact.class">
-        <div class="section__wrap">
-          <LpTitle
-            :class="section.contact.class + '__title'"
-            :title="section.contact.title"
-          />
-          <ul :class="section.contact.class + '__list'">
-            <li v-for="list in section.contact.list" :key="list.title">
-              <LpButton :link="list" type="main" size="l" />
-            </li>
-          </ul>
-        </div>
-      </section> -->
-
       <!-- SECTION CV -->
-      <section :class="section.cv.class">
+      <section id="contact" :class="section.cv.class">
         <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" />
         <div class="section__wrap">
           <LpTitle
