@@ -559,9 +559,8 @@ export default {
 }
 
 .manage-table{
-  position: absolute;
   z-index: 10;
-  width: calc(100% - 228px);
+  width: 100%;
   @include media(sp) {
     width: 100%;
     overflow: hidden;
@@ -581,6 +580,7 @@ export default {
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;

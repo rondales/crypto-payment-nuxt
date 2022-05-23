@@ -376,6 +376,7 @@ li {
   top: 120px;
   left: 50%;
   transform: translate(0, -50%);
+  z-index: 9999;
 }
 @keyframes fadeOut {
   0% {
@@ -384,4 +385,7 @@ li {
   100% {
     opacity: 0;
   }
+}
+.copy{
+  cursor: pointer;
 }

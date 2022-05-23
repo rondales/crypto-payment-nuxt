@@ -2,21 +2,16 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Select a Wallet
+        Apps terminal Note
       </h3>
     </div>
     <div class="body">
-      <button class="btn __m __pg icon-right full" @click="connector(METAMASK)">
-        <span class="btn-icon">
-          <img src="@/assets/images/metamask-fox.svg">
-        </span>
-          MetaMask
-      </button>
-      <button class="btn __m __pg icon-right full" @click="connector(WALLET_CONNECT)">
-        <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect_w.svg">
-        </span>
-          WalletConnect
+      <div class="text-wrap">
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+      </div>
+      <button @click="saveNote" class="save">
+        Save Note
+        <img src="@/assets/images/edit.svg">
       </button>
     </div>
     <button class="close" @click="hideModal">
@@ -27,50 +22,21 @@
 </template>
 
 <script>
-  import { METAMASK, WALLET_CONNECT } from '@/constants'
-  import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
-  import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
-  import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
 
   export default {
     name: 'walletModal',
-    mixins: [
-      ConnectWalletMixin,
-      PaymentWalletConnectorMixin,
-      MerchantAdminAuthentificationMixin,
-    ],
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      },
-      METAMASK() {
-        return METAMASK
-      },
-      WALLET_CONNECT() {
-        return WALLET_CONNECT
-      },
-      isAdminLoginMode() {
-        const path = /^\/admin$/
-        return path.test(this.$route.path)
-      },
-      isPaymentMode() {
-        const path = /^\/payment\//
-        return path.test(this.$route.path)
-      },
+      }
     },
     methods: {
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      connector(useProvider) {
-        if (this.isAdminLoginMode) {
-          this.authentification(useProvider, true, true)
-          return
-        }
-        if (this.isPaymentMode) {
-          this.connect(useProvider, true)
-          return
-        }
+      // save the Terminal info note
+      saveNote(){
+        alert("save the Terminal info note")
       }
     }
   }
@@ -85,7 +51,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background:var(--color_bg);
+    background: #292536;
     @include media(pc) {
       &.--small {
         width: 470px;
@@ -101,7 +67,7 @@
   }
   .header {
     @include media(pc) {
-      padding: 24px;
+      padding: 24px 24px 0 24px;
       &__title {
         font-size: 2.5rem;
         margin-bottom: 2rem;
@@ -140,16 +106,46 @@
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px 40px;
+      padding: 0 24px 24px;
     }
     @include media(sp) {
-      padding: 16px 12px 48px;
+      padding: 0 12px 24px;
     }
-    // .btn {
-    //   &.__m {
-    //     background: $gradation-pale;
-    //   }
-    // }
+    .sub-title{
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .text-wrap{
+      text-align: center;
+      textarea{
+        font-size: 16px;
+        resize: none;
+        width:100%;
+        height:160px;
+        background: #171522;
+        padding: 16px;
+        border-radius: 10px;
+        outline: none;
+        margin-bottom: 16px;
+      }
+    }
+    .dsc-wrap{
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .dsc{
+      font-size: 12px;
+      font-weight: 200;
+    }
+    .save{
+      text-align: center;
+      width: 100%;
+      font-size: 18px;
+      img{
+        margin-left: 8px;
+        width: 20px;
+      }
+    }
   }
   .footer {
     text-align: center;

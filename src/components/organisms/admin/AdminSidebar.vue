@@ -11,13 +11,8 @@
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/payment/history" :class="{ inactive: isUnselectedReceiveToken }">
-                History
-              </router-link>
-            </li>
-            <li @click="close()">
-              <router-link to="/admin/payment/settings/contract" :class="{ inactive: isUnselectedReceiveToken, 'router-link-active': isSettingsPage }">
-                Settings
+              <router-link to="/admin/web3payment?id=1" :class="{ inactive: isUnselectedReceiveToken }">
+                Slash payment
               </router-link>
             </li>
             <!--
@@ -33,6 +28,13 @@
                 Keys
               </router-link>
             </li>
+            <li @click="close()">
+              <router-link to="/admin/store" :class="{ inactive: isUnselectedReceiveToken }">
+                Store apps
+              </router-link>
+            </li>            
+            <!--
+            @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
               <a
                 target="_blank"

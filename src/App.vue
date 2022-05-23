@@ -25,7 +25,12 @@ export default {
     switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
-    receiveModal: () => import('@/components/molecules/receiveModal')
+    receiveModal: () => import('@/components/molecules/receiveModal'),
+    editNoteModal: () => import('@/components/molecules/editNoteModal'),
+    urlRefreshModal: () => import('@/components/molecules/urlRefreshModal'),
+    deleteRowModal: () => import('@/components/molecules/deleteRowModal'),
+    createDeeplinkModal: () => import('@/components/molecules/createDeeplinkModal'),
+    openQrModal: () => import('@/components/molecules/openQrModal'),
   },
   computed: {
     classes() {
