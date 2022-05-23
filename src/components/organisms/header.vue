@@ -41,7 +41,8 @@
         </span>
         <div v-if="show" class="pc">
           <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
-            <span class="btn-icon">
+
+            <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
             </span>
             {{ networkName }}
@@ -49,7 +50,8 @@
         </div>
         <div v-if="show" class="ml-2">
           <button v-if="connected" class="account-wallet">
-            <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
+            <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
+            <span v-else class="price unknown">Balance unknown</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
           </button>
           <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
@@ -63,6 +65,7 @@
 
 <script>
 import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import AvailableNetworks from '@/network'
 
 export default {
   name: 'Header',
@@ -152,6 +155,12 @@ export default {
     isFixedReceiveToken() {
       return (this.$store.state.account.receiveSymbol)
     },
+    isSupportedNetwork() {
+      const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      })
+      return this.$store.state.web3.chainId && systemAvailableNetworks.includes(this.$store.state.web3.chainId)
+    },
     receiveTokenSymbol() {
       return this.$store.state.account.receiveSymbol
     },
@@ -167,22 +176,18 @@ export default {
       return this.$store.state.web3.chainId
     },
     networkName() {
-      if (this.$store.state.web3.chainId !== null) {
+      if (this.isSupportedNetwork) {
         return NETWORKS[
           this.$store.state.web3.chainId
         ].name
       } else {
-        return ''
+        return 'Not supported network'
       }
     },
     networkIcon() {
-      if (this.$store.state.web3.chainId !== null) {
-        return NETWORKS[
-          this.$store.state.web3.chainId
-        ].icon
-      } else {
-        return ''
-      }
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
     },
     symbol() {
       return this.$store.state.account.symbol
@@ -326,6 +331,10 @@ export default {
     .price {
       margin-left: 24px;
       color: #fff;
+      &.unknown {
+        margin-left: 10px;
+        font-weight: 100;
+      }
     }
     .id {
       max-width: 192px;
@@ -356,6 +365,9 @@ export default {
       max-width: 115px;
       margin: 0 10px;
       color: #fff;
+      &.unknown {
+        margin-left: 0px;
+      }
     }
     .id {
       max-width: 140px;
