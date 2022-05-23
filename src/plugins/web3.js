@@ -119,7 +119,7 @@ const getAccountData = async function(web3, chainId) {
   const balance = await getBalance(web3, addresses[0])
   return {
     address: addresses[0],
-    symbol: NETWORKS[chainId].symbol,
+    symbol: NETWORKS[chainId] ? NETWORKS[chainId].symbol : null,
     balance: balance
   }
 }
