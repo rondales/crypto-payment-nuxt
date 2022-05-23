@@ -78,7 +78,7 @@
           </div>
         </li>
         <li>
-          <router-link class="add-flex j-between a-center" to="/admin/web3payment?id=1">
+          <router-link class="add-flex j-between a-center" to="/admin/payment/history">
             <p>
               History
             </p>
@@ -86,21 +86,21 @@
           </router-link>
         </li>
         <li>
-          <router-link class="add-flex j-between a-center" to="/admin/web3payment?id=2">
+          <router-link class="add-flex j-between a-center" to="/admin/payment/settings/contract">
             <p>
               Settings
             </p>
             <img src="@/assets/images/settings.svg" alt="">
           </router-link>
         </li>
-        <li>
+        <!-- <li>
           <router-link class="add-flex j-between a-center" to="/admin/store">
             <p>
               Store apps
             </p>
             <img src="@/assets/images/scan.svg" alt="">
           </router-link>
-        </li>
+        </li> -->
         <li @click="disconnect()">
           <p>
             Disconnect
