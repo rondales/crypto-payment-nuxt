@@ -21,9 +21,10 @@
             </ul>
           </div>
           <div class="lp-header__nav">
-            <a href="#developers">Developers</a>
-            <a href="#fee-ecosystem">Fee & Ecosystem</a>
-            <a href="#roadmap">Roadmap</a>
+            <a :href="`${localUrl}#developers`">Developers</a>
+            <a :href="`${localUrl}#fee-ecosystem`">Fee & Ecosystem</a>
+            <a :href="`${localUrl}#roadmap`">Roadmap</a>
+            <a :href="`${localUrl}/branding`">Branding</a>
             <button
               :class="[
                 'theme-button',
@@ -80,7 +81,7 @@
       <a
         v-for="(link, key) in nav"
         :key="key"
-        :href="link.link"
+        :href="localUrl+link.link"
         @click="close()"
         >{{ link.title }}</a
       >
@@ -111,6 +112,10 @@ export default {
           link: "#roadmap",
           title: "Roadmap",
         },
+        {
+          link: "/branding",
+          title: "Branding",
+        },
       ],
       cvLink: {
         title: "Enter App",
@@ -119,7 +124,11 @@ export default {
         func: "enterApp",
         status: true,
       },
+      localUrl: "",
     };
+  },
+  created(){
+    this.localUrl = location.origin
   },
   methods: {
     changeTheme(theme) {
