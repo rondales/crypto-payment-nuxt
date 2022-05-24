@@ -24,7 +24,7 @@
             <a :href="`${localUrl}#developers`">Developers</a>
             <a :href="`${localUrl}#fee-ecosystem`">Fee & Ecosystem</a>
             <a :href="`${localUrl}#roadmap`">Roadmap</a>
-            <a :href="`${localUrl}/branding`">Branding</a>
+            <a :href="`${localUrl}/media_kit`">Media Kit</a>
             <button
               :class="[
                 'theme-button',
@@ -113,8 +113,8 @@ export default {
           title: "Roadmap",
         },
         {
-          link: "/branding",
-          title: "Branding",
+          link: "/media_kit",
+          title: "Media Kit",
         },
       ],
       cvLink: {

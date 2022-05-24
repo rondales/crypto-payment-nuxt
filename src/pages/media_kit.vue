@@ -1,15 +1,15 @@
 <template>
-  <div class="lp-wrapper">
-    <branding-index/>
+  <div>
+    <media-kit-index/>
   </div>
 </template>
 
 <script>
-import BrandingIndex from '../components/templates/BrandingIndex.vue'
+import MediaKitIndex from '../components/templates/MediaKitIndex.vue'
 export default {
   name: 'payment',
   components: {
-    BrandingIndex
+    MediaKitIndex
   },
 }
 </script>

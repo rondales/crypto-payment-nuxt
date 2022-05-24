@@ -22,9 +22,9 @@ const router = new Router({
           component: () => import("@/pages/index"),
         },
         {
-          name: "branding",
-          path: "/branding",
-          component: () => import("@/pages/branding"),
+          name: "media_kit",
+          path: "/media_kit",
+          component: () => import("@/pages/media_kit"),
         },
         {
           name: "payment",

@@ -908,8 +908,8 @@ export default {
             {
               title: "Media kit",
               icon: "icon/mediakit",
-              url: "",
-              status: false,
+              url: "/media_kit",
+              status: true,
             },
             {
               title: "Support for Slash Payment System",
