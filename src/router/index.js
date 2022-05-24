@@ -22,6 +22,11 @@ const router = new Router({
           component: () => import("@/pages/index"),
         },
         {
+          name: "branding",
+          path: "/branding",
+          component: () => import("@/pages/branding"),
+        },
+        {
           name: "payment",
           path: "/payment",
           component: () => import("@/pages/payment"),
