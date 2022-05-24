@@ -62,7 +62,10 @@
           '--light',
           { 'is-active': $store.state.theme == 'light' },
         ]"
-        @click="changeTheme('light')"
+        @click="
+          changeTheme('light');
+          close();
+        "
         v-if="$store.state.theme == 'dark'"
       >
         <img src="@/assets/images/lp/dark.svg" alt="" />
@@ -73,7 +76,10 @@
           '--dark',
           { 'is-active': $store.state.theme == 'dark' },
         ]"
-        @click="changeTheme('dark')"
+        @click="
+          changeTheme('dark');
+          close();
+        "
         v-if="$store.state.theme == 'light'"
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
