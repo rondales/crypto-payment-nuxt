@@ -163,48 +163,16 @@
             </h3>
           </div>
           <div class="download-items">
-            <div class="download-item add-flex">
+            <div v-for="(svg, key) in svgList" :key="key" class="download-item add-flex">
               <div class="download-item-left">
-                <p>Slash Logomark</p>
-                <a href="@/assets/images/lp/slash-logo.svg" download>svg</a>
+                <p>{{svg.title}}</p>
+                <a class="pc-inline" :href="svg.svgImage" download>svg</a>
               </div>
               <div class="download-item-right">
                 <figure>
-                  <img src="@/assets/images/lp/slash-logo.svg" alt="">
+                  <img :src="svg.svgImage">
                 </figure>
-              </div>
-            </div>
-            <div class="download-item add-flex">
-              <div class="download-item-left">
-                <p>Mark only</p>
-                <a href="@/assets/images/lp/slash-mark.svg" download>svg</a>
-              </div>
-              <div class="download-item-right">
-                <figure>
-                  <img src="@/assets/images/lp/slash-mark.svg" alt="">
-                </figure>
-              </div>
-            </div>
-            <div class="download-item add-flex">
-              <div class="download-item-left">
-                <p>Text only</p>
-                <a href="@/assets/images/lp/slash-text.svg" download>svg</a>
-              </div>
-              <div class="download-item-right">
-                <figure>
-                  <img src="@/assets/images/lp/slash-text.svg" alt="">
-                </figure>
-              </div>
-            </div>
-            <div class="download-item add-flex">
-              <div class="download-item-left">
-                <p>Full name</p>
-                <a href="@/assets/images/lp/slash-full.svg" download>svg</a>
-              </div>
-              <div class="download-item-right">
-                <figure>
-                  <img src="@/assets/images/lp/slash-full.svg" alt="">
-                </figure>
+                <a class="download sp-inline" :href="svg.svgImage" download>svg</a>
               </div>
             </div>
           </div>
@@ -228,10 +196,10 @@ export default {
   data() {
     return {
       svgList: [
-        {svgName: "slash-logo"},
-        {svgName: "slash-mark"},
-        {svgName: "slash-text"},
-        {svgName: "slash-full"}
+        {title:"Slash Logomark", svgImage: require("@/assets/images/lp/slash-logo.svg")},
+        {title:"Mark only", svgImage: require("@/assets/images/lp/slash-mark.svg")},
+        {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg")},
+        {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg")}
       ],
     };
   },
@@ -242,10 +210,10 @@ export default {
   computed: {
   },
   methods: {
-    downloadFile() {
+    download() {
       let a = document.createElement('a');
-      a.href = `/assets/images/lp/fee-sp.jpg`;
-      a.download = 'fee-sp.jpg';
+      a.href = "/assets/images/lp/slash-logo.svg";
+      a.download = 'slash-logo.svg';
       a.click();
     }
   },
@@ -412,6 +380,10 @@ export default {
     .another{
       margin-bottom: 80px;
       padding-bottom: 40px;
+      @include media(tb) {
+        margin-bottom: 48px;
+        padding-bottom: 0;
+      }
       .another-dsc{
         margin-bottom: 40px;
         @include media(tb) {
@@ -436,6 +408,9 @@ export default {
       .download-items{
         .download-item{
           margin-bottom: 96px;
+          @include media(tb) {
+            margin-bottom: 56px;
+          }
           .download-item-left{
             width: 40%;
             @include media(tb) {
@@ -453,6 +428,16 @@ export default {
               font-weight: 400;
             }
           }
+          &:nth-child(1){
+            img{
+              width: 80%;
+            }
+          }
+          &:nth-child(4){
+            img{
+              width: 70%;
+            }
+          }
           .download-item-right{
             width: 46%;
             @include media(tb) {
@@ -464,6 +449,16 @@ export default {
               height: 250px;
               line-height: 250px;
               border-radius: 8px;
+              margin-bottom: 16px;
+            }
+            @include media(tb) {
+              a{
+                padding: 8px 32px;
+                background: $gradation-light !important;
+                box-sizing: border-box !important;
+                border-radius: 30px;
+                font-weight: 400;
+              }
             }
           }
         }
@@ -472,6 +467,9 @@ export default {
     .terms{
       font-size: 30px;
       border-bottom: 1px solid #fff;
+      @include media(tb) {
+        margin-bottom: 56px;
+      }
     }
   }
 }
