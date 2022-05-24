@@ -307,12 +307,14 @@ export default {
           this.getDefaultTokens()
         })
       } else {
+        const availableNetworkCount = this.availableNetworks.length
         this.$store.dispatch('modal/show', {
           target: 'network-modal',
-          size: 'medium',
+          size: availableNetworkCount > 1 ? 'medium' : 'small',
           params: {
             unsupported: true,
-            hideCloseButton: true
+            hideCloseButton: true,
+            itemCount: availableNetworkCount
           }
         })
       }
