@@ -283,6 +283,12 @@ li {
     display: block !important;
   }
 }
+.sp-inline{
+  display: none !important;
+  @include media(sp) {
+    display: inline-block !important;
+  }
+}
 .tb{
   display: none !important;
   @include media(tb) {
@@ -292,6 +298,12 @@ li {
 .pc{
   display: block;
   @include media(tb) {
+    display: none;
+  }
+}
+.pc-inline{
+  display: inline-block;
+  @include media(sp) {
     display: none;
   }
 }
@@ -377,6 +389,7 @@ li {
   left: 50%;
   transform: translate(0, -50%);
 }
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
