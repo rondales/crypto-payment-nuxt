@@ -1,5 +1,5 @@
 <template>
-  <div class="lp-wrapper">
+  <div>
     <media-kit-index/>
   </div>
 </template>

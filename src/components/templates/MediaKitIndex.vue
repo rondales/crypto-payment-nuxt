@@ -181,8 +181,8 @@
           TERMS OF SERVICE
         </a>
       </section>
-      <lp-footer />
     </article>
+    <LpFooter />
   </div>
 </template>
 
