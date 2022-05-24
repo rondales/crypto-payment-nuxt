@@ -78,10 +78,13 @@
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
       </button>
-      <a :href="`${localUrl}#developers`">Developers</a>
-      <a :href="`${localUrl}#fee-ecosystem`">Fee & Ecosystem</a>
-      <a :href="`${localUrl}#roadmap`">Roadmap</a>
-      <a :href="`${localUrl}/branding`">Branding</a>
+      <a
+        v-for="(link, key) in nav"
+        :key="key"
+        :href="localUrl+link.link"
+        @click="close()"
+        >{{ link.title }}</a
+      >
       <LpButton :link="cvLink" type="main" size="s" />
     </div>
   </header>
@@ -130,9 +133,13 @@ export default {
   methods: {
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
+      this.$store.dispatch("hamberger", { hamberger: false });
     },
     open() {
       this.$store.dispatch("hamberger", { hamberger: true });
+    },
+    close() {
+      this.$store.dispatch("hamberger", { hamberger: false });
     },
     // enterApp() {
     // Button.vueに記述
