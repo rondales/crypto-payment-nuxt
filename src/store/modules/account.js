@@ -10,6 +10,7 @@ const store = {
       isSelected: false,
       isSettingComplete: false
     },
+    note: null
   },
   actions: {
     // トークン選択後の画面切り替え判定
@@ -35,6 +36,9 @@ const store = {
     },
     updateReceiveSymbol({ commit }, payload) {
       commit('updateReceiveSymbol', payload)
+    },
+    updateNote({ commit }, payload) {
+      commit('updateNote', payload)
     }
   },
   mutations: {
@@ -43,6 +47,7 @@ const store = {
       state.balance = 0
       state.symbol = null
       state.receiveSymbol = null
+      state.note = null
     },
     selectReceiveToken(state){
       state.receive.isSelected = true;
@@ -63,6 +68,9 @@ const store = {
     },
     updateReceiveSymbol(state, payload) {
       state.receiveSymbol = payload
+    },
+    updateNote(state, payload) {
+      state.note = payload
     }
   }
 }

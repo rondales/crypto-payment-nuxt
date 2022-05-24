@@ -49,7 +49,7 @@
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="connected" class="account-wallet">
+          <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
@@ -60,11 +60,62 @@
         </div>
       </div>
     </div>
+    <div v-if="this.$store.state.accountMenu" class="account-menu">
+      <ul>
+        <li @click="openAccountModal()">
+          <p>
+            Account
+          </p>
+          <img src="@/assets/images/account.svg" alt="">
+        </li>
+        <li @click="editNote()" >
+          <p>
+            Account Note
+          </p>
+          <img src="@/assets/images/edit.svg" alt="">
+        </li>
+        <li>
+          <div class="account-note">
+            {{accountNote}}
+          </div>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/payment/history">
+            <p>
+              History
+            </p>
+            <img src="@/assets/images/history.svg" alt="">
+          </router-link>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/payment/settings/contract">
+            <p>
+              Settings
+            </p>
+            <img src="@/assets/images/settings.svg" alt="">
+          </router-link>
+        </li>
+        <!-- <li>
+          <router-link class="add-flex j-between a-center" to="/admin/store">
+            <p>
+              Store apps
+            </p>
+            <img src="@/assets/images/scan.svg" alt="">
+          </router-link>
+        </li> -->
+        <li @click="disconnect()">
+          <p>
+            Disconnect
+          </p>
+          <img src="@/assets/images/logout.svg" alt="">
+        </li>
+      </ul>
+    </div>
   </header>
 </template>
 
 <script>
-import { DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 
 export default {
@@ -204,6 +255,9 @@ export default {
     },
     fixedNetwork() {
       return (this.$store.state.web3.chainId)
+    },
+    accountNote() {
+      return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
     }
   },
   methods: {
@@ -215,6 +269,26 @@ export default {
     },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
+    },
+    toggleSubMenu(){
+      if (this.isAdminPage) {
+        this.$store.dispatch("toggleAccountMenu");
+      }
+    },
+    openAccountModal(){
+      this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
+    },
+    editNote(){
+      this.$store.dispatch("modal/show", {target: 'edit-account-note-modal', size: "small"});
+    },
+    disconnect(){
+      this.toggleSubMenu()
+      if (this.$store.state.web3.provider === WALLET_CONNECT) {
+        this.$web3.disconnectByWalletConnect(
+          this.$store.state.web3.instance
+        )
+      }
+      this.$router.push({ path: '/admin' })
     }
   }
 }
@@ -322,12 +396,15 @@ export default {
   display: flex;
   align-items: center;
   background: var(--color_darken);
+  cursor: default;
+  &.admin {
+    cursor: pointer;
+  }
   @include media(pc) {
     height: 42px;
     border-radius: 8px;
     padding: 7px 0 7px 7px;
     font-size: 1.2rem;
-    cursor: default;
     .price {
       margin-left: 24px;
       color: #fff;
@@ -413,7 +490,6 @@ export default {
 }
 .theme-button {
   font-size: 0;
-
   @include media(pc) {
     .emoji {
       font-size: 28px;
@@ -437,6 +513,61 @@ export default {
   &--dark {
     grid-row: 1;
     grid-column: 3;
+  }
+}
+.account-menu{
+  position: absolute;
+  right: 24px;
+  top: 70px;
+  background: #292536;
+  padding: 24px 16px;
+  border-radius: 10px;
+  @include media(sp) {
+    width: 90%;
+  }
+  ul{
+    li{
+      font-size: 15px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      cursor: pointer;
+      &:hover{
+        opacity: 0.8;
+      }
+      a{
+        width: 100%;
+      }
+      &:nth-child(2){
+        img{
+          cursor: pointer;
+        }
+      }
+      &:nth-child(3){
+        cursor: unset;
+        &:hover{
+          opacity: 1;
+        }
+      }
+      &:last-child{
+        margin-bottom: 0;
+      }
+      .account-note{
+        overflow: scroll;
+        background: #171522;
+        border-radius: 8px;
+        padding: 8px;
+        resize: none;
+        width: 200px;
+        height: 100%;
+        max-height: 100px;
+        font-size: 11px;
+        @include media(sp) {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 </style>
