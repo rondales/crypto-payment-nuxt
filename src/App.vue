@@ -25,7 +25,9 @@ export default {
     switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
-    receiveModal: () => import('@/components/molecules/receiveModal')
+    receiveModal: () => import('@/components/molecules/receiveModal'),
+    editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
+    accountModal: () => import('@/components/molecules/accountModal'),
   },
   computed: {
     classes() {

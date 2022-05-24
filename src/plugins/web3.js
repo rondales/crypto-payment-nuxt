@@ -2,9 +2,21 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
 import { Decimal as BigJs } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import {
+  METAMASK,
+  WALLET_CONNECT,
+  NETWORKS,
+  DEFAULT_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT,
+  BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
+  MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  MATIC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
+  AVALANCHE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+} from '@/constants'
 import AvailableNetworks from '@/network'
-import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
   EthereumTokens,
@@ -21,6 +33,7 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
+          disconnectByWalletConnect: disconnectByWalletConnect,
           getWeb3Instance: getWeb3Instance,
           isConnectedByWalletConnect: isConnectedByWalletConnect,
           getCurrentChainId: getCurrentChainId,
@@ -84,6 +97,10 @@ const connectByWalletConnect = async function() {
     instance: provider,
     chainId: chainId
   }
+}
+
+const disconnectByWalletConnect = async function(web3) {
+  await web3.currentProvider.disconnect()
 }
 
 const isConnectedByWalletConnect = function() {
@@ -412,7 +429,7 @@ const monitoringPaymentTransaction = function(web3, transactionHash) {
   return web3.eth.getTransactionReceipt(transactionHash)
 }
 
-const publishMerchantContract = async function(
+const publishMerchantContract = function(
   web3,
   chainId,
   merchantWalletAddress,
@@ -422,24 +439,18 @@ const publishMerchantContract = async function(
     throw new Error('Currently, this network has stopped issuing contracts.')
   }
 
+  const scanBlockNumberMaxLimit = getScanBlockNumberMaxLimit(chainId)
   const factoryContract = new web3.eth.Contract(
     MerchantFactoryContract.abi,
-    MerchantFactoryContract.addresses[chainId]
+    MerchantFactoryContract.addresses[chainId],
+    { transactionBlockTimeout: scanBlockNumberMaxLimit }
   )
 
   try {
-    let contractAddress = null
-
-     const transaction = await factoryContract.methods.deployMerchant(
-      merchantWalletAddress,
-      receiveTokenAddress
-    ).send({ from: merchantWalletAddress })
-
-    contractAddress = transaction.events['NewMerchantDeployed'].returnValues.merchantAddress_
-    return {
-      abi: MerchantContract.abi,
-      address: contractAddress
-    }
+    return factoryContract.methods.deployMerchant(
+        merchantWalletAddress,
+        receiveTokenAddress
+      ).send({ from: merchantWalletAddress })
   } catch(error) {
     throw new Error(error)
   }
@@ -488,6 +499,29 @@ function getWrappedToken(chainId) {
     if (symbol in defaultTokens) wrappedToken = defaultTokens[symbol]
   })
   return wrappedToken
+}
+
+function getScanBlockNumberMaxLimit(chainId) {
+  switch(parseInt(chainId, 10)) {
+    case NETWORKS[1].chainId:
+      return ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[3].chainId:
+      return ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[56].chainId:
+      return BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[97].chainId:
+      return BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[137].chainId:
+      return MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[80001].chainId:
+      return MATIC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[43114].chainId:
+      return AVALANCHE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[43113].chainId:
+      return AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    default:
+      return DEFAULT_SCAN_BLOCK_NUMBER_LIMIT
+  }
 }
 
 class MetamaskNotInstalledError extends Error {
