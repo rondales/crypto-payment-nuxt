@@ -292,6 +292,9 @@ export default {
       figure{
         line-height: 53px;
         position: absolute;
+        img{
+          vertical-align: sub;
+        }
       }
       select{
         padding-left: 36px;
