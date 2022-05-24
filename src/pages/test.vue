@@ -187,6 +187,7 @@ export default {
       this.modalOpen = false
     },
     copyPaymentUrl() {
+      this.$store.dispatch('account/copied')
       this.$clipboard(this.paymentUrl);
     }
   },
