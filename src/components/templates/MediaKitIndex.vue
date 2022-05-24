@@ -227,22 +227,26 @@ export default {
 .media_kit{
   padding: 56px 0;
   @include media(tb) {
-    padding: 56px 16px;
+    padding: 56px 16px 0;
   }
   section{
     text-align: left;
+    padding: 104px 0 0;
+    @include media(tb) {
+      padding: 56px 0 0;
+    }
     .border-bottom{
       border-bottom: 1px solid #766D91;
     }
     .title{
       h1{
-        font-size: 78px;
+        font-size: 73px;
         @include media(tb) {
           font-size: 60px;
         }
       }
       p{
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 40px;
         font-weight: 400;
         @include media(tb) {
@@ -252,12 +256,18 @@ export default {
     }
     .contents-title{
       h3{
-        font-size: 45px;
+        font-size: 32px;
         font-weight: 600;
-        margin-bottom: 40px;
+        margin-bottom: 24px;
         @include media(tb) {
-          font-size: 35px;
-          margin-bottom: 24px;
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+      }
+      span{
+        img{
+          width: 32px;
+          height: 32px;
         }
       }
     }
@@ -269,8 +279,8 @@ export default {
         margin-bottom: 56px;
       }
       h2{
-        font-size: 70px;
-        margin-bottom: 24px;
+        font-size: 60px;
+        margin-bottom: 8px;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -281,14 +291,15 @@ export default {
         }
       }
       .dsc-title{
-        font-size: 45px;
-        margin-bottom: 24px;
+        font-size: 28px;
+        margin-bottom: 16px;
+        font-weight: 600;
         @include media(tb) {
-          font-size: 35px;
+          font-size: 24px;
         }        
       }
       .dsc{
-        font-size: 22px;
+        font-size: 16px;
         font-weight: 400;
         @include media(tb) {
           font-size: 15px;
@@ -316,6 +327,7 @@ export default {
         h4{
           font-size: 30px;
           margin-bottom: 32px;
+          font-weight: 600;
           @include media(tb) {
             font-size: 25px;
             margin-bottom: 24px;
@@ -334,12 +346,13 @@ export default {
           margin-bottom: 40px;
         }
         h4{
-          font-size: 30px;
+          font-size: 26px;
           font-weight: 400;
-          margin-bottom: 32px;
+          margin-bottom: 24px;
           @include media(tb) {
-            font-size: 25px;
-            margin-bottom: 24px;
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 8px;
           }
         }
       }
@@ -370,22 +383,22 @@ export default {
             }
           }
           p{
-            @include media(tb) {
-              font-size: 18px;
-            }
+            font-size: 16px;
+            font-weight: 400;
           }
         }
       }
     }
     .another{
       margin-bottom: 80px;
-      padding-bottom: 40px;
+      padding-bottom: 32px;
       @include media(tb) {
-        margin-bottom: 48px;
+        margin-bottom: 40px;
         padding-bottom: 0;
       }
       .another-dsc{
         margin-bottom: 40px;
+        font-size: 16px;
         @include media(tb) {
           font-size: 15px;
         }
@@ -393,12 +406,18 @@ export default {
       .another-logo{
         figure{
           margin-bottom: 56px;
-          @include media(tb) {
             &:nth-child(1){
-              width: 35%;
+              width: 360px;
             }
             &:nth-child(2){
-              width: 70%;
+              width: 560px;
+            }
+          @include media(tb) {
+            &:nth-child(1){
+              width: 32%;
+            }
+            &:nth-child(2){
+              width: 58%;
             }
           }
         }
@@ -417,8 +436,9 @@ export default {
               width: 100%;
             }
             p{
-              margin-bottom: 24px;
-              font-size: 30px;
+              margin-bottom: 16px;
+              font-size: 22px;
+              font-weight: 300;
             }
             a{
               padding: 8px 24px;
@@ -468,7 +488,8 @@ export default {
       font-size: 30px;
       border-bottom: 1px solid #fff;
       @include media(tb) {
-        margin-bottom: 56px;
+        font-size: 24px;
+        margin-bottom: 32px;
       }
     }
   }
