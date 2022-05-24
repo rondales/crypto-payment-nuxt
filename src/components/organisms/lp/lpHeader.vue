@@ -68,7 +68,10 @@
           '--light',
           { 'is-active': $store.state.theme == 'light' },
         ]"
-        @click="changeTheme('light')"
+        @click="
+          changeTheme('light');
+          close();
+        "
         v-if="$store.state.theme == 'dark'"
       >
         <img src="@/assets/images/lp/dark.svg" alt="" />
@@ -79,7 +82,10 @@
           '--dark',
           { 'is-active': $store.state.theme == 'dark' },
         ]"
-        @click="changeTheme('dark')"
+        @click="
+          changeTheme('dark');
+          close();
+        "
         v-if="$store.state.theme == 'light'"
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
@@ -87,7 +93,7 @@
       <a
         v-for="(link, key) in nav"
         :key="key"
-        :href="localUrl+link.link"
+        :href="localUrl + link.link"
         @click="close()"
         >{{ link.title }}</a
       >
@@ -137,8 +143,8 @@ export default {
       localUrl: "",
     };
   },
-  created(){
-    this.localUrl = location.origin
+  created() {
+    this.localUrl = location.origin;
   },
   mounted() {
 
@@ -146,7 +152,6 @@ export default {
   methods: {
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
-      this.$store.dispatch("hamberger", { hamberger: false });
     },
     open() {
       this.$store.dispatch("hamberger", { hamberger: true });
@@ -170,34 +175,15 @@ export default {
   top: 0;
   z-index: 100;
   width: 100%;
-  // background: var(--color_lp_bg);
-  // @include media(pc) {
-  //   height: 100px;
-  //   padding: 0 36px;
-  //   .logo {
-  //     height: 36px;
-  //     width: 100%;
-  //   }
-  // }
-  // @include media(tb) {
-  //   padding: 0 !important;
-  // }
-  // @include media(tb) {
-  //   display: block;
-  //   height: 0vh !important;
-  //   text-align: left;
-  //   &.active {
-  //     height: 100vh !important;
-  //     .link-wrap {
-  //       display: block !important;
-  //     }
-  //   }
-  // }
   &__wrap {
     @extend .section__wrap;
     @include rem_padding(1, 0, 1, 0);
     position: relative;
     z-index: 100;
+    @include media(sp) {
+      padding-top: rem_sp(1);
+      padding-bottom: rem_sp(1);
+    }
   }
   &__inner {
     @include flex(space-between, center);
@@ -205,7 +191,7 @@ export default {
   &__logo {
     width: rem(18);
     @include media(sp) {
-      width: rem(15);
+      width: rem_sp(15);
     }
   }
 
@@ -227,14 +213,20 @@ export default {
       margin-right: rem(2);
       @include media(tb) {
         margin-right: 0;
-        margin-bottom: rem(1);
+        margin-bottom: rem_sp(1);
       }
     }
     a {
       @include font(rem(1.1), $fw, $ls, $lh, $en_go);
+      @include media(sp) {
+        font-size: rem_sp(1.1);
+      }
     }
     .theme-button {
       width: rem(2);
+      @include media(sp) {
+        width: rem_sp(2);
+      }
     }
   }
   &__hamburger {
@@ -298,8 +290,7 @@ export default {
     visibility: hidden;
     @include flex(center, center);
     flex-direction: column;
-    padding-top: 100px;
-    padding-bottom: 40px;
+    padding: 100px 10% 40px;
     transition: transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
       visibility 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
       opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -311,14 +302,23 @@ export default {
     * {
       @include media(tb) {
         margin-right: 0;
-        margin-bottom: rem(1);
+        margin-bottom: rem_tb(1);
       }
     }
     a {
       @include font(rem(1.1), $fw, $ls, $lh, $en_go);
+      @include media(sp) {
+        font-size: rem_sp(pow(1));
+      }
     }
     .theme-button {
       width: rem(2);
+      @include media(sp) {
+        width: rem_sp(2);
+      }
+    }
+    .lpButton.main {
+      margin: 0;
     }
   }
 

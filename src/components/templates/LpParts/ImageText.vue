@@ -100,6 +100,9 @@ export default {
         }
         .logos {
           margin-top: -1rem;
+          @include media(sp) {
+            margin-top: rem(1);
+          }
         }
       }
     }
