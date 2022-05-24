@@ -1,11 +1,11 @@
 <template>
   <div>
     <lp-header />
-    <article class="branding lp display">
+    <article class="media_kit lp display">
       <section>
         <div class="title">
           <h1>
-            Branding
+            Media Kit
           </h1>
           <p>
             Latest update: March, 2022
@@ -224,7 +224,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 
-.branding{
+.media_kit{
   padding: 56px 0;
   @include media(tb) {
     padding: 56px 16px;
