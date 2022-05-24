@@ -331,7 +331,7 @@ export default {
             subtitle: "Web 3.0 ",
             text: "Slash Payment",
           },
-          lead: 'Merchants can automatically accept online TOKEN <br class="pc" />payments from customers using the Web3 wallet.',
+          lead: 'Merchants can accept online TOKEN payments from <br class="pc" />customer’s Web3 wallet in the most reasonable way.',
         },
         token: {
           class: "dlp-token",
@@ -374,11 +374,11 @@ export default {
           ],
           sub: {
             title:
-              'Exchanges at DEX automatically <br class="sp" />at the best rate',
-            text: "Slash Payment’s payment contracts and core contractsautomatically connect to the best-rate DEX SWAP router whenmaking payments for different tokens. This solution allowsCustomers can pay with any token.",
+              'Exchanges at DEX automatically <br>at an optimal rate',
+            text: "Slash Payment’s smart contracts automatically find an optimal rate through supported DEX SWAP routers. This solution allows Customers can pay with any token at an optimal-rate.",
             link: {
               url: "/",
-              title: "Slash Payment Install Docs.",
+              title: "See Quick Start",
               icon: "icon/arrow",
               iconAfter: true,
             },
@@ -434,7 +434,7 @@ export default {
                   lightSrc: "",
                 },
               ],
-              text: "customer’s payment will reach the merchant instantly in exchange for Stable Token（USDT.USDC.DAI…）via a decentralized exchange.",
+              text: "The merchant receives the amount in Stable Token exchanged at an optimal rate through supported DEX.",
             },
             {
               title: "Multiple chain",
@@ -493,7 +493,7 @@ export default {
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
               link: {
                 url: "/",
-                title: "Slash Payment Install Docs.",
+                title: "See Quick Start",
                 icon: "icon/arrow",
                 iconAfter: true,
               },
@@ -588,7 +588,7 @@ export default {
                 alt: "Slash Payment fee is 0.2〜0.6%",
                 lightSrc: "",
               },
-              text: "There are no commissions paid to Merchants. The commission is 0.2-0.6% of the payment amount and is collected as a platform token along with the gas cost of the customer’s payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.",
+              text: "There are no commissions charged to the Merchants. The commission is charged to the payers but is only 0.2-0.6% of the payment amount. It is collected along with the gas cost of the  payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.",
               link: {
                 url: "/",
                 title: "Fee Structure",
@@ -636,7 +636,7 @@ export default {
                 alt: "The All fees Use buyback $Slash*",
                 lightSrc: "",
               },
-              text: " The Slash Payment fee is 0.2~0.6% of the settlement amount and is collected as a gas fee in platform tokens (ETH, BNB, Matic….).<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
+              text: "The Slash Payment fee is 0.2~0.6% of the settlement amount.<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
               link: {
                 url: "/",
                 title: "Details of $Slash",
@@ -888,7 +888,7 @@ export default {
           },
           list: [
             {
-              title: "Slash Payment Docs.",
+              title: "Slash Payment Docs",
               icon: "icon/gitbook",
               url: "",
               status: true,
