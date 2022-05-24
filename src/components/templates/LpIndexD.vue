@@ -255,6 +255,7 @@
                 :link="list"
                 :type="list.status ? 'main' : 'noactive'"
                 size="s"
+                :target="list.blank"
               />
             </li>
           </ul>
@@ -892,42 +893,49 @@ export default {
               icon: "icon/gitbook",
               url: "",
               status: true,
+              blank: true
             },
             {
               title: "Slash Payment github",
               icon: "icon/github",
               url: "",
               status: true,
+              blank: true
             },
             {
               title: "Slash Recruit information",
               icon: "icon/recruit",
               url: "",
               status: true,
+              blank: true
             },
             {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
               status: true,
+              blank: false
             },
             {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
               url: "",
               status: false,
+              blank: true
             },
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
               url: "",
               status: false,
+              blank: true
             },
             {
               title: "FAQ about system implementation",
               icon: "icon/help",
               url: "",
               status: false,
+              blank: true
             },
           ],
         },
@@ -1031,6 +1039,7 @@ export default {
           ],
         },
       ],
+      hash: this.$route.hash,
     };
   },
   components: {

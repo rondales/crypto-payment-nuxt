@@ -295,6 +295,12 @@ li {
     display: block !important;
   }
 }
+.tb-inline{
+  display: inline-block;
+  @include media(sp) {
+    display: none;
+  }
+}
 .pc{
   display: block;
   @include media(tb) {

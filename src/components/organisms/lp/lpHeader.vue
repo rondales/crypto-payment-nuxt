@@ -21,10 +21,16 @@
             </ul>
           </div>
           <div class="lp-header__nav">
-            <a :href="`${localUrl}#developers`">Developers</a>
-            <a :href="`${localUrl}#fee-ecosystem`">Fee & Ecosystem</a>
-            <a :href="`${localUrl}#roadmap`">Roadmap</a>
-            <a :href="`${localUrl}/media_kit`">Media Kit</a>
+            <div v-for="(list, index) in nav" :key="index">
+              <router-link
+                  :to="{
+                      name: list.name,
+                      hash: list.link
+                  }"
+              >
+                  {{list.title}}
+              </router-link>
+            </div>
             <button
               :class="[
                 'theme-button',
@@ -101,19 +107,23 @@ export default {
     return {
       nav: [
         {
+          name: "home",
           link: "#developers",
           title: "Developers",
         },
         {
+          name: "home",
           link: "#fee-ecosystem",
           title: "Fee & Ecosystem",
         },
         {
+          name: "home",
           link: "#roadmap",
           title: "Roadmap",
         },
         {
-          link: "/media_kit",
+          name: "media_kit",
+          link: "",
           title: "Media Kit",
         },
       ],
@@ -129,6 +139,9 @@ export default {
   },
   created(){
     this.localUrl = location.origin
+  },
+  mounted() {
+
   },
   methods: {
     changeTheme(theme) {
@@ -203,6 +216,14 @@ export default {
     }
 
     * {
+      margin-right: rem(0.5);
+      @include media(tb) {
+        margin-right: 0;
+        margin-bottom: rem(1);
+      }
+    }
+
+    button{
       margin-right: rem(2);
       @include media(tb) {
         margin-right: 0;
