@@ -11,6 +11,31 @@ const RouterLayout = createRouterLayout((layout) => {
 const router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
+  scrollBehavior: async (to, from, savedPosition) => {
+    if (savedPosition) {
+      return savedPosition;
+    }
+
+    const findEl = async (hash, x) => {
+      return document.querySelector(hash) ||
+        new Promise((resolve) => {
+          if (x > 50) {
+            return resolve();
+          }
+          setTimeout(() => {
+            resolve(findEl(hash, ++x || 1));
+          }, 100);
+        });
+    }
+
+    if (to.hash) {
+      const el = await findEl(to.hash);
+
+      return window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+    }
+
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: "/",
@@ -18,13 +43,13 @@ const router = new Router({
       children: [
         {
           name: "home",
-          path: "/",
+          path: "",
           component: () => import("@/pages/index"),
         },
         {
-          name: "branding",
-          path: "/branding",
-          component: () => import("@/pages/branding"),
+          name: "media_kit",
+          path: "/media_kit",
+          component: () => import("@/pages/media_kit"),
         },
         {
           name: "payment",

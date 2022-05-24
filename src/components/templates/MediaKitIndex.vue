@@ -1,11 +1,11 @@
 <template>
   <div>
     <lp-header />
-    <article class="branding lp display">
+    <article class="media_kit lp display">
       <section>
         <div class="title">
           <h1>
-            Branding
+            Media Kit
           </h1>
           <p>
             Latest update: March, 2022
@@ -33,7 +33,7 @@
               <figure>
                 <img src="@/assets/images/lp/logo-l.png" alt="">
               </figure>
-              <figure class="pc">
+              <figure>
                 <img src="@/assets/images/lp/logo-m.png" alt="">
               </figure>
             </div>
@@ -46,7 +46,7 @@
               <figure>
                 <img src="@/assets/images/lp/clearspace-l.png" alt="">
               </figure>
-              <figure class="pc">
+              <figure>
                 <img src="@/assets/images/lp/clearspace-m.png" alt="">
               </figure>
             </div>
@@ -61,7 +61,10 @@
               <h4>
                 STANDARD BUTTON
               </h4>
-              <figure>
+              <figure class="sp">
+                <img src="@/assets/images/lp/standard-button-sp.png" alt="">
+              </figure>
+              <figure class="pc">
                 <img src="@/assets/images/lp/standard-button.png" alt="">
               </figure>
             </div>
@@ -69,7 +72,10 @@
               <h4>
                 Settlement indication
               </h4>
-              <figure>
+              <figure class="sp">
+                <img src="@/assets/images/lp/indication-sp.png" alt="">
+              </figure>
+              <figure class="pc">
                 <img src="@/assets/images/lp/indication.png" alt="">
               </figure>
             </div>
@@ -166,13 +172,13 @@
             <div v-for="(svg, key) in svgList" :key="key" class="download-item add-flex">
               <div class="download-item-left">
                 <p>{{svg.title}}</p>
-                <a class="pc-inline" :href="svg.svgImage" download>svg</a>
+                <a class="tb-inline" :href="svg.svgImage" download>SVG</a>
               </div>
               <div class="download-item-right">
                 <figure>
                   <img :src="svg.svgImage">
                 </figure>
-                <a class="download sp-inline" :href="svg.svgImage" download>svg</a>
+                <a class="download sp-inline" :href="svg.svgImage" download>SVG</a>
               </div>
             </div>
           </div>
@@ -181,8 +187,8 @@
           TERMS OF SERVICE
         </a>
       </section>
-      <lp-footer />
     </article>
+    <LpFooter />
   </div>
 </template>
 
@@ -197,6 +203,7 @@ export default {
     return {
       svgList: [
         {title:"Slash Logomark", svgImage: require("@/assets/images/lp/slash-logo.svg")},
+        {title:"Slash Logomark2", svgImage: require("@/assets/images/lp/slash-logo2.svg")},
         {title:"Mark only", svgImage: require("@/assets/images/lp/slash-mark.svg")},
         {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg")},
         {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg")}
@@ -224,25 +231,29 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 
-.branding{
+.media_kit{
   padding: 56px 0;
   @include media(tb) {
-    padding: 56px 16px;
+    padding: 56px 16px 0;
   }
   section{
     text-align: left;
+    padding: 104px 0 0;
+    @include media(tb) {
+      padding: 56px 0 0;
+    }
     .border-bottom{
       border-bottom: 1px solid #766D91;
     }
     .title{
       h1{
-        font-size: 78px;
+        font-size: 73px;
         @include media(tb) {
           font-size: 60px;
         }
       }
       p{
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 40px;
         font-weight: 400;
         @include media(tb) {
@@ -252,12 +263,18 @@ export default {
     }
     .contents-title{
       h3{
-        font-size: 45px;
+        font-size: 32px;
         font-weight: 600;
-        margin-bottom: 40px;
+        margin-bottom: 24px;
         @include media(tb) {
-          font-size: 35px;
-          margin-bottom: 24px;
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+      }
+      span{
+        img{
+          width: 32px;
+          height: 32px;
         }
       }
     }
@@ -269,8 +286,8 @@ export default {
         margin-bottom: 56px;
       }
       h2{
-        font-size: 70px;
-        margin-bottom: 24px;
+        font-size: 60px;
+        margin-bottom: 8px;
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -281,14 +298,15 @@ export default {
         }
       }
       .dsc-title{
-        font-size: 45px;
-        margin-bottom: 24px;
+        font-size: 28px;
+        margin-bottom: 16px;
+        font-weight: 600;
         @include media(tb) {
-          font-size: 35px;
+          font-size: 24px;
         }        
       }
       .dsc{
-        font-size: 22px;
+        font-size: 16px;
         font-weight: 400;
         @include media(tb) {
           font-size: 15px;
@@ -307,8 +325,24 @@ export default {
           margin-bottom: 40px;
         }
         figure{
+          @include media(tb) {
+            margin-bottom: 24px;
+          }
+          &:nth-child(1){
+            @include media(tb) {
+              img{
+                width: 80%;
+              }
+            }
+          }
           &:nth-child(2){
             margin-left: 24px;
+            @include media(tb) {
+              margin-left: 0;
+              img{
+                width: 63%;
+              }
+            }
           }
         }
       }
@@ -316,6 +350,7 @@ export default {
         h4{
           font-size: 30px;
           margin-bottom: 32px;
+          font-weight: 600;
           @include media(tb) {
             font-size: 25px;
             margin-bottom: 24px;
@@ -334,12 +369,13 @@ export default {
           margin-bottom: 40px;
         }
         h4{
-          font-size: 30px;
+          font-size: 26px;
           font-weight: 400;
-          margin-bottom: 32px;
+          margin-bottom: 24px;
           @include media(tb) {
-            font-size: 25px;
-            margin-bottom: 24px;
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 8px;
           }
         }
       }
@@ -352,14 +388,18 @@ export default {
         margin-bottom: 48px;
       }
       .misuse-items{
+        @include media(tb) {
+          justify-content: space-between;
+        }
         .misuse-item{
           margin-bottom: 16px;
           @include media(tb) {
             margin-bottom: 24px;
+            width: 82%;
           }
           &:nth-child(2){
             margin-left: 24px;
-            @include media(tb) {
+            @include media(sp) {
               margin-left: 0;
             }
           }
@@ -370,22 +410,22 @@ export default {
             }
           }
           p{
-            @include media(tb) {
-              font-size: 18px;
-            }
+            font-size: 16px;
+            font-weight: 400;
           }
         }
       }
     }
     .another{
       margin-bottom: 80px;
-      padding-bottom: 40px;
+      padding-bottom: 32px;
       @include media(tb) {
-        margin-bottom: 48px;
+        margin-bottom: 40px;
         padding-bottom: 0;
       }
       .another-dsc{
         margin-bottom: 40px;
+        font-size: 16px;
         @include media(tb) {
           font-size: 15px;
         }
@@ -393,12 +433,18 @@ export default {
       .another-logo{
         figure{
           margin-bottom: 56px;
-          @include media(tb) {
             &:nth-child(1){
-              width: 35%;
+              width: 360px;
             }
             &:nth-child(2){
-              width: 70%;
+              width: 560px;
+            }
+          @include media(tb) {
+            &:nth-child(1){
+              width: 32%;
+            }
+            &:nth-child(2){
+              width: 58%;
             }
           }
         }
@@ -415,27 +461,51 @@ export default {
             width: 40%;
             @include media(tb) {
               width: 100%;
+              
             }
             p{
-              margin-bottom: 24px;
-              font-size: 30px;
+              margin-bottom: 16px;
+              font-size: 22px;
+              font-weight: 300;
             }
             a{
               padding: 8px 24px;
               background: $gradation-light !important;
               box-sizing: border-box !important;
               border-radius: 30px;
-              font-weight: 400;
+              font-weight: 500;
+              margin-bottom: 16px;
             }
           }
           &:nth-child(1){
             img{
-              width: 80%;
+              width: 65%;
+              @include media(tb) {
+                width: 75%;
+              }
+            }
+          }
+          &:nth-child(2){
+            img{
+              @include media(tb) {
+                width: 54%;
+              }
             }
           }
           &:nth-child(4){
             img{
-              width: 70%;
+              width: 45%;
+              @include media(tb) {
+                width: 60%;
+              }
+            }
+          }
+          &:nth-child(5){
+            img{
+              width: 80%;
+              @include media(tb) {
+                width: 75%;
+              }
             }
           }
           .download-item-right{
@@ -446,10 +516,15 @@ export default {
             figure{
               background: #fff;
               text-align: center;
+              max-width: 498px;
               height: 250px;
               line-height: 250px;
               border-radius: 8px;
               margin-bottom: 16px;
+              @include media(sp) {
+                height: 213px;
+                line-height: 213px;
+              }
             }
             @include media(tb) {
               a{
@@ -468,7 +543,8 @@ export default {
       font-size: 30px;
       border-bottom: 1px solid #fff;
       @include media(tb) {
-        margin-bottom: 56px;
+        font-size: 24px;
+        margin-bottom: 32px;
       }
     }
   }

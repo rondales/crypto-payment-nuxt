@@ -140,8 +140,8 @@ export default {
               url: "",
             },
             {
-              title: "Branding",
-              url: "/branding",
+              title: "Media Kit",
+              url: "/media_kit",
             },
           ],
         },

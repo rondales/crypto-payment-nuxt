@@ -47,6 +47,7 @@ export default {
         url: "",
         icon: "",
         status: true,
+        blank: false,
         func: "",
       }),
     },
@@ -98,7 +99,9 @@ export default {
           prop["href"] = this.isExternalLink(this.link.url)
             ? this.link.url
             : "";
-          prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
+          if(this.link.blank){
+            prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
+          }
         }
       }
       return prop;
