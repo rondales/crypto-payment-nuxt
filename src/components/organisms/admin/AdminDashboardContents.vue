@@ -87,7 +87,7 @@
       </div>
       <p>
         *You can deploy or update your new network
-        <router-link :to="{ path: '/admin/web3payment', query: { id: '2' } }"> here</router-link>.
+        <router-link to="/admin/payment/settings/contract"> here</router-link>.
       </p>
     </div>
     <div class="title">

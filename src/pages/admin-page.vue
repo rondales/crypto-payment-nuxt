@@ -30,11 +30,6 @@ export default {
     isSetWeb3ProviderType() {
       return this.$store.state.web3.provider === METAMASK
               || this.$store.state.web3.provider === WALLET_CONNECT
-    },
-    isSetWeb3ChainId() {
-      return Object.values(AvailableNetworks)
-              .map((network) => { return network.chainId })
-              .includes(this.$store.state.web3.chainId)
     }
   },
   methods: {
@@ -43,13 +38,15 @@ export default {
         return network.chainId
       })
       if (!systemAvailableNetworks.includes(chainId)) {
-        return this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'The current network does not support it.'
-          }
+        this.$store.dispatch('modal/show', {
+          target: 'switch-network-for-admin-modal',
+          size: 'medium',
         })
+      } else {
+        const currentModalTarget = this.$store.state.modal.target
+        if (currentModalTarget === 'switch-network-for-admin-modal') {
+          this.$store.dispatch('modal/hide')
+        }
       }
       this.$web3.getAccountData(this.web3.instance, chainId).then((accountData) => {
         this.$store.dispatch('web3/updateChainId', chainId)
@@ -92,11 +89,6 @@ export default {
           return this.getCurrentChainId(web3Instance)
         })
         .then((currentChainId) => {
-          const isCurrentChainSupported = this.checkSupportedChain(currentChainId)
-          if (!isCurrentChainSupported) {
-            this.forceLogout()
-            return
-          }
           this.$store.dispatch('web3/updateInstance', web3Instance)
           this.$store.dispatch('web3/updateChainId', currentChainId)
           this.setEventsListener()
@@ -158,9 +150,9 @@ export default {
     }
   },
   created() {
-    if (this.isSetWeb3Instance && this.isSetWeb3ProviderType && this.isSetWeb3ChainId) {
+    if (this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
       this.setEventsListener()
-    } else if (!this.isSetWeb3Instance && this.isSetWeb3ProviderType && !this.isSetWeb3ChainId) {
+    } else if (!this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
       this.restoreWeb3Instance(this.web3.provider)
     } else {
       this.forceLogout()
