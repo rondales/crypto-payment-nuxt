@@ -98,7 +98,7 @@
       </figure>
       <div class="welcome-receice_contents auto">
         <router-link
-          :to="{ path: '/admin/web3payment', query: { id: '2' } }"
+          to="/admin/payment/settings/contract"
           tag="button"
           class="welcome-receice_btn"
         >

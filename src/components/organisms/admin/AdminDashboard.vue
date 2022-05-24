@@ -9,6 +9,7 @@
 import AdminDashboardPreSetting from '@/components/organisms/admin/AdminDashboardPreSetting'
 import AdminDashboardContents from '@/components/organisms/admin/AdminDashboardContents'
 import RequestUtility from '@/utils/request'
+import AvailableNetworks from '@/network'
 
 export default {
   name: 'PaymentTop',
@@ -26,6 +27,9 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    currentChainId() {
+      return this.$store.state.web3.chainId
     },
     isLoaded() {
       return this.loaded
@@ -47,6 +51,15 @@ export default {
         }
       })
       this.loaded = true
+      const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      })
+      if (!systemAvailableNetworks.includes(this.currentChainId)) {
+        this.$store.dispatch('modal/show', {
+          target: 'switch-network-for-admin-modal',
+          size: 'medium',
+        })
+      }
     })
   }
 }

@@ -3,27 +3,30 @@
     <div class="manage-setting">
       <div class="setting-wrap">
         <div class="setting-toggle add-flex">
-          <div
+          <router-link
+            to="/admin/payment/settings/contract"
+            tag="div"
             class="setting-toggle-right"
             :class="{ active: isContractSettingTab }"
-            @click="switchTab(tabs.contractSetting)"
           >
             Contract Setting
-          </div>
-          <div
+          </router-link>
+          <router-link
+            to="/admin/payment/settings/basic"
+            tag="div"
             class="setting-toggle-center"
             :class="{ active: isPaymentSettingTab }"
-            @click="switchTab(tabs.paymentSetting)"
           >
             Payment Setting
-          </div>
-          <div
+          </router-link>
+          <router-link
+            to="/admin/payment/settings/domain"
+            tag="div"
             class="setting-toggle-left"
             :class="{ active: isDomainSettingTab }"
-            @click="switchTab(tabs.domainSetting)"
           >
             Domain Setting
-          </div>
+          </router-link>
         </div>
         <div class="manage-contents" v-if="isContractSettingTab">
           <div class="manage-contents_head">
@@ -112,13 +115,6 @@
               A URL for the user to go from SlashPayment to the merchant's website after a successful payment.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.successReturnUrl">
-          </div>
-          <div class="manage-contents_clm">
-            <h4>Payment faliure return URL</h4>
-            <p>
-              A URL for the user to go from SlashPayment to the merchant's website after a failure payment.
-            </p>
-            <input class="text-box" type="text" v-model="paymentSettings.failureReturnUrl">
           </div>
           <div class="manage-contents_clm">
             <h4><span>*</span>Exchange margin rate</h4>
@@ -220,11 +216,6 @@ export default {
   data() {
     return {
       currentTab: null,
-      tabs: {
-        contractSetting: 1,
-        paymentSetting: 2,
-        domainSetting: 3
-      },
       contractSettings: {
         loaded: false,
         contracts: {}
@@ -232,7 +223,6 @@ export default {
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
-        failureReturnUrl: '',
         exchangeMarginRate: '0.0',
         allowCurrencies: {
           USD: false,
@@ -256,13 +246,16 @@ export default {
       return this.contractSettings.contracts
     },
     isContractSettingTab() {
-      return this.currentTab === this.tabs.contractSetting
+      const targetPath = '/admin/payment/settings/contract'
+      return this.$route.path === targetPath
     },
     isPaymentSettingTab() {
-      return this.currentTab === this.tabs.paymentSetting
+      const targetPath = '/admin/payment/settings/basic'
+      return this.$route.path === targetPath
     },
     isDomainSettingTab() {
-      return this.currentTab === this.tabs.domainSetting
+      const targetPath = '/admin/payment/settings/domain'
+      return this.$route.path === targetPath
     },
     isContractUpdateRequest() {
       return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
@@ -347,7 +340,6 @@ export default {
       const data = {
         complete_kickback_url: this.paymentSettings.successNotifyUrl,
         succeeded_return_url: this.paymentSettings.successReturnUrl,
-        failured_return_url: this.paymentSettings.failureReturnUrl,
         exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
         allow_currencies: this.paymentSettings.allowCurrencies
       }
@@ -385,7 +377,6 @@ export default {
       this.apiGetPaymentSettings().then((response) => {
         this.paymentSettings.successNotifyUrl = response.data.complete_kickback_url
         this.paymentSettings.successReturnUrl = response.data.succeeded_return_url
-        this.paymentSettings.failureReturnUrl = response.data.failured_return_url
         this.paymentSettings.exchangeMarginRate = response.data.exchange_margin_rate
         this.paymentSettings.allowCurrencies = response.data.allow_currencies
       }).catch((error) => {
@@ -509,7 +500,6 @@ export default {
     }
   },
   created() {
-    this.currentTab = this.tabs.contractSetting
     const receiveTokenSymbol = this.$store.state.account.receiveSymbol
     const supportStatuses = {
       [AvailableNetworks.ethereum.chainId]: (EthereumTokens[receiveTokenSymbol].address),
