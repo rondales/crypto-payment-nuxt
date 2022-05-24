@@ -49,7 +49,7 @@
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="connected" class="account-wallet" @click="toggleSubMenu">
+          <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
             <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
@@ -271,7 +271,9 @@ export default {
       this.$emit('switchColorTheme', color)
     },
     toggleSubMenu(){
-      this.$store.dispatch("toggleAccountMenu");
+      if (this.isAdminPage) {
+        this.$store.dispatch("toggleAccountMenu");
+      }
     },
     openAccountModal(){
       this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
@@ -394,7 +396,10 @@ export default {
   display: flex;
   align-items: center;
   background: var(--color_darken);
-  cursor: pointer;
+  cursor: default;
+  &.admin {
+    cursor: pointer;
+  }
   @include media(pc) {
     height: 42px;
     border-radius: 8px;
