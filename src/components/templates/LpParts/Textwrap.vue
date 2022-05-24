@@ -9,7 +9,7 @@
     <div class="absTest">
       <p class="text scrollAction op"><span v-html="textData.text"></span></p>
       <div v-if="textData.app" class="app">
-        <div class="app_link">
+        <div class="app_wrap">
           <p v-if="textData.app.coming" class="app_title">
             <span>{{ textData.app.coming }}</span>
           </p>
@@ -74,16 +74,23 @@ export default {
   margin-bottom: rem(2);
   @include media(sp) {
     @include flex(center, center);
+    margin-bottom: rem(1);
   }
   dt {
     background: $gradation-light;
     color: #fff;
     @include font(rem(pow(0)), 600, $ls, 1, $en_go);
     @include rem_padding(0.5, 1, 0.5, 1);
+    @include media(sp) {
+      margin-top: rem_sp(1);
+    }
   }
   dd {
     padding-left: 2rem;
     @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+    @include media(sp) {
+      margin-top: rem_sp(1);
+    }
   }
 }
 
@@ -93,21 +100,21 @@ export default {
   // border-radius: rem(1);
   @include rem_padding(2, 2, 2, 2);
   border: 1px solid var(--color_update);
+  @include media(sp) {
+    padding: rem_sp(2);
+  }
   &_title {
     @include font(rem(pow(2)), $fw, $ls, $lh, $en_go);
     margin-bottom: rem(1);
+    text-align: center;
     @include media(sp) {
-      text-align: center;
+      font-size: rem_sp(pow(2));
+      margin-bottom: rem_sp(1);
     }
   }
   &_link {
     @include flex(center, flex-start);
-    @include media(sp) {
-      @include flex(center, flex-start);
-    }
-    a {
-      width: rem(15);
-    }
+    flex-wrap: nowrap;
     .disable {
       opacity: 0.8;
       pointer-events: none;
@@ -115,13 +122,17 @@ export default {
     a + a {
       margin-left: rem(1);
       @include media(sp) {
-        margin-left: rem(0);
+        margin-left: rem_sp(1);
       }
     }
   }
   &_cap {
     margin-top: rem(1);
     @include font(rem(pow(-1)), $fw, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: rem_sp(pow(-1));
+      margin-top: rem_sp(1);
+    }
   }
 }
 .title {
@@ -133,20 +144,27 @@ export default {
   // word-break: break-all;
   overflow-wrap: break-word;
   @include media(sp) {
-    @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
-    margin-bottom: rem(1);
+    font-size: rem_sp(1.5);
+    margin-bottom: rem_sp(1);
     text-align: center;
+    span br {
+      display: none;
+    }
   }
 }
 .text {
   @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
   // word-break: break-all;
   overflow-wrap: break-word;
+  @include media(sp) {
+    font-size: rem_sp(1);
+  }
 }
 .link {
   margin-top: rem(1);
   @include media(sp) {
     text-align: center;
+    margin-top: rem_sp(1);
   }
 }
 .logos {
@@ -155,6 +173,9 @@ export default {
     @include flex(center, center);
   }
   margin-top: rem(1);
+  @include media(sp) {
+    margin-top: rem_sp(1);
+  }
   & > * {
     flex: 1;
   }

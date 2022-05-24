@@ -197,11 +197,6 @@
               <LpImage :imgData="logo" />
             </li>
           </ul>
-          <ul :class="section.network.class + '__logos2'">
-            <li v-for="logo in section.network.logos" :key="logo.src">
-              <LpImage :imgData="logo" />
-            </li>
-          </ul>
         </div>
       </section>
 
@@ -277,8 +272,8 @@
               </div>
               <LpButton :link="section.cv.link" type="main" size="m" />
             </div>
-            <ul :class="section.contact.class + '__list'">
-              <li v-for="list in section.contact.list" :key="list.title">
+            <ul :class="section.cv.class + '__list'">
+              <li v-for="list in section.cv.list" :key="list.title">
                 <LpButton :link="list" type="main" size="l" />
               </li>
             </ul>
@@ -373,8 +368,7 @@ export default {
             },
           ],
           sub: {
-            title:
-              'Exchanges at DEX automatically <br>at an optimal rate',
+            title: "Exchanges at DEX automatically <br>at an optimal rate",
             text: "Slash Payment’s smart contracts automatically find an optimal rate through supported DEX SWAP routers. This solution allows Customers can pay with any token at an optimal-rate.",
             link: {
               url: "/",
@@ -535,7 +529,7 @@ export default {
             {
               layout: "c",
               title:
-                'The best way for Accepting Web3<br class="sp"> Wallet Payments at Physical Stores',
+                "The best way for Accepting Web3 Wallet Payments at Physical Stores",
               image: {
                 src: "lp/app2.png",
                 alt: "The best way for Accepting Web3 Wallet Payments at Physical Stores",
@@ -690,7 +684,7 @@ export default {
         network: {
           class: "dlp-network",
           title: {
-            title: 'Connected <br class="sp">network 🌎',
+            title: 'Connected dapps<br class="sp"> & network 🌎',
             subtitle: "",
           },
           logos: [
@@ -748,6 +742,41 @@ export default {
               alt: "etherscan",
               src: "lp/logos/etherscan.svg",
               lightSrc: "lp/logos/etherscan_l.svg",
+            },
+            {
+              alt: "spookeyswap",
+              src: "lp/logos/spookeyswap.svg",
+              lightSrc: "lp/logos/spookeyswap_l.svg",
+            },
+            {
+              alt: "sushiswap",
+              src: "lp/logos/sushiswap.svg",
+              lightSrc: "lp/logos/sushiswap_l.svg",
+            },
+            {
+              alt: "ftmscan",
+              src: "lp/logos/ftmscan.svg",
+              lightSrc: "lp/logos/ftmscan_l.svg",
+            },
+            {
+              alt: "fantom",
+              src: "lp/logos/fantom.svg",
+              lightSrc: "",
+            },
+            {
+              alt: "avalanche",
+              src: "lp/logos/avalanche.svg",
+              lightSrc: "",
+            },
+            {
+              alt: "ava_explorer",
+              src: "lp/logos/ava_explorer.svg",
+              lightSrc: "lp/logos/ava_explorer_l.svg",
+            },
+            {
+              alt: "spritswap",
+              src: "lp/logos/spritswap.svg",
+              lightSrc: "",
             },
           ],
         },
@@ -931,11 +960,18 @@ export default {
             },
           ],
         },
-        contact: {
-          class: "dlp-contact",
+        cv: {
+          class: "dlp-cv",
           title: {
-            title: "Contact us",
+            title: "Install on your online service now!⚡",
             subtitle: "",
+          },
+          link: {
+            title: "Enter App",
+            icon: "",
+            url: "",
+            func: "enterApp",
+            status: true,
           },
           list: [
             {
@@ -951,20 +987,6 @@ export default {
               status: true,
             },
           ],
-        },
-        cv: {
-          class: "dlp-cv",
-          title: {
-            title: "Install on your online service now!⚡",
-            subtitle: "",
-          },
-          link: {
-            title: "Enter App",
-            icon: "",
-            url: "",
-            func: "enterApp",
-            status: true,
-          },
         },
       },
       nativeApp: false,
@@ -1230,22 +1252,29 @@ body.is-mounted {
       margin-left: auto;
       margin-right: auto;
       margin-bottom: rem(1);
+      @include media(sp) {
+        width: rem_sp(4);
+        margin-bottom: rem_sp(1);
+      }
     }
     &__h1 {
       text-align: center;
       margin-bottom: rem(3);
+      @include media(sp) {
+        margin-bottom: rem_sp(2);
+      }
       &__title {
         @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
         display: block;
         @include media(sp) {
-          @include font(rem(4), 500, 0.02em, 1.2, $ff);
+          font-size: rem_sp(4);
         }
       }
       &__subtitle {
         @include font(rem(1.8), 500, $ls, 1, $ff);
         display: block;
         @include media(sp) {
-          @include font(rem(1.5), 500, 0.02em, 1.2, $ff);
+          @include font(rem_sp(1.8), 500, 0.02em, 1.2, $ff);
         }
       }
     }
@@ -1254,8 +1283,8 @@ body.is-mounted {
       text-align: center;
       white-space: nowrap;
       @include font(rem(1), $fw, $ls, $lh, $ff);
-      // @include font(rem(pow(1)), $fw, $ls, $lh, $ff);
       @include media(sp) {
+        font-size: rem_sp(1);
         white-space: normal;
         br {
           display: none;
@@ -1279,9 +1308,8 @@ body.is-mounted {
     position: relative;
     @include rem_padding(8, 0, 8, 0);
     @include media(sp) {
-      @include rem_padding(2, 0, 8, 0);
-    }
-    .section__wrap {
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(8);
     }
     &__wrap {
       @include flex(flex-start, center);
@@ -1301,6 +1329,7 @@ body.is-mounted {
       margin-bottom: rem(2);
       @include media(sp) {
         text-align: center;
+        margin-bottom: rem_sp(2);
       }
       * {
         background: $gradation-light;
@@ -1313,9 +1342,10 @@ body.is-mounted {
         @include font(rem(8), 700, 0em, 1.2, $ff);
         display: block;
         @include media(tb) {
-          font-size: rem(6);
+          font-size: rem_tb(6);
         }
         @include media(sp) {
+          font-size: rem_sp(6);
           text-align: center;
         }
       }
@@ -1323,16 +1353,17 @@ body.is-mounted {
         display: block;
         @include media(sp) {
           text-align: center;
+          margin-bottom: rem_sp(0.5);
         }
         span {
           @include font(rem(6), 700, 0em, 1.2, $ff);
           display: inline-block;
           vertical-align: middle;
           @include media(tb) {
-            font-size: rem(4);
+            font-size: rem_tb(4);
           }
           @include media(sp) {
-            font-size: rem(3.5);
+            font-size: rem_sp(3.5);
           }
         }
         img {
@@ -1340,10 +1371,10 @@ body.is-mounted {
           vertical-align: middle;
           width: rem(6);
           @include media(tb) {
-            font-size: rem(4);
+            font-size: rem_tb(4);
           }
           @include media(sp) {
-            width: rem(3.5);
+            width: rem_sp(3.5);
           }
         }
       }
@@ -1351,10 +1382,10 @@ body.is-mounted {
         @include font(rem(4), 700, 0em, 1.5, $ff);
         display: block;
         @include media(tb) {
-          font-size: rem(3);
+          font-size: rem_tb(3);
         }
         @include media(sp) {
-          @include font(rem(2), 700, 0em, 1.2, $ff);
+          @include font(rem_sp(2), 700, 0em, 1.2, $ff);
         }
       }
     }
@@ -1363,6 +1394,7 @@ body.is-mounted {
       z-index: 10;
       @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
       @include media(sp) {
+        font-size: rem_sp(pow(0));
         span br {
           display: none !important;
         }
@@ -1372,8 +1404,10 @@ body.is-mounted {
       width: 35%;
       position: relative;
       @include media(sp) {
-        width: 100%;
-        margin-top: rem(4);
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: rem_sp(4);
       }
     }
     &__image {
@@ -1410,34 +1444,26 @@ body.is-mounted {
     @include rem_padding(6, 0, 6, 0);
     position: relative;
     @include media(sp) {
-      @include rem_padding(2, 0, 2, 0);
-    }
-    .section__wrap {
-      position: relative;
-      z-index: 10;
-    }
-    &__canvas {
-      position: absolute;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(2);
     }
     &__iconlist {
       @include flex(center, flex-start);
+      @include list(6, rem(2));
       margin-bottom: rem(5);
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+      @include media(sp) {
+        @include list(3, rem_sp(2));
+        margin-bottom: rem_sp(2);
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+      }
       li {
-        width: rem(6);
-        margin: 0 rem(1);
-        @include media(tb) {
-          flex: 1;
-        }
         @include media(sp) {
-          flex: auto;
-          width: rem(4);
-          margin: rem(1);
+          margin-bottom: rem_sp(1);
         }
       }
     }
@@ -1448,15 +1474,27 @@ body.is-mounted {
       margin-right: auto;
       border-top: rem(0.3) solid var(--color_darken);
       padding-top: rem(3);
+      @include media(sp) {
+        margin-bottom: rem_sp(2);
+        padding-top: rem_sp(3);
+      }
       &__title {
         text-align: center;
         @include font(rem(2), 700, 0em, 1.5, $ff);
         display: block;
         margin-bottom: rem(1);
+        @include media(sp) {
+          font-size: rem_sp(1.5);
+          margin-bottom: rem_sp(1);
+        }
       }
       &__text {
         @include font(rem(1), $fw, $ls, $lh, $ff);
         margin-bottom: rem(1);
+        @include media(sp) {
+          font-size: rem_sp(1);
+          margin-bottom: rem_sp(1);
+        }
       }
       &__link {
         @include flex(center, center);
@@ -1467,11 +1505,11 @@ body.is-mounted {
       @include list(3, rem(0.5));
 
       @include media(tb) {
-        @include list(1, rem(0.5));
+        @include list(1, rem_tb(0.5));
       }
       & > li {
         @include media(tb) {
-          margin-bottom: rem(2);
+          margin-bottom: rem_tb(2);
         }
       }
       &__list {
@@ -1497,6 +1535,7 @@ body.is-mounted {
         text-align: center;
         margin-bottom: rem(1);
         @include media(tb) {
+          font-size: rem_sp(1.5);
           flex: auto;
           height: auto;
           min-height: initial;
@@ -1512,27 +1551,22 @@ body.is-mounted {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: rem(1);
-        // @include media(tb) {
-        //   width: 100%;
-        //   @include list(3, rem(0.8));
-        //   height: auto;
-        //   min-height: initial;
-        // }
         @include media(tb) {
           flex: auto;
           height: auto;
           min-height: initial;
-          @include list(6, rem(2));
+          @include list(6, rem_tb(2));
         }
         @include media(sp) {
-          @include list(3, rem(2));
+          @include list(3, rem_sp(2));
+          width: 90%;
+          margin-left: auto;
+          margin-right: auto;
         }
         li {
-          // width: rem(3);
           margin-bottom: rem(1);
           @include media(tb) {
             max-width: 200px;
-            // margin-bottom: rem(0);
           }
         }
       }
@@ -1543,6 +1577,7 @@ body.is-mounted {
         overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
         @include media(tb) {
+          font-size: rem_sp(1);
           flex: auto;
           height: auto;
           min-height: initial;
@@ -1570,32 +1605,20 @@ body.is-mounted {
   &-fee {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
-    }
-    &__sectitle {
-      margin-bottom: rem(3);
-      text-align: center;
-      // * {
-      //   background: $gradation-light;
-      //   -webkit-background-clip: text;
-      //   -webkit-text-fill-color: transparent;
-      //   // background-size: 100% 10%;
-      // }
-      &__title {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-        display: block;
-      }
-      &__subtitle {
-        @include font(rem(3), 700, 0em, 1.5, $ff);
-      }
+      padding-bottom: rem_sp(3);
     }
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
+      padding-bottom: rem_sp(3);
     }
     &__feature {
+      @include media(sp) {
+        width: 86%;
+        margin-left: auto;
+        margin-right: auto;
+      }
       .scrollAction {
         &.active {
           [class$="__textwrap"] {
@@ -1630,6 +1653,9 @@ body.is-mounted {
         padding: rem(6) 0;
         & + li {
           margin-top: rem(4);
+          @include media(sp) {
+            margin-top: rem_sp(2);
+          }
         }
         &:nth-child(2n) {
           [class$="list"] {
@@ -1684,7 +1710,8 @@ body.is-mounted {
         width: 70%;
         margin: rem(2) auto rem(1);
         @include media(sp) {
-          width: 90%;
+          width: 75%;
+          margin: rem_sp(1) auto;
         }
         &::v-deep {
           svg {
@@ -1704,7 +1731,7 @@ body.is-mounted {
         transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 0ms,
           opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
         @include media(sp) {
-          padding: rem(2);
+          padding: rem_sp(2);
         }
         * {
           opacity: 0;
@@ -1726,6 +1753,9 @@ body.is-mounted {
           );
           transform-origin: center center;
           transform: translate(-50%, 0%);
+          @include media(sp) {
+            width: 100%;
+          }
         }
         * {
           position: relative;
@@ -1737,17 +1767,26 @@ body.is-mounted {
             @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
             color: #fff;
             @include media(sp) {
-              @include font(rem(pow(1)), 700, $ls, $lh, $en_go);
-              margin-bottom: rem(1);
+              font-size: rem_sp(pow(1));
+              margin-bottom: rem_sp(0.5);
             }
           }
           .text {
             @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
             color: #fff;
+            @include media(sp) {
+              font-size: rem_sp(pow(0));
+            }
           }
 
           .link {
             margin-top: rem(2);
+            @include media(sp) {
+              margin-top: rem_sp(2);
+              * {
+                margin: 0;
+              }
+            }
             .lpButton.m .icon {
               width: rem(4);
             }
@@ -1758,19 +1797,13 @@ body.is-mounted {
   }
   &-network {
     position: relative;
-    @include rem_padding(6, 0, 6, 0);
-    position: relative;
-    @include media(sp) {
-      @include rem_padding(2, 0, 2, 0);
-    }
     .section__wrap {
       position: relative;
       z-index: 10;
-    }
-    &__title {
-      &::v-deep {
-        .title {
-        }
+      @include rem_padding(6, 0, 6, 0);
+      @include media(sp) {
+        padding-top: rem_sp(4);
+        padding-bottom: rem_sp(4);
       }
     }
 
@@ -1802,30 +1835,26 @@ body.is-mounted {
     }
 
     &__logos {
-      flex: 4;
       white-space: nowrap;
       @include flex(flex-start, center);
       @include list(4, rem(3));
       @include media(sp) {
-        @include flex(flex-start, center);
-        @include list(2, rem(1));
+        @include list(2, rem_sp(1));
       }
 
       li {
         margin-bottom: rem(2);
         @include media(sp) {
-          margin-bottom: rem(1);
+          margin-bottom: rem_sp(1);
         }
       }
-    }
-    &__logos2 {
-      display: none;
     }
   }
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
+      padding-top: rem_sp(3);
+      padding-bottom: rem_sp(3);
     }
     &__phase {
       &__box {
@@ -1835,6 +1864,7 @@ body.is-mounted {
         overflow: hidden;
         @include media(sp) {
           display: block;
+          margin-bottom: rem_sp(2);
         }
       }
       &__title {
@@ -1844,8 +1874,8 @@ body.is-mounted {
         color: #fff;
         @include flex(center, center);
         @include media(sp) {
-          @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
-          padding: rem(0.5);
+          font-size: rem_sp(1.5);
+          padding: rem_sp(1);
         }
       }
 
@@ -1855,11 +1885,14 @@ body.is-mounted {
         @include list(2, 0);
         @include media(sp) {
           width: 100%;
-          @include list(1, rem(2));
+          @include list(1, rem_sp(2));
         }
         & > li {
           padding: rem(2);
           position: relative;
+          @include media(sp) {
+            padding: rem_sp(2);
+          }
           &:nth-child(n + 3) {
             &::after {
               content: "";
@@ -1909,23 +1942,19 @@ body.is-mounted {
       &__listwrap {
         @include flex(center, center);
         flex-direction: column;
-        // border-radius: rem(1);
-        // overflow: hidden;
       }
       &__subtitle {
         @include font(rem(pow(1)), 700, $ls, 1, $en_go);
         text-align: center;
         margin-bottom: rem(1);
-        // background: $gradation-light;
-        // padding: rem(0.5);
-        // -webkit-background-clip: text;
-        // -webkit-text-fill-color: transparent;
+        @include media(sp) {
+          font-size: rem_sp(pow(1));
+          margin-bottom: rem_sp(1);
+        }
       }
       &__sublist {
-        // padding: rem(1);
         li {
           @include font(rem(pow(0)), 400, $ls, 2, $en_go);
-          // text-align: center;
           span {
             display: inline-block;
             padding-left: rem(2);
@@ -1947,42 +1976,39 @@ body.is-mounted {
         }
       }
     }
-    // &__feature {
-    //   @include flex(center, center);
-    //   @include list(3, 2rem);
-    // }
   }
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
     background-color: var(--color_bg_parts);
     @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
+      padding-top: rem_sp(3);
+      padding-bottom: rem_sp(3);
     }
     &__list {
       @include flex(center, flex-start);
-    }
-  }
-  &-contact {
-    @include rem_padding(6, 0, 6, 0);
-    &__list {
-      flex: 1;
-      margin: auto rem(2);
-
-      @include media(sp) {
-        margin: 0;
+      li {
+        @include media(sp) {
+          width: 100%;
+        }
         &::v-deep {
-          .lpButton.main {
-            margin: 0;
-            margin-bottom: rem(1);
+          .lpButton.s {
+            @include media(sp) {
+              margin-left: 0;
+              margin-right: 0;
+            }
           }
         }
       }
     }
   }
+
   &-cv {
     @include rem_padding(4, 0, 5, 0);
     position: relative;
-
+    @include media(sp) {
+      padding-top: rem_sp(6);
+      padding-bottom: rem_sp(6);
+    }
     .section__wrap {
       position: relative;
       z-index: 10;
@@ -2031,7 +2057,12 @@ body.is-mounted {
       flex: 1;
       @include media(sp) {
         margin: 0;
-        margin-bottom: rem(2);
+        margin-bottom: rem_sp(2);
+      }
+      .lpButton.m {
+        margin: 0;
+        @include media(sp) {
+        }
       }
     }
     &__logo {
@@ -2041,7 +2072,7 @@ body.is-mounted {
       @include flex(center, center);
       margin-bottom: rem(1);
       @include media(sp) {
-        margin-bottom: rem(0);
+        margin-bottom: rem_sp(0);
       }
       img {
         width: rem(3);
@@ -2052,6 +2083,27 @@ body.is-mounted {
         background: $gradation-light;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+    }
+
+    &__list {
+      flex: 1;
+      margin: auto rem(2);
+      &::v-deep {
+        .lpButton.m {
+          margin: 0;
+          @include media(sp) {
+          }
+        }
+      }
+      @include media(sp) {
+        margin: 0;
+        &::v-deep {
+          .lpButton.main {
+            margin: 0;
+            margin-bottom: rem_sp(1);
+          }
+        }
       }
     }
   }
