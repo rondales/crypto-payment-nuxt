@@ -40,7 +40,7 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a :href="navlink.url">
+                  <a :href="localUrl+navlink.url">
                     <span>{{ navlink.title }}</span>
                   </a>
                 </li>
@@ -141,6 +141,10 @@ export default {
               title: "Privacy Terms",
               url: "",
             },
+            {
+              title: "Branding",
+              url: "/branding",
+            },
           ],
         },
       ],
@@ -171,7 +175,11 @@ export default {
           status: true,
         },
       ],
+      localUrl: "",
     };
+  },
+  created(){
+    this.localUrl = location.origin
   },
   methods: {
     changeTheme(theme) {
