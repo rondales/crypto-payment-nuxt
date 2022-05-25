@@ -90,8 +90,7 @@
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
       </button>
-<<<<<<< HEAD
-        <div v-for="(list, index) in nav" :key="index">
+        <div v-for="(list, key) in nav" :key="key">
           <router-link
               :to="{
                   name: list.name,
@@ -101,15 +100,6 @@
               {{list.title}}
           </router-link>
         </div>
-=======
-      <a
-        v-for="(link, key) in nav"
-        :key="key"
-        :href="localUrl + link.link"
-        @click="close()"
-        >{{ link.title }}</a
-      >
->>>>>>> feature/delaunay
       <LpButton :link="cvLink" type="main" size="s" />
     </div>
   </header>
