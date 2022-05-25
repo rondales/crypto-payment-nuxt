@@ -62,10 +62,10 @@
                 STANDARD BUTTON
               </h4>
               <figure class="sp">
-                <img src="@/assets/images/lp/standard-button-sp.png" alt="">
+                <img src="@/assets/images/lp/standard-button-sp.svg" alt="">
               </figure>
               <figure class="pc">
-                <img src="@/assets/images/lp/standard-button.png" alt="">
+                <img src="@/assets/images/lp/standard-button.svg" alt="">
               </figure>
             </div>
             <div class="usecase-block">
@@ -73,10 +73,10 @@
                 Settlement indication
               </h4>
               <figure class="sp">
-                <img src="@/assets/images/lp/indication-sp.png" alt="">
+                <img src="@/assets/images/lp/indication-sp.svg" alt="">
               </figure>
               <figure class="pc">
-                <img src="@/assets/images/lp/indication.png" alt="">
+                <img src="@/assets/images/lp/indication.svg" alt="">
               </figure>
             </div>
           </div>
@@ -93,7 +93,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-01.png" alt="">
+                <img src="@/assets/images/lp/misuse-01.svg" alt="">
               </figure>
               <p>
                 Don’t adjust the
@@ -103,7 +103,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-02.png" alt="">
+                <img src="@/assets/images/lp/misuse-02.svg" alt="">
               </figure>
               <p>
                 Don’t add other visual
@@ -115,7 +115,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-03.png" alt="">
+                <img src="@/assets/images/lp/misuse-03.svg" alt="">
               </figure>
               <p>
                 Don’t change color
@@ -123,7 +123,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-04.png" alt="">
+                <img src="@/assets/images/lp/misuse-04.svg" alt="">
               </figure>
               <p>
                 Don't change the
@@ -143,22 +143,37 @@
             Please use this one depending on your application.
           </p>
           <div class="another-logo pc">
-            <figure>
+            <figure v-if="$store.state.theme == 'dark'">
               <img src="@/assets/images/lp/another-logo.png" alt="">
             </figure>
-            <figure>
+            <figure v-if="$store.state.theme == 'light'">
+              <img src="@/assets/images/lp/another-logo-d.png" alt="">
+            </figure>
+            <figure v-if="$store.state.theme == 'dark'">
               <img src="@/assets/images/lp/another-full-logo.png" alt="">
+            </figure>
+            <figure v-if="$store.state.theme == 'light'">
+              <img src="@/assets/images/lp/another-full-logo-d.png" alt="">
             </figure>
           </div>
           <div class="another-logo sp">
-            <figure>
+            <figure v-if="$store.state.theme == 'dark'">
               <img src="@/assets/images/lp/another-logo-sp.png" alt="">
             </figure>
-            <figure>
+            <figure v-if="$store.state.theme == 'light'">
+              <img src="@/assets/images/lp/another-logo-sp-d.png" alt="">
+            </figure>
+            <figure v-if="$store.state.theme == 'dark'">
               <img src="@/assets/images/lp/another-logo-sp-02.png" alt="">
             </figure>
-            <figure>
+            <figure v-if="$store.state.theme == 'light'">
+              <img src="@/assets/images/lp/another-logo-sp-02-d.png" alt="">
+            </figure>
+            <figure v-if="$store.state.theme == 'dark'">
               <img src="@/assets/images/lp/another-logo-sp-03.png" alt="">
+            </figure>
+            <figure v-if="$store.state.theme == 'light'">
+              <img src="@/assets/images/lp/another-logo-sp-03-d.png" alt="">
             </figure>
           </div>
         </div>
@@ -248,8 +263,9 @@ export default {
     .title{
       h1{
         font-size: 73px;
+        font-weight: 500;
         @include media(tb) {
-          font-size: 60px;
+          font-size: 50px;
         }
       }
       p{
@@ -257,7 +273,7 @@ export default {
         margin-bottom: 40px;
         font-weight: 400;
         @include media(tb) {
-          margin-bottom: 16px;
+          margin-bottom: 0;
         }
       }
     }
@@ -267,7 +283,7 @@ export default {
         font-weight: 600;
         margin-bottom: 24px;
         @include media(tb) {
-          font-size: 24px;
+          font-size: 21px;
           margin-bottom: 16px;
         }
       }
@@ -294,7 +310,7 @@ export default {
         background-size: 100% 10%;
         display: inline-block;
         @include media(tb) {
-          font-size: 46px;
+          font-size: 28px;
         }
       }
       .dsc-title{
@@ -302,14 +318,15 @@ export default {
         margin-bottom: 16px;
         font-weight: 600;
         @include media(tb) {
-          font-size: 24px;
+          font-size: 21px;
+          margin-bottom: 8px;
         }        
       }
       .dsc{
         font-size: 16px;
         font-weight: 400;
         @include media(tb) {
-          font-size: 15px;
+          font-size: 14px;
         }
       }
     }
@@ -373,7 +390,7 @@ export default {
           font-weight: 400;
           margin-bottom: 24px;
           @include media(tb) {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 300;
             margin-bottom: 8px;
           }
@@ -410,7 +427,7 @@ export default {
             }
           }
           p{
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 400;
           }
         }
@@ -427,7 +444,7 @@ export default {
         margin-bottom: 40px;
         font-size: 16px;
         @include media(tb) {
-          font-size: 15px;
+          font-size: 14px;
         }
       }
       .another-logo{
@@ -465,7 +482,7 @@ export default {
             }
             p{
               margin-bottom: 16px;
-              font-size: 22px;
+              font-size: 20px;
               font-weight: 300;
             }
             a{
@@ -522,8 +539,8 @@ export default {
               border-radius: 8px;
               margin-bottom: 16px;
               @include media(sp) {
-                height: 213px;
-                line-height: 213px;
+                height: 200px;
+                line-height: 200px;
               }
             }
             @include media(tb) {
@@ -541,9 +558,10 @@ export default {
     }
     .terms{
       font-size: 30px;
+      font-weight: 600;
       border-bottom: 1px solid #fff;
       @include media(tb) {
-        font-size: 24px;
+        font-size: 21px;
         margin-bottom: 32px;
       }
     }
