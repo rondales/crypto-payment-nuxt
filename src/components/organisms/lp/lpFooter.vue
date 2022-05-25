@@ -13,10 +13,11 @@
           <div class="lp-footer_info">
             <div><span>SLASH FINTECH LIMITED（BVI）</span></div>
             <p>
-              <span
-                >3rd Floor, J & C Building, Road<br />Town, Tortola, British
-                Virgin Islands, VG1110</span
-              >
+              <span>
+                Vistra Corporate Services Centre, Wickhams Cay II Road
+                <br />
+                Town Tortola VG1110, British Virgin Islands
+              </span>
             </p>
           </div>
           <!-- <div class="lp-footer_info">
