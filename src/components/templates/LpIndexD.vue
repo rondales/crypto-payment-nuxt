@@ -583,7 +583,7 @@ export default {
                 alt: "Slash Payment fee is 0.2〜0.6%",
                 lightSrc: "",
               },
-              text: "There are no commissions charged to the Merchants. The commission is charged to the payers but is only 0.2-0.6% of the payment amount. It is collected along with the gas cost of the  payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper. A portion of the fees will also go towards the Slash donation program, where the recipients of the donation will be determined by a vote.",
+              text: "There are no commissions charged to the Merchants. The commission is charged to the payers but is only 0.2-0.6% of the payment amount. It is collected along with the gas cost of the  payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper.",
               link: {
                 url: "/",
                 title: "Fee Structure",
@@ -599,7 +599,7 @@ export default {
                 alt: "Slash automatically donation program",
                 lightSrc: "",
               },
-              text: "0.1% of all Slash Payment fees are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
+              text: "0.1% of the settlement amount charged to the payers apart from commitions. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
                   alt: "save-the-children",
