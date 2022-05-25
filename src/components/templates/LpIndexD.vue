@@ -1097,8 +1097,8 @@ export default {
       for (let i = 0; i < scrollActions.length; i++) {
         const windowHeight = window.innerHeight;
         const elTop = scrollActions[i].getBoundingClientRect().top;
-        const elVisible = 150;
-        if (elTop < windowHeight - elVisible) {
+        // const elVisible = 150;
+        if (elTop < windowHeight - windowHeight * 0.2) {
           scrollActions[i].classList.add("active");
         } else {
           scrollActions[i].classList.remove("active");
@@ -1161,6 +1161,15 @@ export default {
       &:nth-child(3) {
         transition-delay: 1040ms;
       }
+      @include media(sp) {
+        transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms;
+        &:nth-child(2) {
+          transition-delay: 120ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 240ms;
+        }
+      }
     }
     &::v-deep {
       transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
@@ -1190,12 +1199,21 @@ export default {
   &.capcha {
     figure {
       opacity: 0;
-      transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 1000ms;
+      transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
       &:nth-child(2) {
-        transition-delay: 1200ms;
+        transition-delay: 800ms;
       }
       &:nth-child(3) {
-        transition-delay: 1400ms;
+        transition-delay: 1000ms;
+      }
+      @include media(sp) {
+        transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+        &:nth-child(2) {
+          transition-delay: 200ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 400ms;
+        }
       }
     }
     &.active {
@@ -1597,7 +1615,8 @@ body.is-mounted {
   &-install {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      @include rem_padding(3, 0, 3, 0);
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(0);
     }
     &__feature {
       li {
@@ -1614,13 +1633,15 @@ body.is-mounted {
   &-fee {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      padding-bottom: rem_sp(3);
+      padding-top: rem_sp(0);
+      padding-bottom: rem_sp(0);
     }
   }
   &-trial {
     @include rem_padding(6, 0, 6, 0);
     @include media(sp) {
-      padding-bottom: rem_sp(3);
+      padding-top: rem_sp(0);
+      padding-bottom: rem_sp(0);
     }
     &__feature {
       @include media(sp) {
