@@ -2,8 +2,6 @@
   <footer>
     <div class="footer-wrap">
       <div class="lp-footer_logo">
-        <!-- <img src="@/assets/images/lp/logo.png" alt="" />
-        <h4>Slash Payment</h4> -->
         <img
           class="logoimage"
           src="@/assets/images/lp/lp-logo.svg"
@@ -40,7 +38,7 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a :href="localUrl+navlink.url">
+                  <a :href="localUrl + navlink.url">
                     <span>{{ navlink.title }}</span>
                   </a>
                 </li>
@@ -178,8 +176,8 @@ export default {
       localUrl: "",
     };
   },
-  created(){
-    this.localUrl = location.origin
+  created() {
+    this.localUrl = location.origin;
   },
   methods: {
     changeTheme(theme) {
@@ -202,6 +200,10 @@ footer {
   .footer-wrap {
     @extend .section__wrap;
     @include rem_padding(5, 0, 3, 0);
+    @include media(sp) {
+      padding-top: rem_sp(4);
+      padding-bottom: rem_sp(3);
+    }
 
     .lp-footer {
       &_logo {
@@ -209,14 +211,22 @@ footer {
         margin-bottom: rem(3);
         @include media(sp) {
           @include flex(center, center);
+          margin-bottom: rem_sp(3);
         }
 
         img {
           width: rem(3);
           margin-right: rem(1);
+          @include media(sp) {
+            width: rem_sp(3);
+            margin-right: rem_sp(1);
+          }
           &.logoimage {
             width: rem(23);
             margin-right: 0;
+            @include media(sp) {
+              width: rem_sp(20);
+            }
           }
         }
         h4 {
@@ -225,7 +235,7 @@ footer {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           @include media(sp) {
-            font-size: rem(2);
+            font-size: rem_sp(2);
           }
         }
       }
@@ -240,42 +250,48 @@ footer {
           margin-bottom: rem(3);
         }
       }
-      &_right {
-        // width: 60%;
-        // @include media(sp) {
-        //   width: 100%;
-        // }
-      }
+
       &_nav {
         @include flex(flex-end, flex-start);
         @include media(sp) {
           display: block;
         }
         .navbox {
+          @include media(sp) {
+            border-top: 1px solid var(--color_darken);
+            padding-top: rem_sp(2);
+          }
           & + * {
             margin-left: rem(4);
             @include media(sp) {
               margin-left: 0;
-              margin-top: rem(4);
+              margin-top: rem_sp(2.5);
             }
           }
         }
         ul {
-          display: block;
+          @include media(sp) {
+            @include flex(flex-start, flex-start);
+            @include list(2, rem_sp(1));
+          }
         }
         h4 {
           @include font(rem(pow(1)), 600, 0.06em, $lh, $en_go);
           margin-bottom: rem(1);
           @include media(sp) {
-            text-align: center;
+            // border-bottom: 1px solid var(--color_darken);
+            // padding-bottom: rem_sp(0.5);
+            // text-align: center;
+            font-size: rem_sp(pow(1));
+            margin-bottom: rem_sp(1);
           }
         }
         a {
           display: block;
-          @include font(rem(pow(0)), 400, $ls, $lh, $en_go);
-          @include rem_padding(0.3, 0, 0.3, 0);
+          @include font(rem(pow(0)), 400, $ls, 2, $en_go);
           @include media(sp) {
-            text-align: center;
+            // text-align: center;
+            font-size: rem_sp(pow(0));
           }
         }
       }
@@ -283,13 +299,21 @@ footer {
         margin-bottom: rem(3);
         @include media(sp) {
           text-align: center;
+          margin-bottom: rem_sp(3);
         }
         div {
           @include font(rem(pow(0)), 500, 0.06em, $lh, $en_go);
           margin-bottom: rem(0.5);
+          @include media(sp) {
+            font-size: rem_sp(pow(0));
+            margin-bottom: rem_sp(0.5);
+          }
         }
         p {
           @include font(rem(pow(-1)), $fw, 0.06em, $lh, $en_go);
+          @include media(sp) {
+            font-size: rem_sp(pow(-1));
+          }
         }
       }
       &_icon {
@@ -301,6 +325,9 @@ footer {
         a {
           display: block;
           width: rem(3);
+          @include media(sp) {
+            width: rem_sp(3);
+          }
         }
         .icon {
           &::v-deep {
@@ -322,6 +349,9 @@ footer {
         }
         li + li {
           margin-left: rem(1);
+          @include media(sp) {
+            margin-left: rem_sp(1);
+          }
         }
       }
     }
@@ -330,6 +360,11 @@ footer {
     @include rem_padding(2, 0, 2, 0);
     text-align: center;
     @include font(rem(pow(-1)), 400, 0.06em, $lh, $en_go);
+    @include media(sp) {
+      font-size: rem_sp(pow(-1));
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(2);
+    }
   }
 }
 </style>

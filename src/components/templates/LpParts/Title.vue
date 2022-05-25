@@ -41,7 +41,7 @@ export default {
   margin-bottom: rem(4);
   text-align: center;
   @include media(sp) {
-    margin-bottom: rem(2);
+    margin-bottom: rem_sp(2);
   }
   &.g {
     * {
@@ -54,13 +54,13 @@ export default {
     @include font(rem(3), 700, 0em, 1.5, $ff);
     display: block;
     @include media(sp) {
-      @include font(rem(2), 700, 0em, 1.5, $ff);
+      font-size: rem_sp(2);
     }
   }
   .subtitle {
     @include font(rem(3), 700, 0em, 1.5, $ff);
     @include media(sp) {
-      @include font(rem(2), 700, 0em, 1.5, $ff);
+      font-size: rem_sp(2);
     }
   }
 }
