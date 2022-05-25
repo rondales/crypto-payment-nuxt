@@ -14,9 +14,9 @@
             <div><span>SLASH FINTECH LIMITED（BVI）</span></div>
             <p>
               <span>
-                Vistra Corporate Services Centre, Wickhams Cay II Road
+                Wickhams Cay II Road Town Tortola VG1110,
                 <br />
-                Town Tortola VG1110, British Virgin Islands
+                British Virgin Islands
               </span>
             </p>
           </div>
