@@ -84,13 +84,16 @@
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
       </button>
-      <a
-        v-for="(link, key) in nav"
-        :key="key"
-        :href="localUrl+link.link"
-        @click="close()"
-        >{{ link.title }}</a
-      >
+        <div v-for="(list, index) in nav" :key="index">
+          <router-link
+              :to="{
+                  name: list.name,
+                  hash: list.link
+              }"
+          >
+              {{list.title}}
+          </router-link>
+        </div>
       <LpButton :link="cvLink" type="main" size="s" />
     </div>
   </header>
