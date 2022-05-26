@@ -1,20 +1,40 @@
 <template>
   <div>
-    <div class="side-bar" :class="{'active': $store.state.hamberger === true}">
+    <div class="side-bar" :class="{ active: $store.state.hamberger === true }">
       <div class="side-bar--top"></div>
       <div class="side-bar--content">
         <div class="side-bar--inner">
           <ul>
             <li @click="close()">
-              <router-link to="/admin/dashboard">
-                Dashboard
+              <router-link to="/admin/dashboard"> Dashboard </router-link>
+            </li>
+            <li @click="close()">
+              <router-link
+                to="/admin/payment/history"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                History
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/web3payment?id=1" :class="{ inactive: isUnselectedReceiveToken }">
-                Slash payment
+              <router-link
+                to="/admin/payment/settings/contract"
+                :class="{
+                  inactive: isUnselectedReceiveToken,
+                  'router-link-active': isSettingsPage,
+                }"
+              >
+                Settings
               </router-link>
             </li>
+            <!-- <li @click="close()">
+              <router-link
+                to="/admin/web3payment?id=1"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                Slash payment
+              </router-link>
+            </li> -->
             <!--
             @todo remove comment out when implementing invoice function
             <li @click="close()">
@@ -24,15 +44,29 @@
             </li>
             -->
             <li @click="close()">
-              <router-link to="/admin/keys" :class="{ inactive: isUnselectedReceiveToken }">
+              <router-link
+                to="/admin/keys"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
                 Keys
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/store" :class="{ inactive: isUnselectedReceiveToken }">
+              <router-link
+                to="/admin/store"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
                 Store apps
               </router-link>
-            </li>            
+            </li>
+            <li @click="close()">
+              <a
+                target="_blank"
+                href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
+              >
+                Documents
+              </a>
+            </li>
             <!--
             @todo external connection specification page will be released as soon as it is completed
             <li @click="close()">
@@ -43,6 +77,7 @@
                 Documents
               </a>
             </li>
+            -->
           </ul>
         </div>
       </div>
@@ -51,42 +86,41 @@
 </template>
 
 <script>
-
 export default {
-  name: 'payment',
+  name: "AdminSidebar",
   computed: {
     isUnselectedReceiveToken() {
-      return !(this.$store.state.account.receiveSymbol)
+      return !this.$store.state.account.receiveSymbol;
     },
     isSettingsPage() {
       const targetPaths = [
-        '/admin/payment/settings/basic',
-        '/admin/payment/settings/contract',
-        '/admin/payment/settings/domain'
-      ]
-      return targetPaths.includes(this.$route.path)
-    }
+        "/admin/payment/settings/basic",
+        "/admin/payment/settings/contract",
+        "/admin/payment/settings/domain",
+      ];
+      return targetPaths.includes(this.$route.path);
+    },
   },
   methods: {
-    close(){
-      this.$store.state.hamberger = false
-    }
-  }
-}
+    close() {
+      this.$store.state.hamberger = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
-.side-bar{
+@import "@/assets/scss/style.scss";
+.side-bar {
   position: fixed;
   top: 80px;
   bottom: 0;
   left: 0;
   width: 170px;
-  border-right: 1px solid #58466E;
+  border-right: 1px solid #58466e;
   @include media(sp) {
     display: none;
-    &.active{
+    &.active {
       display: block;
       top: 0;
       width: 100%;
@@ -95,26 +129,26 @@ export default {
       padding-top: 64px;
     }
   }
-  &--top{
+  &--top {
     margin-top: 46px;
   }
-  &--content{
+  &--content {
     overflow-y: auto;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       display: none;
     }
   }
-  &--inner{
+  &--inner {
     width: 170px;
-    ul{
-      li{
+    ul {
+      li {
         padding: 8px 24px;
         margin-bottom: 20px;
         font-size: 15px;
-        a{
+        a {
           color: #fff;
           text-decoration: none;
-          &.inactive{
+          &.inactive {
             pointer-events: none;
             color: #838383;
           }
@@ -123,9 +157,9 @@ export default {
     }
   }
 }
-.router-link-active{
-  color: #8B2AE1;
-  background: linear-gradient(120deg, #5294F5 30%, #705CEA 50%, #8B2AE1 66%);
+.router-link-active {
+  color: #8b2ae1;
+  background: linear-gradient(120deg, #5294f5 30%, #705cea 50%, #8b2ae1 66%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 150% 150%;
