@@ -324,7 +324,7 @@ export default {
           class: "dlp-hello",
           title: {
             title: "Hello!",
-            subtitle: "Web 3.0 ",
+            subtitle: "Web 3 ",
             text: "Slash Payment",
           },
           lead: 'Merchants can accept online TOKEN payments from <br class="pc" />customer’s Web3 wallet in the most reasonable way.',
@@ -922,49 +922,49 @@ export default {
               icon: "icon/gitbook",
               url: "",
               status: true,
-              blank: true
+              blank: true,
             },
             {
               title: "Slash Payment github",
               icon: "icon/github",
               url: "",
               status: true,
-              blank: true
+              blank: true,
             },
             {
               title: "Slash Recruit information",
               icon: "icon/recruit",
               url: "",
               status: true,
-              blank: true
+              blank: true,
             },
             {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
               status: true,
-              blank: false
+              blank: false,
             },
             {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
               url: "",
               status: false,
-              blank: true
+              blank: true,
             },
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
               url: "",
               status: false,
-              blank: true
+              blank: true,
             },
             {
               title: "FAQ about system implementation",
               icon: "icon/help",
               url: "",
               status: false,
-              blank: true
+              blank: true,
             },
           ],
         },
@@ -1387,18 +1387,20 @@ body.is-mounted {
           display: inline-block;
           vertical-align: middle;
           @include media(tb) {
-            font-size: rem_tb(4);
+            font-size: rem_tb(5);
           }
           @include media(sp) {
-            font-size: rem_sp(3.5);
+            font-size: rem_sp(4.5);
           }
         }
         img {
           display: inline-block;
           vertical-align: middle;
           width: rem(6);
+          margin-left: 10px;
           @include media(tb) {
-            font-size: rem_tb(4);
+            width: rem_tb(5);
+            margin-left: 4px;
           }
           @include media(sp) {
             width: rem_sp(3.5);
