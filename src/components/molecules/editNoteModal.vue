@@ -1,160 +1,225 @@
 <template>
   <div :class="classes">
     <div class="header">
-      <h3 class="header__title">
-        Apps terminal Note
-      </h3>
+      <h3 class="header__title">Apps terminal Note</h3>
     </div>
     <div class="body">
       <div class="text-wrap">
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <textarea
+          v-model="note"
+          name="note"
+          id="note"
+          cols="30"
+          rows="10"
+        ></textarea>
       </div>
       <button @click="saveNote" class="save">
         Save Note
-        <img src="@/assets/images/edit.svg">
+        <img src="@/assets/images/edit.svg" />
       </button>
     </div>
     <button class="close" @click="hideModal">
-      <img src="@/assets/images/cross.svg">
+      <img src="@/assets/images/cross.svg" />
       閉じる
     </button>
   </div>
 </template>
 
 <script>
-
-  export default {
-    name: 'walletModal',
-    computed: {
-      classes() {
-        return [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      }
+import RequestUtility from "@/utils/request";
+export default {
+  name: "walletModal",
+  data() {
+    return {
+      note: "",
+    };
+  },
+  computed: {
+    classes() {
+      return ["modal-box", `--${this.$store.state.modal.size}`];
     },
-    methods: {
-      hideModal() {
-        this.$store.dispatch('modal/hide')
-      },
-      // save the Terminal info note
-      saveNote(){
-        alert("save the Terminal info note")
-      }
-    }
-  }
+    deeplinks() {
+      return this.$store.state.deeplink.links;
+    },
+    deeplink() {
+      return this.$store.state.deeplink.link;
+    },
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL;
+    },
+  },
+  methods: {
+    apiGetDeepLinks() {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const paginate = {
+        per_page: 10,
+        current_page: this.deeplinks.current_page,
+      };
+
+      return this.axios.get(
+        `${url}?per_page=${paginate.per_page}&current_page=${paginate.current_page}`,
+        options
+      );
+    },
+    apiUpdateDeepLinkNote() {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code/${this.deeplink.id}/updateNote`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const data = {
+        note: this.note,
+      };
+
+      return this.axios.patch(url, data, options);
+    },
+    hideModal() {
+      this.$store.dispatch("modal/hide");
+    },
+    // save the Terminal info note
+    saveNote() {
+      this.apiUpdateDeepLinkNote()
+        .then((res) => {
+          if (res.data.updated) {
+            this.$store.dispatch("deeplink/updateLinks", {
+              ...this.deeplinks,
+              data: this.deeplinks.data.map((deeplink) => {
+                if (deeplink.id === this.deeplink.id) {
+                  return {
+                    ...deeplink,
+                    note: this.note,
+                  };
+                }
+                return deeplink;
+              }),
+            });
+            this.note = "";
+            this.$store.dispatch("modal/hide");
+          }
+        })
+        .catch((e) => console.error(e));
+    },
+  },
+  mounted() {
+    this.note = this.deeplink.note;
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
+@import "@/assets/scss/style.scss";
 
-  .modal-box {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #292536;
-    @include media(pc) {
-      &.--small {
-        width: 470px;
-      }
-      &.--medium {
-        width: 760px;
-      }
+.modal-box {
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #292536;
+  @include media(pc) {
+    &.--small {
+      width: 470px;
     }
-    @include media(sp) {
-      width: calc(100vw - 32px);
+    &.--medium {
+      width: 760px;
     }
-
   }
-  .header {
-    @include media(pc) {
-      padding: 24px 24px 0 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__desc {
-        font-size: 2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 2.3rem;
-      }
-    }
+  @include media(sp) {
+    width: calc(100vw - 32px);
+  }
+}
+.header {
+  @include media(pc) {
+    padding: 24px 24px 0 24px;
     &__title {
-      font-weight: 500;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
     &__desc {
-      font-weight: 100;
+      font-size: 2rem;
     }
   }
-  .close {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    font-size: 0;
+  @include media(sp) {
+    padding: 18px;
+    &__title {
+      font-size: 2.3rem;
+    }
+  }
+  &__title {
+    font-weight: 500;
+  }
+  &__desc {
+    font-weight: 100;
+  }
+}
+.close {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
 
-    @include media(pc) {
-      top: 30px;
-      right: 24px;
-    }
-    @include media(sp) {
-      top: 24px;
-      right: 24px;
-    }
+  @include media(pc) {
+    top: 30px;
+    right: 24px;
   }
-  .body {
-    @include media(pc) {
-      padding: 0 24px 24px;
-    }
-    @include media(sp) {
-      padding: 0 12px 24px;
-    }
-    .sub-title{
-      font-size: 18px;
+  @include media(sp) {
+    top: 24px;
+    right: 24px;
+  }
+}
+.body {
+  @include media(pc) {
+    padding: 0 24px 24px;
+  }
+  @include media(sp) {
+    padding: 0 12px 24px;
+  }
+  .sub-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .text-wrap {
+    text-align: center;
+    textarea {
+      font-size: 16px;
+      resize: none;
+      width: 100%;
+      height: 160px;
+      background: #171522;
+      padding: 16px;
+      border-radius: 10px;
+      outline: none;
       margin-bottom: 16px;
     }
-    .text-wrap{
-      text-align: center;
-      textarea{
-        font-size: 16px;
-        resize: none;
-        width:100%;
-        height:160px;
-        background: #171522;
-        padding: 16px;
-        border-radius: 10px;
-        outline: none;
-        margin-bottom: 16px;
-      }
-    }
-    .dsc-wrap{
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .dsc{
-      font-size: 12px;
-      font-weight: 200;
-    }
-    .save{
-      text-align: center;
-      width: 100%;
-      font-size: 18px;
-      img{
-        margin-left: 8px;
-        width: 20px;
-      }
-    }
   }
-  .footer {
+  .dsc-wrap {
     text-align: center;
-
-    @include media(pc) {
-      padding: 0 40px 40px;
-    }
-    @include media(sp) {
-      padding: 0 32px 32px;
+    margin-bottom: 32px;
+  }
+  .dsc {
+    font-size: 12px;
+    font-weight: 200;
+  }
+  .save {
+    text-align: center;
+    width: 100%;
+    font-size: 18px;
+    img {
+      margin-left: 8px;
+      width: 20px;
     }
   }
+}
+.footer {
+  text-align: center;
+
+  @include media(pc) {
+    padding: 0 40px 40px;
+  }
+  @include media(sp) {
+    padding: 0 32px 32px;
+  }
+}
 </style>

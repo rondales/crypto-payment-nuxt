@@ -1,29 +1,27 @@
 <template>
   <div class="store">
-    <div class="title-gradation">
-      Slash Store Apps
-    </div>
+    <div class="title-gradation">Slash Store Apps</div>
     <p class="store-desc">
       Your sales deposit address
-      <span>
-        （*Currently logged in Web3 address）
-      </span>
+      <span> （*Currently logged in Web3 address） </span>
     </p>
     <div class="store-copy">
       <span>
         {{ currentAddres }}
       </span>
-      <img class="copy" @click="copy(currentAddres)" src="@/assets/images/copy.svg">
+      <img
+        class="copy"
+        @click="copy(currentAddres)"
+        src="@/assets/images/copy.svg"
+      />
     </div>
-    <p class="store-desc">
-      Slash Store Apps Login Deeplink Issuance
-    </p>
+    <p class="store-desc">Slash Store Apps Login Deeplink Issuance</p>
     <div class="comfirm-wrap">
-      <div @click="create()" class="confirm-btn">
-        Create
-      </div>
+      <div @click="create()" class="confirm-btn">Create</div>
       <p>
-        In order to activate the Slash Store Apps, you must issue a deep link to activate your account. If you are using the same account on multiple devices, please issue multiple deeplinks.
+        In order to activate the Slash Store Apps, you must issue a deep link to
+        activate your account. If you are using the same account on multiple
+        devices, please issue multiple deeplinks.
       </p>
     </div>
 
@@ -31,9 +29,7 @@
       <div class="search-wrap add-flex j-between">
         <div class="manage-function add-flex a-center">
           <div class="manage-show add-flex a-center">
-            <div class="manage-show-title">
-              show
-            </div>
+            <div class="manage-show-title">show</div>
             <div class="show-select">
               <select @change="searchHistory">
                 <option value="10">10</option>
@@ -41,15 +37,11 @@
                 <option value="50">50</option>
               </select>
             </div>
-            <div class="manage-show-unit">
-              entries
-            </div>
+            <div class="manage-show-unit">entries</div>
           </div>
         </div>
         <div class="select-status add-flex">
-          <div class="select-status_title">
-            Status
-          </div>
+          <div class="select-status_title">Status</div>
           <select v-model="searchParams.status.value">
             <option value="0">All</option>
             <option value="1">Active</option>
@@ -88,9 +80,7 @@
             ></DatetimePicker>
           </div>
         </div>
-        <div class="search-btn" @click="searchHistory()">
-          Search
-        </div>
+        <div class="search-btn" @click="searchHistory()">Search</div>
       </div>
       <div class="manage-table">
         <table>
@@ -104,22 +94,27 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(record, index) in summaries.records"
-              :key="index"
-            >
+            <tr v-for="(record, index) in records" :key="index">
               <td>
-                <img @click="openQr" class="qricon" src="@/assets/images/store-qricon.png">
+                <img
+                  @click="openQr(record)"
+                  class="qricon"
+                  src="@/assets/images/store-qricon.png"
+                />
                 <span>
-                  {{record.linkUrl}}
+                  {{ record.linkUrl }}
                 </span>
-                <img class="copy" @click="copy(record.linkUrl)" src="@/assets/images/copy.svg">
+                <img
+                  class="copy"
+                  @click="copy(record.linkUrl)"
+                  src="@/assets/images/copy.svg"
+                />
               </td>
               <td>
-                <div v-if="record.status === 0" class="status-active">
+                <div v-if="record.status === 1" class="status-active">
                   Active
                 </div>
-                <div v-if="record.status === 1" class="status-invalid">
+                <div v-if="record.status === 0" class="status-invalid">
                   invalid
                 </div>
                 <div v-if="record.status === 2" class="status-invitation">
@@ -127,37 +122,42 @@
                 </div>
               </td>
               <td>
-                {{record.lastLogin | empty}}
+                {{ record.lastLogin | empty }}
               </td>
               <td>
                 <p>
-                  {{record.note}}
-                  <br>
-                  <span>
-                    Terminal info：{{record.info}}
-                  </span>
+                  {{ record.note }}
+                  <br />
+                  <span> Terminal info：{{ record.info }} </span>
                 </p>
-                <img @click="editNote()" src="@/assets/images/edit.svg">
+                <img @click="editNote(record)" src="@/assets/images/edit.svg" />
               </td>
               <td>
                 <div class="option add-flex a-center j-between">
-                  <div class="toggle_switch" v-if="record.status === 0">
-                    <input type="checkbox" v-bind:id="record.id" checked>
-                    <label v-bind:for="record.id"></label>
-                  </div>
                   <div class="toggle_switch" v-if="record.status === 1">
-                    <input type="checkbox" v-bind:id="record.id">
+                    <input
+                      type="checkbox"
+                      v-bind:id="record.id"
+                      checked
+                      @click="inactivateLink(record)"
+                    />
                     <label v-bind:for="record.id"></label>
                   </div>
-                  <div class="switch-empty" v-if="record.status === 2">
-                    -
+                  <div class="toggle_switch" v-if="record.status === 0">
+                    <input
+                      type="checkbox"
+                      v-bind:id="record.id"
+                      @click="activateLink(record)"
+                    />
+                    <label v-bind:for="record.id"></label>
                   </div>
+                  <div class="switch-empty" v-if="record.status === 2">-</div>
                   <button class="btn refresh" @click="urlRefresh()">
-                    <img src="@/assets/images/url-refresh.svg">
+                    <img src="@/assets/images/url-refresh.svg" />
                     Url refresh
                   </button>
                   <button class="btn delete" @click="deleteRow()">
-                    <img src="@/assets/images/trash-box.svg">
+                    <img src="@/assets/images/trash-box.svg" />
                     delete
                   </button>
                 </div>
@@ -172,114 +172,185 @@
 
 
 <script>
-import '@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
-import DatetimePicker from 'vue-ctk-date-time-picker'
+import "@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
+import DatetimePicker from "vue-ctk-date-time-picker";
+import RequestUtility from "@/utils/request";
 
 export default {
-  name: 'AdminTransactionHistory',
+  name: "AdminTransactionHistory",
   components: {
     DatetimePicker,
   },
   data() {
     return {
       searchParams: {
-        variable: { key: 'transaction_address', value: null },
-        status: { key: 'status', value: '0'},
-        datetimeFrom: { key: 'updated_at_from', value: null },
-        datetimeTo: { key: 'updated_at_to', value: null },
-        sortKey: { key: 'sort_key', value: null },
-        sortType: { key: 'sort_value', value: null }
+        variable: { key: "transaction_address", value: null },
+        status: { key: "status", value: "0" },
+        datetimeFrom: { key: "updated_at_from", value: null },
+        datetimeTo: { key: "updated_at_to", value: null },
+        sortKey: { key: "sort_key", value: null },
+        sortType: { key: "sort_value", value: null },
       },
       paginateParams: {
-        perPage: {value: '10' },
+        perPage: { value: "10" },
       },
       summaries: {
         lastPageNumber: 0,
         fromItemNumber: null,
         toItemNumber: null,
         total: null,
-        records: [
-          {
-            id: 0,
-            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
-            status: 0,
-            lastLogin: "30/9/2021 00:00",
-            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
-            info: "IOS3161613162626",
-          },
-          {
-            id: 1,
-            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
-            status: 1,
-            lastLogin: "30/9/2021 00:00",
-            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
-            info: "IOS3161613162626",
-          },
-          {
-            id: 2,
-            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
-            status: 2,
-            lastLogin: "",
-            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
-            info: "IOS3161613162626",
-          },
-          {
-            id: 3,
-            linkUrl: "https://slash.fi/store_apps/de51c6e1d6ef6wc26ec1e51vc5e15ve3f463ef43",
-            status: 0,
-            lastLogin: "30/9/2021 00:00",
-            note: "In order to activate the Slash Store Apps, you must issue a deep link to activate your…. ",
-            info: "IOS3161613162626",
-          },
-        ]
       },
-      checkbox: []
-    }
+      checkbox: [],
+    };
   },
   filters: {
-    empty(value){
-      if (!(value)) {
+    empty(value) {
+      if (!value) {
         return "-";
       } else {
         return value;
       }
-    }
+    },
   },
   computed: {
-    currentAddres(){
+    currentAddres() {
       return this.$store.state.account.address;
-    }
+    },
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL;
+    },
+    records() {
+      return this.$store.getters["deeplink/links"];
+    },
+    deeplinks() {
+      return this.$store.state.deeplink.links;
+    },
   },
   methods: {
     copy(value) {
-      this.$store.dispatch('account/copied')
+      this.$store.dispatch("account/copied");
       this.$clipboard(value);
     },
-    openQr(){
-      this.$store.dispatch("modal/show", {target: 'open-qr-modal', size: "small"});
+    openQr(record) {
+      this.$store.dispatch("deeplink/updateLink", record);
+      this.$store.dispatch("modal/show", {
+        target: "open-qr-modal",
+        size: "small",
+      });
     },
-    deleteRow(){
-      this.$store.dispatch("modal/show", {target: 'delete-row-modal', size: "small"});
+    deleteRow() {
+      this.$store.dispatch("modal/show", {
+        target: "delete-row-modal",
+        size: "small",
+      });
     },
-    urlRefresh(){
-      this.$store.dispatch("modal/show", {target: 'url-refresh-modal', size: "small"});
+    urlRefresh() {
+      this.$store.dispatch("modal/show", {
+        target: "url-refresh-modal",
+        size: "small",
+      });
     },
-    create(){
-      this.$store.dispatch("modal/show", {target: 'create-deeplink-modal', size: "small"});
+    create() {
+      this.$store.dispatch("modal/show", {
+        target: "create-deeplink-modal",
+        size: "small",
+      });
     },
-    editNote(){
-      this.$store.dispatch("modal/show", {target: 'edit-note-modal', size: "small"});
+    editNote(record) {
+      this.$store.dispatch("deeplink/updateLink", record);
+      this.$store.dispatch("modal/show", {
+        target: "edit-note-modal",
+        size: "small",
+      });
     },
-    searchHistory(){}
+    inactivateLink(record) {
+      const status = 0;
+      this.apiUpdateDeepLinkActiveStatus(record, status)
+        .then((res) => {
+          if (res.data.updated) {
+            this.$store.dispatch("deeplink/updateLinks", {
+              ...this.deeplinks,
+              data: this.deeplinks.data.map((deeplink) => {
+                if (deeplink.id === record.id) {
+                  return {
+                    ...deeplink,
+                    active: status,
+                  };
+                }
+                return deeplink;
+              }),
+            });
+          }
+        })
+        .catch((e) => console.error(e));
+    },
+    activateLink(record) {
+      const status = 1;
+      this.apiUpdateDeepLinkActiveStatus(record, status)
+        .then((res) => {
+          if (res.data.updated) {
+            this.$store.dispatch("deeplink/updateLinks", {
+              ...this.deeplinks,
+              data: this.deeplinks.data.map((deeplink) => {
+                if (deeplink.id === record.id) {
+                  return {
+                    ...deeplink,
+                    active: status,
+                  };
+                }
+                return deeplink;
+              }),
+            });
+          }
+        })
+        .catch((e) => console.error(e));
+    },
+    apiUpdateDeepLinkActiveStatus(record, status) {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code/${record.id}/updateActive`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const data = {
+        active: status,
+      };
+
+      return this.axios.patch(url, data, options);
+    },
+    searchHistory() {},
+    getDeepLinks() {
+      this.apiGetDeepLinks()
+        .then((res) => {
+          this.$store.dispatch("deeplink/updateLinks", res.data);
+        })
+        .catch((e) => console.error(e));
+    },
+    apiGetDeepLinks() {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const params = {
+        per_page: this.paginateParams.perPage.value,
+        current_page: 1,
+      };
+
+      return this.axios.get(
+        `${url}?per_page=${params.per_page}&current_page=1`,
+        options
+      );
+    },
   },
-  created() {}
-}
+  created() {},
+  mounted() {
+    this.getDeepLinks();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import "@/assets/scss/style.scss";
 
-.title-gradation{
+.title-gradation {
   background: $gradation-light;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -289,14 +360,14 @@ export default {
   font-size: 24px;
   margin-bottom: 16px;
 }
-.store-desc{
+.store-desc {
   font-size: 20px;
   margin-bottom: 32px;
-  span{
+  span {
     font-size: 15px;
   }
 }
-.store-copy{
+.store-copy {
   background: #292536;
   display: flex;
   justify-content: space-between;
@@ -308,14 +379,14 @@ export default {
   @include media(tb) {
     width: 100%;
   }
-  span{
+  span {
     display: inline-block;
   }
-  img{
+  img {
     float: right;
   }
 }
-.comfirm-wrap{
+.comfirm-wrap {
   display: flex;
   justify-content: start;
   align-items: center;
@@ -326,22 +397,22 @@ export default {
   border-radius: 8px;
   margin-bottom: 48px;
   @include media(tb) {
-    .confirm-btn{
+    .confirm-btn {
       order: 2;
       width: 100%;
     }
-    p{
+    p {
       margin-bottom: 32px;
     }
   }
-  p{
+  p {
     font-size: 12px;
     font-weight: 300;
     width: 75%;
     line-height: 1.7;
   }
 }
-.confirm-btn{
+.confirm-btn {
   font-weight: 400;
   font-size: 14px;
   height: 48px;
@@ -355,31 +426,31 @@ export default {
     width: 100%;
     text-align: center;
   }
-  &:hover{
-    opacity: .8;
+  &:hover {
+    opacity: 0.8;
   }
 }
-.search-wrap{
+.search-wrap {
   margin-bottom: 32px;
-  .select-id{
+  .select-id {
     width: 28%;
-    border: 1px solid #78668D;
+    border: 1px solid #78668d;
     position: relative;
     border-radius: 8px;
     @include media(sp) {
       width: 100%;
       margin-bottom: 16px;
     }
-    &::after{
+    &::after {
       position: absolute;
       right: 50%;
-      transform: translate(-50%,0);
+      transform: translate(-50%, 0);
       content: "";
       height: 35px;
       width: 1px;
-      background: #78668D;
+      background: #78668d;
     }
-    &::before{
+    &::before {
       position: absolute;
       content: "";
       background: url(/assets/images/down-arrow.svg) no-repeat center center;
@@ -390,42 +461,43 @@ export default {
       transform: translate(-50%, -50%);
       z-index: 0;
     }
-    select, input{
+    select,
+    input {
       width: 50%;
       font-size: 13px;
       line-height: 32px;
       font-weight: 300;
     }
-    input{
+    input {
       text-align: right;
-      padding:0 4px;
+      padding: 0 4px;
     }
-    select{
+    select {
       padding: 0 8px;
     }
   }
-  .select-status{
+  .select-status {
     width: 20%;
-    border: 1px solid #78668D;
+    border: 1px solid #78668d;
     position: relative;
     border-radius: 8px;
     @include media(sp) {
       width: 100%;
       margin-bottom: 16px;
     }
-    &::after{
+    &::after {
       position: absolute;
       right: 70%;
-      transform: translate(-50%,0);
+      transform: translate(-50%, 0);
       content: "";
       height: 35px;
       width: 1px;
-      background: #78668D;
+      background: #78668d;
       @include media(sp) {
         right: 50%;
       }
     }
-    &::before{
+    &::before {
       position: absolute;
       content: "";
       background: url(/assets/images/down-arrow.svg) no-repeat center center;
@@ -436,7 +508,7 @@ export default {
       transform: translate(-50%, -50%);
       z-index: 0;
     }
-    &_title{
+    &_title {
       width: 30%;
       font-size: 13px;
       line-height: 32px;
@@ -446,7 +518,7 @@ export default {
         width: 50%;
       }
     }
-    select{
+    select {
       width: 70%;
       font-size: 13px;
       line-height: 32px;
@@ -457,14 +529,14 @@ export default {
       }
     }
   }
-  .select-date-wrap{
+  .select-date-wrap {
     width: 35%;
     position: relative;
     @include media(sp) {
       width: 100%;
       margin-bottom: 16px;
     }
-    &::after{
+    &::after {
       content: "";
       position: absolute;
       top: 50%;
@@ -475,15 +547,15 @@ export default {
       background: #fff;
     }
   }
-  .select-date{
+  .select-date {
     width: 46%;
-    border: 1px solid #78668D;
+    border: 1px solid #78668d;
     position: relative;
     border-radius: 8px;
-    &:nth-child(1){
+    &:nth-child(1) {
       margin-right: 8%;
     }
-    &::before{
+    &::before {
       position: absolute;
       content: "";
       background: url(/assets/images/calender.svg) no-repeat center center;
@@ -495,7 +567,7 @@ export default {
       z-index: 1;
     }
   }
-  .search-btn{
+  .search-btn {
     font-weight: 200;
     font-size: 14px;
     line-height: 35px;
@@ -507,8 +579,8 @@ export default {
       width: 100%;
       text-align: center;
     }
-    &:hover{
-      opacity: .8;
+    &:hover {
+      opacity: 0.8;
     }
   }
 }
@@ -524,7 +596,7 @@ export default {
     width: 0.6em;
     height: 0.35em;
     border-radius: 0.35em;
-    background-color: #B0BEC5;
+    background-color: #b0bec5;
     cursor: pointer;
     &::before {
       position: absolute;
@@ -544,13 +616,13 @@ export default {
 }
 
 .toggle_switch > input:checked + label::before {
-    left: calc(100% - 0.35em + 0.04em);
+  left: calc(100% - 0.35em + 0.04em);
 }
 
 .select-date::v-deep {
   .date-time-picker {
     $base-bg-color: #161421;
-    $base-font-color: #FFFFFF;
+    $base-font-color: #ffffff;
     .field-input {
       height: 35px;
       min-height: 30px;
@@ -572,17 +644,18 @@ export default {
   }
 }
 
-.manage-function{
-  .manage-show{
-    &-title,&-unit{
+.manage-function {
+  .manage-show {
+    &-title,
+    &-unit {
       font-size: 14px;
       font-weight: 200;
     }
-    .show-select{
+    .show-select {
       position: relative;
       width: 50px;
       margin: 0 8px;
-      &::before{
+      &::before {
         position: absolute;
         content: "";
         background: url(/assets/images/down-arrow.svg) no-repeat center center;
@@ -594,11 +667,11 @@ export default {
         z-index: 0;
       }
     }
-    select{
+    select {
       font-size: 14px;
       font-weight: 200;
       width: 50px;
-      border: 1px solid #78668D;
+      border: 1px solid #78668d;
       position: relative;
       border-radius: 8px;
       padding: 8px;
@@ -606,7 +679,7 @@ export default {
   }
 }
 
-.manage-table{
+.manage-table {
   z-index: 10;
   width: 100%;
   @include media(tb) {
@@ -614,14 +687,14 @@ export default {
     overflow: auto;
     position: unset;
   }
-  table{
+  table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 32px;
     display: block;
     overflow-x: auto;
     height: 50vh;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       display: none;
     }
     @include media(tb) {
@@ -631,127 +704,129 @@ export default {
       scrollbar-width: none;
       margin-bottom: 0;
     }
-    thead,tbody{
+    thead,
+    tbody {
       width: 100%;
       @include media(tb) {
         width: 1100px;
       }
-      tr{
-        border-bottom: 2px solid #58466E;
-        th{
+      tr {
+        border-bottom: 2px solid #58466e;
+        th {
           font-size: 16px;
           text-align: left;
           padding-bottom: 8px;
           padding: 0 8px 8px 8px;
         }
-        td{
+        td {
           font-size: 10px;
           padding: 16px 8px;
           height: 90px;
-          &:nth-child(2){
+          &:nth-child(2) {
             font-size: 12px;
           }
-          &:nth-child(4){
+          &:nth-child(4) {
             margin-top: -16px;
           }
-          div{
+          div {
             text-align: left;
             border-radius: 8px;
             font-weight: 300;
-            span{
+            span {
               font-size: 12px;
             }
           }
         }
-        th,td{
+        th,
+        td {
           overflow-wrap: break-word;
           font-weight: 400;
-          &:nth-child(1){
+          &:nth-child(1) {
             display: flex;
             align-items: center;
             width: 20vw;
             @include media(tb) {
               width: 300px;
             }
-            .qricon{
+            .qricon {
               widows: 30px;
               height: 30px;
               cursor: pointer;
             }
-            span{
+            span {
               width: 200px;
               padding: 0px 8px;
               font-weight: 300;
             }
           }
-          &:nth-child(2){
+          &:nth-child(2) {
             width: 8vw;
             @include media(tb) {
               width: 96px;
             }
-            .status-active{
-              color: #4CAF50;
+            .status-active {
+              color: #4caf50;
             }
-            .status-invalid{
-              color: #CE3A3A;
+            .status-invalid {
+              color: #ce3a3a;
             }
-            .status-invitation{
-              color: #FEDC90;
+            .status-invitation {
+              color: #fedc90;
             }
           }
-          &:nth-child(3){
+          &:nth-child(3) {
             width: 10vw;
             text-align: center;
             @include media(tb) {
               width: 120px;
             }
           }
-          &:nth-child(4){
+          &:nth-child(4) {
             width: 22vw;
             display: inline-flex;
             align-items: center;
             @include media(tb) {
               width: 264px;
             }
-            p{
-              span{
+            p {
+              span {
                 color: #707070;
               }
             }
-            img{
+            img {
               width: 20px;
               height: 20px;
               cursor: pointer;
             }
           }
-          &:nth-child(5){
+          &:nth-child(5) {
             width: 30vw;
             @include media(tb) {
               width: 400px;
             }
-            .switch-empty{
+            .switch-empty {
               width: 40px;
               text-align: center;
             }
-            .option{
-              .btn{
+            .option {
+              .btn {
                 font-size: 10px;
                 font-weight: 300;
                 padding: 0 1.5rem 0 1.5rem;
-                img{
+                img {
                   width: 14px;
-                  margin-right: .5em;
+                  margin-right: 0.5em;
                 }
               }
-              .refresh{
-                background: #4E455A;
-                img{
+              .refresh {
+                background: #4e455a;
+                img {
                   margin-top: -4px;
                 }
               }
-              .delete{
+              .delete {
                 background: #707070;
-                img{
+                img {
                   margin-top: -3px;
                 }
               }
@@ -763,14 +838,14 @@ export default {
   }
 }
 
-.pagination{
+.pagination {
   margin-bottom: 32px;
   width: calc(100% - 40px);
-  .page-count{
+  .page-count {
     font-size: 16px;
     font-weight: 300;
   }
-  .pagenation-wrap{
+  .pagenation-wrap {
     font-weight: 300;
     font-size: 16px;
   }
@@ -790,14 +865,14 @@ export default {
   display: inline;
 }
 
-.p-num{
+.p-num {
   padding: 8px;
   font-size: 13px;
   border-radius: 8px;
   display: inline;
   cursor: pointer;
-  &.active{
-    background: #4E455A;
+  &.active {
+    background: #4e455a;
   }
 }
 </style>

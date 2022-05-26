@@ -494,8 +494,6 @@ export default {
           type: "bytes16",
         },
       ],
-      name: "submitTransaction",
-      outputs: [],
       stateMutability: "payable",
       type: "function",
     },
