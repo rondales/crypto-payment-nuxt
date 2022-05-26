@@ -224,7 +224,7 @@
                     </h4>
                     <ul :class="section.roadmap.class + '__phase__sublist'">
                       <li v-for="li in list.list" :key="li.text">
-                        <span>
+                        <span :class="{active: li.active}">
                           {{ li.text }}
                         </span>
                       </li>
@@ -804,18 +804,18 @@ export default {
                 {
                   title: "Basic Features",
                   list: [
-                    { text: "Web3Payment BSC" },
-                    { text: "Web3Payment ETH" },
-                    { text: "Web3Payment Polygon" },
-                    { text: "Merchant App" },
+                    { text: "Web3Payment BSC", active: true },
+                    { text: "Web3Payment ETH", active: true },
+                    { text: "Web3Payment Polygon", active: true },
+                    { text: "Merchant App", active: true },
                   ],
                 },
                 {
                   title: "Open Source Plugins Ver.1",
                   list: [
-                    { text: "Woocommerce" },
-                    { text: "Wellcart" },
-                    { text: "EC CUBE" },
+                    { text: "Woocommerce", active: true },
+                    { text: "Wellcart", active: true },
+                    { text: "EC CUBE", active: true },
                   ],
                 },
               ],
@@ -826,39 +826,39 @@ export default {
                 {
                   title: "Slash TOKEN",
                   list: [
-                    { text: "TOKEN SALE" },
-                    { text: "Staking pool" },
-                    { text: "Referral feature" },
-                    { text: "Coin Market Cap Listing" },
-                    { text: "CoinGecko Listing" },
-                    { text: "CEX Listing" },
+                    { text: "TOKEN SALE", active: false },
+                    { text: "Staking pool", active: false },
+                    { text: "Referral feature", active: false },
+                    { text: "Coin Market Cap Listing", active: false },
+                    { text: "CoinGecko Listing", active: false },
+                    { text: "CEX Listing", active: false },
                   ],
                 },
                 {
                   title: "Additional Features",
                   list: [
-                    { text: "Online tipping feature" },
-                    { text: "Single EC feature" },
-                    { text: "Store Payment feature" },
-                    { text: "Escrow feature" },
+                    { text: "Online tipping feature", active: false },
+                    { text: "Single EC feature", active: false },
+                    { text: "Store Payment feature", active: false },
+                    { text: "Escrow feature", active: false },
                   ],
                 },
                 {
                   title: "OpenSource Plugins Ver.2",
                   list: [
-                    { text: "OpenCart" },
-                    { text: "Zencart" },
-                    { text: "Drupal-Commerce" },
-                    { text: "Magento" },
-                    { text: "Magento2" },
-                    { text: "WHMCS" },
-                    { text: "Drupal 8 Ubercart" },
-                    { text: "Easy Digital Downloads" },
+                    { text: "OpenCart", active: false },
+                    { text: "Zencart", active: false },
+                    { text: "Drupal-Commerce", active: false },
+                    { text: "Magento", active: false },
+                    { text: "Magento2", active: false },
+                    { text: "WHMCS", active: false },
+                    { text: "Drupal 8 Ubercart", active: false },
+                    { text: "Easy Digital Downloads", active: false },
                   ],
                 },
                 {
                   title: "Integration Requirements",
-                  list: [{ text: "Shopify" }, { text: "Wix" }],
+                  list: [{ text: "Shopify", active: false }, { text: "Wix", active: false }],
                 },
               ],
             },
