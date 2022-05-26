@@ -61,23 +61,24 @@
               <h4>
                 STANDARD BUTTON
               </h4>
-              <figure class="sp">
-                <img src="@/assets/images/lp/standard-button-sp.svg" alt="">
-              </figure>
-              <figure class="pc">
-                <img src="@/assets/images/lp/standard-button.svg" alt="">
-              </figure>
+              <div class="usecase-bg">
+                <figure>
+                  <img src="@/assets/images/lp/standard-button-w.svg" alt="">
+                  <img src="@/assets/images/lp/standard-button-b.svg" alt="">
+                </figure>
+              </div>
             </div>
             <div class="usecase-block">
               <h4>
                 Settlement indication
               </h4>
-              <figure class="sp">
-                <img src="@/assets/images/lp/indication-sp.svg" alt="">
-              </figure>
-              <figure class="pc">
-                <img src="@/assets/images/lp/indication.svg" alt="">
-              </figure>
+              <div class="usecase-content">
+                <ul>
+                  <li v-for="(icon, list) in logoList" :key="list">
+                    <img :src="icon.svg" alt="">
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -223,6 +224,23 @@ export default {
         {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg")},
         {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg")}
       ],
+      logoList: [
+        {svg: require("@/assets/images/lp//indication/icon-01.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-02.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-03.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-04.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-05.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-06.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-07.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-08.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-09.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-10.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-11.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-12.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-13.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-14.svg")},
+        {svg: require("@/assets/images/lp//indication/icon-15.svg")},
+      ]
     };
   },
   components: {
@@ -393,6 +411,82 @@ export default {
             font-size: 14px;
             font-weight: 300;
             margin-bottom: 8px;
+          }
+        }
+        .usecase-bg{
+          background: #fff;
+          max-width: 698px;
+          padding: 48px;
+          border-radius: 8px;
+          @include media(tb) {
+            padding: 32px 40px;
+          }
+          figure{
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            @include media(tb) {
+              img{
+                &:nth-child(1){
+                  margin-bottom: 16px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .usecase-content{
+        background: #fff;
+        max-width: 698px;
+        padding: 40px;
+        border-radius: 8px;
+        @include media(tb) {
+          padding: 16px;
+        }
+        ul{
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          li{
+            border: 1px solid #D1D1D1;
+            border-radius: 8px;
+            width: 18%;
+            text-align: center;
+            line-height: 65px;
+            height: 70px;
+            margin-bottom: 32px;
+            @include media(tb) {
+              width: 32%;
+              margin-bottom: 16px;
+              &:nth-child(n + 13){
+                margin-bottom: 0;
+              }
+            }
+            @include media(pc) {
+              &:nth-child(n + 10){
+                margin-bottom: 0;
+              }
+            }
+            &:nth-child(1){
+              img{
+                width: 55%;
+              }
+            }
+            &:nth-child(5){
+              img{
+                width: 40%;
+              }
+            }
+            &:nth-child(10){
+              img{
+                width: 70%;
+              }
+            }
+            &:nth-child(15){
+              img{
+                width: 80%;
+              }
+            }
           }
         }
       }
