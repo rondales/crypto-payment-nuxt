@@ -1,6 +1,6 @@
 <template>
   <div :class="canvasClass + '__canvas'">
-    <div :id="type"></div>
+    <div :id="type" class="canvasItem"></div>
   </div>
 </template>
 <script src="https://unpkg.com/vue-p5"></script>
@@ -15,7 +15,6 @@ export default {
     },
   },
   mounted() {
- 
     const P5 = require("p5");
     const store = this.$store;
 
@@ -32,21 +31,16 @@ export default {
       let curTime = 0.0;
       let speed = 40.0;
       let SizeMin, SizeMax;
+      let thisDom = document.getElementById("MvCanvas");
 
       mv.setup = (_) => {
         // p5.disableFriendlyErrors = true;
         mv.frameRate(30);
         // mv.curveDetail(144);
-        document.getElementById("MvCanvas").style.width = window.innerWidth;
-        document.getElementById("MvCanvas").style.height = window.innerHeight;
-        SizeMin = mv.min(
-          document.getElementById("MvCanvas").clientWidth,
-          document.getElementById("MvCanvas").clientHeight
-        );
-        SizeMax = mv.max(
-          document.getElementById("MvCanvas").clientWidth,
-          document.getElementById("MvCanvas").clientHeight
-        );
+        thisDom.style.width = window.innerWidth;
+        thisDom.style.height = window.innerHeight;
+        SizeMin = mv.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = mv.max(thisDom.clientWidth, thisDom.clientHeight);
         // mySize = 500;
         var canvas = mv.createCanvas(SizeMax, SizeMax, mv.WEBGL);
         canvas.parent("MvCanvas");
@@ -68,16 +62,10 @@ export default {
       };
 
       mv.windowResized = (_) => {
-        document.getElementById("MvCanvas").style.width = window.innerWidth;
-        document.getElementById("MvCanvas").style.height = window.innerHeight;
-        SizeMin = mv.min(
-          document.getElementById("MvCanvas").clientWidth,
-          document.getElementById("MvCanvas").clientHeight
-        );
-        SizeMax = mv.max(
-          document.getElementById("MvCanvas").clientWidth,
-          document.getElementById("MvCanvas").clientHeight
-        );
+        thisDom.style.width = window.innerWidth;
+        thisDom.style.height = window.innerHeight;
+        SizeMin = mv.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = mv.max(thisDom.clientWidth, thisDom.clientHeight);
 
         mv.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
@@ -87,17 +75,19 @@ export default {
       };
 
       mv.draw = (_) => {
-        if (store.state.theme == "dark") {
-          mv.background(DarkColor);
-        } else {
-          mv.background(LightColor);
-        }
+        if (thisDom.classList.contains("active")) {
+          if (store.state.theme == "dark") {
+            mv.background(DarkColor);
+          } else {
+            mv.background(LightColor);
+          }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
+          for (let i = 0; i < shapes.length; i++) {
+            let shape = shapes[i];
+            shape.draw();
+          }
+          curTime += mv.deltaTime * 0.001;
         }
-        curTime += mv.deltaTime * 0.001;
       };
       class Shape {
         constructor(id, maxnum, size) {
@@ -189,19 +179,14 @@ export default {
       let curTime = 0.0;
       let speed = 25.0;
       let SizeMin, SizeMax;
+      let thisDom = document.getElementById("SubCanvas1");
       // s1.disableFriendlyErrors = true;
 
       s1.setup = (_) => {
         // p5.disableFriendlyErrors = true;
         s1.frameRate(30);
-        SizeMin = s1.min(
-          document.getElementById("SubCanvas1").clientWidth,
-          document.getElementById("SubCanvas1").clientHeight
-        );
-        SizeMax = s1.max(
-          document.getElementById("SubCanvas1").clientWidth,
-          document.getElementById("SubCanvas1").clientHeight
-        );
+        SizeMin = s1.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = s1.max(thisDom.clientWidth, thisDom.clientHeight);
         // mySize = 500;
         var canvas = s1.createCanvas(SizeMax, SizeMax, s1.WEBGL);
         canvas.parent("SubCanvas1");
@@ -223,14 +208,8 @@ export default {
       };
 
       s1.windowResized = (_) => {
-        SizeMin = s1.min(
-          document.getElementById("SubCanvas1").clientWidth,
-          document.getElementById("SubCanvas1").clientHeight
-        );
-        SizeMax = s1.max(
-          document.getElementById("SubCanvas1").clientWidth,
-          document.getElementById("SubCanvas1").clientHeight
-        );
+        SizeMin = s1.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = s1.max(thisDom.clientWidth, thisDom.clientHeight);
 
         s1.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
@@ -240,17 +219,19 @@ export default {
       };
 
       s1.draw = (_) => {
-        if (store.state.theme == "dark") {
-          s1.background(DarkColor);
-        } else {
-          s1.background(LightColor);
-        }
+        if (thisDom.classList.contains("active")) {
+          if (store.state.theme == "dark") {
+            s1.background(DarkColor);
+          } else {
+            s1.background(LightColor);
+          }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
+          for (let i = 0; i < shapes.length; i++) {
+            let shape = shapes[i];
+            shape.draw();
+          }
+          curTime += s1.deltaTime * 0.001;
         }
-        curTime += s1.deltaTime * 0.001;
       };
       class Shape {
         constructor(id, maxnum, size) {
@@ -353,19 +334,14 @@ export default {
       let curTime = 0.0;
       let speed = 25.0;
       let SizeMin, SizeMax;
+      let thisDom = document.getElementById("SubCanvas2");
       // s2.disableFriendlyErrors = true;
 
       s2.setup = (_) => {
         // p5.disableFriendlyErrors = true;
         s2.frameRate(30);
-        SizeMin = s2.min(
-          document.getElementById("SubCanvas2").clientWidth,
-          document.getElementById("SubCanvas2").clientHeight
-        );
-        SizeMax = s2.max(
-          document.getElementById("SubCanvas2").clientWidth,
-          document.getElementById("SubCanvas2").clientHeight
-        );
+        SizeMin = s2.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = s2.max(thisDom.clientWidth, thisDom.clientHeight);
         // mySize = 500;
         var canvas = s2.createCanvas(SizeMax, SizeMax, s2.WEBGL);
         canvas.parent("SubCanvas2");
@@ -387,14 +363,8 @@ export default {
       };
 
       s2.windowResized = (_) => {
-        SizeMin = s2.min(
-          document.getElementById("SubCanvas2").clientWidth,
-          document.getElementById("SubCanvas2").clientHeight
-        );
-        SizeMax = s2.max(
-          document.getElementById("SubCanvas2").clientWidth,
-          document.getElementById("SubCanvas2").clientHeight
-        );
+        SizeMin = s2.min(thisDom.clientWidth, thisDom.clientHeight);
+        SizeMax = s2.max(thisDom.clientWidth, thisDom.clientHeight);
 
         s2.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
@@ -404,17 +374,19 @@ export default {
       };
 
       s2.draw = (_) => {
-        if (store.state.theme == "dark") {
-          s2.background(DarkColor);
-        } else {
-          s2.background(LightColor);
-        }
+        if (thisDom.classList.contains("active")) {
+          if (store.state.theme == "dark") {
+            s2.background(DarkColor);
+          } else {
+            s2.background(LightColor);
+          }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
+          for (let i = 0; i < shapes.length; i++) {
+            let shape = shapes[i];
+            shape.draw();
+          }
+          curTime += s2.deltaTime * 0.001;
         }
-        curTime += s2.deltaTime * 0.001;
       };
       class Shape {
         constructor(id, maxnum, size) {
@@ -454,7 +426,7 @@ export default {
           s2.rotateY(ang);
           s2.rotateZ(ang);
           // s2.translate(s2.width/2, 0, 0);
-    
+
           let scaleval = 1.0 - this.id / this.maxnum;
           let addscale = s2.map(
             s2.sin(s2.radians(curTime * 10.0)),
@@ -503,307 +475,288 @@ export default {
       }
     };
 
-    const SubCanvas3 = function (s3) {
-      //ShapesSetting
-      let ShapesNum;
-      let shapes = [];
-      let curTime = 0.0;
-      let speed = 50.0;
-      let SizeMin, SizeMax;
-      // s3.disableFriendlyErrors = true;
+    // const SubCanvas3 = function (s3) {
+    //   //ShapesSetting
+    //   let ShapesNum;
+    //   let shapes = [];
+    //   let curTime = 0.0;
+    //   let speed = 50.0;
+    //   let SizeMin, SizeMax;
+    //   let thisDom = document.getElementById("SubCanvas3");
+    //   // s3.disableFriendlyErrors = true;
 
-      s3.setup = (_) => {
-        // p5.disableFriendlyErrors = true;
-        s3.frameRate(30);
-        SizeMin = s3.min(
-          document.getElementById("SubCanvas3").clientWidth,
-          document.getElementById("SubCanvas3").clientHeight
-        );
-        SizeMax = s3.max(
-          document.getElementById("SubCanvas3").clientWidth,
-          document.getElementById("SubCanvas3").clientHeight
-        );
-        // mySize = 500;
-        var canvas = s3.createCanvas(SizeMax, SizeMax, s3.WEBGL);
-        canvas.parent("SubCanvas3");
-        // ShapesNum = floor(mySize/6);
-        ShapesNum = 30;
-        // print(ShapesNum)
-        s3.colorMode(s3.HSB, 360, 100, 100, 100);
+    //   s3.setup = (_) => {
+    //     // p5.disableFriendlyErrors = true;
+    //     s3.frameRate(30);
+    //     SizeMin = s3.min(thisDom.clientWidth, thisDom.clientHeight);
+    //     SizeMax = s3.max(thisDom.clientWidth, thisDom.clientHeight);
+    //     // mySize = 500;
+    //     var canvas = s3.createCanvas(SizeMax, SizeMax, s3.WEBGL);
+    //     canvas.parent("SubCanvas3");
+    //     // ShapesNum = floor(mySize/6);
+    //     ShapesNum = 30;
+    //     // print(ShapesNum)
+    //     s3.colorMode(s3.HSB, 360, 100, 100, 100);
 
-        if (store.state.theme == "dark") {
-          s3.background(DarkColorDeep);
-        } else {
-          s3.background(LightColorDeep);
-        }
+    //     if (store.state.theme == "dark") {
+    //       s3.background(DarkColorDeep);
+    //     } else {
+    //       s3.background(LightColorDeep);
+    //     }
 
-        for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
-          shapes.push(shape);
-        }
-      };
+    //     for (let i = 0; i < ShapesNum; i++) {
+    //       let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
+    //       shapes.push(shape);
+    //     }
+    //   };
 
-      s3.windowResized = (_) => {
-        SizeMin = s3.min(
-          document.getElementById("SubCanvas3").clientWidth,
-          document.getElementById("SubCanvas3").clientHeight
-        );
-        SizeMax = s3.max(
-          document.getElementById("SubCanvas3").clientWidth,
-          document.getElementById("SubCanvas3").clientHeight
-        );
+    //   s3.windowResized = (_) => {
+    //     SizeMin = s3.min(thisDom.clientWidth, thisDom.clientHeight);
+    //     SizeMax = s3.max(thisDom.clientWidth, thisDom.clientHeight);
 
-        s3.resizeCanvas(SizeMax, SizeMax);
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.resize(SizeMin * 1.414);
-        }
-      };
+    //     s3.resizeCanvas(SizeMax, SizeMax);
+    //     for (let i = 0; i < shapes.length; i++) {
+    //       let shape = shapes[i];
+    //       shape.resize(SizeMin * 1.414);
+    //     }
+    //   };
 
-      s3.draw = (_) => {
-        if (store.state.theme == "dark") {
-          s3.background(DarkColorDeep);
-        } else {
-          s3.background(LightColorDeep);
-        }
+    //   s3.draw = (_) => {
+    //     // if (thisDom.classList.contains("active")) {
+    //     if (store.state.theme == "dark") {
+    //       s3.background(DarkColorDeep);
+    //     } else {
+    //       s3.background(LightColorDeep);
+    //     }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
-        }
-        curTime += s3.deltaTime * 0.001;
-      };
-      class Shape {
-        constructor(id, maxnum, size) {
-          this.id = id;
-          this.maxnum = maxnum;
-          this.size = size;
-        }
+    //     for (let i = 0; i < shapes.length; i++) {
+    //       let shape = shapes[i];
+    //       shape.draw();
+    //     }
+    //     curTime += s3.deltaTime * 0.001;
+    //     // }
+    //   };
+    //   class Shape {
+    //     constructor(id, maxnum, size) {
+    //       this.id = id;
+    //       this.maxnum = maxnum;
+    //       this.size = size;
+    //     }
 
-        resize(size) {
-          this.size = size;
-        }
+    //     resize(size) {
+    //       this.size = size;
+    //     }
 
-        draw() {
-          s3.noFill();
-          let maxid = this.maxnum * 0.1;
-          s3.strokeWeight(0.5);
-          // let thresh = s3.map(s3.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-          // s3.strokeWeight(s3.map(s3.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
-          s3.push();
-          let angrange = s3.map(
-            s3.sin(s3.radians(curTime * 10.0)),
-            -1.0,
-            1.0,
-            45.0,
-            90.0
-          );
-          let addang =
-            curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
-          let ang = s3.radians(0 + addang);
-          // s3.rotateX(ang);
-          // s3.rotateY(ang);
-          // s3.rotateX(4.5+(curTime * 0.1));
-          // s3.rotateY(4.5-(curTime * 0.1));
-          // s3.rotateZ(4.5+(curTime * 0.1));
-          s3.rotateZ(45);
-          // s3.rotateZ(curTime * 0.1);
-          // s3.rotateY(curTime * 0.1);
-          // s3.rotateZ(curTime * 0.1);
+    //     draw() {
+    //       s3.noFill();
+    //       let maxid = this.maxnum * 0.1;
+    //       s3.strokeWeight(0.5);
+    //       // let thresh = s3.map(s3.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
+    //       // s3.strokeWeight(s3.map(s3.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
+    //       s3.push();
+    //       let angrange = s3.map(
+    //         s3.sin(s3.radians(curTime * 10.0)),
+    //         -1.0,
+    //         1.0,
+    //         45.0,
+    //         90.0
+    //       );
+    //       let addang =
+    //         curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
+    //       let ang = s3.radians(0 + addang);
+    //       // s3.rotateX(ang);
+    //       // s3.rotateY(ang);
+    //       // s3.rotateX(4.5+(curTime * 0.1));
+    //       // s3.rotateY(4.5-(curTime * 0.1));
+    //       // s3.rotateZ(4.5+(curTime * 0.1));
+    //       s3.rotateZ(45);
+    //       // s3.rotateZ(curTime * 0.1);
+    //       // s3.rotateY(curTime * 0.1);
+    //       // s3.rotateZ(curTime * 0.1);
 
-          let movex = s3.map(
-            this.id,
-            0,
-            this.maxnum,
-            -s3.width / 2,
-            s3.width / 2
-          );
-          s3.translate(movex, 0, movex);
+    //       let movex = s3.map(
+    //         this.id,
+    //         0,
+    //         this.maxnum,
+    //         -s3.width / 2,
+    //         s3.width / 2
+    //       );
+    //       s3.translate(movex, 0, movex);
 
-          let Hue =
-            195 *
-              s3.abs(s3.sin(curTime - (this.id * 10.0) / (this.maxnum - 1.0))) +
-            75;
-          let Saturation =
-            20 *
-              s3.abs(s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            100;
-          let Brightness =
-            10 *
-              s3.abs(s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            80;
-          if (store.state.theme == "light") {
-            Saturation =
-              20 *
-                s3.abs(
-                  s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
-                ) +
-              100;
-            Brightness =
-              10 *
-                s3.abs(
-                  s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
-                ) +
-              100;
-          }
+    //       let Hue =
+    //         195 *
+    //           s3.abs(s3.sin(curTime - (this.id * 10.0) / (this.maxnum - 1.0))) +
+    //         75;
+    //       let Saturation =
+    //         20 *
+    //           s3.abs(s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+    //         100;
+    //       let Brightness =
+    //         10 *
+    //           s3.abs(s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+    //         80;
+    //       if (store.state.theme == "light") {
+    //         Saturation =
+    //           20 *
+    //             s3.abs(
+    //               s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+    //             ) +
+    //           100;
+    //         Brightness =
+    //           10 *
+    //             s3.abs(
+    //               s3.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+    //             ) +
+    //           100;
+    //       }
 
-          s3.stroke(Hue, Saturation, Brightness, 100);
-          s3.box(this.size * 1.5);
-          s3.pop();
-        }
-      }
-    };
-    const SubCanvas4 = function (s4) {
-      //ShapesSetting
-      let ShapesNum;
-      let shapes = [];
-      let curTime = 0.0;
-      let speed = 50.0;
-      let SizeMin, SizeMax;
-      // s4.disableFriendlyErrors = true;
+    //       s3.stroke(Hue, Saturation, Brightness, 100);
+    //       s3.box(this.size * 1.5);
+    //       s3.pop();
+    //     }
+    //   }
+    // };
+    // const SubCanvas4 = function (s4) {
+    //   //ShapesSetting
+    //   let ShapesNum;
+    //   let shapes = [];
+    //   let curTime = 0.0;
+    //   let speed = 50.0;
+    //   let SizeMin, SizeMax;
+    //   let thisDom = document.getElementById("SubCanvas4");
+    //   // s4.disableFriendlyErrors = true;
 
-      s4.setup = (_) => {
-        // p5.disableFriendlyErrors = true;
-        s4.frameRate(30);
-        SizeMin = s4.min(
-          document.getElementById("SubCanvas4").clientWidth,
-          document.getElementById("SubCanvas4").clientHeight
-        );
-        SizeMax = s4.max(
-          document.getElementById("SubCanvas4").clientWidth,
-          document.getElementById("SubCanvas4").clientHeight
-        );
-        // mySize = 500;
-        var canvas = s4.createCanvas(SizeMax, SizeMax, s4.WEBGL);
-        canvas.parent("SubCanvas4");
-        // ShapesNum = floor(mySize/6);
-        ShapesNum = 30;
-        // print(ShapesNum)
-        s4.colorMode(s4.HSB, 360, 100, 100, 100);
+    //   s4.setup = (_) => {
+    //     // p5.disableFriendlyErrors = true;
+    //     s4.frameRate(30);
+    //     SizeMin = s4.min(thisDom.clientWidth, thisDom.clientHeight);
+    //     SizeMax = s4.max(thisDom.clientWidth, thisDom.clientHeight);
+    //     // mySize = 500;
+    //     var canvas = s4.createCanvas(SizeMax, SizeMax, s4.WEBGL);
+    //     canvas.parent("SubCanvas4");
+    //     // ShapesNum = floor(mySize/6);
+    //     ShapesNum = 30;
+    //     // print(ShapesNum)
+    //     s4.colorMode(s4.HSB, 360, 100, 100, 100);
 
-        if (store.state.theme == "dark") {
-          s4.background(DarkColorDeep);
-        } else {
-          s4.background(LightColorDeep);
-        }
+    //     if (store.state.theme == "dark") {
+    //       s4.background(DarkColorDeep);
+    //     } else {
+    //       s4.background(LightColorDeep);
+    //     }
 
-        for (let i = 0; i < ShapesNum; i++) {
-          let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
-          shapes.push(shape);
-        }
-      };
+    //     for (let i = 0; i < ShapesNum; i++) {
+    //       let shape = new Shape(i, ShapesNum, SizeMin * 1.414);
+    //       shapes.push(shape);
+    //     }
+    //   };
 
-      s4.windowResized = (_) => {
-        SizeMin = s4.min(
-          document.getElementById("SubCanvas4").clientWidth,
-          document.getElementById("SubCanvas4").clientHeight
-        );
-        SizeMax = s4.max(
-          document.getElementById("SubCanvas4").clientWidth,
-          document.getElementById("SubCanvas4").clientHeight
-        );
+    //   s4.windowResized = (_) => {
+    //     SizeMin = s4.min(thisDom.clientWidth, thisDom.clientHeight);
+    //     SizeMax = s4.max(thisDom.clientWidth, thisDom.clientHeight);
 
-        s4.resizeCanvas(SizeMax, SizeMax);
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.resize(SizeMin * 1.414);
-        }
-      };
+    //     s4.resizeCanvas(SizeMax, SizeMax);
+    //     for (let i = 0; i < shapes.length; i++) {
+    //       let shape = shapes[i];
+    //       shape.resize(SizeMin * 1.414);
+    //     }
+    //   };
 
-      s4.draw = (_) => {
-        if (store.state.theme == "dark") {
-          s4.background(DarkColorDeep);
-        } else {
-          s4.background(LightColorDeep);
-        }
+    //   s4.draw = (_) => {
+    //     // if (thisDom.classList.contains("active")) {
+    //     if (store.state.theme == "dark") {
+    //       s4.background(DarkColorDeep);
+    //     } else {
+    //       s4.background(LightColorDeep);
+    //     }
 
-        for (let i = 0; i < shapes.length; i++) {
-          let shape = shapes[i];
-          shape.draw();
-        }
-        curTime += s4.deltaTime * 0.001;
-      };
-      class Shape {
-        constructor(id, maxnum, size) {
-          this.id = id;
-          this.maxnum = maxnum;
-          this.size = size;
-        }
+    //     for (let i = 0; i < shapes.length; i++) {
+    //       let shape = shapes[i];
+    //       shape.draw();
+    //     }
+    //     curTime += s4.deltaTime * 0.001;
+    //     // }
+    //   };
+    //   class Shape {
+    //     constructor(id, maxnum, size) {
+    //       this.id = id;
+    //       this.maxnum = maxnum;
+    //       this.size = size;
+    //     }
 
-        resize(size) {
-          this.size = size;
-        }
+    //     resize(size) {
+    //       this.size = size;
+    //     }
 
-        draw() {
-          s4.noFill();
-          let maxid = this.maxnum * 0.1;
-          s4.strokeWeight(0.5);
-          // let thresh = s4.map(s4.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
-          // s4.strokeWeight(s4.map(s4.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
-          s4.push();
-          let angrange = s4.map(
-            s4.sin(s4.radians(curTime * 10.0)),
-            -1.0,
-            1.0,
-            45.0,
-            90.0
-          );
-          let addang =
-            curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
-          let ang = s4.radians(0 + addang);
-          // s4.rotateX(ang);
-          // s4.rotateY(ang);
-          // s4.rotateX(4.5+(curTime * 0.1));
-          // s4.rotateY(4.5-(curTime * 0.1));
-          // s4.rotateZ(4.5+(curTime * 0.1));
-          s4.rotateZ(45);
-          // s4.rotateZ(curTime * 0.1);
-          // s4.rotateY(curTime * 0.1);
-          // s4.rotateZ(curTime * 0.1);
+    //     draw() {
+    //       s4.noFill();
+    //       let maxid = this.maxnum * 0.1;
+    //       s4.strokeWeight(0.5);
+    //       // let thresh = s4.map(s4.max(this.id, maxid), maxid, this.maxnum - 1, 0, 1.0);
+    //       // s4.strokeWeight(s4.map(s4.max(thresh, 0.0), 0.0, 1.0, 0.1, 1.0));
+    //       s4.push();
+    //       let angrange = s4.map(
+    //         s4.sin(s4.radians(curTime * 10.0)),
+    //         -1.0,
+    //         1.0,
+    //         45.0,
+    //         90.0
+    //       );
+    //       let addang =
+    //         curTime * speed + (angrange * this.id) / (this.maxnum - 1.0);
+    //       let ang = s4.radians(0 + addang);
+    //       // s4.rotateX(ang);
+    //       // s4.rotateY(ang);
+    //       // s4.rotateX(4.5+(curTime * 0.1));
+    //       // s4.rotateY(4.5-(curTime * 0.1));
+    //       // s4.rotateZ(4.5+(curTime * 0.1));
+    //       s4.rotateZ(45);
+    //       // s4.rotateZ(curTime * 0.1);
+    //       // s4.rotateY(curTime * 0.1);
+    //       // s4.rotateZ(curTime * 0.1);
 
-          let movex = s4.map(
-            this.id,
-            0,
-            this.maxnum,
-            -s4.width / 2,
-            s4.width / 2
-          );
-          s4.translate(movex, 0, movex);
+    //       let movex = s4.map(
+    //         this.id,
+    //         0,
+    //         this.maxnum,
+    //         -s4.width / 2,
+    //         s4.width / 2
+    //       );
+    //       s4.translate(movex, 0, movex);
 
-          let Hue =
-            195 *
-              s4.abs(s4.sin(curTime - (this.id * 10.0) / (this.maxnum - 1.0))) +
-            75;
-          let Saturation =
-            20 *
-              s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            100;
-          let Brightness =
-            10 *
-              s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
-            60;
-          if (store.state.theme == "light") {
-            Saturation =
-              20 *
-                s4.abs(
-                  s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
-                ) +
-              100;
-            Brightness =
-              10 *
-                s4.abs(
-                  s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
-                ) +
-              100;
-          }
+    //       let Hue =
+    //         195 *
+    //           s4.abs(s4.sin(curTime - (this.id * 10.0) / (this.maxnum - 1.0))) +
+    //         75;
+    //       let Saturation =
+    //         20 *
+    //           s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+    //         100;
+    //       let Brightness =
+    //         10 *
+    //           s4.abs(s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))) +
+    //         60;
+    //       if (store.state.theme == "light") {
+    //         Saturation =
+    //           20 *
+    //             s4.abs(
+    //               s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+    //             ) +
+    //           100;
+    //         Brightness =
+    //           10 *
+    //             s4.abs(
+    //               s4.sin(curTime - (this.id * 5.0) / (this.maxnum - 1.0))
+    //             ) +
+    //           100;
+    //       }
 
-          s4.stroke(Hue, Saturation, Brightness, 100);
-          s4.box(this.size * 1.5);
-          s4.pop();
-        }
-      }
-    };
-
+    //       s4.stroke(Hue, Saturation, Brightness, 100);
+    //       s4.box(this.size * 1.5);
+    //       s4.pop();
+    //     }
+    //   }
+    // };
 
     new P5(eval(this.type));
     // new P5(SubCanvas1);
@@ -834,50 +787,4 @@ export default {
     }
   }
 }
-
-// #SubCanvas1,
-// #SubCanvas2 {
-//   position: relative;
-//   overflow: hidden;
-//   width: 600px;
-//   height: 600px;
-
-//   ::v-deep {
-//     canvas {
-//       // position: absolute;
-//       // width: 100%;
-//       // height: 100%;
-//       // top: 50%;
-//       // left: 50%;
-//       // transform: translate(-50%, -50%);
-//     }
-//   }
-// }
-
-// #SubCanvas3 {
-//   position: relative;
-//   width: 100%;
-//   overflow: hidden;
-//   //   max-height: 500px;
-//   height: 100%;
-
-//   &:before {
-//     content: "";
-//     display: block;
-//     padding-top: 50%;
-
-//     width: 100%;
-//   }
-
-//   ::v-deep {
-//     canvas {
-//       position: absolute;
-//       width: 100%;
-//       height: 100%;
-//       top: 50%;
-//       left: 50%;
-//       transform: translate(-50%, -50%);
-//     }
-//   }
-// }
 </style>

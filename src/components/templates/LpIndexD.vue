@@ -186,7 +186,7 @@
 
       <!-- SECTION network -->
       <section :class="section.network.class">
-        <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" />
+        <!-- <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" /> -->
         <div class="section__wrap">
           <LpTitle
             :class="section.network.class + '__title'"
@@ -259,7 +259,7 @@
 
       <!-- SECTION CV -->
       <section id="contact" :class="section.cv.class">
-        <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" />
+        <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
         <div class="section__wrap">
           <LpTitle
             :class="section.cv.class + '__title'"
@@ -300,6 +300,16 @@ import LpIcon from "@/components/templates/LpParts/Icon";
 export default {
   data() {
     return {
+      winH: 0,
+      scrollY: 0,
+      height: 0,
+      position: 0,
+      currentWindow: {
+        t: 0,
+        h: 0,
+        b: 0,
+      },
+      canvasItems: [],
       section: {
         mv: {
           class: "dlp-mv",
@@ -1076,6 +1086,27 @@ export default {
   },
   mounted() {
     document.body.classList.add("is-mounted");
+    this.winH = window.innerHeight;
+    const scrollActions = document.querySelectorAll(".canvasItem");
+    for (let i = 0; i < scrollActions.length; i++) {
+      let itemId = scrollActions[i].id;
+      this.canvasItems[itemId] = {
+        t: scrollActions[i].getBoundingClientRect().top,
+        h: scrollActions[i].clientHeight,
+        b:
+          scrollActions[i].getBoundingClientRect().top +
+          scrollActions[i].clientHeight,
+      };
+    }
+  },
+  created() {
+    // window.addEventListener("scroll", this.scrollAction);
+    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("resize", this.onResize);
+    window.addEventListener("load", () => {
+      this.onScroll();
+      this.onResize();
+    });
   },
 
   methods: {
@@ -1094,8 +1125,8 @@ export default {
     // },
     scrollAction() {
       const scrollActions = document.querySelectorAll(".scrollAction");
+      const windowHeight = this.winH;
       for (let i = 0; i < scrollActions.length; i++) {
-        const windowHeight = window.innerHeight;
         const elTop = scrollActions[i].getBoundingClientRect().top;
         // const elVisible = 150;
         if (elTop < windowHeight - windowHeight * 0.2) {
@@ -1105,9 +1136,28 @@ export default {
         }
       }
     },
-  },
-  created() {
-    window.addEventListener("scroll", this.scrollAction);
+    onScroll() {
+      this.scrollAction();
+      this.scrollY = window.scrollY;
+      this.currentWindow.t = this.scrollY;
+      this.currentWindow.b = this.scrollY + this.winH;
+      for (let index in this.canvasItems) {
+        let thisComponent = document.getElementById(index);
+        let thisComponentTop = thisComponent.getBoundingClientRect().top;
+        let thisComponentBottom =
+          thisComponent.getBoundingClientRect().top +
+          thisComponent.clientHeight;
+        if (thisComponentTop < this.winH && thisComponentBottom > 0) {
+          console.log(index);
+          thisComponent.classList.add("active");
+        } else {
+          thisComponent.classList.remove("active");
+        }
+      }
+    },
+    onResize() {
+      this.height = document.documentElement.clientHeight;
+    },
   },
 };
 </script>

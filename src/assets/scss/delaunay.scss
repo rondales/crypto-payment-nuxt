@@ -1346,6 +1346,8 @@ body.is-mounted {
   }
   &-network {
     position: relative;
+    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
+      background-size: cover;
     .section__wrap {
       position: relative;
       z-index: 10;
@@ -1554,6 +1556,8 @@ body.is-mounted {
   &-cv {
     @include rem_padding(4, 0, 5, 0);
     position: relative;
+    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
+      background-size: cover;
     @include media(sp) {
       padding-top: rem_sp(6);
       padding-bottom: rem_sp(6);
