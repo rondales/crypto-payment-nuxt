@@ -1510,6 +1510,13 @@ body.is-mounted {
             display: inline-block;
             padding-left: rem(2);
             position: relative;
+            &.active {
+              opacity: 1;
+              &:before {
+                content: "";
+                background: $gradation-light;
+              }
+            }
             &:before {
               content: "";
               width: rem(1);
@@ -1518,7 +1525,7 @@ body.is-mounted {
               position: absolute;
               top: 50%;
               left: 0;
-              background: $gradation-light;
+              background: $gray;
               transform-origin: center center;
               transform: translate3d(0%, -50%, 0) rotate(0deg) scale(1, 1);
               border-radius: 100%;
