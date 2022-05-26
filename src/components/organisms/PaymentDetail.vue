@@ -63,7 +63,7 @@
         </div>
         <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Eate</p>
+            <p>Exchange Rate</p>
             <p>1{{ paymentRequestSymbol }}＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
@@ -84,11 +84,11 @@
             <p>Liquidity Provider Fee</p>
             <p>0.002367 BNB</p>
           </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Slippage tolerance</p>
-            <p>0.50%</p>
-          </div>
           -->
+          <div v-if="isDifferentToken" class="dattail-list add-flex j-between mb-1">
+            <p>Slippage tolerance</p>
+            <p>{{ slippageTolerance }}%</p>
+          </div>
           <div class="dattail-list add-flex j-between mb-2">
             <p>Platform Fee</p>
             <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
@@ -121,7 +121,7 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="isPublishedTransactionHash" class="payment-status_btn" :href="transactionUrl">
+          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="_blank" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
@@ -167,6 +167,12 @@ import {
   MaticTokens,
   AvalancheTokens
 } from '@/contracts/tokens'
+import {
+  BscTokens as BscReceiveTokens,
+  EthereumTokens as EthereumReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
   name: 'PaymentDetail',
@@ -200,6 +206,9 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    slippageTolerance() {
+      return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
     },
     web3Instance() {
       return this.$store.state.web3.instance
@@ -327,6 +336,31 @@ export default {
     },
     isPublishedTransactionHash() {
       return (this.transactionHash)
+    },
+    isDifferentToken() {
+      let receiveToken
+      switch(this.$store.state.web3.chainId) {
+        case NETWORKS[1].chainId:
+        case NETWORKS[3].chainId:
+          receiveToken = EthereumReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[56].chainId:
+        case NETWORKS[97].chainId:
+          receiveToken = BscReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[137].chainId:
+        case NETWORKS[80001].chainId:
+          receiveToken = MaticReceiveTokens[this.paymentRequestSymbol]
+          break
+        case NETWORKS[43113].chainId:
+        case NETWORKS[43114].chainId:
+          receiveToken = AvalacheReceiveTokens[this.paymentRequestSymbol]
+      }
+      const receiveTokenAddress = receiveToken.address.toLowerCase()
+      const paymentTokenAddress = this.$store.state.payment.token.address
+        ? this.$store.state.payment.token.address.toLowerCase()
+        : ''
+      return receiveTokenAddress !== paymentTokenAddress
     }
   },
   methods: {
@@ -390,13 +424,16 @@ export default {
         this.$store.state.account.address,
         this.contract,
         this.$store.state.payment.token,
-        this.paymentRequestAmount
+        this.paymentRequestSymbol,
+        this.paymentRequestAmount,
+        this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,
           rate: exchange.rate
         })
+        this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
         this.equivalent = exchange.equivalentAmount
         this.requireAmount = exchange.requireAmount
         this.exchangeRate = exchange.rate
@@ -483,7 +520,8 @@ export default {
         this.contract,
         this.$store.state.payment.token,
         this.userTokenPaymentAmount,
-        this.$store.state.payment.fee
+        this.$store.state.payment.fee,
+        this.$store.state.payment.amountWei
       )
     },
     checkTransactionStatus(transactionHash) {
