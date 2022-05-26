@@ -293,22 +293,24 @@ const getTokenExchangeData = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  const feePath = token.address === null
+  const path = token.address === null || token.address === wrappedToken.address
     ? [wrappedToken.address, requestToken.address]
     : [token.address, wrappedToken.address, requestToken.address]
   const payingTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
+  const feePath = [wrappedToken.address, requestToken.address]
+
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
       payingTokenAddress,
       userTokenBalanceWei,  
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       requestAmountWei,
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const requireAmountWithSlippage = token.address == requestToken.address 
@@ -321,7 +323,7 @@ const getTokenExchangeData = async function(
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       perRequestTokenWei,
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
@@ -399,18 +401,17 @@ const sendPaymentTransaction = function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  const path = token.address === null
+  const path = token.address === null || token.address === wrappedToken.address
     ? [wrappedToken.address, requestToken.address]
     : [token.address, wrappedToken.address, requestToken.address]
-  const feePath = token.address === null
-    ? [wrappedToken.address, requestToken.address]
-    : [token.address, wrappedToken.address, requestToken.address]
+  const feePath = [wrappedToken.address, requestToken.address]
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
   const msgValue = token.address === null
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
+
   return merchantContract.methods.submitTransaction(
     paymentTokenAddress,
     userTokenAmountWei,
