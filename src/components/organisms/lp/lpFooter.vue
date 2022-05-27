@@ -133,11 +133,19 @@ export default {
               url: "#contact",
             },
             {
-              title: "Terms of Service",
+              title: "Terms of Use（payee）",
+              url: "",
+            },
+            {
+              title: "Terms of Use（payer）",
               url: "",
             },
             {
               title: "Privacy Terms",
+              url: "",
+            },
+            {
+              title: "AML Policy",
               url: "",
             },
             {
