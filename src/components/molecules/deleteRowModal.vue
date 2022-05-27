@@ -71,13 +71,10 @@ export default {
       this.apiDeleteDeepLink()
         .then((res) => {
           if (res.data.deleted) {
-            this.$store.dispatch("deeplink/updateLinks", {
-              ...this.deeplinks,
-              data: this.deeplinks.data.filter(
-                (deeplink) => deeplink.id !== this.deeplink.id
-              ),
+            this.apiGetDeepLinks().then((res) => {
+              this.$store.dispatch("deeplink/updateLinks", res.data);
+              this.hideModal();
             });
-            this.hideModal();
           }
         })
         .catch((error) => {
@@ -97,6 +94,21 @@ export default {
       };
 
       return this.axios.delete(url, options);
+    },
+    apiGetDeepLinks() {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const paginate = {
+        per_page: this.deeplinks.per_page,
+        current_page: this.deeplinks.current_page,
+      };
+
+      return this.axios.get(
+        `${url}?per_page=${paginate.per_page}&current_page=${paginate.current_page}`,
+        options
+      );
     },
     showErrorModal(message) {
       this.$store.dispatch("modal/show", {

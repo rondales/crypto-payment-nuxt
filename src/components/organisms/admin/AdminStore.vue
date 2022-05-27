@@ -96,7 +96,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(record, index) in records" :key="index">
+            <tr v-for="(record, index) in summaries.records" :key="index">
               <td>
                 <img
                   @click="openQr(record)"
@@ -127,7 +127,7 @@
                 <p>
                   {{ record.note }}
                   <br />
-                  <span> Terminal info：{{ record.info }} </span>
+                  <span>Device ：{{ record.device }} </span>
                 </p>
                 <img @click="editNote(record)" src="@/assets/images/edit.svg" />
               </td>
@@ -151,7 +151,7 @@
                     <label v-bind:for="record.id"></label>
                   </div>
                   <div class="switch-empty" v-if="record.status === 2">-</div>
-                  <button class="btn refresh" @click="urlRefresh()">
+                  <button class="btn refresh" @click="urlRefresh(record)">
                     <img src="@/assets/images/url-refresh.svg" />
                     Url refresh
                   </button>
@@ -218,13 +218,7 @@ export default {
         perPage: { key: "per_page", value: "10" },
         currentPage: { key: "current_page", value: "1" },
       },
-      summaries: {
-        lastPageNumber: 0,
-        fromItemNumber: null,
-        toItemNumber: null,
-        total: null,
-        records: [],
-      },
+
       checkbox: [],
     };
   },
@@ -244,11 +238,17 @@ export default {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL;
     },
-    records() {
-      return this.$store.getters["deeplink/links"];
-    },
     deeplinks() {
       return this.$store.state.deeplink.links;
+    },
+    summaries() {
+      return {
+        lastPageNumber: this.deeplinks.last_page,
+        fromItemNumber: this.deeplinks.from,
+        toItemNumber: this.deeplinks.to,
+        total: this.deeplinks.total,
+        records: this.$store.getters["deeplink/links"],
+      };
     },
   },
   methods: {
@@ -274,10 +274,13 @@ export default {
         },
       });
     },
-    urlRefresh() {
+    urlRefresh(record) {
       this.$store.dispatch("modal/show", {
         target: "url-refresh-modal",
         size: "small",
+        params: {
+          record,
+        },
       });
     },
     create() {
@@ -369,11 +372,6 @@ export default {
       this.apiGetDeepLinks()
         .then((res) => {
           this.$store.dispatch("deeplink/updateLinks", res.data);
-          this.summaries.records = res.data.data;
-          this.summaries.total = res.data.total;
-          this.summaries.fromItemNumber = res.data.from;
-          this.summaries.toItemNumber = res.data.to;
-          this.summaries.lastPageNumber = res.data.last_page;
         })
         .catch((error) => {
           let message;

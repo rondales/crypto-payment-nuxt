@@ -1,3 +1,4 @@
+import moment from "moment";
 const store = {
   namespaced: true,
   state: {
@@ -8,7 +9,7 @@ const store = {
       last_page: 1,
       per_page: 10,
       to: 1,
-      total: 1
+      total: 0
     },
   },
   getters: {
@@ -20,9 +21,9 @@ const store = {
           code: link.code,
           merchantId: link.merchantId,
           status: link.active,
-          lastLogin: link.verified_at,
+          lastLogin: link.verified_at ? moment(link.verified_at).format("DD/MM/YYYY hh:mm:ss A") : '-',
           note: link.note,
-          info: link.device_name,
+          device: link.device_name ? link.device_name : '-',
         };
       });
     },
