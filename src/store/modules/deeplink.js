@@ -20,7 +20,7 @@ const store = {
           code: link.code,
           merchantId: link.merchantId,
           status: link.active,
-          lastLogin: "30/9/2021 00:00",
+          lastLogin: link.verified_at,
           note: link.note,
           info: link.device_name,
         };

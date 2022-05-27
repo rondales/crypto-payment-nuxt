@@ -208,7 +208,7 @@ export default {
     return {
       searchParams: {
         variable: { key: "transaction_address", value: null },
-        status: { key: "status", value: "0" },
+        status: { key: "active", value: "" },
         datetimeFrom: { key: "updated_at_from", value: null },
         datetimeTo: { key: "updated_at_to", value: null },
         sortKey: { key: "sort_key", value: null },
@@ -406,8 +406,9 @@ export default {
         return [param.key, param.value];
       });
 
+      const timezoneParam = [["offset", moment().utcOffset()]];
       const convertedParams = new URLSearchParams(
-        inputedParams.concat(controlParams)
+        inputedParams.concat(controlParams, timezoneParam)
       );
 
       const request = {
