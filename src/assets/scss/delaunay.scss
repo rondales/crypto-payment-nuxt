@@ -631,3 +631,1040 @@ textarea {
 input+label {
 	cursor: pointer;
 }
+
+
+#wrapAll {
+  background: var(--color_lp_bg);
+  main {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.scrollAction {
+  // position: relative;
+  // transform: translateY(150px);
+  // opacity: 0;
+  // transition: 2s all ease;
+  // &.active {
+  //   transform: translateY(0);
+  //   opacity: 1;
+  // }
+  &.op {
+    opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+      visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    &::v-deep {
+      opacity: 0;
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+        visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    &.active {
+      opacity: 1;
+      &::v-deep {
+        opacity: 1;
+      }
+    }
+  }
+  &.textMove {
+    // opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    span {
+      transform: translate(0, 105%);
+      transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 800ms;
+      &:nth-child(2) {
+        transition-delay: 920ms;
+      }
+      &:nth-child(3) {
+        transition-delay: 1040ms;
+      }
+      @include media(sp) {
+        transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms;
+        &:nth-child(2) {
+          transition-delay: 120ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 240ms;
+        }
+      }
+    }
+    &::v-deep {
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      span {
+        transform: translate(0, 105%);
+        transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 500ms;
+        &:nth-child(2) {
+          transition-delay: 120ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 240ms;
+        }
+      }
+    }
+    &.active {
+      // opacity: 1;
+      span {
+        transform: translate(0, 0);
+      }
+      &::v-deep {
+        span {
+          transform: translate(0, 0);
+        }
+      }
+    }
+  }
+  &.capcha {
+    figure {
+      opacity: 0;
+      transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+      &:nth-child(2) {
+        transition-delay: 800ms;
+      }
+      &:nth-child(3) {
+        transition-delay: 1000ms;
+      }
+      @include media(sp) {
+        transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+        &:nth-child(2) {
+          transition-delay: 200ms;
+        }
+        &:nth-child(3) {
+          transition-delay: 400ms;
+        }
+      }
+    }
+    &.active {
+      figure {
+        opacity: 1;
+      }
+    }
+  }
+  &.listMove {
+    li {
+      opacity: 0;
+      transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      @for $i from 1 through 20 {
+        &:nth-child($i) {
+          transition-delay: 120ms * $i;
+        }
+      }
+    }
+    &.active {
+      li {
+        opacity: 1;
+      }
+    }
+  }
+}
+body.is-mounted {
+  .dlp {
+    &-mv {
+      &__title {
+        opacity: 1;
+      }
+    }
+  }
+}
+.dlp {
+  &-mv {
+    height: 100vh;
+    position: relative;
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    &__title {
+      position: absolute;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 800ms cubic-bezier(0.25, 0.1, 0.25, 1) 400ms,
+        visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      transform: translate(-50%, -50%);
+      @include media(sp) {
+        width: 80%;
+      }
+    }
+    &__icon {
+      width: rem(6);
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: rem(1);
+      @include media(sp) {
+        width: rem_sp(4);
+        margin-bottom: rem_sp(1);
+      }
+    }
+    &__h1 {
+      text-align: center;
+      margin-bottom: rem(3);
+      @include media(sp) {
+        margin-bottom: rem_sp(2);
+      }
+      &__title {
+        @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
+        display: block;
+        @include media(sp) {
+          font-size: rem_sp(4);
+        }
+      }
+      &__subtitle {
+        @include font(rem(1.8), 500, $ls, 1, $ff);
+        display: block;
+        @include media(sp) {
+          @include font(rem_sp(1.8), 500, 0.02em, 1.2, $ff);
+        }
+      }
+    }
+    &__lead {
+      margin-bottom: rem(2);
+      text-align: center;
+      white-space: nowrap;
+      @include font(rem(1), $fw, $ls, $lh, $ff);
+      @include media(sp) {
+        font-size: rem_sp(1);
+        white-space: normal;
+        br {
+          display: none;
+        }
+      }
+    }
+    &__button {
+      @include flex(center, center);
+      flex-wrap: nowrap;
+      @include media(sp) {
+        flex-direction: column;
+        &::v-deep {
+          .lpButton.m {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  &-hello {
+    position: relative;
+    @include rem_padding(8, 0, 8, 0);
+    @include media(sp) {
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(8);
+    }
+    &__wrap {
+      @include flex(flex-start, center);
+      @include media(sp) {
+        display: block;
+      }
+    }
+    &__textwrap {
+      width: 65%;
+      @include media(sp) {
+        width: 100%;
+      }
+    }
+    &__h2 {
+      position: relative;
+      z-index: 10;
+      margin-bottom: rem(2);
+      @include media(sp) {
+        text-align: center;
+        margin-bottom: rem_sp(2);
+      }
+      * {
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 100% 10%;
+      }
+
+      &__title {
+        @include font(rem(8), 700, 0em, 1.2, $ff);
+        display: block;
+        @include media(tb) {
+          font-size: rem_tb(6);
+        }
+        @include media(sp) {
+          font-size: rem_sp(6);
+          text-align: center;
+        }
+      }
+      &__subtitle {
+        display: block;
+        @include media(sp) {
+          text-align: center;
+          margin-bottom: rem_sp(0.5);
+        }
+        span {
+          @include font(rem(6), 700, 0em, 1.2, $ff);
+          display: inline-block;
+          vertical-align: middle;
+          @include media(tb) {
+            font-size: rem_tb(5);
+          }
+          @include media(sp) {
+            font-size: rem_sp(4.5);
+          }
+        }
+        img {
+          display: inline-block;
+          vertical-align: middle;
+          width: rem(6);
+          margin-left: 10px;
+          @include media(tb) {
+            width: rem_tb(5);
+            margin-left: 4px;
+          }
+          @include media(sp) {
+            width: rem_sp(3.5);
+          }
+        }
+      }
+      &__text {
+        @include font(rem(4), 700, 0em, 1.5, $ff);
+        display: block;
+        @include media(tb) {
+          font-size: rem_tb(3);
+        }
+        @include media(sp) {
+          @include font(rem_sp(2), 700, 0em, 1.2, $ff);
+        }
+      }
+    }
+    &__lead {
+      position: relative;
+      z-index: 10;
+      @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
+      @include media(sp) {
+        font-size: rem_sp(pow(0));
+        span br {
+          display: none !important;
+        }
+      }
+    }
+    &__imagewrap {
+      width: 35%;
+      position: relative;
+      @include media(sp) {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: rem_sp(4);
+      }
+    }
+    &__image {
+      width: 75%;
+      box-shadow: var(--color_shadow);
+      margin-top: 10%;
+      margin-left: -20%;
+      border-radius: 8px;
+      overflow: hidden;
+      @include media(sp) {
+        margin-left: auto;
+        margin-right: 0;
+        margin-top: 0;
+      }
+      &.r {
+        margin-top: 10%;
+        margin-left: -20%;
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+        transform-origin: center center;
+        transform: translate(-50%, -50%);
+        margin-top: -10%;
+        margin-left: 20%;
+        @include media(sp) {
+          margin-left: -10%;
+          margin-top: 10%;
+        }
+      }
+    }
+  }
+  &-token {
+    @include rem_padding(6, 0, 6, 0);
+    position: relative;
+    @include media(sp) {
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(2);
+    }
+    &__iconlist {
+      @include flex(center, flex-start);
+      @include list(6, rem(2));
+      margin-bottom: rem(5);
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+      @include media(sp) {
+        @include list(3, rem_sp(2));
+        margin-bottom: rem_sp(2);
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      li {
+        @include media(sp) {
+          margin-bottom: rem_sp(1);
+        }
+      }
+    }
+    &__subbox {
+      margin-bottom: rem(6);
+      max-width: rem(50);
+      margin-left: auto;
+      margin-right: auto;
+      border-top: rem(0.3) solid var(--color_darken);
+      padding-top: rem(3);
+      @include media(sp) {
+        margin-bottom: rem_sp(2);
+        padding-top: rem_sp(3);
+      }
+      &__title {
+        text-align: center;
+        @include font(rem(2), 700, 0em, 1.5, $ff);
+        display: block;
+        margin-bottom: rem(1);
+        @include media(sp) {
+          font-size: rem_sp(1.5);
+          margin-bottom: rem_sp(1);
+        }
+      }
+      &__text {
+        @include font(rem(1), $fw, $ls, $lh, $ff);
+        margin-bottom: rem(1);
+        @include media(sp) {
+          font-size: rem_sp(1);
+          margin-bottom: rem_sp(1);
+        }
+      }
+      &__link {
+        @include flex(center, center);
+      }
+    }
+    &__card {
+      @include flex(flex-start, stretch);
+      @include list(3, rem(0.5));
+
+      @include media(tb) {
+        @include list(1, rem_tb(0.5));
+      }
+      & > li {
+        @include media(tb) {
+          margin-bottom: rem_tb(2);
+        }
+      }
+      &__list {
+        height: 100%;
+        background-color: var(--color_lp_box);
+        @include rem_padding(2, 2, 2, 2);
+        border-radius: rem(1);
+        display: flex;
+        flex-direction: column;
+        @include media(tb) {
+          display: block;
+        }
+      }
+      &__title {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
+        @include font(rem(1.5), 700, 0em, 1.5, $ff);
+        display: block;
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: rem(1);
+        @include media(tb) {
+          font-size: rem_sp(1.5);
+          flex: auto;
+          height: auto;
+          min-height: initial;
+        }
+      }
+      &__iconlist {
+        flex: 2;
+        height: 100%;
+        min-height: 0%;
+        @include flex(center, center);
+        @include list(3, rem(2));
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: rem(1);
+        @include media(tb) {
+          flex: auto;
+          height: auto;
+          min-height: initial;
+          @include list(6, rem_tb(2));
+        }
+        @include media(sp) {
+          @include list(3, rem_sp(2));
+          width: 90%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        li {
+          margin-bottom: rem(1);
+          @include media(tb) {
+            max-width: 200px;
+          }
+        }
+      }
+      &__text {
+        flex: 1;
+        height: 100%;
+        min-height: 0%;
+        overflow-wrap: break-word;
+        @include font(rem(0.9), $fw, $ls, $lh, $ff);
+        @include media(tb) {
+          font-size: rem_sp(1);
+          flex: auto;
+          height: auto;
+          min-height: initial;
+        }
+      }
+    }
+  }
+  &-install {
+    @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      padding-top: rem_sp(2);
+      padding-bottom: rem_sp(0);
+    }
+    &__feature {
+      li {
+        &:nth-child(3) {
+          &::v-deep {
+            .textimgwrap__image {
+              background-color: var(--color_lp_box);
+            }
+          }
+        }
+      }
+    }
+  }
+  &-fee {
+    @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      padding-top: rem_sp(0);
+      padding-bottom: rem_sp(0);
+    }
+  }
+  &-trial {
+    @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      padding-top: rem_sp(0);
+      padding-bottom: rem_sp(0);
+    }
+    &__feature {
+      @include media(sp) {
+        width: 86%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .scrollAction {
+        &.active {
+          [class$="__textwrap"] {
+            transition: transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)
+                300ms,
+              opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 300ms;
+            opacity: 1;
+            transform: perspective(500px) rotateY(12deg);
+            @include media(sp) {
+              transform: perspective(500px) rotateY(0deg);
+            }
+            * {
+              opacity: 1;
+            }
+          }
+          [class$="__imagewrap"] {
+            transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+            opacity: 1;
+          }
+          &:nth-child(2n) {
+            [class$="__textwrap"] {
+              transform: perspective(500px) rotateY(-12deg);
+              @include media(sp) {
+                transform: perspective(500px) rotateY(0deg);
+              }
+            }
+          }
+        }
+      }
+      & > li {
+        position: relative;
+        padding: rem(6) 0;
+        & + li {
+          margin-top: rem(4);
+          @include media(sp) {
+            margin-top: rem_sp(2);
+          }
+        }
+        &:nth-child(2n) {
+          [class$="list"] {
+            flex-direction: row;
+          }
+          [class$="__trapezoid"] {
+            transform-origin: center center;
+            transform: translate3d(0%, 0%, 0) rotate(180deg) scale(1, 1);
+            left: auto;
+            right: 0;
+          }
+          [class$="__textwrap"] {
+            transform: perspective(500px) rotateY(-30deg);
+          }
+        }
+
+        @include media(sp) {
+          padding: rem(0) 0;
+        }
+      }
+      &__list {
+        position: relative;
+        @include flex(flex-start, center);
+        flex-wrap: nowrap;
+        flex-direction: row-reverse;
+        @extend .section__wrap;
+        z-index: 10;
+        transform-style: preserve-3d;
+        @include media(sp) {
+          display: block;
+        }
+      }
+
+      &__imagewrap {
+        flex: 1;
+        position: relative;
+        z-index: 100;
+        opacity: 0;
+        will-change: opacity;
+        transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+        @include media(sp) {
+          width: 100%;
+          flex: auto;
+        }
+        &::v-deep {
+          img {
+            box-shadow: 0px 0px 20px 6px rgba(#000, 0.1);
+          }
+        }
+      }
+      &__logo {
+        width: 70%;
+        margin: rem(2) auto rem(1);
+        @include media(sp) {
+          width: 75%;
+          margin: rem_sp(1) auto;
+        }
+        &::v-deep {
+          svg {
+            fill: var(--color_font);
+            fill: #fff;
+          }
+        }
+      }
+      &__textwrap {
+        flex: 1;
+        padding: rem(4);
+        position: relative;
+        transform-origin: center center;
+        transform: perspective(500px) rotateY(30deg);
+        opacity: 0;
+        will-change: opacity, transform;
+        transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 0ms,
+          opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+        @include media(sp) {
+          padding: rem_sp(2);
+        }
+        * {
+          opacity: 0;
+          transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 800ms;
+        }
+        &::before {
+          content: "";
+          display: block;
+          width: 150%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          background: linear-gradient(
+            90.25deg,
+            rgba(#3eb9fc, 1) 5.43%,
+            rgba(#6a68ed, 0.7) 59.32%,
+            rgba(#8b2ae1, 0.4) 98.19%
+          );
+          transform-origin: center center;
+          transform: translate(-50%, 0%);
+          @include media(sp) {
+            width: 100%;
+          }
+        }
+        * {
+          position: relative;
+          z-index: 10;
+        }
+        &::v-deep {
+          text-align: center;
+          .title {
+            @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
+            color: #fff;
+            @include media(sp) {
+              font-size: rem_sp(pow(1));
+              margin-bottom: rem_sp(0.5);
+            }
+          }
+          .text {
+            @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
+            color: #fff;
+            @include media(sp) {
+              font-size: rem_sp(pow(0));
+            }
+          }
+
+          .link {
+            margin-top: rem(2);
+            @include media(sp) {
+              margin-top: rem_sp(2);
+              * {
+                margin: 0;
+              }
+            }
+            .lpButton.m .icon {
+              width: rem(4);
+            }
+          }
+        }
+      }
+    }
+  }
+  &-network {
+    position: relative;
+    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
+      background-size: cover;
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+      @include rem_padding(6, 0, 6, 0);
+      @include media(sp) {
+        padding-top: rem_sp(4);
+        padding-bottom: rem_sp(4);
+      }
+    }
+
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &::v-deep {
+        div {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          canvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform-origin: center center;
+            transform: translate(0%, -50%);
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+
+    &__logos {
+      white-space: nowrap;
+      @include flex(flex-start, center);
+      @include list(4, rem(3));
+      @include media(sp) {
+        @include list(2, rem_sp(1));
+      }
+
+      li {
+        margin-bottom: rem(2);
+        @include media(sp) {
+          margin-bottom: rem_sp(1);
+        }
+      }
+    }
+  }
+  &-roadmap {
+    @include rem_padding(6, 0, 6, 0);
+    @include media(sp) {
+      padding-top: rem_sp(3);
+      padding-bottom: rem_sp(3);
+    }
+    &__phase {
+      &__box {
+        @include flex(flex-start, stretch);
+        margin-bottom: rem(4);
+        background-color: var(--color_darken);
+        overflow: hidden;
+        @include media(sp) {
+          display: block;
+          margin-bottom: rem_sp(2);
+        }
+      }
+      &__title {
+        flex: 1;
+        @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
+        background: $gradation-light;
+        color: #fff;
+        @include flex(center, center);
+        @include media(sp) {
+          font-size: rem_sp(1.5);
+          padding: rem_sp(1);
+        }
+      }
+
+      &__list {
+        flex: 3;
+        @include flex(center, stretch);
+        @include list(2, 0);
+        @include media(sp) {
+          width: 100%;
+          @include list(1, rem_sp(2));
+        }
+        & > li {
+          padding: rem(2);
+          position: relative;
+          @include media(sp) {
+            padding: rem_sp(2);
+          }
+          &:nth-child(n + 3) {
+            &::after {
+              content: "";
+              display: block;
+              height: 1px;
+              width: 90%;
+              background-color: var(--color_update);
+              position: absolute;
+              top: 0%;
+              left: 50%;
+              transform-origin: center center;
+              transform: translate(-50%, 0%);
+            }
+          }
+          &:nth-child(2n) {
+            &::before {
+              content: "";
+              display: block;
+              width: 1px;
+              height: 80%;
+              background-color: var(--color_update);
+              position: absolute;
+              top: 50%;
+              left: 0;
+              transform-origin: center center;
+              transform: translate(0%, -50%);
+            }
+          }
+          &:nth-child(n + 2) {
+            @include media(sp) {
+              &::after {
+                content: "";
+                display: block;
+                height: 1px;
+                width: 80%;
+                background-color: var(--color_update);
+                position: absolute;
+                top: 0%;
+                left: 50%;
+                transform-origin: center center;
+                transform: translate(-50%, 0%);
+              }
+            }
+          }
+        }
+      }
+      &__listwrap {
+        @include flex(center, center);
+        flex-direction: column;
+      }
+      &__subtitle {
+        @include font(rem(pow(1)), 700, $ls, 1, $en_go);
+        text-align: center;
+        margin-bottom: rem(1);
+        @include media(sp) {
+          font-size: rem_sp(pow(1));
+          margin-bottom: rem_sp(1);
+        }
+      }
+      &__sublist {
+        li {
+          @include font(rem(pow(0)), 400, $ls, 2, $en_go);
+          span {
+            display: inline-block;
+            padding-left: rem(2);
+            position: relative;
+            &.active {
+              opacity: 1;
+              &:before {
+                content: "";
+                background: $gradation-light;
+              }
+            }
+            &:before {
+              content: "";
+              width: rem(1);
+              height: rem(1);
+              display: block;
+              position: absolute;
+              top: 50%;
+              left: 0;
+              background: $gray;
+              transform-origin: center center;
+              transform: translate3d(0%, -50%, 0) rotate(0deg) scale(1, 1);
+              border-radius: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+  &-welcome {
+    @include rem_padding(6, 0, 6, 0);
+    background-color: var(--color_bg_parts);
+    @include media(sp) {
+      padding-top: rem_sp(3);
+      padding-bottom: rem_sp(3);
+    }
+    &__list {
+      @include flex(center, flex-start);
+      li {
+        @include media(sp) {
+          width: 100%;
+        }
+        &::v-deep {
+          .lpButton.s {
+            @include media(sp) {
+              margin-left: 0;
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &-cv {
+    @include rem_padding(4, 0, 5, 0);
+    position: relative;
+    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
+      background-size: cover;
+    @include media(sp) {
+      padding-top: rem_sp(6);
+      padding-bottom: rem_sp(6);
+    }
+    .section__wrap {
+      position: relative;
+      z-index: 10;
+    }
+    &__wrap {
+      @include flex(flex-start, stretch);
+      @include media(sp) {
+        flex-direction: column;
+      }
+    }
+    &__canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &::v-deep {
+        div {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          canvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform-origin: center center;
+            transform: translate(0%, -50%);
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+    &__textwrap {
+      background: var(--color_lp_box);
+      border-radius: 10px;
+      height: 100%;
+      @include rem_padding(3, 4, 3, 4);
+      // max-width: 600px;
+      text-align: center;
+      // margin: rem(2) auto;
+      margin: auto rem(2);
+      flex: 1;
+      @include media(sp) {
+        margin: 0;
+        margin-bottom: rem_sp(2);
+      }
+      .lpButton.m {
+        margin: 0;
+        @include media(sp) {
+        }
+      }
+    }
+    &__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include flex(center, center);
+      margin-bottom: rem(1);
+      @include media(sp) {
+        margin-bottom: rem_sp(0);
+      }
+      img {
+        width: rem(3);
+        margin-right: rem(1);
+      }
+      h4 {
+        @include font(rem(pow(4)), 600, $ls, $lh, $en_go);
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    &__list {
+      flex: 1;
+      margin: auto rem(2);
+      &::v-deep {
+        .lpButton.m {
+          margin: 0;
+          @include media(sp) {
+          }
+        }
+      }
+      @include media(sp) {
+        margin: 0;
+        &::v-deep {
+          .lpButton.main {
+            margin: 0;
+            margin-bottom: rem_sp(1);
+          }
+        }
+      }
+    }
+  }
+}

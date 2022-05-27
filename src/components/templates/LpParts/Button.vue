@@ -99,7 +99,7 @@ export default {
           prop["href"] = this.isExternalLink(this.link.url)
             ? this.link.url
             : "";
-          if(this.link.blank){
+          if (this.link.blank) {
             prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
           }
         }
@@ -323,6 +323,7 @@ export default {
       left: 0;
       transition: opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
       z-index: 5;
+      border-radius: 10rem;
     }
     &::before {
       background: $gradation-light;
@@ -373,6 +374,7 @@ export default {
       left: 0;
       transition: opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
       z-index: 5;
+      border-radius: 10rem;
     }
     &::before {
       background: $gradation-orange;
