@@ -51,21 +51,6 @@ export default {
     },
   },
   methods: {
-    apiGetDeepLinks() {
-      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
-      const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
-      const paginate = {
-        per_page: 10,
-        current_page: this.deeplinks.current_page,
-      };
-
-      return this.axios.get(
-        `${url}?per_page=${paginate.per_page}&current_page=${paginate.current_page}`,
-        options
-      );
-    },
     apiUpdateDeepLinkNote() {
       const url = `${this.baseUrl}/api/v1/management/authorization-code/${this.deeplink.id}/updateNote`;
       const options = {

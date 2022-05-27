@@ -22,7 +22,7 @@ const store = {
           status: link.active,
           lastLogin: "30/9/2021 00:00",
           note: link.note,
-          info: "IOS3161613162626",
+          info: link.device_name,
         };
       });
     },
