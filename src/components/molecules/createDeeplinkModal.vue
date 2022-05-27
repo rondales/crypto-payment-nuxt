@@ -28,6 +28,7 @@
 
 <script>
 import RequestUtility from "@/utils/request";
+import { errorCodeList } from "@/enum/error_code";
 
 export default {
   name: "walletModal",
@@ -62,14 +63,33 @@ export default {
     confirm() {
       this.apiCreateDeepLink()
         .then((res) => {
-          this.$store.dispatch("deeplink/updateLink", res.data);
           this.note = "";
           this.$store.dispatch("modal/show", {
             target: "open-qr-modal",
             size: "small",
+            params: {
+              record: res.data,
+            },
           });
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
+    },
+    showErrorModal(message) {
+      this.$store.dispatch("modal/show", {
+        target: "error-modal",
+        size: "small",
+        params: {
+          message: message,
+        },
+      });
     },
   },
 };

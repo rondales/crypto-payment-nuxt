@@ -39,6 +39,8 @@
 <script>
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import RequestUtility from "@/utils/request";
+import { errorCodeList } from "@/enum/error_code";
+
 export default {
   name: "walletModal",
   data() {
@@ -63,7 +65,7 @@ export default {
       return this.$store.state.deeplink.links;
     },
     deeplink() {
-      return this.$store.state.deeplink.link;
+      return this.$store.state.modal.params.record;
     },
     baseUrl() {
       switch (this.environment) {
@@ -79,28 +81,21 @@ export default {
     },
   },
   methods: {
-    apiGetDeepLinks() {
-      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
-      const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
-      const paginate = {
-        per_page: 10,
-        current_page: this.deeplinks.current_page,
-      };
-
-      return this.axios.get(
-        `${url}?per_page=${paginate.per_page}&current_page=${paginate.current_page}`,
-        options
-      );
-    },
     hideModal() {
       this.apiGetDeepLinks()
         .then((res) => {
           this.$store.dispatch("deeplink/updateLinks", res.data);
           this.$store.dispatch("modal/hide");
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
     },
     copy(value) {
       this.$store.dispatch("account/copied");
@@ -112,7 +107,39 @@ export default {
           this.$store.dispatch("deeplink/updateLinks", res.data);
           this.$store.dispatch("modal/hide");
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
+    },
+    apiGetDeepLinks() {
+      const url = `${this.baseUrl}/api/v1/management/authorization-code`;
+      const options = {
+        headers: { Authorization: RequestUtility.getBearer() },
+      };
+      const paginate = {
+        per_page: this.deeplinks.per_page,
+        current_page: this.deeplinks.current_page,
+      };
+
+      return this.axios.get(
+        `${url}?per_page=${paginate.per_page}&current_page=${paginate.current_page}`,
+        options
+      );
+    },
+    showErrorModal(message) {
+      this.$store.dispatch("modal/show", {
+        target: "error-modal",
+        size: "small",
+        params: {
+          message: message,
+        },
+      });
     },
   },
   mounted() {

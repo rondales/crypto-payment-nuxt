@@ -27,6 +27,8 @@
 
 <script>
 import RequestUtility from "@/utils/request";
+import { errorCodeList } from "@/enum/error_code";
+
 export default {
   name: "walletModal",
   data() {
@@ -42,7 +44,7 @@ export default {
       return this.$store.state.deeplink.links;
     },
     deeplink() {
-      return this.$store.state.deeplink.link;
+      return this.$store.state.modal.params.record;
     },
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL;
@@ -96,10 +98,27 @@ export default {
               }),
             });
             this.note = "";
-            this.$store.dispatch("modal/hide");
+            this.hideModal();
           }
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
+    },
+    showErrorModal(message) {
+      this.$store.dispatch("modal/show", {
+        target: "error-modal",
+        size: "small",
+        params: {
+          message: message,
+        },
+      });
     },
   },
   mounted() {

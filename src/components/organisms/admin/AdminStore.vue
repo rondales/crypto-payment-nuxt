@@ -31,7 +31,10 @@
           <div class="manage-show add-flex a-center">
             <div class="manage-show-title">show</div>
             <div class="show-select">
-              <select @change="searchHistory">
+              <select
+                v-model="paginateParams.perPage.value"
+                @change="searchHistory"
+              >
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -43,10 +46,9 @@
         <div class="select-status add-flex">
           <div class="select-status_title">Status</div>
           <select v-model="searchParams.status.value">
-            <option value="0">All</option>
+            <option value="">All</option>
             <option value="1">Active</option>
-            <option value="2">invalid</option>
-            <option value="3">invitation</option>
+            <option value="0">Inactive</option>
           </select>
         </div>
         <div class="select-date-wrap add-flex">
@@ -115,10 +117,7 @@
                   Active
                 </div>
                 <div v-if="record.status === 0" class="status-invalid">
-                  invalid
-                </div>
-                <div v-if="record.status === 2" class="status-invitation">
-                  invitation
+                  Inactive
                 </div>
               </td>
               <td>
@@ -156,7 +155,7 @@
                     <img src="@/assets/images/url-refresh.svg" />
                     Url refresh
                   </button>
-                  <button class="btn delete" @click="deleteRow()">
+                  <button class="btn delete" @click="deleteRow(record)">
                     <img src="@/assets/images/trash-box.svg" />
                     delete
                   </button>
@@ -165,6 +164,26 @@
             </tr>
           </tbody>
         </table>
+        <div class="pagination add-flex j-between a-center">
+          <div class="page-count">
+            Showing {{ summaries.fromItemNumber }} to
+            {{ summaries.toItemNumber }} of {{ summaries.total }} entries
+          </div>
+          <div>
+            <Paginate
+              :page-count="summaries.lastPageNumber"
+              :page-range="3"
+              :margin-pages="1"
+              :click-handler="searchHistory"
+              :prev-text="'Previous'"
+              :next-text="'Next'"
+              :container-class="'pagenation-wrap'"
+              :prev-class="'prev-item'"
+              :page-class="'p-num'"
+              :next-class="'next-item'"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -175,11 +194,15 @@
 import "@/../node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
 import DatetimePicker from "vue-ctk-date-time-picker";
 import RequestUtility from "@/utils/request";
+import { errorCodeList } from "@/enum/error_code";
+import moment from "moment";
+import Paginate from "vuejs-paginate";
 
 export default {
   name: "AdminTransactionHistory",
   components: {
     DatetimePicker,
+    Paginate,
   },
   data() {
     return {
@@ -192,13 +215,15 @@ export default {
         sortType: { key: "sort_value", value: null },
       },
       paginateParams: {
-        perPage: { value: "10" },
+        perPage: { key: "per_page", value: "10" },
+        currentPage: { key: "current_page", value: "1" },
       },
       summaries: {
         lastPageNumber: 0,
         fromItemNumber: null,
         toItemNumber: null,
         total: null,
+        records: [],
       },
       checkbox: [],
     };
@@ -232,16 +257,21 @@ export default {
       this.$clipboard(value);
     },
     openQr(record) {
-      this.$store.dispatch("deeplink/updateLink", record);
       this.$store.dispatch("modal/show", {
         target: "open-qr-modal",
         size: "small",
+        params: {
+          record,
+        },
       });
     },
-    deleteRow() {
+    deleteRow(record) {
       this.$store.dispatch("modal/show", {
         target: "delete-row-modal",
         size: "small",
+        params: {
+          record,
+        },
       });
     },
     urlRefresh() {
@@ -257,10 +287,12 @@ export default {
       });
     },
     editNote(record) {
-      this.$store.dispatch("deeplink/updateLink", record);
       this.$store.dispatch("modal/show", {
         target: "edit-note-modal",
         size: "small",
+        params: {
+          record,
+        },
       });
     },
     inactivateLink(record) {
@@ -282,7 +314,15 @@ export default {
             });
           }
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
     },
     activateLink(record) {
       const status = 1;
@@ -303,7 +343,15 @@ export default {
             });
           }
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
     },
     apiUpdateDeepLinkActiveStatus(record, status) {
       const url = `${this.baseUrl}/api/v1/management/authorization-code/${record.id}/updateActive`;
@@ -316,28 +364,82 @@ export default {
 
       return this.axios.patch(url, data, options);
     },
-    searchHistory() {},
-    getDeepLinks() {
+    searchHistory(page = 1) {
+      this.paginateParams.currentPage.value = page;
       this.apiGetDeepLinks()
         .then((res) => {
           this.$store.dispatch("deeplink/updateLinks", res.data);
         })
-        .catch((e) => console.error(e));
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
+    },
+    getDeepLinks() {
+      this.apiGetDeepLinks()
+        .then((res) => {
+          this.$store.dispatch("deeplink/updateLinks", res.data);
+          this.summaries.records = res.data.data;
+          this.summaries.total = res.data.total;
+          this.summaries.fromItemNumber = res.data.from;
+          this.summaries.toItemNumber = res.data.to;
+          this.summaries.lastPageNumber = res.data.last_page;
+        })
+        .catch((error) => {
+          let message;
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg;
+          } else {
+            message = "Please try again after a while.";
+          }
+          this.showErrorModal(message);
+        });
     },
     apiGetDeepLinks() {
       const url = `${this.baseUrl}/api/v1/management/authorization-code`;
-      const options = {
+      const inputedParams = Object.entries(this.searchParams)
+        .map(([key, param]) => {
+          if (
+            (param.key !== "status" && param.value) ||
+            (param.key === "status" && param.value !== "")
+          ) {
+            const value =
+              key === "datetimeFrom" || key === "datetimeTo"
+                ? String(moment(param.value).unix())
+                : param.value;
+            return [param.key, value];
+          }
+        })
+        .filter((param) => param);
+
+      const controlParams = Object.values(this.paginateParams).map((param) => {
+        return [param.key, param.value];
+      });
+
+      const convertedParams = new URLSearchParams(
+        inputedParams.concat(controlParams)
+      );
+
+      const request = {
         headers: { Authorization: RequestUtility.getBearer() },
-      };
-      const params = {
-        per_page: this.paginateParams.perPage.value,
-        current_page: 1,
+        params: convertedParams,
       };
 
-      return this.axios.get(
-        `${url}?per_page=${params.per_page}&current_page=1`,
-        options
-      );
+      return this.axios.get(url, request);
+    },
+    showErrorModal(message) {
+      this.$store.dispatch("modal/show", {
+        target: "error-modal",
+        size: "small",
+        params: {
+          message: message,
+        },
+      });
     },
   },
   created() {},

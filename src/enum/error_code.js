@@ -26,5 +26,14 @@ export const errorCodeList = {
   3110: { msg: 'Sort items are incorrect.' },
   3111: { msg: 'Sort settings are incorrect.' },
   3250: { msg: 'Please enter the exchange margin rate in the correct format.' },
+  3510: { msg: 'Invalid Merchant Id.' },
+  3520: { msg: 'Invalid authorization code.' },
+  3610: { msg: 'Invalid Merchant Id.' },
+  3620: { msg: 'Note too long.' },
+  3710: { msg: 'Invalid authorization code Id.' },
+  3720: { msg: 'Note too long.' },
+  3810: { msg: 'Invalid authorization code Id.' },
+  3820: { msg: 'Invalid active value.' },
+  3910: { msg: 'Invalid authorization code Id.' },
   9000: { msg: 'Cannot be continued due to system reasons.' }
 }

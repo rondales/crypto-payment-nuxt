@@ -5,8 +5,11 @@ const store = {
       current_page: 1,
       data: [],
       from: 1,
+      last_page: 1,
+      per_page: 10,
+      to: 1,
+      total: 1
     },
-    link: null,
   },
   getters: {
     links(state) {
@@ -28,16 +31,10 @@ const store = {
     updateLinks({ commit }, payload) {
       commit("updateLinks", payload);
     },
-    updateLink({ commit }, payload) {
-      commit("updateLink", payload);
-    },
   },
   mutations: {
     updateLinks(state, payload) {
       state.links = payload;
-    },
-    updateLink(state, payload) {
-      state.link = payload;
     },
   },
 };
