@@ -369,21 +369,6 @@ export default {
       this.apiGetDeepLinks()
         .then((res) => {
           this.$store.dispatch("deeplink/updateLinks", res.data);
-        })
-        .catch((error) => {
-          let message;
-          if (error.response.status === 400) {
-            message = errorCodeList[error.response.data.errors.shift()].msg;
-          } else {
-            message = "Please try again after a while.";
-          }
-          this.showErrorModal(message);
-        });
-    },
-    getDeepLinks() {
-      this.apiGetDeepLinks()
-        .then((res) => {
-          this.$store.dispatch("deeplink/updateLinks", res.data);
           this.summaries.records = res.data.data;
           this.summaries.total = res.data.total;
           this.summaries.fromItemNumber = res.data.from;
@@ -442,9 +427,8 @@ export default {
       });
     },
   },
-  created() {},
   mounted() {
-    this.getDeepLinks();
+    this.searchHistory();
   },
 };
 </script>
