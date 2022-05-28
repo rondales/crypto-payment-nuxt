@@ -8,6 +8,7 @@ const store = {
     amount: null,
     amountWei: null,
     symbol: null,
+    decimalUnit: null,
     fee: null,
     transactionHash: null,
     availableNetworks: [],
@@ -47,6 +48,9 @@ const store = {
     updateFee({ commit }, payload) {
       commit('updateFee', payload)
     },
+    updateDecimalUnit({ commit }, payload) {
+      commit('updateDecimalUnit', payload)
+    },
     updateTransactionHash({ commit }, payload) {
       commit('updateTransactionHash', payload)
     },
@@ -73,6 +77,7 @@ const store = {
       state.amountWei = null
       state.symbol = null
       state.fee = null
+      state.decimalUnit = null
       state.transactionHash = null
       state.availableNetworks = []
       state.status = 1
@@ -108,6 +113,9 @@ const store = {
     },
     updateFee(state, payload) {
       state.fee = payload
+    },
+    updateDecimalUnit(state, payload) {
+      state.decimalUnit = payload
     },
     updateStatus(state, payload) {
       state.status = payload

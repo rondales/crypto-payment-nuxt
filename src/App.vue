@@ -18,6 +18,7 @@ export default {
   name: 'App',
   components: {
     networkModal: () => import('@/components/molecules/networkModal'),
+    refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
