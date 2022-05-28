@@ -189,7 +189,7 @@
         <!-- <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" /> -->
         <div class="section__wrap">
           <LpTitle
-            :class="section.network.class + '__title'"
+           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
             :title="section.network.title"
           />
           <ul :class="section.network.class + '__logos scrollAction listMove'">
@@ -260,9 +260,9 @@
       <!-- SECTION CV -->
       <section id="contact" :class="section.cv.class">
         <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
-        <div class="section__wrap">
+        <div class="section__wrap ">
           <LpTitle
-            :class="section.cv.class + '__title'"
+            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
             :title="section.cv.title"
           />
           <div :class="section.cv.class + '__wrap'">
@@ -712,27 +712,33 @@ export default {
             {
               alt: "ethereum",
               src: "lp/logos/ethereum.svg",
-              lightSrc: "lp/logos/ethereum_l.svg",
+              // lightSrc: "lp/logos/ethereum_l.svg",
+              lightSrc: "",
             },
             {
               alt: "polygonscan",
               src: "lp/logos/polygonscan.svg",
-              lightSrc: "lp/logos/polygonscan_l.svg",
+              // lightSrc: "lp/logos/polygonscan_l.svg",
+                    lightSrc: "",
+
             },
             {
               alt: "METAMASK",
               src: "lp/logos/metamask.svg",
-              lightSrc: "lp/logos/metamask_l.svg",
+              // lightSrc: "lp/logos/metamask_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "PancakeSwap",
               src: "lp/logos/pancakeswap.svg",
-              lightSrc: "lp/logos/pancakeswap_l.svg",
+              // lightSrc: "lp/logos/pancakeswap_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "polygon",
               src: "lp/logos/polygon.svg",
-              lightSrc: "lp/logos/polygon_l.svg",
+              // lightSrc: "lp/logos/polygon_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "QUICKSWAP",
@@ -747,27 +753,32 @@ export default {
             {
               alt: "BscScan",
               src: "lp/logos/bscscan.svg",
-              lightSrc: "lp/logos/bscscan_l.svg",
+              // lightSrc: "lp/logos/bscscan_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "etherscan",
               src: "lp/logos/etherscan.svg",
-              lightSrc: "lp/logos/etherscan_l.svg",
+              // lightSrc: "lp/logos/etherscan_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "spookeyswap",
               src: "lp/logos/spookeyswap.svg",
-              lightSrc: "lp/logos/spookeyswap_l.svg",
+              // lightSrc: "lp/logos/spookeyswap_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "sushiswap",
               src: "lp/logos/sushiswap.svg",
-              lightSrc: "lp/logos/sushiswap_l.svg",
+              // lightSrc: "lp/logos/sushiswap_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "ftmscan",
               src: "lp/logos/ftmscan.svg",
-              lightSrc: "lp/logos/ftmscan_l.svg",
+              // lightSrc: "lp/logos/ftmscan_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "fantom",
@@ -782,7 +793,8 @@ export default {
             {
               alt: "ava_explorer",
               src: "lp/logos/ava_explorer.svg",
-              lightSrc: "lp/logos/ava_explorer_l.svg",
+              // lightSrc: "lp/logos/ava_explorer_l.svg",
+                    lightSrc: "",
             },
             {
               alt: "spritswap",
