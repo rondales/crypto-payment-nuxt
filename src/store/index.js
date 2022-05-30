@@ -41,8 +41,9 @@ const store = new Vuex.Store({
   },
   state: {
     hamberger: false,
-    theme: "dark",
+    theme: 'dark',
     invoicePage: true,
+    accountMenu: false
   },
   actions: {
     hamberger({ commit }) {
@@ -54,6 +55,12 @@ const store = new Vuex.Store({
     currentPath({ commit }, invoicePage) {
       commit("currentPath", invoicePage);
     },
+    currentPath({ commit }, invoicePage){
+      commit('currentPath', invoicePage);
+    },
+    toggleAccountMenu({ commit }) {
+      commit('toggleAccountMenu')
+    }
   },
   mutations: {
     hamberger(state) {
@@ -65,7 +72,10 @@ const store = new Vuex.Store({
     currentPath(state, { invoicePage }) {
       state.invoicePage = invoicePage;
     },
-  },
-});
+    toggleAccountMenu(state) {
+      state.accountMenu = !state.accountMenu
+    }
+  }
+})
 
 export default store;

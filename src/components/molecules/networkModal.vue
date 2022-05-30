@@ -18,7 +18,7 @@
         v-for="(network, key) in networks"
         :key="key"
         class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId) }"
+        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne }"
         @click="switchNetwork(network.chainId)"
       >
         <span class="btn-icon">
@@ -27,7 +27,7 @@
           {{network.name}}
       </button>
     </div>
-    <button v-if="!require" class="close" @click="hideModal">
+    <button v-if="!unsupported" class="close" @click="hideModal">
       <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
       <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
       閉じる
@@ -57,6 +57,9 @@ export default {
       return (chainId) => {
         return chainId === this.$store.state.web3.chainId
       }
+    },
+    isNetworkOnlyOne() {
+      return this.$store.state.modal.params.itemCount === 1
     },
     unsupported() {
       return 'unsupported' in this.$store.state.modal.params

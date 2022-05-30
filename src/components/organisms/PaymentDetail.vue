@@ -716,13 +716,16 @@ export default {
     &-name{
       p{
         font-size: 16px;
-        font-weight: 100;
+        font-weight: 400;
         line-height: 25px;
         margin-left: 7px;
       }
       figure {
         width: 25px;
         height: 25px;
+        img{
+          vertical-align: baseline;
+        }
       }
     }
     &-value{
