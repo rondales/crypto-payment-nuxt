@@ -52,9 +52,6 @@ const store = new Vuex.Store({
     changeTheme({ commit }, theme) {
       commit("changeTheme", { theme: theme });
     },
-    currentPath({ commit }, invoicePage) {
-      commit("currentPath", invoicePage);
-    },
     currentPath({ commit }, invoicePage){
       commit('currentPath', invoicePage);
     },
