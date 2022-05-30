@@ -1,5 +1,3 @@
-
-
 /* -----------------------
 メディアクエリ
 @include media(pc) {} //860px以上
@@ -10,23 +8,23 @@ $tb: 1000px;
 $sp: 680px;
 
 @mixin media($media-width) {
-	@if $media-width==sp {
-		@media only screen and (max-width: $sp) {
-			@content;
-		}
-	}
+  @if $media-width==sp {
+    @media only screen and (max-width: $sp) {
+      @content;
+    }
+  }
 
-	@else if $media-width==tb {
-		@media only screen and (max-width: $tb) {
-			@content;
-		}
-	}
+  @else if $media-width==tb {
+    @media only screen and (max-width: $tb) {
+      @content;
+    }
+  }
 
-	@else if $media-width==pc {
-		@media only screen and (min-width: $tb) {
-			@content;
-		}
-	}
+  @else if $media-width==pc {
+    @media only screen and (min-width: $tb) {
+      @content;
+    }
+  }
 }
 
 /* -----------------------
@@ -36,11 +34,11 @@ flex基本設定
 
 -----------------------*/
 @mixin flex($jc: flex-start, $ai: stretch) {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: $jc;
-	align-items: $ai;
-	width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: $jc;
+  align-items: $ai;
+  width: 100%;
 }
 
 /* -----------------------
@@ -50,14 +48,14 @@ blogのindexなどのリスト組。ulなどwrapper要素ににつける
 
 -----------------------*/
 @mixin list($col: 3, $padd-lr: 2rem) {
-	width: calc(100% - 1px + #{$padd-lr});
-	margin-left: -$padd-lr / 2;
+  width: calc(100% - 1px + #{$padd-lr});
+  margin-left: -$padd-lr / 2;
 
-	&>* {
-		width: 100% / $col;
-		padding-left: $padd-lr / 2;
-		padding-right: $padd-lr / 2;
-	}
+  &>* {
+    width: 100% / $col;
+    padding-left: $padd-lr / 2;
+    padding-right: $padd-lr / 2;
+  }
 }
 
 /* -----------------------
@@ -67,17 +65,17 @@ Grid for IE11
 
 -----------------------*/
 @mixin grid($type, $start: 1, $span: 1) {
-	@if $type=="column" {
-		-ms-grid-column: $start;
-		-ms-grid-column-span: $span;
-		grid-column: $start / span $span;
-	}
+  @if $type=="column" {
+    -ms-grid-column: $start;
+    -ms-grid-column-span: $span;
+    grid-column: $start / span $span;
+  }
 
-	@else {
-		-ms-grid-row: $start;
-		-ms-grid-row-span: $span;
-		grid-row: $start / span $span;
-	}
+  @else {
+    -ms-grid-row: $start;
+    -ms-grid-row-span: $span;
+    grid-row: $start / span $span;
+  }
 }
 
 /* -----------------------
@@ -87,129 +85,129 @@ fontサイズを設定する (weightやfamilyは端折らず記載する)
 
 -----------------------*/
 @mixin font($size: 1rem, $weight: 400, $letter-spacing: 0.06em, $lign-height: 1.75, $family: "san-serif") {
-	font: {
-		size: $size;
-		weight: $weight;
-		family: $family;
-	}
+  font: {
+    size: $size;
+    weight: $weight;
+    family: $family;
+  }
 
-	letter-spacing: $letter-spacing;
-	line-height: $lign-height;
+  letter-spacing: $letter-spacing;
+  line-height: $lign-height;
 }
 
 /* -----------------------
 べき乗の計算をする
 -----------------------*/
 @function pow($exp, $ratio: $font_ratio) {
-	$base: $ratio;
-	$value: 1;
+  $base: $ratio;
+  $value: 1;
 
-	@if $exp >=1 {
-		@for $i from 1 through $exp {
-			$value: $value * $base;
-		}
-	}
+  @if $exp >=1 {
+    @for $i from 1 through $exp {
+      $value: $value * $base;
+    }
+  }
 
-	@else if $exp <=-1 {
-		@for $i from 1 through -$exp {
-			$value: $value / $base;
-		}
-	}
+  @else if $exp <=-1 {
+    @for $i from 1 through -$exp {
+      $value: $value / $base;
+    }
+  }
 
-	@else {
-		$value: 1;
-	}
+  @else {
+    $value: 1;
+  }
 
-	@return $value;
+  @return $value;
 }
 
 /* -----------------------
 remを整数に
 -----------------------*/
 @function rem($num) {
-	@if $num =="auto" {
-		@return "auto";
-	}
+  @if $num =="auto" {
+    @return "auto";
+  }
 
-	@else {
-		$value: floor($num * $font_size_pc);
-		@return $value;
+  @else {
+    $value: floor($num * $font_size_pc);
+    @return $value;
 
-		@if $value < 10px {
-			$value: 10px;
-		}
-	}
+    @if $value < 10px {
+      $value: 10px;
+    }
+  }
 }
 
 @function rem_tb($num) {
-	@if $num =="auto" {
-		@return "auto";
-	}
+  @if $num =="auto" {
+    @return "auto";
+  }
 
-	@else {
-		$value: floor($num * $font_size_tb);
-		@return $value;
+  @else {
+    $value: floor($num * $font_size_tb);
+    @return $value;
 
-		@if $value < 10px {
-			$value: 10px;
-		}
-	}
+    @if $value < 10px {
+      $value: 10px;
+    }
+  }
 }
 
 @function rem_sp($num) {
-	@if $num =="auto" {
-		@return "auto";
-	}
+  @if $num =="auto" {
+    @return "auto";
+  }
 
-	@else {
-		$value: floor($num * $font_size_sp);
-		@return $value;
+  @else {
+    $value: floor($num * $font_size_sp);
+    @return $value;
 
-		@if $value < 10px {
-			$value: 10px;
-		}
-	}
+    @if $value < 10px {
+      $value: 10px;
+    }
+  }
 }
 
 @mixin font2($pow: 1, $weight: 400, $letter-spacing: 0.06em, $lign-height: 1.75, $family: "san-serif") {
-	font-size: rem($pow);
-	font-weight: $weight;
-	font-family: $family;
-	letter-spacing: $letter-spacing;
-	line-height: $lign-height;
+  font-size: rem($pow);
+  font-weight: $weight;
+  font-family: $family;
+  letter-spacing: $letter-spacing;
+  line-height: $lign-height;
 
-	@include media(tb) {
-		font-size: rem_tb($pow);
-		letter-spacing: 0.02em;
-	}
+  @include media(tb) {
+    font-size: rem_tb($pow);
+    letter-spacing: 0.02em;
+  }
 
-	@include media(sp) {
-		font-size: rem_sp($pow);
-	}
+  @include media(sp) {
+    font-size: rem_sp($pow);
+  }
 }
 
 @mixin rem_padding($top: 0, $right: 0, $bottom: 0, $left: 0) {
-	padding: rem($top) rem($right) rem($bottom) rem($left);
+  padding: rem($top) rem($right) rem($bottom) rem($left);
 
-	@include media(tb) {
-		padding: rem_tb($top) rem_tb($right) rem_tb($bottom) rem_tb($left);
-	}
+  @include media(tb) {
+    padding: rem_tb($top) rem_tb($right) rem_tb($bottom) rem_tb($left);
+  }
 
-	@include media(sp) {
-		padding: rem_sp($top) rem_sp($right) rem_sp($bottom) rem_sp($left);
-	}
+  @include media(sp) {
+    padding: rem_sp($top) rem_sp($right) rem_sp($bottom) rem_sp($left);
+  }
 }
 
 @mixin rem_margin($top: 0, $right: 0, $bottom: 0, $left: 0) {
-	margin: rem($top) rem($right) rem($bottom) rem($left);
+  margin: rem($top) rem($right) rem($bottom) rem($left);
 
-	@include media(tb) {
-		margin: rem_tb($top) rem_tb($right) rem_tb($bottom) rem_tb($left);
-	}
+  @include media(tb) {
+    margin: rem_tb($top) rem_tb($right) rem_tb($bottom) rem_tb($left);
+  }
 
-	@include media(sp) {
-		margin: rem_sp($top) rem_sp($right) rem_sp($bottom) rem_sp($left);
-	}
+  @include media(sp) {
+    margin: rem_sp($top) rem_sp($right) rem_sp($bottom) rem_sp($left);
+  }
 }
 
 /* -----------------------
@@ -219,16 +217,16 @@ icon画像を設定する
 
 -----------------------*/
 @mixin icon($width: 20px, $height: 20px, $path: "../img/icon/xxx") {
-	display: inline-block;
-	width: $width;
-	height: $height;
-	background-repeat: no-repeat;
-	background-size: $width $height;
-	background-position: center;
-	background-image: url($path + ".png");
-	background-image: url($path + ".svg");
-	overflow: hidden;
-	text-indent: -99999999px;
+  display: inline-block;
+  width: $width;
+  height: $height;
+  background-repeat: no-repeat;
+  background-size: $width $height;
+  background-position: center;
+  background-image: url($path + ".png");
+  background-image: url($path + ".svg");
+  overflow: hidden;
+  text-indent: -99999999px;
 }
 
 /* -----------------------
@@ -238,10 +236,10 @@ icon画像を設定する
 
 -----------------------*/
 @mixin img-cover($path: "../img/_dummy/1.jpg") {
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center center;
-	background-image: url($path);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-image: url($path);
 }
 
 /* -----------------------
@@ -251,10 +249,10 @@ icon画像を設定する
 
 -----------------------*/
 @mixin ratio($padd: 66.6%) {
-	position: relative;
-	width: 100%;
-	display: block;
-	padding-top: $padd;
+  position: relative;
+  width: 100%;
+  display: block;
+  padding-top: $padd;
 }
 
 /* -----------------------
@@ -264,81 +262,81 @@ cleafix
 
 -----------------------*/
 @mixin clearfix {
-	_height: 1px;
-	min-height: 1px;
+  _height: 1px;
+  min-height: 1px;
 
-	/*・･*/
-	/*/
+  /*・･*/
+  /*/
   height: auto;
   overflow: hidden;
   /**/
-	&:after {
-		height: 0;
-		visibility: hidden;
-		content: ".";
-		display: block;
-		clear: both;
-		font-size: 0;
-		line-height: 0;
-		overflow: hidden;
-	}
+  &:after {
+    height: 0;
+    visibility: hidden;
+    content: ".";
+    display: block;
+    clear: both;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
 }
 
 // Round (四捨五入)
 @function round-decimal($number, $digits: 0) {
-	@return to-fixed($number, $digits, "round");
+  @return to-fixed($number, $digits, "round");
 }
 
 // Ceil (切り上げ)
 @function ceil-decimal($number, $digits: 0) {
-	@return to-fixed($number, $digits, "ceil");
+  @return to-fixed($number, $digits, "ceil");
 }
 
 // Floor (切り捨て)
 @function floor-decimal($number, $digits: 0) {
-	@return to-fixed($number, $digits, "floor");
+  @return to-fixed($number, $digits, "floor");
 }
 
 @function to-fixed($number, $digits: 0, $round: "round") {
-	$n: 1;
+  $n: 1;
 
-	// $number must be a number
-	@if type-of($number) !=number {
-		@warn '#{ $number } is not a number.';
-		@return $number;
-	}
+  // $number must be a number
+  @if type-of($number) !=number {
+    @warn '#{ $number } is not a number.';
+    @return $number;
+  }
 
-	// $digits must be a unitless number
-	@if type-of($digits) !=number {
-		@warn '#{ $digits } is not a number.';
-		@return $number;
-	}
+  // $digits must be a unitless number
+  @if type-of($digits) !=number {
+    @warn '#{ $digits } is not a number.';
+    @return $number;
+  }
 
-	@else if not unitless($digits) {
-		@warn '#{ $digits } has a unit.';
-		@return $number;
-	}
+  @else if not unitless($digits) {
+    @warn '#{ $digits } has a unit.';
+    @return $number;
+  }
 
-	@for $i from 1 through $digits {
-		$n: $n * 10;
-	}
+  @for $i from 1 through $digits {
+    $n: $n * 10;
+  }
 
-	@if $round =="round" {
-		@return round($number * $n) / $n;
-	}
+  @if $round =="round" {
+    @return round($number * $n) / $n;
+  }
 
-	@else if $round =="ceil" {
-		@return ceil($number * $n) / $n;
-	}
+  @else if $round =="ceil" {
+    @return ceil($number * $n) / $n;
+  }
 
-	@else if $round =="floor" {
-		@return floor($number * $n) / $n;
-	}
+  @else if $round =="floor" {
+    @return floor($number * $n) / $n;
+  }
 
-	@else {
-		@warn '#{ $round } is undefined keyword.';
-		@return $number;
-	}
+  @else {
+    @warn '#{ $round } is undefined keyword.';
+    @return $number;
+  }
 }
 
 //-------------------------------------
@@ -349,91 +347,91 @@ $LN2: 0.6931471805599453;
 $SQRT2: 1.4142135623730951;
 
 @function frexp($x) {
-	$exp: 0;
+  $exp: 0;
 
-	@if $x < 0 {
-		$x: $x * -1;
-	}
+  @if $x < 0 {
+    $x: $x * -1;
+  }
 
-	@if $x < 0.5 {
-		@while $x < 0.5 {
-			$x: $x * 2;
-			$exp: $exp - 1;
-		}
-	}
+  @if $x < 0.5 {
+    @while $x < 0.5 {
+      $x: $x * 2;
+      $exp: $exp - 1;
+    }
+  }
 
-	@else if $x >=1 {
-		@while $x >=1 {
-			$x: $x / 2;
-			$exp: $exp +1;
-		}
-	}
+  @else if $x >=1 {
+    @while $x >=1 {
+      $x: $x / 2;
+      $exp: $exp +1;
+    }
+  }
 
-	@return $x,
-	$exp;
+  @return $x,
+  $exp;
 }
 
 @function ldexp($x, $exp) {
-	$b: if($exp >=0, 2, 1 / 2);
+  $b: if($exp >=0, 2, 1 / 2);
 
-	@if $exp < 0 {
-		$exp: $exp * -1;
-	}
+  @if $exp < 0 {
+    $exp: $exp * -1;
+  }
 
-	@while $exp >0 {
-		@if $exp % 2==1 {
-			$x: $x * $b;
-		}
+  @while $exp >0 {
+    @if $exp % 2==1 {
+      $x: $x * $b;
+    }
 
-		$b: $b * $b;
-		$exp: floor($exp * 0.5);
-	}
+    $b: $b * $b;
+    $exp: floor($exp * 0.5);
+  }
 
-	@return $x;
+  @return $x;
 }
 
 @function log($x, $b: null) {
-	@if $b  !=null {
-		@return log($x) / log($b);
-	}
+  @if $b  !=null {
+    @return log($x) / log($b);
+  }
 
-	@if $x <=0 {
-		@return 0 / 0;
-	}
+  @if $x <=0 {
+    @return 0 / 0;
+  }
 
-	$k: nth(frexp($x / $SQRT2), 2);
-	$x: $x / ldexp(1, $k);
+  $k: nth(frexp($x / $SQRT2), 2);
+  $x: $x / ldexp(1, $k);
 
-	@return $LN2 * $k +_log($x);
+  @return $LN2 * $k +_log($x);
 }
 
 @function _log($x) {
-	$x: ($x - 1) / ($x + 1);
-	$x2: $x * $x;
-	$i: 1;
-	$s: $x;
-	$sp: null;
+  $x: ($x - 1) / ($x + 1);
+  $x2: $x * $x;
+  $i: 1;
+  $s: $x;
+  $sp: null;
 
-	@while $sp  !=$s {
-		$x: $x * $x2;
-		$i: $i +2;
-		$sp: $s;
-		$s: $s +$x / $i;
-	}
+  @while $sp  !=$s {
+    $x: $x * $x2;
+    $i: $i +2;
+    $sp: $s;
+    $s: $s +$x / $i;
+  }
 
-	@return 2 * $s;
+  @return 2 * $s;
 }
 
 @function _exp($x) {
-	$ret: 0;
-	$i: 1;
+  $ret: 0;
+  $i: 1;
 
-	@for $n from 0 to 24 {
-		$ret: $ret +$i;
-		$i: $i * $x / ($n + 1);
-	}
+  @for $n from 0 to 24 {
+    $ret: $ret +$i;
+    $i: $i * $x / ($n + 1);
+  }
 
-	@return $ret;
+  @return $ret;
 }
 
 
@@ -463,178 +461,180 @@ Setting Content - コンテンツ設定
 --------------------------------------------*/
 // エクステンドで使う
 .common_width {
-	width: 90%;
-	max-width: 1200px;
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
-	@include media(tb) {
-		width: 86%;
-	}
+  width: 90%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
 
-	@include media(sp) {
-		width: 86%;
-	}
+  @include media(tb) {
+    width: 86%;
+  }
+
+  @include media(sp) {
+    width: 86%;
+  }
 }
 
 .section__wrap {
-	@extend .common_width;
+  @extend .common_width;
 }
 
 
 .show_pc {
-	display: block;
+  display: block;
 
-	@include media(tb) {
-		display: none;
-	}
+  @include media(tb) {
+    display: none;
+  }
 
-	@include media(sp) {
-		display: none;
-	}
+  @include media(sp) {
+    display: none;
+  }
 }
 
 .show_pctb {
-	display: block;
+  display: block;
 
-	@include media(tb) {
-		display: block;
-	}
+  @include media(tb) {
+    display: block;
+  }
 
-	@include media(sp) {
-		display: none;
-	}
+  @include media(sp) {
+    display: none;
+  }
 }
 
 .show_tbsp {
-	display: none;
+  display: none;
 
-	@include media(tb) {
-		display: block;
-	}
+  @include media(tb) {
+    display: block;
+  }
 
-	@include media(sp) {
-		display: block;
-	}
+  @include media(sp) {
+    display: block;
+  }
 }
 
 .show_tb {
-	display: none;
+  display: none;
 
-	@include media(tb) {
-		display: block;
-	}
+  @include media(tb) {
+    display: block;
+  }
 
-	@include media(sp) {
-		display: none;
-	}
+  @include media(sp) {
+    display: none;
+  }
 }
 
 .show_sp {
-	display: none;
+  display: none;
 
-	@include media(tb) {
-		display: none;
-	}
+  @include media(tb) {
+    display: none;
+  }
 
-	@include media(sp) {
-		display: block;
-	}
+  @include media(sp) {
+    display: block;
+  }
 }
 
 #wrapAll {
-	width: 100%;
-	position: relative;
-	overflow: hidden;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 
-	main {
-		width: 100%;
-	}
+  main {
+    width: 100%;
+  }
 }
 
 * {
-	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-	-webkit-font-feature-settings: "palt" 1; // for Android 4.4
-	font-feature-settings: "palt" 1;
-	box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-font-feature-settings: "palt" 1; // for Android 4.4
+  font-feature-settings: "palt" 1;
+  box-sizing: border-box;
 }
 
 
 ::selection {
-	color: #fff;
-	background: #6A68ED ;
-	text-decoration: underline;
+  color: #fff;
+  background: #6A68ED;
+  text-decoration: underline;
 }
 
 ::-moz-selection {
-	color: #fff;
-	background: #6A68ED ;
+  color: #fff;
+  background: #6A68ED;
 }
 
 
 img {
-	display: block;
-	width: 100%;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
+  display: block;
+  width: 100%;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 span,
 i {
-	font-size: inherit;
-	color: inherit;
-	line-height: inherit;
-	letter-spacing: inherit;
-	font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-weight: inherit;
 }
 
 a {
-	text-decoration: none;
-	display: inline-block;
-	cursor: pointer;
-	color: var(--Title);
-	// &:visited {
-	//   color: var(--Title);
-	//   text-decoration: none;
-	// }
-	// &:hover {
-	//   color: var(--Title);
-	//   text-decoration: none;
-	// }
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--Title);
+  // &:visited {
+  //   color: var(--Title);
+  //   text-decoration: none;
+  // }
+  // &:hover {
+  //   color: var(--Title);
+  //   text-decoration: none;
+  // }
 }
 
 select,
 input,
 textarea,
 button {
-	cursor: pointer;
-	box-sizing: border-box;
-	outline: none;
-	border-radius: 0;
-	appearance: button;
-	border: none;
-	background-color: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 0;
+  appearance: button;
+  border: none;
+  background-color: transparent;
 }
 
 textarea {
-	resize: vertical;
-	overflow: auto;
+  resize: vertical;
+  overflow: auto;
 }
 
 input+label {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 
 #wrapAll {
   background: var(--color_lp_bg);
+
   main {
     position: relative;
     z-index: 1;
@@ -642,6 +642,7 @@ input+label {
 }
 
 .scrollAction {
+
   // position: relative;
   // transform: translateY(150px);
   // opacity: 0;
@@ -654,58 +655,75 @@ input+label {
     opacity: 0;
     transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
       visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
     &::v-deep {
       opacity: 0;
       transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
         visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
     }
+
     &.active {
       opacity: 1;
+
       &::v-deep {
         opacity: 1;
       }
     }
   }
+
   &.textMove {
     // opacity: 0;
     transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
     span {
       transform: translate(0, 105%);
       transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 800ms;
+
       &:nth-child(2) {
         transition-delay: 920ms;
       }
+
       &:nth-child(3) {
         transition-delay: 1040ms;
       }
+
       @include media(sp) {
         transition: transform 400ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms;
+
         &:nth-child(2) {
           transition-delay: 120ms;
         }
+
         &:nth-child(3) {
           transition-delay: 240ms;
         }
       }
     }
+
     &::v-deep {
       transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
       span {
         transform: translate(0, 105%);
         transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 500ms;
+
         &:nth-child(2) {
           transition-delay: 120ms;
         }
+
         &:nth-child(3) {
           transition-delay: 240ms;
         }
       }
     }
+
     &.active {
+
       // opacity: 1;
       span {
         transform: translate(0, 0);
       }
+
       &::v-deep {
         span {
           transform: translate(0, 0);
@@ -713,42 +731,52 @@ input+label {
       }
     }
   }
+
   &.capcha {
     figure {
       opacity: 0;
       transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+
       &:nth-child(2) {
         transition-delay: 800ms;
       }
+
       &:nth-child(3) {
         transition-delay: 1000ms;
       }
+
       @include media(sp) {
         transition: opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
         &:nth-child(2) {
           transition-delay: 200ms;
         }
+
         &:nth-child(3) {
           transition-delay: 400ms;
         }
       }
     }
+
     &.active {
       figure {
         opacity: 1;
       }
     }
   }
+
   &.listMove {
     li {
       opacity: 0;
       transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
       @for $i from 1 through 20 {
         &:nth-child($i) {
           transition-delay: 120ms * $i;
         }
       }
     }
+
     &.active {
       li {
         opacity: 1;
@@ -756,6 +784,7 @@ input+label {
     }
   }
 }
+
 body.is-mounted {
   .dlp {
     &-mv {
@@ -765,10 +794,12 @@ body.is-mounted {
     }
   }
 }
+
 .dlp {
   &-mv {
     height: 100vh;
     position: relative;
+
     &__canvas {
       position: absolute;
       z-index: 1;
@@ -777,6 +808,7 @@ body.is-mounted {
       top: 0;
       left: 0;
     }
+
     &__title {
       position: absolute;
       z-index: 10;
@@ -787,59 +819,74 @@ body.is-mounted {
       left: 50%;
       transform-origin: center center;
       transform: translate(-50%, -50%);
+
       @include media(sp) {
         width: 80%;
       }
     }
+
     &__icon {
       width: rem(6);
       margin-left: auto;
       margin-right: auto;
       margin-bottom: rem(1);
+
       @include media(sp) {
         width: rem_sp(4);
         margin-bottom: rem_sp(1);
       }
     }
+
     &__h1 {
       text-align: center;
       margin-bottom: rem(3);
+
       @include media(sp) {
         margin-bottom: rem_sp(2);
       }
+
       &__title {
         @include font(rem(4.6), 500, 0.02em, 1.2, $ff);
         display: block;
+
         @include media(sp) {
           font-size: rem_sp(4);
         }
       }
+
       &__subtitle {
         @include font(rem(1.8), 500, $ls, 1, $ff);
         display: block;
+
         @include media(sp) {
           @include font(rem_sp(1.8), 500, 0.02em, 1.2, $ff);
         }
       }
     }
+
     &__lead {
       margin-bottom: rem(2);
       text-align: center;
       white-space: nowrap;
       @include font(rem(1), $fw, $ls, $lh, $ff);
+
       @include media(sp) {
         font-size: rem_sp(1);
         white-space: normal;
+
         br {
           display: none;
         }
       }
     }
+
     &__button {
       @include flex(center, center);
       flex-wrap: nowrap;
+
       @include media(sp) {
         flex-direction: column;
+
         &::v-deep {
           .lpButton.m {
             width: 100%;
@@ -848,33 +895,42 @@ body.is-mounted {
       }
     }
   }
+
   &-hello {
     position: relative;
     @include rem_padding(8, 0, 8, 0);
+
     @include media(sp) {
       padding-top: rem_sp(2);
       padding-bottom: rem_sp(8);
     }
+
     &__wrap {
       @include flex(flex-start, center);
+
       @include media(sp) {
         display: block;
       }
     }
+
     &__textwrap {
       width: 65%;
+
       @include media(sp) {
         width: 100%;
       }
     }
+
     &__h2 {
       position: relative;
       z-index: 10;
       margin-bottom: rem(2);
+
       @include media(sp) {
         text-align: center;
         margin-bottom: rem_sp(2);
       }
+
       * {
         background: $gradation-light;
         -webkit-background-clip: text;
@@ -885,70 +941,88 @@ body.is-mounted {
       &__title {
         @include font(rem(8), 700, 0em, 1.2, $ff);
         display: block;
+
         @include media(tb) {
           font-size: rem_tb(6);
         }
+
         @include media(sp) {
           font-size: rem_sp(6);
           text-align: center;
         }
       }
+
       &__subtitle {
         display: block;
+
         @include media(sp) {
           text-align: center;
           margin-bottom: rem_sp(0.5);
         }
+
         span {
           @include font(rem(6), 700, 0em, 1.2, $ff);
           display: inline-block;
           vertical-align: middle;
+
           @include media(tb) {
             font-size: rem_tb(5);
           }
+
           @include media(sp) {
             font-size: rem_sp(4.5);
           }
         }
+
         img {
           display: inline-block;
           vertical-align: middle;
           width: rem(6);
           margin-left: 10px;
+
           @include media(tb) {
             width: rem_tb(5);
             margin-left: 4px;
           }
+
           @include media(sp) {
             width: rem_sp(3.5);
           }
         }
       }
+
       &__text {
         @include font(rem(4), 700, 0em, 1.5, $ff);
         display: block;
+
         @include media(tb) {
           font-size: rem_tb(3);
         }
+
         @include media(sp) {
           @include font(rem_sp(2), 700, 0em, 1.2, $ff);
         }
       }
     }
+
     &__lead {
       position: relative;
       z-index: 10;
       @include font(rem(pow(1)), $fw, $ls, 1.75, $ff);
+
       @include media(sp) {
         font-size: rem_sp(pow(0));
+
         span br {
           display: none !important;
         }
       }
     }
+
     &__imagewrap {
       width: 35%;
       position: relative;
+
       @include media(sp) {
         width: 90%;
         margin-left: auto;
@@ -956,6 +1030,7 @@ body.is-mounted {
         margin-top: rem_sp(4);
       }
     }
+
     &__image {
       width: 75%;
       box-shadow: var(--color_shadow);
@@ -963,11 +1038,13 @@ body.is-mounted {
       margin-left: -20%;
       border-radius: 8px;
       overflow: hidden;
+
       @include media(sp) {
         margin-left: auto;
         margin-right: 0;
         margin-top: 0;
       }
+
       &.r {
         margin-top: 10%;
         margin-left: -20%;
@@ -979,6 +1056,7 @@ body.is-mounted {
         transform: translate(-50%, -50%);
         margin-top: -10%;
         margin-left: 20%;
+
         @include media(sp) {
           margin-left: -10%;
           margin-top: 10%;
@@ -986,13 +1064,16 @@ body.is-mounted {
       }
     }
   }
+
   &-token {
     @include rem_padding(6, 0, 6, 0);
     position: relative;
+
     @include media(sp) {
       padding-top: rem_sp(2);
       padding-bottom: rem_sp(2);
     }
+
     &__iconlist {
       @include flex(center, flex-start);
       @include list(6, rem(2));
@@ -1000,6 +1081,7 @@ body.is-mounted {
       margin-left: auto;
       margin-right: auto;
       max-width: 800px;
+
       @include media(sp) {
         @include list(3, rem_sp(2));
         margin-bottom: rem_sp(2);
@@ -1007,12 +1089,14 @@ body.is-mounted {
         margin-left: auto;
         margin-right: auto;
       }
+
       li {
         @include media(sp) {
           margin-bottom: rem_sp(1);
         }
       }
     }
+
     &__subbox {
       margin-bottom: rem(6);
       max-width: rem(50);
@@ -1020,32 +1104,39 @@ body.is-mounted {
       margin-right: auto;
       border-top: rem(0.3) solid var(--color_darken);
       padding-top: rem(3);
+
       @include media(sp) {
         margin-bottom: rem_sp(2);
         padding-top: rem_sp(3);
       }
+
       &__title {
         text-align: center;
         @include font(rem(2), 700, 0em, 1.5, $ff);
         display: block;
         margin-bottom: rem(1);
+
         @include media(sp) {
           font-size: rem_sp(1.5);
           margin-bottom: rem_sp(1);
         }
       }
+
       &__text {
         @include font(rem(1), $fw, $ls, $lh, $ff);
         margin-bottom: rem(1);
+
         @include media(sp) {
           font-size: rem_sp(1);
           margin-bottom: rem_sp(1);
         }
       }
+
       &__link {
         @include flex(center, center);
       }
     }
+
     &__card {
       @include flex(flex-start, stretch);
       @include list(3, rem(0.5));
@@ -1053,11 +1144,13 @@ body.is-mounted {
       @include media(tb) {
         @include list(1, rem_tb(0.5));
       }
-      & > li {
+
+      &>li {
         @include media(tb) {
           margin-bottom: rem_tb(2);
         }
       }
+
       &__list {
         height: 100%;
         background-color: var(--color_lp_box);
@@ -1065,10 +1158,12 @@ body.is-mounted {
         border-radius: rem(1);
         display: flex;
         flex-direction: column;
+
         @include media(tb) {
           display: block;
         }
       }
+
       &__title {
         flex: 1;
         height: 100%;
@@ -1080,6 +1175,7 @@ body.is-mounted {
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: rem(1);
+
         @include media(tb) {
           font-size: rem_sp(1.5);
           flex: auto;
@@ -1087,6 +1183,7 @@ body.is-mounted {
           min-height: initial;
         }
       }
+
       &__iconlist {
         flex: 2;
         height: 100%;
@@ -1097,31 +1194,37 @@ body.is-mounted {
         margin-left: auto;
         margin-right: auto;
         margin-bottom: rem(1);
+
         @include media(tb) {
           flex: auto;
           height: auto;
           min-height: initial;
           @include list(6, rem_tb(2));
         }
+
         @include media(sp) {
           @include list(3, rem_sp(2));
           width: 90%;
           margin-left: auto;
           margin-right: auto;
         }
+
         li {
           margin-bottom: rem(1);
+
           @include media(tb) {
             max-width: 200px;
           }
         }
       }
+
       &__text {
         flex: 1;
         height: 100%;
         min-height: 0%;
         overflow-wrap: break-word;
         @include font(rem(0.9), $fw, $ls, $lh, $ff);
+
         @include media(tb) {
           font-size: rem_sp(1);
           flex: auto;
@@ -1131,12 +1234,15 @@ body.is-mounted {
       }
     }
   }
+
   &-install {
     @include rem_padding(6, 0, 6, 0);
+
     @include media(sp) {
       padding-top: rem_sp(2);
       padding-bottom: rem_sp(0);
     }
+
     &__feature {
       li {
         &:nth-child(3) {
@@ -1149,47 +1255,57 @@ body.is-mounted {
       }
     }
   }
+
   &-fee {
     @include rem_padding(6, 0, 6, 0);
+
     @include media(sp) {
       padding-top: rem_sp(0);
       padding-bottom: rem_sp(0);
     }
   }
+
   &-trial {
     @include rem_padding(6, 0, 6, 0);
+
     @include media(sp) {
       padding-top: rem_sp(0);
       padding-bottom: rem_sp(0);
     }
+
     &__feature {
       @include media(sp) {
         width: 86%;
         margin-left: auto;
         margin-right: auto;
       }
+
       .scrollAction {
         &.active {
           [class$="__textwrap"] {
-            transition: transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)
-                300ms,
+            transition: transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 300ms,
               opacity 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 300ms;
             opacity: 1;
             transform: perspective(500px) rotateY(12deg);
+
             @include media(sp) {
               transform: perspective(500px) rotateY(0deg);
             }
+
             * {
               opacity: 1;
             }
           }
+
           [class$="__imagewrap"] {
             transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
             opacity: 1;
           }
+
           &:nth-child(2n) {
             [class$="__textwrap"] {
               transform: perspective(500px) rotateY(-12deg);
+
               @include media(sp) {
                 transform: perspective(500px) rotateY(0deg);
               }
@@ -1197,25 +1313,31 @@ body.is-mounted {
           }
         }
       }
-      & > li {
+
+      &>li {
         position: relative;
         padding: rem(6) 0;
-        & + li {
+
+        &+li {
           margin-top: rem(4);
+
           @include media(sp) {
             margin-top: rem_sp(2);
           }
         }
+
         &:nth-child(2n) {
           [class$="list"] {
             flex-direction: row;
           }
+
           [class$="__trapezoid"] {
             transform-origin: center center;
             transform: translate3d(0%, 0%, 0) rotate(180deg) scale(1, 1);
             left: auto;
             right: 0;
           }
+
           [class$="__textwrap"] {
             transform: perspective(500px) rotateY(-30deg);
           }
@@ -1225,6 +1347,7 @@ body.is-mounted {
           padding: rem(0) 0;
         }
       }
+
       &__list {
         position: relative;
         @include flex(flex-start, center);
@@ -1233,6 +1356,7 @@ body.is-mounted {
         @extend .section__wrap;
         z-index: 10;
         transform-style: preserve-3d;
+
         @include media(sp) {
           display: block;
         }
@@ -1245,23 +1369,28 @@ body.is-mounted {
         opacity: 0;
         will-change: opacity;
         transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 600ms;
+
         @include media(sp) {
           width: 100%;
           flex: auto;
         }
+
         &::v-deep {
           img {
             box-shadow: 0px 0px 20px 6px rgba(#000, 0.1);
           }
         }
       }
+
       &__logo {
         width: 70%;
         margin: rem(2) auto rem(1);
+
         @include media(sp) {
           width: 75%;
           margin: rem_sp(1) auto;
         }
+
         &::v-deep {
           svg {
             fill: var(--color_font);
@@ -1269,6 +1398,7 @@ body.is-mounted {
           }
         }
       }
+
       &__textwrap {
         flex: 1;
         padding: rem(4);
@@ -1279,13 +1409,16 @@ body.is-mounted {
         will-change: opacity, transform;
         transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 0ms,
           opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+
         @include media(sp) {
           padding: rem_sp(2);
         }
+
         * {
           opacity: 0;
           transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 800ms;
         }
+
         &::before {
           content: "";
           display: block;
@@ -1294,35 +1427,40 @@ body.is-mounted {
           position: absolute;
           top: 0;
           left: 50%;
-          background: linear-gradient(
-            90.25deg,
-            rgba(#3eb9fc, 1) 5.43%,
-            rgba(#6a68ed, 0.7) 59.32%,
-            rgba(#8b2ae1, 0.4) 98.19%
-          );
+          background: linear-gradient(90.25deg,
+              rgba(#3eb9fc, 1) 5.43%,
+              rgba(#6a68ed, 0.7) 59.32%,
+              rgba(#8b2ae1, 0.4) 98.19%);
           transform-origin: center center;
           transform: translate(-50%, 0%);
+
           @include media(sp) {
             width: 100%;
           }
         }
+
         * {
           position: relative;
           z-index: 10;
         }
+
         &::v-deep {
           text-align: center;
+
           .title {
             @include font(rem(pow(2)), 700, $ls, $lh, $en_go);
             color: #fff;
+
             @include media(sp) {
               font-size: rem_sp(pow(1));
               margin-bottom: rem_sp(0.5);
             }
           }
+
           .text {
             @include font(rem(pow(0)), $fw, $ls, $lh, $en_go);
             color: #fff;
+
             @include media(sp) {
               font-size: rem_sp(pow(0));
             }
@@ -1330,12 +1468,15 @@ body.is-mounted {
 
           .link {
             margin-top: rem(2);
+
             @include media(sp) {
               margin-top: rem_sp(2);
+
               * {
                 margin: 0;
               }
             }
+
             .lpButton.m .icon {
               width: rem(4);
             }
@@ -1344,17 +1485,26 @@ body.is-mounted {
       }
     }
   }
+
   &-network {
     position: relative;
-    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
-      background-size: cover;
+    background: url(/assets/images/lp/network.jpg) no-repeat center center;
+    background-size: cover;
+
     .section__wrap {
       position: relative;
       z-index: 10;
       @include rem_padding(6, 0, 6, 0);
+
       @include media(sp) {
         padding-top: rem_sp(4);
         padding-bottom: rem_sp(4);
+      }
+    }
+
+    &__title {
+      &.light {
+        color: #fff;
       }
     }
 
@@ -1366,12 +1516,14 @@ body.is-mounted {
       top: 0;
       left: 0;
       z-index: 1;
+
       &::v-deep {
         div {
           position: relative;
           width: 100%;
           height: 100%;
           overflow: hidden;
+
           canvas {
             position: absolute;
             top: 50%;
@@ -1389,41 +1541,49 @@ body.is-mounted {
       white-space: nowrap;
       @include flex(flex-start, center);
       @include list(4, rem(3));
+
       @include media(sp) {
         @include list(2, rem_sp(1));
       }
 
       li {
         margin-bottom: rem(2);
+
         @include media(sp) {
           margin-bottom: rem_sp(1);
         }
       }
     }
   }
+
   &-roadmap {
     @include rem_padding(6, 0, 6, 0);
+
     @include media(sp) {
       padding-top: rem_sp(3);
       padding-bottom: rem_sp(3);
     }
+
     &__phase {
       &__box {
         @include flex(flex-start, stretch);
         margin-bottom: rem(4);
         background-color: var(--color_darken);
         overflow: hidden;
+
         @include media(sp) {
           display: block;
           margin-bottom: rem_sp(2);
         }
       }
+
       &__title {
         flex: 1;
         @include font(rem(pow(3)), 700, $ls, $lh, $en_go);
         background: $gradation-light;
         color: #fff;
         @include flex(center, center);
+
         @include media(sp) {
           font-size: rem_sp(1.5);
           padding: rem_sp(1);
@@ -1434,13 +1594,16 @@ body.is-mounted {
         flex: 3;
         @include flex(center, stretch);
         @include list(2, 0);
+
         @include media(sp) {
           width: 100%;
           @include list(1, rem_sp(2));
         }
-        & > li {
+
+        &>li {
           padding: rem(2);
           position: relative;
+
           @include media(sp) {
             padding: rem_sp(2);
           }
@@ -1463,6 +1626,7 @@ body.is-mounted {
               transform: translate(-50%, 0%);
             }
           }
+
           &:nth-child(2n) {
             &::before {
               content: "";
@@ -1477,6 +1641,7 @@ body.is-mounted {
               transform: translate(0%, -50%);
             }
           }
+
           &:nth-child(n + 2) {
             @include media(sp) {
               &::after {
@@ -1495,10 +1660,12 @@ body.is-mounted {
           }
         }
       }
+
       &__listwrap {
         @include flex(center, center);
         flex-direction: column;
       }
+
       &__subtitle {
         @include font(rem(pow(1)), 700, $ls, 1, $en_go);
         text-align: center;
@@ -1512,11 +1679,13 @@ body.is-mounted {
           margin-bottom: rem_sp(1);
         }
       }
+
       &__sublist {
         width: 92%;
         text-align: left;
         li {
           @include font(rem(pow(0)), 400, $ls, 2, $en_go);
+
           span {
             display: inline-block;
             padding-left: rem(2);
@@ -1525,11 +1694,13 @@ body.is-mounted {
             font-size: 13px;
             &.active{
               opacity: 1;
+
               &:before {
                 content: "";
                 background: $gradation-light;
               }
             }
+
             &:before {
               content: "";
               width: rem(1);
@@ -1548,19 +1719,24 @@ body.is-mounted {
       }
     }
   }
+
   &-welcome {
     @include rem_padding(6, 0, 6, 0);
     background-color: var(--color_bg_parts);
+
     @include media(sp) {
       padding-top: rem_sp(3);
       padding-bottom: rem_sp(3);
     }
+
     &__list {
       @include flex(center, flex-start);
+
       li {
         @include media(sp) {
           width: 100%;
         }
+
         &::v-deep {
           .lpButton.s {
             @include media(sp) {
@@ -1576,22 +1752,27 @@ body.is-mounted {
   &-cv {
     @include rem_padding(4, 0, 5, 0);
     position: relative;
-    background: url(/assets/images/lp/last_back_m.jpg) no-repeat center center;
-      background-size: cover;
+    background: url(/assets/images/lp/cv.jpg) no-repeat center center;
+    background-size: cover;
+
     @include media(sp) {
       padding-top: rem_sp(6);
       padding-bottom: rem_sp(6);
     }
+
     .section__wrap {
       position: relative;
       z-index: 10;
     }
+
     &__wrap {
       @include flex(flex-start, stretch);
+
       @include media(sp) {
         flex-direction: column;
       }
     }
+
     &__canvas {
       position: absolute;
       z-index: 1;
@@ -1600,12 +1781,14 @@ body.is-mounted {
       top: 0;
       left: 0;
       z-index: 1;
+
       &::v-deep {
         div {
           position: relative;
           width: 100%;
           height: 100%;
           overflow: hidden;
+
           canvas {
             position: absolute;
             top: 50%;
@@ -1618,6 +1801,13 @@ body.is-mounted {
         }
       }
     }
+
+    &__title {
+      &.light {
+        color: #fff;
+      }
+    }
+
     &__textwrap {
       background: var(--color_lp_box);
       border-radius: 10px;
@@ -1628,29 +1818,35 @@ body.is-mounted {
       // margin: rem(2) auto;
       margin: auto rem(2);
       flex: 1;
+
       @include media(sp) {
         margin: 0;
         margin-bottom: rem_sp(2);
       }
+
       .lpButton.m {
         margin: 0;
-        @include media(sp) {
-        }
+
+        @include media(sp) {}
       }
     }
+
     &__logo {
       display: flex;
       align-items: center;
       justify-content: center;
       @include flex(center, center);
       margin-bottom: rem(1);
+
       @include media(sp) {
         margin-bottom: rem_sp(0);
       }
+
       img {
         width: rem(3);
         margin-right: rem(1);
       }
+
       h4 {
         @include font(rem(pow(4)), 600, $ls, $lh, $en_go);
         background: $gradation-light;
@@ -1662,15 +1858,18 @@ body.is-mounted {
     &__list {
       flex: 1;
       margin: auto rem(2);
+
       &::v-deep {
         .lpButton.m {
           margin: 0;
-          @include media(sp) {
-          }
+
+          @include media(sp) {}
         }
       }
+
       @include media(sp) {
         margin: 0;
+
         &::v-deep {
           .lpButton.main {
             margin: 0;
