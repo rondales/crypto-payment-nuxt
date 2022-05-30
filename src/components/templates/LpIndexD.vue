@@ -1175,7 +1175,6 @@ export default {
           thisComponent.getBoundingClientRect().top +
           thisComponent.clientHeight;
         if (thisComponentTop < this.winH && thisComponentBottom > 0) {
-          console.log(index);
           thisComponent.classList.add("active");
         } else {
           thisComponent.classList.remove("active");
