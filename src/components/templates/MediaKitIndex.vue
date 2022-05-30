@@ -63,8 +63,12 @@
               </h4>
               <div class="usecase-bg">
                 <figure>
-                  <img src="@/assets/images/lp/standard-button-w.svg" alt="">
-                  <img src="@/assets/images/lp/standard-button-b.svg" alt="">
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/standard-button-w.png" alt="">
+                  </div>
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/standard-button-b.png" alt="">
+                  </div>
                 </figure>
               </div>
             </div>
@@ -199,9 +203,6 @@
             </div>
           </div>
         </div>
-        <a class="terms" href="">
-          TERMS OF SERVICE
-        </a>
       </section>
     </article>
     <LpFooter />
@@ -425,8 +426,26 @@ export default {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            @include media(tb) {
+            .usecase-img{
+              position: relative;
               img{
+                max-width: 275px;
+              }
+              &::before{
+                position: absolute;
+                content: "";
+                background: url(/assets/images/lp/slash-logo-s.svg) no-repeat center center;
+                width: 124px;
+                height: 40px;
+                top: 50%;
+                right: 8%;
+                transform: translate(0, -50%);
+                z-index: 0;
+              }
+            }
+            @include media(tb) {
+              justify-content: center;
+              .usecase-img{
                 &:nth-child(1){
                   margin-bottom: 16px;
                 }
@@ -468,6 +487,11 @@ export default {
               }
             }
             &:nth-child(1){
+              img{
+                width: 55%;
+              }
+            }
+            &:nth-child(2){
               img{
                 width: 55%;
               }
@@ -598,8 +622,9 @@ export default {
           }
           &:nth-child(2){
             img{
+              width: 45%;
               @include media(tb) {
-                width: 54%;
+                width: 50%;
               }
             }
           }
@@ -621,6 +646,9 @@ export default {
           }
           .download-item-right{
             width: 46%;
+            a{
+              color: #fff;
+            }
             @include media(tb) {
               width: 100%;
             }

@@ -814,21 +814,54 @@ export default {
               title: "Phase 1",
               list: [
                 {
-                  title: "Basic Features",
+                  title: "Payment Support",
                   list: [
-                    { text: "Web3Payment BSC", active: true },
-                    { text: "Web3Payment ETH", active: true },
-                    { text: "Web3Payment Polygon", active: true },
-                    { text: "Merchant App", active: true },
+                    { text: "Ethereum (ETH)", active: true },
+                    { text: "BNB Chain (BNB)", active: true },
+                    { text: "Polygon (Matic)", active: true },
+                    { text: "Avalanche C-Chain (AVAX)", active: true },
+                    { text: "Fantom (FTM)", active: false },
+                    { text: "Arbitrum One (ETH)", active: false },
+                    { text: "Solana (SOL)", active: false },
                   ],
                 },
                 {
-                  title: "Open Source Plugins Ver.1",
+                  title: "DEX Router Support",
+                  list: [
+                    { text: "Uniswap V2 specification Router", active: true },
+                    { text: "Curve.fi Router", active: false },
+                    { text: "Uniswap V3 Router", active: false },
+                  ],
+                },
+                {
+                  title: "Open Source Plugins",
                   list: [
                     { text: "Woocommerce", active: true },
                     { text: "Wellcart", active: true },
                     { text: "EC CUBE", active: true },
+                    { text: "Magento", active: false },
+                    { text: "OpenCart", active: false },
+                    { text: "Drupal", active: false },
+                    { text: "ZenCart", active: false },
                   ],
+                },
+                {
+                  title: "Requests to EC Platforms",
+                  list: [
+                    { text: "Shopify", active: false },
+                    { text: "Wix", active: false },
+                    { text: "BASE", active: false },
+                    { text: "STORES", active: false },
+                  ],
+                },
+                {
+                  title: "Our DApps／Apps",
+                  list: [
+                    { text: "Store Merchant App (iOS／Android)", active: false },
+                    { text: "Article Publishing Platforms (Web DApps)", active: false },
+                  ],
+                },
+                {
                 },
               ],
             },
@@ -838,39 +871,21 @@ export default {
                 {
                   title: "Slash TOKEN",
                   list: [
-                    { text: "TOKEN SALE", active: false },
-                    { text: "Staking pool", active: false },
-                    { text: "Referral feature", active: false },
+                    { text: "Token Issuance", active: false },
+                    { text: "Launchpad", active: false },
+                    { text: "DEX Listing", active: false },
                     { text: "Coin Market Cap Listing", active: false },
                     { text: "CoinGecko Listing", active: false },
                     { text: "CEX Listing", active: false },
                   ],
                 },
                 {
-                  title: "Additional Features",
+                  title: "Our DApps／Apps",
                   list: [
-                    { text: "Online tipping feature", active: false },
-                    { text: "Single EC feature", active: false },
-                    { text: "Store Payment feature", active: false },
-                    { text: "Escrow feature", active: false },
+                    { text: "Staking pool (DApps)", active: false },
+                    { text: "Discount Buy Staking Pool (DApps)", active: false },
+                    { text: "Referral feature (DApps)", active: false },
                   ],
-                },
-                {
-                  title: "OpenSource Plugins Ver.2",
-                  list: [
-                    { text: "OpenCart", active: false },
-                    { text: "Zencart", active: false },
-                    { text: "Drupal-Commerce", active: false },
-                    { text: "Magento", active: false },
-                    { text: "Magento2", active: false },
-                    { text: "WHMCS", active: false },
-                    { text: "Drupal 8 Ubercart", active: false },
-                    { text: "Easy Digital Downloads", active: false },
-                  ],
-                },
-                {
-                  title: "Integration Requirements",
-                  list: [{ text: "Shopify", active: false }, { text: "Wix", active: false }],
                 },
               ],
             },
