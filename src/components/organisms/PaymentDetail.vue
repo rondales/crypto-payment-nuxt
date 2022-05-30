@@ -270,6 +270,7 @@ export default {
       }
     },
     tradeRoute() {
+      if (!this.isDifferentToken) return this.paymentRequestSymbol;
       const chainId = this.$store.state.web3.chainId
       const nativeTokenSymbols = [
         'ETH', 'BNB', 'MATIC', 'AVAX',
