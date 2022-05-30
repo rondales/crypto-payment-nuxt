@@ -43,6 +43,7 @@ export default {
           getTokenContract: getTokenContract,
           getBalance: getBalance,
           searchToken: searchToken,
+          isBlacklistedFromPayToken: isBlacklistedFromPayToken,
           importToken: importToken,
           switchChain: switchChain,
           addToken: addToken,
@@ -186,6 +187,11 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     console.log(e)
     throw new Error('Invalid token address')
   }
+}
+
+const isBlacklistedFromPayToken = function(web3, contract, tokenContractAddress) {
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  return merchantContract.methods.isBlacklistedFromPayToken(tokenContractAddress).call()
 }
 
 const importToken = async function(web3, contractAddress, walletAddress) {
