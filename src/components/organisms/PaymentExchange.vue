@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="payment_balance-price">
-            {{ paymentAmount | balanceFormat }}
+            {{ paymentAmount }}
           </div>
         </div>
         <div v-if="isExchangeLoaded && isBalanceEnough">
