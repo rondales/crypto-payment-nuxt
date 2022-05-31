@@ -485,7 +485,7 @@ export default {
           this.contractSettings.contracts[chainId].address = merchantContractAddess
           this.contractSettings.contracts[chainId].processing = false
         }).catch((error) => {
-          if (error.response.status !== BAD_REQUEST) {
+          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
             this.apiConnectionErrorHandler(error.response.status, error.response.data)
           }
           if (error.response.data.errors.shift() === 3530) {
