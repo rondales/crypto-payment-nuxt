@@ -478,6 +478,9 @@ export default {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            @media only screen and (max-width: 460px) {
+              justify-content: center;
+            }
             .usecase-img{
               position: relative;
               img{
