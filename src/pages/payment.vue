@@ -14,7 +14,7 @@
 import NumberFormat from 'number-format.js'
 import PaymentIndex from '@/components/templates/PaymentIndex'
 import VuexRestore from '@/components/mixins/VuexRestore'
-import { HTTP_CODES, STATUS_PUBLISHED } from '@/constants'
+import { HTTP_CODES, STATUS_PUBLISHED, MERCHANT_DOMAIN_VERIFIED } from '@/constants'
 import AvailableNetworks from '@/network'
 
 export default {
@@ -46,8 +46,20 @@ export default {
     paymentId() {
       return this.paymentData.id
     },
+    merchantWalletAddress() {
+      return this.paymentData.merchantWalletAddress
+    },
+    isVerifiedDomain() {
+      return this.paymentData.isVerifiedDomain == MERCHANT_DOMAIN_VERIFIED
+    },
     receiver() {
-      return this.paymentData.domain
+      if (!this.isVerifiedDomain) {
+        const omittedMerchantWalletAddress = this.merchantWalletAddress.slice(0, 6) 
+          + "…" + this.merchantWalletAddress.slice(-6)
+        return omittedMerchantWalletAddress
+      }
+      return this.paymentData.domain 
+        + `<img class="domain-verified-check" src="${require('@/assets/images/check.svg')}" alt="verified">`
     },
     invoiceId() {
       return this.paymentData.orderCode
@@ -75,6 +87,15 @@ export default {
     },
   },
   methods: {
+    showWarningModal(message) {
+      this.$store.dispatch('modal/show', {
+        target: 'warning-modal',
+        size: 'small',
+        params: {
+          message: message
+        }
+      })
+    },
     apiGetReceivedData() {
       const url = `${this.baseUrl}/api/v1/payment`
       const params = new URLSearchParams([['payment_token', this.paymentToken]])
@@ -118,6 +139,8 @@ export default {
           receiveData.domain,
           receiveData.order_code,
           receiveData.allow_currencies,
+          receiveData.is_verified_domain,
+          receiveData.merchant_wallet_address,
           transactionData.base_symbol,
           transactionData.base_amount
         )
@@ -146,6 +169,9 @@ export default {
           paymentToken,
           receiveData.domain,
           receiveData.order_code,
+          receiveData.allow_currencies,
+          receiveData.is_verified_domain,
+          receiveData.merchant_wallet_address,
           transactionData.base_symbol,
           transactionData.base_amount
         )
@@ -169,6 +195,8 @@ export default {
       merchantDomain,
       merchantOrderCode,
       merchantAllowCurrencies,
+      merchantIsVerifiedDomain,
+      merchantWalletAddress,
       merchantReceiveSymbol,
       merchantReceiveAmount
     ) {
@@ -177,6 +205,8 @@ export default {
         domain: merchantDomain,
         orderCode: merchantOrderCode,
         symbol: merchantReceiveSymbol,
+        isVerifiedDomain: merchantIsVerifiedDomain,
+        merchantWalletAddress: merchantWalletAddress,
         amount: NumberFormat('0.00', merchantReceiveAmount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', merchantAllowCurrencies)
@@ -226,11 +256,17 @@ export default {
         this.redirectToEntrancePage(this.currentRouteName, this.paymentToken)
       }
     })
+    if (!this.isVerifiedDomain) {
+      this.showWarningModal('We cannot guarantee the reliability of this payee!')
+    }
   }
 }
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/style.scss';
-
+  @import '@/assets/scss/style.scss';
+  .domain-verified-check {
+    height: 12px;
+    margin-left: 5px;
+  }
 </style>

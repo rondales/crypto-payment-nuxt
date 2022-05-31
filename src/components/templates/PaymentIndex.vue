@@ -38,7 +38,7 @@
       <div class="add-flex j-between">
         <div>
           <p class="payment_Receiver mb-1">
-            Payee：{{ receiver }}
+            Payee： <span v-html="receiver"></span>
           </p>
           <p class="payment_invoice-id">
             Invoice ID：{{ invoiceId }}

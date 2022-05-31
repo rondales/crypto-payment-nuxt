@@ -4,6 +4,8 @@ const store = {
     id: null,
     headerInvoice: false,
     domain: null,
+    isVerifiedDomain: null,
+    merchantWalletAddress: null,
     orderCode: null,
     amount: null,
     amountWei: null,
@@ -68,6 +70,8 @@ const store = {
       state.id = null
       state.headerInvoice = false
       state.domain = null
+      state.isVerifiedDomain = null
+      state.merchantWalletAddress = null
       state.orderCode = null
       state.amount = null
       state.amountWei = null
