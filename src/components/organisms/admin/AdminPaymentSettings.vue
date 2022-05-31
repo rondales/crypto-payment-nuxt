@@ -485,7 +485,14 @@ export default {
           this.contractSettings.contracts[chainId].address = merchantContractAddess
           this.contractSettings.contracts[chainId].processing = false
         }).catch((error) => {
-          this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
+          if (error.response.data.errors.shift() === 3530) {
+            this.contractSettings.contracts[chainId].address = merchantContractAddess
+          } else {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
           this.contractSettings.contracts[chainId].processing = false
         })
       }).catch(() => {
