@@ -490,6 +490,8 @@ export default {
           }
           if (error.response.data.errors.shift() === 3530) {
             this.contractSettings.contracts[chainId].address = merchantContractAddess
+          } else {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
           }
           this.contractSettings.contracts[chainId].processing = false
         })
