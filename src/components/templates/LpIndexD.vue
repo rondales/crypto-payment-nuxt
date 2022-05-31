@@ -1126,14 +1126,18 @@ export default {
       };
     }
   },
+
   created() {
     // window.addEventListener("scroll", this.scrollAction);
     window.addEventListener("scroll", this.onScroll);
     window.addEventListener("resize", this.onResize);
-    window.addEventListener("load", () => {
-      this.onScroll();
-      this.onResize();
-    });
+    window.addEventListener("load", this.onLoad);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("load", this.onLoad);
   },
 
   methods: {
@@ -1184,6 +1188,10 @@ export default {
     onResize() {
       this.height = document.documentElement.clientHeight;
     },
+    onLoad() {
+      this.onScroll();
+      this.onResize();
+    }
   },
 };
 </script>
