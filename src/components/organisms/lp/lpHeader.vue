@@ -5,9 +5,9 @@
   >
     <div class="lp-header__wrap">
       <div class="lp-header__inner">
-        <div class="lp-header__logo">
-          <img src="@/assets/images/lp/lp-logo.svg" alt="Web3 Payment" />
-        </div>
+        <a href="/" class="lp-header__logo">
+          <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
+        </a >
         <div class="lp-header__navwrap">
           <div
             class="lp-header__hamburger tb"
