@@ -492,7 +492,7 @@ export default {
                 content: "";
                 background: url(/assets/images/lp/slash-logo-s.svg) no-repeat center center;
                 width: 124px;
-                height: 40px;
+                height: 100%;
                 top: 50%;
                 right: 6%;
                 transform: translate(0, -50%);
