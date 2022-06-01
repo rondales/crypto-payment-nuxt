@@ -458,6 +458,8 @@ export default {
       width: 100%;
       font-weight: 100;
       font-size: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .via{
