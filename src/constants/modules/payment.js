@@ -5,6 +5,3 @@ export const STATUS_PUBLISHED = 1
 export const STATUS_PROCESSING = 2
 export const STATUS_RESULT_FAILURE = 3
 export const STATUS_RESULT_SUCCESS = 4
-
-export const MERCHANT_DOMAIN_NOT_VERIFIED = 0
-export const MERCHANT_DOMAIN_VERIFIED = 1

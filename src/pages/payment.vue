@@ -3,6 +3,7 @@
     :colorTheme="colorTheme"
     :showFooterMenu="showFooterMenu"
     :receiver="receiver"
+    :isVerifiedDomain="isVerifiedDomain"
     :invoiceId="invoiceId"
     :base64VuexData="base64VuexData"
     @openModal="openModal"
@@ -14,7 +15,7 @@
 import NumberFormat from 'number-format.js'
 import PaymentIndex from '@/components/templates/PaymentIndex'
 import VuexRestore from '@/components/mixins/VuexRestore'
-import { HTTP_CODES, STATUS_PUBLISHED, MERCHANT_DOMAIN_VERIFIED } from '@/constants'
+import { HTTP_CODES, STATUS_PUBLISHED } from '@/constants'
 import AvailableNetworks from '@/network'
 
 export default {
@@ -50,16 +51,15 @@ export default {
       return this.paymentData.merchantWalletAddress
     },
     isVerifiedDomain() {
-      return this.paymentData.isVerifiedDomain == MERCHANT_DOMAIN_VERIFIED
+      return this.paymentData.isVerifiedDomain
     },
     receiver() {
-      if (!this.isVerifiedDomain) {
-        const omittedMerchantWalletAddress = this.merchantWalletAddress.slice(0, 6) 
-          + "…" + this.merchantWalletAddress.slice(-6)
+      if (!this.isVerifiedDomain && this.merchantWalletAddress) {
+        const omittedMerchantWalletAddress = this.merchantWalletAddress.substr(0, 6) 
+          + "…" + this.merchantWalletAddress.substr(-6)
         return omittedMerchantWalletAddress
       }
-      return this.paymentData.domain 
-        + `<img class="domain-verified-check" src="${require('@/assets/images/check.svg')}" alt="verified">`
+      return this.paymentData.domain
     },
     invoiceId() {
       return this.paymentData.orderCode
@@ -87,15 +87,6 @@ export default {
     },
   },
   methods: {
-    showWarningModal(message) {
-      this.$store.dispatch('modal/show', {
-        target: 'warning-modal',
-        size: 'small',
-        params: {
-          message: message
-        }
-      })
-    },
     apiGetReceivedData() {
       const url = `${this.baseUrl}/api/v1/payment`
       const params = new URLSearchParams([['payment_token', this.paymentToken]])
@@ -256,17 +247,10 @@ export default {
         this.redirectToEntrancePage(this.currentRouteName, this.paymentToken)
       }
     })
-    if (!this.isVerifiedDomain) {
-      this.showWarningModal('We cannot guarantee the reliability of this payee!')
-    }
   }
 }
 </script>
 
 <style lang="scss">
   @import '@/assets/scss/style.scss';
-  .domain-verified-check {
-    height: 12px;
-    margin-left: 5px;
-  }
 </style>

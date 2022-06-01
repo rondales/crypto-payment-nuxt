@@ -4,7 +4,7 @@ const store = {
     id: null,
     headerInvoice: false,
     domain: null,
-    isVerifiedDomain: null,
+    isVerifiedDomain: false,
     merchantWalletAddress: null,
     orderCode: null,
     amount: null,
@@ -40,6 +40,12 @@ const store = {
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
     },
+    updateIsVerifiedDomain({ commit }, payload) {
+      commit('updateIsVerifiedDomain', payload)
+    },
+    updateMerchantWalletAddress({ commit }, payload) {
+      commit('updateMerchantWalletAddress', payload)
+    },
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
     },
@@ -70,7 +76,7 @@ const store = {
       state.id = null
       state.headerInvoice = false
       state.domain = null
-      state.isVerifiedDomain = null
+      state.isVerifiedDomain = false
       state.merchantWalletAddress = null
       state.orderCode = null
       state.amount = null
@@ -103,6 +109,12 @@ const store = {
     },
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload
+    },
+    updateIsVerifiedDomain(state, payload) {
+      state.isVerifiedDomain = payload
+    },
+    updateMerchantWalletAddress(state, payload) {
+      state.merchantWalletAddress = payload
     },
     updateAmount(state, payload) {
       state.amount = payload
