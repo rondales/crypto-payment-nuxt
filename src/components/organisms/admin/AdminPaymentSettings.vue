@@ -180,6 +180,7 @@
             <p>
               Please enter the your domain.
               If you have completed TXT record authentication for the domain, this domain will be exposed to the user on the payment pages.
+              <br>
               Also, if the domain is not set, your account address will be displayed to the user on the payment pages.
             </p>
             <div>
@@ -193,6 +194,7 @@
             <h4>Prove ownership of a domain with TXT records</h4>
             <p>
               By authenticating the domain with a TXT record, the domain and authentication mark will be displayed on the payment pages.
+              <br>
               If you have not completed authentication, your account address will be displayed to the user on the payment pages.
             </p>
             <div>
