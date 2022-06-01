@@ -128,7 +128,7 @@ export default {
         weeklyAmount: {value: '0 ', text: 'weekly total amount'},
         weeklyCount: {value: '0', text: 'weekly total count'},
         todayAmount: {value: '0', text: 'today total amount'},
-        todayCount: {value: '0', text: 'today total amount'}
+        todayCount: {value: '0', text: 'today total count'}
       },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),

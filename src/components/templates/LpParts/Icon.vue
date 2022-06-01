@@ -13,7 +13,6 @@ export default {
   },
   created() {},
   mounted() {
-    // console.log(`@/assets/images/lp/${this.path}.svg?component`);
   },
   components: {},
 };

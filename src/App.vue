@@ -1,5 +1,5 @@
 <template>
-  <body :class="[classes, { contents_height: isAdminPage }]" >
+  <div :class="[classes, { contents_height: isAdminPage }]" >
     <router-view />
     <div v-if="modal.show" class="modal-base">
       <component :is="modal.target" />
@@ -10,7 +10,7 @@
         copied
       </span>
     </div>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -33,6 +33,7 @@ export default {
   computed: {
     classes() {
       return [
+        'main',
         `theme--${this.$store.state.theme}`,
       ];
     },
@@ -49,7 +50,7 @@ export default {
 <style lang="scss">
 @import '@/assets/scss/style.scss';
 
-body{
+div.main{
     background: var(--color_bg);
     color: var(--color_font);
 }

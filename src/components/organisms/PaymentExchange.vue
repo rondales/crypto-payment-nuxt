@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="payment_balance-price">
-            {{ paymentAmount | balanceFormat }}
+            {{ paymentAmount }}
           </div>
         </div>
         <div v-if="isExchangeLoaded && isBalanceEnough">
@@ -459,6 +459,8 @@ export default {
       width: 100%;
       font-weight: 100;
       font-size: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .via{

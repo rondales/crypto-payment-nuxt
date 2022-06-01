@@ -136,6 +136,10 @@ export default {
       tokenList: [],
       tokenIdList: [],
       validAddress: false,
+      contract: {
+        address: null,
+        abi: null
+      },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -158,6 +162,9 @@ export default {
     }
   },
   computed: {
+    baseUrl() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
     web3Instance() {
       return this.$store.state.web3.instance
     },
@@ -196,6 +203,15 @@ export default {
     networkModal() {
       this.$store.dispatch("modal/show", {target: 'network-modal', size: "medium"});
     },
+    showErrorModal(message) {
+      this.$store.dispatch('modal/show', {
+        target: 'error-modal',
+        size: 'small',
+        params: {
+          message: message
+        }
+      })
+    },
     leftTab(){
       this.tab = "list"
       this.isActive = true
@@ -217,33 +233,69 @@ export default {
       this.tokenCount = 0;
       this.validAddress = false
     },
+    apiGetContract() {
+      const url = `${this.baseUrl}/api/v1/payment/contract`
+      const request = { params: new URLSearchParams([
+        ['payment_token', this.$route.params.token],
+        ['network_type', this.$store.state.web3.chainId]
+      ])}
+      return this.axios.get(url, request)
+    },
+    checkTokenExists(tokenAddress) {
+      let exists = false
+      this.tokenList.forEach((token) => {
+        if(tokenAddress && tokenAddress === token.address) {
+          exists = true
+        }
+      })
+      return exists
+    },
     searchToken(event) {
-      this.tokenIdList = []
-      this.tokenCount = 0;
-      this.validAddress = false
-      this.$web3.searchToken(
+      if(this.checkTokenExists(event.target.value)) {
+        this.showErrorModal(
+          'Input token is already added!'
+        )
+        return
+      }
+
+      this.$web3.isBlacklistedFromPayToken(
         this.$store.state.web3.instance,
-        event.target.value,
-        this.$store.state.account.address
-      ).then((response) => {
-        const scanUrl = NETWORKS[
-          this.$store.state.web3.chainId
-        ].scanUrl
-        this.tokenIdList.push({
-          name: response.name,
-          symbol: response.symbol,
-          decimal: response.decimal,
-          address: response.address,
-          balance: response.balance,
-          icon: response.icon,
-          url: `${scanUrl}/token/${response.address}`
-        })
-        this.tokenCount = this.tokenIdList.length
-      }).catch((error) => {
-        console.log(error)
-        this.tokenCount = 0
-        this.tokenIdList = []
-        this.validAddress = true
+        this.contract,
+        event.target.value
+      ).then((isBlacklistedFromPayToken) => {
+        if(isBlacklistedFromPayToken) {
+          this.showErrorModal(
+            'Input token is currently not supported!'
+          )
+        } else {
+          this.tokenIdList = []
+          this.tokenCount = 0;
+          this.validAddress = false
+          this.$web3.searchToken(
+            this.$store.state.web3.instance,
+            event.target.value,
+            this.$store.state.account.address
+          ).then((response) => {
+            const scanUrl = NETWORKS[
+              this.$store.state.web3.chainId
+            ].scanUrl
+            this.tokenIdList.push({
+              name: response.name,
+              symbol: response.symbol,
+              decimal: response.decimal,
+              address: response.address,
+              balance: response.balance,
+              icon: response.icon,
+              url: `${scanUrl}/token/${response.address}`
+            })
+            this.tokenCount = this.tokenIdList.length
+          }).catch((error) => {
+            console.log(error)
+            this.tokenCount = 0
+            this.tokenIdList = []
+            this.validAddress = true
+          })
+        }
       })
     },
     importToken(index){
@@ -329,6 +381,10 @@ export default {
           this.handleChainChanged(chainId)
         })
       }
+      this.apiGetContract().then((response) => {
+        this.contract.address = response.data.address
+        this.contract.abi = JSON.parse(response.data.args)
+      })
     }
   },
   beforeDestroy() {

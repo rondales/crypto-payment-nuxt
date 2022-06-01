@@ -30,12 +30,12 @@
               Logomark
             </h3>
             <div class="logo-img add-flex">
-              <figure>
-                <img src="@/assets/images/lp/logo-l.png" alt="">
-              </figure>
-              <figure>
-                <img src="@/assets/images/lp/logo-m.png" alt="">
-              </figure>
+              <div class="logo-bg">
+                <img src="@/assets/images/lp/slash-logo.svg" alt="">
+              </div>
+              <div class="logo-bg">
+                <img src="@/assets/images/lp/slash-logo2.svg" alt="">
+              </div>
             </div>
           </div>
           <div class="logo-clearspace">
@@ -44,10 +44,10 @@
             </h4>
             <div class="logo-img add-flex">
               <figure>
-                <img src="@/assets/images/lp/clearspace-l.png" alt="">
+                <img src="@/assets/images/lp/clearspace-l.svg" alt="">
               </figure>
               <figure>
-                <img src="@/assets/images/lp/clearspace-m.png" alt="">
+                <img src="@/assets/images/lp/clearspace-m.svg" alt="">
               </figure>
             </div>
           </div>
@@ -61,23 +61,28 @@
               <h4>
                 STANDARD BUTTON
               </h4>
-              <figure class="sp">
-                <img src="@/assets/images/lp/standard-button-sp.svg" alt="">
-              </figure>
-              <figure class="pc">
-                <img src="@/assets/images/lp/standard-button.svg" alt="">
-              </figure>
+              <div class="usecase-bg">
+                <figure>
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/standard-button-w.svg" alt="">
+                  </div>
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/standard-button-b.svg" alt="">
+                  </div>
+                </figure>
+              </div>
             </div>
             <div class="usecase-block">
               <h4>
                 Settlement indication
               </h4>
-              <figure class="sp">
-                <img src="@/assets/images/lp/indication-sp.svg" alt="">
-              </figure>
-              <figure class="pc">
-                <img src="@/assets/images/lp/indication.svg" alt="">
-              </figure>
+              <div class="usecase-content">
+                <ul>
+                  <li v-for="(icon, list) in logoList" :key="list">
+                    <img :src="icon.svg" alt="">
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -142,39 +147,35 @@
           <p class="another-dsc">
             Please use this one depending on your application.
           </p>
-          <div class="another-logo pc">
-            <figure v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/another-logo.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/another-logo-d.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/another-full-logo.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/another-full-logo-d.png" alt="">
-            </figure>
-          </div>
-          <div class="another-logo sp">
-            <figure v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/another-logo-sp.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/another-logo-sp-d.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/another-logo-sp-02.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/another-logo-sp-02-d.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'dark'">
-              <img src="@/assets/images/lp/another-logo-sp-03.png" alt="">
-            </figure>
-            <figure v-if="$store.state.theme == 'light'">
-              <img src="@/assets/images/lp/another-logo-sp-03-d.png" alt="">
-            </figure>
+          <div class="another-logo">
+            <div class="another-items add-flex j-left">
+              <div class="another-item">
+                <p>
+                  Mark only
+                </p>
+                <figure>
+                  <img src="@/assets/images/lp/slash-mark.svg" alt="">
+                </figure>
+              </div>
+              <div class="another-item">
+                <p>
+                  Text only
+                </p>
+                <figure>
+                  <img src="@/assets/images/lp/slash-text.svg" alt="">
+                </figure>
+              </div>
+            </div>
+            <div class="another-items">
+              <div class="another-item">
+                <p>
+                  Full name
+                </p>
+                <figure>
+                  <img src="@/assets/images/lp/slash-full.svg" alt="">
+                </figure>
+              </div>
+            </div>
           </div>
         </div>
         <div class="download">
@@ -198,9 +199,6 @@
             </div>
           </div>
         </div>
-        <a class="terms" href="">
-          TERMS OF SERVICE
-        </a>
       </section>
     </article>
     <LpFooter />
@@ -223,6 +221,23 @@ export default {
         {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg")},
         {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg")}
       ],
+      logoList: [
+        {svg: require("@/assets/images/lp/indication/icon-01.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-02.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-03.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-04.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-05.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-06.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-07.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-08.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-09.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-10.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-11.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-12.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-13.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-14.svg")},
+        {svg: require("@/assets/images/lp/indication/icon-15.svg")},
+      ]
     };
   },
   components: {
@@ -341,24 +356,80 @@ export default {
         @include media(tb) {
           margin-bottom: 40px;
         }
-        figure{
-          @include media(tb) {
-            margin-bottom: 24px;
-          }
+        .logo-bg{
+          display: flex;
+          -webkit-box-align: center;
+          align-items: center;
+          -webkit-box-pack: center;
+          justify-content: center;
+          border-radius: 10px;
           &:nth-child(1){
+            width: 100%;
+            max-width: 500px;
+            background: center center / contain no-repeat white;
             @include media(tb) {
-              img{
-                width: 80%;
+              max-width: 273px;
+              height: 138px;
+              margin-bottom: 16px;
+            }
+            img{
+              width: 70%;
+              @include media(tb) {
+                width: 70%;
               }
             }
           }
           &:nth-child(2){
+            width: 100%;
+            max-width: 330px;
+            height: 250px;
+            background: center center / contain no-repeat white;
             margin-left: 24px;
             @include media(tb) {
+              max-width: 181px;
+              height: 138px;
+              margin-left: 24px;
+            }
+            @media only screen and (max-width: 500px) {
               margin-left: 0;
-              img{
-                width: 63%;
+            }
+            img{
+              width: 62%;
+              @include media(tb) {
+                width: 70%;
               }
+            }
+          }
+        }
+        figure{
+          img{
+            width: 100%;
+          }
+          @include media(tb) {
+            margin-bottom: 24px;
+          }
+          &:nth-child(1){
+            width: 100%;
+            max-width: 500px;
+            height: 250px;
+            @include media(tb) {
+              max-width: 273px;
+              height: 138px;
+              margin-bottom: 16px;
+            }
+          }
+          &:nth-child(2){
+            width: 100%;
+            max-width: 330px;
+            height: 250px;
+            margin-left: 24px;
+            @include media(tb) {
+              max-width: 181px;
+              height: 138px;
+              margin-left: 24px;
+            }
+            @media only screen and (max-width: 500px) {
+              margin-left: 0;
             }
           }
         }
@@ -395,6 +466,123 @@ export default {
             margin-bottom: 8px;
           }
         }
+        .usecase-bg{
+          background: #fff;
+          max-width: 698px;
+          padding: 48px;
+          border-radius: 8px;
+          @include media(tb) {
+            padding: 32px 40px;
+          }
+          figure{
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            @media only screen and (max-width: 460px) {
+              justify-content: center;
+            }
+            .usecase-img{
+              position: relative;
+              img{
+                max-width: 275px;
+                width: 100%;
+              }
+              &::before{
+                position: absolute;
+                content: "";
+                background: url(/assets/images/lp/slash-logo-s.svg) no-repeat center center;
+                width: 124px;
+                height: 100%;
+                top: 50%;
+                right: 6%;
+                transform: translate(0, -50%);
+                z-index: 0;
+              }
+            }
+            @media only screen and (max-width: 660px) {
+              .usecase-img{
+                &:nth-child(1){
+                  margin-bottom: 16px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .usecase-content{
+        background: #fff;
+        max-width: 698px;
+        padding: 40px;
+        border-radius: 8px;
+        @include media(tb) {
+          padding: 16px;
+        }
+        ul{
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          li{
+            border: 1px solid #D1D1D1;
+            border-radius: 8px;
+            width: 18%;
+            text-align: center;
+            line-height: 65px;
+            height: 70px;
+            margin-bottom: 32px;
+            @include media(sp) {
+              width: 32%;
+              margin-bottom: 16px;
+              &:nth-child(n + 13){
+                margin-bottom: 0;
+              }
+            }
+            @include media(pc) {
+              &:nth-child(n + 10){
+                margin-bottom: 0;
+              }
+            }
+            &:nth-child(1){
+              img{
+                width: 55%;
+                @include media(tb) {
+                  width: 56px;
+                }
+              }
+            }
+            &:nth-child(2){
+              img{
+                width: 55%;
+                @include media(tb) {
+                  width: 56px;
+                }
+              }
+            }
+            &:nth-child(5){
+              img{
+                width: 40%;
+                @include media(tb) {
+                  width: 41px;
+                }
+              }
+            }
+            &:nth-child(10){
+              img{
+                width: 70%;
+                @include media(tb) {
+                  width: 70px;
+                }
+              }
+            }
+            &:nth-child(15){
+              img{
+                width: 80%;
+                @include media(tb) {
+                  width: 82px;
+                }
+              }
+            }
+          }
+        }
       }
     }
     .misuse{
@@ -416,7 +604,7 @@ export default {
           }
           &:nth-child(2){
             margin-left: 24px;
-            @include media(sp) {
+            @media only screen and (max-width: 820px) {
               margin-left: 0;
             }
           }
@@ -448,14 +636,53 @@ export default {
         }
       }
       .another-logo{
+        .another-items{
+          p{
+            font-size: 24px;
+            margin-bottom: 16px;
+            @include media(tb) {
+              font-size: 18px;
+            }
+          }
+          &:nth-child(1){
+            max-width: 500px;
+            .another-item{
+              width: 50%;
+              @include media(tb) {
+                width: 100%;
+              }
+              figure{
+                display: flex;
+                align-items: center;
+                height: 117px;
+                @include media(tb) {
+                  height: auto;
+                }
+              }
+            }
+          }
+          &:nth-child(2){
+            width: 80%;
+            @include media(tb) {
+              width: 100%;
+            }
+            .another-item{
+              figure{
+                display: flex;
+                align-items: center;
+                max-width: 742px;
+                @include media(tb) {
+                  width: 100%;
+                }
+                img{
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
         figure{
           margin-bottom: 56px;
-            &:nth-child(1){
-              width: 360px;
-            }
-            &:nth-child(2){
-              width: 560px;
-            }
           @include media(tb) {
             &:nth-child(1){
               width: 32%;
@@ -504,8 +731,9 @@ export default {
           }
           &:nth-child(2){
             img{
+              width: 45%;
               @include media(tb) {
-                width: 54%;
+                width: 50%;
               }
             }
           }
@@ -527,6 +755,9 @@ export default {
           }
           .download-item-right{
             width: 46%;
+            a{
+              color: #fff;
+            }
             @include media(tb) {
               width: 100%;
             }
