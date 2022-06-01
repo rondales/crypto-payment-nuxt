@@ -165,7 +165,9 @@ import {
   STATUS_PUBLISHED,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS
+  STATUS_RESULT_SUCCESS,
+  MERCHANT_NEW_TRANSACTION,
+  MERCHANT_NEW_TRANSACTION_PARAM_LIST
 } from '@/constants'
 import {
   BscTokens,
@@ -196,6 +198,8 @@ export default {
       exchangeTimer: null,
       expiredExchange: false,
       waitingWallet: false,
+      refundedTokenAmount: null,
+      refundedFeeAmount: null,
       contract: {
         address: null,
         abi: null
@@ -373,6 +377,19 @@ export default {
       return this.returnUrls.succeed != null
     }
   },
+  watch: {
+    refundedFeeAmount() {
+      this.$store.dispatch('modal/show', {
+        target: 'refund-info-modal',
+        size: 'small',
+        params: {
+          refundedTokenAmount: this.refundedTokenAmount,
+          refundedFeeAmount: this.refundedFeeAmount,
+          refundedFeeSymbol: this.nativeTokenSymbol
+        }
+      })
+    }
+  },
   methods: {
     apiGetTransaction() {
       const url = `${this.baseUrl}/api/v1/payment/transaction`
@@ -439,6 +456,7 @@ export default {
         this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateDecimalUnit', exchange.requestTokenDecimal)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,
           rate: exchange.rate
@@ -502,7 +520,23 @@ export default {
         this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
         this.pageState = this.pageStateList.failured
         this.waitingWallet = false
+      }).then((txReceipt) => {
+        const events = Object.values(txReceipt.events)
+        const result = this.getRefundInfo(events)
+        this.refundedTokenAmount = result.refundedTokenAmount
+        this.refundedFeeAmount = result.refundedFeeAmount
       })
+    },
+    getRefundInfo(events) {
+      const eventName = MERCHANT_NEW_TRANSACTION
+      const eventParams = MERCHANT_NEW_TRANSACTION_PARAM_LIST 
+      const result = this.$web3.getEventLog(this.$store.state.web3.instance, eventName, eventParams, events)
+      const refundedTokenAmount = '0.' + this.$store.state.web3.instance.utils.padLeft(result[6], this.$store.state.payment.decimalUnit)
+      const refundedFeeAmount =  this.$store.state.web3.instance.utils.fromWei(result[7], 'ether')
+      return {
+        refundedTokenAmount: refundedTokenAmount,
+        refundedFeeAmount: refundedFeeAmount
+      }
     },
     checkContractApproved() {
       return this.$web3.checkTokenApproved(

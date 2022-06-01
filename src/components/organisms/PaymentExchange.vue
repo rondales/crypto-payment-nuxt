@@ -274,6 +274,7 @@ export default {
         this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateDecimalUnit', exchange.requestTokenDecimal)
         this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,

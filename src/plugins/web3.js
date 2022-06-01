@@ -54,7 +54,8 @@ export default {
           monitoringPaymentTransaction: monitoringPaymentTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
-          signWithPrivateKey: signWithPrivateKey
+          signWithPrivateKey: signWithPrivateKey,
+          getEventLog: getEventLog
         }
       }
     })
@@ -344,7 +345,8 @@ const getTokenExchangeData = async function(
     requestAmountWei: requestAmountWei,
     equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
-    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether')
+    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
+    requestTokenDecimal: requestTokenDecimal
   }
 }
 
@@ -470,6 +472,18 @@ const deleteMerchantContract = function() {
 
 const signWithPrivateKey = function(web3, address) {
   return web3.eth.personal.sign('Signature for login authentication', address)
+}
+
+const getEventLog = function(web3, eventName, eventParams, events) {
+  let result
+  const eventTopic = web3.utils.sha3(eventName)
+  for(let i = 0; i < events.length; i++) {
+    if(events[i].raw.topics[0] === eventTopic) {
+      result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
+      break
+    }
+  }
+  return result
 }
 
 function getNetworkDefaultTokens(chainId) {
