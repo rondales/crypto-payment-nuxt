@@ -37,7 +37,7 @@
       />
       <div class="add-flex j-between">
         <div>
-          <p class="payment_Receiver mb-1">
+          <p class="payment_Receiver mb-1" :class="{ 'domain-verified':isVerifiedDomain }">
             Payee：{{ receiver }}
           </p>
           <p class="payment_invoice-id">
@@ -106,6 +106,7 @@ export default {
     'colorTheme',
     'showFooterMenu',
     'receiver',
+    'isVerifiedDomain',
     'invoiceId',
     'base64VuexData'
   ],
@@ -243,6 +244,17 @@ export default {
   .payment_invoice-id{
     font-weight: 400;
     font-size: 15px;
+  }
+  .domain-verified {
+    &::after{
+      content: "";
+      background: url(/assets/images/domain-verified.svg) no-repeat center center;
+      width: 17px;
+      height: 17px;
+      position: absolute;
+      margin-top: 3px;
+      margin-left: 8px;
+    }
   }
 }
 .fixed{
