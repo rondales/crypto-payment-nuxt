@@ -2,18 +2,30 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Token Refund
+        Refunded information
       </h3>
-      <p class="header__desc">The following token(s) have been refunded :</p>
+      <p class="header__desc">
+        Slippage collections were refunded.
+        <br>
+        Refund information is below.
+        <br>
+        <span class="notice">*&nbsp;Tokens are refunded in merchant's receive token.</span>
+      </p>
     </div>
     <div class="body add-flex j-between">
-        <p v-if="refundedTokenAmount"><span>Token Refunded: </span>{{ refundedTokenAmount }}<span>  {{ refundedTokenSymbol }}</span></p>
-        <p><span>Transaction Fee Refunded: </span>{{ refundedFeeAmount }}<span>  {{ refundedFeeSymbol }}</span></p>
+        <div v-if="refundedTokenAmount" class="refund-item mt-2 mb-3">
+          <h3>Token refunded amount</h3>
+          <p>{{ refundedTokenAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
+        <div v-if="refundedFeeAmount" class="refund-item">
+          <h3>Fee refunded amount</h3>
+          <p>{{ refundedFeeAmount }}&nbsp;{{ refundedFeeSymbol }}</p>
+        </div>
     </div>
     <button class="close" @click="hideModal">
       <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
       <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
-      閉じる
+      close
     </button>
   </div>
 </template>
@@ -36,13 +48,13 @@ export default {
       return this.$store.state.modal.params.refundedTokenAmount
     },
     refundedTokenSymbol() {
-        return this.$store.state.payment.symbol
+      return this.$store.state.payment.symbol
     },
     refundedFeeAmount() {
       return this.$store.state.modal.params.refundedFeeAmount
     },
     refundedFeeSymbol() {
-        return this.$store.state.modal.params.refundedFeeSymbol
+      return this.$store.state.modal.params.refundedFeeSymbol
     }
   },
   methods: {
@@ -96,6 +108,10 @@ export default {
       }
       &__desc {
         font-size: 1.7rem;
+        .notice{
+          font-weight: 100;
+          font-size: 1.4rem;
+        }
       }
     }
     @include media(sp) {
@@ -106,6 +122,10 @@ export default {
       }
       &__desc {
         font-size: 1.5rem;
+        .notice{
+          font-weight: 100;
+          font-size: 1.2rem;
+        }
       }
     }
     &__title {
@@ -139,6 +159,18 @@ export default {
       padding: 12px 12px 48px;
       flex-wrap: wrap;
       font-size: 1.5rem;
+    }
+    .refund-item{
+      width: 100%;
+      h3 {
+        font-weight: 500;
+        font-size: 1.7rem;
+      }
+      p {
+        font-weight: 200;
+        margin-right: 30px;
+        text-align: right;
+      }
     }
   }
   .footer {
