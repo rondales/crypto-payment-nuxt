@@ -178,7 +178,10 @@
           <div class="manage-contents_clm">
             <h4>Receiver Domain Setting</h4>
             <p>
-              Enter the request URL (POST) for the Deposit Notification API.
+              Please enter the your domain.
+              If you have completed TXT record authentication for the domain, this domain will be exposed to the user on the payment pages.
+              <br>
+              Also, if the domain is not set, your account address will be displayed to the user on the payment pages.
             </p>
             <div>
               <input class="text-box" type="text" v-model="domainSettings.domain">
@@ -190,7 +193,9 @@
           <div class="manage-contents_clm">
             <h4>Prove ownership of a domain with TXT records</h4>
             <p>
-              By proving the ownership of the domain with a TXT record, a certification mark will be included in the domain display on the payment screen.
+              By authenticating the domain with a TXT record, the domain and authentication mark will be displayed on the payment pages.
+              <br>
+              If you have not completed authentication, your account address will be displayed to the user on the payment pages.
             </p>
             <div>
               <input class="text-box" type="text" v-model="domainSettings.txt" disabled>
@@ -199,7 +204,7 @@
               Check
             </div>
             <div class="verify" v-if="domainSettings.verified">
-              verify
+              verified
             </div>
           </div>
         </div>
