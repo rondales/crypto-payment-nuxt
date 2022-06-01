@@ -249,11 +249,11 @@ export default {
     &::after{
       content: "";
       background: url(/assets/images/domain-verified.svg) no-repeat center center;
-      width: 12px;
-      height: 12px;
+      width: 17px;
+      height: 17px;
       position: absolute;
-      margin-top: 5px;
-      margin-left: 5px;
+      margin-top: 3px;
+      margin-left: 8px;
     }
   }
 }

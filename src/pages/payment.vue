@@ -55,8 +55,8 @@ export default {
     },
     receiver() {
       if (!this.isVerifiedDomain && this.merchantWalletAddress) {
-        const omittedMerchantWalletAddress = this.merchantWalletAddress.substr(0, 6) 
-          + "…" + this.merchantWalletAddress.substr(-6)
+        const omittedMerchantWalletAddress = this.merchantWalletAddress.substr(0, 10) 
+          + "…" + this.merchantWalletAddress.substr(-10)
         return omittedMerchantWalletAddress
       }
       return this.paymentData.domain
