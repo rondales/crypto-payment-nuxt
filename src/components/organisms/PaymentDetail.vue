@@ -121,7 +121,7 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="_blank" :href="transactionUrl">
+          <a v-if="(isPublishedTransactionHash && !isSuccessedState) || (isSuccessedState && hasSuccessReturnUrl)" class="payment-status_btn" target="_blank" :href="transactionUrl">
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
@@ -135,9 +135,15 @@
         <button class="btn __g __l mb-2 inactive" v-else-if="isProcessingState">
           processing…
         </button>
-        <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState">
+        <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState && hasSuccessReturnUrl">
           Back to Payee’s Services
         </button>
+        <a :href="transactionUrl" target="_blank" v-else-if="isSuccessedState && !hasSuccessReturnUrl">
+          <button class="btn __g __l mb-2">
+            View on explorer
+            <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="">
+          </button>
+        </a>
         <button class="btn __g __l mb-2" @click="retry" v-else>
           Try again
         </button>
@@ -362,6 +368,9 @@ export default {
         ? this.$store.state.payment.token.address.toLowerCase()
         : ''
       return receiveTokenAddress !== paymentTokenAddress
+    },
+    hasSuccessReturnUrl() {
+      return this.returnUrls.succeed != null
     }
   },
   methods: {
@@ -770,6 +779,9 @@ export default {
       height: 20px;
       margin-left: 5px;
     }
+  }
+  .new-tab-icon {
+    padding: 0!important;
   }
 }
 </style>
