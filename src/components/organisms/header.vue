@@ -159,6 +159,8 @@ export default {
           balanceSplit[1] = (balanceSplit[1] + '0000').substr(0,4)
         }
         balance = balanceSplit[0] + '.' + balanceSplit[1]
+      } else {
+        balance = balance + '.' + '0000'
       }
       return balance
     },
