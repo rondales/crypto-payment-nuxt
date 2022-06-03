@@ -551,9 +551,12 @@ export default {
   }
   .token-approve-btn-img {
     padding-top: 0px!important;
+    width: 25px;
+    height: 25px;
   }
   .approve-token-btn {
-    font-size: 10px;
+    padding: 0;
+    font-size: 11px;
   }
 }
 </style>
