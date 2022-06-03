@@ -531,7 +531,10 @@ export default {
       const eventName = MERCHANT_NEW_TRANSACTION
       const eventParams = MERCHANT_NEW_TRANSACTION_PARAM_LIST 
       const result = this.$web3.getEventLog(this.$store.state.web3.instance, eventName, eventParams, events)
-      const refundedTokenAmount = '0.' + this.$store.state.web3.instance.utils.padLeft(result[6], this.$store.state.payment.decimalUnit)
+      const tokenDecimalUnit = this.$store.state.payment.decimalUnit
+      const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
+      const refundTokenInWei = result[6]
+      const refundedTokenAmount = this.$store.state.web3.instance.utils.fromWei(refundTokenInWei, tokenWeiUnit)
       const refundedFeeAmount =  this.$store.state.web3.instance.utils.fromWei(result[7], 'ether')
       return {
         refundedTokenAmount: refundedTokenAmount,

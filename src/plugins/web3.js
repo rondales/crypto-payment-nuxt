@@ -49,13 +49,16 @@ export default {
           addToken: addToken,
           getTokenExchangeData: getTokenExchangeData,
           checkTokenApproved: checkTokenApproved,
+          getTokenApprovedAmount: getTokenApprovedAmount,
           tokenApprove: tokenApprove,
+          getTokenDecimalUnit: getTokenDecimalUnit,
           sendPaymentTransaction: sendPaymentTransaction,
           monitoringPaymentTransaction: monitoringPaymentTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
-          getEventLog: getEventLog
+          getEventLog: getEventLog,
+          getTokenUnit: getTokenUnit,
         }
       }
     })
@@ -373,6 +376,32 @@ const checkTokenApproved = async function(web3, chainId, walletAddress, contract
   }
 }
 
+const getTokenApprovedAmount = async function(web3, chainId, walletAddress, contract, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+
+  try {
+    const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+    const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+    const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
+    const tokenDecimalUnit = await tokenContract.methods.decimals().call()
+    const tokenWeiUnit = getTokenUnit(tokenDecimalUnit)
+    const allowanceAmountInWei = await tokenContract.methods.allowance(
+      walletAddress,
+      slashCoreContractAddress
+    ).call({ from: walletAddress })
+    const allowanceAmount = web3.utils.fromWei(allowanceAmountInWei, tokenWeiUnit)
+    return allowanceAmount 
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
 const tokenApprove = async function(web3, chainId, walletAddress, contract, token) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
   let tokenAbi = null
@@ -387,6 +416,18 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
   return await tokenContract.methods
     .approve(slashCoreContractAddress, uint256)
     .send({ from: walletAddress })
+}
+
+const getTokenDecimalUnit = function(web3, chainId, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+
+  const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+  return tokenContract.methods.decimals().call()
 }
 
 const sendPaymentTransaction = function(
@@ -486,6 +527,15 @@ const getEventLog = function(web3, eventName, eventParams, events) {
   return result
 }
 
+const getTokenUnit = function getTokenUnit(decimal) {
+  const wei = (10 ** decimal).toString()
+  const unitMap = Web3.utils.unitMap
+  const units = Object.keys(unitMap).filter((key) => {
+    return unitMap[key] === wei
+  })
+  return units.length > 0 ? units[0] : 'ether'
+}
+
 function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
@@ -501,15 +551,6 @@ function getNetworkDefaultTokens(chainId) {
     case NETWORKS[43114].chainId:
       return AvalancheTokens
   }
-}
-
-function getTokenUnit(decimal) {
-  const wei = (10 ** decimal).toString()
-  const unitMap = Web3.utils.unitMap
-  const units = Object.keys(unitMap).filter((key) => {
-    return unitMap[key] === wei
-  })
-  return units.length > 0 ? units[0] : 'ether'
 }
 
 function getWrappedToken(chainId) {
