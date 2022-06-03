@@ -17,6 +17,7 @@
 export default {
   name: 'App',
   components: {
+    contractStatusModal: () => import('@/components/molecules/contractStatusModal'),
     networkModal: () => import('@/components/molecules/networkModal'),
     refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),

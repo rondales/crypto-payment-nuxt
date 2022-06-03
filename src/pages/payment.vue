@@ -31,7 +31,8 @@ export default {
         processing: 2,
         failed: 3,
         succeeded: 4
-      }
+      },
+      contractStatues: null
     }
   },
   computed: {
@@ -46,6 +47,12 @@ export default {
     },
     paymentId() {
       return this.paymentData.id
+    },
+    paymentAvailableContracts() {
+      return this.contractStatues
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
     },
     merchantWalletAddress() {
       return this.paymentData.merchantWalletAddress
@@ -85,6 +92,18 @@ export default {
     isPaymentDifferent() {
       return this.paymentId !== this.paymentToken
     },
+
+  },
+  watch: {
+    paymentAvailableContracts() {
+      this.handleContractStatues()
+    },
+    $route() {
+      this.handleContractStatues()
+    },
+    chainId() {
+      this.handleContractStatues()
+    }
   },
   methods: {
     apiGetReceivedData() {
@@ -101,6 +120,27 @@ export default {
       const url = `${this.baseUrl}/api/v1/payment/contract/network`
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
+    },
+    apiGetMerchantContractStatus() {
+      const url = `${this.baseUrl}/api/v1/payment/merchant/status`
+      const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
+      return this.axios.get(url, request)
+    },
+    handleContractStatues() {
+      if (['token', 'exchange', 'detail'].includes(this.currentRouteName)) {
+        if (this.contractStatues != null && !this.contractStatues.includes(this.chainId)) {
+          const availableNetworkCount = this.contractStatues.length
+          this.$store.dispatch('modal/show', {
+            target: 'contract-status-modal',
+            size: availableNetworkCount > 1 ? 'medium' : 'small',
+            params: {
+              availableNetworks: this.contractStatues,
+              hideCloseButton: true,
+              itemCount: availableNetworkCount
+            }
+          })
+        }
+      }
     },
     redirectToEntrancePage(currentRouteName, paymentToken) {
       if (currentRouteName !== 'entrance') {
@@ -225,6 +265,12 @@ export default {
     }
   },
   created() {
+    this.apiGetMerchantContractStatus().then((result) => {
+      const networks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      }).filter(item => result.data[item] == false)
+      this.contractStatues = networks
+    })
     if (this.isRestorePayment) {
       this.restoreVuex(this.restoreParam)
       this.redirectToConnectWalletPage(this.currentRouteName, this.paymentToken)
