@@ -64,7 +64,7 @@
         <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
             <p>Exchange Rate</p>
-            <p>1{{ paymentRequestSymbol }}＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
+            <p>1 {{ paymentRequestSymbol }} ＝ {{ userTokenExchangeRate }} {{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
             <p>Route</p>
