@@ -17,6 +17,7 @@
 export default {
   name: 'App',
   components: {
+    adminContractPausedModal: () => import('@/components/molecules/adminContractPausedModal'),
     networkModal: () => import('@/components/molecules/networkModal'),
     refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),

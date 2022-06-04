@@ -100,7 +100,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="manage-contents_address-wrap" v-if="isPublishedContract(chainId)">
+                <div class="manage-contents_address-wrap" :class="{ available: contract.available, unavailable: !contract.available }" v-if="isPublishedContract(chainId)">
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
@@ -415,6 +415,7 @@ export default {
         response.data.forEach((contract) => {
           if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
             this.contractSettings.contracts[contract.network_type].address = contract.address
+            this.contractSettings.contracts[contract.network_type].available = contract.available
           }
         })
         this.contractSettings.loaded = true
@@ -698,15 +699,29 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
-        &::after{
-          content: "";
-          background: url(/assets/images/check-mark.svg) no-repeat center center;
-          width: 20px;
-          height: 20px;
-          position: absolute;
-          top: 15%;
-          left: 10px;
-          transform: translate(-50%, -50%);
+        &.available{
+          &::after{
+            content: "";
+            background: url(/assets/images/check-mark.svg) no-repeat center center;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 15%;
+            left: 10px;
+            transform: translate(-50%, -50%);
+          }
+        }
+        &.unavailable{
+          &::after{
+            content: "";
+            background: url(/assets/images/bad-mark.svg) no-repeat center center;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 15%;
+            left: 10px;
+            transform: translate(-50%, -50%);
+          }
         }
       }
       &_address{

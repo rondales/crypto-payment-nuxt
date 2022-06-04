@@ -1,12 +1,24 @@
 <template>
   <div :class="classes">
     <div class="header">
-      <h3 class="header__title">
-        Error
-      </h3>
-      <p v-html="message" class="header__desc"></p>
+    <h3 class="header__title">
+        Warning
+    </h3>
+    <p class="header__desc">
+        The following contracts have been suspended for various reasons.
+        <br>
+        Please contact the help desk for details.
+    </p>
     </div>
-    <button v-if="allowClose" class="close" @click="hideModal">
+    <div class="body">
+      <h4 class="title">Suspended contracts</h4>
+      <ul class="list_network">
+        <li v-for="network in contractSuspendedNetworks" :key="network.chainId">
+          {{ network.name }}
+        </li>
+      </ul>
+    </div>
+    <button class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       close
     </button>
@@ -14,29 +26,35 @@
 </template>
 
 <script>
+import AvailableNetworks from '@/network'
 
-  export default {
-    name: 'errorModal',
-    computed: {
-      classes() {
-        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-        return classes
-      },
-      message() {
-        return this.$store.state.modal.params.message
-      },
-      allowClose() {
-        return ('allowClose' in this.$store.state.modal.params)
-          ? this.$store.state.modal.param
-          : true
-      }
+export default {
+  name: 'contractStatusModal',
+  data() {
+    return {
+      networks: []
+    };
+  },
+  computed: {
+    classes() {
+      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      return classes
     },
-    methods: {
-      hideModal() {
-        this.$store.dispatch('modal/hide')
-      }
+    paymentAvailableNetworks() {
+      return this.$store.state.modal.params.availableNetworks
+    },
+    contractSuspendedNetworks() {
+      return Object.values(AvailableNetworks).filter(
+        network => this.paymentAvailableNetworks.includes(network.chainId)
+      )
+    }
+  },
+  methods: {
+    hideModal() {
+      this.$store.dispatch('modal/hide')
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -87,6 +105,9 @@
     }
     &__desc {
       font-weight: 100;
+      ul {
+        list-style: circle;
+      }
     }
   }
   .close {
@@ -104,16 +125,33 @@
     }
   }
   .body {
+    .title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .list_network {
+      font-weight: 100;
+      li {
+        list-style: circle;
+        margin-left: 25px;
+      }
+    }
     @include media(pc) {
       padding: 24px 24px 40px;
+      .title {
+        font-size: 2rem;
+      }
+      .list_network {
+        font-size: 1.7rem;
+      }
     }
     @include media(sp) {
       padding: 24px 12px 48px;
-      .btn_content{
-        margin-left: 0;
-        p{
-          font-size: 10px;
-        }
+      .title {
+        font-size: 1.7rem;
+      }
+      .list_network {
+        font-size: 1.5rem;
       }
     }
   }
