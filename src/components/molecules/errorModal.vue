@@ -4,13 +4,11 @@
       <h3 class="header__title">
         Error
       </h3>
-      <p class="header__desc">
-        {{ message }}
-      </p>
+      <p v-html="message" class="header__desc"></p>
     </div>
-    <button class="close" @click="hideModal">
+    <button v-if="allowClose" class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
-      閉じる
+      close
     </button>
   </div>
 </template>
@@ -19,8 +17,6 @@
 
   export default {
     name: 'errorModal',
-    components: {
-    },
     computed: {
       classes() {
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -28,6 +24,11 @@
       },
       message() {
         return this.$store.state.modal.params.message
+      },
+      allowClose() {
+        return ('allowClose' in this.$store.state.modal.params)
+          ? this.$store.state.modal.param
+          : true
       }
     },
     methods: {

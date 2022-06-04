@@ -2,31 +2,25 @@
   <div :class="classes">
     <div class="header">
     <h3 class="header__title">
-        Contract Suspended
+        Warning
     </h3>
     <p class="header__desc">
-        Your contract(s) are currently suspended in following network(s):
+        The following contracts have been suspended for various reasons.
         <br>
-        Please contact administrator for more information.
+        Please contact the help desk for details.
     </p>
     </div>
-    <div class="body add-flex j-between">
-    <button
-        v-for="(network, key) in networks"
-        :key="key"
-        class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne }"
-    >
-        <span class="btn-icon">
-        <img :src="network.icon">
-        </span>
-        {{network.name}}
-    </button>
+    <div class="body">
+      <h4 class="title">Suspended contracts</h4>
+      <ul class="list_network">
+        <li v-for="network in contractSuspendedNetworks" :key="network.chainId">
+          {{ network.name }}
+        </li>
+      </ul>
     </div>
     <button class="close" @click="hideModal">
-      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
-      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
-      閉じる
+      <img src="@/assets/images/cross.svg">
+      close
     </button>
   </div>
 </template>
@@ -49,41 +43,22 @@ export default {
     paymentAvailableNetworks() {
       return this.$store.state.modal.params.availableNetworks
     },
-    isCurrentNetwork() {
-      return (chainId) => {
-        return chainId === this.$store.state.web3.chainId
-      }
-    },
-    isNetworkOnlyOne() {
-      return this.$store.state.modal.params.itemCount === 1
+    contractSuspendedNetworks() {
+      return Object.values(AvailableNetworks).filter(
+        network => this.paymentAvailableNetworks.includes(network.chainId)
+      )
     }
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
     }
-  },
-  created() {
-    this.networks = Object.values(AvailableNetworks).filter(
-      network => this.paymentAvailableNetworks.includes(network.chainId)
-    )
   }
 }
 </script>
 
 <style lang="scss" scoped>
   @import '@/assets/scss/style.scss';
-
-  @include media(pc) {
-    .btn:nth-child(n + 3) {
-      margin-top: 25px;
-    }
-  }
-  @include media(sp) {
-    .btn:not(:last-child) {
-      margin-bottom: 16px;
-    }
-  }
 
   .modal-box {
     border-radius: 10px;
@@ -103,7 +78,6 @@ export default {
     @include media(sp) {
       width: calc(100vw - 32px);
     }
-
   }
   .header {
     @include media(pc) {
@@ -131,6 +105,9 @@ export default {
     }
     &__desc {
       font-weight: 100;
+      ul {
+        list-style: circle;
+      }
     }
   }
   .close {
@@ -138,7 +115,6 @@ export default {
     width: 16px;
     height: 16px;
     font-size: 0;
-
     @include media(pc) {
       top: 30px;
       right: 24px;
@@ -149,17 +125,33 @@ export default {
     }
   }
   .body {
+    .title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .list_network {
+      font-weight: 100;
+      li {
+        list-style: circle;
+        margin-left: 25px;
+      }
+    }
     @include media(pc) {
       padding: 24px 24px 40px;
+      .title {
+        font-size: 2rem;
+      }
+      .list_network {
+        font-size: 1.7rem;
+      }
     }
     @include media(sp) {
       padding: 24px 12px 48px;
-      flex-wrap: wrap;
-      .btn{
-        width: 100% !important;
-        &:nth-child(1){
-          margin-bottom: 16px;
-        }
+      .title {
+        font-size: 1.7rem;
+      }
+      .list_network {
+        font-size: 1.5rem;
       }
     }
   }

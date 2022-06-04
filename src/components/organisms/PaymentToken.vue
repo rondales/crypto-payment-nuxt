@@ -201,7 +201,12 @@ export default {
   },
   methods: {
     networkModal() {
-      this.$store.dispatch("modal/show", {target: 'network-modal', size: "medium"});
+      const availableNetworkCount = this.availableNetworks.length
+      this.$store.dispatch('modal/show', {
+        target: 'network-modal',
+        size: availableNetworkCount > 1 ? 'medium' : 'small',
+        params: { itemCount: availableNetworkCount }
+      })
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {

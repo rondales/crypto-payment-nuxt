@@ -31,8 +31,7 @@ export default {
         processing: 2,
         failed: 3,
         succeeded: 4
-      },
-      contractStatues: null
+      }
     }
   },
   computed: {
@@ -48,8 +47,8 @@ export default {
     paymentId() {
       return this.paymentData.id
     },
-    paymentAvailableContracts() {
-      return this.contractStatues
+    availableNetworks() {
+      return this.$store.state.payment.availableNetworks
     },
     chainId() {
       return this.$store.state.web3.chainId
@@ -95,9 +94,6 @@ export default {
 
   },
   watch: {
-    paymentAvailableContracts() {
-      this.handleContractStatues()
-    },
     $route() {
       this.handleContractStatues()
     },
@@ -127,19 +123,30 @@ export default {
       return this.axios.get(url, request)
     },
     handleContractStatues() {
-      if (['token', 'exchange', 'detail'].includes(this.currentRouteName)) {
-        if (this.contractStatues != null && !this.contractStatues.includes(this.chainId)) {
-          const availableNetworkCount = this.contractStatues.length
-          this.$store.dispatch('modal/show', {
-            target: 'contract-status-modal',
-            size: availableNetworkCount > 1 ? 'medium' : 'small',
-            params: {
-              availableNetworks: this.contractStatues,
-              hideCloseButton: true,
-              itemCount: availableNetworkCount
-            }
-          })
-        }
+      if (!this.availableNetworks.length) {
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
+            message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
+            allowClose: false
+          }
+        })
+      } else if (
+        !this.availableNetworks.includes(this.chainId)
+        && ['token', 'exchange', 'detail'].includes(this.currentRouteName)
+      ) {
+        const networkCount = this.availableNetworks.length
+        const modalSize = networkCount > 1 ? 'medium' : 'small'
+        this.$store.dispatch('modal/show', {
+          target: 'network-modal',
+          size: modalSize,
+          params: {
+            itemCount: networkCount,
+            unsupported: true,
+            require: true
+          }
+        })
       }
     },
     redirectToEntrancePage(currentRouteName, paymentToken) {
@@ -265,11 +272,23 @@ export default {
     }
   },
   created() {
+    console.log('payment component created')
     this.apiGetMerchantContractStatus().then((result) => {
       const networks = Object.values(AvailableNetworks).map((network) => {
         return network.chainId
       }).filter(item => result.data[item] == false)
-      this.contractStatues = networks
+      if (networks.length) {
+        this.$store.dispatch('payment/updateAvailableNetworks', networks)
+      } else {
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
+            message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
+            allowClose: false
+          }
+        })
+      }
     })
     if (this.isRestorePayment) {
       this.restoreVuex(this.restoreParam)
