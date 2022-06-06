@@ -20,17 +20,19 @@ Vue.use(VueAxios, axios)
 Vue.use(Web3)
 Vue.config.productionTip = false
 
-Sentry.init({
-  Vue,
-  dsn: process.env.VUE_APP_SENTRY_DSN,
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      tracingOrigins: ['localhost', /^\//],
-    })
-  ],
-  tracesSampleRate: 1.0
-})
+if (process.env.VUE_APP_SENTRY_DSN !== '') {
+  Sentry.init({
+    Vue,
+    dsn: process.env.VUE_APP_SENTRY_DSN,
+    integrations: [
+      new BrowserTracing({
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+        tracingOrigins: ['localhost', /^\//],
+      })
+    ],
+    tracesSampleRate: 1.0
+  })
+}
 
 new Vue({
   router,
