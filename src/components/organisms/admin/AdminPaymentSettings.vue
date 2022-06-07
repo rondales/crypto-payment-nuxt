@@ -34,7 +34,7 @@
               Create contract
             </h3>
             <p>
-              Create a contract for payment with the Web3 address you are using. It must be the same address in ERC20 and BEP20.
+              Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
             </p>
           </div>
           <div class="manage-contents_body">
@@ -112,9 +112,9 @@
         </div>
         <div class="manage-payment" v-if="isPaymentSettingTab">
           <div class="manage-contents_clm">
-            <h4>Success notify URL</h4>
+            <h4>URL to receive Payment Result kickback from Slash Payment</h4>
             <p>
-              URL to receive kickbacks sent by SlashPayment after payment is successed.
+              URL to receive kickbacks sent by SlashPayment after payment is finished.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.successNotifyUrl">
           </div>
