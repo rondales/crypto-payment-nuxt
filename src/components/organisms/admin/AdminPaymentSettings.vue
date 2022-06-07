@@ -467,7 +467,6 @@ export default {
       this.contractSettings.contracts[chainId].processing = true
       const merchantWalletAddress = this.$store.state.account.address
       const receiveTokenAddress = this.contractSettings.contracts[chainId].support
-
       this.$web3.publishMerchantContract(
         this.$store.state.web3.instance,
         chainId,
