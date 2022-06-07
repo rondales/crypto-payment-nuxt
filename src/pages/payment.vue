@@ -272,7 +272,6 @@ export default {
     }
   },
   created() {
-    console.log('payment component created')
     this.apiGetMerchantContractStatus().then((result) => {
       const networks = Object.values(AvailableNetworks).map((network) => {
         return network.chainId
