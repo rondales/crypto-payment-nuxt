@@ -94,8 +94,9 @@ export default {
       legalCurrencyAmount: null,
       selectedCurrency: null,
       exchangedAmount: 0,
-      exchangeRate: 100,
-      exchangeMarginRate: 3.5,
+      exchangeRate: null,
+      exchangeMarginRate: null,
+      exchangeTimer: null,
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -153,8 +154,9 @@ export default {
         this.exchangeMarginRate = response.data.margin_rate
         if (this.legalCurrencyAmount) this.calculationExchange()
         this.requireUpdateExchange = false
-        setTimeout(() => {
+        this.exchangeTimer = setTimeout(() => {
           this.requireUpdateExchange = true
+          clearTimeout(this.exchangeTimer)
         }, 120000)
       }).catch((error) => {
         let message
