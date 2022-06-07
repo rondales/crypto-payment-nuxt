@@ -21,7 +21,7 @@
             </option>
           </select> -->
           <select name="currency" v-model="selectedCurrency">
-            <option disabled value="">{{ selectedCurrencyName }}</option>
+            <!-- <option disabled value="">{{ selectedCurrencyName }}</option> -->
             <option v-for="(currency, key) in currencies" :value="currency.name" :key="key">
               {{ currency.name }}
             </option>
@@ -92,7 +92,7 @@ export default {
       loading: false,
       requireUpdateExchange: false,
       legalCurrencyAmount: null,
-      selectedCurrency: CURRENCIES.JPY.name,
+      selectedCurrency: null,
       exchangedAmount: 0,
       exchangeRate: 100,
       exchangeMarginRate: 3.5,
@@ -142,6 +142,9 @@ export default {
   methods: {
     calculationExchange() {
       this.exchangedAmount = MathExtend.ceilDecimal(this.legalCurrencyAmount / this.exchangeRate, 2)
+    },
+    updateDefaultCurrency() {
+      this.selectedCurrency = Object.values(this.currencies)[0].name
     },
     updateExchangeData(currency = null) {
       if (currency === null) currency = this.selectedCurrency
@@ -217,6 +220,7 @@ export default {
     }
   },
   created() {
+    this.updateDefaultCurrency()
     this.updateExchangeData(this.selectedCurrency)
   }
 }
