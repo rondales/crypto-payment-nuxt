@@ -28,7 +28,7 @@
       <div class="desc">
         This is the value used to generate the hash string set in "verify_token", a request parameter of the "Payment Request API".
         <br>
-        The hash value to be set for "verify_token" is the value obtained by hashing the string "order_code::amount::ThisValue(HashToken)" with SHA256.
+        The hash value to be set for "verify_token" is the value obtained by hashing the string "order_code::amount::ThisValue(HashToken)" with SHA256. If you don't specify amount, it become "order_code::::ThisValue(HashToken)" with SHA256
       </div>
     </div>
   </div>

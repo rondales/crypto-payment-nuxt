@@ -483,6 +483,7 @@ export default {
             }
             .usecase-img{
               position: relative;
+              width: 280px;
               img{
                 max-width: 275px;
                 width: 100%;
@@ -494,7 +495,7 @@ export default {
                 width: 124px;
                 height: 100%;
                 top: 50%;
-                right: 6%;
+                right: 8%;
                 transform: translate(0, -50%);
                 z-index: 0;
               }
@@ -604,7 +605,7 @@ export default {
           }
           &:nth-child(2){
             margin-left: 24px;
-            @media only screen and (max-width: 820px) {
+            @media only screen and (max-width: 1024px) {
               margin-left: 0;
             }
           }
