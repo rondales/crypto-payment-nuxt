@@ -479,6 +479,7 @@ export default {
         })
       }).
       then((receipt) => {
+        this.contractSettings.contracts[chainId].available = true
         const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
         const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
