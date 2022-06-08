@@ -121,32 +121,52 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="(isPublishedTransactionHash && !isSuccessedState) || (isSuccessedState && hasSuccessReturnUrl)" class="payment-status_btn" target="_blank" :href="transactionUrl">
+          <a
+            v-if="isPublishedTransactionHash
+            && ((isSuccessedState && hasSuccessReturnUrl)
+            || (isFailuredState && hasFailureReturnUrl))"
+            class="payment-status_btn"
+            target="_blank"
+            :href="transactionUrl"
+          >
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
         </div>
-        <button :class="{inactive: isExpiredExchange || isWaitingWallet}" class="btn __g __l mb-2" @click="payment" v-if="isDetailState">
+        <button
+          v-if="isDetailState"
+          class="btn __g __l mb-2"
+          :class="{inactive: isExpiredExchange || isWaitingWallet}"
+          @click="payment"
+        >
           Confirm Wallet
           <div class="loading-wrap" :class="{active: isWaitingWallet}">
             <img class="spin" src="@/assets/images/loading.svg">
           </div>
         </button>
-        <button class="btn __g __l mb-2 inactive" v-else-if="isProcessingState">
+        <button
+          v-else-if="isProcessingState"
+          class="btn __g __l mb-2 inactive"
+        >
           processing…
         </button>
-        <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState && hasSuccessReturnUrl">
+        <button
+          v-else-if="(isSuccessedState && hasSuccessReturnUrl) || (isFailuredState && hasFailureReturnUrl)"
+          class="btn __g __l mb-2"
+          @click="backToMerchant"
+        >
           Back to Payee’s Services
         </button>
-        <a :href="transactionUrl" target="_blank" v-else-if="isSuccessedState && !hasSuccessReturnUrl">
+        <a
+          v-else
+          :href="transactionUrl"
+          target="_blank"
+        >
           <button class="btn __g __l mb-2">
             View on explorer
             <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="">
           </button>
         </a>
-        <button class="btn __g __l mb-2" @click="retry" v-else>
-          Try again
-        </button>
         <p class="via" v-if="isDetailState || isProcessingState">
           via Slash Payment
           <span>
@@ -204,7 +224,10 @@ export default {
         address: null,
         abi: null
       },
-      returnUrls: { succeed: null },
+      returnUrls: {
+        succeed: null,
+        failured: null
+      },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -375,6 +398,9 @@ export default {
     },
     hasSuccessReturnUrl() {
       return this.returnUrls.succeed != null
+    },
+    hasFailureReturnUrl() {
+      return this.returnUrls.failured != null
     }
   },
   watch: {
@@ -434,11 +460,6 @@ export default {
         this.updateExchange()
       })
     },
-    retry() {
-      this.updateExchange()
-      this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-      this.pageState = this.pageStateList.detail
-    },
     exchangeExpireTimer() {
       this.exchangeTimer = setTimeout(() => {
         this.expiredExchange = true;
@@ -471,8 +492,10 @@ export default {
         this.exchangeExpireTimer()
       })
     },
-    transitionSucceedUrl() {
-      window.location = this.returnUrls.succeed
+    backToMerchant() {
+      window.location = this.isSuccessedState
+        ? this.returnUrls.succeed
+        : this.returnUrls.failured
     },
     payment() {
       this.waitingWallet = true
@@ -636,6 +659,7 @@ export default {
       }
       this.apiGetPaymentCompletedUrl().then((response) => {
         this.returnUrls.succeed = response.data.succeeded_return_url
+        this.returnUrls.failured = response.data.failured_return_url
       })
       this.apiGetContract().then((response) => {
         this.contract.address = response.data.address
