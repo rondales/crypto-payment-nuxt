@@ -75,6 +75,7 @@ export default {
       })
     },
     handleAccountsChanged() {
+      console.log('handle acc change')
       this.authentification(
         this.$store.state.web3.provider,
         false,
@@ -165,8 +166,11 @@ export default {
           : chainId
         this.handleChainChanged(chainId)
       })
-      this.web3.instance.currentProvider.on('accountsChanged', () => {
-        if(!this.checkSameAccount(this.web3.instance)) this.handleAccountsChanged()
+      this.web3.instance.currentProvider.on('accountsChanged', (account) => {
+        const newAccAddress = account[0].toLowerCase()
+        if(newAccAddress != this.account.address.toLowerCase()) {
+          this.handleAccountsChanged()
+        }
       })
     }
   },
