@@ -78,9 +78,9 @@
               </div>
             </div>
           </div>
-          <button v-if="!isTokenApprovedAmountEnough && !isPayingWithNativeToken" class="btn __g __l mb-2 approve-token-btn" @click="handleTokenApprove">
+          <button v-if="!isTokenApprovedAmountEnough && !isPayingWithNativeToken" :class="{inactive: isTokenApproving}" class="btn __g __l mb-2 approve-token-btn" @click="handleTokenApprove">
             <img class="token-approve-btn-img" :src="tokenIcon">
-            Allow the Slash protocol to use your USDT
+            Allow the Slash protocol to use your {{ tokenSymbol }}
             <div class="loading-wrap" :class="{'active': isTokenApproving}">
               <img class="spin" src="@/assets/images/loading.svg">
             </div>

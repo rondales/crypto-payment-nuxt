@@ -63,7 +63,7 @@
               show
             </div>
             <div class="show-select">
-              <select v-model="paginateParams.perPage.value" @change="searchHistory">
+              <select v-model="paginateParams.perPage.value" @change="searchHistory()">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -250,6 +250,7 @@ export default {
       const controlParams = Object.values(this.paginateParams).map((param) => {
         return [ param.key, param.value ]
       })
+      console.log(controlParams)
       const timezoneParam = [[ 'offset', moment().utcOffset() ]]
       const convertedParams = new URLSearchParams(inputedParams.concat(controlParams, timezoneParam))
       const request = {
