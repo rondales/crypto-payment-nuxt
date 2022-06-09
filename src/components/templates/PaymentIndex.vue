@@ -10,23 +10,23 @@
           <img src="@/assets/images/menu.svg">
         </div>
         <div class="menu-nav_body">
-          <a href="/">
+          <!-- <a href="/">
             Cookie settings
-          </a>
-          <a href="/">
+          </a> -->
+          <a href="https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper" target="_blank">
             About Slash.fi
           </a>
-          <a href="/">
-            Frequently Asked Questions
+          <a href="https://slash-fi.gitbook.io/docs/support/help-center" target="_blank">
+            FAQ
           </a>
-          <a href="/">
-            Terms or Service
+          <a href="https://slash-fi.gitbook.io/docs/support/terms-of-use" target="_blank">
+            Terms of Service
           </a>
-          <a href="/">
+          <a href="https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy" target="_blank">
             Privacy Policy
           </a>
-          <a href="/">
-            AML・KYC Policy
+          <a href="https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy" target="_blank">
+            AML Policy
           </a>
         </div>
       </div>
