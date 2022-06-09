@@ -540,8 +540,8 @@ export default {
           this.checkTransactionStatus(transactionHash)
         })
       }).on('error', () => {
-        this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-        this.pageState = this.pageStateList.failured
+        this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
+        this.pageState = this.pageStateList.detail
         this.waitingWallet = false
       }).then((txReceipt) => {
         const events = Object.values(txReceipt.events)
