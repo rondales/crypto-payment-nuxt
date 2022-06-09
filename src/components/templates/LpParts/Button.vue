@@ -16,19 +16,47 @@
       :path="link.icon"
     />
   </button>
-  <a v-else :class="linkClass" v-bind="aHref">
-    <LpIcon
-      v-if="!link.iconAfter && link.icon"
-      class="icon before"
-      :path="link.icon"
-    />
-    <span>{{ link.title }}</span>
-    <LpIcon
-      v-if="link.iconAfter && link.icon"
-      class="icon after"
-      :path="link.icon"
-    />
-  </a>
+  <div v-else>
+    <a v-if="link.btnType === 'a'" :class="linkClass" :href="link.url">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </a>
+    <a v-if="link.url===''" :class="linkClass">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </a>
+    <router-link v-if="link.btnType === 'router'" :class="linkClass" :to="link.url">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -88,24 +116,24 @@ export default {
       return classname;
     },
 
-    aHref() {
-      let prop = {};
-      // prop["class"] = this.linkClass;
+    // aHref() {
+    //   let prop = {};
+    //   // prop["class"] = this.linkClass;
 
-      if (!this.link.status) {
-        prop["tabindex"] = "-1";
-      } else {
-        if (typeof this.link.func == "undefined") {
-          prop["href"] = this.isExternalLink(this.link.url)
-            ? this.link.url
-            : "";
-          if (this.link.blank) {
-            prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
-          }
-        }
-      }
-      return prop;
-    },
+    //   if (!this.link.status) {
+    //     prop["tabindex"] = "-1";
+    //   } else {
+    //     if (typeof this.link.func == "undefined") {
+    //       prop["href"] = this.isExternalLink(this.link.url)
+    //         ? this.link.url
+    //         : "";
+    //       if (this.link.blank) {
+    //         prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
+    //       }
+    //     }
+    //   }
+    //   return prop;
+    // },
   },
   methods: {
     // 外部リンクかどうかチェック

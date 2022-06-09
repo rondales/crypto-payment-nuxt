@@ -180,7 +180,7 @@
                 Create contract
               </h3>
               <p>
-                Create a contract for payment with the Web3 address you are using. It must be the same address in ERC20 and BEP20.
+                Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
               </p>
             </div>
             <div class="manage-contents_body">

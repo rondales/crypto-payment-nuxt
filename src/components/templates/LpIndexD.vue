@@ -148,7 +148,7 @@
       </section>
 
       <!-- SECTION trial -->
-      <section id="donation" :class="section.trial.class">
+      <!-- <section id="donation" :class="section.trial.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.trial.class + '__title'"
@@ -182,7 +182,7 @@
             </div>
           </li>
         </ul>
-      </section>
+      </section> -->
 
       <!-- SECTION network -->
       <section :class="section.network.class">
@@ -248,7 +248,7 @@
             <li v-for="list in section.welcome.list" :key="list.title">
               <LpButton
                 :link="list"
-                :type="list.status ? 'main' : 'noactive'"
+                :type="list.url ? 'main' : 'noactive'"
                 size="s"
                 :target="list.blank"
               />
@@ -295,7 +295,8 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-import LpIcon from "@/components/templates/LpParts/Icon";
+// used it used at SECTION trial
+// import LpIcon from "@/components/templates/LpParts/Icon";
 
 export default {
   data() {
@@ -325,9 +326,10 @@ export default {
             func: "enterApp",
           },
           link2: {
-            url: "/",
-            title: "Slash docs.",
+            url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+            title: "Whitepaper",
             icon: "icon/gitbook",
+            btnType: "a",
           },
         },
         hello: {
@@ -382,10 +384,11 @@ export default {
             title: "Exchanges at DEX automatically <br>at an optimal rate",
             text: "Slash Payment’s smart contracts automatically find an optimal rate through supported DEX SWAP routers. This solution allows Customers can pay with any token at an optimal-rate.",
             link: {
-              url: "/",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
               title: "See Quick Start",
               icon: "icon/arrow",
               iconAfter: true,
+              btnType: "a"
             },
           },
           cards: [
@@ -497,10 +500,11 @@ export default {
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
@@ -531,10 +535,11 @@ export default {
                 },
               ],
               link: {
-                url: "/",
-                title: "Details of Integrations",
+                url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
+                title: "Details of Integration",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a",
               },
             },
             {
@@ -595,10 +600,11 @@ export default {
               },
               text: "There are no commissions charged to the Merchants. The commission is charged to the payers but is only 0.2-0.6% of the payment amount. It is collected along with the gas cost of the  payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper.",
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/settlement-details",
                 title: "Fee Structure",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
@@ -609,7 +615,7 @@ export default {
                 alt: "Slash automatically donation program",
                 lightSrc: "",
               },
-              text: "0.1% of the settlement amount charged to the payers apart from commitions. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
+              text: "0.1% of the 0.2~0.6% commission fee will be collected as a donation. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
                   alt: "save-the-children",
@@ -623,10 +629,11 @@ export default {
                 },
               ],
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
                 title: "donation program",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
@@ -635,18 +642,19 @@ export default {
                 title: "Phase 2",
                 text: "coming soon…",
               },
-              title: "The All fees Use <br>buyback $Slash*",
+              title: "The All fees Use <br>buyback Slash Token*",
               image: {
                 src: "lp/buyback.jpg",
-                alt: "The All fees Use buyback $Slash*",
+                alt: "The All fees Use buyback Slash Token*",
                 lightSrc: "",
               },
               text: "The Slash Payment fee is 0.2~0.6% of the settlement amount.<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
               link: {
-                url: "/",
-                title: "Details of $Slash",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+                title: "Detail of Slash Token",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
           ],
@@ -957,51 +965,41 @@ export default {
             {
               title: "Slash Payment Docs",
               icon: "icon/gitbook",
-              url: "",
-              status: true,
-              blank: true,
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
+              btnType: "a"
             },
             {
               title: "Slash Payment github",
               icon: "icon/github",
-              url: "",
-              status: true,
-              blank: true,
-            },
-            {
-              title: "Slash Recruit information",
-              icon: "icon/recruit",
-              url: "",
-              status: true,
-              blank: true,
+              url: "https://github.com/slash-fi",
+              btnType: "a"
             },
             {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
-              status: true,
-              blank: false,
+              btnType: "router"
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "icon/recruit",
+              url: "https://slash-fi.gitbook.io/docs/we-are-hiring/jobs-at-slash",
+              btnType: "a"
             },
             {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
               url: "",
-              status: false,
-              blank: true,
             },
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
               url: "",
-              status: false,
-              blank: true,
             },
             {
               title: "FAQ about system implementation",
               icon: "icon/help",
               url: "",
-              status: false,
-              blank: true,
             },
           ],
         },
@@ -1022,14 +1020,16 @@ export default {
             {
               title: "Contact Email",
               icon: "icon/arroba",
-              url: "",
+              url: "mailto:hello@slash.vision",
               status: true,
+              btnType: "a"
             },
             {
               title: "Twitter for DM",
               icon: "icon/twitter",
-              url: "",
+              url: "https://twitter.com/SlashWeb3",
               status: true,
+              btnType: "a"
             },
           ],
         },
@@ -1108,7 +1108,7 @@ export default {
     LpButton,
     LpTitle,
     LpImage,
-    LpIcon,
+    // LpIcon,
     LpImageText,
   },
   mounted() {
