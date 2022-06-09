@@ -27,7 +27,7 @@
             Privacy Policy
           </a>
           <a href="https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy" target="_blank">
-            AML・KYC Policy
+            AML Policy
           </a>
         </div>
       </div>
