@@ -425,6 +425,7 @@ export default {
           if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
             this.contractSettings.contracts[contract.network_type].address = contract.address
             this.contractSettings.contracts[contract.network_type].available = contract.available
+            this.contractSettings.contracts[contract.network_type].processing = contract.processing
           }
         })
         this.contractSettings.loaded = true
