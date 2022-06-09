@@ -75,7 +75,6 @@ export default {
       })
     },
     handleAccountsChanged() {
-      console.log('handle acc change')
       this.authentification(
         this.$store.state.web3.provider,
         false,
