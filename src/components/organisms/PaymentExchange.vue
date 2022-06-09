@@ -135,7 +135,6 @@ export default {
         address: null,
         abi: null
       },
-      tokenApproving: false,
       tokenApprovedAmount: null,
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
@@ -163,8 +162,8 @@ export default {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
     },
-    isTokenApproving() {
-      return this.tokenApproving
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     },
     slippageTolerance() {
       return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
@@ -357,8 +356,7 @@ export default {
       )
     },
     handleTokenApprove() {
-      this.tokenApproving = true
-      this.$emit('tokenApproving', true)
+      this.$store.dispatch('payment/updateWalletPending', true)
       this.tokenApprove().then((receipt) => {
         if(receipt.status) {
           const approvedAmountInWei = receipt.events['Approval'].returnValues.value
@@ -366,14 +364,12 @@ export default {
             const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
             const approvedAmount = this.$store.state.web3.instance.utils.fromWei(approvedAmountInWei, tokenWeiUnit)
             this.tokenApprovedAmount = approvedAmount
-            this.tokenApproving = false
-            this.$emit('tokenApproving', false)
+            this.$store.dispatch('payment/updateWalletPending', false)
           })
         }
       }).catch(error => {
         console.log(error)
-        this.tokenApproving = false
-        this.$emit('tokenApproving', false)
+        this.$store.dispatch('payment/updateWalletPending', false)
       }) 
     }
   },
