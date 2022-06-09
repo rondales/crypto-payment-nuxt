@@ -166,7 +166,7 @@ export default {
         this.handleChainChanged(chainId)
       })
       this.web3.instance.currentProvider.on('accountsChanged', () => {
-        this.handleAccountsChanged()
+        if(!this.checkSameAccount(this.web3.instance)) this.handleAccountsChanged()
       })
     }
   },

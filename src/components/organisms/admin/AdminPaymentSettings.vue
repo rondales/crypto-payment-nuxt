@@ -522,22 +522,12 @@ export default {
       })
     },
     switchNetwork(chainId) {
-      if (this.isMetamask) {
-        this.$web3.switchChain(
-          this.$store.state.web3.instance,
-          chainId
-        ).then(() => {
-          this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
-        })
-      } else {
-        this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'You are using WalletConnect to connect to SlashApps, so you cannot switch networks from this screen. Please use the Wallet app to switch networks.'
-          }
-        })
-      }
+      this.$web3.switchChain(
+        this.$store.state.web3.instance,
+        chainId
+      ).then(() => {
+        this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
+      })
     },
     copyPaymentContractUrl(chainId) {
       this.$clipboard(this.contractUrl(chainId))
