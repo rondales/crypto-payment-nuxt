@@ -39,7 +39,7 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a v-if="navlink.blank" :href="navlink.url" :target="navlink.blank? '_blank':false">
+                  <a v-if="navlink.blank" :href="navlink.url">
                     <span>{{ navlink.title }}</span>
                   </a>
                   <router-link 
@@ -61,7 +61,6 @@
         <li v-for="thisSns in sns" :key="thisSns.icon">
           <a
             :href="thisSns.link"
-            target="_blank"
             :class="[thisSns.status ? 'active' : 'disable']"
           >
             <LpIcon class="icon" :path="thisSns.icon" />
