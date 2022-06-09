@@ -39,9 +39,18 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a :href="localUrl + navlink.url">
+                  <a v-if="navlink.blank" :href="navlink.url" :target="navlink.blank? '_blank':false">
                     <span>{{ navlink.title }}</span>
                   </a>
+                  <router-link 
+                    v-else 
+                    :to="{
+                      name: navlink.name,
+                      hash: navlink.hash
+                    }"
+                  >
+                    <span>{{ navlink.title }}</span>
+                  </router-link>
                 </li>
               </ul>
             </div>
@@ -84,19 +93,23 @@ export default {
           list: [
             {
               title: "Integrations",
-              url: "",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
+              blank:  true,
             },
             {
               title: "Plugins",
-              url: "",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/plugins-for-store-apps",
+              blank:  true,
             },
             {
-              title: "Docs",
-              url: "",
+              title: "API",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/api-integration",
+              blank:  true,
             },
             {
-              title: "Slash Developers",
-              url: "",
+              title: "Quick Start",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+              blank:  true,
             },
           ],
         },
@@ -105,15 +118,18 @@ export default {
           list: [
             {
               title: "Fee & Ecosystem",
-              url: "#fee-ecosystem",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+              blank: true,
             },
             {
               title: "Donation Program",
-              url: "#donation",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+              blank: true,
             },
             {
               title: "Slash Token",
-              url: "#token",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+              blank: true,
             },
           ],
         },
@@ -122,35 +138,41 @@ export default {
           list: [
             {
               title: "RoadMap",
-              url: "#roadmap",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/roadmap-status",
+              blank: true,
             },
-            {
-              title: "Referral",
-              url: "#developers",
-            },
+            // {
+            //   title: "Referral",
+            //   url: "#developers",
+            //   blank: false,
+            // },
             {
               title: "Contact",
-              url: "#contact",
+              url: "",
+              name: "home",
+              hash: "#contact",
+              blank: false,
             },
             {
-              title: "Terms of Use（payee）",
-              url: "",
+              title: "Terms of Use",
+              url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
+              blank: true,
             },
             {
-              title: "Terms of Use（payer）",
-              url: "",
+              title: "Data Protection and Privacy Policy",
+              url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
+              blank: true,
             },
             {
-              title: "Privacy Terms",
-              url: "",
-            },
-            {
-              title: "AML Policy",
-              url: "",
+              title: "Anti-Money Laundering Policy",
+              url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
+              blank: true,
             },
             {
               title: "Media Kit",
-              url: "/media_kit",
+              url: "",
+              name: "media_kit",
+              blank: false,
             },
           ],
         },
@@ -158,7 +180,7 @@ export default {
       sns: [
         {
           icon: "icon/twitter",
-          link: "",
+          link: "https://twitter.com/SlashWeb3",
           status: true,
         },
         {
@@ -173,12 +195,12 @@ export default {
         },
         {
           icon: "icon/arroba",
-          link: "",
+          link: "mailto:hello@slash.vision",
           status: true,
         },
         {
           icon: "icon/gitbook",
-          link: "",
+          link: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
           status: true,
         },
       ],
@@ -281,7 +303,7 @@ footer {
         ul {
           @include media(sp) {
             @include flex(flex-start, flex-start);
-            @include list(2, rem_sp(1));
+            @include list(1, rem_sp(1));
           }
         }
         h4 {
