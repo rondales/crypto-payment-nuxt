@@ -488,7 +488,7 @@ const publishMerchantContract = function(
   if (!MerchantFactoryContract.addresses[chainId]) {
     throw new Error('Currently, this network has stopped issuing contracts.')
   }
-
+  const reservedParam = '0x'
   const scanBlockNumberMaxLimit = getScanBlockNumberMaxLimit(chainId)
   const factoryContract = new web3.eth.Contract(
     MerchantFactoryContract.abi,
@@ -499,7 +499,8 @@ const publishMerchantContract = function(
   try {
     return factoryContract.methods.deployMerchant(
         merchantWalletAddress,
-        receiveTokenAddress
+        receiveTokenAddress,
+        reservedParam
       ).send({ from: merchantWalletAddress })
   } catch(error) {
     throw new Error(error)

@@ -67,6 +67,18 @@ export default {
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "refTokBal",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "refFeeBal",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "timeStamp",
           "type": "uint256"
         }
@@ -366,6 +378,16 @@ export default {
             },
             {
               "internalType": "uint256",
+              "name": "refTokBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "refFeeBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
               "name": "timeStamp",
               "type": "uint256"
             }
@@ -468,6 +490,11 @@ export default {
           "internalType": "address",
           "name": "merchantOwner_",
           "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "initialize",
@@ -828,6 +855,19 @@ export default {
     {
       "inputs": [
         {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "updateReserve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "slashController_",
           "type": "address"
@@ -1090,6 +1130,19 @@ export default {
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReserved",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
         }
       ],
       "stateMutability": "view",
