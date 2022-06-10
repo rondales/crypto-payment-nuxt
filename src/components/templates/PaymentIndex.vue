@@ -2,7 +2,6 @@
   <div class="slash-bg">
     <Header
       :width="windowWidth"
-      :tokenApproving="isTokenApproving"
       @switchColorTheme="switchColorTheme"
     />
     <div class="payment">
@@ -45,7 +44,7 @@
             Invoice ID：{{ invoiceId }}
           </p>
         </div>
-          <router-view @tokenApproving="getTokenApprovingStatus" />
+          <router-view />
       </div>
     </div>
     <div v-if="showFooterMenu" class="sp">
@@ -114,8 +113,7 @@ export default {
   data() {
     return {
       windowWidth: window.innerWidth,
-      showMenu: false,
-      tokenApproving: false
+      showMenu: false
     }
   },
   computed: {
@@ -133,9 +131,6 @@ export default {
     },
     isShowMenu() {
       return this.showMenu
-    },
-    isTokenApproving() {
-      return this.tokenApproving
     }
   },
   methods: {
@@ -154,9 +149,6 @@ export default {
     },
     toggleMenu(state) {
       this.showMenu = state
-    },
-    getTokenApprovingStatus(status) {
-      this.tokenApproving = status
     }
   },
   mounted() {
