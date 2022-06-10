@@ -40,7 +40,8 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
+          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
+            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
 
             <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
@@ -278,6 +279,12 @@ export default {
         size: 'small'
       })
     },
+    showNetworkModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'switch-network-for-admin-modal',
+        size: 'medium'
+      })
+    },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
     },
@@ -488,6 +495,9 @@ export default {
       height: 3rem;
       font-size: 12px;
     }
+  }
+  &.pointer {
+    cursor: pointer;
   }
 }
 .toggle-theme {
