@@ -539,10 +539,12 @@ export default {
         }).then(() => {
           this.checkTransactionStatus(transactionHash)
         })
-      }).on('error', () => {
-        this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-        this.pageState = this.pageStateList.detail
-        this.waitingWallet = false
+      }).on('error', (error) => {
+        if (error.code == '4001') {
+          this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
+          this.pageState = this.pageStateList.detail
+          this.waitingWallet = false
+        }
       }).then((txReceipt) => {
         const events = Object.values(txReceipt.events)
         const result = this.getRefundInfo(events)
