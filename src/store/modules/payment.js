@@ -14,6 +14,7 @@ const store = {
     fee: null,
     transactionHash: null,
     availableNetworks: [],
+    walletPending: false,
     status: 1,
     allowCurrencies: {
       USD: false,
@@ -65,6 +66,9 @@ const store = {
     updateAvailableNetworks({ commit }, payload) {
       commit('updateAvailableNetworks', payload)
     },
+    updateWalletPending({ commit }, payload) {
+      commit('updateWalletPending', payload)
+    },
     updateStatus({ commit }, payload) {
       commit('updateStatus', payload)
     },
@@ -90,6 +94,7 @@ const store = {
       state.decimalUnit = null
       state.transactionHash = null
       state.availableNetworks = []
+      state.walletPending = false
       state.status = 1
       state.allowCurrencies = {
         USD: false,
@@ -132,6 +137,9 @@ const store = {
     },
     updateDecimalUnit(state, payload) {
       state.decimalUnit = payload
+    },
+    updateWalletPending(state, payload) {
+      state.walletPending = payload
     },
     updateStatus(state, payload) {
       state.status = payload
