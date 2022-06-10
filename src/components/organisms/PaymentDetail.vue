@@ -537,10 +537,12 @@ export default {
         }).then(() => {
           this.checkTransactionStatus(transactionHash)
         })
-      }).on('error', () => {
-        this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-        this.pageState = this.pageStateList.detail
-        this.$store.dispatch('payment/updateWalletPending', false)
+      }).on('error', (error) => {
+        if (error.code == '4001') {
+          this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
+          this.pageState = this.pageStateList.detail
+          this.$store.dispatch('payment/updateWalletPending', false)
+        }
       }).then((txReceipt) => {
         this.$store.dispatch('payment/updateWalletPending', false)
         const events = Object.values(txReceipt.events)
