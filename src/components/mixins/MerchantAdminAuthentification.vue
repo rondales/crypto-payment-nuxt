@@ -1,5 +1,6 @@
 <script>
 import { METAMASK, WALLET_CONNECT, LOGIN_TOKEN } from '@/constants'
+import AvailableNetworks from '@/network'
 import RequestUtility from '@/utils/request'
 
 export default {
@@ -30,12 +31,25 @@ export default {
     },
     $_merchantAdminAuthentification_getConnectSucceededFunction(loginMode, modalMode) {
       return (connectInfo) => {
-        this.$_merchantAdminAuthentification_getAcountData(connectInfo)
+        this.$_merchantAdminAuthentification_checkCurrentChain(connectInfo)
+          .then(this.$_merchantAdminAuthentification_getAcountData)
           .then(this.$_merchantAdminAuthentification_signWithPrivateKey)
           .then(this.$_merchantAdminAuthentification_apiLoginAuthentification)
           .then(this.$_merchantAdminAuthentification_apiGetMerchantReceiveSymbol)
           .then((authorized) => {
             this.$_merchantAdminAuthentification_authorizedAfrer(authorized, loginMode, modalMode)
+            this.$_merchantAdminAuthentification_apiGetMerchantPausedNetworks(authorized)
+          })
+          .catch((error) => {
+            if (
+              error instanceof NotSupportedChainError
+              && /^(\/admin|\/admin\/)$/.test(this.$route.path)
+            ) {
+              this.$store.dispatch('modal/show', {
+                target: 'error-current-network-modal',
+                size: 'small'
+              })
+            }
           })
       }
     },
@@ -64,6 +78,23 @@ export default {
           })
         }
       }
+    },
+    $_merchantAdminAuthentification_checkCurrentChain(connectInfo) {
+      return new Promise((resolve) => {
+        if (connectInfo.provider !== WALLET_CONNECT) {
+          resolve(connectInfo);
+        }
+
+        const systemAvailableNetworks =
+          Object.values(AvailableNetworks)
+            .map((network) => { return network.chainId})
+
+        if (systemAvailableNetworks.includes(connectInfo.chainId)) {
+          resolve(connectInfo);
+        } else {
+          throw new NotSupportedChainError()
+        }
+      })
     },
     $_merchantAdminAuthentification_getAcountData(connectInfo) {
       return this.$web3.getAccountData(
@@ -104,10 +135,18 @@ export default {
         return connectInfo
       })
     },
+    $_merchantAdminAuthentification_apiGetMerchantPausedNetworks(authorizedData) {
+      const url = `${this.$_merchantAdminAuthentification_API_BASE_URL}/api/v1/management/merchant/status`
+      const request = { headers: { Authorization: RequestUtility.getBearer(authorizedData.authorized.login_token) } }
+      return this.axios.get(url, request).then((apiResponse) => {
+        this.$store.dispatch('merchant/updatePausedNetworkStatus', apiResponse.data)
+      })
+    },
     $_merchantAdminAuthentification_authorizedAfrer(authorizedData, loginMode, modalMode) {
       localStorage.setItem(LOGIN_TOKEN, authorizedData.authorized.login_token)
       this.$store.dispatch('account/update', authorizedData.account)
       this.$store.dispatch('account/updateReceiveSymbol', authorizedData.account.receiveSymbol)
+      this.$store.dispatch('account/updateNote', authorizedData.authorized.note)
       if (loginMode) {
         this.$store.dispatch('web3/update', authorizedData.web3)
         if (modalMode) {
@@ -122,6 +161,13 @@ export default {
         }
       }
     }
+  }
+}
+
+class NotSupportedChainError extends Error {
+  constructor() {
+    super('The currently connected network is not supported')
+    this.name = 'NotSupportedChainError'
   }
 }
 </script>

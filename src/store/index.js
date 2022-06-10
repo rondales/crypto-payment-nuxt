@@ -5,6 +5,7 @@ import SecureLS from 'secure-ls'
 
 import web3 from './modules/web3'
 import account from './modules/account'
+import merchant from './modules/merchant'
 import payment from './modules/payment'
 import modal from './modules/modal'
 
@@ -19,6 +20,7 @@ const store = new Vuex.Store({
       paths: [
         'web3.provider',
         'account',
+        'merchant',
         'payment',
         'hamberger',
         'theme',
@@ -34,13 +36,15 @@ const store = new Vuex.Store({
   modules: {
     web3,
     account,
+    merchant,
     payment,
     modal
   },
   state: {
     hamberger: false,
     theme: 'dark',
-    invoicePage: true
+    invoicePage: true,
+    accountMenu: false
   },
   actions: {
     hamberger({ commit }) {
@@ -51,6 +55,9 @@ const store = new Vuex.Store({
     },
     currentPath({ commit }, invoicePage){
       commit('currentPath', invoicePage);
+    },
+    toggleAccountMenu({ commit }) {
+      commit('toggleAccountMenu')
     }
   },
   mutations: {
@@ -62,6 +69,9 @@ const store = new Vuex.Store({
     },
     currentPath(state, { invoicePage }) {
       state.invoicePage = invoicePage;
+    },
+    toggleAccountMenu(state) {
+      state.accountMenu = !state.accountMenu
     }
   }
 })

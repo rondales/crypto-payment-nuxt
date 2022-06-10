@@ -54,7 +54,6 @@ import {
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
 } from '@/constants'
-import AvailableNetworks from '@/network'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
 
@@ -126,12 +125,6 @@ export default {
   },
   created() {
     this.$store.dispatch('payment/updateHeaderInvoice', true)
-    this.apiGetAvailableNetworks().then((response) => {
-      const networks = Object.values(AvailableNetworks).map((network) => {
-        return network.chainId
-      }).filter(item => response.data.networks.includes(item))
-      this.$store.dispatch('payment/updateAvailableNetworks', networks)
-    })
   }
 }
 </script>

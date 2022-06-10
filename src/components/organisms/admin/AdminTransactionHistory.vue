@@ -63,7 +63,7 @@
               show
             </div>
             <div class="show-select">
-              <select v-model="paginateParams.perPage.value" @change="searchHistory">
+              <select v-model="paginateParams.perPage.value" @change="searchHistory()">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -98,13 +98,13 @@
                   <div v-if="record.status === 1" class="received">
                     System Received
                   </div>
-                  <div v-if="record.status === 2" class="received">
+                  <div v-if="record.status === 2" class="pending">
                     Result Pending
                   </div>
                   <div v-if="record.status === 3" class="cancelled">
                     Cancelled
                   </div>
-                  <div v-if="record.status === 4" class="received">
+                  <div v-if="record.status === 4" class="completed">
                     Completed
                   </div>
                 </td>
@@ -250,6 +250,7 @@ export default {
       const controlParams = Object.values(this.paginateParams).map((param) => {
         return [ param.key, param.value ]
       })
+      console.log(controlParams)
       const timezoneParam = [[ 'offset', moment().utcOffset() ]]
       const convertedParams = new URLSearchParams(inputedParams.concat(controlParams, timezoneParam))
       const request = {
@@ -602,25 +603,25 @@ export default {
               font-size: 12px;
             }
           }
-          .cancelled,.cancelled-refund{
-            border: 1px solid #F75D68;
-            color: #F75D68;
-            padding: 16px 16px;
-          }
-          .cancelled-refund{
-            border: 1px solid #F75D68;
-            color: #F75D68;
-            padding: 4px;
-          }
           .received{
+            border: 1px solid #C0C0C0;
+            color: #C0C0C0;
+            padding: 16px 16px;
+          }
+          .pending{
+            border: 1px solid #FFC107;
+            color: #FFC107;
+            padding: 16px 16px;
+          }
+          .cancelled{
+            border: 1px solid #F75D68;
+            color: #F75D68;
+            padding: 16px 16px;
+          }
+          .completed{
             border: 1px solid #00FF3B;
             color: #00FF3B;
             padding: 16px 16px;
-          }
-          .received-refund{
-            border: 1px solid #00FF3B;
-            color: #00FF3B;
-            padding: 4px 16px;
           }
         }
         th,td{

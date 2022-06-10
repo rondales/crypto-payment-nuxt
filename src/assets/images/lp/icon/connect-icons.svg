@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240" height="53" viewBox="0 0 240 53">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="長方形_17948" data-name="長方形 17948" width="240" height="53" transform="translate(169 2069)" fill="#fff" stroke="#707070" stroke-width="1" opacity="0.54"/>
+    </clipPath>
+  </defs>
+  <g id="マスクグループ_86" data-name="マスクグループ 86" transform="translate(-169 -2069)" clip-path="url(#clip-path)">
+    <g id="グループ_5206" data-name="グループ 5206" transform="translate(219.582 2076.128)">
+      <g id="metamask-fox-1" transform="translate(0)">
+        <path id="パス_1961" data-name="パス 1961" d="M190.982,35.5,174.6,47.667l3.029-7.178Z" transform="translate(-151.089 -35.5)" fill="#e2761b" stroke="#e2761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <g id="グループ_5164" data-name="グループ 5164" transform="translate(0.346 0)">
+          <path id="パス_1962" data-name="パス 1962" d="M44.4,35.5,60.65,47.782l-2.881-7.294Z" transform="translate(-42.671 -35.5)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1963" data-name="パス 1963" d="M216.163,206.8l-4.363,6.684,9.335,2.568,2.684-9.1Z" transform="translate(-182.511 -178.597)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1964" data-name="パス 1964" d="M33.9,206.948l2.667,9.1,9.335-2.568L41.539,206.8Z" transform="translate(-33.9 -178.597)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1965" data-name="パス 1965" d="M90.4,109.714l-2.6,3.935,9.269.412L96.74,104.1Z" transform="translate(-78.926 -92.806)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1966" data-name="パス 1966" d="M181.235,109.129l-6.421-5.729-.214,10.076,9.253-.412Z" transform="translate(-151.435 -92.221)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1967" data-name="パス 1967" d="M106.8,214.57l5.565-2.717-4.807-3.754Z" transform="translate(-94.798 -179.683)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1968" data-name="パス 1968" d="M177.9,211.854l5.581,2.717-.774-6.47Z" transform="translate(-154.192 -179.683)" fill="#e4761b" stroke="#e4761b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="グループ_5165" data-name="グループ 5165" transform="translate(12.348 32.171)">
+          <path id="パス_1969" data-name="パス 1969" d="M183.481,233.617,177.9,230.9l.445,3.639-.049,1.531Z" transform="translate(-166.194 -230.9)" fill="#d7c1b3" stroke="#d7c1b3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1970" data-name="パス 1970" d="M106.8,233.617l5.186,2.453-.033-1.531.412-3.639Z" transform="translate(-106.8 -230.9)" fill="#d7c1b3" stroke="#d7c1b3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <path id="パス_1971" data-name="パス 1971" d="M115.243,178.965,110.6,177.6l3.276-1.5Z" transform="translate(-97.626 -152.952)" fill="#233447" stroke="#233447" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1972" data-name="パス 1972" d="M179.7,178.965l1.367-2.865,3.293,1.5Z" transform="translate(-155.35 -152.952)" fill="#233447" stroke="#233447" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <g id="グループ_5166" data-name="グループ 5166" transform="translate(7.985 20.843)">
+          <path id="パス_1973" data-name="パス 1973" d="M84.663,213.484l.79-6.684-5.153.148Z" transform="translate(-80.3 -199.441)" fill="#cd6116" stroke="#cd6116" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1974" data-name="パス 1974" d="M207,206.8l.79,6.684,4.363-6.536Z" transform="translate(-186.14 -199.441)" fill="#cd6116" stroke="#cd6116" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1975" data-name="パス 1975" d="M183.853,162.1l-9.253.412.856,4.758,1.367-2.865,3.293,1.5Z" transform="translate(-159.074 -162.1)" fill="#cd6116" stroke="#cd6116" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1976" data-name="パス 1976" d="M91.554,165.9l3.293-1.5,1.35,2.865.873-4.758L87.8,162.1Z" transform="translate(-86.565 -162.1)" fill="#cd6116" stroke="#cd6116" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="グループ_5167" data-name="グループ 5167" transform="translate(9.22 20.843)">
+          <path id="パス_1977" data-name="パス 1977" d="M87.8,162.1l3.886,7.573-.132-3.77Z" transform="translate(-87.8 -162.1)" fill="#e4751f" stroke="#e4751f" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1978" data-name="パス 1978" d="M207.265,165.9l-.165,3.77L211,162.1Z" transform="translate(-187.458 -162.1)" fill="#e4751f" stroke="#e4751f" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1979" data-name="パス 1979" d="M139.673,164.6l-.873,4.758,1.087,5.614.247-7.392Z" transform="translate(-130.403 -164.188)" fill="#e4751f" stroke="#e4751f" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1980" data-name="パス 1980" d="M172.344,164.6l-.445,2.964.2,7.409,1.1-5.614Z" transform="translate(-158.054 -164.188)" fill="#e4751f" stroke="#e4751f" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <path id="パス_1981" data-name="パス 1981" d="M174.2,186.567l-1.1,5.614.79.543,4.807-3.754.165-3.77Z" transform="translate(-149.836 -160.553)" fill="#f6851b" stroke="#f6851b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1982" data-name="パス 1982" d="M110.6,185.2l.132,3.77,4.807,3.754.79-.543-1.087-5.614Z" transform="translate(-97.626 -160.553)" fill="#f6851b" stroke="#f6851b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1983" data-name="パス 1983" d="M118.9,249.853l.049-1.531-.412-.362h-6.207l-.379.362.033,1.531L106.8,247.4l1.811,1.482,3.671,2.552h6.306l3.688-2.552,1.811-1.482Z" transform="translate(-94.452 -212.513)" fill="#c0ad9e" stroke="#c0ad9e" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1984" data-name="パス 1984" d="M144.653,228.143l-.79-.543H139.3l-.79.543-.412,3.639.379-.362h6.207l.412.362Z" transform="translate(-120.599 -195.973)" fill="#161616" stroke="#161616" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <g id="グループ_5168" data-name="グループ 5168" transform="translate(0 0)">
+          <path id="パス_1985" data-name="パス 1985" d="M194.43,48.457l1.4-6.717-2.091-6.24L177.9,47.255l6.092,5.153,8.611,2.519,1.91-2.223-.823-.593,1.317-1.2-1.021-.79,1.317-1Z" transform="translate(-153.846 -35.5)" fill="#763d16" stroke="#763d16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <path id="パス_1986" data-name="パス 1986" d="M31.8,41.74l1.4,6.717-.889.659,1.317,1-1,.79,1.317,1.2-.823.593,1.893,2.223,8.611-2.519,6.092-5.153L33.874,35.5Z" transform="translate(-31.8 -35.5)" fill="#763d16" stroke="#763d16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <path id="パス_1987" data-name="パス 1987" d="M216.995,140.719l-8.611-2.519L211,142.135l-3.9,7.573,5.137-.066h7.656Z" transform="translate(-178.239 -121.291)" fill="#f6851b" stroke="#f6851b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1988" data-name="パス 1988" d="M45.375,138.2l-8.611,2.519L33.9,149.642h7.639l5.12.066-3.886-7.573Z" transform="translate(-33.554 -121.291)" fill="#f6851b" stroke="#f6851b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="パス_1989" data-name="パス 1989" d="M133.667,82.066l.543-9.5,2.5-6.767H125.6l2.47,6.767.576,9.5.2,3,.016,7.376h4.561l.033-7.376Z" transform="translate(-110.157 -60.811)" fill="#f6851b" stroke="#f6851b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Page-1" transform="translate(83.924 0.658)">
+        <g id="walletconnect-logo-alt" transform="translate(0 0)">
+          <path id="WalletConnect" d="M11.368,7.816a21.6,21.6,0,0,1,32.685,0l1.086,1.2a1.372,1.372,0,0,1,0,1.8l-3.716,4.1a.54.54,0,0,1-.817,0l-1.495-1.651a15.069,15.069,0,0,0-22.8,0l-1.6,1.768a.54.54,0,0,1-.817,0l-3.716-4.1a1.372,1.372,0,0,1,0-1.8ZM51.739,16.3l3.307,3.652a1.372,1.372,0,0,1,0,1.8L40.133,38.23a1.08,1.08,0,0,1-1.634,0h0L27.915,26.541a.27.27,0,0,0-.409,0h0L16.923,38.23a1.08,1.08,0,0,1-1.634,0h0L.376,21.76a1.372,1.372,0,0,1,0-1.8L3.683,16.3a1.08,1.08,0,0,1,1.634,0L15.9,27.992a.27.27,0,0,0,.409,0h0L26.894,16.3a1.08,1.08,0,0,1,1.634,0h0L39.112,27.992a.27.27,0,0,0,.409,0L50.1,16.3A1.08,1.08,0,0,1,51.739,16.3Z" transform="translate(-0.038 -0.34)" fill="#3b99fc"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

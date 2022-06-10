@@ -21,7 +21,7 @@
             </option>
           </select> -->
           <select name="currency" v-model="selectedCurrency">
-            <option disabled value="">{{ selectedCurrencyName }}</option>
+            <!-- <option disabled value="">{{ selectedCurrencyName }}</option> -->
             <option v-for="(currency, key) in currencies" :value="currency.name" :key="key">
               {{ currency.name }}
             </option>
@@ -92,10 +92,11 @@ export default {
       loading: false,
       requireUpdateExchange: false,
       legalCurrencyAmount: null,
-      selectedCurrency: CURRENCIES.JPY.name,
+      selectedCurrency: null,
       exchangedAmount: 0,
-      exchangeRate: 100,
-      exchangeMarginRate: 3.5,
+      exchangeRate: null,
+      exchangeMarginRate: null,
+      exchangeTimer: null,
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -143,6 +144,9 @@ export default {
     calculationExchange() {
       this.exchangedAmount = MathExtend.ceilDecimal(this.legalCurrencyAmount / this.exchangeRate, 2)
     },
+    updateDefaultCurrency() {
+      this.selectedCurrency = Object.values(this.currencies)[0].name
+    },
     updateExchangeData(currency = null) {
       if (currency === null) currency = this.selectedCurrency
       this.apiGetExchangeRate(currency).then((response) => {
@@ -150,8 +154,9 @@ export default {
         this.exchangeMarginRate = response.data.margin_rate
         if (this.legalCurrencyAmount) this.calculationExchange()
         this.requireUpdateExchange = false
-        setTimeout(() => {
+        this.exchangeTimer = setTimeout(() => {
           this.requireUpdateExchange = true
+          clearTimeout(this.exchangeTimer)
         }, 120000)
       }).catch((error) => {
         let message
@@ -217,6 +222,7 @@ export default {
     }
   },
   created() {
+    this.updateDefaultCurrency()
     this.updateExchangeData(this.selectedCurrency)
   }
 }
@@ -292,6 +298,9 @@ export default {
       figure{
         line-height: 53px;
         position: absolute;
+        img{
+          vertical-align: sub;
+        }
       }
       select{
         padding-left: 36px;

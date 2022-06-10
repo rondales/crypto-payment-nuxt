@@ -43,17 +43,26 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
-            <span class="btn-icon">
+          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
+            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
+
+            <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
             </span>
             {{ networkName }}
           </button>
         </div>
         <div v-if="show" class="ml-2">
-          <button v-if="connected" class="account-wallet">
-            <span class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
-            <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+          <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
+            <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
+            <span v-else class="price unknown">Balance unknown</span>
+            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
+              <div class="loading-wrap-header loading-wrap active">
+                  <img class="spin spin-header" src="@/assets/images/loading.svg">
+              </div>
+              Pending
+            </div>
           </button>
           <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
             Connect to a wallet
@@ -61,11 +70,63 @@
         </div>
       </div>
     </div>
+    <div v-if="this.$store.state.accountMenu" class="account-menu">
+      <ul>
+        <li @click="openAccountModal()">
+          <p>
+            Account
+          </p>
+          <img src="@/assets/images/account.svg" alt="">
+        </li>
+        <li @click="editNote()" >
+          <p>
+            Account Note
+          </p>
+          <img src="@/assets/images/edit.svg" alt="">
+        </li>
+        <li>
+          <div class="account-note">
+            {{accountNote}}
+          </div>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/payment/history">
+            <p>
+              History
+            </p>
+            <img src="@/assets/images/history.svg" alt="">
+          </router-link>
+        </li>
+        <li>
+          <router-link class="add-flex j-between a-center" to="/admin/payment/settings/contract">
+            <p>
+              Settings
+            </p>
+            <img src="@/assets/images/settings.svg" alt="">
+          </router-link>
+        </li>
+        <!-- <li>
+          <router-link class="add-flex j-between a-center" to="/admin/store">
+            <p>
+              Store apps
+            </p>
+            <img src="@/assets/images/scan.svg" alt="">
+          </router-link>
+        </li> -->
+        <li @click="disconnect()">
+          <p>
+            Disconnect
+          </p>
+          <img src="@/assets/images/logout.svg" alt="">
+        </li>
+      </ul>
+    </div>
   </header>
 </template>
 
 <script>
-import { DEVELOPMENT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { DEVELOPMENT, WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import AvailableNetworks from '@/network'
 
 export default {
   name: 'Header',
@@ -105,9 +166,11 @@ export default {
         if (balanceSplit[1].length > 4) {
           balanceSplit[1] = balanceSplit[1].substr(0, 4)
         } else {
-          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+          balanceSplit[1] = (balanceSplit[1] + '0000').substr(0,4)
         }
         balance = balanceSplit[0] + '.' + balanceSplit[1]
+      } else {
+        balance = balance + '.' + '0000'
       }
       return balance
     },
@@ -158,6 +221,12 @@ export default {
     isUseTestnet() {
       return process.env.NODE_ENV === DEVELOPMENT
     },
+    isSupportedNetwork() {
+      const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      })
+      return this.$store.state.web3.chainId && systemAvailableNetworks.includes(this.$store.state.web3.chainId)
+    },
     receiveTokenSymbol() {
       return this.$store.state.account.receiveSymbol
     },
@@ -173,22 +242,18 @@ export default {
       return this.$store.state.web3.chainId
     },
     networkName() {
-      if (this.$store.state.web3.chainId !== null) {
+      if (this.isSupportedNetwork) {
         return NETWORKS[
           this.$store.state.web3.chainId
         ].name
       } else {
-        return ''
+        return 'Not supported network'
       }
     },
     networkIcon() {
-      if (this.$store.state.web3.chainId !== null) {
-        return NETWORKS[
-          this.$store.state.web3.chainId
-        ].icon
-      } else {
-        return ''
-      }
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
     },
     symbol() {
       return this.$store.state.account.symbol
@@ -205,6 +270,12 @@ export default {
     },
     fixedNetwork() {
       return (this.$store.state.web3.chainId)
+    },
+    accountNote() {
+      return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   methods: {
@@ -214,8 +285,34 @@ export default {
         size: 'small'
       })
     },
+    showNetworkModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'switch-network-for-admin-modal',
+        size: 'medium'
+      })
+    },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
+    },
+    toggleSubMenu(){
+      if (this.isAdminPage) {
+        this.$store.dispatch("toggleAccountMenu");
+      }
+    },
+    openAccountModal(){
+      this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
+    },
+    editNote(){
+      this.$store.dispatch("modal/show", {target: 'edit-account-note-modal', size: "small"});
+    },
+    disconnect(){
+      this.toggleSubMenu()
+      if (this.$store.state.web3.provider === WALLET_CONNECT) {
+        this.$web3.disconnectByWalletConnect(
+          this.$store.state.web3.instance
+        )
+      }
+      this.$router.push({ path: '/admin' })
     }
   }
 }
@@ -340,15 +437,22 @@ export default {
   display: flex;
   align-items: center;
   background: var(--color_darken);
+  cursor: default;
+  &.admin {
+    cursor: pointer;
+  }
   @include media(pc) {
     height: 42px;
     border-radius: 8px;
     padding: 7px 0 7px 7px;
     font-size: 1.2rem;
-    cursor: default;
     .price {
       margin-left: 24px;
       color: #fff;
+      &.unknown {
+        margin-left: 10px;
+        font-weight: 100;
+      }
     }
     .id {
       max-width: 192px;
@@ -379,6 +483,9 @@ export default {
       max-width: 115px;
       margin: 0 10px;
       color: #fff;
+      &.unknown {
+        margin-left: 0px;
+      }
     }
     .id {
       max-width: 140px;
@@ -412,6 +519,9 @@ export default {
       font-size: 12px;
     }
   }
+  &.pointer {
+    cursor: pointer;
+  }
 }
 .toggle-theme {
   text-align: center;
@@ -424,7 +534,6 @@ export default {
 }
 .theme-button {
   font-size: 0;
-
   @include media(pc) {
     .emoji {
       font-size: 28px;
@@ -449,5 +558,67 @@ export default {
     grid-row: 1;
     grid-column: 3;
   }
+}
+.account-menu{
+  position: absolute;
+  right: 24px;
+  top: 70px;
+  background: #292536;
+  padding: 24px 16px;
+  border-radius: 10px;
+  @include media(sp) {
+    width: 90%;
+  }
+  ul{
+    li{
+      font-size: 15px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      cursor: pointer;
+      &:hover{
+        opacity: 0.8;
+      }
+      a{
+        width: 100%;
+      }
+      &:nth-child(2){
+        img{
+          cursor: pointer;
+        }
+      }
+      &:nth-child(3){
+        cursor: unset;
+        &:hover{
+          opacity: 1;
+        }
+      }
+      &:last-child{
+        margin-bottom: 0;
+      }
+      .account-note{
+        overflow: scroll;
+        background: #171522;
+        border-radius: 8px;
+        padding: 8px;
+        resize: none;
+        width: 200px;
+        height: 100%;
+        max-height: 100px;
+        font-size: 11px;
+        @include media(sp) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+.loading-wrap-header {
+  display: contents !important;
+}
+.spin-header {
+  height: 20px !important;
+  width: 20px !important;
 }
 </style>

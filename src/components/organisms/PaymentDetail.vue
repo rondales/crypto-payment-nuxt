@@ -64,7 +64,7 @@
         <div class="dattail-lists mt-1" v-if="isDetailState">
           <div class="dattail-list add-flex j-between mb-1">
             <p>Exchange Rate</p>
-            <p>1{{ paymentRequestSymbol }}＝ {{ userTokenExchangeRate }}{{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
+            <p>1 {{ paymentRequestSymbol }} ＝ {{ userTokenExchangeRate }} {{ userTokenSymbol }}<img src="@/assets/images/exchange.svg" alt=""></p>
           </div>
           <div class="dattail-list add-flex j-between mb-1">
             <p>Route</p>
@@ -121,26 +121,52 @@
               Check the reason for the reverted from Explorer.
             </p>
           </div>
-          <a v-if="isPublishedTransactionHash" class="payment-status_btn" target="_blank" :href="transactionUrl">
+          <a
+            v-if="isProcessingState 
+            || (isSuccessedState && hasSuccessReturnUrl)
+            || (isFailuredState && hasFailureReturnUrl)"
+            class="payment-status_btn"
+            target="_blank"
+            :href="transactionUrl"
+          >
             View on explorer
             <img src="@/assets/images/link-icon.svg" alt="">
           </a>
         </div>
-        <button :class="{inactive: isExpiredExchange || isWaitingWallet}" class="btn __g __l mb-2" @click="payment" v-if="isDetailState">
+        <button
+          v-if="isDetailState"
+          class="btn __g __l mb-2"
+          :class="{inactive: isExpiredExchange || isWalletPending}"
+          @click="payment"
+        >
           Confirm Wallet
-          <div class="loading-wrap" :class="{active: isWaitingWallet}">
+          <div class="loading-wrap" :class="{active: isWalletPending}">
             <img class="spin" src="@/assets/images/loading.svg">
           </div>
         </button>
-        <button class="btn __g __l mb-2 inactive" v-else-if="isProcessingState">
+        <button
+          v-else-if="isProcessingState"
+          class="btn __g __l mb-2 inactive"
+        >
           processing…
         </button>
-        <button class="btn __g __l mb-2" @click="transitionSucceedUrl" v-else-if="isSuccessedState">
+        <button
+          v-else-if="(isSuccessedState && hasSuccessReturnUrl) || (isFailuredState && hasFailureReturnUrl)"
+          class="btn __g __l mb-2"
+          @click="backToMerchant"
+        >
           Back to Payee’s Services
         </button>
-        <button class="btn __g __l mb-2" @click="retry" v-else>
-          Try again
-        </button>
+        <a
+          v-else
+          :href="transactionUrl"
+          target="_blank"
+        >
+          <button class="btn __g __l mb-2">
+            View on explorer
+            <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="">
+          </button>
+        </a>
         <p class="via" v-if="isDetailState || isProcessingState">
           via Slash Payment
           <span>
@@ -159,7 +185,9 @@ import {
   STATUS_PUBLISHED,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS
+  STATUS_RESULT_SUCCESS,
+  MERCHANT_NEW_TRANSACTION,
+  MERCHANT_NEW_TRANSACTION_PARAM_LIST
 } from '@/constants'
 import {
   BscTokens,
@@ -189,12 +217,16 @@ export default {
       monitoringInterval: null,
       exchangeTimer: null,
       expiredExchange: false,
-      waitingWallet: false,
+      refundedTokenAmount: null,
+      refundedFeeAmount: null,
       contract: {
         address: null,
         abi: null
       },
-      returnUrls: { succeed: null },
+      returnUrls: {
+        succeed: null,
+        failured: null
+      },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -270,6 +302,7 @@ export default {
       }
     },
     tradeRoute() {
+      if (!this.isDifferentToken) return this.paymentRequestSymbol;
       const chainId = this.$store.state.web3.chainId
       const nativeTokenSymbols = [
         'ETH', 'BNB', 'MATIC', 'AVAX',
@@ -331,9 +364,6 @@ export default {
     isExpiredExchange() {
       return this.expiredExchange
     },
-    isWaitingWallet() {
-      return this.waitingWallet
-    },
     isPublishedTransactionHash() {
       return (this.transactionHash)
     },
@@ -361,6 +391,28 @@ export default {
         ? this.$store.state.payment.token.address.toLowerCase()
         : ''
       return receiveTokenAddress !== paymentTokenAddress
+    },
+    hasSuccessReturnUrl() {
+      return this.returnUrls.succeed != null
+    },
+    hasFailureReturnUrl() {
+      return this.returnUrls.failured != null
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
+    }
+  },
+  watch: {
+    refundedFeeAmount() {
+      this.$store.dispatch('modal/show', {
+        target: 'refund-info-modal',
+        size: 'small',
+        params: {
+          refundedTokenAmount: this.refundedTokenAmount,
+          refundedFeeAmount: this.refundedFeeAmount,
+          refundedFeeSymbol: this.nativeTokenSymbol
+        }
+      })
     }
   },
   methods: {
@@ -407,11 +459,6 @@ export default {
         this.updateExchange()
       })
     },
-    retry() {
-      this.updateExchange()
-      this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-      this.pageState = this.pageStateList.detail
-    },
     exchangeExpireTimer() {
       this.exchangeTimer = setTimeout(() => {
         this.expiredExchange = true;
@@ -429,6 +476,7 @@ export default {
         this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateDecimalUnit', exchange.requestTokenDecimal)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,
           rate: exchange.rate
@@ -443,11 +491,13 @@ export default {
         this.exchangeExpireTimer()
       })
     },
-    transitionSucceedUrl() {
-      window.location = this.returnUrls.succeed
+    backToMerchant() {
+      window.location = this.isSuccessedState
+        ? this.returnUrls.succeed
+        : this.returnUrls.failured
     },
     payment() {
-      this.waitingWallet = true
+      this.$store.dispatch('payment/updateWalletPending', true)
       clearTimeout(this.exchangeTimer)
       if(this.$store.state.payment.token.address == null) {
         this.handleSendTransaction()
@@ -462,10 +512,10 @@ export default {
               } else {
                 this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
                 this.pageState = this.pageStateList.failured
-                this.waitingWallet = false
+                this.$store.dispatch('payment/updateWalletPending', false)
               }
             }).catch(error => {
-              if(error.code == '4001') {this.waitingWallet = false}
+              if(error.code == '4001') {this.$store.dispatch('payment/updateWalletPending', false)}
             }) 
           }
         })
@@ -475,7 +525,6 @@ export default {
       this.sendTransaction().on('transactionHash', (transactionHash) => {
         this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
         this.pageState = this.pageStateList.processing
-        this.waitingWallet = false
         this.$store.dispatch('payment/updateTransactionHash', transactionHash)
         this.apiUpdateTransaction({
           payment_token: this.$route.params.token,
@@ -488,11 +537,33 @@ export default {
         }).then(() => {
           this.checkTransactionStatus(transactionHash)
         })
-      }).on('error', () => {
-        this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
-        this.pageState = this.pageStateList.failured
-        this.waitingWallet = false
+      }).on('error', (error) => {
+        if (error.code == '4001') {
+          this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
+          this.pageState = this.pageStateList.detail
+          this.$store.dispatch('payment/updateWalletPending', false)
+        }
+      }).then((txReceipt) => {
+        this.$store.dispatch('payment/updateWalletPending', false)
+        const events = Object.values(txReceipt.events)
+        const result = this.getRefundInfo(events)
+        this.refundedTokenAmount = result.refundedTokenAmount
+        this.refundedFeeAmount = result.refundedFeeAmount
       })
+    },
+    getRefundInfo(events) {
+      const eventName = MERCHANT_NEW_TRANSACTION
+      const eventParams = MERCHANT_NEW_TRANSACTION_PARAM_LIST 
+      const result = this.$web3.getEventLog(this.$store.state.web3.instance, eventName, eventParams, events)
+      const tokenDecimalUnit = this.$store.state.payment.decimalUnit
+      const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
+      const refundTokenInWei = result[6]
+      const refundedTokenAmount = this.$store.state.web3.instance.utils.fromWei(refundTokenInWei, tokenWeiUnit)
+      const refundedFeeAmount =  this.$store.state.web3.instance.utils.fromWei(result[7], 'ether')
+      return {
+        refundedTokenAmount: refundedTokenAmount,
+        refundedFeeAmount: refundedFeeAmount
+      }
     },
     checkContractApproved() {
       return this.$web3.checkTokenApproved(
@@ -589,6 +660,7 @@ export default {
       }
       this.apiGetPaymentCompletedUrl().then((response) => {
         this.returnUrls.succeed = response.data.succeeded_return_url
+        this.returnUrls.failured = response.data.failured_return_url
       })
       this.apiGetContract().then((response) => {
         this.contract.address = response.data.address
@@ -716,13 +788,16 @@ export default {
     &-name{
       p{
         font-size: 16px;
-        font-weight: 100;
+        font-weight: 400;
         line-height: 25px;
         margin-left: 7px;
       }
       figure {
         width: 25px;
         height: 25px;
+        img{
+          vertical-align: baseline;
+        }
       }
     }
     &-value{
@@ -766,6 +841,9 @@ export default {
       height: 20px;
       margin-left: 5px;
     }
+  }
+  .new-tab-icon {
+    padding: 0!important;
   }
 }
 </style>

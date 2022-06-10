@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="payment_balance-price">
-            {{ paymentAmount | balanceFormat }}
+            {{ paymentAmount }}
           </div>
         </div>
         <div v-if="isExchangeLoaded && isBalanceEnough">
@@ -78,8 +78,15 @@
               </div>
             </div>
           </div>
-          <button :class="{inactive: isRequierExchangeUpdate}" class="btn __g __l mb-2" @click="sendTokenItems">
-            Go Exchange to Payment
+          <button v-if="!isTokenApprovedAmountEnough && !isPayingWithNativeToken" :class="{inactive: isWalletPending}" class="btn __g __l mb-2 approve-token-btn" @click="handleTokenApprove">
+            <img class="token-approve-btn-img" :src="tokenIcon">
+            Allow the Slash protocol to use your {{ tokenSymbol }}
+            <div class="loading-wrap" :class="{'active': isWalletPending}">
+              <img class="spin" src="@/assets/images/loading.svg">
+            </div>
+          </button>
+          <button :class="{inactive: (isRequierExchangeUpdate || !isTokenApprovedAmountEnough && !isPayingWithNativeToken) }" class="btn __g __l mb-2" @click="sendTokenItems">
+            Go Payment
             <div class="loading-wrap" :class="{'active': loading}">
               <img class="spin" src="@/assets/images/loading.svg">
             </div>
@@ -128,6 +135,7 @@ export default {
         address: null,
         abi: null
       },
+      tokenApprovedAmount: null,
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -153,6 +161,9 @@ export default {
   computed: {
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     },
     slippageTolerance() {
       return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
@@ -230,6 +241,12 @@ export default {
     isRequierExchangeUpdate() {
       return !this.loadedExchange || this.expiredExchange
     },
+    isTokenApprovedAmountEnough() {
+      return parseFloat(this.tokenApprovedAmount) >= parseFloat(this.requireAmount)
+    },
+    isPayingWithNativeToken() {
+      return this.$store.state.payment.token.address == null
+    }
   },
   methods: {
     apiGetContract() {
@@ -274,6 +291,7 @@ export default {
         this.slippageTolerance
       ).then((exchange) => {
         this.$store.dispatch('payment/updateFee', exchange.fee)
+        this.$store.dispatch('payment/updateDecimalUnit', exchange.requestTokenDecimal)
         this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
         this.$store.dispatch('payment/updateToken', {
           amount: exchange.requireAmount,
@@ -311,6 +329,48 @@ export default {
             this.$router.push({ path: `/payment/token/${this.paymentToken}` })
         })
       })
+    },
+    getTokenApprovedAmount() {
+      return this.$web3.getTokenApprovedAmount(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
+    },
+    tokenApprove() {
+      return this.$web3.tokenApprove(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.account.address,
+        this.contract,
+        this.$store.state.payment.token
+      )
+    },
+    getTokenDecimalUnit() {
+      return this.$web3.getTokenDecimalUnit(
+        this.$store.state.web3.instance,
+        this.$store.state.web3.chainId,
+        this.$store.state.payment.token
+      )
+    },
+    handleTokenApprove() {
+      this.$store.dispatch('payment/updateWalletPending', true)
+      this.tokenApprove().then((receipt) => {
+        if(receipt.status) {
+          const approvedAmountInWei = receipt.events['Approval'].returnValues.value
+          this.getTokenDecimalUnit().then((tokenDecimalUnit) => {
+            const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
+            const approvedAmount = this.$store.state.web3.instance.utils.fromWei(approvedAmountInWei, tokenWeiUnit)
+            this.tokenApprovedAmount = approvedAmount
+            this.$store.dispatch('payment/updateWalletPending', false)
+          })
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$store.dispatch('payment/updateWalletPending', false)
+      }) 
     }
   },
   created(){
@@ -323,6 +383,11 @@ export default {
       this.apiGetContract().then((response) => {
         this.contract.address = response.data.address
         this.contract.abi = JSON.parse(response.data.args)
+        if(!this.isPayingWithNativeToken) {
+          this.getTokenApprovedAmount().then((approvedAmount) => {
+            this.tokenApprovedAmount = approvedAmount
+          })
+        }
         this.updateExchange()
       })
       if (this.web3Instance) {
@@ -416,13 +481,16 @@ export default {
     &-name{
       p{
         font-size: 16px;
-        font-weight: 100;
+        font-weight: 400;
         margin-left: 11px;
         line-height: 25px;
       }
       figure {
         width: 25px;
         height: 25px;
+        img{
+          vertical-align: baseline;
+        }
       }
     }
     &-value{
@@ -455,6 +523,8 @@ export default {
       width: 100%;
       font-weight: 100;
       font-size: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .via{
@@ -474,6 +544,15 @@ export default {
     font-weight: 100;
     letter-spacing: 0.05em;
     text-align: center;
+  }
+  .token-approve-btn-img {
+    padding-top: 0px!important;
+    width: 25px;
+    height: 25px;
+  }
+  .approve-token-btn {
+    padding: 0;
+    font-size: 11px;
   }
 }
 </style>

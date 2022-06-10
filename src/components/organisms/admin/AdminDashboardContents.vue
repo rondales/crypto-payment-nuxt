@@ -21,7 +21,7 @@
             <p v-else class="receive-address">
               Current network is not supported
             </p>
-            <p class="receive-icon" @click="isCurrentNetworkSupport ? copy(tokenAddress) : null">
+            <p class="receive-icon" @click="isCurrentNetworkSupport ? copy(currentNetworkReceiveTokenAddress) : null">
               <img :class="{ inactive: !isCurrentNetworkSupport }" src="@/assets/images/copy.svg">
             </p>
             <p class="receive-icon" @click="isCurrentNetworkSupport ? addToken() : null">
@@ -119,16 +119,13 @@ export default {
   data() {
     return {
       selectTokens: false,
-      tokenName: 'Ethereum',
-      tokenAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      networks: {},
       items: {
         monthlyAmount: {value: '0', text: 'monthly total amount'},
         monthlyCount: {value: '0', text: 'monthly total count'},
         weeklyAmount: {value: '0 ', text: 'weekly total amount'},
         weeklyCount: {value: '0', text: 'weekly total count'},
         todayAmount: {value: '0', text: 'today total amount'},
-        todayCount: {value: '0', text: 'today total amount'}
+        todayCount: {value: '0', text: 'today total count'}
       },
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),

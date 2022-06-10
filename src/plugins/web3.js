@@ -2,9 +2,21 @@ import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
 import { Decimal as BigJs } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import {
+  METAMASK,
+  WALLET_CONNECT,
+  NETWORKS,
+  DEFAULT_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT,
+  BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
+  MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  MATIC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
+  AVALANCHE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+} from '@/constants'
 import AvailableNetworks from '@/network'
-import MerchantContract from '@/contracts/merchant'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
   EthereumTokens,
@@ -21,6 +33,7 @@ export default {
           name: 'Web3',
           connectByMetamask: connectByMetaMask,
           connectByWalletConnect: connectByWalletConnect,
+          disconnectByWalletConnect: disconnectByWalletConnect,
           getWeb3Instance: getWeb3Instance,
           isConnectedByWalletConnect: isConnectedByWalletConnect,
           getCurrentChainId: getCurrentChainId,
@@ -30,17 +43,22 @@ export default {
           getTokenContract: getTokenContract,
           getBalance: getBalance,
           searchToken: searchToken,
+          isBlacklistedFromPayToken: isBlacklistedFromPayToken,
           importToken: importToken,
           switchChain: switchChain,
           addToken: addToken,
           getTokenExchangeData: getTokenExchangeData,
           checkTokenApproved: checkTokenApproved,
+          getTokenApprovedAmount: getTokenApprovedAmount,
           tokenApprove: tokenApprove,
+          getTokenDecimalUnit: getTokenDecimalUnit,
           sendPaymentTransaction: sendPaymentTransaction,
           monitoringPaymentTransaction: monitoringPaymentTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
-          signWithPrivateKey: signWithPrivateKey
+          signWithPrivateKey: signWithPrivateKey,
+          getEventLog: getEventLog,
+          getTokenUnit: getTokenUnit,
         }
       }
     })
@@ -86,6 +104,10 @@ const connectByWalletConnect = async function() {
   }
 }
 
+const disconnectByWalletConnect = async function(web3) {
+  await web3.currentProvider.disconnect()
+}
+
 const isConnectedByWalletConnect = function() {
   let rpcList = { rpc: {} }
   Object.keys(AvailableNetworks).forEach((key) => {
@@ -114,7 +136,7 @@ const getAccountData = async function(web3, chainId) {
   const balance = await getBalance(web3, addresses[0])
   return {
     address: addresses[0],
-    symbol: NETWORKS[chainId].symbol,
+    symbol: NETWORKS[chainId] ? NETWORKS[chainId].symbol : null,
     balance: balance
   }
 }
@@ -169,6 +191,11 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     console.log(e)
     throw new Error('Invalid token address')
   }
+}
+
+const isBlacklistedFromPayToken = function(web3, contract, tokenContractAddress) {
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  return merchantContract.methods.isBlacklistedFromPayToken(tokenContractAddress).call()
 }
 
 const importToken = async function(web3, contractAddress, walletAddress) {
@@ -276,22 +303,24 @@ const getTokenExchangeData = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  const feePath = token.address === null
+  const path = token.address === null || token.address === wrappedToken.address
     ? [wrappedToken.address, requestToken.address]
     : [token.address, wrappedToken.address, requestToken.address]
   const payingTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
+  const feePath = [wrappedToken.address, requestToken.address]
+
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
       payingTokenAddress,
       userTokenBalanceWei,  
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       requestAmountWei,
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const requireAmountWithSlippage = token.address == requestToken.address 
@@ -304,7 +333,7 @@ const getTokenExchangeData = async function(
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
       payingTokenAddress,
       perRequestTokenWei,
-      feePath,
+      path,
       reservedParam
     ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
@@ -319,7 +348,8 @@ const getTokenExchangeData = async function(
     requestAmountWei: requestAmountWei,
     equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
     rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
-    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether')
+    fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
+    requestTokenDecimal: requestTokenDecimal
   }
 }
 
@@ -346,6 +376,32 @@ const checkTokenApproved = async function(web3, chainId, walletAddress, contract
   }
 }
 
+const getTokenApprovedAmount = async function(web3, chainId, walletAddress, contract, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+
+  try {
+    const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+    const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+    const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
+    const tokenDecimalUnit = await tokenContract.methods.decimals().call()
+    const tokenWeiUnit = getTokenUnit(tokenDecimalUnit)
+    const allowanceAmountInWei = await tokenContract.methods.allowance(
+      walletAddress,
+      slashCoreContractAddress
+    ).call({ from: walletAddress })
+    const allowanceAmount = web3.utils.fromWei(allowanceAmountInWei, tokenWeiUnit)
+    return allowanceAmount 
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
 const tokenApprove = async function(web3, chainId, walletAddress, contract, token) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
   let tokenAbi = null
@@ -360,6 +416,18 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
   return await tokenContract.methods
     .approve(slashCoreContractAddress, uint256)
     .send({ from: walletAddress })
+}
+
+const getTokenDecimalUnit = function(web3, chainId, token) {
+  const defaultTokens = getNetworkDefaultTokens(chainId)
+  let tokenAbi = null
+  Object.values(defaultTokens).forEach((defaultToken) => {
+    if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
+  })
+  if (!tokenAbi) tokenAbi = Erc20Abi
+
+  const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+  return tokenContract.methods.decimals().call()
 }
 
 const sendPaymentTransaction = function(
@@ -382,18 +450,17 @@ const sendPaymentTransaction = function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  const path = token.address === null
+  const path = token.address === null || token.address === wrappedToken.address
     ? [wrappedToken.address, requestToken.address]
     : [token.address, wrappedToken.address, requestToken.address]
-  const feePath = token.address === null
-    ? [wrappedToken.address, requestToken.address]
-    : [token.address, wrappedToken.address, requestToken.address]
+  const feePath = [wrappedToken.address, requestToken.address]
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
   const msgValue = token.address === null
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
+
   return merchantContract.methods.submitTransaction(
     paymentTokenAddress,
     userTokenAmountWei,
@@ -412,7 +479,7 @@ const monitoringPaymentTransaction = function(web3, transactionHash) {
   return web3.eth.getTransactionReceipt(transactionHash)
 }
 
-const publishMerchantContract = async function(
+const publishMerchantContract = function(
   web3,
   chainId,
   merchantWalletAddress,
@@ -421,25 +488,20 @@ const publishMerchantContract = async function(
   if (!MerchantFactoryContract.addresses[chainId]) {
     throw new Error('Currently, this network has stopped issuing contracts.')
   }
-
+  const reservedParam = '0x'
+  const scanBlockNumberMaxLimit = getScanBlockNumberMaxLimit(chainId)
   const factoryContract = new web3.eth.Contract(
     MerchantFactoryContract.abi,
-    MerchantFactoryContract.addresses[chainId]
+    MerchantFactoryContract.addresses[chainId],
+    { transactionBlockTimeout: scanBlockNumberMaxLimit }
   )
 
   try {
-    let contractAddress = null
-
-     const transaction = await factoryContract.methods.deployMerchant(
-      merchantWalletAddress,
-      receiveTokenAddress
-    ).send({ from: merchantWalletAddress })
-
-    contractAddress = transaction.events['NewMerchantDeployed'].returnValues.merchantAddress_
-    return {
-      abi: MerchantContract.abi,
-      address: contractAddress
-    }
+    return factoryContract.methods.deployMerchant(
+        merchantWalletAddress,
+        receiveTokenAddress,
+        reservedParam
+      ).send({ from: merchantWalletAddress })
   } catch(error) {
     throw new Error(error)
   }
@@ -452,6 +514,27 @@ const deleteMerchantContract = function() {
 
 const signWithPrivateKey = function(web3, address) {
   return web3.eth.personal.sign('Signature for login authentication', address)
+}
+
+const getEventLog = function(web3, eventName, eventParams, events) {
+  let result
+  const eventTopic = web3.utils.sha3(eventName)
+  for(let i = 0; i < events.length; i++) {
+    if(events[i].raw.topics[0] === eventTopic) {
+      result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
+      break
+    }
+  }
+  return result
+}
+
+const getTokenUnit = function getTokenUnit(decimal) {
+  const wei = (10 ** decimal).toString()
+  const unitMap = Web3.utils.unitMap
+  const units = Object.keys(unitMap).filter((key) => {
+    return unitMap[key] === wei
+  })
+  return units.length > 0 ? units[0] : 'ether'
 }
 
 function getNetworkDefaultTokens(chainId) {
@@ -471,15 +554,6 @@ function getNetworkDefaultTokens(chainId) {
   }
 }
 
-function getTokenUnit(decimal) {
-  const wei = (10 ** decimal).toString()
-  const unitMap = Web3.utils.unitMap
-  const units = Object.keys(unitMap).filter((key) => {
-    return unitMap[key] === wei
-  })
-  return units.length > 0 ? units[0] : 'ether'
-}
-
 function getWrappedToken(chainId) {
   const wrappedTokenSymbols = ['WETH', 'WBNB', 'WMATIC', 'WAVAX']
   const defaultTokens = getNetworkDefaultTokens(chainId)
@@ -488,6 +562,29 @@ function getWrappedToken(chainId) {
     if (symbol in defaultTokens) wrappedToken = defaultTokens[symbol]
   })
   return wrappedToken
+}
+
+function getScanBlockNumberMaxLimit(chainId) {
+  switch(parseInt(chainId, 10)) {
+    case NETWORKS[1].chainId:
+      return ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[3].chainId:
+      return ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[56].chainId:
+      return BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[97].chainId:
+      return BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[137].chainId:
+      return MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[80001].chainId:
+      return MATIC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[43114].chainId:
+      return AVALANCHE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[43113].chainId:
+      return AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    default:
+      return DEFAULT_SCAN_BLOCK_NUMBER_LIMIT
+  }
 }
 
 class MetamaskNotInstalledError extends Error {

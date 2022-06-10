@@ -1,5 +1,5 @@
 <template>
-  <body :class="[classes, { contents_height: isAdminPage }]" >
+  <div :class="[classes, { contents_height: isAdminPage }]" >
     <router-view />
     <div v-if="modal.show" class="modal-base">
       <component :is="modal.target" />
@@ -10,24 +10,32 @@
         copied
       </span>
     </div>
-  </body>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'App',
   components: {
+    adminContractPausedModal: () => import('@/components/molecules/adminContractPausedModal'),
     networkModal: () => import('@/components/molecules/networkModal'),
+    refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
+    errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),
+    switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
-    receiveModal: () => import('@/components/molecules/receiveModal')
+    receiveModal: () => import('@/components/molecules/receiveModal'),
+    editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
+    accountModal: () => import('@/components/molecules/accountModal'),
+    warningModal: () => import('@/components/molecules/warningModal')
   },
   computed: {
     classes() {
       return [
+        'main',
         `theme--${this.$store.state.theme}`,
       ];
     },
@@ -44,7 +52,7 @@ export default {
 <style lang="scss">
 @import '@/assets/scss/style.scss';
 
-body{
+div.main{
     background: var(--color_bg);
     color: var(--color_font);
 }
