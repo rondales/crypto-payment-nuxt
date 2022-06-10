@@ -49,10 +49,10 @@ export default {
         JPYC: require('@/assets/images/icon/jpyc-l.svg')
       },
       tokenMarketUrls: {
-        USDT: 'https://coinmarketcap.com/ja/currencies/tether/',
-        USDC: 'https://coinmarketcap.com/ja/currencies/usd-coin/',
-        DAI: 'https://coinmarketcap.com/ja/currencies/multi-collateral-dai/',
-        JPYC: 'https://coinmarketcap.com/ja/currencies/jpycoin/'
+        USDT: 'https://coinmarketcap.com/currencies/tether/',
+        USDC: 'https://coinmarketcap.com/currencies/usd-coin/',
+        DAI: 'https://coinmarketcap.com/currencies/multi-collateral-dai/',
+        JPYC: 'https://coinmarketcap.com/currencies/jpycoin/'
       }
     }
   },
