@@ -40,7 +40,8 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" @click="showNetworkModal" class="btn __s sp-fixed">
+          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
+            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
 
             <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
@@ -481,11 +482,13 @@ export default {
 .btn {
   cursor: default;
   &.__s {
-    cursor: pointer;
     @include media(sp) {
       height: 3rem;
       font-size: 12px;
     }
+  }
+  &.pointer {
+    cursor: pointer;
   }
 }
 .toggle-theme {
