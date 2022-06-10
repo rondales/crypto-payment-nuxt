@@ -52,8 +52,8 @@
           <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
-            <span v-if="!tokenApproving" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
-            <div v-else-if="tokenApproving" class="id __pg">
+            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
               <div class="loading-wrap-header loading-wrap active">
                   <img class="spin spin-header" src="@/assets/images/loading.svg">
               </div>
@@ -126,7 +126,7 @@ import AvailableNetworks from '@/network'
 
 export default {
   name: 'Header',
-  props: ['width', 'tokenApproving'],
+  props: ['width'],
   data() {
     return {
       receiveTokenIcons: {
@@ -266,6 +266,9 @@ export default {
     },
     accountNote() {
       return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   methods: {

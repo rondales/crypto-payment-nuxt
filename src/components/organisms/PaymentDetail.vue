@@ -136,11 +136,11 @@
         <button
           v-if="isDetailState"
           class="btn __g __l mb-2"
-          :class="{inactive: isExpiredExchange || isWaitingWallet}"
+          :class="{inactive: isExpiredExchange || isWalletPending}"
           @click="payment"
         >
           Confirm Wallet
-          <div class="loading-wrap" :class="{active: isWaitingWallet}">
+          <div class="loading-wrap" :class="{active: isWalletPending}">
             <img class="spin" src="@/assets/images/loading.svg">
           </div>
         </button>
@@ -217,7 +217,6 @@ export default {
       monitoringInterval: null,
       exchangeTimer: null,
       expiredExchange: false,
-      waitingWallet: false,
       refundedTokenAmount: null,
       refundedFeeAmount: null,
       contract: {
@@ -365,9 +364,6 @@ export default {
     isExpiredExchange() {
       return this.expiredExchange
     },
-    isWaitingWallet() {
-      return this.waitingWallet
-    },
     isPublishedTransactionHash() {
       return (this.transactionHash)
     },
@@ -401,6 +397,9 @@ export default {
     },
     hasFailureReturnUrl() {
       return this.returnUrls.failured != null
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   watch: {
@@ -498,7 +497,7 @@ export default {
         : this.returnUrls.failured
     },
     payment() {
-      this.waitingWallet = true
+      this.$store.dispatch('payment/updateWalletPending', true)
       clearTimeout(this.exchangeTimer)
       if(this.$store.state.payment.token.address == null) {
         this.handleSendTransaction()
@@ -513,10 +512,10 @@ export default {
               } else {
                 this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
                 this.pageState = this.pageStateList.failured
-                this.waitingWallet = false
+                this.$store.dispatch('payment/updateWalletPending', false)
               }
             }).catch(error => {
-              if(error.code == '4001') {this.waitingWallet = false}
+              if(error.code == '4001') {this.$store.dispatch('payment/updateWalletPending', false)}
             }) 
           }
         })
@@ -526,7 +525,6 @@ export default {
       this.sendTransaction().on('transactionHash', (transactionHash) => {
         this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
         this.pageState = this.pageStateList.processing
-        this.waitingWallet = false
         this.$store.dispatch('payment/updateTransactionHash', transactionHash)
         this.apiUpdateTransaction({
           payment_token: this.$route.params.token,
@@ -539,11 +537,14 @@ export default {
         }).then(() => {
           this.checkTransactionStatus(transactionHash)
         })
-      }).on('error', () => {
-        this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
-        this.pageState = this.pageStateList.detail
-        this.waitingWallet = false
+      }).on('error', (error) => {
+        if (error.code == '4001') {
+          this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
+          this.pageState = this.pageStateList.detail
+          this.$store.dispatch('payment/updateWalletPending', false)
+        }
       }).then((txReceipt) => {
+        this.$store.dispatch('payment/updateWalletPending', false)
         const events = Object.values(txReceipt.events)
         const result = this.getRefundInfo(events)
         this.refundedTokenAmount = result.refundedTokenAmount
