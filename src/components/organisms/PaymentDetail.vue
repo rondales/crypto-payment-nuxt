@@ -122,9 +122,9 @@
             </p>
           </div>
           <a
-            v-if="(isPublishedTransactionHash && !isSuccessedState && !isSuccessedState)
-            || ((isSuccessedState && hasSuccessReturnUrl)
-            || (isFailuredState && hasFailureReturnUrl))"
+            v-if="isProcessingState 
+            || (isSuccessedState && hasSuccessReturnUrl)
+            || (isFailuredState && hasFailureReturnUrl)"
             class="payment-status_btn"
             target="_blank"
             :href="transactionUrl"
