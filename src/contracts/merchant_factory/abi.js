@@ -86,6 +86,11 @@ export default {
           "internalType": "address",
           "name": "receiveToken_",
           "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "deployMerchant",
@@ -109,6 +114,11 @@ export default {
           "internalType": "address",
           "name": "slashController_",
           "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "deployMerchantWithSpecificController",

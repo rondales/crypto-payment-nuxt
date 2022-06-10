@@ -34,7 +34,7 @@
               Create contract
             </h3>
             <p>
-              Create a contract for payment with the Web3 address you are using. It must be the same address in ERC20 and BEP20.
+              Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
             </p>
           </div>
           <div class="manage-contents_body">
@@ -100,7 +100,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="manage-contents_address-wrap" v-if="isPublishedContract(chainId)">
+                <div class="manage-contents_address-wrap" :class="{ available: contract.available, unavailable: !contract.available }" v-if="isPublishedContract(chainId)">
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
@@ -112,9 +112,9 @@
         </div>
         <div class="manage-payment" v-if="isPaymentSettingTab">
           <div class="manage-contents_clm">
-            <h4>Success notify URL</h4>
+            <h4>URL to receive Payment Result kickback from Slash Payment</h4>
             <p>
-              URL to receive kickbacks sent by SlashPayment after payment is successed.
+              URL to receive kickbacks sent by SlashPayment after payment is finished.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.successNotifyUrl">
           </div>
@@ -124,6 +124,13 @@
               A URL for the user to go from SlashPayment to the merchant's website after a successful payment.
             </p>
             <input class="text-box" type="text" v-model="paymentSettings.successReturnUrl">
+          </div>
+          <div class="manage-contents_clm">
+            <h4>Payment failure return URL</h4>
+            <p>
+              A URL for the user to go from SlashPayment to the merchant's website after a failure payment.
+            </p>
+            <input class="text-box" type="text" v-model="paymentSettings.failureReturnUrl">
           </div>
           <div class="manage-contents_clm">
             <h4><span>*</span>Exchange margin rate</h4>
@@ -238,6 +245,7 @@ export default {
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
+        failureReturnUrl: '',
         exchangeMarginRate: '0.0',
         allowCurrencies: {
           USD: false,
@@ -357,6 +365,7 @@ export default {
       const data = {
         complete_kickback_url: this.paymentSettings.successNotifyUrl,
         succeeded_return_url: this.paymentSettings.successReturnUrl,
+        failured_return_url: this.paymentSettings.failureReturnUrl,
         exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
         allow_currencies: this.paymentSettings.allowCurrencies
       }
@@ -415,6 +424,7 @@ export default {
         response.data.forEach((contract) => {
           if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
             this.contractSettings.contracts[contract.network_type].address = contract.address
+            this.contractSettings.contracts[contract.network_type].available = contract.available
           }
         })
         this.contractSettings.loaded = true
@@ -426,6 +436,7 @@ export default {
       this.apiGetPaymentSettings().then((response) => {
         this.paymentSettings.successNotifyUrl = response.data.complete_kickback_url
         this.paymentSettings.successReturnUrl = response.data.succeeded_return_url
+        this.paymentSettings.failureReturnUrl = response.data.failured_return_url
         this.paymentSettings.exchangeMarginRate = response.data.exchange_margin_rate
         this.paymentSettings.allowCurrencies = response.data.allow_currencies
       }).catch((error) => {
@@ -466,7 +477,6 @@ export default {
       this.contractSettings.contracts[chainId].processing = true
       const merchantWalletAddress = this.$store.state.account.address
       const receiveTokenAddress = this.contractSettings.contracts[chainId].support
-
       this.$web3.publishMerchantContract(
         this.$store.state.web3.instance,
         chainId,
@@ -478,6 +488,7 @@ export default {
         })
       }).
       then((receipt) => {
+        this.contractSettings.contracts[chainId].available = true
         const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
         const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
@@ -520,22 +531,12 @@ export default {
       })
     },
     switchNetwork(chainId) {
-      if (this.isMetamask) {
-        this.$web3.switchChain(
-          this.$store.state.web3.instance,
-          chainId
-        ).then(() => {
-          this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
-        })
-      } else {
-        this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'You are using WalletConnect to connect to SlashApps, so you cannot switch networks from this screen. Please use the Wallet app to switch networks.'
-          }
-        })
-      }
+      this.$web3.switchChain(
+        this.$store.state.web3.instance,
+        chainId
+      ).then(() => {
+        this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
+      })
     },
     copyPaymentContractUrl(chainId) {
       this.$clipboard(this.contractUrl(chainId))
@@ -698,15 +699,29 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
-        &::after{
-          content: "";
-          background: url(/assets/images/check-mark.svg) no-repeat center center;
-          width: 20px;
-          height: 20px;
-          position: absolute;
-          top: 15%;
-          left: 10px;
-          transform: translate(-50%, -50%);
+        &.available{
+          &::after{
+            content: "";
+            background: url(/assets/images/check-mark.svg) no-repeat center center;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 15%;
+            left: 10px;
+            transform: translate(-50%, -50%);
+          }
+        }
+        &.unavailable{
+          &::after{
+            content: "";
+            background: url(/assets/images/bad-mark.svg) no-repeat center center;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 15%;
+            left: 10px;
+            transform: translate(-50%, -50%);
+          }
         }
       }
       &_address{

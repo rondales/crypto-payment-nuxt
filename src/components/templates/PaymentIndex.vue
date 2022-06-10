@@ -10,23 +10,23 @@
           <img src="@/assets/images/menu.svg">
         </div>
         <div class="menu-nav_body">
-          <a href="/">
+          <!-- <a href="/">
             Cookie settings
-          </a>
-          <a href="/">
+          </a> -->
+          <a href="https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper" target="_blank">
             About Slash.fi
           </a>
-          <a href="/">
-            Frequently Asked Questions
+          <a href="https://slash-fi.gitbook.io/docs/support/help-center" target="_blank">
+            FAQ
           </a>
-          <a href="/">
-            Terms or Service
+          <a href="https://slash-fi.gitbook.io/docs/support/terms-of-use" target="_blank">
+            Terms of Service
           </a>
-          <a href="/">
+          <a href="https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy" target="_blank">
             Privacy Policy
           </a>
-          <a href="/">
-            AML・KYC Policy
+          <a href="https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy" target="_blank">
+            AML Policy
           </a>
         </div>
       </div>
@@ -37,7 +37,7 @@
       />
       <div class="add-flex j-between">
         <div>
-          <p class="payment_Receiver mb-1">
+          <p class="payment_Receiver mb-1" :class="{ 'domain-verified':isVerifiedDomain }">
             Payee：{{ receiver }}
           </p>
           <p class="payment_invoice-id">
@@ -106,6 +106,7 @@ export default {
     'colorTheme',
     'showFooterMenu',
     'receiver',
+    'isVerifiedDomain',
     'invoiceId',
     'base64VuexData'
   ],
@@ -143,6 +144,7 @@ export default {
       this.windowWidth = window.innerWidth
     },
     copyLink() {
+      this.$store.dispatch('account/copied')
       const currentUrl = window.location.href
       this.$clipboard(`${currentUrl}?vx=${this.base64VuexData}`);
     },
@@ -243,6 +245,17 @@ export default {
   .payment_invoice-id{
     font-weight: 400;
     font-size: 15px;
+  }
+  .domain-verified {
+    &::after{
+      content: "";
+      background: url(/assets/images/domain-verified.svg) no-repeat center center;
+      width: 17px;
+      height: 17px;
+      position: absolute;
+      margin-top: 3px;
+      margin-left: 8px;
+    }
   }
 }
 .fixed{

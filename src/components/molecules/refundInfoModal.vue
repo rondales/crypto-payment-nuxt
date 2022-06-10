@@ -2,41 +2,35 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Select a Network
+        Refunded information
       </h3>
-      <p v-if="unsupported" class="header__desc">
-        The current network is unsupported.
+      <p class="header__desc">
+        Slippage collections were refunded.
         <br>
-        Select a network of tokens to pay for.
-      </p>
-      <p v-else class="header__desc">
-        Select a network of tokens to pay for.
+        Refund information is below.
+        <br>
+        <span class="notice">*&nbsp;Tokens are refunded in merchant's receive token.</span>
       </p>
     </div>
     <div class="body add-flex j-between">
-      <button
-        v-for="(network, key) in networks"
-        :key="key"
-        class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne, 'mb-0': isNetworkOnlyOne}"
-        @click="switchNetwork(network.chainId)"
-      >
-        <span class="btn-icon">
-          <img :src="network.icon">
-        </span>
-          {{network.name}}
-      </button>
+        <div v-if="refundedTokenAmount" class="refund-item mt-2 mb-3">
+          <h3>Token refunded amount</h3>
+          <p>{{ refundedTokenAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
+        <div v-if="refundedFeeAmount" class="refund-item">
+          <h3>Fee refunded amount</h3>
+          <p>{{ refundedFeeAmount }}&nbsp;{{ refundedFeeSymbol }}</p>
+        </div>
     </div>
-    <button v-if="!unsupported" class="close" @click="hideModal">
+    <button class="close" @click="hideModal">
       <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
       <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
-      閉じる
+      close
     </button>
   </div>
 </template>
 
 <script>
-import AvailableNetworks from '@/network'
 
 export default {
   name: 'networkModal',
@@ -50,46 +44,23 @@ export default {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
-    paymentAvailableNetworks() {
-      return this.$store.state.payment.availableNetworks
+    refundedTokenAmount() {
+      return this.$store.state.modal.params.refundedTokenAmount
     },
-    isCurrentNetwork() {
-      return (chainId) => {
-        return chainId === this.$store.state.web3.chainId
-      }
+    refundedTokenSymbol() {
+      return this.$store.state.payment.symbol
     },
-    isNetworkOnlyOne() {
-      return this.$store.state.modal.params.itemCount === 1
+    refundedFeeAmount() {
+      return this.$store.state.modal.params.refundedFeeAmount
     },
-    unsupported() {
-      return 'unsupported' in this.$store.state.modal.params
-        ? this.$store.state.modal.params.unsupported
-        : false
-    },
-    require() {
-      return 'hideCloseButton' in this.$store.state.modal.params
-        ? this.$store.state.modal.params.hideCloseButton
-        : false
+    refundedFeeSymbol() {
+      return this.$store.state.modal.params.refundedFeeSymbol
     }
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
-    },
-    switchNetwork(chainId) {
-      this.$web3.switchChain(
-        this.$store.state.web3.instance,
-        chainId
-      ).then(() => {
-        this.$store.dispatch('web3/updateChainId', chainId)
-        this.hideModal()
-      })
     }
-  },
-  created() {
-    this.networks = Object.values(AvailableNetworks).filter(
-      network => this.paymentAvailableNetworks.includes(network.chainId)
-    )
   }
 }
 </script>
@@ -130,13 +101,17 @@ export default {
   }
   .header {
     @include media(pc) {
-      padding: 24px;
+      padding: 12px;
       &__title {
         font-size: 2.5rem;
         margin-bottom: 2rem;
       }
       &__desc {
-        font-size: 2rem;
+        font-size: 1.7rem;
+        .notice{
+          font-weight: 100;
+          font-size: 1.4rem;
+        }
       }
     }
     @include media(sp) {
@@ -147,6 +122,10 @@ export default {
       }
       &__desc {
         font-size: 1.5rem;
+        .notice{
+          font-weight: 100;
+          font-size: 1.2rem;
+        }
       }
     }
     &__title {
@@ -173,16 +152,24 @@ export default {
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px 40px;
+      padding: 5px 24px 40px;
+      font-size: 1.5rem;
     }
     @include media(sp) {
-      padding: 24px 12px 48px;
+      padding: 12px 12px 48px;
       flex-wrap: wrap;
-      .btn{
-        width: 100% !important;
-        &:nth-child(1){
-          margin-bottom: 16px;
-        }
+      font-size: 1.5rem;
+    }
+    .refund-item{
+      width: 100%;
+      h3 {
+        font-weight: 500;
+        font-size: 1.7rem;
+      }
+      p {
+        font-weight: 200;
+        margin-right: 30px;
+        text-align: right;
       }
     }
   }

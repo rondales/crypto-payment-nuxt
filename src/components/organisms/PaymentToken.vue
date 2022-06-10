@@ -158,7 +158,9 @@ export default {
   },
   watch: {
     chainId() {
-      this.getDefaultTokens()
+      if (this.availableNetworks.includes(this.chainId)) {
+        this.getDefaultTokens()
+      }
     }
   },
   computed: {
@@ -201,7 +203,12 @@ export default {
   },
   methods: {
     networkModal() {
-      this.$store.dispatch("modal/show", {target: 'network-modal', size: "medium"});
+      const availableNetworkCount = this.availableNetworks.length
+      this.$store.dispatch('modal/show', {
+        target: 'network-modal',
+        size: availableNetworkCount > 1 ? 'medium' : 'small',
+        params: { itemCount: availableNetworkCount }
+      })
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
@@ -333,6 +340,9 @@ export default {
     handleChainChanged(chainId) {
       if (this.availableNetworks.includes(chainId)) {
         this.$store.dispatch('web3/updateChainId', chainId)
+        if(this.$store.state.modal.target === 'network-modal') {
+          this.$store.dispatch('modal/hide')
+        }
       } else {
         this.$store.dispatch('web3/updateChainId', null)
         this.$store.dispatch('modal/show', {

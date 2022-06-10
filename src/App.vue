@@ -17,7 +17,9 @@
 export default {
   name: 'App',
   components: {
+    adminContractPausedModal: () => import('@/components/molecules/adminContractPausedModal'),
     networkModal: () => import('@/components/molecules/networkModal'),
+    refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
@@ -28,6 +30,7 @@ export default {
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
+    warningModal: () => import('@/components/molecules/warningModal')
   },
   computed: {
     classes() {

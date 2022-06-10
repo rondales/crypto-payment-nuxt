@@ -53,7 +53,13 @@
           <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
-            <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
+              <div class="loading-wrap-header loading-wrap active">
+                  <img class="spin spin-header" src="@/assets/images/loading.svg">
+              </div>
+              Pending
+            </div>
           </button>
           <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
             Connect to a wallet
@@ -261,6 +267,9 @@ export default {
     },
     accountNote() {
       return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   methods: {
@@ -581,5 +590,12 @@ export default {
       }
     }
   }
+}
+.loading-wrap-header {
+  display: contents !important;
+}
+.spin-header {
+  height: 20px !important;
+  width: 20px !important;
 }
 </style>
