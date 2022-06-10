@@ -144,6 +144,7 @@ export default {
       this.windowWidth = window.innerWidth
     },
     copyLink() {
+      this.$store.dispatch('account/copied')
       const currentUrl = window.location.href
       this.$clipboard(`${currentUrl}?vx=${this.base64VuexData}`);
     },
