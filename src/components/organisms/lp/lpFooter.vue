@@ -184,8 +184,8 @@ export default {
         },
         {
           icon: "icon/telegram",
-          link: "",
-          status: false,
+          link: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
+          status: true,
         },
         {
           icon: "icon/discord",
