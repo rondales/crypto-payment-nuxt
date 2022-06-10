@@ -6,6 +6,11 @@
       </h3>
       <p v-html="message" class="header__desc"></p>
     </div>
+    <div v-if="isShowCustomizeButton" class="body">
+      <a class="btn __g __l mb-0" :href="buttonUrl">
+        {{ buttonText }}
+      </a>
+    </div>
     <button v-if="allowClose" class="close" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       close
@@ -29,6 +34,15 @@
         return ('allowClose' in this.$store.state.modal.params)
           ? this.$store.state.modal.param
           : true
+      },
+      isShowCustomizeButton() {
+        return 'btn' in this.$store.state.modal.params
+      },
+      buttonText() {
+        return this.$store.state.modal.params.btn.text
+      },
+      buttonUrl() {
+        return this.$store.state.modal.params.btn.url
       }
     },
     methods: {
@@ -105,7 +119,7 @@
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px 40px;
+      padding: 24px 50px 40px;
     }
     @include media(sp) {
       padding: 24px 12px 48px;
