@@ -335,7 +335,7 @@ export default {
             btnType: "a",
           },
           link3: {
-            url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+            url: "",
             title: "To Testnet",
             icon: "icon/arrow",
             iconAfter: true,
