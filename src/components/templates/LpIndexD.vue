@@ -23,8 +23,11 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton :link="section.mv.link" type="main" size="m" />
+            <LpButton :link="section.mv.link" class="disable" type="main" size="m" />
             <LpButton :link="section.mv.link2" type="sub" size="m" />
+            <div :class="section.token.class + '__subbox__link'">
+              <LpButton :link="section.mv.link3" class="disable" type="simple" size="s"  />
+            </div>
           </div>
         </div>
       </section>
@@ -271,7 +274,7 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton :link="section.cv.link" type="main" size="m" />
+              <LpButton :link="section.cv.link" class="disable" type="main" size="m" />
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -330,6 +333,13 @@ export default {
             title: "Whitepaper",
             icon: "icon/gitbook",
             btnType: "a",
+          },
+          link3: {
+            url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+            title: "To Testnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
           },
         },
         hello: {
