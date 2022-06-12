@@ -7,11 +7,16 @@
       <p class="header__desc">
         {{ message }}
       </p>
+      <br>
+      <div>
+        <input type="checkbox" name="paying-accept" id="paying-accept" ref="accepted" @click="updateAcceptedStatus">
+        <label for="paying-accept" id="paying-accept-checkbox"> I understood and wish to continue</label>
+      </div>
+      <br>
+      <div id="button-container">
+        <button class="continue-button" :class="{ __active: isAccepted }" @click="hideModal">Continue</button>
+      </div>
     </div>
-    <button class="close" @click="hideModal">
-      <img src="@/assets/images/cross.svg">
-      閉じる
-    </button>
   </div>
 </template>
 
@@ -21,6 +26,11 @@
     name: 'errorModal',
     components: {
     },
+    data () {
+      return {
+        accepted: false
+      }
+    },
     computed: {
       classes() {
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
@@ -28,11 +38,19 @@
       },
       message() {
         return this.$store.state.modal.params.message
+      },
+      isAccepted() {
+        return this.accepted
       }
     },
     methods: {
       hideModal() {
-        this.$store.dispatch('modal/hide')
+        if(this.isAccepted) {
+          this.$store.dispatch('modal/hide')
+        }
+      },
+      updateAcceptedStatus() {
+        this.accepted = this.$refs.accepted.checked
       }
     }
   }
@@ -124,6 +142,27 @@
     }
     @include media(sp) {
       padding: 0 32px 32px;
+    }
+  }
+  #paying-accept-checkbox {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  #button-container {
+    text-align: center;
+  }
+  .continue-button {
+    position: relative;
+    font-size: 17px;
+    font-weight: 100;
+    cursor: pointer;
+    padding: 4px 16px;
+    border-radius: 10px;
+    border: solid 1px #fff;
+    &.__active {
+      color: #fff;
+      background: $gradation-pale;
     }
   }
 </style>
