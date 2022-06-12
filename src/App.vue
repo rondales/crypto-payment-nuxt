@@ -21,6 +21,7 @@ export default {
     networkModal: () => import('@/components/molecules/networkModal'),
     refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
+    cautionWalletConnectModal: () => import('@/components/molecules/cautionWalletConnectModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),

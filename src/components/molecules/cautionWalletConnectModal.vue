@@ -2,38 +2,44 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Select a Wallet
+        Caution
       </h3>
+      <p class="header__desc">
+        Operation cannot be guaranteed when connecting using WalletConnect.
+        <br>
+        See the documentation for more information.
+      </p>
+      <a
+        class="link"
+        href="https://slash-fi.gitbook.io/docs/support/help-center/notes-on-wallet-connect"
+        target="_blank"
+      >
+        See to Document
+      </a>
     </div>
     <div class="body">
-      <button class="btn __m __pg icon-right full" @click="connector(METAMASK)">
-        <span class="btn-icon">
-          <img src="@/assets/images/metamask-fox.svg">
-        </span>
-          MetaMask
+      <button class="btn __g __l mb-2" @click="connector()">
+          Yes, I understood and will connect
       </button>
-      <button class="btn __m __pg icon-right full" @click="showWalletConnectCautionModal()">
-        <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect_w.svg">
-        </span>
-          WalletConnect
+      <button class="btn __g __l" @click="hideModal()">
+          No, I not understood
       </button>
     </div>
     <button class="close" @click="hideModal()">
       <img src="@/assets/images/cross.svg">
-      閉じる
+      close
     </button>
   </div>
 </template>
 
 <script>
-  import { METAMASK } from '@/constants'
+  import { WALLET_CONNECT } from '@/constants'
   import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
   import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
   import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
 
   export default {
-    name: 'walletModal',
+    name: 'CautionWalletConnectModal',
     mixins: [
       ConnectWalletMixin,
       PaymentWalletConnectorMixin,
@@ -56,19 +62,14 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      showWalletConnectCautionModal() {
-        this.$store.dispatch('modal/show', {
-          target: 'caution-wallet-connect-modal',
-          size: 'small'
-        })
-      },
       connector() {
+        this.hideModal()
         if (this.isAdminLoginMode) {
-          this.authentification(METAMASK, true, true)
+          this.authentification(WALLET_CONNECT, true, true)
           return
         }
         if (this.isPaymentMode) {
-          this.connect(METAMASK, true)
+          this.connect(WALLET_CONNECT, true)
           return
         }
       }
@@ -109,11 +110,21 @@
       &__desc {
         font-size: 2rem;
       }
+      & .link {
+        font-weight: 300;
+        font-size: 1.5rem;
+      }
     }
     @include media(sp) {
       padding: 18px;
       &__title {
         font-size: 1.7rem;
+      }
+      &__desc {
+        font-size: 1.6rem;
+      }
+      & .link {
+        font-size: 1.4rem;
       }
     }
     &__title {
@@ -121,6 +132,18 @@
     }
     &__desc {
       font-weight: 100;
+    }
+    & .link {
+      font-weight: 300;
+    }
+    & .link::after {
+      content: "";
+      background: url(/assets/images/link-icon.svg) no-repeat center center;
+      width: 17px;
+      height: 17px;
+      position: absolute;
+      margin-top: 8px;
+      margin-left: 8px;
     }
   }
   .close {
