@@ -30,7 +30,6 @@ export default {
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
-    warningModal: () => import('@/components/molecules/warningModal'),
     warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal')
   },
   computed: {
