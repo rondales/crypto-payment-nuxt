@@ -39,18 +39,20 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a v-if="navlink.blank" :href="navlink.url" :class="{disable: !(navlink.url)}">
-                    <span>{{ navlink.title }}</span>
-                  </a>
-                  <router-link 
-                    v-else 
-                    :to="{
-                      name: navlink.name,
-                      hash: navlink.hash
-                    }"
-                  >
-                    <span>{{ navlink.title }}</span>
-                  </router-link>
+                  <div v-if="navlink.show">
+                    <a v-if="navlink.blank" :href="navlink.url" :class="{disable: !(navlink.url)}">
+                      <span>{{ navlink.title }}</span>
+                    </a>
+                    <router-link 
+                      v-else 
+                      :to="{
+                        name: navlink.name,
+                        hash: navlink.hash
+                      }"
+                    >
+                      <span>{{ navlink.title }}</span>
+                    </router-link>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -84,6 +86,9 @@ export default {
   components: {
     LpIcon,
   },
+  props: {
+    isShowTestnet: Boolean
+  },
   data() {
     return {
       nav: [
@@ -94,26 +99,31 @@ export default {
               title: "Integrations",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
               blank:  true,
+              show: true
             },
             {
               title: "Plugins",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/plugins-for-store-apps",
               blank:  true,
+              show: true
             },
             {
               title: "API",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/api-integration",
               blank:  true,
+              show: true
             },
             {
               title: "Quick Start",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
               blank:  true,
+              show: true
             },
             {
               title: "To Testnet",
               url: "",
               blank:  true,
+              show: this.isShowTestnet
             },
           ],
         },
@@ -124,16 +134,19 @@ export default {
               title: "Fee & Ecosystem",
               url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
               blank: true,
+              show: true
             },
             {
               title: "Donation Program",
               url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
               blank: true,
+              show: true
             },
             {
               title: "Slash Token",
               url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
               blank: true,
+              show: true
             },
           ],
         },
@@ -144,39 +157,46 @@ export default {
               title: "RoadMap",
               url: "https://slash-fi.gitbook.io/docs/whitepaper/roadmap-status",
               blank: true,
+              show: true
             },
-            // {
-            //   title: "Referral",
-            //   url: "#developers",
-            //   blank: false,
-            // },
+            {
+              title: "Referral",
+              url: "#developers",
+              blank: false,
+              show: false
+            },
             {
               title: "Contact",
               url: "",
               name: "home",
               hash: "#contact",
               blank: false,
+              show: true
             },
             {
               title: "Terms of Use",
               url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
               blank: true,
+              show: true
             },
             {
               title: "Data Protection and Privacy Policy",
               url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
               blank: true,
+              show: true
             },
             {
               title: "Anti-Money Laundering Policy",
               url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
               blank: true,
+              show: true
             },
             {
               title: "Media Kit",
               url: "",
               name: "media_kit",
               blank: false,
+              show: true
             },
           ],
         },

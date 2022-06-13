@@ -17,7 +17,7 @@
     />
   </button>
   <div v-else>
-    <a v-if="link.btnType === 'a'" :class="linkClass" :href="link.url">
+    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass" :href="link.url">
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
