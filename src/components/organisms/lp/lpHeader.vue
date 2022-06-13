@@ -53,7 +53,8 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton :link="cvLink" type="main" size="s" />
+            <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s" />
+            <LpButton v-else :link="cvLink" class="disable" type="main" size="s" />
           </div>
         </div>
       </div>
@@ -112,6 +113,7 @@ export default {
   components: {
     LpButton,
   },
+  props: { isEnableEnterApp: Boolean },
   data() {
     return {
       nav: [
