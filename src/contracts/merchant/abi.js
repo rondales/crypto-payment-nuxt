@@ -639,6 +639,16 @@ export default {
           "type": "address[]"
         },
         {
+          "internalType": "string",
+          "name": "paymentId_",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "optional_",
+          "type": "string"
+        },
+        {
           "internalType": "bytes",
           "name": "reserved_",
           "type": "bytes"

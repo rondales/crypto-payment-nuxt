@@ -1,9 +1,8 @@
-import { PRODUCTION } from '@/constants'
 import Production from './production'
 import Development from './develoment'
 
-const environment =
-process.env.NODE_ENV === PRODUCTION ? Production : Development
+const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+const environment = isUseMainnet ? Production : Development
 
 export default {
   chainId: environment.chainId,

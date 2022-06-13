@@ -989,7 +989,8 @@ export default {
             {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
-              url: "",
+              url: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
+              btnType: "a"
             },
             {
               title: "Slash Developer Community",

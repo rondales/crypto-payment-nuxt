@@ -40,7 +40,8 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
+          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
+            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
 
             <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
@@ -52,8 +53,8 @@
           <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
-            <span v-if="!tokenApproving" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
-            <div v-else-if="tokenApproving" class="id __pg">
+            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
               <div class="loading-wrap-header loading-wrap active">
                   <img class="spin spin-header" src="@/assets/images/loading.svg">
               </div>
@@ -126,7 +127,7 @@ import AvailableNetworks from '@/network'
 
 export default {
   name: 'Header',
-  props: ['width', 'tokenApproving'],
+  props: ['width'],
   data() {
     return {
       receiveTokenIcons: {
@@ -266,6 +267,9 @@ export default {
     },
     accountNote() {
       return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   methods: {
@@ -273,6 +277,12 @@ export default {
       this.$store.dispatch('modal/show', {
         target: 'wallet-modal',
         size: 'small'
+      })
+    },
+    showNetworkModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'switch-network-for-admin-modal',
+        size: 'medium'
       })
     },
     switchColorTheme(color) {
@@ -485,6 +495,9 @@ export default {
       height: 3rem;
       font-size: 12px;
     }
+  }
+  &.pointer {
+    cursor: pointer;
   }
 }
 .toggle-theme {

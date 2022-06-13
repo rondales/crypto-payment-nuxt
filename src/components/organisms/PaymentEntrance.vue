@@ -63,14 +63,8 @@ export default {
         }
       })
     },
-    showWarningModal(message) {
-      this.$store.dispatch('modal/show', {
-        target: 'warning-modal',
-        size: 'small',
-        params: {
-          message: message
-        }
-      })
+    showWarningModal() {
+      this.$store.dispatch('modal/show', { target: 'warning-domain-unauth-modal', size: 'small' })
     }
   },
   created() {
@@ -94,7 +88,7 @@ export default {
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       if (!this.isVerifiedDomain) {
-        this.showWarningModal('We cannot guarantee the reliability of this payee!')
+        this.showWarningModal()
       }
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'

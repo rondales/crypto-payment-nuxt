@@ -165,8 +165,11 @@ export default {
           : chainId
         this.handleChainChanged(chainId)
       })
-      this.web3.instance.currentProvider.on('accountsChanged', () => {
-        this.handleAccountsChanged()
+      this.web3.instance.currentProvider.on('accountsChanged', (account) => {
+        const newAccAddress = account[0].toLowerCase()
+        if(newAccAddress != this.account.address.toLowerCase()) {
+          this.handleAccountsChanged()
+        }
       })
     }
   },
