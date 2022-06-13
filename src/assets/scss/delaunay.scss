@@ -882,7 +882,6 @@ body.is-mounted {
 
     &__button {
       @include flex(center, center);
-      flex-wrap: nowrap;
 
       @include media(sp) {
         flex-direction: column;
@@ -1134,6 +1133,11 @@ body.is-mounted {
 
       &__link {
         @include flex(center, center);
+        // If the test net becomes available, remove it.
+        .disable{
+          opacity: .7 !important;
+          pointer-events:none;
+        }
       }
     }
 

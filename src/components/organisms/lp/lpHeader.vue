@@ -53,7 +53,7 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton :link="cvLink" type="main" size="s" />
+            <LpButton :link="cvLink" class="disable" type="main" size="s" />
           </div>
         </div>
       </div>

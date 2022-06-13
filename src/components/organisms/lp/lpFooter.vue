@@ -39,7 +39,7 @@
               </h4>
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
-                  <a v-if="navlink.blank" :href="navlink.url">
+                  <a v-if="navlink.blank" :href="navlink.url" :class="{disable: !(navlink.url)}">
                     <span>{{ navlink.title }}</span>
                   </a>
                   <router-link 
@@ -108,6 +108,11 @@ export default {
             {
               title: "Quick Start",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+              blank:  true,
+            },
+            {
+              title: "To Testnet",
+              url: "",
               blank:  true,
             },
           ],
@@ -323,6 +328,10 @@ footer {
             // text-align: center;
             font-size: rem_sp(pow(0));
           }
+          &.disable{
+            opacity: .6;
+            pointer-events: none;
+          }
         }
       }
       &_info {
@@ -367,7 +376,6 @@ footer {
           }
         }
         .disable {
-          // opacity: 0.5;
           pointer-events: none;
           .icon {
             &::v-deep {
