@@ -10,9 +10,9 @@
         <p class="logo-sub">
           {{ subTitle }}
         </p>
-        <div class="testnet-navbar" v-if="isTestNet" v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave">
+        <div class="testnet-navbar" v-if="isUseTestnet" v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave">
           <span>
-            Testnets
+            Testnet
           </span>
           <div class="testnet-hovercontens" v-if="isHover">
             <p>
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { DEVELOPMENT, WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 
 export default {
@@ -148,8 +148,7 @@ export default {
         DAI: require('@/assets/images/symbol/dai.svg'),
         JPYC: require('@/assets/images/symbol/jpyc.svg')
       },
-      isHover: false,
-      isTestNet: true
+      isHover: false
     }
   },
   watch: {
@@ -230,7 +229,7 @@ export default {
       return (this.$store.state.account.receiveSymbol)
     },
     isUseTestnet() {
-      return process.env.NODE_ENV === DEVELOPMENT
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     },
     isSupportedNetwork() {
       const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
