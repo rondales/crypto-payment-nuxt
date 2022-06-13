@@ -6,7 +6,8 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 RUN mkdir /work
 COPY /src /work/src
 COPY /public /work/public
-COPY .env.production /work/.env.production
+COPY .env.mainnet /work/.env.mainnet
+COPY .env.testnet /work/.env.testnet
 COPY .env.staging /work/.env.staging
 COPY vue.config.js /work/vue.config.js
 COPY package.json /work/package.json

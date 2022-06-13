@@ -448,8 +448,9 @@ const sendPaymentTransaction = function(
   const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const paymentIdParam = ''
+  const optionalParam = ''
   const reservedParam = '0x'
-
   const path = token.address === null || token.address === wrappedToken.address
     ? [wrappedToken.address, requestToken.address]
     : [token.address, wrappedToken.address, requestToken.address]
@@ -467,6 +468,8 @@ const sendPaymentTransaction = function(
     requestAmountWei,
     path,
     feePath,
+    paymentIdParam,
+    optionalParam,
     reservedParam
   ).send({
     from: walletAddress,
