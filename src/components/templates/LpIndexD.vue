@@ -1,6 +1,6 @@
 <template>
   <div id="wrapAll">
-    <LpHeader />
+    <LpHeader :isEnableEnterApp="isEnableEnterApp" />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' '">
@@ -23,8 +23,12 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton :link="section.mv.link" type="main" size="m" />
+            <LpButton v-if="isEnableEnterApp" :link="section.mv.link" type="main" size="m" />
+            <LpButton v-else :link="section.mv.link" class="disable" type="main" size="m" />
             <LpButton :link="section.mv.link2" type="sub" size="m" />
+            <div v-if="isShowTestnet" :class="section.token.class + '__subbox__link'">
+              <LpButton :link="section.mv.link3" class="disable" type="simple" size="s"  />
+            </div>
           </div>
         </div>
       </section>
@@ -271,7 +275,8 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton :link="section.cv.link" type="main" size="m" />
+              <LpButton v-if="isEnableEnterApp" :link="section.cv.link" type="main" size="m" />
+              <LpButton v-else :link="section.cv.link" class="disable" type="main" size="m" />
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -282,7 +287,7 @@
         </div>
       </section>
     </main>
-    <LpFooter />
+    <LpFooter :isShowTestnet="isShowTestnet" />
   </div>
 </template>
 
@@ -295,6 +300,7 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
+import { PRODUCTION, DEVELOPMENT } from "@/constants"
 // used it used at SECTION trial
 // import LpIcon from "@/components/templates/LpParts/Icon";
 
@@ -330,6 +336,13 @@ export default {
             title: "Whitepaper",
             icon: "icon/gitbook",
             btnType: "a",
+          },
+          link3: {
+            url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+            title: "To Testnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
           },
         },
         hello: {
@@ -1139,6 +1152,27 @@ export default {
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("load", this.onLoad);
+  },
+
+  computed: {
+    ENVIRONMENT() {
+      return process.env.NODE_ENV
+    },
+    isProduction() {
+      return this.ENVIRONMENT === PRODUCTION
+    },
+    isDevelopment() {
+      return this.ENVIRONMENT === DEVELOPMENT
+    },
+    isUseMainnet() {
+      return JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isShowTestnet() {
+      return (this.isProduction && this.isUseMainnet) || this.isDevelopment
+    },
+    isEnableEnterApp() {
+      return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    }
   },
 
   methods: {
