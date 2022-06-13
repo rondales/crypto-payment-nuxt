@@ -1,8 +1,7 @@
 import developmentNetworks from './environments/development'
 import productionNetworks from './environments/production'
-import { PRODUCTION } from '@/constants'
 
-const networks =
-  process.env.NODE_ENV === PRODUCTION ? productionNetworks : developmentNetworks
+const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+const networks = isUseMainnet ? productionNetworks : developmentNetworks
 
 export default networks
