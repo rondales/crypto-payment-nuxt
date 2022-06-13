@@ -9,7 +9,8 @@
     "serve": "vue-cli-service serve --mode local",
     "build:dev": "vue-cli-service build --mode development",
     "build:stg": "vue-cli-service build --mode staging",
-    "build:prd": "vue-cli-service build --mode production",
+    "build:testnet": "vue-cli-service build --mode testnet",
+    "build:mainnet": "vue-cli-service build --mode mainnet",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
