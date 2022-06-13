@@ -5,7 +5,7 @@
         Caution
       </h3>
       <p class="header__desc">
-        Operation cannot be guaranteed when connecting using WalletConnect.
+        Operation cannot be guaranteed when connecting with WalletConnect.
         <br>
         See the documentation for more information.
       </p>
@@ -19,10 +19,10 @@
     </div>
     <div class="body">
       <button class="btn __g __l mb-2" @click="connector()">
-          Yes, I understood and will connect
+          I understood and will connect
       </button>
       <button class="btn __g __l" @click="hideModal()">
-          No, I not understood
+          Cancel
       </button>
     </div>
     <button class="close" @click="hideModal()">
