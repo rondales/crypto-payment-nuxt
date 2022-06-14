@@ -21,6 +21,7 @@ export default {
     networkModal: () => import('@/components/molecules/networkModal'),
     refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
     walletModal: () => import('@/components/molecules/walletModal'),
+    cautionWalletConnectModal: () => import('@/components/molecules/cautionWalletConnectModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),
@@ -30,7 +31,7 @@ export default {
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
-    warningModal: () => import('@/components/molecules/warningModal')
+    warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal')
   },
   computed: {
     classes() {

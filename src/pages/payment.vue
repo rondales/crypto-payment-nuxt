@@ -275,17 +275,24 @@ export default {
     this.apiGetMerchantContractStatus().then((result) => {
       const networks = Object.values(AvailableNetworks).map((network) => {
         return network.chainId
-      }).filter(item => result.data[item] == false)
+      }).filter(item => result.data.statuses[item] == false)
       if (networks.length) {
         this.$store.dispatch('payment/updateAvailableNetworks', networks)
       } else {
+        const modalParams = {
+          message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
+          allowClose: false,
+        }
+        if (result.data.return_url) {
+          modalParams.btn =  {
+            text: 'Back to Merchant',
+            url: result.data.return_url
+          }
+        }
         this.$store.dispatch('modal/show', {
           target: 'error-modal',
           size: 'small',
-          params: {
-            message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
-            allowClose: false
-          }
+          params: modalParams
         })
       }
     })

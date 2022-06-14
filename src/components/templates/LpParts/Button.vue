@@ -17,7 +17,7 @@
     />
   </button>
   <div v-else>
-    <a v-if="link.btnType === 'a'" :class="linkClass" :href="link.url">
+    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass" :href="link.url">
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
@@ -230,17 +230,25 @@ export default {
   justify-content: center;
   white-space: nowrap;
   overflow: hidden;
-
   margin: rem(0.5);
   color: #fff;
   transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
     visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+  @include media(tb) {
+    margin: rem(0.5) 0;
+  }
   @include media(pc) {
     &:hover {
       opacity: 1;
     }
   }
-
+  &.disable{
+    opacity: .9 !important;
+    pointer-events:none;
+    &:before {
+      background: $border !important;
+    }
+  }
   .icon {
     &.before {
       margin-left: -6%;

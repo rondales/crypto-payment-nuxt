@@ -1,8 +1,8 @@
-import { PRODUCTION } from '@/constants'
 import MainnetTokens from './production'
 import TestnetTokens from './development'
 
-const tokens =
-  process.env.NODE_ENV === PRODUCTION ? MainnetTokens : TestnetTokens
+const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+const tokens = isUseMainnet ? MainnetTokens : TestnetTokens
 
 export default tokens
+
