@@ -11,7 +11,7 @@
             src="@/assets/images/logo-icon.svg"
             alt="Slash payment"
           />
-          <h1 :class="section.mv.class + '__h1'">
+          <h1 :class="section.mv.class + '__h1 non-translate'">
             <span :class="section.mv.class + '__h1__title'">{{
               section.mv.title.title
             }}</span>
@@ -34,7 +34,7 @@
         <div class="section__wrap">
           <div :class="section.hello.class + '__wrap'">
             <div :class="section.hello.class + '__textwrap'">
-              <h2 :class="section.hello.class + '__h2 scrollAction textMove'">
+              <h2 :class="section.hello.class + '__h2 scrollAction textMove non-translate'">
                 <span :class="section.hello.class + '__h2__title'">{{
                   section.hello.title.title
                 }}</span>
@@ -68,7 +68,7 @@
       <section id="token" :class="section.token.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.token.class + '__title'"
+            :class="section.token.class + '__title '"
             :title="section.token.title"
             color="g"
           />
@@ -84,7 +84,7 @@
             <p :class="section.token.class + '__subbox__text'">
               <span>{{ section.token.sub.text }}</span>
             </p>
-            <div :class="section.token.class + '__subbox__link'">
+            <div :class="section.token.class + '__subbox__link non-translate'">
               <LpButton :link="section.token.sub.link" type="main" size="s" />
             </div>
           </div>
@@ -112,7 +112,7 @@
       <section :class="section.install.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.install.class + '__title'"
+            :class="section.install.class + '__title non-translate'"
             :title="section.install.title"
           />
           <ul :class="section.install.class + '__feature'">
@@ -133,7 +133,7 @@
       <section id="fee-ecosystem" :class="section.fee.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.fee.class + '__title'"
+            :class="section.fee.class + '__title non-translate'"
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
@@ -189,7 +189,7 @@
         <!-- <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" /> -->
         <div class="section__wrap">
           <LpTitle
-           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.network.title"
           />
           <ul :class="section.network.class + '__logos scrollAction listMove'">
@@ -204,7 +204,7 @@
       <section id="roadmap" :class="section.roadmap.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.roadmap.class + '__title'"
+            :class="section.roadmap.class + '__title non-translate'"
             :title="section.roadmap.title"
           />
           <div :class="section.roadmap.class + '__phase'">
@@ -213,7 +213,7 @@
               v-for="phase in section.roadmap.phases"
               :key="phase.title"
             >
-              <h3 :class="section.roadmap.class + '__phase__title'">
+              <h3 :class="section.roadmap.class + '__phase__title non-translate'">
                 <span v-html="phase.title"></span>
               </h3>
               <ul :class="section.roadmap.class + '__phase__list'">
@@ -222,7 +222,7 @@
                     <h4 :class="section.roadmap.class + '__phase__subtitle'">
                       <span>{{ list.title }}</span>
                     </h4>
-                    <ul :class="section.roadmap.class + '__phase__sublist'">
+                    <ul :class="section.roadmap.class + '__phase__sublist non-translate'">
                       <li v-for="li in list.list" :key="li.text">
                         <span :class="{active: li.active}">
                           {{ li.text }}
@@ -241,7 +241,7 @@
       <section id="developers" :class="section.welcome.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.welcome.class + '__title'"
+            :class="section.welcome.class + '__title non-translate'"
             :title="section.welcome.title"
           />
           <ul :class="section.welcome.class + '__list'">
@@ -262,7 +262,7 @@
         <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
         <div class="section__wrap ">
           <LpTitle
-            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.cv.title"
           />
           <div :class="section.cv.class + '__wrap'">
@@ -703,7 +703,7 @@ export default {
         network: {
           class: "dlp-network",
           title: {
-            title: 'Connected dapps<br class="sp"> & network 🌎',
+            title: 'Connected dapps<br class="sp"> & network',
             subtitle: "",
           },
           logos: [

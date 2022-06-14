@@ -906,7 +906,7 @@ body.is-mounted {
     }
 
     &__wrap {
-      @include flex(flex-start, center);
+      @include flex(space-between, center);
 
       @include media(sp) {
         display: block;
@@ -914,7 +914,7 @@ body.is-mounted {
     }
 
     &__textwrap {
-      width: 65%;
+      width: 55%;
 
       @include media(sp) {
         width: 100%;
