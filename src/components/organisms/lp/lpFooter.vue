@@ -11,9 +11,9 @@
       <div class="lp-footer_col">
         <div class="lp-footer_left">
           <div class="lp-footer_info">
-            <div><span>SLASH FINTECH LIMITED（BVI）</span></div>
+            <div class="non-translate"><span>SLASH FINTECH LIMITED（BVI）</span></div>
             <p>
-              <span>
+              <span class="non-translate">
                 Wickhams Cay II Road Town Tortola VG1110,
                 <br />
                 British Virgin Islands
