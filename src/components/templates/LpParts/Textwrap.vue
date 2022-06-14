@@ -2,7 +2,7 @@
   <div class="textwrap">
     <dl v-if="textData.tag" class="tag">
       <dt>{{ textData.tag.title }}</dt>
-      <dd>{{ textData.tag.text }}</dd>
+      <dd class="non-translate">{{ textData.tag.text }}</dd>
     </dl>
     <h3 class="title scrollAction op"><span v-html="textData.title"></span></h3>
 
@@ -10,7 +10,7 @@
       <p class="text scrollAction op"><span v-html="textData.text"></span></p>
       <div v-if="textData.app" class="app">
         <div class="app_wrap">
-          <p v-if="textData.app.coming" class="app_title">
+          <p v-if="textData.app.coming" class="app_title non-translate">
             <span>{{ textData.app.coming }}</span>
           </p>
           <div class="app_link">
@@ -35,7 +35,7 @@
       </li>
     </ul>
     <div v-if="textData.link" class="link">
-      <LpButton :link="textData.link" type="simple" size="s" />
+      <LpButton :link="textData.link" class="non-translate" type="simple" size="s" />
     </div>
   </div>
 </template>
