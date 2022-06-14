@@ -31,9 +31,9 @@
           @click="hideModal"
         >OK</button>
         <button
+          v-if="isShowCancelButton"
           class="btn __g __l mt-1 non-translate"
-          :class="{ inactive: !isAccepted }"
-          @click="hideModal"
+          @click="returnToMerchant"
         >Cancel</button>
       </div>
     </div>
@@ -60,6 +60,9 @@
       },
       isAccepted() {
         return this.confirmed && this.accepted
+      },
+      isShowCancelButton() {
+        return 'returnUrl' in this.$store.state.modal.params
       }
     },
     methods: {
@@ -67,6 +70,9 @@
         if(this.isAccepted) {
           this.$store.dispatch('modal/hide')
         }
+      },
+      returnToMerchant() {
+        location.href = this.$store.state.modal.params.returnUrl
       },
       updateConfirmedStatus() {
         this.confirmed = this.$refs.confirmed.checked
