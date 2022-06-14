@@ -63,6 +63,7 @@
       },
       isShowCancelButton() {
         return 'returnUrl' in this.$store.state.modal.params
+          && this.$store.state.modal.params.returnUrl !== null
       }
     },
     methods: {
