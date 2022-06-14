@@ -2,24 +2,39 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Warning
+        Risk Disclaimer
       </h3>
       <p class="header__desc">
-        We cannot guarantee the reliability of this payee!
+        Read the risk disclaimer carefully, and check the following options to acknowledge confirmation.
       </p>
     </div>
+    <div class="separate-line"></div>
     <div class="body">
-      <div class="checkbox-container">
-        <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus">
-        <label for="accept">I understood the dangers</label>
+      <p class="desc mt-2">
+        Do you understand the purpose of this transaction and have you verified that there is no risk of fraud?
+      </p>
+      <div class="checkbox-container mt-2">
+        <input id="confirm" type="checkbox" ref="confirmed" @click="updateConfirmedStatus">
+        <label for="confirm">I understand the purpose of this transaction and have verified that there is no fear of fraud.</label>
       </div>
-      <br>
-      <div class="btn-container mt-2">
+      <p class="desc mt-2">
+        No refund of funds from us can be made if you are successful in this transaction. If there is a dispute with Payee, the parties will need to resolve it among themselves. Do you still want to continue with this transaction?
+      </p>
+      <div class="checkbox-container mt-2">
+        <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus">
+        <label for="accept">I understand the risk and continue this transaction.</label>
+      </div>
+      <div class="btn-container mt-3">
         <button
-          class="btn __g __l"
+          class="btn __g __l non-translate"
           :class="{ inactive: !isAccepted }"
           @click="hideModal"
         >OK</button>
+        <button
+          v-if="isShowCancelButton"
+          class="btn __g __l mt-1 non-translate"
+          @click="returnToMerchant"
+        >Cancel</button>
       </div>
     </div>
   </div>
@@ -29,10 +44,9 @@
 
   export default {
     name: 'errorModal',
-    components: {
-    },
     data () {
       return {
+        confirmed: false,
         accepted: false
       }
     },
@@ -45,7 +59,11 @@
         return this.$store.state.modal.params.message
       },
       isAccepted() {
-        return this.accepted
+        return this.confirmed && this.accepted
+      },
+      isShowCancelButton() {
+        return 'returnUrl' in this.$store.state.modal.params
+          && this.$store.state.modal.params.returnUrl !== null
       }
     },
     methods: {
@@ -53,6 +71,12 @@
         if(this.isAccepted) {
           this.$store.dispatch('modal/hide')
         }
+      },
+      returnToMerchant() {
+        location.href = this.$store.state.modal.params.returnUrl
+      },
+      updateConfirmedStatus() {
+        this.confirmed = this.$refs.confirmed.checked
       },
       updateAcceptedStatus() {
         this.accepted = this.$refs.accepted.checked
@@ -81,6 +105,8 @@
     }
     @include media(sp) {
       width: calc(100vw - 32px);
+      max-height: 85%;
+      overflow: auto;
     }
   }
   .header {
@@ -90,8 +116,12 @@
         font-size: 2.5rem;
         margin-bottom: 2rem;
       }
+      &__title::before {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
       &__desc {
-        font-size: 2rem;
+        font-size: 1.6rem;
       }
     }
     @include media(sp) {
@@ -100,6 +130,10 @@
         font-size: 2rem;
         margin-bottom: 1rem;
       }
+      &__title::before {
+        width: 2rem;
+        height: 2rem;
+      }
       &__desc {
         font-size: 1.5rem;
       }
@@ -107,8 +141,25 @@
     &__title {
       font-weight: 500;
     }
+    &__title::before {
+      content: "";
+      margin-right: 5px;
+      display: inline-block;
+      background: url(/assets/images/caution.svg) no-repeat center center;
+      background-size: contain;
+      vertical-align: middle;
+    }
     &__desc {
       font-weight: 100;
+    }
+  }
+  .separate-line {
+    border-bottom: 1px solid #78668D;
+    @include media(pc) {
+      margin: 0 24px;
+    }
+    @include media(sp) {
+      margin: 0 18px;
     }
   }
   .close {
@@ -130,7 +181,7 @@
       padding: 0 24px 24px 24px;
     }
     @include media(sp) {
-      padding: 24px 12px 48px;
+      padding: 0 24px 18px 18px;
       .btn_content{
         margin-left: 0;
         p{
@@ -138,7 +189,13 @@
         }
       }
     }
+    .desc {
+      font-weight: 100;
+      font-size: 1.6rem;
+    }
     .checkbox-container {
+      position: relative;
+      font-weight: 100;
       font-size: 1.4rem;
       input[type="checkbox"] {
           display: none;
@@ -148,7 +205,7 @@
         cursor: pointer;
         display: inline-block;
         position: relative;
-        padding-left: 25px;
+        padding-left: 30px;
         padding-right: 10px;
       }
       input[type="checkbox"]+label::before{
@@ -158,9 +215,8 @@
         box-sizing: border-box;
         width: 18px;
         height: 18px;
-        margin-top: -10px;
         left: 0;
-        top: 50%;
+        top: 0%;
         border: 2px solid;
         border-radius: 2px;
         border-color:  var(--color_font);
@@ -173,8 +229,8 @@
         box-sizing: border-box;
         width: 15px;
         height: 6px;
-        margin-top: -6px;
-        top: 50%;
+        margin-top: 5px;
+        top: 0%;
         left: 3px;
         transform: rotate(-45deg);
         border-bottom: 3px solid;
@@ -183,7 +239,12 @@
       }
     }
     .btn-container {
-      padding: 0 80px 0;
+      @include media(pc) {
+        padding: 0 80px 0;
+      }
+      @include media(sp) {
+        padding: 0 40px 0;
+      }
     }
   }
   .footer {
