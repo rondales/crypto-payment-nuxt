@@ -88,46 +88,46 @@ export default {
   },
   data() {
     return {
-      nav: [
-        {
+      nav: {
+        developers: {
           title: "Developers",
-          list: [
-            {
+          list: {
+            integrations: {
               title: "Integrations",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
               blank:  true,
               show: true
             },
-            {
+            plugins: {
               title: "Plugins",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/plugins-for-store-apps",
               blank:  true,
               show: true
             },
-            {
+            api: {
               title: "API",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/api-integration",
               blank:  true,
               show: true
             },
-            {
+            quickStart: {
               title: "Quick Start",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
               blank:  true,
               show: true
             },
-            {
+            network: {
               title: "To Testnet",
               url: "https://testnet.slash.fi/",
               blank:  true,
               show: true
             },
-          ],
+          },
         },
-        {
+        feeAndEcosystem: {
           title: "Fee & Ecosystem",
-          list: [
-            {
+          list: {
+            feeAndEcosystem: {
               title: "Fee & Ecosystem",
               url: "",
               name: "home",
@@ -135,7 +135,7 @@ export default {
               blank: false,
               show: true
             },
-            {
+            donationProgram: {
               title: "Donation Program",
               url: "",
               name: "home",
@@ -143,20 +143,20 @@ export default {
               blank: false,
               show: true
             },
-            {
+            slashToken: {
               title: "Slash Token",
               url: "",
               name: "home",
-              hash: "#token",
+              hash: "#slash-token",
               blank: false,
               show: true
             },
-          ],
+          },
         },
-        {
+        other: {
           title: "Other",
-          list: [
-            {
+          list: {
+            roadmap: {
               title: "RoadMap",
               url: "",
               name: "home",
@@ -164,7 +164,7 @@ export default {
               blank: false,
               show: true
             },
-            {
+            referral: {
               title: "Referral",
               url: "",
               name: "home",
@@ -172,7 +172,7 @@ export default {
               blank: false,
               show: false
             },
-            {
+            contact: {
               title: "Contact",
               url: "",
               name: "home",
@@ -180,66 +180,75 @@ export default {
               blank: false,
               show: true
             },
-            {
+            terms: {
               title: "Terms of Use",
               url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
               blank: true,
               show: true
             },
-            {
+            privacy: {
               title: "Data Protection and Privacy Policy",
               url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
               blank: true,
               show: true
             },
-            {
+            aml: {
               title: "Anti-Money Laundering Policy",
               url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
               blank: true,
               show: true
             },
-            {
+            mediaKit: {
               title: "Media Kit",
               url: "",
               name: "media_kit",
               blank: false,
               show: true
             },
-          ],
+          },
         },
-      ],
-      sns: [
-        {
+      },
+      sns: {
+        twitter: {
           icon: "icon/twitter",
           link: "https://twitter.com/SlashWeb3",
           status: true,
         },
-        {
+        telegram: {
           icon: "icon/telegram",
           link: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
           status: true,
         },
-        {
+        discord: {
           icon: "icon/discord",
           link: "",
           status: false,
         },
-        {
+        mail: {
           icon: "icon/arroba",
           link: "mailto:hello@slash.vision",
           status: true,
         },
-        {
+        gitbook: {
           icon: "icon/gitbook",
           link: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
           status: true,
         },
-      ],
+      },
       localUrl: "",
     };
   },
   created() {
     this.localUrl = location.origin;
+    if (this.isUseTestnet) {
+      this.nav.developers.list.network.title = "To Mainnet"
+      this.nav.developers.list.network.url = "https://slash.fi/"
+    }
+  },
+  computed: {
+    isUseTestnet() {
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    }
   },
   methods: {
     changeTheme(theme) {

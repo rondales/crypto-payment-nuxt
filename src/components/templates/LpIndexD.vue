@@ -23,15 +23,13 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton v-if="isShowTestnet"  class="disable non-translate" :link="section.mv.link4" type="main" size="m" font="small"/>
-            <LpButton v-else :link="section.mv.link6" class="disable non-translate" type="main" size="m" font="small"/>
+            <LpButton v-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link6" type="main" size="m" font="small"/>
+            <LpButton v-else :link="section.mv.link5" class="disable non-translate" type="main" size="m" font="small"/>
             <LpButton :link="section.mv.link2" type="main" size="m" />
 
-            <div v-if="isShowTestnet" :class="section.token.class + '__subbox__link'">
-              <LpButton :link="section.mv.link5" type="simple" size="s"  />
-            </div>
-            <div v-else :class="section.token.class + '__subbox__link'">
-              <LpButton :link="section.mv.link3" type="simple" size="s"  />
+            <div :class="section.token.class + '__subbox__link'">
+              <LpButton v-if="isUseMainnet" :link="section.mv.link3" type="simple" size="s"  />
+              <LpButton v-else :link="section.mv.link4" type="simple" size="s"  />
             </div>
           </div>
         </div>
@@ -280,8 +278,8 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton v-if="isShowTestnet"  class="disable non-translate" :link="section.mv.link4" type="main" size="m" font="small"/>
-              <LpButton v-else :link="section.mv.link6" class="disable non-translate" type="main" size="m" font="small"/>
+              <LpButton v-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link6" type="main" size="m" font="small"/>
+              <LpButton v-else :link="section.mv.link5" class="disable non-translate" type="main" size="m" font="small"/>
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -350,18 +348,18 @@ export default {
             btnType: "a"
           },
           link4: {
-            url: "/",
-            title: "Launch June 27, 2022",
-            // icon: "pointing-up",
-            func: "enterApp",
-            font: "s"
-          },
-          link5: {
             url: "https://slash.fi/",
             title: "To Mainnet",
             icon: "icon/arrow",
             iconAfter: true,
             btnType: "a"
+          },
+          link5: {
+            url: "/",
+            title: "Launch June 27, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
           },
           link6: {
             url: "/",
@@ -680,6 +678,7 @@ export default {
             },
             {
               layout: "l",
+              addId: "slash-token",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
