@@ -167,6 +167,12 @@ const router = new Router({
               component: () => import("@/components/organisms/admin/AdminDocuments"),
               meta: { title: 'Slash Apps' }
             },
+            {
+              name: "admin",
+              path: "/admin/plug-ins",
+              component: () => import("@/components/organisms/admin/AdminKeys"),
+              meta: { title: 'Slash Apps' }
+            },
           ]
         }
       ]

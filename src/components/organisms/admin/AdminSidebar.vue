@@ -60,6 +60,14 @@
               </router-link>
             </li>
             <li @click="close()">
+              <router-link
+                to="/admin/plug-ins"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                Plug-ins
+              </router-link>
+            </li>
+            <li @click="close()">
               <a
                 target="_blank"
                 href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
