@@ -276,8 +276,8 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton v-if="isEnableEnterApp" :link="section.cv.link" type="main" size="m" />
-              <LpButton v-else :link="section.cv.link" class="disable" type="main" size="m" />
+            <LpButton v-if="isEnableEnterApp" :link="section.mv.link" type="main" size="m"/>
+            <LpButton v-else :link="section.mv.link4" class="disable" type="main" size="m" font="small"/>
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
