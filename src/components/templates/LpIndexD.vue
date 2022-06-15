@@ -23,11 +23,11 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton v-if="isEnableEnterApp" :link="section.mv.link" type="main" size="m" />
-            <LpButton v-else :link="section.mv.link" class="disable" type="main" size="m" />
-            <LpButton :link="section.mv.link2" type="sub" size="m" />
+            <LpButton v-if="isEnableEnterApp" :link="section.mv.link" type="main" size="m"/>
+            <LpButton v-else :link="section.mv.link4" class="disable" type="main" size="m" font="small"/>
+            <LpButton :link="section.mv.link2" type="main" size="m" />
             <div v-if="isShowTestnet" :class="section.token.class + '__subbox__link'">
-              <LpButton :link="section.mv.link3" class="disable" type="simple" size="s"  />
+              <LpButton :link="section.mv.link3" type="simple" size="s"  />
             </div>
           </div>
         </div>
@@ -141,10 +141,11 @@
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
-            <li v-for="feature in section.fee.features" :key="feature.title">
+            <li v-for="feature in section.fee.features" :key="feature.title" >
               <LpImageText
                 :data="feature"
                 :class="section.install.class + '__feature__list'"
+                :id="feature.addId"
               />
             </li>
           </ul>
@@ -338,11 +339,18 @@ export default {
             btnType: "a",
           },
           link3: {
-            url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+            url: "https://testnet.slash.fi/",
             title: "To Testnet",
             icon: "icon/arrow",
             iconAfter: true,
             btnType: "a"
+          },
+          link4: {
+            url: "/",
+            title: "Launch July 4, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
           },
         },
         hello: {
@@ -512,6 +520,7 @@ export default {
                 lightSrc: "",
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
+              text2: "Mainnet will launch July 4, 2022.",
               link: {
                 url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",
@@ -621,6 +630,8 @@ export default {
               },
             },
             {
+              show: true,
+              addId: "donate",
               layout: "c",
               title: "Slash automatically donation program",
               image: {
@@ -982,27 +993,27 @@ export default {
               btnType: "a"
             },
             {
-              title: "Slash Payment github",
-              icon: "icon/github",
-              url: "https://github.com/slash-fi",
-              btnType: "a"
-            },
-            {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
               btnType: "router"
             },
             {
-              title: "Slash Recruit information",
-              icon: "icon/recruit",
-              url: "https://slash-fi.gitbook.io/docs/we-are-hiring/jobs-at-slash",
-              btnType: "a"
-            },
-            {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
               url: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
+              btnType: "a"
+            },
+            {
+              title: "Slash Payment github",
+              icon: "icon/github",
+              url: "",
+              btnType: "a"
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "icon/recruit",
+              url: "",
               btnType: "a"
             },
             {

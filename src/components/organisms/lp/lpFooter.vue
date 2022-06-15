@@ -11,13 +11,9 @@
       <div class="lp-footer_col">
         <div class="lp-footer_left">
           <div class="lp-footer_info">
-            <div class="non-translate"><span>SLASH FINTECH LIMITED（BVI）</span></div>
+            <div class="non-translate"><span>SLASH VISION</span></div>
             <p>
-              <span class="non-translate">
-                Wickhams Cay II Road Town Tortola VG1110,
-                <br />
-                British Virgin Islands
-              </span>
+              <a href="https://www.slash.vision/">https://www.slash.vision/</a>
             </p>
           </div>
           <!-- <div class="lp-footer_info">
@@ -40,7 +36,7 @@
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
                   <div v-if="navlink.show">
-                    <a v-if="navlink.blank" :href="navlink.url" :class="{disable: !(navlink.url)}">
+                    <a v-if="navlink.blank" :href="navlink.url" :target="navlink.blank? '_blank':false" :class="{disable: !(navlink.url)}">
                       <span>{{ navlink.title }}</span>
                     </a>
                     <router-link 
@@ -63,6 +59,7 @@
         <li v-for="thisSns in sns" :key="thisSns.icon">
           <a
             :href="thisSns.link"
+            target="_blank"
             :class="[thisSns.status ? 'active' : 'disable']"
           >
             <LpIcon class="icon" :path="thisSns.icon" />
@@ -71,7 +68,7 @@
       </ul>
       <p class="copy">
         <span
-          >@ 2022 Copyrights by SLASH FINTECH LIMITED . All Rights
+          >@ 2022 Copyrights by <a href="https://slash.vision/">SLASH VISION.</a> All Rights
           Reserved.</span
         >
       </p>
@@ -121,9 +118,9 @@ export default {
             },
             {
               title: "To Testnet",
-              url: "",
+              url: "https://testnet.slash.fi/",
               blank:  true,
-              show: this.isShowTestnet
+              show: true
             },
           ],
         },
@@ -132,20 +129,26 @@ export default {
           list: [
             {
               title: "Fee & Ecosystem",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#fee-ecosystem",
+              blank: false,
               show: true
             },
             {
               title: "Donation Program",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#donation-programme",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#donate",
+              blank: false,
               show: true
             },
             {
               title: "Slash Token",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#slash-token",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#token",
+              blank: false,
               show: true
             },
           ],
@@ -155,13 +158,17 @@ export default {
           list: [
             {
               title: "RoadMap",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/roadmap-status",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#roadmap",
+              blank: false,
               show: true
             },
             {
               title: "Referral",
-              url: "#developers",
+              url: "",
+              name: "home",
+              hash: "#developers",
               blank: false,
               show: false
             },

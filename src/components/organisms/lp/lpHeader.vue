@@ -5,9 +5,17 @@
   >
     <div class="lp-header__wrap">
       <div class="lp-header__inner">
-        <a href="/" class="lp-header__logo">
-          <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
-        </a >
+        <div class="add-flex a-center">
+          <a href="/" class="lp-header__logo">
+            <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
+          </a >
+          <div class="testnet-navbar" v-if="isUseTestnet">
+            <span>
+              Testnet
+            </span>
+          </div>
+        </div>
+
         <div class="lp-header__navwrap">
           <div
             class="lp-header__hamburger tb"
@@ -53,8 +61,8 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s" />
-            <LpButton v-else :link="cvLink" class="disable" type="main" size="s" />
+            <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s"/>
+            <LpButton v-else :link="cvLink2" class="disable" type="main" size="s" font="small"/>
           </div>
         </div>
       </div>
@@ -101,7 +109,8 @@
               {{list.title}}
           </router-link>
         </div>
-      <LpButton :link="cvLink" type="main" size="s" />
+        <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s"/>
+        <LpButton v-else :link="cvLink2" class="disable" type="main" size="s" font="small"/>
     </div>
   </header>
 </template>
@@ -145,6 +154,13 @@ export default {
         func: "enterApp",
         status: true,
       },
+      cvLink2: {
+        title: "Launch July 4, 2022",
+        icon: "",
+        url: "",
+        func: "enterApp",
+        status: true,
+      },
       localUrl: "",
     };
   },
@@ -155,6 +171,12 @@ export default {
 
   },
   methods: {
+    mouseOver(){
+      this.isHover = true;
+    },
+    mouseLeave(){
+      this.isHover = false;
+    },
     changeTheme(theme) {
       this.$store.dispatch("changeTheme", theme);
     },
@@ -169,6 +191,11 @@ export default {
     //   this.$store.dispatch("changeTheme", "dark");
     // },
   },
+  computed: {
+    isUseTestnet() {
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+  }
 };
 </script>
 
@@ -180,6 +207,64 @@ export default {
   top: 0;
   z-index: 100;
   width: 100%;
+  .testnet-navbar{
+    background: #DE4437;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 2px;
+    margin-left: 8px;
+    margin-right:16px;
+    height: 22px;
+    @include media(sp) {
+      margin: 0 0 0 8px;
+      font-size: 8px;
+      padding: 2px 4px;
+      height: 20px;
+    }
+    position: relative;
+    .testnet-hovercontens{
+      position: absolute;
+      top: 32px;
+      left: 0;    
+      p{
+        width: 260px;
+        background: $gray;
+        padding:8px 16px;
+        border-radius: 8px;
+        position: relative;
+        a{
+          font-weight: 500;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 150% 150%;
+          pointer-events: none;
+          position: relative;
+          &::after{
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translate(0, -50%);
+            width: 100%;
+            height: 1px;
+            background: #fff;
+
+          }
+        }
+        &::before{
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 20px;
+          top: -15px;
+          border: 8px solid transparent;
+          border-bottom: 8px solid $gray;
+        }
+      }
+    }
+  }
   &__wrap {
     @extend .section__wrap;
     @include rem_padding(1, 0, 1, 0);
