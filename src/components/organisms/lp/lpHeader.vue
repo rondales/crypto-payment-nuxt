@@ -107,7 +107,7 @@
               {{list.title}}
           </router-link>
         </div>
-        <LpButton v-if="isShowTestnet"  class="disable non-translate" :link="cvLink" type="main" size="m" font="small"/>
+        <LpButton v-if="isUseTestnet"  class="disable non-translate" :link="cvLink" type="main" size="m" font="small"/>
         <LpButton v-else :link="cvLink2" class="disable non-translate" type="main" size="m" font="small"/>
     </div>
   </header>
