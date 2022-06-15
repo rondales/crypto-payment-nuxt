@@ -138,13 +138,13 @@ export default {
             },
             {
               title: "Donation Program",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#donation-programme",
               blank: true,
               show: true
             },
             {
               title: "Slash Token",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#slash-token",
               blank: true,
               show: true
             },
