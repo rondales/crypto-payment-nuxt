@@ -425,6 +425,12 @@ footer {
     @include rem_padding(2, 0, 2, 0);
     text-align: center;
     @include font(rem(pow(-1)), 400, 0.06em, $lh, $en_go);
+    a{
+    background: linear-gradient(90.25deg, #8a2ce1 5.43%, #d97c87 98.19%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100% 10%;
+    }
     @include media(sp) {
       font-size: rem_sp(pow(-1));
       padding-top: rem_sp(2);

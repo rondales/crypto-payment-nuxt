@@ -10,9 +10,7 @@
             <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
           </a >
           <div class="testnet-navbar" v-if="isUseTestnet">
-            <span>
-              Testnet
-            </span>
+            Testnet
           </div>
         </div>
 
@@ -61,8 +59,8 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s"/>
-            <LpButton v-else :link="cvLink2" class="disable" type="main" size="s" font="small"/>
+            <LpButton v-if="isShowTestnet"  class="disable non-translate" :link="cvLink" type="main" size="m" font="small"/>
+            <LpButton v-else :link="cvLink2" class="disable non-translate" type="main" size="m" font="small"/>
           </div>
         </div>
       </div>
@@ -109,8 +107,8 @@
               {{list.title}}
           </router-link>
         </div>
-        <LpButton v-if="isEnableEnterApp" :link="cvLink" type="main" size="s"/>
-        <LpButton v-else :link="cvLink2" class="disable" type="main" size="s" font="small"/>
+        <LpButton v-if="isShowTestnet"  class="disable non-translate" :link="cvLink" type="main" size="m" font="small"/>
+        <LpButton v-else :link="cvLink2" class="disable non-translate" type="main" size="m" font="small"/>
     </div>
   </header>
 </template>
@@ -122,7 +120,7 @@ export default {
   components: {
     LpButton,
   },
-  props: { isEnableEnterApp: Boolean },
+  props: { isShowTestnet: Boolean },
   data() {
     return {
       nav: [
@@ -148,7 +146,7 @@ export default {
         },
       ],
       cvLink: {
-        title: "Enter App",
+        title:  "Launch June 27, 2022",
         icon: "",
         url: "",
         func: "enterApp",
@@ -195,6 +193,7 @@ export default {
     isUseTestnet() {
       return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     },
+    
   }
 };
 </script>
@@ -220,7 +219,7 @@ export default {
     @include media(sp) {
       margin: 0 0 0 8px;
       font-size: 8px;
-      padding: 2px 4px;
+      padding: 2px 8px;
       height: 20px;
     }
     position: relative;

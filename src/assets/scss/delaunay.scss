@@ -1816,6 +1816,7 @@ body.is-mounted {
       background: var(--color_lp_box);
       border-radius: 10px;
       height: 100%;
+      
       @include rem_padding(3, 4, 3, 4);
       // max-width: 600px;
       text-align: center;
@@ -1826,6 +1827,7 @@ body.is-mounted {
       @include media(sp) {
         margin: 0;
         margin-bottom: rem_sp(2);
+        width: 100%;
       }
 
       .lpButton.m {
