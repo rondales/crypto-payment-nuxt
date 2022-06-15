@@ -63,8 +63,14 @@ export default {
         }
       })
     },
-    showWarningModal() {
-      this.$store.dispatch('modal/show', { target: 'warning-domain-unauth-modal', size: 'small' })
+    showWarningModal(returnUrl) {
+      this.$store.dispatch('modal/show', {
+        target: 'warning-domain-unauth-modal',
+        size: 'small',
+        params: {
+          returnUrl: returnUrl
+        }
+      })
     }
   },
   created() {
@@ -88,7 +94,7 @@ export default {
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       if (!this.isVerifiedDomain) {
-        this.showWarningModal()
+        this.showWarningModal(receiveResponse.data.return_url)
       }
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
