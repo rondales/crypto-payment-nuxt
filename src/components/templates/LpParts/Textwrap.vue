@@ -1,8 +1,8 @@
 <template>
   <div class="textwrap">
-    <dl v-if="textData.tag" class="tag">
+    <dl v-if="textData.tag" class="tag non-translate">
       <dt>{{ textData.tag.title }}</dt>
-      <dd class="non-translate">{{ textData.tag.text }}</dd>
+      <dd>{{ textData.tag.text }}</dd>
     </dl>
     <h3 class="title scrollAction op"><span v-html="textData.title"></span></h3>
 
