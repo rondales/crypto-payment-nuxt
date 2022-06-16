@@ -597,7 +597,7 @@ export default {
     },
     checkTransactionStatus(transactionHash) {
       this.monitoringInterval = setInterval(() => {
-        this.$web3.monitoringPaymentTransaction(
+        this.$web3.monitoringTransaction(
           this.$store.state.web3.instance,
           transactionHash
         ).then((receipt) => {

@@ -15,13 +15,13 @@
       </p>
       <p class="desc mt-2">This contract issuance process requires the preparation of 
         {{ symbol }} in the Web3 wallet that will be collected in the network as gas fee.</p>
-      <button class="btn __g __l" v-if="!isContractUpdateRequest" @click="publishMerchantContract(chainId)">
+      <button class="btn __g __l" v-if="!isContractUpdateRequest && !isPublishedContract" @click="publishMerchantContract(chainId)">
         Create Contract
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
         </div>
       </button>
-      <button class="btn __g __l" v-else-if="isContractUpdateRequest" @click="forceUpdateContract(chainId)">
+      <button class="btn __g __l" v-else-if="isContractUpdateRequest && !isPublishedContract" @click="forceUpdateContract(chainId)">
         Update Contract
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
@@ -83,7 +83,11 @@
         Close
       </button>
     </div>
-    <button class="close" @click="hideModal">
+    <figure v-if="isProcessingState" class="reload close" @click="refresh">
+      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
+      <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
+    </figure>
+    <button class="close" v-else-if="!isProcessingState" @click="hideModal">
       <img src="@/assets/images/cross.svg">
       閉じる
     </button>
@@ -127,6 +131,9 @@ export default {
     },
     contractSetting() {
       return this.$store.state.contract.contracts[this.chainId]
+    },
+    isPublishedContract() {
+      return Boolean(this.contractSetting.address)
     },
     isProcessing() {
       return this.contractSetting.processing
@@ -249,6 +256,23 @@ export default {
       }
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
+    refresh() {
+      const transactionHash = this.contractSetting.transactionAddess
+      if(transactionHash != null) {
+        this.$web3.monitoringTransaction(
+          this.$store.state.web3.instance,
+          this.contractSetting.transactionAddess
+        ).then((receipt) => {
+          if (receipt) {
+            if (receipt.status) {
+              this.pageState = this.pageStateList.successed
+            } else {
+              this.pageState = this.pageStateList.failured
+            }
+          }
+        })
+      }
+    },
     publishMerchantContract(chainId) {
       if (this.isProcessing) return
       this.updateContractProcessing(this.chainId, true)
@@ -363,7 +387,6 @@ export default {
     width: 16px;
     height: 16px;
     font-size: 0;
-
     @include media(pc) {
       top: 30px;
       right: 24px;
@@ -371,6 +394,12 @@ export default {
     @include media(sp) {
       top: 24px;
       right: 24px;
+    }
+  }
+  .reload{
+    cursor: pointer;
+    img{
+      vertical-align: middle;
     }
   }
   .body {
