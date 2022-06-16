@@ -77,7 +77,7 @@
                     </div>
                     <div
                       v-else-if="isCurrentNetwork(chainId) && !contractSettings.contracts[chainId].processing"
-                      @click="publishMerchantContract(chainId)"
+                      @click="showContractIssuanceModal(chainId)"
                       class="manage-contents_btn"
                     >
                       Create
@@ -231,7 +231,6 @@ import {
 } from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
-import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'AdminPaymentSetting',
@@ -332,18 +331,6 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
-    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/update`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        address: contractAddress,
-        transaction_address: transactionAddress,
-        args: JSON.stringify(contractAbi),
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT
-      }
-      return this.axios.post(url, data, options)
-    },
     apiDeleteContract(chainId, contractAddress) {
       const url = `${this.baseUrl}/api/v1/management/contract`
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
@@ -386,16 +373,6 @@ export default {
       const url = `${this.baseUrl}/api/v1/management/setting/domain/verify`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
-    },
-    apiRegistTransaction(chainId, transactionAddress) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/transaction`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT,
-        transaction_address: transactionAddress
-      }
-      return this.axios.post(url, data, options)
     },
     apiGetPendingTransactions() {
       const url = `${this.baseUrl}/api/v1/management/contract/deploy/status`
@@ -473,55 +450,6 @@ export default {
           : this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
-    publishMerchantContract(chainId) {
-      this.contractSettings.contracts[chainId].processing = true
-      const merchantWalletAddress = this.$store.state.account.address
-      const receiveTokenAddress = this.contractSettings.contracts[chainId].support
-      this.$web3.publishMerchantContract(
-        this.$store.state.web3.instance,
-        chainId,
-        merchantWalletAddress,
-        receiveTokenAddress
-      ).on('transactionHash', (hash) => {
-        this.apiRegistTransaction(chainId,hash).catch((error) => {
-          console.log(error)
-        })
-      }).
-      then((receipt) => {
-        this.contractSettings.contracts[chainId].available = true
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
-        const transactionAddress = receipt.transactionHash
-        const merchantContractAbi = MerchantContract.abi
-        this.apiUpdateContract(
-          chainId,
-          transactionAddress,
-          merchantContractAddess,
-          merchantContractAbi,
-        ).then(() => {
-          this.contractSettings.contracts[chainId].address = merchantContractAddess
-          this.contractSettings.contracts[chainId].processing = false
-        }).catch((error) => {
-          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          if (error.response.data.errors.shift() === 3530) {
-            this.contractSettings.contracts[chainId].address = merchantContractAddess
-          } else {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          this.contractSettings.contracts[chainId].processing = false
-        })
-      }).catch(() => {
-        this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'Failed to create a contract.'
-          }
-        })
-        this.contractSettings.contracts[chainId].processing = false
-      })
-    },
     updateContract(chainId) {
       this.contractSettings.contracts[chainId].processing = true
       const contract = this.contractSettings.contracts[chainId]
@@ -565,6 +493,15 @@ export default {
     },
     selectCurrency(event, currency) {
       this.paymentSettings.allowCurrencies[currency] = event.target.checked
+    },
+    showContractIssuanceModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-issuance-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
     }
   },
   created() {
@@ -585,6 +522,7 @@ export default {
         support: supportStatuses[network.chainId]
       })
     })
+    this.$store.dispatch('contract/addContracts',this.contractSettings.contracts)
     this.getContracts()
     this.getPendingTransactions()
     this.getPaymentSettings()

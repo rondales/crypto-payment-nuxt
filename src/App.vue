@@ -31,7 +31,8 @@ export default {
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
-    warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal')
+    warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal'),
+    contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal')
   },
   computed: {
     classes() {

@@ -5,6 +5,7 @@ import SecureLS from 'secure-ls'
 
 import web3 from './modules/web3'
 import account from './modules/account'
+import contract from './modules/contract'
 import merchant from './modules/merchant'
 import payment from './modules/payment'
 import modal from './modules/modal'
@@ -20,6 +21,7 @@ const store = new Vuex.Store({
       paths: [
         'web3.provider',
         'account',
+        'contract',
         'merchant',
         'payment',
         'hamberger',
@@ -36,6 +38,7 @@ const store = new Vuex.Store({
   modules: {
     web3,
     account,
+    contract,
     merchant,
     payment,
     modal
