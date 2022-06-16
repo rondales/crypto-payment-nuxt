@@ -11,13 +11,9 @@
       <div class="lp-footer_col">
         <div class="lp-footer_left">
           <div class="lp-footer_info">
-            <div class="non-translate"><span>SLASH FINTECH LIMITED（BVI）</span></div>
+            <div class="non-translate"><span>SLASH VISION</span></div>
             <p>
-              <span class="non-translate">
-                Wickhams Cay II Road Town Tortola VG1110,
-                <br />
-                British Virgin Islands
-              </span>
+              <a href="https://www.slash.vision/">https://www.slash.vision/</a>
             </p>
           </div>
           <!-- <div class="lp-footer_info">
@@ -40,11 +36,11 @@
               <ul>
                 <li v-for="navlink in footmenu.list" :key="navlink.title">
                   <div v-if="navlink.show">
-                    <a v-if="navlink.blank" :href="navlink.url" :class="{disable: !(navlink.url)}">
+                    <a v-if="navlink.blank" :href="navlink.url" :target="navlink.blank? '_blank':false" :class="{disable: !(navlink.url)}">
                       <span>{{ navlink.title }}</span>
                     </a>
-                    <router-link 
-                      v-else 
+                    <router-link
+                      v-else
                       :to="{
                         name: navlink.name,
                         hash: navlink.hash
@@ -63,6 +59,7 @@
         <li v-for="thisSns in sns" :key="thisSns.icon">
           <a
             :href="thisSns.link"
+            target="_blank"
             :class="[thisSns.status ? 'active' : 'disable']"
           >
             <LpIcon class="icon" :path="thisSns.icon" />
@@ -71,7 +68,7 @@
       </ul>
       <p class="copy">
         <span
-          >@ 2022 Copyrights by SLASH FINTECH LIMITED . All Rights
+          >@ 2022 Copyrights by <a href="https://slash.vision/">SLASH VISION.</a> All Rights
           Reserved.</span
         >
       </p>
@@ -86,86 +83,94 @@ export default {
   components: {
     LpIcon,
   },
-  props: {
-    isShowTestnet: Boolean
-  },
+  props: { isUseMainnet: Boolean },
   data() {
     return {
-      nav: [
-        {
+      nav: {
+        developers: {
           title: "Developers",
-          list: [
-            {
+          list: {
+            integrations: {
               title: "Integrations",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
               blank:  true,
               show: true
             },
-            {
+            plugins: {
               title: "Plugins",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/plugins-for-store-apps",
               blank:  true,
               show: true
             },
-            {
+            api: {
               title: "API",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/api-integration",
               blank:  true,
               show: true
             },
-            {
+            quickStart: {
               title: "Quick Start",
               url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
               blank:  true,
               show: true
             },
-            {
+            network: {
               title: "To Testnet",
-              url: "",
+              url: "https://testnet.slash.fi/",
               blank:  true,
-              show: this.isShowTestnet
+              show: true
             },
-          ],
+          },
         },
-        {
+        feeAndEcosystem: {
           title: "Fee & Ecosystem",
-          list: [
-            {
+          list: {
+            feeAndEcosystem: {
               title: "Fee & Ecosystem",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#fee-ecosystem",
+              blank: false,
               show: true
             },
-            {
+            donationProgram: {
               title: "Donation Program",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#donation-programme",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#donate",
+              blank: false,
               show: true
             },
-            {
+            slashToken: {
               title: "Slash Token",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper#slash-token",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#slash-token",
+              blank: false,
               show: true
             },
-          ],
+          },
         },
-        {
+        other: {
           title: "Other",
-          list: [
-            {
+          list: {
+            roadmap: {
               title: "RoadMap",
-              url: "https://slash-fi.gitbook.io/docs/whitepaper/roadmap-status",
-              blank: true,
+              url: "",
+              name: "home",
+              hash: "#roadmap",
+              blank: false,
               show: true
             },
-            {
+            referral: {
               title: "Referral",
-              url: "#developers",
+              url: "",
+              name: "home",
+              hash: "#developers",
               blank: false,
               show: false
             },
-            {
+            contact: {
               title: "Contact",
               url: "",
               name: "home",
@@ -173,78 +178,71 @@ export default {
               blank: false,
               show: true
             },
-            {
+            terms: {
               title: "Terms of Use",
               url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
               blank: true,
               show: true
             },
-            {
+            privacy: {
               title: "Data Protection and Privacy Policy",
               url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
               blank: true,
               show: true
             },
-            {
+            aml: {
               title: "Anti-Money Laundering Policy",
               url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
               blank: true,
               show: true
             },
-            {
+            mediaKit: {
               title: "Media Kit",
               url: "",
               name: "media_kit",
               blank: false,
               show: true
             },
-          ],
+          },
         },
-      ],
-      sns: [
-        {
+      },
+      sns: {
+        twitter: {
           icon: "icon/twitter",
           link: "https://twitter.com/SlashWeb3",
           status: true,
         },
-        {
+        telegram: {
           icon: "icon/telegram",
           link: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
           status: true,
         },
-        {
+        discord: {
           icon: "icon/discord",
           link: "",
           status: false,
         },
-        {
+        mail: {
           icon: "icon/arroba",
           link: "mailto:hello@slash.vision",
           status: true,
         },
-        {
+        gitbook: {
           icon: "icon/gitbook",
           link: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
           status: true,
         },
-      ],
+      },
       localUrl: "",
     };
   },
   created() {
     this.localUrl = location.origin;
-  },
-  methods: {
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    open() {
-      this.$store.dispatch("hamberger", { hamberger: true });
-    },
-    enterApp() {
-      this.$store.dispatch("changeTheme", "dark");
-    },
-  },
+    if (!this.isUseMainnet) {
+      this.nav.developers.list.network.title = "To Mainnet"
+      this.nav.developers.list.network.url = "https://slash.fi/"
+    }
+  }
 };
 </script>
 
@@ -418,6 +416,12 @@ footer {
     @include rem_padding(2, 0, 2, 0);
     text-align: center;
     @include font(rem(pow(-1)), 400, 0.06em, $lh, $en_go);
+    a{
+    background: linear-gradient(90.25deg, #8a2ce1 5.43%, #d97c87 98.19%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100% 10%;
+    }
     @include media(sp) {
       font-size: rem_sp(pow(-1));
       padding-top: rem_sp(2);
