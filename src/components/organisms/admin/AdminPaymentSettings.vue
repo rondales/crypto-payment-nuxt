@@ -37,6 +37,13 @@
               Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
             </p>
           </div>
+          <div class="manage-contents_subhead">
+            <p>
+              <img src="@/assets/images/learn-more.svg">
+               About Slash’s payment contract setup specifications. 
+               <a href="https://slash-fi.gitbook.io/docs/integration-guide/quick-start#contract-settings" target="_blank" class="learn-more">Learn more.</a>
+            </p>
+          </div>
           <div class="manage-contents_body">
             <div class="manage-contents_items">
 
@@ -586,6 +593,20 @@ export default {
         p{
           font-weight: 300;
           font-size: 15px;
+        }
+      }
+      &_subhead{
+        padding-bottom: 32px;
+        h3{
+          font-weight: 300;
+        }
+        p{
+          font-weight: 300;
+          font-size: 15px;
+        }
+        a {
+          color:#5390F2;
+          cursor: pointer;
         }
       }
       &_item{
