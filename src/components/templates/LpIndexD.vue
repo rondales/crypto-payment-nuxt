@@ -1,6 +1,6 @@
 <template>
   <div id="wrapAll">
-    <LpHeader :isShowTestnet="isShowTestnet" />
+    <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' '">
@@ -23,13 +23,14 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton v-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link6" type="main" size="m" font="small"/>
-            <LpButton v-else :link="section.mv.link5" class="disable non-translate" type="main" size="m" font="small"/>
-            <LpButton :link="section.mv.link2" type="main" size="m" />
+            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+            <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small" />
+            <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small" />
+            <LpButton :link="section.mv.link4" type="main" size="m" />
 
             <div :class="section.token.class + '__subbox__link'">
-              <LpButton v-if="isUseMainnet" :link="section.mv.link3" type="simple" size="s"  />
-              <LpButton v-else :link="section.mv.link4" type="simple" size="s"  />
+              <LpButton v-if="isUseMainnet" :link="section.mv.link5" type="simple" size="s" />
+              <LpButton v-else :link="section.mv.link6" type="simple" size="s" />
             </div>
           </div>
         </div>
@@ -278,8 +279,9 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton v-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link6" type="main" size="m" font="small"/>
-              <LpButton v-else :link="section.mv.link5" class="disable non-translate" type="main" size="m" font="small"/>
+              <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+              <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small"/>
+              <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small"/>
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -290,7 +292,7 @@
         </div>
       </section>
     </main>
-    <LpFooter :isShowTestnet="isShowTestnet" />
+    <LpFooter :isUseMainnet="isUseMainnet" />
   </div>
 </template>
 
@@ -303,7 +305,6 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-import { PRODUCTION, DEVELOPMENT } from "@/constants"
 // used it used at SECTION trial
 // import LpIcon from "@/components/templates/LpParts/Icon";
 
@@ -328,45 +329,45 @@ export default {
             subtitle: "Web3 payment",
           },
           lead: "the next generation of decentralized payment methods,<br>to support any Token payment.",
-          link: {
+          link1: {
             url: "/",
             title: "Enter App",
             // icon: "pointing-up",
             func: "enterApp",
           },
           link2: {
-            url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
-            title: "Whitepaper",
-            icon: "icon/gitbook",
-            btnType: "a",
+            url: "/",
+            title: "Launch July 4, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
           },
           link3: {
-            url: "https://testnet.slash.fi/",
-            title: "To Testnet",
-            icon: "icon/arrow",
-            iconAfter: true,
-            btnType: "a"
-          },
-          link4: {
-            url: "https://slash.fi/",
-            title: "To Mainnet",
-            icon: "icon/arrow",
-            iconAfter: true,
-            btnType: "a"
-          },
-          link5: {
             url: "/",
             title: "Launch June 27, 2022",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"
           },
+          link4: {
+            url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+            title: "Whitepaper",
+            icon: "icon/gitbook",
+            btnType: "a",
+          },
+          link5: {
+            url: "https://testnet.slash.fi/",
+            title: "To Testnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
+          },
           link6: {
-            url: "/",
-            title: "Launch July 4, 2022",
-            // icon: "pointing-up",
-            func: "enterApp",
-            font: "s"
+            url: "https://slash.fi/",
+            title: "To Mainnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
           },
         },
         hello: {
@@ -1183,20 +1184,8 @@ export default {
   },
 
   computed: {
-    ENVIRONMENT() {
-      return process.env.NODE_ENV
-    },
-    isProduction() {
-      return this.ENVIRONMENT === PRODUCTION
-    },
-    isDevelopment() {
-      return this.ENVIRONMENT === DEVELOPMENT
-    },
     isUseMainnet() {
       return JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-    },
-    isShowTestnet() {
-      return (this.isProduction && this.isUseMainnet) || this.isDevelopment
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
@@ -1204,19 +1193,6 @@ export default {
   },
 
   methods: {
-    openModal(target) {
-      this.$store.dispatch("modal/show", { target: target, size: "small" });
-    },
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    toggle(key) {
-      this.$set(this.show, key, !this.show[key]);
-    },
-    // enterApp() {
-    // Button.vueに記述
-    //   this.$store.dispatch("changeTheme", "dark");
-    // },
     scrollAction() {
       const scrollActions = document.querySelectorAll(".scrollAction");
       const windowHeight = this.winH;

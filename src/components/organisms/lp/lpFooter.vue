@@ -39,8 +39,8 @@
                     <a v-if="navlink.blank" :href="navlink.url" :target="navlink.blank? '_blank':false" :class="{disable: !(navlink.url)}">
                       <span>{{ navlink.title }}</span>
                     </a>
-                    <router-link 
-                      v-else 
+                    <router-link
+                      v-else
                       :to="{
                         name: navlink.name,
                         hash: navlink.hash
@@ -83,9 +83,7 @@ export default {
   components: {
     LpIcon,
   },
-  props: {
-    isShowTestnet: Boolean
-  },
+  props: { isUseMainnet: Boolean },
   data() {
     return {
       nav: {
@@ -240,27 +238,11 @@ export default {
   },
   created() {
     this.localUrl = location.origin;
-    if (this.isUseTestnet) {
+    if (!this.isUseMainnet) {
       this.nav.developers.list.network.title = "To Mainnet"
       this.nav.developers.list.network.url = "https://slash.fi/"
     }
-  },
-  computed: {
-    isUseTestnet() {
-      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-    }
-  },
-  methods: {
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    open() {
-      this.$store.dispatch("hamberger", { hamberger: true });
-    },
-    enterApp() {
-      this.$store.dispatch("changeTheme", "dark");
-    },
-  },
+  }
 };
 </script>
 

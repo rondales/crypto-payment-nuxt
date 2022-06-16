@@ -9,7 +9,7 @@
           <a href="/" class="lp-header__logo">
             <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
           </a >
-          <div class="testnet-navbar" v-if="isUseTestnet">
+          <div class="testnet-navbar" v-if="!isUseMainnet">
             Testnet
           </div>
         </div>
@@ -59,8 +59,9 @@
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton v-if="isUseTestnet"  class="disable non-translate" :link="cvLink" type="main" size="s" font="small"/>
-            <LpButton v-else :link="cvLink2" class="disable non-translate" type="main" size="s" font="small"/>
+            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="s" />
+            <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="cvLink2" type="main" size="s" font="small" />
+            <LpButton v-else class="disable non-translate" :link="cvLink3" type="main" size="s" font="small" />
           </div>
         </div>
       </div>
@@ -107,8 +108,9 @@
               {{list.title}}
           </router-link>
         </div>
-        <LpButton v-if="isUseTestnet"  class="disable non-translate" :link="cvLink" type="main" size="m" font="small"/>
-        <LpButton v-else :link="cvLink2" class="disable non-translate" type="main" size="m" font="small"/>
+        <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="m" />
+        <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="cvLink2" type="main" size="m" font="small" />
+        <LpButton v-else class="disable non-translate" :link="cvLink3" type="main" size="m" font="small" />
     </div>
   </header>
 </template>
@@ -120,7 +122,10 @@ export default {
   components: {
     LpButton,
   },
-  props: { isShowTestnet: Boolean },
+  props: {
+    isUseMainnet: Boolean,
+    isEnableEnterApp: Boolean
+  },
   data() {
     return {
       nav: [
@@ -145,8 +150,8 @@ export default {
           title: "Media Kit",
         },
       ],
-      cvLink: {
-        title:  "Launch June 27, 2022",
+      cvLink1: {
+        title:  "Enter App",
         icon: "",
         url: "",
         func: "enterApp",
@@ -159,14 +164,18 @@ export default {
         func: "enterApp",
         status: true,
       },
+      cvLink3: {
+        title:  "Launch June 27, 2022",
+        icon: "",
+        url: "",
+        func: "enterApp",
+        status: true,
+      },
       localUrl: "",
     };
   },
   created() {
     this.localUrl = location.origin;
-  },
-  mounted() {
-
   },
   methods: {
     mouseOver(){
@@ -183,17 +192,7 @@ export default {
     },
     close() {
       this.$store.dispatch("hamberger", { hamberger: false });
-    },
-    // enterApp() {
-    // Button.vueに記述
-    //   this.$store.dispatch("changeTheme", "dark");
-    // },
-  },
-  computed: {
-    isUseTestnet() {
-      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-    },
-    
+    }
   }
 };
 </script>
