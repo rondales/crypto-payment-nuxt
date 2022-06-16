@@ -64,7 +64,7 @@
                     </div>
                     <div
                       v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
-                      @click="updateContract(chainId)"
+                      @click="showContractIssuanceModal(chainId)"
                       class="manage-contents_btn"
                     >
                       Update
@@ -76,14 +76,14 @@
                       Created
                     </div>
                     <div
-                      v-else-if="isCurrentNetwork(chainId) && !contractSettings.contracts[chainId].processing"
+                      v-else-if="isCurrentNetwork(chainId) && !contracts[chainId].processing"
                       @click="showContractIssuanceModal(chainId)"
                       class="manage-contents_btn"
                     >
                       Create
                     </div>
                     <div 
-                      v-else-if="isCurrentNetwork(chainId) && contractSettings.contracts[chainId].processing"
+                      v-else-if="isCurrentNetwork(chainId) && contracts[chainId].processing"
                       class="manage-contents_btn inactive"
                     >
                     Creating...
@@ -237,10 +237,6 @@ export default {
   data() {
     return {
       currentTab: null,
-      contractSettings: {
-        loaded: false,
-        contracts: {}
-      },
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
@@ -266,7 +262,7 @@ export default {
       return process.env.VUE_APP_API_BASE_URL
     },
     contracts() {
-      return this.contractSettings.contracts
+      return this.$store.state.contract.contracts
     },
     isContractSettingTab() {
       const targetPath = '/admin/payment/settings/contract'
@@ -290,7 +286,7 @@ export default {
     },
     isPublishedContract() {
       return (chainId) => {
-        return Boolean(this.contractSettings.contracts[chainId].address)
+        return Boolean(this.$store.state.contract.contracts[chainId].address)
       }
     },
     isMetamask() {
@@ -313,11 +309,11 @@ export default {
       return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
     },
     contractLoaded() {
-      return this.contractSettings.loaded
+      return this.$store.state.contract.loaded
     },
     contractUrl() {
       return (chainId) => {
-        const contract = this.contractSettings.contracts[chainId]
+        const contract = this.contracts[chainId]
         return `${contract.scanUrl}/address/${contract.address}`
       }
     }
@@ -379,14 +375,38 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
+    updateContractProcessing(chainId, processing) {
+      const payload = {
+        chainId: chainId,
+        processing: processing
+      }
+      this.$store.dispatch('contract/updateContractProcessing', payload)
+    },
+    updateContractAvailable(chainId, available) {
+      const payload = {
+        chainId: chainId,
+        available: available
+      }
+      this.$store.dispatch('contract/updateContractAvailable', payload)
+    },
+    updateContractAddress(chainId, address) {
+      const payload = {
+        chainId: chainId,
+        address: address
+      }
+      this.$store.dispatch('contract/updateContractAddress', payload)
+    },
+    updateContractsLoaded(loaded) {
+      this.$store.dispatch('contract/updateContractsLoaded', loaded)
+    },
     getPendingTransactions() {
       this.apiGetPendingTransactions().then((response) => {
           if (response.data === undefined || response.data.length == 0) {
             clearTimeout(this.monitoringInterval)
           } else {
             response.data.forEach((transaction) => {
-              if(transaction.network_type in this.contractSettings.contracts) {
-                this.contractSettings.contracts[transaction.network_type].processing = true
+              if(transaction.network_type in this.contracts) {
+                this.updateContractProcessing(transaction.network_type, true)
               }
             })
           }
@@ -399,13 +419,14 @@ export default {
     getContracts() {
       this.apiGetContracts().then((response) => {
         response.data.forEach((contract) => {
-          if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
-            this.contractSettings.contracts[contract.network_type].address = contract.address
-            this.contractSettings.contracts[contract.network_type].available = contract.available
+          if (contract.payment_type === 1 && contract.network_type in this.contracts) {
+            this.updateContractAddress(contract.network_type, contract.address)
+            this.updateContractAvailable(contract.network_type, contract.available)
           }
         })
-        this.contractSettings.loaded = true
+        this.updateContractsLoaded(true)
       }).catch((error) => {
+        console.log(error)
         this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
@@ -448,14 +469,6 @@ export default {
         error.response.status === HTTP_CODES.BAD_REQUEST
           ? this.domainSettings.verified = false
           : this.apiConnectionErrorHandler(error.response.status, error.response.data)
-      })
-    },
-    updateContract(chainId) {
-      this.contractSettings.contracts[chainId].processing = true
-      const contract = this.contractSettings.contracts[chainId]
-      this.apiDeleteContract(chainId, contract.address).then(() => {
-        this.publishMerchantContract(chainId)
-        this.contractSettings.contracts[chainId].processing = false
       })
     },
     switchNetwork(chainId) {
@@ -512,8 +525,9 @@ export default {
       [AvailableNetworks.matic.chainId]: (MaticTokens[receiveTokenSymbol].address),
       [AvailableNetworks.avalanche.chainId]: (AvalancheTokens[receiveTokenSymbol].address)
     }
+    let contractSettings = {}
     Object.values(AvailableNetworks).forEach((network) => {
-      this.$set(this.contractSettings.contracts, network.chainId, {
+      this.$set(contractSettings, network.chainId, {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
@@ -522,7 +536,7 @@ export default {
         support: supportStatuses[network.chainId]
       })
     })
-    this.$store.dispatch('contract/addContracts',this.contractSettings.contracts)
+    this.$store.dispatch('contract/addContracts',contractSettings)
     this.getContracts()
     this.getPendingTransactions()
     this.getPaymentSettings()

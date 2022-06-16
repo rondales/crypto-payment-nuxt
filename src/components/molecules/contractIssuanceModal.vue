@@ -15,8 +15,17 @@
       </p>
       <p class="desc mt-2">This contract issuance process requires the preparation of 
         {{ symbol }} in the Web3 wallet that will be collected in the network as gas fee.</p>
-      <button class="btn __m" @click="publishMerchantContract(chainId)">
+      <button class="btn __g __l" v-if="!isContractUpdateRequest" @click="publishMerchantContract(chainId)">
         Create Contract
+        <div class="loading-wrap" :class="{active: isProcessing}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
+      </button>
+      <button class="btn __g __l" v-else-if="isContractUpdateRequest" @click="forceUpdateContract(chainId)">
+        Update Contract
+        <div class="loading-wrap" :class="{active: isProcessing}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
       </button>
     </div>
     <div class="body" v-else-if="isProcessingState">
@@ -34,7 +43,7 @@
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
       </p>
-      <button class="btn __g __l  inactive" >
+      <button class="btn __g __l inactive" >
         Processing...
       </button>
     </div>
@@ -65,7 +74,7 @@
       </p>
       <p class="desc mt-2">The transaction cannot succeed due to error:</p>
       <p>
-        <a class="payment-status_btn" target="_blank" :href="transactionUrl">
+        <a class="payment-status_btn" v-if="transactionUrl" target="_blank" :href="transactionUrl">
           View on explorer
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
@@ -150,17 +159,29 @@ export default {
     transactionUrl() {
       const transactionHash = this.contractSetting.transactionAddess
       const scanSiteUrl = NETWORKS[this.chainId].scanUrl
-      console.log(transactionHash)
       if (transactionHash) {
         return `${scanSiteUrl}/tx/${transactionHash}`
       } else {
         return ''
       }
-    }
+    },
+    isContractUpdateRequest() {
+      return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
+    },
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
+    },
+    apiDeleteContract(chainId, contractAddress) {
+      const url = `${this.baseUrl}/api/v1/management/contract`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = {
+        address: contractAddress,
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
+      }
+      return this.axios.delete(url, data, options)
     },
     apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
       const url = `${this.baseUrl}/api/v1/management/contract/deploy/update`
@@ -229,6 +250,7 @@ export default {
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
     publishMerchantContract(chainId) {
+      if (this.isProcessing) return
       this.updateContractProcessing(this.chainId, true)
       const merchantWalletAddress = this.$store.state.account.address
       const receiveTokenAddress = this.contractSetting.support
@@ -258,7 +280,6 @@ export default {
         ).then(() => {
           this.updateContractAddress(chainId, merchantContractAddess)
           this.updateContractProcessing(chainId, false)
-          console.log(this.$store.state.contract.contracts)
         }).catch((error) => {
           if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
             this.apiConnectionErrorHandler(error.response.status, error.response.data)
@@ -275,6 +296,12 @@ export default {
         this.updateContractProcessing(chainId, false)
       })
     },
+    forceUpdateContract(chainId) {
+      const contract = this.contractSetting
+      this.apiDeleteContract(chainId, contract.address).then(() => {
+        this.publishMerchantContract(chainId)
+      })
+    }
   }
 }
 </script>
@@ -362,7 +389,7 @@ export default {
     p{
       font-size: 15px;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     span{
       font-size: 13px;
