@@ -8,6 +8,7 @@ import account from "./modules/account";
 import payment from "./modules/payment";
 import modal from "./modules/modal";
 import deeplink from "./modules/deeplink";
+import plugInsToken from "./modules/plugInsToken";
 
 Vue.use(Vuex);
 
@@ -38,6 +39,7 @@ const store = new Vuex.Store({
     payment,
     modal,
     deeplink,
+    plugInsToken
   },
   state: {
     hamberger: false,

@@ -30,6 +30,10 @@ export default {
     receiveModal: () => import("@/components/molecules/receiveModal"),
     editNoteModal: () => import("@/components/molecules/editNoteModal"),
     urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
+    plugInsTokenRefreshModal: () =>
+      import("@/components/molecules/plugInsTokenRefreshModal"),
+    plugInsTokenDeleteModal: () =>
+      import("@/components/molecules/plugInsTokenDeleteModal"),
     deleteRowModal: () => import("@/components/molecules/deleteRowModal"),
     createDeeplinkModal: () =>
       import("@/components/molecules/createDeeplinkModal"),

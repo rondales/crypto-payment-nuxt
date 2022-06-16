@@ -170,7 +170,7 @@ const router = new Router({
             {
               name: "admin",
               path: "/admin/plug-ins",
-              component: () => import("@/components/organisms/admin/AdminKeys"),
+              component: () => import("@/components/organisms/admin/AdminPlugIns"),
               meta: { title: 'Slash Apps' }
             },
           ]
