@@ -70,13 +70,6 @@
                       Not support
                     </div>
                     <div
-                      v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
-                      @click="showContractIssuanceModal(chainId)"
-                      class="manage-contents_btn"
-                    >
-                      Update
-                    </div>
-                    <div
                       v-else-if="isPublishedContract(chainId) && !isContractUpdateRequest"
                       class="manage-contents_btn inactive"
                     >
@@ -282,9 +275,6 @@ export default {
     isDomainSettingTab() {
       const targetPath = '/admin/payment/settings/domain'
       return this.$route.path === targetPath
-    },
-    isContractUpdateRequest() {
-      return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
     },
     isCurrentNetwork() {
       return (chainId) => {

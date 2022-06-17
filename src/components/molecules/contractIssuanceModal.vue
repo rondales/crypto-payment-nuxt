@@ -15,14 +15,8 @@
       </p>
       <p class="desc mt-2">This contract issuance process requires the preparation of 
         {{ symbol }} in the Web3 wallet that will be collected in the network as gas fee.</p>
-      <button class="btn __g __l" v-if="!isContractUpdateRequest && !isPublishedContract" @click="publishMerchantContract(chainId)">
+      <button class="btn __g __l mb-0" v-if="!isPublishedContract" @click="publishMerchantContract(chainId)">
         Create Contract
-        <div class="loading-wrap" :class="{active: isProcessing}">
-          <img class="spin" src="@/assets/images/loading.svg">
-        </div>
-      </button>
-      <button class="btn __g __l" v-else-if="isContractUpdateRequest && !isPublishedContract" @click="forceUpdateContract(chainId)">
-        Update Contract
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
         </div>
@@ -43,7 +37,7 @@
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
       </p>
-      <button class="btn __g __l inactive" >
+      <button class="btn __g __l inactive mb-0" >
         Processing...
       </button>
     </div>
@@ -61,7 +55,7 @@
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
       </p>
-      <button class="btn __m" @click="hideModal" >
+      <button class="btn __m mb-0" @click="hideModal" >
         Close
       </button>
     </div>
@@ -79,17 +73,17 @@
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
       </p>
-      <button class="btn __m" @click="hideModal" >
+      <button class="btn __m mb-0" @click="hideModal" >
         Close
       </button>
     </div>
     <figure v-if="isProcessingState" class="reload close" @click="refresh">
-      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
-      <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
+      <img v-if="$store.state.theme == 'dark'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload.svg">
+      <img v-if="$store.state.theme == 'light'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload-l.svg">
     </figure>
     <button class="close" v-else-if="!isProcessingState" @click="hideModal">
       <img src="@/assets/images/cross.svg">
-      閉じる
+      close
     </button>
   </div>
 </template>
@@ -98,7 +92,6 @@
 import { NETWORKS, HTTP_CODES, LOGIN_TOKEN, NORMAL_TYPE_PAYMENT } from '@/constants'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
-import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'contractIssuanceModal',
@@ -110,7 +103,8 @@ export default {
         successed: 3,
         failured: 4
       },
-      pageState: 1
+      pageState: 1,
+      reloadSpinning: false,
     }
   },
   computed: {
@@ -118,7 +112,10 @@ export default {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
-    baseUrl() {
+    isReloadSpinning() {
+      return this.reloadSpinning
+    },
+    API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
     allowClose() {
@@ -172,38 +169,16 @@ export default {
         return ''
       }
     },
-    isContractUpdateRequest() {
-      return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
-    },
+    isWalletPending() {
+      return this.$store.state.wallet.pending
+    }
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
     },
-    apiDeleteContract(chainId, contractAddress) {
-      const url = `${this.baseUrl}/api/v1/management/contract`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        address: contractAddress,
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT
-      }
-      return this.axios.delete(url, data, options)
-    },
-    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/update`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        address: contractAddress,
-        transaction_address: transactionAddress,
-        args: JSON.stringify(contractAbi),
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT
-      }
-      return this.axios.post(url, data, options)
-    },
     apiRegistTransaction(chainId, transactionAddress) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/transaction`
+      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/transaction`
       const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
         network_type: parseInt(chainId, 10),
@@ -257,6 +232,8 @@ export default {
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
     refresh() {
+      if(this.isReloadSpinning) return
+      this.reloadSpinning = true
       const transactionHash = this.contractSetting.transactionAddess
       if(transactionHash != null) {
         this.$web3.monitoringTransaction(
@@ -265,11 +242,17 @@ export default {
         ).then((receipt) => {
           if (receipt) {
             if (receipt.status) {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
               this.pageState = this.pageStateList.successed
             } else {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
               this.pageState = this.pageStateList.failured
             }
           }
+          this.reloadSpinning = false
+        }).catch((error) => {
+          console.log(error)
+          this.reloadSpinning = false
         })
       }
     },
@@ -285,45 +268,23 @@ export default {
         receiveTokenAddress
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
+        this.$store.dispatch('wallet/updatePendingStatus', true)
         this.updateContractTxAddess(chainId, hash)
         this.apiRegistTransaction(chainId,hash).catch((error) => {
           console.log(error)
         })
       }).
       then((receipt) => {
+        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
         this.pageState = this.pageStateList.successed
         this.updateContractAvailable(chainId, true)
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
-        const transactionAddress = receipt.transactionHash
-        const merchantContractAbi = MerchantContract.abi
-        this.apiUpdateContract(
-          chainId,
-          transactionAddress,
-          merchantContractAddess,
-          merchantContractAbi,
-        ).then(() => {
-          this.updateContractAddress(chainId, merchantContractAddess)
-          this.updateContractProcessing(chainId, false)
-        }).catch((error) => {
-          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          if (error.response.data.errors.shift() === 3530) {
-            this.updateContractAddress(chainId, merchantContractAddess)
-          } else {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          this.updateContractProcessing(chainId, false)
-        })
+        this.updateContractAddress(chainId, merchantContractAddess)
+        this.updateContractProcessing(chainId, false)
+        this.$store.dispatch('wallet/updatePendingStatus', false)
       }).catch(() => {
         this.pageState = this.pageStateList.failured
         this.updateContractProcessing(chainId, false)
-      })
-    },
-    forceUpdateContract(chainId) {
-      const contract = this.contractSetting
-      this.apiDeleteContract(chainId, contract.address).then(() => {
-        this.publishMerchantContract(chainId)
+        this.$store.dispatch('wallet/updatePendingStatus', false)
       })
     }
   }
@@ -372,7 +333,7 @@ export default {
     }
     &__title {
       font-weight: 500;
-      background: $gradation-light;
+      background: #ffff;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 150% 150%;
@@ -388,7 +349,7 @@ export default {
     height: 16px;
     font-size: 0;
     @include media(pc) {
-      top: 30px;
+      top: 35px;
       right: 24px;
     }
     @include media(sp) {
@@ -400,6 +361,16 @@ export default {
     cursor: pointer;
     img{
       vertical-align: middle;
+      transform: scale(1.35);
+    }
+    .spinning{
+      cursor: default;
+      animation: 0.7s linear infinite spinning;
+    }
+
+    @keyframes spinning {
+      from { transform: rotateZ(0deg) scale(1.35); }
+      to { transform: rotateZ(360deg) scale(1.35); }
     }
   }
   .body {

@@ -497,7 +497,7 @@ export default {
         : this.returnUrls.failured
     },
     payment() {
-      this.$store.dispatch('payment/updateWalletPending', true)
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       clearTimeout(this.exchangeTimer)
       if(this.$store.state.payment.token.address == null) {
         this.handleSendTransaction()
@@ -512,10 +512,10 @@ export default {
               } else {
                 this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
                 this.pageState = this.pageStateList.failured
-                this.$store.dispatch('payment/updateWalletPending', false)
+                this.$store.dispatch('wallet/updatePendingStatus', false)
               }
             }).catch(error => {
-              if(error.code == '4001') {this.$store.dispatch('payment/updateWalletPending', false)}
+              if(error.code == '4001') {this.$store.dispatch('wallet/updatePendingStatus', false)}
             }) 
           }
         })
@@ -541,10 +541,10 @@ export default {
         if (error.code == '4001') {
           this.$store.dispatch('payment/updateStatus', STATUS_PUBLISHED)
           this.pageState = this.pageStateList.detail
-          this.$store.dispatch('payment/updateWalletPending', false)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
         }
       }).then((txReceipt) => {
-        this.$store.dispatch('payment/updateWalletPending', false)
+        this.$store.dispatch('wallet/updatePendingStatus', false)
         const events = Object.values(txReceipt.events)
         const result = this.getRefundInfo(events)
         this.refundedTokenAmount = result.refundedTokenAmount
