@@ -70,7 +70,7 @@
                       Not support
                     </div>
                     <div
-                      v-else-if="isPublishedContract(chainId) && !isContractUpdateRequest"
+                      v-else-if="isPublishedContract(chainId)"
                       class="manage-contents_btn inactive"
                     >
                       Created
