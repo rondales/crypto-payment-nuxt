@@ -59,7 +59,7 @@
                     </p>
                   </div>
                   <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
-                    <div class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
@@ -109,7 +109,7 @@
                     {{ contractUrl(chainId) }}
                   </div>
                 </div>
-                <div class="manage-contents_bottom">
+                <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom">
                   <div class="manage-contents_bottom_item mb-2">
                     <div class="manage-contents_bottom_left">
                       <p :class="{'add-check': isConnect}">
@@ -136,8 +136,8 @@
                         </div>
                       </div>
                     </div>
-                  </div>  
-                  <div class="manage-contents_bottom_item">
+                  </div>
+                  <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom_item">
                     <div class="manage-contents_bottom_left">
                       <p :class="{'add-check': isConnect}">
                         Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
