@@ -38,6 +38,7 @@ export default {
           .then(this.$_merchantAdminAuthentification_apiGetMerchantReceiveSymbol)
           .then((authorized) => {
             this.$_merchantAdminAuthentification_authorizedAfrer(authorized, loginMode, modalMode)
+            this.$_merchantAdminAuthentification_apiGetMerchantPausedNetworks(authorized)
           })
           .catch((error) => {
             if (
@@ -132,6 +133,13 @@ export default {
       return this.axios.get(url, request).then((apiResponse) => {
         connectInfo.account.receiveSymbol = apiResponse.data.symbol
         return connectInfo
+      })
+    },
+    $_merchantAdminAuthentification_apiGetMerchantPausedNetworks(authorizedData) {
+      const url = `${this.$_merchantAdminAuthentification_API_BASE_URL}/api/v1/management/merchant/status`
+      const request = { headers: { Authorization: RequestUtility.getBearer(authorizedData.authorized.login_token) } }
+      return this.axios.get(url, request).then((apiResponse) => {
+        this.$store.dispatch('merchant/updatePausedNetworkStatus', apiResponse.data)
       })
     },
     $_merchantAdminAuthentification_authorizedAfrer(authorizedData, loginMode, modalMode) {

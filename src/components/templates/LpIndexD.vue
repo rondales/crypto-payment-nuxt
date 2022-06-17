@@ -1,6 +1,6 @@
 <template>
   <div id="wrapAll">
-    <LpHeader />
+    <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' '">
@@ -11,7 +11,7 @@
             src="@/assets/images/logo-icon.svg"
             alt="Slash payment"
           />
-          <h1 :class="section.mv.class + '__h1'">
+          <h1 :class="section.mv.class + '__h1 non-translate'">
             <span :class="section.mv.class + '__h1__title'">{{
               section.mv.title.title
             }}</span>
@@ -23,8 +23,15 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton :link="section.mv.link" type="main" size="m" />
-            <LpButton :link="section.mv.link2" type="sub" size="m" />
+            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+            <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small" />
+            <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small" />
+            <LpButton :link="section.mv.link4" type="main" size="m" />
+
+            <div :class="section.token.class + '__subbox__link'">
+              <LpButton v-if="isUseMainnet" :link="section.mv.link5" type="simple" size="s" />
+              <LpButton v-else :link="section.mv.link6" type="simple" size="s" />
+            </div>
           </div>
         </div>
       </section>
@@ -34,7 +41,7 @@
         <div class="section__wrap">
           <div :class="section.hello.class + '__wrap'">
             <div :class="section.hello.class + '__textwrap'">
-              <h2 :class="section.hello.class + '__h2 scrollAction textMove'">
+              <h2 :class="section.hello.class + '__h2 scrollAction textMove non-translate'">
                 <span :class="section.hello.class + '__h2__title'">{{
                   section.hello.title.title
                 }}</span>
@@ -68,7 +75,7 @@
       <section id="token" :class="section.token.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.token.class + '__title'"
+            :class="section.token.class + '__title '"
             :title="section.token.title"
             color="g"
           />
@@ -84,7 +91,7 @@
             <p :class="section.token.class + '__subbox__text'">
               <span>{{ section.token.sub.text }}</span>
             </p>
-            <div :class="section.token.class + '__subbox__link'">
+            <div :class="section.token.class + '__subbox__link non-translate'">
               <LpButton :link="section.token.sub.link" type="main" size="s" />
             </div>
           </div>
@@ -112,7 +119,7 @@
       <section :class="section.install.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.install.class + '__title'"
+            :class="section.install.class + '__title non-translate'"
             :title="section.install.title"
           />
           <ul :class="section.install.class + '__feature'">
@@ -133,14 +140,15 @@
       <section id="fee-ecosystem" :class="section.fee.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.fee.class + '__title'"
+            :class="section.fee.class + '__title non-translate'"
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
-            <li v-for="feature in section.fee.features" :key="feature.title">
+            <li v-for="feature in section.fee.features" :key="feature.title" >
               <LpImageText
                 :data="feature"
                 :class="section.install.class + '__feature__list'"
+                :id="feature.addId"
               />
             </li>
           </ul>
@@ -148,7 +156,7 @@
       </section>
 
       <!-- SECTION trial -->
-      <section id="donation" :class="section.trial.class">
+      <!-- <section id="donation" :class="section.trial.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.trial.class + '__title'"
@@ -182,14 +190,14 @@
             </div>
           </li>
         </ul>
-      </section>
+      </section> -->
 
       <!-- SECTION network -->
       <section :class="section.network.class">
         <!-- <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" /> -->
         <div class="section__wrap">
           <LpTitle
-           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.network.title"
           />
           <ul :class="section.network.class + '__logos scrollAction listMove'">
@@ -204,7 +212,7 @@
       <section id="roadmap" :class="section.roadmap.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.roadmap.class + '__title'"
+            :class="section.roadmap.class + '__title non-translate'"
             :title="section.roadmap.title"
           />
           <div :class="section.roadmap.class + '__phase'">
@@ -213,7 +221,7 @@
               v-for="phase in section.roadmap.phases"
               :key="phase.title"
             >
-              <h3 :class="section.roadmap.class + '__phase__title'">
+              <h3 :class="section.roadmap.class + '__phase__title non-translate'">
                 <span v-html="phase.title"></span>
               </h3>
               <ul :class="section.roadmap.class + '__phase__list'">
@@ -222,7 +230,7 @@
                     <h4 :class="section.roadmap.class + '__phase__subtitle'">
                       <span>{{ list.title }}</span>
                     </h4>
-                    <ul :class="section.roadmap.class + '__phase__sublist'">
+                    <ul :class="section.roadmap.class + '__phase__sublist non-translate'">
                       <li v-for="li in list.list" :key="li.text">
                         <span :class="{active: li.active}">
                           {{ li.text }}
@@ -241,14 +249,14 @@
       <section id="developers" :class="section.welcome.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.welcome.class + '__title'"
+            :class="section.welcome.class + '__title non-translate'"
             :title="section.welcome.title"
           />
           <ul :class="section.welcome.class + '__list'">
             <li v-for="list in section.welcome.list" :key="list.title">
               <LpButton
                 :link="list"
-                :type="list.status ? 'main' : 'noactive'"
+                :type="list.url ? 'main' : 'noactive'"
                 size="s"
                 :target="list.blank"
               />
@@ -262,7 +270,7 @@
         <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
         <div class="section__wrap ">
           <LpTitle
-            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.cv.title"
           />
           <div :class="section.cv.class + '__wrap'">
@@ -271,7 +279,9 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton :link="section.cv.link" type="main" size="m" />
+              <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+              <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small"/>
+              <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small"/>
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -282,7 +292,7 @@
         </div>
       </section>
     </main>
-    <LpFooter />
+    <LpFooter :isUseMainnet="isUseMainnet" />
   </div>
 </template>
 
@@ -295,7 +305,8 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-import LpIcon from "@/components/templates/LpParts/Icon";
+// used it used at SECTION trial
+// import LpIcon from "@/components/templates/LpParts/Icon";
 
 export default {
   data() {
@@ -318,7 +329,7 @@ export default {
             subtitle: "Web3 payment",
           },
           lead: "the next generation of decentralized payment methods,<br>to support any Token payment.",
-          link: {
+          link1: {
             url: "/",
             title: "Enter App",
             // icon: "pointing-up",
@@ -326,8 +337,37 @@ export default {
           },
           link2: {
             url: "/",
-            title: "Slash docs.",
+            title: "Launch July 4, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
+          },
+          link3: {
+            url: "/",
+            title: "Launch June 27, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
+          },
+          link4: {
+            url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+            title: "Whitepaper",
             icon: "icon/gitbook",
+            btnType: "a",
+          },
+          link5: {
+            url: "https://testnet.slash.fi/",
+            title: "To Testnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
+          },
+          link6: {
+            url: "https://slash.fi/",
+            title: "To Mainnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
           },
         },
         hello: {
@@ -382,10 +422,11 @@ export default {
             title: "Exchanges at DEX automatically <br>at an optimal rate",
             text: "Slash Payment’s smart contracts automatically find an optimal rate through supported DEX SWAP routers. This solution allows Customers can pay with any token at an optimal-rate.",
             link: {
-              url: "/",
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
               title: "See Quick Start",
               icon: "icon/arrow",
               iconAfter: true,
+              btnType: "a"
             },
           },
           cards: [
@@ -496,11 +537,13 @@ export default {
                 lightSrc: "",
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
+              text2: "Mainnet will launch July 4, 2022.",
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
@@ -531,10 +574,11 @@ export default {
                 },
               ],
               link: {
-                url: "/",
-                title: "Details of Integrations",
+                url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
+                title: "Details of Integration",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a",
               },
             },
             {
@@ -595,13 +639,16 @@ export default {
               },
               text: "There are no commissions charged to the Merchants. The commission is charged to the payers but is only 0.2-0.6% of the payment amount. It is collected along with the gas cost of the  payment transaction.<br><br>The commission is also used to automatically buyback Slash tokens through the ecosystem described in the whitepaper.",
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/settlement-details",
                 title: "Fee Structure",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
+              show: true,
+              addId: "donate",
               layout: "c",
               title: "Slash automatically donation program",
               image: {
@@ -609,7 +656,7 @@ export default {
                 alt: "Slash automatically donation program",
                 lightSrc: "",
               },
-              text: "0.1% of the settlement amount charged to the payers apart from commitions. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
+              text: "0.1% of the 0.2~0.6% commission fee will be collected as a donation. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
               logos: [
                 {
                   alt: "save-the-children",
@@ -623,30 +670,33 @@ export default {
                 },
               ],
               link: {
-                url: "/",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
                 title: "donation program",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
             {
               layout: "l",
+              addId: "slash-token",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
               },
-              title: "The All fees Use <br>buyback $Slash*",
+              title: "The All fees Use <br>buyback Slash Token*",
               image: {
                 src: "lp/buyback.jpg",
-                alt: "The All fees Use buyback $Slash*",
+                alt: "The All fees Use buyback Slash Token*",
                 lightSrc: "",
               },
               text: "The Slash Payment fee is 0.2~0.6% of the settlement amount.<br><br>Except for the 0.1% fee used for donation, the Slash Payment has a completely new ecosystem that automatically buys back Slash Token from DEX for each transaction. Slash Token can also serve as governance for Slash and can be used to vote for donation recipients or be used in a staking pool with a fee discount feature to be launched later.<br><br>*Slash Token will be issued in Phase 2.",
               link: {
-                url: "/",
-                title: "Details of $Slash",
+                url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+                title: "Detail of Slash Token",
                 icon: "icon/arrow",
                 iconAfter: true,
+                btnType: "a"
               },
             },
           ],
@@ -695,7 +745,7 @@ export default {
         network: {
           class: "dlp-network",
           title: {
-            title: 'Connected dapps<br class="sp"> & network 🌎',
+            title: 'Connected dapps<br class="sp"> & network',
             subtitle: "",
           },
           logos: [
@@ -957,51 +1007,42 @@ export default {
             {
               title: "Slash Payment Docs",
               icon: "icon/gitbook",
-              url: "",
-              status: true,
-              blank: true,
-            },
-            {
-              title: "Slash Payment github",
-              icon: "icon/github",
-              url: "",
-              status: true,
-              blank: true,
-            },
-            {
-              title: "Slash Recruit information",
-              icon: "icon/recruit",
-              url: "",
-              status: true,
-              blank: true,
+              url: "https://slash-fi.gitbook.io/docs/integration-guide/introduction",
+              btnType: "a"
             },
             {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
-              status: true,
-              blank: false,
+              btnType: "router"
             },
             {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
+              url: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
+              btnType: "a"
+            },
+            {
+              title: "Slash Payment github",
+              icon: "icon/github",
               url: "",
-              status: false,
-              blank: true,
+              btnType: "a"
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "icon/recruit",
+              url: "",
+              btnType: "a"
             },
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
               url: "",
-              status: false,
-              blank: true,
             },
             {
               title: "FAQ about system implementation",
               icon: "icon/help",
               url: "",
-              status: false,
-              blank: true,
             },
           ],
         },
@@ -1022,14 +1063,16 @@ export default {
             {
               title: "Contact Email",
               icon: "icon/arroba",
-              url: "",
+              url: "mailto:hello@slash.vision",
               status: true,
+              btnType: "a"
             },
             {
               title: "Twitter for DM",
               icon: "icon/twitter",
-              url: "",
+              url: "https://twitter.com/SlashWeb3",
               status: true,
+              btnType: "a"
             },
           ],
         },
@@ -1108,7 +1151,7 @@ export default {
     LpButton,
     LpTitle,
     LpImage,
-    LpIcon,
+    // LpIcon,
     LpImageText,
   },
   mounted() {
@@ -1126,30 +1169,30 @@ export default {
       };
     }
   },
+
   created() {
     // window.addEventListener("scroll", this.scrollAction);
     window.addEventListener("scroll", this.onScroll);
     window.addEventListener("resize", this.onResize);
-    window.addEventListener("load", () => {
-      this.onScroll();
-      this.onResize();
-    });
+    window.addEventListener("load", this.onLoad);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("load", this.onLoad);
+  },
+
+  computed: {
+    isUseMainnet() {
+      return JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isEnableEnterApp() {
+      return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    }
   },
 
   methods: {
-    openModal(target) {
-      this.$store.dispatch("modal/show", { target: target, size: "small" });
-    },
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    toggle(key) {
-      this.$set(this.show, key, !this.show[key]);
-    },
-    // enterApp() {
-    // Button.vueに記述
-    //   this.$store.dispatch("changeTheme", "dark");
-    // },
     scrollAction() {
       const scrollActions = document.querySelectorAll(".scrollAction");
       const windowHeight = this.winH;
@@ -1175,7 +1218,6 @@ export default {
           thisComponent.getBoundingClientRect().top +
           thisComponent.clientHeight;
         if (thisComponentTop < this.winH && thisComponentBottom > 0) {
-          console.log(index);
           thisComponent.classList.add("active");
         } else {
           thisComponent.classList.remove("active");
@@ -1185,6 +1227,10 @@ export default {
     onResize() {
       this.height = document.documentElement.clientHeight;
     },
+    onLoad() {
+      this.onScroll();
+      this.onResize();
+    }
   },
 };
 </script>

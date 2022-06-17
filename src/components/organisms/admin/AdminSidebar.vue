@@ -80,12 +80,20 @@
             <li @click="close()">
               <a
                 target="_blank"
-                href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
+                href="https://slash-fi.gitbook.io/docs/integration-guide/introduction"
               >
                 Documents
               </a>
             </li>
             -->
+            <li @click="close()">
+              <a
+                target="_blank"
+                href="https://slash-fi.gitbook.io/docs/support/help-center#developer-support"
+              >
+                Support
+              </a>
+            </li>
           </ul>
         </div>
       </div>

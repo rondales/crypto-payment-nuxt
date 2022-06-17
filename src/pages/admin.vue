@@ -18,7 +18,7 @@
               </span>
               MetaMask
             </button>
-            <button class="btn __m icon-right full" @click="authentification(WALLET_CONNECT, true, false)">
+            <button class="btn __m icon-right full" @click="showWalletConnectCautionModal()">
               <span class="btn-icon">
                 <img src="@/assets/images/wallet-connect.svg">
               </span>
@@ -52,6 +52,14 @@ export default {
     },
     WALLET_CONNECT() {
       return WALLET_CONNECT
+    }
+  },
+  methods: {
+    showWalletConnectCautionModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'caution-wallet-connect-modal',
+        size: 'small'
+      })
     }
   },
   created() {

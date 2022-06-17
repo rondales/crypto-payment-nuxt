@@ -18,7 +18,7 @@
         v-for="(network, key) in networks"
         :key="key"
         class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne }"
+        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne, 'mb-0': isNetworkOnlyOne}"
         @click="switchNetwork(network.chainId)"
       >
         <span class="btn-icon">

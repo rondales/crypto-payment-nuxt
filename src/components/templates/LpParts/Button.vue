@@ -16,19 +16,47 @@
       :path="link.icon"
     />
   </button>
-  <a v-else :class="linkClass" v-bind="aHref">
-    <LpIcon
-      v-if="!link.iconAfter && link.icon"
-      class="icon before"
-      :path="link.icon"
-    />
-    <span>{{ link.title }}</span>
-    <LpIcon
-      v-if="link.iconAfter && link.icon"
-      class="icon after"
-      :path="link.icon"
-    />
-  </a>
+  <div v-else>
+    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass"  :href="link.url" target="_blank">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </a>
+    <a v-if="link.url===''" :class="linkClass">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </a>
+    <router-link v-if="link.btnType === 'router'" :class="linkClass" :to="link.url">
+      <LpIcon
+        v-if="!link.iconAfter && link.icon"
+        class="icon before"
+        :path="link.icon"
+      />
+      <span>{{ link.title }}</span>
+      <LpIcon
+        v-if="link.iconAfter && link.icon"
+        class="icon after"
+        :path="link.icon"
+      />
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -59,6 +87,9 @@ export default {
       type: String,
       default: "m",
     },
+    font: {
+      type: String,
+    },
   },
   computed: {
     API_BASE_URL() {
@@ -84,28 +115,28 @@ export default {
       return process.env.VUE_APP_UNICEF_MERCHANT_HASH_TOKEN;
     },
     linkClass() {
-      let classname = "lpButton " + this.type + " " + this.size;
+      let classname = "lpButton " + this.type + " " + this.size + " " + this.font;
       return classname;
     },
 
-    aHref() {
-      let prop = {};
-      // prop["class"] = this.linkClass;
+    // aHref() {
+    //   let prop = {};
+    //   // prop["class"] = this.linkClass;
 
-      if (!this.link.status) {
-        prop["tabindex"] = "-1";
-      } else {
-        if (typeof this.link.func == "undefined") {
-          prop["href"] = this.isExternalLink(this.link.url)
-            ? this.link.url
-            : "";
-          if (this.link.blank) {
-            prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
-          }
-        }
-      }
-      return prop;
-    },
+    //   if (!this.link.status) {
+    //     prop["tabindex"] = "-1";
+    //   } else {
+    //     if (typeof this.link.func == "undefined") {
+    //       prop["href"] = this.isExternalLink(this.link.url)
+    //         ? this.link.url
+    //         : "";
+    //       if (this.link.blank) {
+    //         prop["target"] = this.isExternalLink(this.link.url) ? "_blank" : "";
+    //       }
+    //     }
+    //   }
+    //   return prop;
+    // },
   },
   methods: {
     // 外部リンクかどうかチェック
@@ -202,17 +233,26 @@ export default {
   justify-content: center;
   white-space: nowrap;
   overflow: hidden;
-
   margin: rem(0.5);
   color: #fff;
   transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
     visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+  @include media(tb) {
+    margin: rem(0.5) 0;
+  }
   @include media(pc) {
     &:hover {
       opacity: 1;
     }
   }
-
+  &.disable{
+    opacity: .8 !important;
+    pointer-events:none;
+    position: relative;
+    &::before{
+      background: #AAAAAA !important;
+    }
+  }
   .icon {
     &.before {
       margin-left: -6%;
@@ -301,6 +341,9 @@ export default {
         margin-left: rem_sp(0.5);
       }
     }
+  }
+  &.small{
+    font-size: 14px
   }
   &.main {
     @extend .lpButton;

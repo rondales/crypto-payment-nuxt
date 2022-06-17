@@ -3,6 +3,7 @@
     :colorTheme="colorTheme"
     :showFooterMenu="showFooterMenu"
     :receiver="receiver"
+    :isVerifiedDomain="isVerifiedDomain"
     :invoiceId="invoiceId"
     :base64VuexData="base64VuexData"
     @openModal="openModal"
@@ -46,7 +47,24 @@ export default {
     paymentId() {
       return this.paymentData.id
     },
+    availableNetworks() {
+      return this.$store.state.payment.availableNetworks
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    merchantWalletAddress() {
+      return this.paymentData.merchantWalletAddress
+    },
+    isVerifiedDomain() {
+      return this.paymentData.isVerifiedDomain
+    },
     receiver() {
+      if (!this.isVerifiedDomain && this.merchantWalletAddress) {
+        const omittedMerchantWalletAddress = this.merchantWalletAddress.substr(0, 10) 
+          + "…" + this.merchantWalletAddress.substr(-10)
+        return omittedMerchantWalletAddress
+      }
       return this.paymentData.domain
     },
     invoiceId() {
@@ -73,6 +91,15 @@ export default {
     isPaymentDifferent() {
       return this.paymentId !== this.paymentToken
     },
+
+  },
+  watch: {
+    $route() {
+      this.handleContractStatues()
+    },
+    chainId() {
+      this.handleContractStatues()
+    }
   },
   methods: {
     apiGetReceivedData() {
@@ -89,6 +116,38 @@ export default {
       const url = `${this.baseUrl}/api/v1/payment/contract/network`
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
+    },
+    apiGetMerchantContractStatus() {
+      const url = `${this.baseUrl}/api/v1/payment/merchant/status`
+      const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
+      return this.axios.get(url, request)
+    },
+    handleContractStatues() {
+      if (!this.availableNetworks.length) {
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: {
+            message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
+            allowClose: false
+          }
+        })
+      } else if (
+        !this.availableNetworks.includes(this.chainId)
+        && ['token', 'exchange', 'detail'].includes(this.currentRouteName)
+      ) {
+        const networkCount = this.availableNetworks.length
+        const modalSize = networkCount > 1 ? 'medium' : 'small'
+        this.$store.dispatch('modal/show', {
+          target: 'network-modal',
+          size: modalSize,
+          params: {
+            itemCount: networkCount,
+            unsupported: true,
+            require: true
+          }
+        })
+      }
     },
     redirectToEntrancePage(currentRouteName, paymentToken) {
       if (currentRouteName !== 'entrance') {
@@ -118,6 +177,8 @@ export default {
           receiveData.domain,
           receiveData.order_code,
           receiveData.allow_currencies,
+          receiveData.is_verified_domain,
+          receiveData.merchant_wallet_address,
           transactionData.base_symbol,
           transactionData.base_amount
         )
@@ -146,6 +207,9 @@ export default {
           paymentToken,
           receiveData.domain,
           receiveData.order_code,
+          receiveData.allow_currencies,
+          receiveData.is_verified_domain,
+          receiveData.merchant_wallet_address,
           transactionData.base_symbol,
           transactionData.base_amount
         )
@@ -169,6 +233,8 @@ export default {
       merchantDomain,
       merchantOrderCode,
       merchantAllowCurrencies,
+      merchantIsVerifiedDomain,
+      merchantWalletAddress,
       merchantReceiveSymbol,
       merchantReceiveAmount
     ) {
@@ -177,6 +243,8 @@ export default {
         domain: merchantDomain,
         orderCode: merchantOrderCode,
         symbol: merchantReceiveSymbol,
+        isVerifiedDomain: merchantIsVerifiedDomain,
+        merchantWalletAddress: merchantWalletAddress,
         amount: NumberFormat('0.00', merchantReceiveAmount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', merchantAllowCurrencies)
@@ -204,6 +272,30 @@ export default {
     }
   },
   created() {
+    this.apiGetMerchantContractStatus().then((result) => {
+      const networks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      }).filter(item => result.data.statuses[item] == false)
+      if (networks.length) {
+        this.$store.dispatch('payment/updateAvailableNetworks', networks)
+      } else {
+        const modalParams = {
+          message: 'This payment cannot be continued due to merchant\'s circumstances.<br>Please contact the merchant for details.',
+          allowClose: false,
+        }
+        if (result.data.return_url) {
+          modalParams.btn =  {
+            text: 'Back to Merchant',
+            url: result.data.return_url
+          }
+        }
+        this.$store.dispatch('modal/show', {
+          target: 'error-modal',
+          size: 'small',
+          params: modalParams
+        })
+      }
+    })
     if (this.isRestorePayment) {
       this.restoreVuex(this.restoreParam)
       this.redirectToConnectWalletPage(this.currentRouteName, this.paymentToken)
@@ -231,6 +323,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/style.scss';
-
+  @import '@/assets/scss/style.scss';
 </style>

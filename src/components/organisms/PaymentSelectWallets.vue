@@ -33,7 +33,7 @@
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="connect(WALLET_CONNECT, false)">
+      <button class="btn __m __pg icon-right full" @click="showWalletConnectCautionModal()">
         <div class="loading-wrap" :class="{'active': loadingWallet}">
           <img class="spin mt" src="@/assets/images/loading.svg">
         </div>
@@ -49,12 +49,10 @@
 <script>
 import {
   METAMASK,
-  WALLET_CONNECT,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
 } from '@/constants'
-import AvailableNetworks from '@/network'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
 
@@ -79,9 +77,6 @@ export default {
   computed: {
     METAMASK() {
       return METAMASK
-    },
-    WALLET_CONNECT() {
-      return WALLET_CONNECT
     },
     baseUrl() {
       return process.env.VUE_APP_API_BASE_URL
@@ -110,6 +105,12 @@ export default {
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
     },
+    showWalletConnectCautionModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'caution-wallet-connect-modal',
+        size: 'small'
+      })
+    },
     pageTransition() {
       let nextPath
       switch(this.status) {
@@ -126,12 +127,6 @@ export default {
   },
   created() {
     this.$store.dispatch('payment/updateHeaderInvoice', true)
-    this.apiGetAvailableNetworks().then((response) => {
-      const networks = Object.values(AvailableNetworks).map((network) => {
-        return network.chainId
-      }).filter(item => response.data.networks.includes(item))
-      this.$store.dispatch('payment/updateAvailableNetworks', networks)
-    })
   }
 }
 </script>

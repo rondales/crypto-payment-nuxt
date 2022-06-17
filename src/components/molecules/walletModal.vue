@@ -12,14 +12,14 @@
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="connector(WALLET_CONNECT)">
+      <button class="btn __m __pg icon-right full" @click="showWalletConnectCautionModal()">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect_w.svg">
         </span>
           WalletConnect
       </button>
     </div>
-    <button class="close" @click="hideModal">
+    <button class="close" @click="hideModal()">
       <img src="@/assets/images/cross.svg">
       閉じる
     </button>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { METAMASK, WALLET_CONNECT } from '@/constants'
+  import { METAMASK } from '@/constants'
   import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
   import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
   import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
@@ -43,12 +43,6 @@
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
       },
-      METAMASK() {
-        return METAMASK
-      },
-      WALLET_CONNECT() {
-        return WALLET_CONNECT
-      },
       isAdminLoginMode() {
         const path = /^\/admin$/
         return path.test(this.$route.path)
@@ -62,13 +56,19 @@
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
-      connector(useProvider) {
+      showWalletConnectCautionModal() {
+        this.$store.dispatch('modal/show', {
+          target: 'caution-wallet-connect-modal',
+          size: 'small'
+        })
+      },
+      connector() {
         if (this.isAdminLoginMode) {
-          this.authentification(useProvider, true, true)
+          this.authentification(METAMASK, true, true)
           return
         }
         if (this.isPaymentMode) {
-          this.connect(useProvider, true)
+          this.connect(METAMASK, true)
           return
         }
       }

@@ -30,6 +30,25 @@ export default {
       "inputs": [
         {
           "indexed": false,
+          "internalType": "uint256",
+          "name": "oldPercent",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newPercent",
+          "type": "uint256"
+        }
+      ],
+      "name": "CashBackPercentageUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "bytes16",
           "name": "txId",
           "type": "bytes16"
@@ -67,6 +86,18 @@ export default {
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "refTokBal",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "refFeeBal",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "timeStamp",
           "type": "uint256"
         }
@@ -97,6 +128,31 @@ export default {
       "anonymous": false,
       "inputs": [],
       "name": "Pause",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "oldAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
+        }
+      ],
+      "name": "ReceiveWalletUpdated",
       "type": "event"
     },
     {
@@ -366,6 +422,21 @@ export default {
             },
             {
               "internalType": "uint256",
+              "name": "refTokBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "refFeeBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cashBack",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
               "name": "timeStamp",
               "type": "uint256"
             }
@@ -468,6 +539,11 @@ export default {
           "internalType": "address",
           "name": "merchantOwner_",
           "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
         }
       ],
       "name": "initialize",
@@ -612,6 +688,16 @@ export default {
           "type": "address[]"
         },
         {
+          "internalType": "string",
+          "name": "paymentId_",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "optional_",
+          "type": "string"
+        },
+        {
           "internalType": "bytes",
           "name": "reserved_",
           "type": "bytes"
@@ -686,6 +772,19 @@ export default {
         }
       ],
       "name": "updateAffiliatorWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "cashBack_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateCashBackPercent",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -803,6 +902,19 @@ export default {
       "inputs": [
         {
           "internalType": "address",
+          "name": "merchantReceiveWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMerchantReceiveWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "merchantWallet_",
           "type": "address"
         }
@@ -821,6 +933,32 @@ export default {
         }
       ],
       "name": "updateMinAmountToProcessFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "contractAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "updateReceiveContractAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "updateReserve",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -924,6 +1062,19 @@ export default {
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewCashBackPercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1058,6 +1209,19 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewMerchantReceiveWallet",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewMerchantWallet",
       "outputs": [
         {
@@ -1084,12 +1248,38 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewReceiveContractAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewReceiveToken",
       "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReserved",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
         }
       ],
       "stateMutability": "view",

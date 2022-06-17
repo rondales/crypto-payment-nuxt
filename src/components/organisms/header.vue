@@ -10,6 +10,18 @@
         <p class="logo-sub">
           {{ subTitle }}
         </p>
+        <div class="testnet-navbar" v-if="isUseTestnet" v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave">
+          <span>
+            Testnet
+          </span>
+          <div class="testnet-hovercontens" v-if="isHover">
+            <p>
+              You are on the Slash test network.
+              If you want to use the product, Please wait for a little while longer.
+              <!--Go to <a href="https://slash.fi/admin">https://slash.fi/admin</a> -->
+            </p>
+          </div>
+        </div>
         <div v-if="isAdminPage && isConnected && isFixedReceiveToken" class="user-status">
           ReceiveToken：<img :src="receiveTokenIcon"><span>{{ receiveTokenSymbol }}</span>
         </div>
@@ -40,7 +52,8 @@
           </button>
         </span>
         <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" class="btn __s sp-fixed">
+          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
+            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
 
             <span v-if="isSupportedNetwork" class="btn-icon">
               <img :src="networkIcon" alt="Web3 Payment">
@@ -48,11 +61,17 @@
             {{ networkName }}
           </button>
         </div>
-        <div v-if="show" class="ml-2">
+        <div v-if="show" class="ml-1">
           <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
-            <span class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
+            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
+              <div class="loading-wrap-header loading-wrap active">
+                  <img class="spin spin-header" src="@/assets/images/loading.svg">
+              </div>
+              Pending
+            </div>
           </button>
           <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
             Connect to a wallet
@@ -128,7 +147,8 @@ export default {
         USDC: require('@/assets/images/symbol/usdc.svg'),
         DAI: require('@/assets/images/symbol/dai.svg'),
         JPYC: require('@/assets/images/symbol/jpyc.svg')
-      }
+      },
+      isHover: false
     }
   },
   watch: {
@@ -156,9 +176,11 @@ export default {
         if (balanceSplit[1].length > 4) {
           balanceSplit[1] = balanceSplit[1].substr(0, 4)
         } else {
-          balanceSplit[1] = (balanceSplit[1] + '0000').slice(-4)
+          balanceSplit[1] = (balanceSplit[1] + '0000').substr(0,4)
         }
         balance = balanceSplit[0] + '.' + balanceSplit[1]
+      } else {
+        balance = balance + '.' + '0000'
       }
       return balance
     },
@@ -205,6 +227,9 @@ export default {
     },
     isFixedReceiveToken() {
       return (this.$store.state.account.receiveSymbol)
+    },
+    isUseTestnet() {
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     },
     isSupportedNetwork() {
       const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
@@ -258,6 +283,9 @@ export default {
     },
     accountNote() {
       return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+    },
+    isWalletPending() {
+      return this.$store.state.payment.walletPending
     }
   },
   methods: {
@@ -265,6 +293,12 @@ export default {
       this.$store.dispatch('modal/show', {
         target: 'wallet-modal',
         size: 'small'
+      })
+    },
+    showNetworkModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'switch-network-for-admin-modal',
+        size: 'medium'
       })
     },
     switchColorTheme(color) {
@@ -289,6 +323,12 @@ export default {
         )
       }
       this.$router.push({ path: '/admin' })
+    },
+    mouseOver(){
+      this.isHover = true;
+    },
+    mouseLeave(){
+      this.isHover = false;
     }
   }
 }
@@ -296,6 +336,63 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+.testnet-navbar{
+  background: #DE4437;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-right:16px;
+  @include media(sp) {
+    margin: 0 0 0 2px;
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+  cursor: pointer;
+  position: relative;
+  .testnet-hovercontens{
+    position: absolute;
+    top: 32px;
+    left: 0;    
+    p{
+      width: 260px;
+      background: $gray;
+      padding:8px 16px;
+      border-radius: 8px;
+      position: relative;
+      a{
+        font-weight: 500;
+        background: $gradation-light;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 150% 150%;
+        pointer-events: none;
+        position: relative;
+        &::after{
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translate(0, -50%);
+          width: 100%;
+          height: 1px;
+          background: #fff;
+
+        }
+      }
+      &::before{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 20px;
+        top: -15px;
+        border: 8px solid transparent;
+        border-bottom: 8px solid $gray;
+      }
+    }
+  }
+}
 .user-status{
   font-size: 14px;
   font-weight: 400;
@@ -318,6 +415,9 @@ export default {
     font-size: 12px;
     margin-left: 16px;
     padding: 2px 12px;
+  }
+  span{
+    vertical-align: bottom;
   }
 }
 .global-header {
@@ -478,6 +578,9 @@ export default {
       font-size: 12px;
     }
   }
+  &.pointer {
+    cursor: pointer;
+  }
 }
 .toggle-theme {
   text-align: center;
@@ -569,5 +672,12 @@ export default {
       }
     }
   }
+}
+.loading-wrap-header {
+  display: contents !important;
+}
+.spin-header {
+  height: 20px !important;
+  width: 20px !important;
 }
 </style>

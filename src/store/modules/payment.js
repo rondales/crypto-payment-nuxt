@@ -4,13 +4,17 @@ const store = {
     id: null,
     headerInvoice: false,
     domain: null,
+    isVerifiedDomain: false,
+    merchantWalletAddress: null,
     orderCode: null,
     amount: null,
     amountWei: null,
     symbol: null,
+    decimalUnit: null,
     fee: null,
     transactionHash: null,
     availableNetworks: [],
+    walletPending: false,
     status: 1,
     allowCurrencies: {
       USD: false,
@@ -38,6 +42,12 @@ const store = {
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
     },
+    updateIsVerifiedDomain({ commit }, payload) {
+      commit('updateIsVerifiedDomain', payload)
+    },
+    updateMerchantWalletAddress({ commit }, payload) {
+      commit('updateMerchantWalletAddress', payload)
+    },
     updateAmount({ commit }, payload) {
       commit('updateAmount', payload)
     },
@@ -47,11 +57,17 @@ const store = {
     updateFee({ commit }, payload) {
       commit('updateFee', payload)
     },
+    updateDecimalUnit({ commit }, payload) {
+      commit('updateDecimalUnit', payload)
+    },
     updateTransactionHash({ commit }, payload) {
       commit('updateTransactionHash', payload)
     },
     updateAvailableNetworks({ commit }, payload) {
       commit('updateAvailableNetworks', payload)
+    },
+    updateWalletPending({ commit }, payload) {
+      commit('updateWalletPending', payload)
     },
     updateStatus({ commit }, payload) {
       commit('updateStatus', payload)
@@ -68,13 +84,17 @@ const store = {
       state.id = null
       state.headerInvoice = false
       state.domain = null
+      state.isVerifiedDomain = false
+      state.merchantWalletAddress = null
       state.orderCode = null
       state.amount = null
       state.amountWei = null
       state.symbol = null
       state.fee = null
+      state.decimalUnit = null
       state.transactionHash = null
       state.availableNetworks = []
+      state.walletPending = false
       state.status = 1
       state.allowCurrencies = {
         USD: false,
@@ -100,6 +120,12 @@ const store = {
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload
     },
+    updateIsVerifiedDomain(state, payload) {
+      state.isVerifiedDomain = payload
+    },
+    updateMerchantWalletAddress(state, payload) {
+      state.merchantWalletAddress = payload
+    },
     updateAmount(state, payload) {
       state.amount = payload
     },
@@ -108,6 +134,12 @@ const store = {
     },
     updateFee(state, payload) {
       state.fee = payload
+    },
+    updateDecimalUnit(state, payload) {
+      state.decimalUnit = payload
+    },
+    updateWalletPending(state, payload) {
+      state.walletPending = payload
     },
     updateStatus(state, payload) {
       state.status = payload

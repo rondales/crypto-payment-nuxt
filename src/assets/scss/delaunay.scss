@@ -882,7 +882,6 @@ body.is-mounted {
 
     &__button {
       @include flex(center, center);
-      flex-wrap: nowrap;
 
       @include media(sp) {
         flex-direction: column;
@@ -906,7 +905,7 @@ body.is-mounted {
     }
 
     &__wrap {
-      @include flex(flex-start, center);
+      @include flex(space-between, center);
 
       @include media(sp) {
         display: block;
@@ -914,7 +913,7 @@ body.is-mounted {
     }
 
     &__textwrap {
-      width: 65%;
+      width: 55%;
 
       @include media(sp) {
         width: 100%;
@@ -1134,6 +1133,11 @@ body.is-mounted {
 
       &__link {
         @include flex(center, center);
+        // If the test net becomes available, remove it.
+        .disable{
+          opacity: .7 !important;
+          pointer-events:none;
+        }
       }
     }
 
@@ -1812,6 +1816,7 @@ body.is-mounted {
       background: var(--color_lp_box);
       border-radius: 10px;
       height: 100%;
+      
       @include rem_padding(3, 4, 3, 4);
       // max-width: 600px;
       text-align: center;
@@ -1822,6 +1827,7 @@ body.is-mounted {
       @include media(sp) {
         margin: 0;
         margin-bottom: rem_sp(2);
+        width: 100%;
       }
 
       .lpButton.m {

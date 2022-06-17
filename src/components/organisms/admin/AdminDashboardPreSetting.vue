@@ -88,9 +88,9 @@
       Step 2
     </div>
     <p class="welcome-desc">
-      Deploy Slash payment contracts on a per-network basis.
+      Create merchant-specific contracts on a per-network basis.
       <br>
-      *Deployment is required for each network that accepts payments.
+      *Required for each network that accepts payments.
     </p>
     <div class="welcome-image">
       <figure>

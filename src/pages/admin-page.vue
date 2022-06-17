@@ -30,6 +30,27 @@ export default {
     isSetWeb3ProviderType() {
       return this.$store.state.web3.provider === METAMASK
               || this.$store.state.web3.provider === WALLET_CONNECT
+    },
+    merchantPausedNetworkStatus() {
+      return this.$store.state.merchant.pausedNetworkStatus
+    }
+  },
+  watch: {
+    merchantPausedNetworkStatus(newStatus) {
+      const networks = Object.values(AvailableNetworks).map((network) => {
+        return network.chainId
+      }).filter(item => newStatus[item] == true)
+      if (networks && networks.length > 0) {
+        const availableNetworkCount = networks.length
+        this.$store.dispatch('modal/show', {
+          target: 'admin-contract-paused-modal',
+          size: availableNetworkCount > 1 ? 'medium' : 'small',
+          params: {
+            availableNetworks: networks,
+            itemCount: availableNetworkCount
+          }
+        })
+      }
     }
   },
   methods: {
@@ -144,8 +165,11 @@ export default {
           : chainId
         this.handleChainChanged(chainId)
       })
-      this.web3.instance.currentProvider.on('accountsChanged', () => {
-        this.handleAccountsChanged()
+      this.web3.instance.currentProvider.on('accountsChanged', (account) => {
+        const newAccAddress = account[0].toLowerCase()
+        if(newAccAddress != this.account.address.toLowerCase()) {
+          this.handleAccountsChanged()
+        }
       })
     }
   },

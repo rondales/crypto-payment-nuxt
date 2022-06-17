@@ -28,6 +28,9 @@ export default {
     },
     paymentData() {
       return this.$store.state.payment
+    },
+    isVerifiedDomain() {
+      return this.paymentData.isVerifiedDomain
     }
   },
   methods: {
@@ -59,6 +62,15 @@ export default {
           message: message
         }
       })
+    },
+    showWarningModal(returnUrl) {
+      this.$store.dispatch('modal/show', {
+        target: 'warning-domain-unauth-modal',
+        size: 'small',
+        params: {
+          returnUrl: returnUrl
+        }
+      })
     }
   },
   created() {
@@ -76,9 +88,14 @@ export default {
         domain: receiveResponse.data.domain,
         orderCode: receiveResponse.data.order_code,
         symbol: receiveResponse.data.symbol,
+        isVerifiedDomain: receiveResponse.data.is_verified_domain,
+        merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
+      if (!this.isVerifiedDomain) {
+        this.showWarningModal(receiveResponse.data.return_url)
+      }
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {

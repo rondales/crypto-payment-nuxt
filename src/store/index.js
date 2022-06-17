@@ -9,6 +9,7 @@ import payment from "./modules/payment";
 import modal from "./modules/modal";
 import deeplink from "./modules/deeplink";
 import plugInsToken from "./modules/plugInsToken";
+import merchant from "./modules/merchant";
 
 Vue.use(Vuex);
 
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
         "hamberger",
         "theme",
         "invoicePage",
+        "merchant",
       ],
       storage: {
         getItem: (key) => ls.get(key),
@@ -36,16 +38,17 @@ const store = new Vuex.Store({
   modules: {
     web3,
     account,
+    merchant,
     payment,
     modal,
     deeplink,
-    plugInsToken
+    plugInsToken,
   },
   state: {
     hamberger: false,
-    theme: 'dark',
+    theme: "dark",
     invoicePage: true,
-    accountMenu: false
+    accountMenu: false,
   },
   actions: {
     hamberger({ commit }) {
@@ -54,12 +57,12 @@ const store = new Vuex.Store({
     changeTheme({ commit }, theme) {
       commit("changeTheme", { theme: theme });
     },
-    currentPath({ commit }, invoicePage){
-      commit('currentPath', invoicePage);
+    currentPath({ commit }, invoicePage) {
+      commit("currentPath", invoicePage);
     },
     toggleAccountMenu({ commit }) {
-      commit('toggleAccountMenu')
-    }
+      commit("toggleAccountMenu");
+    },
   },
   mutations: {
     hamberger(state) {
@@ -72,9 +75,9 @@ const store = new Vuex.Store({
       state.invoicePage = invoicePage;
     },
     toggleAccountMenu(state) {
-      state.accountMenu = !state.accountMenu
-    }
-  }
-})
+      state.accountMenu = !state.accountMenu;
+    },
+  },
+});
 
 export default store;

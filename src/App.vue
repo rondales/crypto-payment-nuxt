@@ -1,5 +1,5 @@
 <template>
-  <body :class="[classes, { contents_height: isAdminPage }]">
+  <div :class="[classes, { contents_height: isAdminPage }]">
     <router-view />
     <div v-if="modal.show" class="modal-base">
       <component :is="modal.target" />
@@ -8,7 +8,7 @@
       <img src="@/assets/images/check-mark.svg" />
       <span> copied </span>
     </div>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -38,10 +38,20 @@ export default {
     createDeeplinkModal: () =>
       import("@/components/molecules/createDeeplinkModal"),
     openQrModal: () => import("@/components/molecules/openQrModal"),
+    adminContractPausedModal: () =>
+      import("@/components/molecules/adminContractPausedModal"),
+    refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
+    cautionWalletConnectModal: () =>
+      import("@/components/molecules/cautionWalletConnectModal"),
+    editAccountNoteModal: () =>
+      import("@/components/molecules/editAccountNoteModal"),
+    accountModal: () => import("@/components/molecules/accountModal"),
+    warningDomainUnauthModal: () =>
+      import("@/components/molecules/warningDomainUnauthModal"),
   },
   computed: {
     classes() {
-      return [`theme--${this.$store.state.theme}`];
+      return ["main", `theme--${this.$store.state.theme}`];
     },
     isAdminPage() {
       return this.$route.name === "admin";
@@ -56,7 +66,7 @@ export default {
 <style lang="scss">
 @import "@/assets/scss/style.scss";
 
-body {
+div.main {
   background: var(--color_bg);
   color: var(--color_font);
 }
