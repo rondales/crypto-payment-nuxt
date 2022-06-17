@@ -38,7 +38,6 @@
             </p>
             <p>
               <img src="@/assets/images/learn-more.svg">About Slash’s payment contract setup specifications. <a href="https://slash-fi.gitbook.io/docs/integration-guide/quick-start#contract-settings" target="_blank" class="learn-more">Learn more.</a>
-
             </p>
           </div>
           <div class="manage-contents_body">
@@ -60,7 +59,7 @@
                     </p>
                   </div>
                   <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
-                    <div class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
