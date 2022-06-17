@@ -1,13 +1,14 @@
 <template>
   <div class="textwrap">
-    <dl v-if="textData.tag" class="tag">
+    <dl v-if="textData.tag" class="tag non-translate">
       <dt>{{ textData.tag.title }}</dt>
-      <dd class="non-translate">{{ textData.tag.text }}</dd>
+      <dd>{{ textData.tag.text }}</dd>
     </dl>
     <h3 class="title scrollAction op"><span v-html="textData.title"></span></h3>
 
     <div class="absTest">
       <p class="text scrollAction op"><span v-html="textData.text"></span></p>
+      <p class="text scrollAction op mt-2"><span v-html="textData.text2"></span></p>
       <div v-if="textData.app" class="app">
         <div class="app_wrap">
           <p v-if="textData.app.coming" class="app_title non-translate">
@@ -35,7 +36,12 @@
       </li>
     </ul>
     <div v-if="textData.link" class="link">
-      <LpButton :link="textData.link" class="non-translate" type="simple" size="s" />
+      <div v-if="textData.show" class="comming-soon">
+        comming soon...
+      </div>
+      <div :class="{'disable': textData.show}">
+        <LpButton :link="textData.link" class="non-translate" type="simple" size="s" />
+      </div>
     </div>
   </div>
 </template>
@@ -165,6 +171,20 @@ export default {
   @include media(sp) {
     text-align: center;
     margin-top: rem_sp(1);
+  }
+  .comming-soon{
+    font-size: 10px;
+    margin-left: 8px;
+    @include media(sp) {
+      width: 175px;
+      margin: auto;
+      text-align: left;
+    }
+  }
+  .disable{
+    pointer-events:none;
+    opacity: .5;
+    text-decoration: none;
   }
 }
 .logos {
