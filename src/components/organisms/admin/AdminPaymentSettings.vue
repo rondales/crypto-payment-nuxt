@@ -31,10 +31,13 @@
         <div class="manage-contents" v-if="isContractSettingTab">
           <div class="manage-contents_head">
             <h3>
-              Create contract
+              Payment contract issuance and detailed settings
             </h3>
+            <p class="mb-2">
+              Create contracts on the networks you want to accept payments from The Web3 Wallet Address must be the same, even if the networks are different.
+            </p>
             <p>
-              Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
+              <img src="@/assets/images/mortarboard.svg">About Slash’s payment contract setup specifications.<a href="">Learn more.</a>
             </p>
           </div>
           <div class="manage-contents_body">
@@ -55,7 +58,8 @@
                       {{ contract.name }}
                     </p>
                   </div>
-                  <div v-if="contractLoaded">
+                  <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
@@ -104,7 +108,64 @@
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
-                  <div class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy Address</div>
+                </div>
+                <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom">
+                  <div class="manage-contents_bottom_item mb-2">
+                    <div class="manage-contents_bottom_left">
+                      <p :class="{'add-check': isConnect}">
+                        Received address： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      </p>
+                      <div class="add-flex a-center j-between">
+                        <div class="manage-contents_bottom_box">
+                          0x2AF8Ae03294d28D2098A7bc...
+                          <span>
+                            <img src="@/assets/images/copy-address.svg">
+                          </span>
+                        </div>
+                        <div
+                          class="manage-contents_btn"
+                          v-if="isPublishedContract(chainId) && !isContractUpdateRequest"
+                        >
+                          Change
+                        </div>
+                        <div
+                          v-else
+                          class="manage-contents_btn other"
+                        >
+                          switch network
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom_item">
+                    <div class="manage-contents_bottom_left">
+                      <p :class="{'add-check': isConnect}">
+                        Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      </p>
+                      <div class="add-flex a-center j-between">
+                        <div class="add-flex a-center">
+                          <div class="manage-contents_bottom_box lerge-pd">
+                            0.00%
+                          </div>
+                          <span class="manage-contents_bottom_dsc">
+                              of amount back to the payer
+                          </span>
+                        </div>
+                        <div
+                          class="manage-contents_btn"
+                          v-if="isPublishedContract(chainId) && !isContractUpdateRequest"
+                        >
+                          Change
+                        </div>
+                        <div
+                          v-else
+                          class="manage-contents_btn other"
+                        >
+                          switch network
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
                 </div>
               </div>
             </div>
@@ -259,7 +320,8 @@ export default {
         txt: '',
         verified: false
       },
-      monitoringInterval: null
+      monitoringInterval: null,
+      isConnect: true
     }
   },
   computed: {
@@ -649,7 +711,6 @@ export default {
       .created{
         .manage-contents_network{
           padding-bottom: 16px;
-          border-bottom: 1px solid #78668D;
           margin-bottom: 16px;
         }
       }
@@ -683,9 +744,16 @@ export default {
         width: 180px;
         text-align: center;
         border-radius: 30px;
+        height: 34px;
         cursor: pointer;
-        @include media(sp) {
+        @include media(tb) {
+          font-size: 14px;
           margin: auto;
+          width: 140px;
+        }
+        @include media(sp) {
+          font-size: 12px;
+          width: 120px;
         }
         &.inactive{
           // background: var(--color_inactive) !important;
@@ -699,6 +767,8 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
+        border-bottom: 1px solid #78668D;
+        margin-bottom: 16px;
         &.available{
           &::after{
             content: "";
@@ -706,9 +776,9 @@ export default {
             width: 20px;
             height: 20px;
             position: absolute;
-            top: 15%;
+            top: 50%;
             left: 10px;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -90%);
           }
         }
         &.unavailable{
@@ -730,6 +800,11 @@ export default {
         font-weight: 300;
         word-break: break-all;
       }
+      &_box{
+        @include media(tb) {
+          width: 100%;
+        }
+      }
       &_copy{
         color: #8E86AD;
         font-size: 17px;
@@ -737,6 +812,10 @@ export default {
         display: inline-block;
         font-weight: 300;
         cursor: pointer;
+        margin-right: 48px;
+        @include media(tb) {
+          font-size: 14px;
+        }
         &::after{
           content: "";
           background: url(/assets/images/copy-address.svg) no-repeat center center;
@@ -802,6 +881,82 @@ export default {
         padding: 12px 40px;
         border-radius: 8px;
         cursor: pointer;
+      }
+      &_bottom{
+        font-size: 16px;
+        font-weight: 400;
+        &_left{
+          p{
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 16px;
+            span{
+              color: #8E86AD;
+              &.history{
+                position: relative;
+                @include media(tb) {
+                  display: inline-block;
+                }
+                &:after{
+                  content: "";
+                  background: url(/assets/images/clock.svg) no-repeat center center;
+                  width: 20px;
+                  height: 20px;
+                  position: absolute;
+                  top: 50%;
+                  right: -24px;
+                  transform: translate(0, -50%);
+                }
+              }
+            }
+            &:after{
+              content: "-";
+              position: absolute;
+              left: 6px;
+            }
+            &.add-check{
+              &:after{
+                content: "";
+                background: url(/assets/images/check-mark.svg) no-repeat center center;
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                transform: translate(-50%, -50%);
+              }
+            }
+          }
+        }
+        &_box{
+          background: #171522;
+          border-radius: 8px;
+          height: 46px;
+          line-height: 46px;
+          padding: 0 12px;
+          @include media(tb) {
+            margin-bottom: 16px;
+            font-size: 13px;
+          }
+          &.lerge-pd{
+            padding: 0 40px;
+            margin-right: 8px;
+            @include media(tb) {
+              padding: 0 32px;
+            }
+          }
+          span{
+            margin-left: 16px;
+            @include media(tb) {
+              margin-left: 0;
+            }
+          }
+        }
+        &_dsc{
+          @include media(tb) {
+            font-size: 11px;
+          }
+        }
       }
     }
     .bases-wrap{
