@@ -4,20 +4,20 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img :src="receiveTokenIcon" alt="">
+            <img :src="merchantReceiveTokenIcon" :alt="merchantReceiveTokenSymbol">
           </figure>
           <dl>
             <dt>
               Amount billed
             </dt>
             <dd>
-              {{ receiveTokenSymbol }}
+              {{ merchantReceiveTokenSymbol }}
             </dd>
           </dl>
         </div>
         <div class="usdt-price">
           <p>
-            {{ paymentRequestTokenAmount }}
+            {{ merchantReceiveAmount }}
           </p>
         </div>
       </div>
@@ -26,81 +26,103 @@
           <p class="grd">
             Your Balance
           </p>
-          <figure class="reload" @click="reload">
-            <img v-if="$store.state.theme == 'dark'" src="@/assets/images/reload.svg">
-            <img v-if="$store.state.theme == 'light'" src="@/assets/images/reload-l.svg">
+          <figure
+            class="reload"
+            :class="{ loading: isReloading }"
+            @click="updateTokenExchangeData(true)"
+          >
+            <img v-if="isDarkTheme" src="@/assets/images/reload.svg">
+            <img v-else src="@/assets/images/reload-l.svg">
           </figure>
         </div>
         <div class="payment_balance add-flex j-between mb-1">
           <div class="payment_balance-name add-flex a-center mb-2">
             <figure>
-              <img :src="tokenIcon">
+              <img :src="userSelectedTokenIcon" :alt="userSelectedTokenSymbol">
             </figure>
             <p>
-              {{ tokenSymbol }}
+              {{ userSelectedTokenSymbol }}
             </p>
           </div>
           <div class="payment_balance-value">
             <p>
-              Balance : {{ tokenBalance | balanceFormat }} {{ tokenSymbol }}
+              Balance : {{ userSelectedTokenBalance | balanceFormat }} {{ userSelectedTokenSymbol }}
             </p>
             <p>
-              equivalent : {{ equivalent | balanceFormat }} {{ equivalentSymbol }}
+              equivalent : {{ balanceEquivalentAmount | balanceFormat }} {{ equivalentSymbol }}
             </p>
+          </div>
+        </div>
+        <div class="payment-box" v-if="isExpiredExchange && isEnoughUserSelectedTokenBalance && !isNeedApprove && !isWalletConfirming">
+          <div class="add-flex a-center j-between">
+            <div class="add-flex a-center">
+              <img src="@/assets/images/warning.svg" alt="">
+              <div class="payment-box_desc">
+                <p>
+                  Price Updated
+                </p>
+              </div>
+            </div>
+            <div class="payment-box_btn" @click="updateTokenExchangeData(false)">
+              Accept
+            </div>
           </div>
         </div>
         <div class="payment_balance-topken border mb-2">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
-              {{ tokenSymbol }}
+              {{ userSelectedTokenSymbol }}
             </p>
-            <div class="payment_balance-equivalent" :class="{warning: !isBalanceEnough}">
-              {{ usd | usdFormat }} {{ equivalentSymbol }} equivalent
+            <div class="payment_balance-equivalent" :class="{warning: !isEnoughUserSelectedTokenBalance}">
+              {{ userSelectedTokenPayAmountEquivalent | usdFormat }} {{ equivalentSymbol }} equivalent
             </div>
           </div>
           <div class="payment_balance-price">
-            {{ paymentAmount }}
+            {{ userSelectedTokenPayAmount }}
           </div>
         </div>
-        <div v-if="isExchangeLoaded && isBalanceEnough">
-          <div class="payment-box" v-if="isExpiredExchange">
-            <div class="add-flex a-center j-between">
-              <div class="add-flex a-center">
-                <img src="@/assets/images/warning.svg" alt="">
-                <div class="payment-box_desc">
-                  <p>
-                    Price Updated
-                  </p>
+        <div>
+
+          <div v-if="isSetRequreUserPayAmount" class="content-wrap">
+            <div v-if="isEnoughUserSelectedTokenBalance" class="btn-content-wrap">
+              <button
+                v-if="isNeedApprove"
+                class="btn __g __l mb-2 approve-token-btn"
+                :class="{inactive: isWalletConfirming}"
+                @click="handleTokenApprove"
+              >
+                <img class="token-approve-btn-img" :src="userSelectedTokenIcon">
+                Allow the Slash protocol to use your {{ userSelectedTokenSymbol }}
+                <div class="loading-wrap" :class="{'active': isWalletConfirming}">
+                  <img class="spin" src="@/assets/images/loading.svg">
                 </div>
-              </div>
-              <div class="payment-box_btn" @click="updateExchange">
-                Accept
-              </div>
+              </button>
+              <button v-if="isExchangeDataUpdating" class="btn __g __l mb-2 inactive">
+                Price Updating...
+                <div class="loading-wrap active">
+                  <img class="spin" src="@/assets/images/loading.svg">
+                </div>
+              </button>
+              <button
+                v-else
+                class="btn __g __l mb-2"
+                :class="{inactive: isNeedApprove || isExpiredExchange || isWalletConfirming }"
+                @click="handleGoPayment()"
+              >
+                Go Payment
+              </button>
+              <p class="via">
+                via Slash Payment
+                <span>
+                  <img src="@/assets/images/slash-s.svg" alt="">
+                </span>
+              </p>
+            </div>
+            <div v-else class="balance-warning">
+              <p>balance is insufficient</p>
+              <p>for this transaction.</p>
             </div>
           </div>
-          <button v-if="!isTokenApprovedAmountEnough && !isPayingWithNativeToken" :class="{inactive: isWalletPending}" class="btn __g __l mb-2 approve-token-btn" @click="handleTokenApprove">
-            <img class="token-approve-btn-img" :src="tokenIcon">
-            Allow the Slash protocol to use your {{ tokenSymbol }}
-            <div class="loading-wrap" :class="{'active': isWalletPending}">
-              <img class="spin" src="@/assets/images/loading.svg">
-            </div>
-          </button>
-          <button :class="{inactive: (isRequierExchangeUpdate || !isTokenApprovedAmountEnough && !isPayingWithNativeToken) }" class="btn __g __l mb-2" @click="sendTokenItems">
-            Go Payment
-            <div class="loading-wrap" :class="{'active': loading}">
-              <img class="spin" src="@/assets/images/loading.svg">
-            </div>
-          </button>
-          <p class="via">
-            via Slash Payment
-            <span>
-              <img src="@/assets/images/slash-s.svg" alt="">
-            </span>
-          </p>
-        </div>
-        <div v-else class="balance-warning">
-          <p>balance is insufficient</p>
-          <p>for this transaction.</p>
         </div>
       </div>
     </div>
@@ -108,39 +130,37 @@
 </template>
 
 <script>
+import { Decimal as BigJs } from 'decimal.js'
 import { NETWORKS } from '@/constants'
 import {
-  BscTokens,
-  EthereumTokens,
-  MaticTokens,
-  AvalancheTokens
+  EthereumTokens as EthereumDefaultTokens,
+  BscTokens as BscDefaultTokens,
+  MaticTokens as MaticDefaultTokens,
+  AvalancheTokens as AvalancheDefaultTokens
 } from '@/contracts/tokens'
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 import NumberFormat from 'number-format.js'
-import VuexRestore from '@/components/mixins/VuexRestore'
 
 export default {
   name: 'PaymentExchange',
-  mixins: [VuexRestore],
   data() {
     return{
-      loading: false,
-      timer: null,
-      loadedExchange: false,
-      expiredExchange: false,
-      changedPrice: false,
-      equivalent: 0,
-      requireAmount: 0,
+      expired: false,
+      reloading: false,
+      updating: false,
+      exchangeDataExpireTimer: null,
+      userSelectedTokenAllowance: null,
+      requireAmount: null,
+      balanceEquivalentAmount: 0,
       exchangeRate: 0,
       contract: {
         address: null,
         abi: null
-      },
-      tokenApprovedAmount: null,
-      receiveTokenIcons: {
-        USDT: require('@/assets/images/symbol/usdt.svg'),
-        USDC: require('@/assets/images/symbol/usdc.svg'),
-        DAI: require('@/assets/images/symbol/dai.svg'),
-        JPYC: require('@/assets/images/symbol/jpyc.svg')
       }
     }
   },
@@ -159,261 +179,317 @@ export default {
     }
   },
   computed: {
-    baseUrl() {
+    API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
-    isWalletPending() {
-      return this.$store.state.payment.walletPending
-    },
-    slippageTolerance() {
+    SLIPPAGE_RATE() {
       return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE
     },
-    web3Instance() {
-      return this.$store.state.web3.instance
-    },
-    tokenIcon() {
-      const chainId = this.$store.state.web3.chainId
-      const symbol = this.$store.state.payment.token.symbol
-      const tokens =
-        NETWORKS[1].chainId === chainId || NETWORKS[3].chainId === chainId
-        ? EthereumTokens
-        : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
-        ? BscTokens
-        : NETWORKS[137].chainId === chainId || NETWORKS[80001].chainId === chainId
-        ? MaticTokens
-        : NETWORKS[43113].chainId === chainId || NETWORKS[43114].chainId === chainId
-        ? AvalancheTokens
-        : null
-      if (tokens !== null) {
-        return symbol in tokens
-          ? tokens[symbol].icon
-          : require('@/assets/images/symbol/unknown.svg')
-      } else {
-        return require('@/assets/images/symbol/unknown.svg')
-      }
-    },
-    receiveTokenSymbol() {
-      return this.$store.state.payment.symbol
-    },
-    receiveTokenIcon() {
-      return this.receiveTokenIcons[
-        this.$store.state.payment.symbol
-      ]
-    },
-    paymentRequestTokenAmount() {
-      return this.$store.state.payment.amount
-    },
-    tokenSymbol() {
-      return this.$store.state.payment.token.symbol
-    },
-    tokenBalance() {
-      return this.$store.state.payment.token.balance
-    },
-    paymentAmount() {
-      return this.isExchangeLoaded
-        ? this.isBalanceEnough
-        ? this.requireAmount
-        : this.tokenBalance
-        : this.requireAmount
-    },
-    usd() {
-      return parseFloat(this.paymentRequestTokenAmount) <= parseFloat(this.equivalent)
-        ? this.paymentRequestTokenAmount
-        : this.equivalent
-    },
-    equivalentSymbol() {
-      return this.tokenSymbol === 'USDT' && this.receiveTokenSymbol === 'USDT'
-        ? 'USD'
-        : this.receiveTokenSymbol
+    EXCHANGE_RATE_EXPIRE_TIME() {
+      return 30000
     },
     paymentToken() {
       return this.$route.params.token
     },
-    isBalanceEnough() {
-      return parseFloat(this.tokenBalance) >= parseFloat(this.requireAmount)
+    web3Instance() {
+      return this.$store.state.web3.instance
     },
-    isExchangeLoaded() {
-      return this.loadedExchange
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    userAccountAddress() {
+      return this.$store.state.account.address
+    },
+    equivalentSymbol() {
+      return this.merchantReceiveTokenSymbol
+    },
+    merchantReceiveTokens() {
+      if (this.isCurrentNetworkEthereum) {
+        return EthereumReceiveTokens
+      } else if (this.isCurrentNetworkBinance) {
+        return BscReceiveTokens
+      } else if (this.isCurrentNetworkMatic) {
+        return MaticReceiveTokens
+      } else if (this.isCurrentNetworkAvalanche) {
+        return AvalacheReceiveTokens
+      } else {
+        throw new Error('The receive token list could not be obtained due to unsupported network.')
+      }
+    },
+    defaultPaymentTokens() {
+      if (this.isCurrentNetworkEthereum) {
+        return EthereumDefaultTokens
+      } else if (this.isCurrentNetworkBinance) {
+        return BscDefaultTokens
+      } else if (this.isCurrentNetworkMatic) {
+        return MaticDefaultTokens
+      } else if (this.isCurrentNetworkAvalanche) {
+        return AvalancheDefaultTokens
+      } else {
+        throw new Error('The default token list could not be obtained due to an unsupported network.')
+      }
+    },
+    merchantReceiveAmount() {
+      return this.$store.state.payment.amount
+    },
+    merchantReceiveTokenSymbol() {
+      return this.$store.state.payment.symbol
+    },
+    merchantReceiveTokenIcon() {
+      return this.merchantReceiveTokens[
+        this.merchantReceiveTokenSymbol
+      ].icon
+    },
+    userSelectedToken() {
+      return this.$store.state.payment.token
+    },
+    userSelectedTokenDecimal() {
+      return this.userSelectedToken.decimal
+    },
+    userSelectedTokenBalance() {
+      return this.userSelectedToken.balance
+    },
+    userSelectedTokenPayAmount() {
+      if (this.requireAmount === null) {
+        return 0
+      } else if (this.isEnoughUserSelectedTokenBalance) {
+        return this.requireAmount
+      } else {
+        return this.userSelectedTokenBalance
+      }
+    },
+    userSelectedTokenPayAmountEquivalent() {
+      return this.isEnoughUserSelectedTokenBalance
+        ? this.merchantReceiveAmount
+        : this.balanceEquivalentAmount
+    },
+    userSelectedTokenSymbol() {
+      return this.userSelectedToken.symbol
+    },
+    userSelectedTokenIcon() {
+      const tokens = this.defaultPaymentTokens
+      return this.userSelectedTokenSymbol in tokens
+        ? tokens[this.userSelectedTokenSymbol].icon
+        : require('@/assets/images/symbol/unknown.svg')
+    },
+    isCurrentNetworkEthereum() {
+      return this.chainId === NETWORKS[1].chainId
+        || this.chainId === NETWORKS[3].chainId
+    },
+    isCurrentNetworkBinance() {
+      return this.chainId === NETWORKS[56].chainId
+        || this.chainId === NETWORKS[97].chainId
+    },
+    isCurrentNetworkMatic() {
+      return this.chainId === NETWORKS[137].chainId
+        || this.chainId === NETWORKS[80001].chainId
+    },
+    isCurrentNetworkAvalanche() {
+      return this.chainId === NETWORKS[43114].chainId
+        || this.chainId === NETWORKS[43113].chainId
+    },
+    isUserSelectedNativeToken() {
+      return this.userSelectedToken.address === null
+    },
+    isSetRequreUserPayAmount() {
+      return this.requireAmount !== null
+    },
+    isNeedApprove() {
+      return !this.isUserSelectedNativeToken
+        && !this.isEnoughUserSelectedTokenAllowance
+    },
+    isEnoughUserSelectedTokenAllowance() {
+      if (this.userSelectedTokenAllowance === null || this.requireAmount === null) {
+        return false
+      }
+      return new BigJs(this.userSelectedTokenAllowance)
+        .greaterThanOrEqualTo(this.requireAmount)
+    },
+    isEnoughUserSelectedTokenBalance() {
+      if (this.userSelectedTokenBalance === null || this.requireAmount === null) {
+        return false
+      }
+      return new BigJs(this.userSelectedTokenBalance)
+        .greaterThanOrEqualTo(this.requireAmount)
     },
     isExpiredExchange() {
-      return this.expiredExchange
+      return this.expired
     },
-    isRequierExchangeUpdate() {
-      return !this.loadedExchange || this.expiredExchange
+    isReloading() {
+      return this.reloading
     },
-    isTokenApprovedAmountEnough() {
-      return parseFloat(this.tokenApprovedAmount) >= parseFloat(this.requireAmount)
+    isExchangeDataUpdating() {
+      return this.updating
     },
-    isPayingWithNativeToken() {
-      return this.$store.state.payment.token.address == null
+    isWalletConfirming() {
+      return this.$store.state.payment.walletPending
+    },
+    isDarkTheme() {
+      return this.$store.state.theme === 'dark'
     }
   },
   methods: {
     apiGetContract() {
-      const url = `${this.baseUrl}/api/v1/payment/contract`
-      const request = { params: new URLSearchParams([
-        ['payment_token', this.$route.params.token],
-        ['network_type', this.$store.state.web3.chainId]
-      ])}
+      const url = `${this.API_BASE_URL}/api/v1/payment/contract`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.paymentToken],
+          ['network_type', this.chainId]])
+      }
       return this.axios.get(url, request)
     },
-    exchangeExpireTimer() {
-      this.timer = setTimeout(() => {
-        this.expiredExchange = true;
-      }, 30000);
-    },
-    reload() {
-      const tokenContract = this.$web3.getTokenContract(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.payment.token.address
-      )
-      this.$web3.getBalance(
-        this.$store.state.web3.instance,
-        this.$store.state.account.address,
-        tokenContract
-      ).then((balance) => {
-        this.$store.dispatch('payment/updateToken', {
-          balance: balance
-        })
-        this.updateExchange()
-      })
-    },
-    updateExchange() {
-      this.$web3.getTokenExchangeData(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.account.address,
+    getTokenExchangeDataFromContract() {
+      return this.$web3.getTokenExchangeData(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
         this.contract,
-        this.$store.state.payment.token,
-        this.receiveTokenSymbol,
-        this.paymentRequestTokenAmount,
-        this.slippageTolerance
-      ).then((exchange) => {
-        this.$store.dispatch('payment/updateFee', exchange.fee)
-        this.$store.dispatch('payment/updateDecimalUnit', exchange.requestTokenDecimal)
-        this.$store.dispatch('payment/updateAmountWei', exchange.requestAmountWei)
-        this.$store.dispatch('payment/updateToken', {
-          amount: exchange.requireAmount,
-          rate: exchange.rate
-        })
-        this.equivalent = exchange.equivalentAmount
-        this.requireAmount = exchange.requireAmount
-        this.exchangeRate = exchange.rate
-        if (!this.timer) clearTimeout(this.timer)
-        this.expiredExchange = false
-        this.loadedExchange = true
-        this.exchangeExpireTimer()
-      })
+        this.userSelectedToken,
+        this.merchantReceiveTokenSymbol,
+        this.merchantReceiveAmount,
+        this.SLIPPAGE_RATE
+      )
     },
-    sendTokenItems(){
-      this.loading = true;
-      this.$router.push({
-        path: `/payment/detail/${this.paymentToken}`
-      });
-    },
-    handleAccountChanged() {
-      this.$web3.getCurrentChainId(this.web3Instance).then((chainId) => {
-        this.$web3.getAccountData(this.web3Instance, chainId).then((account) => {
-            this.$store.dispatch('account/update', account)
-            this.$store.dispatch('web3/updateChainId', chainId)
-            this.$router.push({ path: `/payment/token/${this.paymentToken}` })
-        })
-      })
-    },
-    handleChainChanged() {
-      this.$web3.getCurrentChainId(this.web3Instance).then((chainId) => {
-        this.$web3.getAccountData(this.web3Instance, chainId).then((account) => {
-            this.$store.dispatch('account/update', account)
-            this.$store.dispatch('web3/updateChainId', chainId)
-            this.$router.push({ path: `/payment/token/${this.paymentToken}` })
-        })
-      })
-    },
-    getTokenApprovedAmount() {
+    getTokenApprovedAmountFromContract() {
       return this.$web3.getTokenApprovedAmount(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.account.address,
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
         this.contract,
-        this.$store.state.payment.token
+        this.userSelectedToken
       )
     },
-    tokenApprove() {
+    sendTokenApproveTransactoinToBlockChain() {
       return this.$web3.tokenApprove(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.account.address,
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
         this.contract,
-        this.$store.state.payment.token
+        this.userSelectedToken
       )
     },
-    getTokenDecimalUnit() {
-      return this.$web3.getTokenDecimalUnit(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.payment.token
-      )
+    setExchangeDataExpireTimer() {
+      return setTimeout(() => {
+        this.expired = true;
+      }, this.EXCHANGE_RATE_EXPIRE_TIME);
+    },
+    updateTokenExchangeData(reload) {
+      clearTimeout(this.exchangeDataExpireTimer)
+      this.expired = false
+      this.reloading = reload
+      this.updating = true
+      this.getTokenExchangeDataFromContract()
+        .then((exchangeData) => {
+          this.$store.dispatch('payment/updateFee', exchangeData.fee)
+          this.$store.dispatch('payment/updateAmountWei', exchangeData.requestAmountWei)
+          this.$store.dispatch('payment/updateToken', {
+            amount: exchangeData.requireAmount,
+            rate: exchangeData.rate
+          })
+          this.balanceEquivalentAmount = exchangeData.equivalentAmount
+          this.requireAmount = exchangeData.requireAmount
+          this.exchangeRate = exchangeData.rate
+        })
+        .finally(() => {
+          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+          this.reloading = false
+          this.updating = false
+        })
     },
     handleTokenApprove() {
       this.$store.dispatch('payment/updateWalletPending', true)
-      this.tokenApprove().then((receipt) => {
-        if(receipt.status) {
+      this.sendTokenApproveTransactoinToBlockChain()
+        .then((receipt) => {
+          if (!receipt.status) {
+            Promise.reject()
+          }
+          const tokenWeiUnit = this.$web3.getTokenUnit(this.userSelectedTokenDecimal)
           const approvedAmountInWei = receipt.events['Approval'].returnValues.value
-          this.getTokenDecimalUnit().then((tokenDecimalUnit) => {
-            const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
-            const approvedAmount = this.$store.state.web3.instance.utils.fromWei(approvedAmountInWei, tokenWeiUnit)
-            this.tokenApprovedAmount = approvedAmount
-            this.$store.dispatch('payment/updateWalletPending', false)
+          this.userSelectedTokenAllowance = this.$web3.convertFromWei(
+            this.web3Instance, approvedAmountInWei, tokenWeiUnit
+          )
+          this.$store.dispatch('payment/updateWalletPending', false)
+        })
+        .catch((error) => {
+          this.$store.dispatch('payment/updateWalletPending', false)
+          if ('code' in error && error.code === 4001) {
+            return
+          }
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message: 'The Slash protocol allow failed with your token, please allow it again.'
+            }
           })
-        }
-      }).catch(error => {
-        console.log(error)
-        this.$store.dispatch('payment/updateWalletPending', false)
-      }) 
+        })
+    },
+    handleGoPayment() {
+      this.$store.dispatch('payment/updateToken', {
+        amount: this.requireAmount,
+        rate: this.exchangeRate
+      })
+      this.$router.push({
+        name: 'detail',
+        params: { token: this.paymentToken }
+      })
+    },
+    handleChainChangedEvent(chainId) {
+      chainId = (this.web3Instance.utils.isHex(chainId))
+        ? this.web3Instance.utils.hexToNumber(chainId)
+        : chainId
+      this.$store.dispatch('web3/updateChainId', chainId)
+      this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+    },
+    handleAccountChangedEvent(address) {
+      this.$store.dispatch('account/updateAddress', address)
+      this.$router.push({ path: `/payment/token/${this.paymentToken}` })
     }
   },
-  created(){
+  mounted(){
+    this.$parent.loading = true
     this.$store.dispatch('payment/updateHeaderInvoice', true)
-    if (this.isNeedRestore) {
-      this.$router.push({
-        path: `/payment/wallets/${this.paymentToken}`
-      })
-    } else {
-      this.apiGetContract().then((response) => {
+
+    this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
+      this.handleChainChangedEvent(chainId)
+    })
+    this.web3Instance.currentProvider.on('accountsChanged', (address) => {
+      this.handleAccountChangedEvent(address)
+    })
+
+    this.apiGetContract()
+      .then((response) => {
         this.contract.address = response.data.address
         this.contract.abi = JSON.parse(response.data.args)
-        if(!this.isPayingWithNativeToken) {
-          this.getTokenApprovedAmount().then((approvedAmount) => {
-            this.tokenApprovedAmount = approvedAmount
-          })
+        const funcList = [this.getTokenExchangeDataFromContract()]
+        if (!this.isUserSelectedNativeToken) {
+          funcList.push(this.getTokenApprovedAmountFromContract())
         }
-        this.updateExchange()
+        Promise.all(funcList)
+          .catch(funcList)
+          .then((results) => {
+            if (!this.isUserSelectedNativeToken) {
+              this.userSelectedTokenAllowance = results[1]
+            }
+            this.$store.dispatch('payment/updateFee', results[0].fee)
+            this.$store.dispatch('payment/updateAmountWei', results[0].requestAmountWei)
+            this.$store.dispatch('payment/updateToken', {
+              amount: results[0].requireAmount,
+              rate: results[0].rate
+            })
+            this.balanceEquivalentAmount = results[0].equivalentAmount
+            this.requireAmount = results[0].requireAmount
+            this.exchangeRate = results[0].rate
+            this.$parent.loading = false
+            this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+          })
       })
-      if (this.web3Instance) {
-        this.web3Instance.currentProvider.on('accountsChanged', () => {
-          this.handleAccountChanged()
-        })
-        this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
-          chainId = (this.web3Instance.utils.isHex(chainId))
-            ? this.web3Instance.utils.hexToNumber(chainId)
-            : chainId
-          this.handleChainChanged(chainId)
-        })
-      }
-    }
   },
   beforeDestroy() {
-    if (this.web3Instance) {
-      this.web3Instance.currentProvider.removeListener(
-        'accountsChanged',
-        this.handleAccountChanged
-      )
-      this.web3Instance.currentProvider.removeListener(
-        'chainChanged',
-        this.handleChainChanged
-      )
-    }
+    this.$parent.loading = false
+    clearTimeout(this.exchangeDataExpireTimer)
+    this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
   }
 }
 </script>
@@ -475,6 +551,11 @@ export default {
     cursor: pointer;
     img {
       vertical-align: middle;
+    }
+    &.loading {
+      animation: 3s linear infinite spin;
+      from { transform: rotateZ(0deg); }
+      to { transform: rotateZ(360deg); }
     }
   }
   .payment_balance{

@@ -46,6 +46,9 @@
         </div>
           <router-view />
       </div>
+      <div v-if="loading" class="loading add-flex j-center a-center">
+        <img class="spin" src="@/assets/images/loading.svg">
+      </div>
     </div>
     <div v-if="showFooterMenu" class="sp">
       <div class="fixed add-flex j-between a-center">
@@ -113,7 +116,8 @@ export default {
   data() {
     return {
       windowWidth: window.innerWidth,
-      showMenu: false
+      showMenu: false,
+      loading: false
     }
   },
   computed: {
@@ -256,6 +260,16 @@ export default {
       margin-top: 3px;
       margin-left: 8px;
     }
+  }
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    border-radius: 8px;
+    z-index: 9999;
   }
 }
 .fixed{

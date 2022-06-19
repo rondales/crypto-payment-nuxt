@@ -48,7 +48,7 @@ export default {
       return this.$store.state.modal.params.refundedTokenAmount
     },
     refundedTokenSymbol() {
-      return this.$store.state.payment.symbol
+      return this.$store.state.modal.params.refundedTokenSymbol
     },
     refundedFeeAmount() {
       return this.$store.state.modal.params.refundedFeeAmount

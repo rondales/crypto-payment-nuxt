@@ -156,7 +156,7 @@ export default {
       return this.status === STATUS_RESULT_SUCCESS
     },
     isPaidEthereum() {
-      return this.chainId === NETWORKS[0].chainId
+      return this.chainId === NETWORKS[1].chainId
         || this.chainId === NETWORKS[3].chainId
     },
     isPaidBinance() {
