@@ -92,6 +92,7 @@
 import { NETWORKS, HTTP_CODES, LOGIN_TOKEN, NORMAL_TYPE_PAYMENT } from '@/constants'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'contractIssuanceModal',
@@ -187,6 +188,18 @@ export default {
       }
       return this.axios.post(url, data, options)
     },
+    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
+      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/update`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = {
+        address: contractAddress,
+        transaction_address: transactionAddress,
+        args: JSON.stringify(contractAbi),
+        network_type: parseInt(chainId, 10),
+        payment_type: NORMAL_TYPE_PAYMENT
+      }
+      return this.axios.post(url, data, options)
+    },
     apiConnectionErrorHandler(statusCode, responseData) {
       if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
         localStorage.removeItem(LOGIN_TOKEN)
@@ -275,12 +288,31 @@ export default {
         })
       }).
       then((receipt) => {
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
         this.pageState = this.pageStateList.successed
         this.updateContractAvailable(chainId, true)
-        this.updateContractAddress(chainId, merchantContractAddess)
-        this.updateContractProcessing(chainId, false)
+        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
+        const transactionAddress = receipt.transactionHash
+        const merchantContractAbi = MerchantContract.abi
         this.$store.dispatch('wallet/updatePendingStatus', false)
+        this.apiUpdateContract(
+          chainId,
+          transactionAddress,
+          merchantContractAddess,
+          merchantContractAbi,
+        ).then(() => {
+          this.updateContractAddress(chainId, merchantContractAddess)
+          this.updateContractProcessing(chainId, false)
+        }).catch((error) => {
+          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
+          if (error.response.data.errors.shift() === 3530) {
+            this.updateContractAddress(chainId, merchantContractAddess)
+          } else {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
+          this.updateContractProcessing(chainId, false)
+        })
       }).catch(() => {
         this.pageState = this.pageStateList.failured
         this.updateContractProcessing(chainId, false)
