@@ -1,16 +1,16 @@
 <template>
   <div class="textimgwrap" :class="data.layout">
-    <LpAnimation
-      v-if="data.canvas"
-      canvasClass="textimgwrap"
-      :type="data.canvas"
-    />
-    <LpImage
-      v-if="!data.canvas"
-      :imgData="data.image"
-      class="textimgwrap__image"
-    />
-    <LpTextwrap class="textimgwrap__textwrap" :textData="data" />
+      <LpAnimation
+        v-if="data.canvas"
+        canvasClass="textimgwrap"
+        :type="data.canvas"
+      />
+      <LpImage
+        v-if="!data.canvas"
+        :imgData="data.image"
+        class="textimgwrap__image"
+      />
+      <LpTextwrap class="textimgwrap__textwrap" :textData="data" />
   </div>
 </template>
 

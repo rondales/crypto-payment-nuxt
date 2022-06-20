@@ -31,10 +31,13 @@
         <div class="manage-contents" v-if="isContractSettingTab">
           <div class="manage-contents_head">
             <h3>
-              Create contract
+              Payment contract issuance and detailed settings
             </h3>
+            <p class="mb-2">
+              Create contracts on the networks you want to accept payments from The Web3 Wallet Address must be the same, even if the networks are different.
+            </p>
             <p>
-              Create contracts on the networks you want to accept payments from. The Web3 Wallet Address must be the same, even if the networks are different.
+              <img src="@/assets/images/learn-more.svg">About Slash’s payment contract setup specifications. <a href="https://slash-fi.gitbook.io/docs/integration-guide/quick-start#contract-settings" target="_blank" class="learn-more">Learn more.</a>
             </p>
           </div>
           <div class="manage-contents_body">
@@ -55,7 +58,8 @@
                       {{ contract.name }}
                     </p>
                   </div>
-                  <div v-if="contractLoaded">
+                  <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
@@ -63,27 +67,20 @@
                       Not support
                     </div>
                     <div
-                      v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId) && isContractUpdateRequest"
-                      @click="updateContract(chainId)"
-                      class="manage-contents_btn"
-                    >
-                      Update
-                    </div>
-                    <div
-                      v-else-if="isPublishedContract(chainId) && !isContractUpdateRequest"
+                      v-else-if="isPublishedContract(chainId)"
                       class="manage-contents_btn inactive"
                     >
                       Created
                     </div>
                     <div
-                      v-else-if="isCurrentNetwork(chainId) && !contractSettings.contracts[chainId].processing"
-                      @click="publishMerchantContract(chainId)"
+                      v-else-if="isCurrentNetwork(chainId) && !contracts[chainId].processing"
+                      @click="showContractIssuanceModal(chainId)"
                       class="manage-contents_btn"
                     >
                       Create
                     </div>
                     <div 
-                      v-else-if="isCurrentNetwork(chainId) && contractSettings.contracts[chainId].processing"
+                      v-else-if="isCurrentNetwork(chainId) && contracts[chainId].processing"
                       class="manage-contents_btn inactive"
                     >
                     Creating...
@@ -104,7 +101,64 @@
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
-                  <div class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy Address</div>
+                </div>
+                <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom">
+                  <div class="manage-contents_bottom_item mb-2">
+                    <div class="manage-contents_bottom_left">
+                      <p :class="{'add-check': isConnect}">
+                        Received address： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      </p>
+                      <div class="add-flex a-center j-between">
+                        <div class="manage-contents_bottom_box">
+                          0x2AF8Ae03294d28D2098A7bc...
+                          <span>
+                            <img src="@/assets/images/copy-address.svg">
+                          </span>
+                        </div>
+                        <div
+                          class="manage-contents_btn"
+                          v-if="isPublishedContract(chainId)"
+                        >
+                          Change
+                        </div>
+                        <div
+                          v-else
+                          class="manage-contents_btn other"
+                        >
+                          switch network
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom_item">
+                    <div class="manage-contents_bottom_left">
+                      <p :class="{'add-check': isConnect}">
+                        Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      </p>
+                      <div class="add-flex a-center j-between">
+                        <div class="add-flex a-center">
+                          <div class="manage-contents_bottom_box lerge-pd">
+                            0.00%
+                          </div>
+                          <span class="manage-contents_bottom_dsc">
+                              of amount back to the payer
+                          </span>
+                        </div>
+                        <div
+                          class="manage-contents_btn"
+                          v-if="isPublishedContract(chainId)"
+                        >
+                          Change
+                        </div>
+                        <div
+                          v-else
+                          class="manage-contents_btn other"
+                        >
+                          switch network
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,17 +285,12 @@ import {
 } from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
-import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'AdminPaymentSetting',
   data() {
     return {
       currentTab: null,
-      contractSettings: {
-        loaded: false,
-        contracts: {}
-      },
       paymentSettings: {
         successNotifyUrl: '',
         successReturnUrl: '',
@@ -259,7 +308,8 @@ export default {
         txt: '',
         verified: false
       },
-      monitoringInterval: null
+      monitoringInterval: null,
+      isConnect: true
     }
   },
   computed: {
@@ -267,7 +317,7 @@ export default {
       return process.env.VUE_APP_API_BASE_URL
     },
     contracts() {
-      return this.contractSettings.contracts
+      return this.$store.state.contract.contracts
     },
     isContractSettingTab() {
       const targetPath = '/admin/payment/settings/contract'
@@ -281,9 +331,6 @@ export default {
       const targetPath = '/admin/payment/settings/domain'
       return this.$route.path === targetPath
     },
-    isContractUpdateRequest() {
-      return process.env.VUE_APP_CONTRACT_UPDATE === 'true'
-    },
     isCurrentNetwork() {
       return (chainId) => {
         return this.$store.state.web3.chainId === parseInt(chainId, 10)
@@ -291,7 +338,7 @@ export default {
     },
     isPublishedContract() {
       return (chainId) => {
-        return Boolean(this.contractSettings.contracts[chainId].address)
+        return Boolean(this.$store.state.contract.contracts[chainId].address)
       }
     },
     isMetamask() {
@@ -314,11 +361,11 @@ export default {
       return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
     },
     contractLoaded() {
-      return this.contractSettings.loaded
+      return this.$store.state.contract.loaded
     },
     contractUrl() {
       return (chainId) => {
-        const contract = this.contractSettings.contracts[chainId]
+        const contract = this.contracts[chainId]
         return `${contract.scanUrl}/address/${contract.address}`
       }
     }
@@ -331,18 +378,6 @@ export default {
       const url = `${this.baseUrl}/api/v1/management/contract`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
-    },
-    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/update`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        address: contractAddress,
-        transaction_address: transactionAddress,
-        args: JSON.stringify(contractAbi),
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT
-      }
-      return this.axios.post(url, data, options)
     },
     apiDeleteContract(chainId, contractAddress) {
       const url = `${this.baseUrl}/api/v1/management/contract`
@@ -387,20 +422,34 @@ export default {
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
     },
-    apiRegistTransaction(chainId, transactionAddress) {
-      const url = `${this.baseUrl}/api/v1/management/contract/deploy/transaction`
-      const options = { headers: { Authorization: RequestUtility.getBearer() } }
-      const data = {
-        network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT,
-        transaction_address: transactionAddress
-      }
-      return this.axios.post(url, data, options)
-    },
     apiGetPendingTransactions() {
       const url = `${this.baseUrl}/api/v1/management/contract/deploy/status`
       const request = { headers: { Authorization: RequestUtility.getBearer() } }
       return this.axios.get(url, request)
+    },
+    updateContractProcessing(chainId, processing) {
+      const payload = {
+        chainId: chainId,
+        processing: processing
+      }
+      this.$store.dispatch('contract/updateContractProcessing', payload)
+    },
+    updateContractAvailable(chainId, available) {
+      const payload = {
+        chainId: chainId,
+        available: available
+      }
+      this.$store.dispatch('contract/updateContractAvailable', payload)
+    },
+    updateContractAddress(chainId, address) {
+      const payload = {
+        chainId: chainId,
+        address: address
+      }
+      this.$store.dispatch('contract/updateContractAddress', payload)
+    },
+    updateContractsLoaded(loaded) {
+      this.$store.dispatch('contract/updateContractsLoaded', loaded)
     },
     getPendingTransactions() {
       this.apiGetPendingTransactions().then((response) => {
@@ -408,8 +457,8 @@ export default {
             clearTimeout(this.monitoringInterval)
           } else {
             response.data.forEach((transaction) => {
-              if(transaction.network_type in this.contractSettings.contracts) {
-                this.contractSettings.contracts[transaction.network_type].processing = true
+              if(transaction.network_type in this.contracts) {
+                this.updateContractProcessing(transaction.network_type, true)
               }
             })
           }
@@ -422,13 +471,14 @@ export default {
     getContracts() {
       this.apiGetContracts().then((response) => {
         response.data.forEach((contract) => {
-          if (contract.payment_type === 1 && contract.network_type in this.contractSettings.contracts) {
-            this.contractSettings.contracts[contract.network_type].address = contract.address
-            this.contractSettings.contracts[contract.network_type].available = contract.available
+          if (contract.payment_type === 1 && contract.network_type in this.contracts) {
+            this.updateContractAddress(contract.network_type, contract.address)
+            this.updateContractAvailable(contract.network_type, contract.available)
           }
         })
-        this.contractSettings.loaded = true
+        this.updateContractsLoaded(true)
       }).catch((error) => {
+        console.log(error)
         this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
@@ -473,63 +523,6 @@ export default {
           : this.apiConnectionErrorHandler(error.response.status, error.response.data)
       })
     },
-    publishMerchantContract(chainId) {
-      this.contractSettings.contracts[chainId].processing = true
-      const merchantWalletAddress = this.$store.state.account.address
-      const receiveTokenAddress = this.contractSettings.contracts[chainId].support
-      this.$web3.publishMerchantContract(
-        this.$store.state.web3.instance,
-        chainId,
-        merchantWalletAddress,
-        receiveTokenAddress
-      ).on('transactionHash', (hash) => {
-        this.apiRegistTransaction(chainId,hash).catch((error) => {
-          console.log(error)
-        })
-      }).
-      then((receipt) => {
-        this.contractSettings.contracts[chainId].available = true
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
-        const transactionAddress = receipt.transactionHash
-        const merchantContractAbi = MerchantContract.abi
-        this.apiUpdateContract(
-          chainId,
-          transactionAddress,
-          merchantContractAddess,
-          merchantContractAbi,
-        ).then(() => {
-          this.contractSettings.contracts[chainId].address = merchantContractAddess
-          this.contractSettings.contracts[chainId].processing = false
-        }).catch((error) => {
-          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          if (error.response.data.errors.shift() === 3530) {
-            this.contractSettings.contracts[chainId].address = merchantContractAddess
-          } else {
-            this.apiConnectionErrorHandler(error.response.status, error.response.data)
-          }
-          this.contractSettings.contracts[chainId].processing = false
-        })
-      }).catch(() => {
-        this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'Failed to create a contract.'
-          }
-        })
-        this.contractSettings.contracts[chainId].processing = false
-      })
-    },
-    updateContract(chainId) {
-      this.contractSettings.contracts[chainId].processing = true
-      const contract = this.contractSettings.contracts[chainId]
-      this.apiDeleteContract(chainId, contract.address).then(() => {
-        this.publishMerchantContract(chainId)
-        this.contractSettings.contracts[chainId].processing = false
-      })
-    },
     switchNetwork(chainId) {
       this.$web3.switchChain(
         this.$store.state.web3.instance,
@@ -565,6 +558,15 @@ export default {
     },
     selectCurrency(event, currency) {
       this.paymentSettings.allowCurrencies[currency] = event.target.checked
+    },
+    showContractIssuanceModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-issuance-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
     }
   },
   created() {
@@ -575,8 +577,9 @@ export default {
       [AvailableNetworks.matic.chainId]: (MaticTokens[receiveTokenSymbol].address),
       [AvailableNetworks.avalanche.chainId]: (AvalancheTokens[receiveTokenSymbol].address)
     }
+    let contractSettings = {}
     Object.values(AvailableNetworks).forEach((network) => {
-      this.$set(this.contractSettings.contracts, network.chainId, {
+      this.$set(contractSettings, network.chainId, {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
@@ -585,6 +588,7 @@ export default {
         support: supportStatuses[network.chainId]
       })
     })
+    this.$store.dispatch('contract/addContracts',contractSettings)
     this.getContracts()
     this.getPendingTransactions()
     this.getPaymentSettings()
@@ -635,6 +639,13 @@ export default {
           font-weight: 300;
           font-size: 15px;
         }
+        img {
+          margin-right: 8px;
+        }
+        a {
+          color:#5390F2;
+          cursor: pointer;
+        }
       }
       &_item{
         background: #292536;
@@ -649,7 +660,6 @@ export default {
       .created{
         .manage-contents_network{
           padding-bottom: 16px;
-          border-bottom: 1px solid #78668D;
           margin-bottom: 16px;
         }
       }
@@ -683,9 +693,16 @@ export default {
         width: 180px;
         text-align: center;
         border-radius: 30px;
+        height: 34px;
         cursor: pointer;
-        @include media(sp) {
+        @include media(tb) {
+          font-size: 14px;
           margin: auto;
+          width: 140px;
+        }
+        @include media(sp) {
+          font-size: 12px;
+          width: 120px;
         }
         &.inactive{
           // background: var(--color_inactive) !important;
@@ -699,6 +716,8 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
+        border-bottom: 1px solid #78668D;
+        margin-bottom: 16px;
         &.available{
           &::after{
             content: "";
@@ -706,9 +725,9 @@ export default {
             width: 20px;
             height: 20px;
             position: absolute;
-            top: 15%;
+            top: 50%;
             left: 10px;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -90%);
           }
         }
         &.unavailable{
@@ -730,6 +749,11 @@ export default {
         font-weight: 300;
         word-break: break-all;
       }
+      &_box{
+        @include media(tb) {
+          width: 100%;
+        }
+      }
       &_copy{
         color: #8E86AD;
         font-size: 17px;
@@ -737,6 +761,10 @@ export default {
         display: inline-block;
         font-weight: 300;
         cursor: pointer;
+        margin-right: 48px;
+        @include media(tb) {
+          font-size: 14px;
+        }
         &::after{
           content: "";
           background: url(/assets/images/copy-address.svg) no-repeat center center;
@@ -802,6 +830,85 @@ export default {
         padding: 12px 40px;
         border-radius: 8px;
         cursor: pointer;
+      }
+      &_bottom{
+        font-size: 16px;
+        &_left{
+          p{
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 16px;
+            font-weight: 300;
+            span{
+              color: #8E86AD;
+              font-weight: 300;
+              &.history{
+                position: relative;
+                @include media(tb) {
+                  display: inline-block;
+                }
+                &:after{
+                  content: "";
+                  background: url(/assets/images/clock.svg) no-repeat center center;
+                  width: 20px;
+                  height: 20px;
+                  position: absolute;
+                  top: 50%;
+                  right: -30px;
+                  transform: translate(0, -50%);
+                }
+              }
+            }
+            &:after{
+              content: "-";
+              position: absolute;
+              left: 6px;
+            }
+            &.add-check{
+              &:after{
+                content: "";
+                background: url(/assets/images/check-mark.svg) no-repeat center center;
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                transform: translate(-50%, -50%);
+              }
+            }
+          }
+        }
+        &_box{
+          font-weight: 300;
+          background: #171522;
+          border-radius: 8px;
+          height: 46px;
+          line-height: 46px;
+          padding: 0 12px;
+          @include media(tb) {
+            margin-bottom: 16px;
+            font-size: 13px;
+          }
+          &.lerge-pd{
+            padding: 0 40px;
+            margin-right: 8px;
+            @include media(tb) {
+              padding: 0 32px;
+            }
+          }
+          span{
+            margin-left: 16px;
+            @include media(tb) {
+              margin-left: 0;
+            }
+          }
+        }
+        &_dsc{
+          font-weight: 300;
+          @include media(tb) {
+            font-size: 11px;
+          }
+        }
       }
     }
     .bases-wrap{

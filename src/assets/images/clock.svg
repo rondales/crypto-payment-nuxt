@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="17" height="16.15" viewBox="0 0 17 16.15">
+  <g id="history-clock-button" transform="translate(0 -12.75)">
+    <g id="history" transform="translate(0 12.75)">
+      <path id="パス_59536" data-name="パス 59536" d="M8.925,12.75a7.938,7.938,0,0,0-6.97,4.08L0,14.875V20.4H5.525l-2.38-2.38a6.409,6.409,0,1,1-.255,4.93H1.105a8.088,8.088,0,1,0,7.82-10.2ZM7.65,17v4.335l4,2.38.68-1.105-3.4-2.04V17Z" transform="translate(0 -12.75)" fill="#fff" opacity="0.9"/>
+    </g>
+  </g>
+</svg>

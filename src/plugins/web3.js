@@ -53,7 +53,7 @@ export default {
           tokenApprove: tokenApprove,
           getTokenDecimalUnit: getTokenDecimalUnit,
           sendPaymentTransaction: sendPaymentTransaction,
-          monitoringPaymentTransaction: monitoringPaymentTransaction,
+          monitoringTransaction: monitoringTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
@@ -468,7 +468,7 @@ const sendPaymentTransaction = function(
   })
 }
 
-const monitoringPaymentTransaction = function(web3, transactionHash) {
+const monitoringTransaction = function(web3, transactionHash) {
   return web3.eth.getTransactionReceipt(transactionHash)
 }
 
