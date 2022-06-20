@@ -1459,8 +1459,6 @@
   "integrity" "sha512-tAG9LWg8+M2CMu7hIsqHPaTyG4uDzjr6mhvH96LvOpLZZj6tgzTluBt+LsCf1/QaYrlis6pITvpIaIhE+iZB+Q=="
   "resolved" "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-3.4.1-solc-0.7-2.tgz"
   "version" "3.4.1-solc-0.7-2"
-<<<<<<< HEAD
-=======
 
 "@sentry/browser@7.0.0":
   "integrity" "sha512-XJeQA/CIocrmShpfVcccJ2RvZbWZy+OustSbgLP5Vk+ZnzbqKQo1zQ92jO/dUoVIsl5dWpUaOKfT6gXmORf4vQ=="
@@ -1524,7 +1522,6 @@
     "@sentry/types" "7.0.0"
     "@sentry/utils" "7.0.0"
     "tslib" "^1.9.3"
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
 
 "@sindresorhus/is@^0.14.0":
   "integrity" "sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ=="
@@ -5349,10 +5346,6 @@
     "setimmediate" "^1.0.5"
 
 "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git":
-<<<<<<< HEAD
-  "integrity" "sha512-qs8G5KwnIO/thOQjv1RvR/4oiTsy6IaCsN+ory5dbiqFXz8sd239aWJH0wmsVNPimL5X1KzQheUpi6xAo6FU4w=="
-=======
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
   "resolved" "git+ssh://git@github.com/ethereumjs/ethereumjs-abi.git#ee3994657fa7a427238e6ba92a84d0b529bbcde0"
   "version" "0.6.8"
   dependencies:
@@ -6046,8 +6039,6 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-<<<<<<< HEAD
-=======
 "fsevents@^1.2.7":
   "integrity" "sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw=="
   "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-1.2.13.tgz"
@@ -6061,7 +6052,6 @@
   "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   "version" "2.3.2"
 
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
 "fstream@^1.0.0", "fstream@^1.0.12":
   "integrity" "sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg=="
   "resolved" "https://registry.npmjs.org/fstream/-/fstream-1.0.12.tgz"
@@ -8336,11 +8326,7 @@
     "object-assign" "^4.0.1"
     "thenify-all" "^1.0.0"
 
-<<<<<<< HEAD
-"nan@^2.13.2", "nan@^2.14.0":
-=======
 "nan@^2.12.1", "nan@^2.13.2", "nan@^2.14.0":
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
   "integrity" "sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ=="
   "resolved" "https://registry.npmjs.org/nan/-/nan-2.15.0.tgz"
   "version" "2.15.0"
@@ -11364,14 +11350,11 @@
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
 
-<<<<<<< HEAD
-=======
 "tslib@^1.9.3":
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
 
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
 "tslib@^2.0.0":
   "integrity" "sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.4.0.tgz"
@@ -11885,11 +11868,7 @@
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-<<<<<<< HEAD
-"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.6.0", "vue@^2.6.10", "vue@^2.6.11", "vue@^2.6.9", "vue@^3.0.0 || ^2.0.0":
-=======
 "vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.6.0", "vue@^2.6.10", "vue@^2.6.11", "vue@^2.6.9", "vue@^3.0.0 || ^2.0.0", "vue@2.x || 3.x":
->>>>>>> e71006a0cd9e431341845eb3f623ac99a87b4a73
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"
