@@ -26,6 +26,8 @@ export const errorCodeList = {
   3110: { msg: 'Sort items are incorrect.' },
   3111: { msg: 'Sort settings are incorrect.' },
   3250: { msg: 'Please enter the exchange margin rate in the correct format.' },
+  3430: { msg: 'Please enter the note in the correct format.' },
+  3440: { msg: 'Please enter the note in 255 characters.' },
   3510: { msg: 'Invalid Merchant Id.' },
   3520: { msg: 'Invalid authorization code.' },
   3610: { msg: 'Invalid Merchant Id.' },

@@ -356,7 +356,7 @@ export default {
       )
     },
     handleTokenApprove() {
-      this.$store.dispatch('payment/updateWalletPending', true)
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       this.tokenApprove().then((receipt) => {
         if(receipt.status) {
           const approvedAmountInWei = receipt.events['Approval'].returnValues.value
@@ -364,12 +364,12 @@ export default {
             const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
             const approvedAmount = this.$store.state.web3.instance.utils.fromWei(approvedAmountInWei, tokenWeiUnit)
             this.tokenApprovedAmount = approvedAmount
-            this.$store.dispatch('payment/updateWalletPending', false)
+            this.$store.dispatch('wallet/updatePendingStatus', false)
           })
         }
       }).catch(error => {
         console.log(error)
-        this.$store.dispatch('payment/updateWalletPending', false)
+        this.$store.dispatch('wallet/updatePendingStatus', false)
       }) 
     }
   },

@@ -10,6 +10,8 @@ import modal from "./modules/modal";
 import deeplink from "./modules/deeplink";
 import plugInsToken from "./modules/plugInsToken";
 import merchant from "./modules/merchant";
+import contract from "./modules/contract";
+import wallet from "./modules/wallet";
 
 Vue.use(Vuex);
 
@@ -27,6 +29,8 @@ const store = new Vuex.Store({
         "theme",
         "invoicePage",
         "merchant",
+        "contract",
+        "wallet",
       ],
       storage: {
         getItem: (key) => ls.get(key),
@@ -38,11 +42,13 @@ const store = new Vuex.Store({
   modules: {
     web3,
     account,
+    contract,
     merchant,
     payment,
-    modal,
     deeplink,
     plugInsToken,
+    wallet,
+    modal
   },
   state: {
     hamberger: false,

@@ -18,36 +18,26 @@ export default {
     networkModal: () => import("@/components/molecules/networkModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
     errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
-    errorMetamaskModal: () =>
-      import("@/components/molecules/errorMetamaskModal"),
-    errorCurrentNetworkModal: () =>
-      import("@/components/molecules/errorCurrentNetworkModal"),
-    switchNetworkForAdminModal: () =>
-      import("@/components/molecules/switchNetworkForAdminModal"),
+    errorMetamaskModal: () => import("@/components/molecules/errorMetamaskModal"),
+    errorCurrentNetworkModal: () => import("@/components/molecules/errorCurrentNetworkModal"),
+    switchNetworkForAdminModal: () => import("@/components/molecules/switchNetworkForAdminModal"),
     errorModal: () => import("@/components/molecules/errorModal"),
-    requireSwitchNetworkModal: () =>
-      import("@/components/molecules/requireSwitchNetworkModal"),
+    requireSwitchNetworkModal: () => import("@/components/molecules/requireSwitchNetworkModal"),
     receiveModal: () => import("@/components/molecules/receiveModal"),
     editNoteModal: () => import("@/components/molecules/editNoteModal"),
     urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
-    plugInsTokenRefreshModal: () =>
-      import("@/components/molecules/plugInsTokenRefreshModal"),
-    plugInsTokenDeleteModal: () =>
-      import("@/components/molecules/plugInsTokenDeleteModal"),
+    plugInsTokenRefreshModal: () => import("@/components/molecules/plugInsTokenRefreshModal"),
+    plugInsTokenDeleteModal: () => import("@/components/molecules/plugInsTokenDeleteModal"),
     deleteRowModal: () => import("@/components/molecules/deleteRowModal"),
-    createDeeplinkModal: () =>
-      import("@/components/molecules/createDeeplinkModal"),
+    createDeeplinkModal: () => import("@/components/molecules/createDeeplinkModal"),
     openQrModal: () => import("@/components/molecules/openQrModal"),
-    adminContractPausedModal: () =>
-      import("@/components/molecules/adminContractPausedModal"),
+    adminContractPausedModal: () => import("@/components/molecules/adminContractPausedModal"),
     refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
-    cautionWalletConnectModal: () =>
-      import("@/components/molecules/cautionWalletConnectModal"),
-    editAccountNoteModal: () =>
-      import("@/components/molecules/editAccountNoteModal"),
+    cautionWalletConnectModal: () => import("@/components/molecules/cautionWalletConnectModal"),
+    editAccountNoteModal: () => import("@/components/molecules/editAccountNoteModal"),
     accountModal: () => import("@/components/molecules/accountModal"),
-    warningDomainUnauthModal: () =>
-      import("@/components/molecules/warningDomainUnauthModal"),
+    warningDomainUnauthModal: () => import("@/components/molecules/warningDomainUnauthModal"),
+    contractIssuanceModal: () => import("@/components/molecules/contractIssuanceModal")
   },
   computed: {
     classes() {

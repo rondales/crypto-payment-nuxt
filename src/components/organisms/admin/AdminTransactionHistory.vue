@@ -561,7 +561,7 @@ export default {
 
 .manage-table{
   z-index: 10;
-  width: 100%;
+  width: calc(100% - 228px);
   @include media(sp) {
     width: 100%;
     overflow: hidden;

@@ -27,14 +27,6 @@
                 Settings
               </router-link>
             </li>
-            <!-- <li @click="close()">
-              <router-link
-                to="/admin/web3payment?id=1"
-                :class="{ inactive: isUnselectedReceiveToken }"
-              >
-                Slash payment
-              </router-link>
-            </li> -->
             <!--
             @todo remove comment out when implementing invoice function
             <li @click="close()">

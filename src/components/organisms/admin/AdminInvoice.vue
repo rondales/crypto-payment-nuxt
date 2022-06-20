@@ -736,7 +736,7 @@ export default {
 }
 .manage-table{
   z-index: 10;
-  width: 100%;
+  width: calc(100% - 228px);
   &::-webkit-scrollbar{
     display: none;
   }

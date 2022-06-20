@@ -389,7 +389,7 @@ export default {
   @include media(sp) {
     padding: 18px;
     &__title {
-      font-size: 2.3rem;
+      font-size: 1.7rem;
     }
   }
   &__title {
