@@ -59,6 +59,10 @@ export default {
           signWithPrivateKey: signWithPrivateKey,
           getEventLog: getEventLog,
           getTokenUnit: getTokenUnit,
+          viewMerchantReceiveAddress: viewMerchantReceiveAddress,
+          viewCashBackPercent: viewCashBackPercent,
+          updateMerchantReceiveAddress: updateMerchantReceiveAddress,
+          updateCashbackPercent: updateCashbackPercent
         }
       }
     })
@@ -508,6 +512,45 @@ const publishMerchantContract = function(
   } catch(error) {
     throw new Error(error)
   }
+}
+
+const viewMerchantReceiveAddress = function(web3, contractAbi, contractAddress) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  return merchantContract.methods.viewMerchantReceiveWallet().call()
+}
+
+const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const cashbackValue = await merchantContract.methods.viewCashBackPercent().call()
+  const cashbackPercent = parseInt(cashbackValue, 10) / 100
+  return cashbackPercent
+}
+
+const updateMerchantReceiveAddress = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  receiveAddress,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  return merchantContract.methods.updateMerchantReceiveWallet(receiveAddress).send({
+    from: merchantWalletAddress
+  })
+}
+
+const updateCashbackPercent = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  cashbackValue,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const cashbackPercent = parseInt(cashbackValue, 10) * 100
+  return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
+    from: merchantWalletAddress
+  })
 }
 
 const deleteMerchantContract = function() {

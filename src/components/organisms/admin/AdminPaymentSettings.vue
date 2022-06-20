@@ -67,7 +67,7 @@
                       Not support
                     </div>
                     <div
-                      v-else-if="isPublishedContract(chainId)"
+                      v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
                       class="manage-contents_btn inactive"
                     >
                       Created
@@ -102,7 +102,7 @@
                     {{ contractUrl(chainId) }}
                   </div>
                 </div>
-                <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom">
+                <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom">
                   <div class="manage-contents_bottom_item mb-2">
                     <div class="manage-contents_bottom_left">
                       <p :class="{'add-check': isConnect}">
@@ -130,7 +130,7 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom_item">
+                  <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom_item">
                     <div class="manage-contents_bottom_left">
                       <p :class="{'add-check': isConnect}">
                         Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
@@ -138,7 +138,7 @@
                       <div class="add-flex a-center j-between">
                         <div class="add-flex a-center">
                           <div class="manage-contents_bottom_box lerge-pd">
-                            0.00%
+                            {{ contractCashBackInfo(chainId) }}%
                           </div>
                           <span class="manage-contents_bottom_dsc">
                               of amount back to the payer
@@ -147,6 +147,7 @@
                         <div
                           class="manage-contents_btn"
                           v-if="isPublishedContract(chainId)"
+                          @click="showContractCashbackChangeModal(chainId)"
                         >
                           Change
                         </div>
@@ -285,6 +286,7 @@ import {
 } from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'AdminPaymentSetting',
@@ -368,6 +370,25 @@ export default {
         const contract = this.contracts[chainId]
         return `${contract.scanUrl}/address/${contract.address}`
       }
+    },
+    contractCashBackInfo() {
+      return (chainId) => {
+        return this.contracts[chainId].cashbackRate
+      }
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    currentContractAddress() {
+      return this.chainId ? this.contracts[this.chainId].address : null
+    }
+  },
+  watch: {
+    chainId() {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+    },
+    currentContractAddress() {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
     }
   },
   methods: {
@@ -448,6 +469,13 @@ export default {
       }
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
+    updateCashbackRate(chainId, rate) {
+      const payload = {
+        chainId: chainId,
+        cashbackRate: rate
+      }
+      this.$store.dispatch('contract/updateContractCashbackRate', payload)
+    },
     updateContractsLoaded(loaded) {
       this.$store.dispatch('contract/updateContractsLoaded', loaded)
     },
@@ -469,7 +497,7 @@ export default {
       this.monitoringInterval = setTimeout(this.getPendingTransactions, 3000)
     },
     getContracts() {
-      this.apiGetContracts().then((response) => {
+      return this.apiGetContracts().then((response) => {
         response.data.forEach((contract) => {
           if (contract.payment_type === 1 && contract.network_type in this.contracts) {
             this.updateContractAddress(contract.network_type, contract.address)
@@ -567,6 +595,25 @@ export default {
           chainId: chainId
         }
       })
+    },
+    showContractCashbackChangeModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-cashback-change-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
+    },
+    async getCurrentContractCashbackRate(chainId) {
+      const contractAddress = this.contracts[chainId].address
+      if(contractAddress == null) return
+      const rate = await this.$web3.viewCashBackPercent(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      this.updateCashbackRate(chainId, rate)
     }
   },
   created() {
@@ -583,13 +630,16 @@ export default {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
+        cashbackRate: null,
         icon: network.icon,
         processing: false,
         support: supportStatuses[network.chainId]
       })
     })
     this.$store.dispatch('contract/addContracts',contractSettings)
-    this.getContracts()
+    this.getContracts().then(() => {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+    })
     this.getPendingTransactions()
     this.getPaymentSettings()
     this.getDomainSettings()
