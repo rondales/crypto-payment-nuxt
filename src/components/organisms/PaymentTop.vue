@@ -1,21 +1,18 @@
 <template>
   <div class="payment_top">
     <div class="payment_headbox add-flex j-between a-center">
-      <div v-if="!isInvoiceHeaderMode" class="logo add-flex a-end">
-        <figure>
-          <img src="@/assets/images/slash.svg">
-        </figure>
-        <div class="product_name">
-          Web3 Payment
-        </div>
-      </div>
       <div v-if="isInvoiceHeaderMode" class="add-flex a-end j-between">
-        <div v-if="prevMode" class="logo copy" @click="prevPage">
+        <div v-if="isCurrentRequestConnectWalletPage" class="logo copy" @click="showRegeneratePaymentUrlModal()">
+          <figure>
+            <img :src="scanIcon">
+          </figure>
+        </div>
+        <div v-else-if="isCurrentBeforeSendTransactionPages" class="logo copy" @click="prevPage()">
           <figure>
             <img :src="prevIcon">
           </figure>
         </div>
-        <div v-else class="logo copy" @click="copyLink">
+        <div v-else-if="isCurrentResultPage" class="logo copy" @click="copyLink()">
           <figure>
             <img :src="linkIcon">
           </figure>
@@ -26,6 +23,14 @@
           <figure>
             <img src="@/assets/images/invoice.svg">
           </figure>
+        </div>
+      </div>
+      <div v-else class="logo add-flex a-end">
+        <figure>
+          <img src="@/assets/images/slash.svg">
+        </figure>
+        <div class="product_name">
+          Web3 Payment
         </div>
       </div>
       <div class="hamburger" @click="hideMenu" :class="{active: showMenu}">
@@ -59,26 +64,46 @@ export default {
     }
   },
   computed: {
+    scanIcon() {
+      return this.isDarkTheme
+        ? require('@/assets/images/camera-scan.svg')
+        : require('@/assets/images/camera-scan-l.svg')
+    },
     linkIcon() {
-      return this.$store.state.theme === 'light'
-        ? require('@/assets/images/link-l.svg')
-        : require('@/assets/images/link.svg')
+      return this.isDarkTheme
+        ? require('@/assets/images/link.svg')
+        : require('@/assets/images/link-l.svg')
     },
     prevIcon() {
-      return this.$store.state.theme === 'light'
-        ? require('@/assets/images/left-arrow-l.svg')
-        : require('@/assets/images/left-arrow.svg')
+      return this.isDarkTheme
+        ? require('@/assets/images/left-arrow.svg')
+        : require('@/assets/images/left-arrow-l.svg')
     },
     hamburgerIcon() {
-      return this.$store.state.theme === 'light'
-        ? require('@/assets/images/hamburger-light.svg')
-        : require('@/assets/images/hamburger.svg')
+      return this.isDarkTheme
+        ? require('@/assets/images/hamburger.svg')
+        : require('@/assets/images/hamburger-light.svg')
     },
     prevMode() {
       return ((this.currentRouteName === 'exchange' || this.currentRouteName === 'detail') && this.$store.state.payment.status === 1)
     },
     isInvoiceHeaderMode() {
-      return this.$store.state.payment.headerInvoice
+      return this.isCurrentRequestConnectWalletPage
+        || this.isCurrentBeforeSendTransactionPages
+        || this.isCurrentResultPage
+    },
+    isCurrentRequestConnectWalletPage() {
+      return this.$route.name === 'wallets'
+    },
+    isCurrentBeforeSendTransactionPages() {
+      const pages = ['token', 'exchange', 'detail']
+      return pages.includes(this.$route.name)
+    },
+    isCurrentResultPage() {
+      return this.$route.name === 'result'
+    },
+    isDarkTheme() {
+      return this.$store.state.theme === 'dark'
     }
   },
   methods: {
@@ -102,6 +127,12 @@ export default {
         default:
           this.$router.back()
       }
+    },
+    showRegeneratePaymentUrlModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'regenerate-payment-url-modal',
+        size: 'small'
+      })
     }
   }
 }
