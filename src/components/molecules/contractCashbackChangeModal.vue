@@ -26,7 +26,8 @@
       <p>
         Changed rate
       </p>
-      <div class="box"><input ref="cashbackRate" placeholder="0.00%"></div>
+      <div class="box"><input v-model="newCashbackRate" placeholder="0.00%"></div>
+      <div class="invalid-rate" v-if="!validCashbackRate">Please enter number from 0.00 ~ 100.00</div>
       <p class="desc mt-2">of amount back to the payer</p>
       <p class="desc mt-2">It is always your responsibility to set the cash back percentage. 
         We cannot be held responsible for lost funds due to incorrectly entered values.</p>
@@ -148,6 +149,7 @@ export default {
       pageState: 1,
       reloadSpinning: false,
       newCashbackRate: null,
+      validCashbackRate: true,
       accepted: false
     }
   },
@@ -216,7 +218,13 @@ export default {
       const current = new Date();
       const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       return date;
-    },
+    }
+  },
+  watch: {
+    newCashbackRate(value) {
+      this.newCashbackRate = value
+      this.checkCashbackRateFormat(value)
+    }
   },
   methods: {
     hideModal() {
@@ -225,10 +233,15 @@ export default {
     validateCashbackRate(rate) {
       return rate.match(/^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$/) != null;
     },
+    checkCashbackRateFormat(rate) {
+      if(this.validateCashbackRate(rate)) {
+        this.validCashbackRate = true
+      } else {
+        this.validCashbackRate = false
+      }
+    },
     changePageToConfirmationState() {
-      const rate = this.$refs.cashbackRate.value
-      if(this.validateCashbackRate(rate)){
-        this.newCashbackRate = this.$refs.cashbackRate.value
+      if(this.validateCashbackRate(this.newCashbackRate)){
         this.pageState = this.pageStateList.confirmation
       }
     },
@@ -542,50 +555,56 @@ export default {
     font-size: 36px !important;
     color: #00FF3B;
   }
+
+  .invalid-rate {
+    font-weight: 100 !important;
+    font-size: 1.2rem !important;
+    color:#E5676C!important;
+  }
   .checkbox-container {
-      position: relative;
-      font-weight: 100;
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      input[type="checkbox"] {
-          display: none;
-      }
-      input[type="checkbox"]+label {
+    position: relative;
+    font-weight: 100;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    input[type="checkbox"] {
         display: none;
-        cursor: pointer;
-        display: inline-block;
-        position: relative;
-        padding-left: 30px;
-        padding-right: 10px;
-      }
-      input[type="checkbox"]+label::before{
-        content: "";
-        position: absolute;
-        display: block;
-        box-sizing: border-box;
-        width: 18px;
-        height: 18px;
-        left: 0;
-        top: 0%;
-        border: 2px solid;
-        border-radius: 2px;
-        border-color:  var(--color_font);
-        background-color: #292536;
-      }
-      input[type="checkbox"]:checked+label::after{
-        content: "";
-        position: absolute;
-        display: block;
-        box-sizing: border-box;
-        width: 15px;
-        height: 6px;
-        margin-top: 5px;
-        top: 0%;
-        left: 3px;
-        transform: rotate(-45deg);
-        border-bottom: 3px solid;
-        border-left: 3px solid;
-        border-color:  #44d866;
-      }
     }
+    input[type="checkbox"]+label {
+      display: none;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      padding-left: 30px;
+      padding-right: 10px;
+    }
+    input[type="checkbox"]+label::before{
+      content: "";
+      position: absolute;
+      display: block;
+      box-sizing: border-box;
+      width: 18px;
+      height: 18px;
+      left: 0;
+      top: 0%;
+      border: 2px solid;
+      border-radius: 2px;
+      border-color:  var(--color_font);
+      background-color: #292536;
+    }
+    input[type="checkbox"]:checked+label::after{
+      content: "";
+      position: absolute;
+      display: block;
+      box-sizing: border-box;
+      width: 15px;
+      height: 6px;
+      margin-top: 5px;
+      top: 0%;
+      left: 3px;
+      transform: rotate(-45deg);
+      border-bottom: 3px solid;
+      border-left: 3px solid;
+      border-color:  #44d866;
+    }
+  }
 </style>

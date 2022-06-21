@@ -547,7 +547,7 @@ const updateCashbackPercent = function(
   merchantWalletAddress
 ) {
   const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
-  const cashbackPercent = parseInt(cashbackValue, 10) * 100
+  const cashbackPercent = parseFloat(cashbackValue) * 100
   return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
     from: merchantWalletAddress
   })

@@ -386,16 +386,18 @@ export default {
     currentContractReceiveAddress() {
       return (chainId) => {
         const address = this.contracts[chainId].receiveAddress
-        return address ? (address.substring(0, 20) + '...') : null
+        return address ? (address.substring(0, 35) + '...') : null
       }
     }
   },
   watch: {
     chainId() {
       this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
     },
     currentContractAddress() {
       this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
     }
   },
   methods: {

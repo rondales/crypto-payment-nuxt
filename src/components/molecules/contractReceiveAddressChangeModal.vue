@@ -27,7 +27,10 @@
       <p>
         Changed address
       </p>
-      <div class="box"><input ref="receiveAddress" placeholder="Enter address"></div>
+      <div class="box">
+        <input v-model="newReceiveAddress" placeholder="Enter address">
+      </div>
+      <div class="invalid-address" v-if="!isValidAddress">Please enter valid address</div>
       <p class="desc mt-2">
         Please set the changed EVM (Ethereum Virtual Machine) compatible address at your own risk. 
         Please be sure to set this address at your own risk. 
@@ -158,7 +161,8 @@ export default {
       pageState: 1,
       reloadSpinning: false,
       newReceiveAddress: null,
-      accepted: false
+      accepted: false,
+      validAddress: true,
     }
   },
   computed: {
@@ -171,6 +175,9 @@ export default {
       },
     isReloadSpinning() {
       return this.reloadSpinning
+    },
+    isValidAddress() {
+      return this.validAddress
     },
     allowClose() {
       return ('allowClose' in this.$store.state.modal.params)
@@ -225,6 +232,12 @@ export default {
       return date;
     },
   },
+  watch: {
+    newReceiveAddress(value) {
+      this.newReceiveAddress = value
+      this.checkAddressFormat(value)
+    }
+  },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
@@ -232,10 +245,15 @@ export default {
     validateAddress(address) {
       return address.match(/^0x([a-z]|[A-Z]|[0-9]){40}$/) != null;
     },
+    checkAddressFormat(address) {
+      if(this.validateAddress(address)) {
+        this.validAddress = true
+      } else {
+        this.validAddress = false
+      }
+    },
     changePageToConfirmationState() {
-      const address = this.$refs.receiveAddress.value
-      if(this.validateAddress(address)){
-        this.newReceiveAddress = this.$refs.receiveAddress.value
+      if(this.validateAddress(this.newReceiveAddress)){
         this.pageState = this.pageStateList.confirmation
       }
     },
@@ -529,6 +547,29 @@ export default {
   .align-left {
     text-align: left !important;
   }
+  .invalid-address {
+    font-weight: 100 !important;
+    font-size: 1.2rem !important;
+    color:#E5676C!important;
+    text-align: left!important;;
+  }
+  .payment-status{
+    text-align: center;
+    margin: auto;
+    &_btn{
+      font-size: 12px;
+      font-weight: 100;
+      cursor: pointer;
+      background: $gradation-pale;
+      padding: 4px 16px;
+      border-radius: 10px;
+      color: #fff;
+      img{
+        margin-left: 4px;
+        vertical-align: middle;
+      }
+    }
+  }
   .checkbox-container {
     position: relative;
     font-weight: 100;
@@ -573,23 +614,6 @@ export default {
       border-bottom: 3px solid;
       border-left: 3px solid;
       border-color:  #44d866;
-    }
-    .payment-status{
-      text-align: center;
-      margin: auto;
-      &_btn{
-        font-size: 12px;
-        font-weight: 100;
-        cursor: pointer;
-        background: $gradation-pale;
-        padding: 4px 16px;
-        border-radius: 10px;
-        color: #fff;
-        img{
-          margin-left: 4px;
-          vertical-align: middle;
-        }
-      }
     }
   }
 </style>
