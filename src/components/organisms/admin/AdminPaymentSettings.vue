@@ -110,9 +110,9 @@
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="manage-contents_bottom_box">
-                          {{ currentContractReceiveAddress(chainId) }}
+                          {{ currentContractReceiveAddress(chainId) | addressFormat }}
                           <span>
-                            <img src="@/assets/images/copy-address.svg">
+                            <button @click="copy(currentContractReceiveAddress(chainId))"><img src="@/assets/images/copy-address.svg"></button>
                           </span>
                         </div>
                         <div
@@ -386,7 +386,7 @@ export default {
     currentContractReceiveAddress() {
       return (chainId) => {
         const address = this.contracts[chainId].receiveAddress
-        return address ? (address.substring(0, 35) + '...') : null
+        return address ? address : null
       }
     }
   },
@@ -398,6 +398,16 @@ export default {
     currentContractAddress() {
       this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
       this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+    }
+  },
+  filters: {
+    addressFormat(address) {
+      if ((address)) {
+        const prefix = address.substr(0, 35);
+        return prefix + '…' ;
+      } else {
+        return '';
+      }
     }
   },
   methods: {
@@ -577,6 +587,10 @@ export default {
     },
     copyPaymentContractUrl(chainId) {
       this.$clipboard(this.contractUrl(chainId))
+    },
+    copy(value) {
+      this.$store.dispatch('account/copied')
+      this.$clipboard(value);
     },
     apiConnectionErrorHandler(statusCode, responseData) {
       if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
