@@ -29,6 +29,15 @@ const store = {
       updateContractCashbackRateTxAddress({ commit }, payload) {
         commit('updateContractCashbackRateTxAddress', payload)
       },
+      updateContractReceiveAddress({ commit }, payload) {
+        commit('updateContractReceiveAddress', payload)
+      },
+      updateContractReceiveAddressProcessing({ commit }, payload) {
+        commit('updateContractReceiveAddressProcessing', payload)
+      },
+      updateContractReceiveAddressTxAddress({ commit }, payload) {
+        commit('updateContractReceiveAddressTxAddress', payload)
+      },
       updateContractsLoaded({ commit }, payload) {
         commit('updateContractsLoaded', payload)
       },
@@ -57,6 +66,15 @@ const store = {
       },
       updateContractCashbackRateTxAddress(state, payload) {
         state.contracts[payload.chainId].cashbackRateTxAddress = payload.cashbackRateTxAddress
+      },
+      updateContractReceiveAddress(state, payload) {
+        state.contracts[payload.chainId].receiveAddress = payload.receiveAddress
+      },
+      updateContractReceiveAddressProcessing(state, payload) {
+        state.contracts[payload.chainId].receiveAddressProcessing = payload.receiveAddressProcessing
+      },
+      updateContractReceiveAddressTxAddress(state, payload) {
+        state.contracts[payload.chainId].receiveAddressTxAddress = payload.receiveAddressTxAddress
       },
       updateContractsLoaded(state, payload) {
         state.loaded = payload

@@ -514,9 +514,9 @@ const publishMerchantContract = function(
   }
 }
 
-const viewMerchantReceiveAddress = function(web3, contractAbi, contractAddress) {
+const viewMerchantReceiveAddress = async function(web3, contractAbi, contractAddress) {
   const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
-  return merchantContract.methods.viewMerchantReceiveWallet().call()
+  return await merchantContract.methods.viewMerchantReceiveWallet().call()
 }
 
 const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {

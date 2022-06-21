@@ -110,7 +110,7 @@
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="manage-contents_bottom_box">
-                          0x2AF8Ae03294d28D2098A7bc...
+                          {{ currentContractReceiveAddress(chainId) }}
                           <span>
                             <img src="@/assets/images/copy-address.svg">
                           </span>
@@ -118,6 +118,7 @@
                         <div
                           class="manage-contents_btn"
                           v-if="isPublishedContract(chainId)"
+                          @click="showContractReceiveAddressChangeModal(chainId)"
                         >
                           Change
                         </div>
@@ -381,6 +382,12 @@ export default {
     },
     currentContractAddress() {
       return this.chainId ? this.contracts[this.chainId].address : null
+    },
+    currentContractReceiveAddress() {
+      return (chainId) => {
+        const address = this.contracts[chainId].receiveAddress
+        return address ? (address.substring(0, 20) + '...') : null
+      }
     }
   },
   watch: {
@@ -475,6 +482,13 @@ export default {
         cashbackRate: rate
       }
       this.$store.dispatch('contract/updateContractCashbackRate', payload)
+    },
+    updateReceiveAddress(chainId, receiveAddress) {
+      const payload = {
+        chainId: chainId,
+        receiveAddress: receiveAddress
+      }
+      this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
     updateContractsLoaded(loaded) {
       this.$store.dispatch('contract/updateContractsLoaded', loaded)
@@ -605,6 +619,15 @@ export default {
         }
       })
     },
+    showContractReceiveAddressChangeModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-receive-address-change-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
+    },
     async getCurrentContractCashbackRate(chainId) {
       const contractAddress = this.contracts[chainId].address
       if(contractAddress == null) return
@@ -614,6 +637,16 @@ export default {
         contractAddress
       )
       this.updateCashbackRate(chainId, rate)
+    },
+    async getCurrentContractReceiveAddress(chainId) {
+      const contractAddress = this.contracts[chainId].address
+      if(contractAddress == null) return
+      const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      this.updateReceiveAddress(chainId, receiveAddress)
     }
   },
   created() {
@@ -631,6 +664,9 @@ export default {
         address: null,
         scanUrl: network.scanUrl,
         cashbackRate: null,
+        receiveAddress: null,
+        cashbackRateProcessing: false,
+        receiveAddressProcessing: false,
         icon: network.icon,
         processing: false,
         support: supportStatuses[network.chainId]
@@ -639,6 +675,7 @@ export default {
     this.$store.dispatch('contract/addContracts',contractSettings)
     this.getContracts().then(() => {
       this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
     })
     this.getPendingTransactions()
     this.getPaymentSettings()
