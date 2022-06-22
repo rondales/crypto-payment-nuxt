@@ -58,13 +58,22 @@
                       {{ contract.name }}
                     </p>
                   </div>
-                  <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
+                  <div class="manage-contents_box add-flex a-center j-between">
                     <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
                     >
                       Not support
+                    </div>
+                    <div 
+                      v-else-if="!contractLoaded"
+                      class="manage-contents_btn other inactive"
+                    >
+                      Loading
+                      <div class="contract-deploying-wrap active">
+                        <img class="spin" src="@/assets/images/loading.svg">
+                      </div>
                     </div>
                     <div
                       v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
@@ -312,7 +321,7 @@ export default {
         verified: false
       },
       monitoringInterval: null,
-      isConnect: true
+      contractLoaded: false
     }
   },
   computed: {
@@ -362,9 +371,6 @@ export default {
     },
     isAllowAed() {
       return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
-    },
-    contractLoaded() {
-      return this.$store.state.contract.loaded
     },
     contractUrl() {
       return (chainId) => {
@@ -515,9 +521,6 @@ export default {
       }
       this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
-    updateContractsLoaded(loaded) {
-      this.$store.dispatch('contract/updateContractsLoaded', loaded)
-    },
     getPendingTransactions() {
       this.apiGetPendingTransactions().then((response) => {
           if (response.data === undefined || response.data.length == 0) {
@@ -543,7 +546,7 @@ export default {
             this.updateContractAvailable(contract.network_type, contract.available)
           }
         })
-        this.updateContractsLoaded(true)
+        this.contractLoaded = true
       }).catch((error) => {
         console.log(error)
         this.apiConnectionErrorHandler(error.response.status, error.response.data)

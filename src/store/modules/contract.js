@@ -1,8 +1,7 @@
 const store = {
     namespaced: true,
     state: {
-      contracts: {},
-      loaded: false
+      contracts: {}
     },
     actions: {
       addContracts({ commit }, payload) {
@@ -31,10 +30,7 @@ const store = {
       },
       updateNewReceiveAddress({ commit }, payload) {
         commit('updateNewReceiveAddress', payload)
-      },
-      updateContractsLoaded({ commit }, payload) {
-        commit('updateContractsLoaded', payload)
-      },
+      }
     },
     mutations: {
       addContracts(state, payload) {
@@ -66,10 +62,7 @@ const store = {
       },
       updateNewReceiveAddress(state, payload) {
         state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
-      },
-      updateContractsLoaded(state, payload) {
-        state.loaded = payload
-      },
+      }
     }
   }
   
