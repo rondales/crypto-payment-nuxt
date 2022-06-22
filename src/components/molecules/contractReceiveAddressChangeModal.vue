@@ -201,7 +201,7 @@ export default {
       return this.riskAgreed
     },
     isFormDataConfirmed() {
-      return this.isContractAddress != null && this.networkConfirmed
+      return this.newReceiveAddress != null && this.isContractAddress != null && this.networkConfirmed
     },
     isReloadSpinning() {
       return this.reloadSpinning
