@@ -235,15 +235,16 @@ export default {
     validateCashbackRate(rate) {
       return rate.match(/^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$/) != null;
     },
-    checkCashbackRateFormat(rate) {
-      if(this.validateCashbackRate(rate)) {
+    checkCashbackRateFormat() {
+      if(this.newCashbackRate && this.validateCashbackRate(this.newCashbackRate)) {
         this.validCashbackRate = true
       } else {
         this.validCashbackRate = false
       }
     },
     changePageToConfirmationState() {
-      if(this.validateCashbackRate(this.newCashbackRate)){
+      this.checkCashbackRateFormat()
+      if(this.validCashbackRate){
         this.pageState = this.pageStateList.confirmation
       }
     },
