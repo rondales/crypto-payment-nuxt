@@ -146,6 +146,8 @@ export default {
         successed: 4,
         failured: 5
       },
+      cashbackRateTxAddress: null,
+      cashbackRateProcessing: false,
       pageState: 1,
       reloadSpinning: false,
       newCashbackRate: null,
@@ -179,7 +181,7 @@ export default {
       return this.$store.state.contract.contracts[this.chainId]
     },
     isProcessing() {
-      return this.contractSetting.cashbackRateProcessing
+      return this.cashbackRateProcessing
     },
     isDetailState() {
       return this.pageState === this.pageStateList.detail
@@ -197,7 +199,7 @@ export default {
       return this.pageState === this.pageStateList.failured
     },
     transactionUrl() {
-      const transactionHash = this.contractSetting.cashbackRateTxAddress
+      const transactionHash = this.cashbackRateTxAddress
       const scanSiteUrl = NETWORKS[this.chainId].scanUrl
       if (transactionHash) {
         return `${scanSiteUrl}/tx/${transactionHash}`
@@ -206,10 +208,10 @@ export default {
       }
     },
     cashbackRate() {
-      return this.contractSetting.cashbackRate
+      return this.contractSetting.cashback.rate
     },
     isCashbackDefaultSetting() {
-      return this.contractSetting.cashbackRate == 0
+      return this.contractSetting.cashback.rate == 0
     },
     isWalletPending() {
       return this.$store.state.wallet.pending
@@ -248,30 +250,27 @@ export default {
     updateAcceptedStatus() {
         this.accepted = this.$refs.accepted.checked
     },
-    updateCashbackRate(chainId, rate) {
+    updateCashbackRate(chainId, cashback) {
       const payload = {
         chainId: chainId,
-        cashbackRate: rate
+        cashbackRate: cashback.rate,
+        lastModified: cashback.lastModified
       }
-      this.$store.dispatch('contract/updateContractCashbackRate', payload)
+      this.$store.dispatch('contract/updateContractCashback', payload)
     },
-    updateCashbackRateProcessing(chainId, cashbackRateProcessing) {
-      const payload = {
-        chainId: chainId,
-        cashbackRateProcessing: cashbackRateProcessing
-      }
-      this.$store.dispatch('contract/updateContractCashbackRateProcessing', payload)
-    },
-    updateContractCashbackRateTxAddress(chainId, cashbackRateTxAddress) {
-      const payload = {
-        chainId: chainId,
-        cashbackRateTxAddress: cashbackRateTxAddress
-      }
-      this.$store.dispatch('contract/updateContractCashbackRateTxAddress', payload)
+    async getCurrentContractCashbackRate(chainId) {
+      const contractAddress = this.contractSetting.address
+      if(contractAddress == null) return
+      const result = await this.$web3.viewCashBackPercent(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      return this.updateCashbackRate(chainId, result)
     },
     changeCashbackRate(chainId) {
       if (this.isProcessing) return
-      this.updateCashbackRateProcessing(chainId, true)
+      this.cashbackRateProcessing = true
       this.$web3.updateCashbackPercent(
         this.$store.state.web3.instance,
         MerchantContract.abi,
@@ -281,27 +280,31 @@ export default {
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
         this.$store.dispatch('wallet/updatePendingStatus', true)
-        this.updateContractCashbackRateTxAddress(chainId, hash)
+        this.cashbackRateTxAddress = hash
       }).then((receipt) => {
-        this.pageState = this.pageStateList.successed
-        const newCashbackRate = receipt.events['CashBackPercentageUpdated'].returnValues.newPercent / 100
-        this.updateCashbackRate(chainId, newCashbackRate)
-        this.updateCashbackRateProcessing(chainId, false)
+        if(receipt.status) {
+          this.getCurrentContractCashbackRate(chainId).then(() => {
+            this.pageState = this.pageStateList.successed
+          })
+        } else {
+          this.pageState = this.pageStateList.failured
+        }
+        this.cashbackRateProcessing = false
         this.$store.dispatch('wallet/updatePendingStatus', false)
       }).catch(() => {
         this.pageState = this.pageStateList.failured
-        this.updateCashbackRateProcessing(chainId, false)
+        this.cashbackRateProcessing = false
         this.$store.dispatch('wallet/updatePendingStatus', false)
       })
     },
     refresh() {
       if(this.isReloadSpinning) return
       this.reloadSpinning = true
-      const transactionHash = this.contractSetting.cashbackRateTxAddress
+      const transactionHash = this.cashbackRateTxAddress
       if(transactionHash != null) {
         this.$web3.monitoringTransaction(
           this.$store.state.web3.instance,
-          this.contractSetting.cashbackRateTxAddress
+          transactionHash
         ).then((receipt) => {
           if (receipt) {
             if (receipt.status) {

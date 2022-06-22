@@ -105,8 +105,8 @@
                 <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom">
                   <div class="manage-contents_bottom_item mb-2">
                     <div class="manage-contents_bottom_left">
-                      <p :class="{'add-check': isConnect}">
-                        Received address： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      <p>
+                        Received address： <span>Last Updated : {{ receiveAddressLastModified(chainId) }}</span>
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="manage-contents_bottom_box">
@@ -133,8 +133,8 @@
                   </div>
                   <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom_item">
                     <div class="manage-contents_bottom_left">
-                      <p :class="{'add-check': isConnect}">
-                        Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      <p>
+                        Cash back rate： <span>{{ cashbackLastModified(chainId) == 0 ? 'Default Setting' : `Last Updated : ${cashbackLastModified(chainId)}` }}</span>
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="add-flex a-center">
@@ -142,7 +142,7 @@
                             {{ contractCashBackInfo(chainId) }}%
                           </div>
                           <span class="manage-contents_bottom_dsc">
-                              of amount back to the payer
+                            of amount back to the payer
                           </span>
                         </div>
                         <div
@@ -374,19 +374,29 @@ export default {
     },
     contractCashBackInfo() {
       return (chainId) => {
-        return this.contracts[chainId].cashbackRate
+        return this.contracts[chainId].cashback.rate
+      }
+    },
+    cashbackLastModified() {
+      return (chainId) => {
+        return this.contracts[chainId].cashback.lastModified
       }
     },
     chainId() {
       return this.$store.state.web3.chainId
     },
     currentContractAddress() {
-      return this.chainId ? this.contracts[this.chainId].address : null
+      return this.chainId && this.contracts[this.chainId] ? this.contracts[this.chainId].address : null
     },
     currentContractReceiveAddress() {
       return (chainId) => {
-        const address = this.contracts[chainId].receiveAddress
+        const address = this.contracts[chainId].receiveAddress.address
         return address ? address : null
+      }
+    },
+    receiveAddressLastModified() {
+      return (chainId) => {
+        return this.contracts[chainId].receiveAddress.lastModified
       }
     }
   },
@@ -488,17 +498,20 @@ export default {
       }
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
-    updateCashbackRate(chainId, rate) {
+    updateCashbackRate(chainId, cashback) {
       const payload = {
         chainId: chainId,
-        cashbackRate: rate
+        cashbackRate: cashback.rate,
+        lastModified: cashback.lastModified
       }
-      this.$store.dispatch('contract/updateContractCashbackRate', payload)
+      this.$store.dispatch('contract/updateContractCashback', payload)
     },
     updateReceiveAddress(chainId, receiveAddress) {
       const payload = {
         chainId: chainId,
-        receiveAddress: receiveAddress
+        receiveAddress: receiveAddress.address,
+        isContract: receiveAddress.isContract,
+        lastModified: receiveAddress.lastModified
       }
       this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
@@ -647,12 +660,12 @@ export default {
     async getCurrentContractCashbackRate(chainId) {
       const contractAddress = this.contracts[chainId].address
       if(contractAddress == null) return
-      const rate = await this.$web3.viewCashBackPercent(
+      const result = await this.$web3.viewCashBackPercent(
         this.$store.state.web3.instance,
         MerchantContract.abi,
         contractAddress
       )
-      this.updateCashbackRate(chainId, rate)
+      this.updateCashbackRate(chainId, result)
     },
     async getCurrentContractReceiveAddress(chainId) {
       const contractAddress = this.contracts[chainId].address
@@ -679,10 +692,15 @@ export default {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
-        cashbackRate: null,
-        receiveAddress: null,
-        cashbackRateProcessing: false,
-        receiveAddressProcessing: false,
+        cashback: {
+          rate: null,
+          lastModified: null
+        },
+        receiveAddress: {
+          address: null,
+          isContract: null,
+          lastModified: null
+        },
         icon: network.icon,
         processing: false,
         support: supportStatuses[network.chainId]

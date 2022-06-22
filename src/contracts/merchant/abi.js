@@ -152,7 +152,7 @@ export default {
           "type": "bool"
         }
       ],
-      "name": "ReceiveWalletUpdated",
+      "name": "ReceiveAddressUpdated",
       "type": "event"
     },
     {
@@ -571,6 +571,19 @@ export default {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "isReceiveOnContract",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -779,9 +792,9 @@ export default {
     {
       "inputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint16",
           "name": "cashBack_",
-          "type": "uint256"
+          "type": "uint16"
         }
       ],
       "name": "updateCashBackPercent",
@@ -902,19 +915,6 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "merchantReceiveWallet_",
-          "type": "address"
-        }
-      ],
-      "name": "updateMerchantReceiveWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "merchantWallet_",
           "type": "address"
         }
@@ -941,11 +941,16 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "contractAddress_",
+          "name": "receiveAddress",
           "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
         }
       ],
-      "name": "updateReceiveContractAddress",
+      "name": "updateReceiveAddress",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1082,6 +1087,24 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewCashBackPercentWithTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "cashBackPercent",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastModified",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewDonationFee",
       "outputs": [
         {
@@ -1209,6 +1232,19 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewMerchantReceiveContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewMerchantReceiveWallet",
       "outputs": [
         {
@@ -1240,6 +1276,34 @@ export default {
         {
           "internalType": "uint256",
           "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReceiveAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastModified",
           "type": "uint256"
         }
       ],

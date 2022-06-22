@@ -17,26 +17,48 @@
       <figure>
         <img src="@/assets/images/receive-address.svg">
       </figure>
-      <p>Current： {{ isDefaultSetting ? "Default Setting" : "" }}</p>
-      <p>
+      <p class="margin-bottom-small">Current： {{ isDefaultSetting ? "Default Setting" : "" }}</p>
+      <p class="margin-bottom-small">
         {{ receiveAddress }}
       </p>
-      <p>
+      <p class="margin-bottom-small">
         <img src="@/assets/images/double-caret.svg">
       </p>
-      <p>
+      <p class="margin-bottom-small">
         Changed address
       </p>
-      <div class="box">
+      <div class="box margin-bottom-small">
         <input v-model="newReceiveAddress" placeholder="Enter address">
       </div>
-      <div class="invalid-address" v-if="!isValidAddress">Please enter valid address</div>
-      <p class="desc mt-2">
+      <div class="invalid-address" v-if="!isValidAddress">Please enter valid address.</div>
+      <p class="mt-2 align-left confirmation margin-bottom-small">Confirmation</p>
+      <p class="mt-2 align-left margin-bottom-small">① Is the address you entered the wallet address or the contract address?</p>
+      <div class="form-attribute form-container align-left margin-bottom-small">
+        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
+        <label for="wallet-address-type"> wallet address</label>
+      </div>
+      <div class="form-attribute form-container align-left margin-bottom-small">
+        <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
+        <label for="contract-address-type"> Contract address</label>
+      </div>
+      <p class="invalid-address margin-bottom-small" v-if="!validAddressType">Please select correct address type.</p>
+      <p class="mt-2 align-left margin-bottom-small">② Are you using the correct address for the following network? 
+        If correct, check the box.
+      </p>
+      <div class="align-left margin-bottom-small">
+        <img class="network-icon" :src="networkIcon">
+        <span class="network-name">{{ networkName }}</span>
+        <div class="checkbox-container network-confirm mt-2 margin-bottom-small">
+          <input id="accept" type="checkbox" ref="networkConfirm" @click="updateNetworkConfirmedStatus">
+          <label for="accept">Yes. Correct.</label>
+        </div>
+      </div>
+      <p class="mt-2 align-left margin-bottom-small">
         Please set the changed EVM (Ethereum Virtual Machine) compatible address at your own risk. 
         Please be sure to set this address at your own risk. 
         If you enter an incorrect address and lose your funds, we will not be held responsible.
       </p>
-      <button class="btn __g __l mb-0" @click="changePageToConfirmationState()">
+      <button class="btn __g __l mb-0" :class="{ inactive: !isFormDataConfirmed }" @click="changePageToConfirmationState()">
         Confirm
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
@@ -65,11 +87,11 @@
         addresses or malfunction of contract addresses created by the customer themselves. 
         Do you understand this risk?
       </p>
-      <div class="checkbox-container mt-2">
-        <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus">
+      <div class="checkbox-container align-left mt-2">
+        <input id="accept" type="checkbox" ref="riskAgreed" @click="updateRiskAgreedStatus">
         <label for="accept">I understand the risk and continue this address change.</label>
       </div>
-      <button class="btn __g __l mb-0" :class="{ inactive: !isAccepted }" @click="changeReceiveAddress(chainId)">
+      <button class="btn __g __l mb-0" :class="{ inactive: !isRiskAgreed }" @click="changeReceiveAddress(chainId)">
         Change address
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
@@ -144,7 +166,7 @@
 </template>
 
 <script>
-import { NETWORKS} from '@/constants'
+import { NETWORKS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
 
 export default {
@@ -161,8 +183,13 @@ export default {
       pageState: 1,
       reloadSpinning: false,
       newReceiveAddress: null,
-      accepted: false,
+      receiveAddressProcessing: false,
+      receiveAddressTxAddress: null,
+      networkConfirmed: false,
+      riskAgreed: false,
       validAddress: true,
+      validAddressType: true,
+      isContractAddress: null,
     }
   },
   computed: {
@@ -170,9 +197,12 @@ export default {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
-    isAccepted() {
-        return this.accepted
-      },
+    isRiskAgreed() {
+      return this.riskAgreed
+    },
+    isFormDataConfirmed() {
+      return this.isContractAddress != null && this.networkConfirmed
+    },
     isReloadSpinning() {
       return this.reloadSpinning
     },
@@ -184,6 +214,16 @@ export default {
         ? this.$store.state.modal.param
         : true
     },
+    networkName() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].name
+    },
+    networkIcon() {
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
+    },
     chainId() {
       return this.$store.state.modal.params.chainId
     },
@@ -191,7 +231,7 @@ export default {
       return this.$store.state.contract.contracts[this.chainId]
     },
     isProcessing() {
-      return this.contractSetting.receiveAddressProcessing
+      return this.receiveAddressProcessing
     },
     isDetailState() {
       return this.pageState === this.pageStateList.detail
@@ -209,7 +249,7 @@ export default {
       return this.pageState === this.pageStateList.failured
     },
     transactionUrl() {
-      const transactionHash = this.contractSetting.receiveAddressTxAddress
+      const transactionHash = this.receiveAddressTxAddress
       const scanSiteUrl = NETWORKS[this.chainId].scanUrl
       if (transactionHash) {
         return `${scanSiteUrl}/tx/${transactionHash}`
@@ -218,10 +258,10 @@ export default {
       }
     },
     receiveAddress() {
-      return this.contractSetting.receiveAddress
+      return this.contractSetting.receiveAddress.address
     },
     isDefaultSetting() {
-      return this.contractSetting.receiveAddress == this.$store.state.account.address
+      return this.contractSetting.receiveAddress.address == this.$store.state.account.address
     },
     isWalletPending() {
       return this.$store.state.wallet.pending
@@ -252,68 +292,80 @@ export default {
         this.validAddress = false
       }
     },
-    changePageToConfirmationState() {
-      if(this.validateAddress(this.newReceiveAddress)){
+    async checkAddressType(address) {
+      const isContractAddress = await this.$web3.isContractAddress(this.$store.state.web3.instance, address)
+      return this.validAddressType = this.isContractAddress === isContractAddress
+    },
+    async changePageToConfirmationState() {
+      if(!this.validateAddress(this.newReceiveAddress)) return
+      await this.checkAddressType(this.newReceiveAddress)
+      if(this.validAddressType){
         this.pageState = this.pageStateList.confirmation
       }
     },
-    updateAcceptedStatus() {
-        this.accepted = this.$refs.accepted.checked
+    updateNetworkConfirmedStatus() {
+      this.networkConfirmed = this.$refs.networkConfirm.checked
+    },
+    updateRiskAgreedStatus() {
+        this.riskAgreed = this.$refs.riskAgreed.checked
     },
     updateReceiveAddress(chainId, receiveAddress) {
       const payload = {
         chainId: chainId,
-        receiveAddress: receiveAddress
+        receiveAddress: receiveAddress.address,
+        isContract: receiveAddress.isContract,
+        lastModified: receiveAddress.lastModified
       }
       this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
-    updateReceiveAddressProcessing(chainId, receiveAddressProcessing) {
-      const payload = {
-        chainId: chainId,
-        receiveAddressProcessing: receiveAddressProcessing
-      }
-      this.$store.dispatch('contract/updateContractReceiveAddressProcessing', payload)
-    },
-    updateContractReceiveAddressTxAddress(chainId, receiveAddressTxAddress) {
-      const payload = {
-        chainId: chainId,
-        receiveAddressTxAddress: receiveAddressTxAddress
-      }
-      this.$store.dispatch('contract/updateContractReceiveAddressTxAddress', payload)
+    async getCurrentContractReceiveAddress(chainId) {
+      const contractAddress = this.contractSetting.address
+      if(contractAddress == null) return
+      const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      return this.updateReceiveAddress(chainId, receiveAddress)
     },
     changeReceiveAddress(chainId) {
       if (this.isProcessing) return
-      this.updateReceiveAddressProcessing(chainId, true)
+      this.receiveAddressProcessing = true
       this.$web3.updateMerchantReceiveAddress(
         this.$store.state.web3.instance,
         MerchantContract.abi,
         this.contractSetting.address,
         this.newReceiveAddress,
+        this.isContractAddress,
         this.$store.state.account.address
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
         this.$store.dispatch('wallet/updatePendingStatus', true)
-        this.updateContractReceiveAddressTxAddress(chainId, hash)
+        this.receiveAddressTxAddress = hash
       }).then((receipt) => {
-        this.pageState = this.pageStateList.successed
-        const newReceiveAddress = receipt.events['ReceiveWalletUpdated'].returnValues.newAddress
-        this.updateReceiveAddress(chainId, newReceiveAddress)
-        this.updateReceiveAddressProcessing(chainId, false)
+        if(receipt.status) {
+          this.getCurrentContractReceiveAddress(chainId).then(() => {
+            this.pageState = this.pageStateList.successed
+          })
+        } else {
+          this.pageState = this.pageStateList.failured
+        }
+        this.receiveAddressProcessing = false
         this.$store.dispatch('wallet/updatePendingStatus', false)
       }).catch(() => {
         this.pageState = this.pageStateList.failured
-        this.updateReceiveAddressProcessing(chainId, false)
+        this.receiveAddressProcessing = false
         this.$store.dispatch('wallet/updatePendingStatus', false)
       })
     },
     refresh() {
       if(this.isReloadSpinning) return
       this.reloadSpinning = true
-      const transactionHash = this.contractSetting.receiveAddressTxAddress
+      const transactionHash = this.receiveAddressTxAddress
       if(transactionHash != null) {
         this.$web3.monitoringTransaction(
           this.$store.state.web3.instance,
-          this.contractSetting.receiveAddressTxAddress
+          transactionHash
         ).then((receipt) => {
           if (receipt) {
             if (receipt.status) {
@@ -431,6 +483,31 @@ export default {
       font-weight: 100;
     }
   }
+  .confirmation::before {
+    content: "";
+    margin-right: 5px;
+    display: inline-block;
+    background: url(/assets/images/caution.svg) no-repeat center center;
+    background-size: contain;
+    vertical-align: middle;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .form-attribute {
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+    cursor: pointer;
+  }
+  .radio-button-type {
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+  }
+
+  .network-name {
+    margin-left: 15px;
+  }
   .close {
     position: absolute;
     width: 16px;
@@ -475,16 +552,16 @@ export default {
       margin-bottom: 32px;
     }
     p{
-      font-size: 15px;
+      font-size: 1.2rem;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     span{
       font-size: 13px;
       font-weight: 400;
     }
     @include media(pc) {
-      padding: 24px 24px 40px;
+      padding: 8px 24px 40px;
     }
     @include media(sp) {
       padding: 16px 12px 48px;
@@ -509,10 +586,14 @@ export default {
       padding: 0 32px 32px;
     }
   }
+
+  .margin-bottom-small {
+    margin-bottom: 13px !important;
+  }
   .desc {
     font-weight: 100 !important;
     font-size: 1.2rem !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
   }
   .box{
     font-weight: 300;
@@ -570,10 +651,14 @@ export default {
       }
     }
   }
+  .network-confirm {
+      display: inline-block;
+      left: 80px;
+    }
   .checkbox-container {
     position: relative;
-    font-weight: 100;
-    font-size: 1.4rem;
+    font-weight: 500;
+    font-size: 1.2rem;
     margin-bottom: 20px;
     input[type="checkbox"] {
         display: none;

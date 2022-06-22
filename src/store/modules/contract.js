@@ -20,23 +20,17 @@ const store = {
       updateContractAddress({ commit }, payload) {
         commit('updateContractAddress', payload)
       },
+      updateContractCashback({ commit }, payload) {
+        commit('updateContractCashback', payload)
+      },
       updateContractCashbackRate({ commit }, payload) {
         commit('updateContractCashbackRate', payload)
-      },
-      updateContractCashbackRateProcessing({ commit }, payload) {
-        commit('updateContractCashbackRateProcessing', payload)
-      },
-      updateContractCashbackRateTxAddress({ commit }, payload) {
-        commit('updateContractCashbackRateTxAddress', payload)
       },
       updateContractReceiveAddress({ commit }, payload) {
         commit('updateContractReceiveAddress', payload)
       },
-      updateContractReceiveAddressProcessing({ commit }, payload) {
-        commit('updateContractReceiveAddressProcessing', payload)
-      },
-      updateContractReceiveAddressTxAddress({ commit }, payload) {
-        commit('updateContractReceiveAddressTxAddress', payload)
+      updateNewReceiveAddress({ commit }, payload) {
+        commit('updateNewReceiveAddress', payload)
       },
       updateContractsLoaded({ commit }, payload) {
         commit('updateContractsLoaded', payload)
@@ -58,23 +52,20 @@ const store = {
       updateContractAddress(state, payload) {
         state.contracts[payload.chainId].address = payload.address
       },
+      updateContractCashback(state, payload) {
+        state.contracts[payload.chainId].cashback.rate = payload.cashbackRate
+        state.contracts[payload.chainId].cashback.lastModified = payload.lastModified
+      },
       updateContractCashbackRate(state, payload) {
-        state.contracts[payload.chainId].cashbackRate = payload.cashbackRate
-      },
-      updateContractCashbackRateProcessing(state, payload) {
-        state.contracts[payload.chainId].cashbackRateProcessing = payload.cashbackRateProcessing
-      },
-      updateContractCashbackRateTxAddress(state, payload) {
-        state.contracts[payload.chainId].cashbackRateTxAddress = payload.cashbackRateTxAddress
+        state.contracts[payload.chainId].cashback.rate = payload.cashbackRate
       },
       updateContractReceiveAddress(state, payload) {
-        state.contracts[payload.chainId].receiveAddress = payload.receiveAddress
+        state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
+        state.contracts[payload.chainId].receiveAddress.isContract = payload.isContract
+        state.contracts[payload.chainId].receiveAddress.lastModified = payload.lastModified
       },
-      updateContractReceiveAddressProcessing(state, payload) {
-        state.contracts[payload.chainId].receiveAddressProcessing = payload.receiveAddressProcessing
-      },
-      updateContractReceiveAddressTxAddress(state, payload) {
-        state.contracts[payload.chainId].receiveAddressTxAddress = payload.receiveAddressTxAddress
+      updateNewReceiveAddress(state, payload) {
+        state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
       },
       updateContractsLoaded(state, payload) {
         state.loaded = payload
