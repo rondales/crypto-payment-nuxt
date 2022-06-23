@@ -110,7 +110,7 @@
         Failed to update contract
       </p>
       <p class="desc mt-2">The transaction cannot succeed due to error:</p>
-      <div>
+      <div class="desc">
         <a class="payment-status_btn" v-if="transactionUrl" target="_blank" :href="transactionUrl">
           View on explorer
           <img src="@/assets/images/link-icon.svg" alt="">
