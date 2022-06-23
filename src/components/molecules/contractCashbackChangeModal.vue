@@ -17,13 +17,13 @@
       <figure>
         <img src="@/assets/images/cash-back.svg">
       </figure>
-      <p>
+      <p class="margin-bottom-small">
         Cash back rate：{{ isCashbackDefaultSetting ? 'Default Setting' : `${cashbackRate}%` }}
       </p>
-      <p>
+      <p class="margin-bottom-small">
         <img src="@/assets/images/double-caret.svg">
       </p>
-      <p>
+      <p class="margin-bottom-small">
         Changed rate
       </p>
       <div class="box"><input v-model="newCashbackRate" placeholder="0.00%"></div>
@@ -84,20 +84,20 @@
       <figure>
         <img src="@/assets/images/cash-back-success.svg" alt="Update Success">
       </figure>
-      <p>
+      <p class="margin-bottom-md">
         contract update Submitted
       </p>
-      <p class="desc mt-2">Current：Changed on {{ currentDate }}</p>
-      <p class="desc mt-2">Cash back rate 
-        <span class="changed-cashback-rate">{{ cashbackRate }}%</span> 
+      <p class="desc margin-bottom-md">Current：Changed on {{ currentDate }}</p>
+      <p class="desc margin-bottom-md">Cash back rate
+        <span class="changed-cashback-rate">{{ cashbackRate }}%</span>
         of amount back to the payer
       </p>
-      <p>
+      <div class="desc">
         <a class="payment-status_btn" target="_blank" :href="transactionUrl">
           View on explorer
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
-      </p>
+      </div>
       <button class="btn __m mb-0" @click="hideModal" >
         Close
       </button>
@@ -110,12 +110,12 @@
         Failed to update contract
       </p>
       <p class="desc mt-2">The transaction cannot succeed due to error:</p>
-      <p>
+      <div>
         <a class="payment-status_btn" v-if="transactionUrl" target="_blank" :href="transactionUrl">
           View on explorer
           <img src="@/assets/images/link-icon.svg" alt="">
         </a>
-      </p>
+      </div>
       <button class="btn __m mb-0" @click="hideModal" >
         Close
       </button>
@@ -558,12 +558,21 @@ export default {
   .changed-cashback-rate {
     font-size: 36px !important;
     color: #00FF3B;
+    margin-right: 5px;
+    margin-left: 5px;
   }
 
   .invalid-rate {
     font-weight: 100 !important;
     font-size: 1.2rem !important;
     color:#E5676C!important;
+  }
+  .margin-bottom-small {
+    margin-bottom: 13px !important;
+  }
+
+  .margin-bottom-md {
+    margin-bottom: 20px !important;
   }
   .checkbox-container {
     position: relative;

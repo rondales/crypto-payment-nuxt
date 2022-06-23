@@ -13,7 +13,7 @@
         Please read the Risk Disclaimer carefully and review the options below before proceeding.</p>
     </div>
     <div class="separate-line" v-if="isConfirmationState"></div>
-    <div class="body" v-if="isDetailState">
+    <div class="body detail-state-padding" v-if="isDetailState">
       <figure>
         <img src="@/assets/images/receive-address.svg">
       </figure>
@@ -66,16 +66,16 @@
       </button>
     </div>
     <div class="body" v-if="isConfirmationState">
-      <p>
+      <p class="margin-bottom-small">
         Current：Default Setting
       </p>
-      <p class="current-receive-address">
+      <p class="current-receive-address margin-bottom-small">
         {{ receiveAddress }}
       </p>
-      <p>
+      <p class="margin-bottom-small">
         <img src="@/assets/images/double-caret.svg">
       </p>
-      <p>
+      <p class="margin-bottom-small">
         Changed address
       </p>
       <p class="new-receive-address">
@@ -561,7 +561,7 @@ export default {
       font-weight: 400;
     }
     @include media(pc) {
-      padding: 8px 24px 40px;
+      padding: 24px 24px 40px;
     }
     @include media(sp) {
       padding: 16px 12px 48px;
@@ -575,6 +575,9 @@ export default {
         background: $gradation-double;
       }
     }
+  }
+  .detail-state-padding {
+    padding: 8px 24px 40px !important;
   }
   .footer {
     text-align: center;
@@ -629,7 +632,7 @@ export default {
     text-align: left !important;
   }
   .invalid-address {
-    font-weight: 100 !important;
+    font-weight: 400 !important;
     font-size: 1.2rem !important;
     color:#E5676C!important;
     text-align: left!important;;
@@ -700,5 +703,8 @@ export default {
       border-left: 3px solid;
       border-color:  #44d866;
     }
+  }
+  .network-icon {
+    transform: scale(0.75);
   }
 </style>

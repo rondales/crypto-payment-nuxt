@@ -59,7 +59,7 @@
                     </p>
                   </div>
                   <div class="manage-contents_box add-flex a-center j-between">
-                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copy(contractUrl(chainId))">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
@@ -600,9 +600,6 @@ export default {
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
       })
-    },
-    copyPaymentContractUrl(chainId) {
-      this.$clipboard(this.contractUrl(chainId))
     },
     copy(value) {
       this.$store.dispatch('account/copied')
