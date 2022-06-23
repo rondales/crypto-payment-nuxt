@@ -57,7 +57,6 @@ export default {
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
-          getEventLog: getEventLog,
           getTokenUnit: getTokenUnit,
         }
       }
@@ -519,17 +518,18 @@ const signWithPrivateKey = function(web3, address) {
   return web3.eth.personal.sign('Signature for login authentication', address)
 }
 
-const getEventLog = function(web3, eventName, eventParams, events) {
-  let result
-  const eventTopic = web3.utils.sha3(eventName)
-  for(let i = 0; i < events.length; i++) {
-    if(events[i].raw.topics[0] === eventTopic) {
-      result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
-      break
-    }
-  }
-  return result
-}
+// For later use
+// const getEventLog = function(web3, eventName, eventParams, events) {
+//   let result
+//   const eventTopic = web3.utils.sha3(eventName)
+//   for(let i = 0; i < events.length; i++) {
+//     if(events[i].raw.topics[0] === eventTopic) {
+//       result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
+//       break
+//     }
+//   }
+//   return result
+// }
 
 const getTokenUnit = function getTokenUnit(decimal) {
   const wei = (10 ** decimal).toString()

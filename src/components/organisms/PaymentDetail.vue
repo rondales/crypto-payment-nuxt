@@ -185,9 +185,7 @@ import {
   STATUS_PUBLISHED,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS,
-  MERCHANT_NEW_TRANSACTION,
-  MERCHANT_NEW_TRANSACTION_PARAM_LIST
+  STATUS_RESULT_SUCCESS
 } from '@/constants'
 import {
   BscTokens,
@@ -219,6 +217,7 @@ export default {
       expiredExchange: false,
       refundedTokenAmount: null,
       refundedFeeAmount: null,
+      cashBackAmount: null,
       contract: {
         address: null,
         abi: null
@@ -410,7 +409,8 @@ export default {
         params: {
           refundedTokenAmount: this.refundedTokenAmount,
           refundedFeeAmount: this.refundedFeeAmount,
-          refundedFeeSymbol: this.nativeTokenSymbol
+          refundedFeeSymbol: this.nativeTokenSymbol,
+          cashBackAmount: this.cashBackAmount
         }
       })
     }
@@ -545,24 +545,27 @@ export default {
         }
       }).then((txReceipt) => {
         this.$store.dispatch('wallet/updatePendingStatus', false)
-        const events = Object.values(txReceipt.events)
-        const result = this.getRefundInfo(events)
+        const newTransactionEvent = txReceipt.events['NewTransaction']
+        const result = this.getRefundInfo(newTransactionEvent)
         this.refundedTokenAmount = result.refundedTokenAmount
         this.refundedFeeAmount = result.refundedFeeAmount
+        this.cashBackAmount = result.cashBackAmount
       })
     },
-    getRefundInfo(events) {
-      const eventName = MERCHANT_NEW_TRANSACTION
-      const eventParams = MERCHANT_NEW_TRANSACTION_PARAM_LIST 
-      const result = this.$web3.getEventLog(this.$store.state.web3.instance, eventName, eventParams, events)
+    getRefundInfo(newTransactionEvent) {
+      console.log(newTransactionEvent)
       const tokenDecimalUnit = this.$store.state.payment.decimalUnit
       const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
-      const refundTokenInWei = result[6]
+      const refundTokenInWei = newTransactionEvent.returnValues.refTokBal
+      const refundFeeInWei = newTransactionEvent.returnValues.refFeeBal
+      const cashBackInWei = newTransactionEvent.returnValues.cashBack
       const refundedTokenAmount = this.$store.state.web3.instance.utils.fromWei(refundTokenInWei, tokenWeiUnit)
-      const refundedFeeAmount =  this.$store.state.web3.instance.utils.fromWei(result[7], 'ether')
+      const refundedFeeAmount =  this.$store.state.web3.instance.utils.fromWei(refundFeeInWei, 'ether')
+      const cashBackAmount = this.$store.state.web3.instance.utils.fromWei(cashBackInWei, tokenWeiUnit)
       return {
         refundedTokenAmount: refundedTokenAmount,
-        refundedFeeAmount: refundedFeeAmount
+        refundedFeeAmount: refundedFeeAmount,
+        cashBackAmount: cashBackAmount
       }
     },
     checkContractApproved() {
