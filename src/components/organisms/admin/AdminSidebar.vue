@@ -42,6 +42,11 @@
               </a>
             </li>
             <li @click="close()">
+              <router-link to="/admin/plugin" :class="{ inactive: isUnselectedReceiveToken }">
+                Plug in Store
+              </router-link>
+            </li>
+            <li @click="close()">
               <a
                 target="_blank"
                 href="https://slash-fi.gitbook.io/docs/support/help-center#developer-support"
