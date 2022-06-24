@@ -553,7 +553,6 @@ export default {
       })
     },
     getRefundInfo(newTransactionEvent) {
-      console.log(newTransactionEvent)
       const tokenDecimalUnit = this.$store.state.payment.decimalUnit
       const tokenWeiUnit = this.$web3.getTokenUnit(tokenDecimalUnit)
       const refundTokenInWei = newTransactionEvent.returnValues.refTokBal
