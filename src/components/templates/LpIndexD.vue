@@ -344,7 +344,7 @@ export default {
           },
           link3: {
             url: "/",
-            title: "Coming Soon",
+            title: "Launch June 30, 2022",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"
