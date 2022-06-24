@@ -49,7 +49,10 @@
                 class="manage-contents_item"
                 :class="{ created: contractLoaded && isPublishedContract(chainId) }"
               >
-                <div class="manage-contents_network add-flex a-center j-between">
+                <div
+                  class="manage-contents_network add-flex a-center j-between"
+                  :class="{ 'mb-2': isPublishedContract(chainId) }"
+                >
                   <div class="manage-contents_logo add-flex a-center">
                     <figure>
                       <img :src="contract.icon" :alt="contract.name">
@@ -106,6 +109,7 @@
                     </div>
                   </div>
                 </div>
+                <div v-if="isPublishedContract(chainId) && !isCurrentNetwork(chainId)" class="manage-contents_separate-line mb-3"></div>
                 <div
                   v-if="isPublishedContract(chainId)"
                   class="manage-contents_address-wrap"
@@ -120,6 +124,7 @@
                     {{ contractUrl(chainId) }}
                   </div>
                 </div>
+                <div  v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_separate-line mb-2"></div>
                 <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom">
                   <div class="manage-contents_bottom_item mb-2">
                     <div class="manage-contents_bottom_left">
@@ -777,6 +782,9 @@ export default {
           cursor: pointer;
         }
       }
+      &_separate-line {
+        border-bottom: 1px solid #78668D;
+      }
       &_item{
         background: #292536;
         margin-bottom: 32px;
@@ -848,12 +856,12 @@ export default {
         position: relative;
         &.separate {
           &_upper {
-            padding-top: 16px;
-            border-top: 1px solid #78668D;
+            padding-bottom: 1px;
           }
           &_bottom {
-            border-bottom: 1px solid #78668D;
-            margin-bottom: 16px;
+            margin-top: 5px;
+            padding-bottom: 1px;
+            margin-bottom: 5px;
           }
         }
         &.available{
