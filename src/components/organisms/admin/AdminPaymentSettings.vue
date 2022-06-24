@@ -106,7 +106,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="manage-contents_address-wrap" :class="{ available: contract.available, unavailable: !contract.available }" v-if="isPublishedContract(chainId)">
+                <div
+                  v-if="isPublishedContract(chainId)"
+                  class="manage-contents_address-wrap"
+                  :class="{
+                    available: contract.available,
+                    unavailable: !contract.available,
+                    separate_bottom: isCurrentNetwork(chainId),
+                    separate_upper: !isCurrentNetwork(chainId)
+                  }"
+                >
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
@@ -837,8 +846,16 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
-        border-bottom: 1px solid #78668D;
-        margin-bottom: 16px;
+        &.separate {
+          &_upper {
+            padding-top: 16px;
+            border-top: 1px solid #78668D;
+          }
+          &_bottom {
+            border-bottom: 1px solid #78668D;
+            margin-bottom: 16px;
+          }
+        }
         &.available{
           &::after{
             content: "";

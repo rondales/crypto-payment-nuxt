@@ -45,10 +45,10 @@
       <p class="mt-2 align-left margin-bottom-small">② Are you using the correct address for the following network? 
         If correct, check the box.
       </p>
-      <div class="align-left margin-bottom-small">
+      <div class="align-left margin-bottom-small add-flex a-center">
         <img class="network-icon" :src="networkIcon">
         <span class="network-name">{{ networkName }}</span>
-        <div class="checkbox-container network-confirm mt-2 margin-bottom-small">
+        <div class="checkbox-container network-confirm margin-bottom-small">
           <input id="accept" type="checkbox" ref="networkConfirm" @click="updateNetworkConfirmedStatus">
           <label for="accept">Yes. Correct.</label>
         </div>
@@ -91,7 +91,7 @@
         <input id="accept" type="checkbox" ref="riskAgreed" @click="updateRiskAgreedStatus">
         <label for="accept">I understand the risk and continue this address change.</label>
       </div>
-      <button class="btn __g __l mb-0" :class="{ inactive: !isRiskAgreed }" @click="changeReceiveAddress(chainId)">
+      <button class="btn __g __l mt-4 mb-0" :class="{ inactive: !isRiskAgreed }" @click="changeReceiveAddress(chainId)">
         Change address
         <div class="loading-wrap" :class="{active: isProcessing}">
           <img class="spin" src="@/assets/images/loading.svg">
@@ -660,6 +660,7 @@ export default {
     }
   .checkbox-container {
     position: relative;
+    top: 6px;
     font-weight: 500;
     font-size: 1.2rem;
     margin-bottom: 20px;
