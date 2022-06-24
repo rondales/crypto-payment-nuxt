@@ -283,7 +283,7 @@ export default {
       const chainId = this.$store.state.web3.chainId
       const symbol = this.$store.state.payment.token.symbol
       const tokens =
-        NETWORKS[1].chainId === chainId || NETWORKS[3].chainId === chainId
+        NETWORKS[1].chainId === chainId || NETWORKS[5].chainId === chainId
         ? EthereumTokens
         : NETWORKS[56].chainId === chainId || NETWORKS[97].chainId === chainId
         ? BscTokens
@@ -310,7 +310,7 @@ export default {
       let route = ''
       switch(chainId) {
         case NETWORKS[1].chainId:
-        case NETWORKS[3].chainId:
+        case NETWORKS[5].chainId:
           route = nativeTokenSymbols.includes(this.userTokenSymbol)
             ? `WETH ⇨ ${this.paymentRequestSymbol}`
             : `${this.userTokenSymbol} ⇨ WETH ⇨ ${this.paymentRequestSymbol}`
@@ -370,7 +370,7 @@ export default {
       let receiveToken
       switch(this.$store.state.web3.chainId) {
         case NETWORKS[1].chainId:
-        case NETWORKS[3].chainId:
+        case NETWORKS[5].chainId:
           receiveToken = EthereumReceiveTokens[this.paymentRequestSymbol]
           break
         case NETWORKS[56].chainId:

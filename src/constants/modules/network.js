@@ -9,13 +9,13 @@ export const NETWORKS = {
     icon: require('@/assets/images/network/ethereum.svg'),
     type: 2
   },
-  3: {
-    name: 'Ethereum Ropsten',
+  5: {
+    name: 'Ethereum Goerli',
     alias: 'Ethereum',
     symbol: 'ETH',
-    chainId: 3,
-    rpcUrl: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-    scanUrl: 'https://ropsten.etherscan.io',
+    chainId: 5,
+    rpcUrl: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    scanUrl: 'https://goerli.etherscan.io',
     icon: require('@/assets/images/network/ethereum.svg'),
     type: null
   },

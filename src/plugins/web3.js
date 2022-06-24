@@ -8,7 +8,7 @@ import {
   NETWORKS,
   DEFAULT_SCAN_BLOCK_NUMBER_LIMIT,
   ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
-  ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_GOERLI_SCAN_BLOCK_NUMBER_LIMIT,
   BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
   BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
   MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
@@ -616,7 +616,7 @@ const getTokenUnit = function getTokenUnit(decimal) {
 function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
-    case NETWORKS[3].chainId:
+    case NETWORKS[5].chainId:
       return EthereumTokens
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
@@ -644,8 +644,8 @@ function getScanBlockNumberMaxLimit(chainId) {
   switch(parseInt(chainId, 10)) {
     case NETWORKS[1].chainId:
       return ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
-    case NETWORKS[3].chainId:
-      return ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[5].chainId:
+      return ETEHREUM_GOERLI_SCAN_BLOCK_NUMBER_LIMIT
     case NETWORKS[56].chainId:
       return BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
     case NETWORKS[97].chainId:
