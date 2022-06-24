@@ -59,6 +59,11 @@ export default {
           signWithPrivateKey: signWithPrivateKey,
           getEventLog: getEventLog,
           getTokenUnit: getTokenUnit,
+          viewMerchantReceiveAddress: viewMerchantReceiveAddress,
+          viewCashBackPercent: viewCashBackPercent,
+          isContractAddress: isContractAddress,
+          updateMerchantReceiveAddress: updateMerchantReceiveAddress,
+          updateCashbackPercent: updateCashbackPercent
         }
       }
     })
@@ -508,6 +513,74 @@ const publishMerchantContract = function(
   } catch(error) {
     throw new Error(error)
   }
+}
+
+const viewMerchantReceiveAddress = async function(web3, contractAbi, contractAddress) {
+  let receiveAddress = {}
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const result = await merchantContract.methods.viewReceiveAddress().call()
+  receiveAddress.isContract = result.isContract
+  if(result.isContract) {
+    receiveAddress.address = result.contractAddress
+  } else {
+    receiveAddress.address = result.walletAddress
+  }
+  const lastModifiedTime = new Date(result.lastModified * 1000)
+  receiveAddress.lastModified = lastModifiedTime.getDate() 
+  + '/' + (lastModifiedTime.getMonth() + 1) 
+  + '/' + lastModifiedTime.getFullYear()
+
+  return receiveAddress
+}
+
+const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {
+  let cashback = {}
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const result = await merchantContract.methods.viewCashBackPercentWithTime().call()
+  
+  cashback.rate = parseInt(result.cashBackPercent, 10) / 100
+  if(result.lastModified == 0) {
+    cashback.lastModified = 0
+  } else {
+    const lastModifiedTime = new Date(result.lastModified * 1000)
+    cashback.lastModified = lastModifiedTime.getDate() 
+      + '/' + (lastModifiedTime.getMonth() + 1) 
+      + '/' + lastModifiedTime.getFullYear()
+  }
+  
+  return cashback
+}
+const isContractAddress = async function(web3, address) {
+  const code = await web3.eth.getCode(address)
+  return code == '0x' ? false : true
+}
+
+const updateMerchantReceiveAddress = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  receiveAddress,
+  isContractAddress,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  return merchantContract.methods.updateReceiveAddress(receiveAddress,isContractAddress).send({
+    from: merchantWalletAddress
+  })
+}
+
+const updateCashbackPercent = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  cashbackValue,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const cashbackPercent = parseInt((parseFloat(cashbackValue) * 100).toFixed(2), 10)
+  return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
+    from: merchantWalletAddress
+  })
 }
 
 const deleteMerchantContract = function() {

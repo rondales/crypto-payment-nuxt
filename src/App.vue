@@ -32,7 +32,9 @@ export default {
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
     warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal'),
-    contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal')
+    contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal'),
+    contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
+    contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
   },
   computed: {
     classes() {
