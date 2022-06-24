@@ -98,6 +98,12 @@ export default {
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "cashBack",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "timeStamp",
           "type": "uint256"
         }
@@ -175,51 +181,6 @@ export default {
       "type": "event"
     },
     {
-      "inputs": [],
-      "name": "MAX_TRANSACTION_FEE",
-      "outputs": [
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "_totalTxCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "_userTxCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -274,222 +235,6 @@ export default {
       "name": "excludeFromRecTokenWhitelist",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "payingToken_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amountOut_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address[]",
-          "name": "path_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "getAmountIn",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "payingToken_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amountIn_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address[]",
-          "name": "path_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "getAmountOut",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amountOut_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address[]",
-          "name": "feePath_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "getFeeAmount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes16",
-          "name": "txNumber_",
-          "type": "bytes16"
-        }
-      ],
-      "name": "getTxDetailById",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes16",
-              "name": "txId",
-              "type": "bytes16"
-            },
-            {
-              "internalType": "address",
-              "name": "userAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "payingToken",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "receiveToken",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amountIn",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amountOut",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "refTokBal",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "refFeeBal",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "cashBack",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "timeStamp",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct Merchant.TransctionInfo",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "userAddress_",
-          "type": "address"
-        }
-      ],
-      "name": "getUserAllTxDetails",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes16[]",
-          "name": "",
-          "type": "bytes16[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "userAddress_",
-          "type": "address"
-        }
-      ],
-      "name": "getUserTxCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -552,87 +297,10 @@ export default {
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token_",
-          "type": "address"
-        }
-      ],
-      "name": "isBlacklistedFromPayToken",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "isReceiveOnContract",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token_",
-          "type": "address"
-        }
-      ],
-      "name": "isWhitelistedForRecToken",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "pause",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "paused",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -731,35 +399,6 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "userAddress_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "offset_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "length_",
-          "type": "uint256"
-        }
-      ],
-      "name": "transactionPagination",
-      "outputs": [
-        {
-          "internalType": "bytes16[]",
-          "name": "txIds",
-          "type": "bytes16[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "newOwner",
           "type": "address"
         }
@@ -770,8 +409,25 @@ export default {
       "type": "function"
     },
     {
+      "stateMutability": "payable",
+      "type": "receive"
+    },
+    {
       "inputs": [],
       "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "affiliatePool_",
+          "type": "address"
+        }
+      ],
+      "name": "updateaffiliatePool",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1034,16 +690,370 @@ export default {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "_totalTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
-          "name": "affiliatePool_",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "updateaffiliatePool",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "_userTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountOut_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "getAmountIn",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountIn_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "getAmountOut",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amountOut_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "feePath_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "getFeeAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes16",
+          "name": "txNumber_",
+          "type": "bytes16"
+        }
+      ],
+      "name": "getTxDetailById",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes16",
+              "name": "txId",
+              "type": "bytes16"
+            },
+            {
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "payingToken",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiveToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountIn",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountOut",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "refTokBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "refFeeBal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cashBack",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Merchant.TransctionInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "getUserAllTxDetails",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes16[]",
+          "name": "",
+          "type": "bytes16[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "getUserTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "isBlacklistedFromPayToken",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isReceiveOnContract",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "isWhitelistedForRecToken",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_TRANSACTION_FEE",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "offset_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length_",
+          "type": "uint256"
+        }
+      ],
+      "name": "transactionPagination",
+      "outputs": [
+        {
+          "internalType": "bytes16[]",
+          "name": "txIds",
+          "type": "bytes16[]"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1413,10 +1423,6 @@ export default {
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "stateMutability": "payable",
-      "type": "receive"
     }
   ]
 }
