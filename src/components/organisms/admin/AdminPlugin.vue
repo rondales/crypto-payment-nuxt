@@ -201,6 +201,9 @@ export default {
     background: #292536;
     padding: 32px 16px 24px 16px;
     border-radius: 8px;
+    @include media(sp) {
+      width: 100%;
+    }
     &:nth-child(-n + 3){
       margin-bottom: 32px !important;
     }
@@ -261,12 +264,17 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        flex-wrap: wrap;
         margin-bottom: 24px;
       }
       .details-main-left{
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        @include media(sp) {
+          width: 100%;
+          margin-bottom: 16px;
+        }
         dl{
           margin-left: 32px;
           dt{
