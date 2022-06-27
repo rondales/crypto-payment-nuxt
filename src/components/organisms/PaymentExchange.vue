@@ -131,7 +131,7 @@
 
 <script>
 import { Decimal as BigJs } from 'decimal.js'
-import { NETWORKS } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -197,6 +197,9 @@ export default {
     chainId() {
       return this.$store.state.web3.chainId
     },
+    providerType() {
+      return this.$store.state.web3.provider
+    },
     userAccountAddress() {
       return this.$store.state.account.address
     },
@@ -213,7 +216,7 @@ export default {
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalacheReceiveTokens
       } else {
-        throw new Error('The receive token list could not be obtained due to unsupported network.')
+        return {}
       }
     },
     defaultPaymentTokens() {
@@ -226,7 +229,7 @@ export default {
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalancheDefaultTokens
       } else {
-        throw new Error('The default token list could not be obtained due to an unsupported network.')
+        return {}
       }
     },
     merchantReceiveAmount() {
@@ -236,9 +239,10 @@ export default {
       return this.$store.state.payment.symbol
     },
     merchantReceiveTokenIcon() {
-      return this.merchantReceiveTokens[
-        this.merchantReceiveTokenSymbol
-      ].icon
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveTokenSymbol in tokens
+        ? tokens[this.merchantReceiveTokenSymbol].icon
+        : require('@/assets/images/symbol/unknown.svg')
     },
     userSelectedToken() {
       return this.$store.state.payment.token
@@ -271,6 +275,19 @@ export default {
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].icon
         : require('@/assets/images/symbol/unknown.svg')
+    },
+    isEmptyWeb3Instance() {
+      return this.web3Instance === null
+    },
+    isUseMetaMaskProvider() {
+      return this.providerType === METAMASK
+    },
+    isUseWalletConnectProvider() {
+      return this.providerType === WALLET_CONNECT
+    },
+    isNeedRestoreWeb3Connection() {
+      return this.isEmptyWeb3Instance
+        && (this.isUseMetaMaskProvider || this.isUseWalletConnectProvider)
     },
     isCurrentNetworkEthereum() {
       return this.chainId === NETWORKS[1].chainId
@@ -322,7 +339,7 @@ export default {
       return this.updating
     },
     isWalletConfirming() {
-      return this.$store.state.payment.walletPending
+      return this.$store.state.wallet.pending
     },
     isDarkTheme() {
       return this.$store.state.theme === 'dark'
@@ -397,7 +414,7 @@ export default {
         })
     },
     handleTokenApprove() {
-      this.$store.dispatch('payment/updateWalletPending', true)
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendTokenApproveTransactoinToBlockChain()
         .then((receipt) => {
           if (!receipt.status) {
@@ -408,10 +425,10 @@ export default {
           this.userSelectedTokenAllowance = this.$web3.convertFromWei(
             this.web3Instance, approvedAmountInWei, tokenWeiUnit
           )
-          this.$store.dispatch('payment/updateWalletPending', false)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
         })
         .catch((error) => {
-          this.$store.dispatch('payment/updateWalletPending', false)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
           if ('code' in error && error.code === 4001) {
             return
           }
@@ -442,20 +459,27 @@ export default {
       this.$router.push({ path: `/payment/token/${this.paymentToken}` })
     },
     handleAccountChangedEvent(address) {
-      this.$store.dispatch('account/updateAddress', address)
+      this.$store.dispatch('account/updateAddress', address[0])
       this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+    }
+  },
+  created() {
+    if (this.isNeedRestoreWeb3Connection) {
+      this.$router.push({
+        name: 'wallets',
+        params: { token: this.paymentToken }
+      })
     }
   },
   mounted(){
     this.$parent.loading = true
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
 
-    this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
-      this.handleChainChangedEvent(chainId)
-    })
-    this.web3Instance.currentProvider.on('accountsChanged', (address) => {
-      this.handleAccountChangedEvent(address)
-    })
+    if (this.isNeedRestoreWeb3Connection) {
+      return
+    }
+
+    this.web3Instance.currentProvider.on('chainChanged', this.handleChainChangedEvent)
+    this.web3Instance.currentProvider.on('accountsChanged', this.handleAccountChangedEvent)
 
     this.apiGetContract()
       .then((response) => {
@@ -488,8 +512,19 @@ export default {
   beforeDestroy() {
     this.$parent.loading = false
     clearTimeout(this.exchangeDataExpireTimer)
-    this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
-    this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$parent.loading = false
+    clearTimeout(this.exchangeDataExpireTimer)
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+    next()
   }
 }
 </script>

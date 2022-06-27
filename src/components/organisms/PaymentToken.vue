@@ -122,7 +122,7 @@
 
 <script>
 import NumberFormat from 'number-format.js'
-import { NETWORKS } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
@@ -173,6 +173,9 @@ export default {
     chainId() {
       return this.$store.state.web3.chainId
     },
+    providerType() {
+      return this.$store.state.web3.provider
+    },
     userAccountAddress() {
       return this.$store.state.account.address
     },
@@ -209,7 +212,7 @@ export default {
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalacheReceiveTokens
       } else {
-        throw new Error('The receive token list could not be obtained due to unsupported network.')
+        return {}
       }
     },
     merchantReceiveAmount() {
@@ -219,9 +222,23 @@ export default {
       return this.$store.state.payment.symbol
     },
     merchantReceiveTokenIcon() {
-      return this.merchantReceiveTokens[
-        this.merchantReceiveTokenSymbol
-      ].icon
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveTokenSymbol in tokens
+        ? tokens[this.merchantReceiveTokenSymbol].icon
+        : require('@/assets/images/symbol/unknown.svg')
+    },
+    isEmptyWeb3Instance() {
+      return this.web3Instance === null
+    },
+    isUseMetaMaskProvider() {
+      return this.providerType === METAMASK
+    },
+    isUseWalletConnectProvider() {
+      return this.providerType === WALLET_CONNECT
+    },
+    isNeedRestoreWeb3Connection() {
+      return this.isEmptyWeb3Instance
+        && (this.isUseMetaMaskProvider || this.isUseWalletConnectProvider)
     },
     isCurrentNetworkEthereum() {
       return this.chainId === NETWORKS[1].chainId
@@ -416,11 +433,13 @@ export default {
       })
     },
     handleAccountChangedEvent() {
+      this.$parent.loading = true
       this.getAccountDataFromBlockChain()
         .then((account) => {
-          this.$store.dispatch('account/update', account)
-          this.getDefaultTokens()
+          return this.$store.dispatch('account/update', account)
         })
+        .then(this.getDefaultTokens)
+        .then(() => { this.$parent.loading = false })
     },
     handleChainChangedEvent(chainId) {
       chainId = (this.web3Instance.utils.isHex(chainId))
@@ -447,16 +466,23 @@ export default {
       }
     }
   },
+  created() {
+    if (this.isNeedRestoreWeb3Connection) {
+      this.$router.push({
+        name: 'wallets',
+        params: { token: this.paymentToken }
+      })
+    }
+  },
   mounted() {
     this.$parent.loading = true
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
 
-    this.web3Instance.currentProvider.on('accountsChanged', (account) => {
-      this.handleAccountChangedEvent(account)
-    })
-    this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
-      this.handleChainChangedEvent(chainId)
-    })
+    if (this.isNeedRestoreWeb3Connection) {
+      return
+    }
+
+    this.web3Instance.currentProvider.on('accountsChanged', this.handleAccountChangedEvent)
+    this.web3Instance.currentProvider.on('chainChanged', this.handleChainChangedEvent)
 
     if (this.isAvailableCurrentNetwork) {
       const funcList = [
@@ -470,8 +496,18 @@ export default {
   },
   beforeDestroy() {
     this.$parent.loading = false
-    this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
-    this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$parent.loading = false
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+    next()
   }
 }
 </script>

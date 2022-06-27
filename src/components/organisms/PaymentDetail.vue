@@ -137,7 +137,12 @@
 </template>
 
 <script>
-import { NETWORKS } from '@/constants'
+import {
+  METAMASK,
+  WALLET_CONNECT,
+  NETWORKS,
+  STATUS_PROCESSING
+} from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -201,6 +206,9 @@ export default {
     web3Instance() {
       return this.$store.state.web3.instance
     },
+    providerType() {
+      return this.$store.state.web3.provider
+    },
     chainId() {
       return this.$store.state.web3.chainId
     },
@@ -217,7 +225,7 @@ export default {
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalacheReceiveTokens
       } else {
-        throw new Error('The receive token list could not be obtained due to unsupported network.')
+        return {}
       }
     },
     defaultPaymentTokens() {
@@ -230,11 +238,13 @@ export default {
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalancheDefaultTokens
       } else {
-        throw new Error('The default token list could not be obtained due to an unsupported network.')
+        return {}
       }
     },
     nativeTokenSymbol() {
-      return NETWORKS[this.$store.state.web3.chainId].symbol
+      return this.chainId !== null 
+        ? NETWORKS[this.chainId].symbol
+        : ''
     },
     merchantReceiveAmount() {
       return this.$store.state.payment.amount
@@ -246,9 +256,10 @@ export default {
       return this.$store.state.payment.symbol
     },
     merchantReceiveTokenIcon() {
-      return this.MERCHNAT_RECEIVE_TOKEN_ICONS[
-        this.merchantReceiveTokenSymbol
-      ]
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveTokenSymbol in tokens
+        ? tokens[this.merchantReceiveTokenSymbol].icon
+        : require('@/assets/images/symbol/unknown.svg')
     },
     userSelectedToken() {
       return this.$store.state.payment.token
@@ -291,11 +302,24 @@ export default {
           ? `${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
           : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
       } else {
-        throw new Error('Trade route could not be determined due to unsupported network.')
+        return ''
       }
     },
     platformFee() {
       return this.$store.state.payment.fee
+    },
+    isEmptyWeb3Instance() {
+      return this.web3Instance === null
+    },
+    isUseMetaMaskProvider() {
+      return this.providerType === METAMASK
+    },
+    isUseWalletConnectProvider() {
+      return this.providerType === WALLET_CONNECT
+    },
+    isNeedRestoreWeb3Connection() {
+      return this.isEmptyWeb3Instance
+        && (this.isUseMetaMaskProvider || this.isUseWalletConnectProvider)
     },
     isCurrentNetworkEthereum() {
       return this.chainId === NETWORKS[1].chainId
@@ -314,8 +338,10 @@ export default {
         || this.chainId === NETWORKS[43113].chainId
     },
     isDifferentToken() {
-      const receiveToken = this.merchantReceiveTokens[this.merchantReceiveTokenSymbol]
-      const receiveTokenAddress = receiveToken.address.toLowerCase()
+      const receiveTokens = this.merchantReceiveTokens
+      const receiveTokenAddress = this.merchantReceiveTokenSymbol in receiveTokens
+        ? receiveTokens[this.merchantReceiveTokenSymbol].address.toLowerCase()
+        : ''
       const paymentTokenAddress = this.userSelectedTokenAddress
         ? this.userSelectedTokenAddress.toLowerCase()
         : this.userSelectedTokenAddress
@@ -335,7 +361,7 @@ export default {
       return this.updating
     },
     isWalletConfirming() {
-      return this.$store.state.payment.walletPending
+      return this.$store.state.wallet.pending
     },
     isDarkTheme() {
       return this.$store.state.theme === 'dark'
@@ -413,40 +439,47 @@ export default {
       )
     },
     executePayment() {
-      this.$store.dispatch('payment/updateWalletPending', true)
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .on('transactionHash', (txHash) => {
+          this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
           this.apiUpdateTransaction(txHash).then(() => {
-            this.$router.replace({
+            this.$router.push({
               name: 'result',
               params: { token: this.paymentToken }
             })
-          })
+          }).catch((error) => {console.log(error.data)})
         })
         .on('error', () => {
-          this.$store.dispatch('payment/updateWalletPending', false)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
         })
     },
     handleChainChangedEvent(chainId) {
-      chainId = (this.web3.utils.isHex(chainId))
-        ? this.web3.utils.hexToNumber(chainId)
+      chainId = (this.web3Instance.utils.isHex(chainId))
+        ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId
       this.$store.dispatch('web3/updateChainId', chainId)
       this.$router.push({ path: `/payment/token/${this.paymentToken}` })
     },
     handleAccountChangedEvent(address) {
-      this.$store.dispatch('account/updateAddress', address)
+      this.$store.dispatch('account/updateAddress', address[0])
       this.$router.push({ path: `/payment/token/${this.paymentToken}` })
     },
   },
+  created() {
+    if (this.isNeedRestoreWeb3Connection) {
+      this.$router.push({
+        name: 'wallets',
+        params: { token: this.paymentToken }
+      })
+    }
+  },
   mounted(){
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
-    this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
-      this.handleChainChangedEvent(chainId)
-    })
-    this.web3Instance.currentProvider.on('accountChanged', (address) => {
-      this.handleAccountChangedEvent(address)
-    })
+    if (this.isNeedRestoreWeb3Connection) {
+      return
+    }
+    this.web3Instance.currentProvider.on('chainChanged', this.handleChainChangedEvent)
+    this.web3Instance.currentProvider.on('accountsChanged', this.handleAccountChangedEvent)
     this.apiGetContract().then((response) => {
       this.contract.abi = JSON.parse(response.data.args)
       this.contract.address = response.data.address
@@ -455,8 +488,18 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.exchangeDataExpireTimer)
-    this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
-    this.web3Instance.currentProvider.removeListener('accountChanged', this.handleAccountChangedEvent)
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$parent.loading = false
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+    next()
   }
 }
 </script>
