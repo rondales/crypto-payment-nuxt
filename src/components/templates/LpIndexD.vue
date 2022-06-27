@@ -337,14 +337,14 @@ export default {
           },
           link2: {
             url: "/",
-            title: "Launch July 4, 2022",
+            title: "Coming Soon",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"
           },
           link3: {
             url: "/",
-            title: "Launch June 27, 2022",
+            title: "Launch June 30, 2022",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"

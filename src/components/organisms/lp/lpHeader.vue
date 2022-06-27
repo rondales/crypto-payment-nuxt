@@ -158,14 +158,14 @@ export default {
         status: true,
       },
       cvLink2: {
-        title: "Launch July 4, 2022",
+        title: "Coming Soon",
         icon: "",
         url: "",
         func: "enterApp",
         status: true,
       },
       cvLink3: {
-        title:  "Launch June 27, 2022",
+        title:  "Launch June 30, 2022",
         icon: "",
         url: "",
         func: "enterApp",

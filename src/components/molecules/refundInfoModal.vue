@@ -13,6 +13,10 @@
       </p>
     </div>
     <div class="body add-flex j-between">
+      <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
+          <h3>Cashback amount</h3>
+          <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
         <div v-if="refundedTokenAmount" class="refund-item mt-2 mb-3">
           <h3>Token refunded amount</h3>
           <p>{{ refundedTokenAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
@@ -55,6 +59,9 @@ export default {
     },
     refundedFeeSymbol() {
       return this.$store.state.modal.params.refundedFeeSymbol
+    },
+    cashBackAmount() {
+      return this.$store.state.modal.params.cashBackAmount
     }
   },
   methods: {
