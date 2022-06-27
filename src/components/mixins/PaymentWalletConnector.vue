@@ -3,6 +3,20 @@ import { METAMASK, WALLET_CONNECT } from '@/constants'
 
 export default {
   name: 'PaymentWalletConnector',
+  computed: {
+    $_paymentWalletConnector_API_BASE_URL() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
+    $_paymentWalletConnector_paymentToken() {
+      return this.$route.params.token
+    },
+    $_paymentWalletConnector_deviceId() {
+      return this.$store.state.payment.deviceId
+    },
+    $_paymentWalletConnector_isSetDeviceId() {
+      return this.$_paymentWalletConnector_deviceId !== null
+    }
+  },
   methods: {
     connect(useProvider, modalMode) {
       const successFunc = this.$_paymentWalletConnector_getConnectSucceededFunction(modalMode)
@@ -22,9 +36,61 @@ export default {
           })
       }
     },
+    $_paymentWalletConnector_apiGetTransactionLockStatus() {
+      const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/lock/status`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.$_paymentWalletConnector_paymentToken]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
+    $_paymentWalletConnector_apiGetTransactionDeviceIdMatchingStatus() {
+      const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/lock/match`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.$_paymentWalletConnector_paymentToken],
+          ['device_id', this.$_paymentWalletConnector_deviceId]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
+    $_paymentWalletConnector_apiGetDeviceId() {
+      const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/lock`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.$_paymentWalletConnector_paymentToken]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
     $_paymentWalletConnector_getConnectSucceededFunction(modalMode) {
       return (connectedData) => {
-        this.$web3.getAccountData(connectedData.instance, connectedData.chainId)
+        this.$_paymentWalletConnector_apiGetTransactionLockStatus()
+          .then((response) => {
+            if (response.data.lock && !this.$_paymentWalletConnector_isSetDeviceId) {
+              return Promise.reject()
+            } else if (response.data.lock && this.$_paymentWalletConnector_isSetDeviceId) {
+              return this.$_paymentWalletConnector_apiGetTransactionDeviceIdMatchingStatus()
+                .then((response) => {
+                  if (response.data.match) {
+                    return Promise.resolve(this.$_paymentWalletConnector_deviceId)
+                  }
+                })
+            } else {
+              return this.$_paymentWalletConnector_apiGetDeviceId()
+                .then((response) => {
+                  return Promise.resolve(response.data.device_id)
+                })
+            }
+          })
+          .then((deviceId) => {
+            this.$store.dispatch('payment/updateDeviceId', deviceId)
+            return Promise.resolve()
+          })
+          .then(() => {
+            return this.$web3.getAccountData(connectedData.instance, connectedData.chainId)
+          })
           .then((accountData) => {
             this.$store.dispatch('web3/update', connectedData)
             this.$store.dispatch('account/update', accountData)
@@ -32,6 +98,15 @@ export default {
               this.$store.dispatch('modal/hide')
             }
             this.$router.push({ path: '/payment/token/' + this.$route.params.token })
+          })
+          .catch(() => {
+            this.$store.dispatch('modal/show', {
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message: 'Payment cannot be continued due to the possibility of duplicate payment.'
+              }
+            })
           })
       }
     },
