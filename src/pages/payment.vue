@@ -169,7 +169,7 @@ export default {
             }
             if (
               (!this.isDifferentPayment && state === 'unset_base_amount' && !this.isRequestEntrancePage)
-              || (this.isDifferentPayment && !this.isRequestEntrancePage)
+              || (this.isDifferentPayment && !this.isRequestEntrancePage && !this.isRequestResultPage)
             ) {
               return resolve(
                 this.$router.replace({
