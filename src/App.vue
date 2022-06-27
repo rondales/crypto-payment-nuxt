@@ -38,6 +38,7 @@ export default {
     regeneratePaymentUrlModal:() => import('@/components/molecules/regeneratePaymentUrlModal'),
     contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
     contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
+    confirmCookiesForPaymentModal: () => import('@/components/molecules/confirmCookiesForPaymentModal'),
   },
   computed: {
     classes() {

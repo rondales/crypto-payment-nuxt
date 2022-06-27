@@ -59,6 +59,11 @@
       },
     },
     methods: {
+      apiSetDeviceIdentification() {
+        const url = `${this.API_BASE_URL}/api/v1/payment/token/refresh`
+        const request = { params: new URLSearchParams([['payment_token', this.paymentToken]])}
+        return this.axios.get(url, request)
+      },
       hideModal() {
         this.$store.dispatch('modal/hide')
       },
@@ -69,6 +74,7 @@
           return
         }
         if (this.isPaymentMode) {
+          this.apiSetDeviceIdentification
           this.connect(WALLET_CONNECT, true)
           return
         }

@@ -53,9 +53,7 @@
 </template>
 
 <script>
-import {
-  METAMASK
-} from '@/constants'
+import { METAMASK } from '@/constants'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
 
@@ -100,6 +98,9 @@ export default {
     },
     paymentToken() {
       return this.$route.params.token
+    },
+    isAllowCookies() {
+      return this.$store.state.payment.isAllowCookies
     }
   },
   methods: {
@@ -107,6 +108,12 @@ export default {
       const url = `${this.baseUrl}/api/v1/payment/contract/network`
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
+    },
+    showCookieCautionModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'confirm-cookies-for-payment-modal',
+        size: 'small',
+      })
     },
     showWalletConnectCautionModal() {
       this.$store.dispatch('modal/show', {
@@ -126,6 +133,9 @@ export default {
     this.$store.dispatch('web3/initialize')
     this.$store.dispatch('payment/initializeForBeforeConnectWallet')
     this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+    if (!this.isAllowCookies) {
+      this.showCookieCautionModal()
+    }
   },
   beforeRouteLeave(to, from, next) {
     const connectedWalletPages = ['tokens', 'exchange', 'detail']
