@@ -149,7 +149,7 @@ export default {
         ? NETWORKS[this.chainId].scanUrl
         : ''
       return {
-        explorer: `${scanSiteUrl}/address/${this.transactionHash}`,
+        explorer: `${scanSiteUrl}/tx/${this.transactionHash}`,
         success: this.successReturnUrl,
         failure: this.failureReturnUrl
       }
