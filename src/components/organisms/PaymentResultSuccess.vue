@@ -7,12 +7,12 @@
           Transaction Submitted
         </p>
       </div>
-      <a v-if="hasReturnUrl" class="payment-status_btn" target="_blank" :href="urls.explorer">
+      <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
         View on explorer
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
     </div>
-    <a v-if="hasReturnUrl" :href="urls.success">
+    <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
       <button class="btn __g __l mb-2">
         Back to Payee’s Services
       </button>
@@ -27,39 +27,48 @@
 </template>
 
 <script>
+import { STATUS_RESULT_SUCCESS } from '@/constants'
+
 export default {
   name: 'PaymentResultSuccess',
   props: {
     urls: Object,
-    token: String
+    token: String,
+    isReceiptMode: Boolean
   },
   computed: {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
     hasReturnUrl() {
-      return (urls.success)
+      return (this.urls.success)
     }
   },
   methods: {
     apiGetTransactionRefundedData() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`
-      return this.axios.get(url, { payment_token: this.token })
+      const request = {
+        params: new URLSearchParams([['payment_token', this.token]])
+      }
+      return this.axios.get(url, request)
     }
   },
   created() {
-    this.apiGetTransactionRefundedData().then((response) => {
-      this.$store.dispatch('modal/show', {
-        target: 'refund-info-modal',
-        size: 'small',
-        params: {
-          refundedTokenAmount: response.data.refunded_token_amount,
-          refundedTokenSymbol: response.data.refunded_token_symbol,
-          refundedFeeAmount: response.data.refunded_fee_amount,
-          refundedFeeSymbol: response.data.refunded_fee_symbol
-        }
+    if (!this.isReceiptMode) {
+      this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
+      this.apiGetTransactionRefundedData().then((response) => {
+        this.$store.dispatch('modal/show', {
+          target: 'refund-info-modal',
+          size: 'small',
+          params: {
+            refundedTokenAmount: response.data.refunded_token_amount,
+            refundedTokenSymbol: response.data.refunded_token_symbol,
+            refundedFeeAmount: response.data.refunded_fee_amount,
+            refundedFeeSymbol: response.data.refunded_fee_symbol
+          }
+        })
       })
-    })
+    }
   }
 }
 </script>

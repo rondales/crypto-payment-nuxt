@@ -9,12 +9,12 @@
           Check the reason for the reverted from Explorer.
         </p>
       </div>
-      <a v-if="hasReturnUrl" class="payment-status_btn" target="_blank" :href="urls.explorer">
+      <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
         View on explorer
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
     </div>
-    <a v-if="hasReturnUrl" :href="urls.failure">
+    <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.failure">
       <button class="btn __g __l mb-2">
         Back to Payee’s Services
       </button>
@@ -29,13 +29,21 @@
 </template>
 
 <script>
+import { STATUS_RESULT_FAILURE } from '@/constants'
+
 export default {
   name: 'PaymentResultFailure',
-  props: { urls: Object },
+  props: {
+    urls: Object,
+    isReceiptMode: Boolean
+  },
   computed: {
     hasReturnUrl() {
-      return (urls.failure)
+      return (this.urls.failure)
     }
+  },
+  created() {
+    this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
   }
 }
 </script>

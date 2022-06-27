@@ -7,7 +7,7 @@
           Waiting for transaction result
         </p>
         <p v-if="hasTransactionData" class="payment-status_desc mb-2">
-          Pay {{ transaction.userPaidAmount }} {{ transaction.userPaidSymbol }} for {{ transaction.merchantReceiveAmount }} {{ transaction.merchantReceiveSymbol }}
+          Pay {{ transaction.userPaidAmount | amountFormat }} {{ transaction.userPaidSymbol }} for {{ transaction.merchantReceiveAmount | amountFormat }} {{ transaction.merchantReceiveSymbol }}
         </p>
       </div>
       <a v-if="hasExplorerUrl" class="payment-status_btn" target="_blank" :href="urls.explorer">
@@ -26,21 +26,28 @@
 </template>
 
 <script>
+import { Decimal as BigJs } from 'decimal.js'
+
 export default {
   name: 'PaymentResultPending',
   props: {
     urls: Object,
     transaction: Object
   },
+  filters: {
+    amountFormat(amount) {
+      return new BigJs(amount).toString()
+    },
+  },
   computed: {
     hasExplorerUrl() {
-      return (urls.explorer)
+      return (this.urls.explorer)
     },
     hasTransactionData() {
-      return transaction.userPaidAmount
-        && transaction.userPaidSymbol
-        && transaction.merchantReceiveAmount
-        && transaction.merchantReceiveSymbol
+      return this.transaction.userPaidAmount
+        && this.transaction.userPaidSymbol
+        && this.transaction.merchantReceiveAmount
+        && this.transaction.merchantReceiveSymbol
     }
   }
 }

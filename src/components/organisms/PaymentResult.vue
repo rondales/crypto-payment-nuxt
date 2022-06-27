@@ -17,7 +17,7 @@
         </div>
         <div class="usdt-price">
           <p>
-            {{ merchantReceiveAmount }}
+            {{ merchantReceiveAmount | amountFormat }}
           </p>
         </div>
       </div>
@@ -38,19 +38,20 @@
           </div>
           <div class="payment_detail-value">
             <p>
-              {{ userPaidAmount }}
+              {{ userPaidAmount | amountFormat }}
             </p>
           </div>
         </div>
-        <pending v-if="isProcessingState" :urls="linkUrlData" :transaction="transactionData" />
-        <failure v-else-if="isFailuredState" :urls="linkUrlData" />
-        <success v-else :urls="linkUrlData" :token="paymentToken" />
+        <pending v-if="isStatusProcessing" :urls="linkUrlData" :transaction="transactionData" />
+        <failure v-else-if="isStatusFailured" :urls="linkUrlData" :isReceiptMode="isReceiptMode" />
+        <success v-else :urls="linkUrlData" :token="paymentToken" :isReceiptMode="isReceiptMode" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Decimal as BigJs } from 'decimal.js'
 import ResultPending from '@/components/organisms/PaymentResultPending'
 import ResultFailure from '@/components/organisms/PaymentResultFailure'
 import ResultSuccess from '@/components/organisms/PaymentResultSuccess'
@@ -77,9 +78,9 @@ export default {
   data() {
     return {
       chainId: null,
-      merchantReceiveAmount: null,
+      merchantReceiveAmount: '0',
       merchantReceiveSymbol: null,
-      userPaidAmount: null,
+      userPaidAmount: '0',
       userPaidSymbol: null,
       transactionHash: null,
       successReturnUrl: null,
@@ -93,6 +94,11 @@ export default {
         JPYC: require('@/assets/images/symbol/jpyc.svg')
       }
     }
+  },
+  filters: {
+    amountFormat(amount) {
+      return new BigJs(amount).toString()
+    },
   },
   computed: {
     API_BASE_URL() {
@@ -139,12 +145,17 @@ export default {
       }
     },
     linkUrlData() {
-      const scanSiteUrl = NETWORKS[this.chainId].scanUrl
+      const scanSiteUrl = this.chainId !== null
+        ? NETWORKS[this.chainId].scanUrl
+        : ''
       return {
         explorer: `${scanSiteUrl}/address/${this.transactionHash}`,
         success: this.successReturnUrl,
         failure: this.failureReturnUrl
       }
+    },
+    isReceiptMode() {
+      return 'rcpt' in this.$route.query
     },
     isStatusProcessing() {
       return this.status === STATUS_PROCESSING
@@ -175,11 +186,17 @@ export default {
   methods: {
     apiGetTransaction() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
-      return this.axios.get(url, { payment_token: this.paymentToken })
+      const request = {
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
+      }
+      return this.axios.get(url, request)
     },
     apiGetTransactionStatus() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
-      return this.axios.get(url, { payment_token: this.paymentToken })
+      const request = {
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
+      }
+      return this.axios.get(url, request)
     },
     showDataInitialize() {
       this.chainId = this.$store.state.web3.chainId
@@ -193,8 +210,8 @@ export default {
       this.chainId = data.network_type
       this.merchantReceiveAmount = data.base_amount
       this.merchantReceiveSymbol = data.base_symbol
-      this.userPaidAmount = data.base_amount
-      this.userPaidSymbol = data.base_symbol
+      this.userPaidAmount = data.user_amount
+      this.userPaidSymbol = data.user_symbol
       this.transactionHash = data.transaction_address
       this.successReturnUrl = data.succeeded_return_url
       this.failureReturnUrl = data.failured_return_url
@@ -222,6 +239,13 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.resultPollingTimer)
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch('modal/show', {
+      target: 'error-forbidden-back-payment-modal',
+      size: 'small'
+    })
+    next(false)
   }
 }
 </script>
