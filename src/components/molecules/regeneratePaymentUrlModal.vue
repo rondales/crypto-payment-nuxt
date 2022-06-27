@@ -128,7 +128,8 @@ export default {
       this.refreshing = true
       this.apiRefreshPaymentToken()
         .then((response) => {
-          this.paymentUrl = `${location.protocol}//${location.host}/wallets/${response.data.token}`
+          this.$store.dispatch('payment/updateDeviceId', null)
+          this.paymentUrl = `${location.protocol}//${location.host}/payment/wallets/${response.data.token}`
           this.refreshing = false
           this.refreshed = true
         })
