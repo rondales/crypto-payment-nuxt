@@ -25,6 +25,8 @@ export default {
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),
+    errorNotExistAvailablePaymentContractModal: () => import('@/components/molecules/errorNotExistAvailablePaymentContractModal'),
+    errorForbiddenBackPaymentModal: () => import('@/components/molecules/errorForbiddenBackPaymentModal'),
     switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
