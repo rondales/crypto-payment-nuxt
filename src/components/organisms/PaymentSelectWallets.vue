@@ -54,10 +54,7 @@
 
 <script>
 import {
-  METAMASK,
-  STATUS_PROCESSING,
-  STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS
+  METAMASK
 } from '@/constants'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
@@ -122,23 +119,18 @@ export default {
         target: 'regenerate-payment-url-modal',
         size: 'small'
       })
-    },
-    pageTransition() {
-      let nextPath
-      switch(this.status) {
-        case STATUS_PROCESSING:
-        case STATUS_RESULT_FAILURE:
-        case STATUS_RESULT_SUCCESS:
-          nextPath = `/payment/detail/${this.paymentToken}`
-          break
-        default:
-          nextPath = `/payment/token/${this.paymentToken}`
-      }
-      this.$router.push({ path: nextPath })
     }
   },
   created() {
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
+    this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+  },
+  beforeRouteLeave(to, from, next) {
+    const connectedWalletPages = ['tokens', 'exchange', 'detail']
+    if (connectedWalletPages.includes(to.name)) {
+      next(false)
+    } else {
+      next()
+    }
   }
 }
 </script>
