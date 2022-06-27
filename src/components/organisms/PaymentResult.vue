@@ -200,9 +200,13 @@ export default {
     },
     showDataInitialize() {
       this.chainId = this.$store.state.web3.chainId
-      this.merchantReceiveAmount = this.$store.state.payment.amount
+      this.merchantReceiveAmount = this.$store.state.payment.amount !== null
+        ? this.$store.state.payment.amount
+        : '0'
       this.merchantReceiveSymbol = this.$store.state.payment.symbol
-      this.userPaidAmount = this.$store.state.payment.token.amount
+      this.userPaidAmount = this.$store.state.payment.token.amount !== null
+        ? this.$store.state.payment.token.amount
+        : '0'
       this.userPaidSymbol = this.$store.state.payment.token.symbol
       this.transactionHash = this.$store.state.payment.transactionHash
     },
