@@ -36,6 +36,9 @@ const store = {
     initialize({ commit }) {
       commit('initialize')
     },
+    initializeForBeforeConnectWallet({ commit }) {
+      commit('initializeForBeforeConnectWallet')
+    },
     update({ commit }, payload) {
       commit('update', payload)
     },
@@ -102,6 +105,19 @@ const store = {
         EUR: false,
         AED: false
       },
+      state.token = {
+        name: null,
+        symbol: null,
+        decimal: null,
+        address: null,
+        balance: null,
+        amount: null,
+        rate: null
+      }
+    },
+    initializeForBeforeConnectWallet(state) {
+      state.amountWei = null
+      state.fee = null
       state.token = {
         name: null,
         symbol: null,

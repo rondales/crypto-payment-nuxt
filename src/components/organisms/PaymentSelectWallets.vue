@@ -122,6 +122,9 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('account/initialize')
+    this.$store.dispatch('web3/initialize')
+    this.$store.dispatch('payment/initializeForBeforeConnectWallet')
     this.$store.dispatch('payment/updateSelectReceiptStatus', true)
   },
   beforeRouteLeave(to, from, next) {
