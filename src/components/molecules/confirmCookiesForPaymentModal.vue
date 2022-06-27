@@ -190,6 +190,11 @@ export default {
     .desc {
       font-weight: 100;
       font-size: 1.6rem;
+
+      a {
+        color: #5492F5;
+        font-weight: 200;
+      }
     }
     .checkbox-container {
       position: relative;
