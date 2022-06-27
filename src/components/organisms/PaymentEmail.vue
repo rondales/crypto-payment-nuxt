@@ -113,7 +113,8 @@ export default {
       })
     },
     next() {
-      this.$router.push({
+      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+      this.$router.replace({
         path: '/payment/wallets/' + this.$route.params.token
       })
     },

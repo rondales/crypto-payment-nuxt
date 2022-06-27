@@ -194,7 +194,7 @@ export default {
       this.loading = true
       this.apiUpdateTransaction().then(() => {
         this.$store.dispatch('payment/updateAmount', this.exchangedAmount)
-        this.$router.push({
+        this.$router.replace({
           path: 'receipt/' + this.$route.params.token,
         })
       }).catch((error) => {

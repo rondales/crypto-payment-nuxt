@@ -31,6 +31,9 @@ export default {
     },
     isVerifiedDomain() {
       return this.paymentData.isVerifiedDomain
+    },
+    isSelectedReceipt() {
+      return this.$store.state.payment.isSelectedReceipt
     }
   },
   methods: {
@@ -74,6 +77,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('wallet/initialize')
     if (this.paymentData.id !== null && this.paymentData.id !== this.paymentToken) {
       this.$store.dispatch('web3/initialize')
       this.$store.dispatch('account/initialize')
@@ -109,15 +113,19 @@ export default {
                     this.showComponent = 'PaymentAmount'
                     break;
                   case 'unset_email':
-                    this.showComponent = 'PaymentEmail'
+                    if (this.isSelectedReceipt) {
+                      this.$router.replace({
+                        path: '/payment/wallets/' + this.$route.params.token
+                      })
+                    } else {
+                      this.showComponent = 'PaymentEmail'
+                    }
                     break;
                   case 'unset_token':
-                    this.$router.push({
+                    this.$router.replace({
                       path: '/payment/wallets/' + this.$route.params.token
                     })
                     break;
-                  case 'close':
-                    this.showErrorModal('This transaction is closed.')
                 }
               }).catch(() => {
                 this.showErrorModal('Please try again after a while.')
