@@ -64,7 +64,9 @@ export default {
             refundedTokenAmount: response.data.refunded_token_amount,
             refundedTokenSymbol: response.data.refunded_token_symbol,
             refundedFeeAmount: response.data.refunded_fee_amount,
-            refundedFeeSymbol: response.data.refunded_fee_symbol
+            refundedFeeSymbol: response.data.refunded_fee_symbol,
+            cashBackAmount: response.data.cashback_amount,
+            cashBackSymbol: response.data.cashback_symbol
           }
         })
       })
