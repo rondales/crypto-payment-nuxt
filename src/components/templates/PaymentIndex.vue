@@ -4,7 +4,15 @@
       :width="windowWidth"
       @switchColorTheme="switchColorTheme"
     />
-    <div class="payment">
+    <div v-if="initializing" class="payment">
+      <div class="payment_initializing">
+        <img class="mb-2 spin" src="@/assets/images/loading.svg" alt="processing">
+        <p class="title">
+          Loading...
+        </p>
+      </div>
+    </div>
+    <div v-else class="payment">
       <div class="menu-nav" v-if="showMenu">
         <div class="menu-nav_top">
           <img src="@/assets/images/menu.svg">
@@ -112,7 +120,8 @@ export default {
     'receiver',
     'isVerifiedDomain',
     'invoiceId',
-    'base64VuexData'
+    'base64VuexData',
+    'initializing'
   ],
   data() {
     return {
@@ -155,8 +164,9 @@ export default {
     },
     copyLink() {
       this.$store.dispatch('account/copied')
-      const currentUrl = window.location.href
-      this.$clipboard(`${currentUrl}?vx=${this.base64VuexData}`);
+      const uri = new URL(window.location.href)
+      const token = this.$route.params.token
+      this.$clipboard(`${uri.protocol}//${uri.host}/payment/result/${token}?rcpt=1`)
     },
     toggleMenu(state) {
       this.showMenu = state
@@ -249,6 +259,16 @@ export default {
       font-size: 18px;
       font-weight: 100;
       margin-bottom: 24px;
+    }
+  }
+  &_initializing {
+    text-align: center;
+    margin: auto;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    .title {
+      font-weight: 200;
+      font-size: 18px;
     }
   }
   .payment_Receiver,

@@ -117,16 +117,7 @@ export default {
       this.$emit('copyLink')
     },
     prevPage() {
-      switch(this.currentRouteName) {
-        case 'detail':
-          this.$router.push({ path: `/payment/exchange/${this.$route.params.token}` })
-          break
-        case 'exchange':
-          this.$router.push({ path: `/payment/token/${this.$route.params.token}` })
-          break
-        default:
-          this.$router.back()
-      }
+      this.$router.back()
     },
     showRegeneratePaymentUrlModal() {
       this.$store.dispatch('modal/show', {
