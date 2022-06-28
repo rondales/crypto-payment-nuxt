@@ -31,7 +31,7 @@ export default {
         this.handleChainChanged()
       }
     },
-    accountAddress() {
+    userAccountAddress() {
       if (this.isRequestConnectedWalletPage) {
         this.handleAccountChanged()
       }
@@ -54,10 +54,10 @@ export default {
       return this.$store.state.theme
     },
     receiver() {
-      if (!this.isVerifiedDomain && this.merchantWalletAddress) {
-        const omittedMerchantWalletAddress = this.merchantWalletAddress.substr(0, 10)
-          + "…" + this.merchantWalletAddress.substr(-10)
-        return omittedMerchantWalletAddress
+      if (!this.isVerifiedDomain && this.merchantAccountAddress) {
+        const omittedMerchantAccountAddress = this.merchantAccountAddress.substr(0, 10)
+          + "…" + this.merchantAccountAddress.substr(-10)
+        return omittedMerchantAccountAddress
       }
       return this.storedPaymentData.domain
     },
@@ -76,8 +76,11 @@ export default {
     providerType() {
       return this.storedWeb3Data.provider
     },
-    accountAddress() {
+    userAccountAddress() {
       return this.storedAccountData.address
+    },
+    merchantAccountAddress() {
+      return this.storedPaymentData.merchantWalletAddress
     },
     urlPaymentToken() {
       return this.$route.params.token
