@@ -2,10 +2,13 @@ const store = {
   namespaced: true,
   state: {
     id: null,
+    deviceId: null,
     headerInvoice: false,
     domain: null,
     isVerifiedDomain: false,
     merchantWalletAddress: null,
+    isSelectedReceipt: false,
+    isAllowCookies: false,
     orderCode: null,
     amount: null,
     amountWei: null,
@@ -35,11 +38,23 @@ const store = {
     initialize({ commit }) {
       commit('initialize')
     },
+    initializeForBeforeConnectWallet({ commit }) {
+      commit('initializeForBeforeConnectWallet')
+    },
     update({ commit }, payload) {
       commit('update', payload)
     },
+    updateDeviceId({ commit }, payload) {
+      commit('updateDeviceId', payload)
+    },
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
+    },
+    updateSelectReceiptStatus({ commit }, payload) {
+      commit('updateSelectReceiptStatus', payload)
+    },
+    updateAllowCookiesStatus({ commit }, payload) {
+      commit('updateAllowCookiesStatus', payload)
     },
     updateIsVerifiedDomain({ commit }, payload) {
       commit('updateIsVerifiedDomain', payload)
@@ -78,10 +93,13 @@ const store = {
   mutations: {
     initialize(state) {
       state.id = null
+      state.deviceId = null
       state.headerInvoice = false
       state.domain = null
       state.isVerifiedDomain = false
       state.merchantWalletAddress = null
+      state.isSelectedReceipt = false
+      state.isAllowCookies = false
       state.orderCode = null
       state.amount = null
       state.amountWei = null
@@ -107,16 +125,38 @@ const store = {
         rate: null
       }
     },
+    initializeForBeforeConnectWallet(state) {
+      state.amountWei = null
+      state.fee = null
+      state.token = {
+        name: null,
+        symbol: null,
+        decimal: null,
+        address: null,
+        balance: null,
+        amount: null,
+        rate: null
+      }
+    },
     update(state, payload) {
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
+    },
+    updateDeviceId(state, payload) {
+      state.deviceId = payload
     },
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload
     },
     updateIsVerifiedDomain(state, payload) {
       state.isVerifiedDomain = payload
+    },
+    updateSelectReceiptStatus(state, payload) {
+      state.isSelectedReceipt = payload
+    },
+    updateAllowCookiesStatus(state, payload) {
+      state.isAllowCookies = payload
     },
     updateMerchantWalletAddress(state, payload) {
       state.merchantWalletAddress = payload
