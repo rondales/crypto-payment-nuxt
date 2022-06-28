@@ -25,6 +25,8 @@ export default {
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
     errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
     errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),
+    errorNotExistAvailablePaymentContractModal: () => import('@/components/molecules/errorNotExistAvailablePaymentContractModal'),
+    errorForbiddenBackPaymentModal: () => import('@/components/molecules/errorForbiddenBackPaymentModal'),
     switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
     requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
@@ -33,8 +35,10 @@ export default {
     accountModal: () => import('@/components/molecules/accountModal'),
     warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal'),
     contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal'),
+    regeneratePaymentUrlModal:() => import('@/components/molecules/regeneratePaymentUrlModal'),
     contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
     contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
+    confirmCookiesForPaymentModal: () => import('@/components/molecules/confirmCookiesForPaymentModal'),
   },
   computed: {
     classes() {
