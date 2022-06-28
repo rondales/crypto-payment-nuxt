@@ -13,7 +13,7 @@ export default {
     LpIndex,
   },
   metaInfo() {
-    const meta = [{ mid: 'seo-robot-setting', name: 'robots', content: 'all' }]
+    const meta = [{ vmid: 'seo-robot-setting', name: 'robots', content: 'all' }]
     return {meta}
   }
 };
