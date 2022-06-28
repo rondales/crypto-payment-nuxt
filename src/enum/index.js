@@ -4,8 +4,8 @@ export const network = {
     symbol: 'ETH',
     icon: 'h-eth.svg'
   },
-  3: {
-    name: 'Ropsten',
+  5: {
+    name: 'Goerli',
     symbol: 'ETH',
     icon: 'h-eth.svg'
   },
