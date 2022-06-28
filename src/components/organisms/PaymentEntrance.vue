@@ -92,7 +92,7 @@ export default {
         domain: receiveResponse.data.domain,
         orderCode: receiveResponse.data.order_code,
         symbol: receiveResponse.data.symbol,
-        isVerifiedDomain: receiveResponse.data.is_verified_domain,
+        isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })

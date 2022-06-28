@@ -47,7 +47,7 @@
         <div>
           <p class="payment_Receiver mb-1">
             Payee：{{ receiver }}
-            <img :src="domainVerifiedIcon">
+            <img v-if="isVerifiedDomain" :src="domainVerifiedIcon">
           </p>
           <p class="payment_invoice-id">
             Invoice ID：{{ invoiceId }}
