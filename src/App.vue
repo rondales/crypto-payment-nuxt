@@ -16,6 +16,11 @@
 <script>
 export default {
   name: 'App',
+  metaInfo: {
+    meta: [
+      { vmid: 'seo-robot-setting', name: 'robots', content: 'none' }
+    ]
+  },
   components: {
     adminContractPausedModal: () => import('@/components/molecules/adminContractPausedModal'),
     networkModal: () => import('@/components/molecules/networkModal'),
