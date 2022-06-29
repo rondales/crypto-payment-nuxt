@@ -33,12 +33,11 @@ export default {
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
-    warningDomainUnauthModal: () => import('@/components/molecules/warningDomainUnauthModal'),
     contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal'),
     regeneratePaymentUrlModal:() => import('@/components/molecules/regeneratePaymentUrlModal'),
     contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
     contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
-    confirmCookiesForPaymentModal: () => import('@/components/molecules/confirmCookiesForPaymentModal'),
+    cautionPaymentRiskDisclaimerModal: () => import('@/components/molecules/cautionPaymentRiskDisclaimerModal'),
   },
   computed: {
     classes() {

@@ -2,37 +2,55 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Caution
+        Risk Disclaimer
       </h3>
+      <p class="header__desc">
+        Read the risk disclaimer carefully, and check the following options to acknowledge confirmation.
+      </p>
     </div>
     <div class="separate-line"></div>
     <div class="body">
-      <h4 class="body__title">
-        This feature uses cookies
-      </h4>
-      <p class="desc mt-1">
-        In order to provide secure payments to our customers, Slash Web3 Payment temporarily retains uniquely identifiable information about the customer's terminal until the payment is completed when the wallet is connected.
+      <div v-if="isUnVerifiedDomain">
+        <p class="desc mt-2">
+          Do you understand the purpose of this transaction and have you verified that there is no risk of fraud?
+        </p>
+        <div class="checkbox-container mt-2">
+          <input id="confirm" type="checkbox" ref="confirmed" @click="updateConfirmedStatus()">
+          <label for="confirm">I understand the purpose of this transaction and have verified that there is no fear of fraud.</label>
+        </div>
+        <p class="desc mt-2">
+          No refund of funds from us can be made if you are successful in this transaction. If there is a dispute with Payee, the parties will need to resolve it among themselves. Do you still want to continue with this transaction?
+        </p>
+        <div class="checkbox-container mt-2">
+          <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus()">
+          <label for="accept">I understand the risk and continue this transaction.</label>
+        </div>
+      </div>
+
+      <p class="desc mt-2">
+        Slash Web3 Payment temporarily retains information that uniquely identifies your terminal from the time you connect the wallet until the transaction is completed in order to provide secure payment, can you agree?
         <br>
         By connecting your Wallet, you agree to our Privacy Policy.&nbsp;
         <a target="_blank" href="https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy">Learn more.</a>
       </p>
       <div class="checkbox-container mt-2">
-        <input id="confirm" type="checkbox" ref="confirmed" @click="updateConfirmedStatus()">
-        <label for="confirm">I agree to the Privacy Policy & accept the use of cookies.</label>
+        <input id="agree" type="checkbox" ref="agreed" @click="updateAgreedStatus()">
+        <label for="agree">I understand and agree.</label>
       </div>
-      <div class="btn-container mt-4">
+
+      <div class="btn-container mt-3">
         <button
           class="btn __g __l non-translate"
-          :class="{ inactive: !isConfirmed }"
-          @click="handleAgreement()"
+          :class="{ inactive: !isAllAccepted }"
+          @click="handleOk()"
         >
-          OK
+        OK
         </button>
         <button
           class="btn __g __l mt-1 non-translate"
           @click="handleCancel()"
         >
-          Cancel
+        Cancel
         </button>
       </div>
     </div>
@@ -40,33 +58,60 @@
 </template>
 
 <script>
-export default {
-  name: 'confirmCookiesForPaymentModal',
-  data () {
-    return { confirmed: false }
-  },
-  computed: {
-    classes() {
-      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      return classes
+
+  export default {
+    name: 'cautionPaymentEiskDisclaimerModal',
+    data () {
+      return {
+        confirmed: false,
+        accepted: false,
+        agreed: false,
+      }
     },
-    isConfirmed() {
-      return this.confirmed
-    }
-  },
-  methods: {
-    handleAgreement() {
-      this.$store.dispatch('payment/updateAllowCookiesStatus', true)
-      this.$store.dispatch('modal/hide')
+    computed: {
+      classes() {
+        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+        return classes
+      },
+      isUnVerifiedDomain() {
+        return !this.$store.state.modal.params.isVerifiedDomain
+      },
+      isAllAccepted() {
+        return this.isUnVerifiedDomain
+          ? this.confirmed && this.accepted && this.agreed
+          : this.agreed
+      },
+      isShowCancelButton() {
+        return 'returnUrl' in this.$store.state.modal.params
+          && this.$store.state.modal.params.returnUrl !== null
+      }
     },
-    handleCancel() {
-      this.$router.back()
-    },
-    updateConfirmedStatus() {
-      this.confirmed = this.$refs.confirmed.checked
+    methods: {
+      hideModal() {
+        if(this.isAccepted) {
+          this.$store.dispatch('modal/hide')
+        }
+      },
+      returnToMerchant() {
+        location.href = this.$store.state.modal.params.returnUrl
+      },
+      updateConfirmedStatus() {
+        this.confirmed = this.$refs.confirmed.checked
+      },
+      updateAcceptedStatus() {
+        this.accepted = this.$refs.accepted.checked
+      },
+      updateAgreedStatus() {
+        this.agreed = this.$refs.agreed.checked
+      },
+      handleOk() {
+        this.$store.dispatch('modal/hide')
+      },
+      handleCancel() {
+        this.$router.back()
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -80,6 +125,8 @@ export default {
     transform: translate(-50%, -50%);
     background:var(--color_bg);
     @include media(pc) {
+      max-height: 70%;
+      overflow: auto;
       &.--small {
         width: 470px;
       }
@@ -95,7 +142,7 @@ export default {
   }
   .header {
     @include media(pc) {
-      padding: 24px 24px 0 24px;
+      padding: 24px;
       &__title {
         font-size: 2.5rem;
         margin-bottom: 2rem;
@@ -109,7 +156,7 @@ export default {
       }
     }
     @include media(sp) {
-      padding: 18px 18px 0 18px;
+      padding: 18px;
       &__title {
         font-size: 2rem;
         margin-bottom: 1rem;
@@ -124,6 +171,17 @@ export default {
     }
     &__title {
       font-weight: 500;
+    }
+    &__title::before {
+      content: "";
+      margin-right: 5px;
+      display: inline-block;
+      background: url(/assets/images/caution.svg) no-repeat center center;
+      background-size: contain;
+      vertical-align: middle;
+    }
+    &__desc {
+      font-weight: 100;
     }
   }
   .separate-line {
@@ -151,24 +209,10 @@ export default {
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px 24px 24px;
-      &__title {
-        font-size: 2rem;
-      }
-      &__title::before {
-        width: 2.7rem;
-        height: 2.7rem;
-      }
+      padding: 0 24px 24px 24px;
     }
     @include media(sp) {
-      padding: 24px 18px 24px 18px;
-      &__title {
-        font-size: 1.8rem;
-      }
-      &__title::before {
-        width: 2.2rem;
-        height: 2.2rem;
-      }
+      padding: 0 24px 18px 18px;
       .btn_content{
         margin-left: 0;
         p{
@@ -176,21 +220,9 @@ export default {
         }
       }
     }
-    &__title {
-      font-weight: 300;
-    }
-    &__title:before {
-      content: "";
-      margin-right: 5px;
-      display: inline-block;
-      background: url(/assets/images/cookie.svg) no-repeat center center;
-      background-size: contain;
-      vertical-align: middle;
-    }
     .desc {
       font-weight: 100;
       font-size: 1.6rem;
-
       a {
         color: #5492F5;
         font-weight: 200;
@@ -247,41 +279,6 @@ export default {
       }
       @include media(sp) {
         padding: 0 40px 0;
-      }
-    }
-    .qr {
-      width: 100%;
-      text-align: center;
-      img {
-        border-radius: 8px;
-      }
-    }
-    .url-wrap {
-      position: relative;
-      // width: 100%;
-      padding: 15px 0 15px 18px;
-      background: var(--color_box);
-      border-radius: 8px;
-      vertical-align: middle;
-      .url {
-        width: 85%;
-        height: 48px;
-        overflow: scroll;
-        -ms-overflow-style: none;
-        overflow-wrap: break-word;
-        font-weight: 100;
-        font-size: 1.6rem;
-      }
-      .url::-webkit-scrollbar {
-        display: none;
-      }
-      figure {
-        position: absolute;
-        top: 22px;
-        right: 15px;
-        .btn-copy {
-          cursor: pointer;
-        }
       }
     }
   }
