@@ -42,9 +42,9 @@
         </span>
           WalletConnect
       </button>
-      <button class="btn __m __pg icon-right full" @click="showRegeneratePaymentUrlModal()">
+      <button class="btn __m __pg icon-right full mb-0" @click="showRegeneratePaymentUrlModal()">
         <span class="btn-icon">
-          <img src="@/assets/images/reuse.svg">
+          <img src="@/assets/images/renewal.svg">
         </span>
           Regenerate URL
       </button>
