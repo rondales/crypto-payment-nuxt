@@ -4,7 +4,15 @@
       :width="windowWidth"
       @switchColorTheme="switchColorTheme"
     />
-    <div class="payment">
+    <div v-if="initializing" class="payment">
+      <div class="payment_initializing">
+        <img class="mb-2 spin" src="@/assets/images/loading.svg" alt="processing">
+        <p class="title">
+          Loading...
+        </p>
+      </div>
+    </div>
+    <div v-else class="payment">
       <div class="menu-nav" v-if="showMenu">
         <div class="menu-nav_top">
           <img src="@/assets/images/menu.svg">
@@ -37,14 +45,18 @@
       />
       <div class="add-flex j-between">
         <div>
-          <p class="payment_Receiver mb-1" :class="{ 'domain-verified':isVerifiedDomain }">
+          <p class="payment_Receiver mb-1">
             Payee：{{ receiver }}
+            <img v-if="isVerifiedDomain" :src="domainVerifiedIcon">
           </p>
           <p class="payment_invoice-id">
             Invoice ID：{{ invoiceId }}
           </p>
         </div>
           <router-view />
+      </div>
+      <div v-if="loading" class="loading add-flex j-center a-center">
+        <img class="spin" src="@/assets/images/loading.svg">
       </div>
     </div>
     <div v-if="showFooterMenu" class="sp">
@@ -108,12 +120,14 @@ export default {
     'receiver',
     'isVerifiedDomain',
     'invoiceId',
-    'base64VuexData'
+    'base64VuexData',
+    'initializing'
   ],
   data() {
     return {
       windowWidth: window.innerWidth,
-      showMenu: false
+      showMenu: false,
+      loading: false
     }
   },
   computed: {
@@ -122,6 +136,11 @@ export default {
     },
     lightTheme() {
       return LIGHT_THEME
+    },
+    domainVerifiedIcon() {
+      return this.isDarkTheme
+        ? require('@/assets/images/domain-verified.svg')
+        : require('@/assets/images/domain-verified-l.svg')
     },
     isDarkTheme() {
       return this.colorTheme === this.darkTheme
@@ -145,8 +164,9 @@ export default {
     },
     copyLink() {
       this.$store.dispatch('account/copied')
-      const currentUrl = window.location.href
-      this.$clipboard(`${currentUrl}?vx=${this.base64VuexData}`);
+      const uri = new URL(window.location.href)
+      const token = this.$route.params.token
+      this.$clipboard(`${uri.protocol}//${uri.host}/payment/result/${token}?rcpt=1`)
     },
     toggleMenu(state) {
       this.showMenu = state
@@ -241,21 +261,30 @@ export default {
       margin-bottom: 24px;
     }
   }
+  &_initializing {
+    text-align: center;
+    margin: auto;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    .title {
+      font-weight: 200;
+      font-size: 18px;
+    }
+  }
   .payment_Receiver,
   .payment_invoice-id{
     font-weight: 400;
     font-size: 15px;
   }
-  .domain-verified {
-    &::after{
-      content: "";
-      background: url(/assets/images/domain-verified.svg) no-repeat center center;
-      width: 17px;
-      height: 17px;
-      position: absolute;
-      margin-top: 3px;
-      margin-left: 8px;
-    }
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    border-radius: 8px;
+    z-index: 9999;
   }
 }
 .fixed{

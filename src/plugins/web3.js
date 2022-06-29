@@ -8,7 +8,7 @@ import {
   NETWORKS,
   DEFAULT_SCAN_BLOCK_NUMBER_LIMIT,
   ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
-  ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT,
+  ETEHREUM_GOERLI_SCAN_BLOCK_NUMBER_LIMIT,
   BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
   BSC_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
   MATIC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
@@ -53,12 +53,17 @@ export default {
           tokenApprove: tokenApprove,
           getTokenDecimalUnit: getTokenDecimalUnit,
           sendPaymentTransaction: sendPaymentTransaction,
-          monitoringPaymentTransaction: monitoringPaymentTransaction,
+          monitoringTransaction: monitoringTransaction,
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
-          getEventLog: getEventLog,
           getTokenUnit: getTokenUnit,
+          convertFromWei: convertFromWei,
+          viewMerchantReceiveAddress: viewMerchantReceiveAddress,
+          viewCashBackPercent: viewCashBackPercent,
+          isContractAddress: isContractAddress,
+          updateMerchantReceiveAddress: updateMerchantReceiveAddress,
+          updateCashbackPercent: updateCashbackPercent
         }
       }
     })
@@ -173,29 +178,23 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
 
 const searchToken = async function(web3, contractAddress, walletAddress) {
   const tokenContract = new web3.eth.Contract(Erc20Abi, contractAddress)
-
-  try {
-    const name = await tokenContract.methods.name().call()
-    const symbol = await tokenContract.methods.symbol().call()
-    const decimal = parseInt(await tokenContract.methods.decimals().call(), 10)
-    const balance = await getBalance(web3, walletAddress, tokenContract)
-    return {
-      name: name,
-      symbol: symbol,
-      decimal: decimal,
-      balance: balance,
-      address: contractAddress,
-      icon: require('@/assets/images/symbol/unknown.svg')
-    }
-  } catch(e) {
-    console.log(e)
-    throw new Error('Invalid token address')
+  const name = await tokenContract.methods.name().call()
+  const symbol = await tokenContract.methods.symbol().call()
+  const decimal = parseInt(await tokenContract.methods.decimals().call(), 10)
+  const balance = await getBalance(web3, walletAddress, tokenContract)
+  return {
+    name: name,
+    symbol: symbol,
+    decimal: decimal,
+    balance: balance,
+    address: contractAddress,
+    icon: require('@/assets/images/symbol/unknown.svg')
   }
 }
 
-const isBlacklistedFromPayToken = function(web3, contract, tokenContractAddress) {
-  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  return merchantContract.methods.isBlacklistedFromPayToken(tokenContractAddress).call()
+const isBlacklistedFromPayToken = async function(web3, contract, tokenContractAddress) {
+    const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+    return await merchantContract.methods.isBlacklistedFromPayToken(tokenContractAddress).call()
 }
 
 const importToken = async function(web3, contractAddress, walletAddress) {
@@ -384,22 +383,17 @@ const getTokenApprovedAmount = async function(web3, chainId, walletAddress, cont
   })
   if (!tokenAbi) tokenAbi = Erc20Abi
 
-  try {
-    const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
-    const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-    const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
-    const tokenDecimalUnit = await tokenContract.methods.decimals().call()
-    const tokenWeiUnit = getTokenUnit(tokenDecimalUnit)
-    const allowanceAmountInWei = await tokenContract.methods.allowance(
-      walletAddress,
-      slashCoreContractAddress
-    ).call({ from: walletAddress })
-    const allowanceAmount = web3.utils.fromWei(allowanceAmountInWei, tokenWeiUnit)
-    return allowanceAmount 
-  } catch (error) {
-    console.error(error)
-    return 0
-  }
+  const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
+  const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
+  const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
+  const tokenDecimalUnit = await tokenContract.methods.decimals().call()
+  const tokenWeiUnit = getTokenUnit(tokenDecimalUnit)
+  const allowanceAmountInWei = await tokenContract.methods.allowance(
+    walletAddress,
+    slashCoreContractAddress
+  ).call({ from: walletAddress })
+  const allowanceAmount = web3.utils.fromWei(allowanceAmountInWei, tokenWeiUnit)
+  return allowanceAmount
 }
 
 const tokenApprove = async function(web3, chainId, walletAddress, contract, token) {
@@ -478,7 +472,7 @@ const sendPaymentTransaction = function(
   })
 }
 
-const monitoringPaymentTransaction = function(web3, transactionHash) {
+const monitoringTransaction = function(web3, transactionHash) {
   return web3.eth.getTransactionReceipt(transactionHash)
 }
 
@@ -510,6 +504,74 @@ const publishMerchantContract = function(
   }
 }
 
+const viewMerchantReceiveAddress = async function(web3, contractAbi, contractAddress) {
+  let receiveAddress = {}
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const result = await merchantContract.methods.viewReceiveAddress().call()
+  receiveAddress.isContract = result.isContract
+  if(result.isContract) {
+    receiveAddress.address = result.contractAddress
+  } else {
+    receiveAddress.address = result.walletAddress
+  }
+  const lastModifiedTime = new Date(result.lastModified * 1000)
+  receiveAddress.lastModified = lastModifiedTime.getDate() 
+  + '/' + (lastModifiedTime.getMonth() + 1) 
+  + '/' + lastModifiedTime.getFullYear()
+
+  return receiveAddress
+}
+
+const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {
+  let cashback = {}
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const result = await merchantContract.methods.viewCashBackPercentWithTime().call()
+  
+  cashback.rate = parseInt(result.cashBackPercent, 10) / 100
+  if(result.lastModified == 0) {
+    cashback.lastModified = 0
+  } else {
+    const lastModifiedTime = new Date(result.lastModified * 1000)
+    cashback.lastModified = lastModifiedTime.getDate() 
+      + '/' + (lastModifiedTime.getMonth() + 1) 
+      + '/' + lastModifiedTime.getFullYear()
+  }
+  
+  return cashback
+}
+const isContractAddress = async function(web3, address) {
+  const code = await web3.eth.getCode(address)
+  return code == '0x' ? false : true
+}
+
+const updateMerchantReceiveAddress = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  receiveAddress,
+  isContractAddress,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  return merchantContract.methods.updateReceiveAddress(receiveAddress,isContractAddress).send({
+    from: merchantWalletAddress
+  })
+}
+
+const updateCashbackPercent = function(
+  web3,
+  contractAbi,
+  contractAddress,
+  cashbackValue,
+  merchantWalletAddress
+) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const cashbackPercent = parseInt((parseFloat(cashbackValue) * 100).toFixed(2), 10)
+  return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
+    from: merchantWalletAddress
+  })
+}
+
 const deleteMerchantContract = function() {
   // @todo Implement functions for deletion inside smart contracts as soon as they are known
   throw new Error('deleteMerchantContract function is not yet implemented')
@@ -519,17 +581,18 @@ const signWithPrivateKey = function(web3, address) {
   return web3.eth.personal.sign('Signature for login authentication', address)
 }
 
-const getEventLog = function(web3, eventName, eventParams, events) {
-  let result
-  const eventTopic = web3.utils.sha3(eventName)
-  for(let i = 0; i < events.length; i++) {
-    if(events[i].raw.topics[0] === eventTopic) {
-      result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
-      break
-    }
-  }
-  return result
-}
+// For later use
+// const getEventLog = function(web3, eventName, eventParams, events) {
+//   let result
+//   const eventTopic = web3.utils.sha3(eventName)
+//   for(let i = 0; i < events.length; i++) {
+//     if(events[i].raw.topics[0] === eventTopic) {
+//       result = Object.values(web3.eth.abi.decodeParameters(eventParams,events[i].raw.data))
+//       break
+//     }
+//   }
+//   return result
+// }
 
 const getTokenUnit = function getTokenUnit(decimal) {
   const wei = (10 ** decimal).toString()
@@ -540,10 +603,14 @@ const getTokenUnit = function getTokenUnit(decimal) {
   return units.length > 0 ? units[0] : 'ether'
 }
 
+const convertFromWei = function convertFromWei(web3, wei, unit) {
+  return web3.utils.fromWei(wei, unit)
+}
+
 function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
-    case NETWORKS[3].chainId:
+    case NETWORKS[5].chainId:
       return EthereumTokens
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
@@ -571,8 +638,8 @@ function getScanBlockNumberMaxLimit(chainId) {
   switch(parseInt(chainId, 10)) {
     case NETWORKS[1].chainId:
       return ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
-    case NETWORKS[3].chainId:
-      return ETEHREUM_ROPSTEN_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[5].chainId:
+      return ETEHREUM_GOERLI_SCAN_BLOCK_NUMBER_LIMIT
     case NETWORKS[56].chainId:
       return BSC_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
     case NETWORKS[97].chainId:

@@ -29,8 +29,8 @@ export default {
     paymentData() {
       return this.$store.state.payment
     },
-    isVerifiedDomain() {
-      return this.paymentData.isVerifiedDomain
+    isSelectedReceipt() {
+      return this.$store.state.payment.isSelectedReceipt
     }
   },
   methods: {
@@ -62,18 +62,10 @@ export default {
           message: message
         }
       })
-    },
-    showWarningModal(returnUrl) {
-      this.$store.dispatch('modal/show', {
-        target: 'warning-domain-unauth-modal',
-        size: 'small',
-        params: {
-          returnUrl: returnUrl
-        }
-      })
     }
   },
   created() {
+    this.$store.dispatch('wallet/initialize')
     if (this.paymentData.id !== null && this.paymentData.id !== this.paymentToken) {
       this.$store.dispatch('web3/initialize')
       this.$store.dispatch('account/initialize')
@@ -88,14 +80,11 @@ export default {
         domain: receiveResponse.data.domain,
         orderCode: receiveResponse.data.order_code,
         symbol: receiveResponse.data.symbol,
-        isVerifiedDomain: receiveResponse.data.is_verified_domain,
+        isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
-      if (!this.isVerifiedDomain) {
-        this.showWarningModal(receiveResponse.data.return_url)
-      }
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {
@@ -109,15 +98,19 @@ export default {
                     this.showComponent = 'PaymentAmount'
                     break;
                   case 'unset_email':
-                    this.showComponent = 'PaymentEmail'
+                    if (this.isSelectedReceipt) {
+                      this.$router.replace({
+                        path: '/payment/wallets/' + this.$route.params.token
+                      })
+                    } else {
+                      this.showComponent = 'PaymentEmail'
+                    }
                     break;
                   case 'unset_token':
-                    this.$router.push({
+                    this.$router.replace({
                       path: '/payment/wallets/' + this.$route.params.token
                     })
                     break;
-                  case 'close':
-                    this.showErrorModal('This transaction is closed.')
                 }
               }).catch(() => {
                 this.showErrorModal('Please try again after a while.')

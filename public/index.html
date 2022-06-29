@@ -16,11 +16,42 @@
     <meta name="author" content="Slash">
     <meta property="og:title" content="Slash Payment">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://slash.fi/">
-    <meta property="og:image" content="<%= BASE_URL %>img/icon/ogp.png">
+    <% if (VUE_APP_USE_MAINNET==="true" ) { %>
+      <meta property="og:url" content="https://slash.fi/">
+      <meta property="og:image" content="https://slash.fi/img/icon/ogp.png">
+    <% } else { %>
+      <meta property="og:url" content="https://testnet.slash.fi/">
+      <meta property="og:image" content="https://testnet.slash.fi/img/icon/ogp.png">
+    <% } %>
     <meta property="og:site_name" content="Slash Payment">
     <meta property="og:description" content="Slash is the next generation of decentralized payment methods that supports any token payment. With Slash payment, merchants can accept tokens as payment from customers using the Web3 wallet.">
     <meta name="twitter:card" content="summary_large_image">
+    <% if (NODE_ENV==="production" ) { %>
+      <% if (VUE_APP_USE_MAINNET==="true" ) { %>
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+            console.log(toString.call('Hello'));
+            w[l] = w[l] || []; w[l].push({
+              'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+          })(window, document, 'script', 'dataLayer', 'GTM-5QTRD3J');</script>
+        <!-- End Google Tag Manager -->
+      <% } else { %>
+        <!-- Google Tag Manager -->
+        <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+              'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+          })(window, document, 'script', 'dataLayer', 'GTM-M2MHGDK');</script>
+        <!-- End Google Tag Manager -->
+      <% } %>
+    <% } %>
   </head>
   <noscript>
     <strong>We're sorry but Slash Payment doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
@@ -48,6 +79,20 @@
 
   </script>
   <body>
+    <meta charset="utf-8">
+    <% if (NODE_ENV==="production" ) { %>
+      <% if (VUE_APP_USE_MAINNET==="true" ) { %>
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5QTRD3J" height="0" width="0"
+          style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+      <% } else { %>
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2MHGDK" height="0" width="0"
+          style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+      <% } %>
+    <% } %>
     <div id="app"></div>
   </body>
   <!-- built files will be auto injected -->

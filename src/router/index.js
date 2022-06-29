@@ -94,6 +94,12 @@ const router = new Router({
               meta: { title: 'Slash Payment' }
             },
             {
+              name: "result",
+              path: "/payment/result/:token",
+              component: () => import("@/components/organisms/PaymentResult"),
+              meta: { title: 'Slash Payment' }
+            },
+            {
               name: "invoice",
               path: "/payment/invoice",
               component: () => import("@/components/organisms/PaymentInvoice"),

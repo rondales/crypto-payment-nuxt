@@ -10,31 +10,48 @@
     </div>
     <div class="separate-line"></div>
     <div class="body">
+      <div v-if="isUnVerifiedDomain">
+        <p class="desc mt-2">
+          Do you understand the purpose of this transaction and have you verified that there is no risk of fraud?
+        </p>
+        <div class="checkbox-container mt-2">
+          <input id="confirm" type="checkbox" ref="confirmed" @click="updateConfirmedStatus()">
+          <label for="confirm">I understand the purpose of this transaction and have verified that there is no fear of fraud.</label>
+        </div>
+        <p class="desc mt-2">
+          No refund of funds from us can be made if you are successful in this transaction. If there is a dispute with Payee, the parties will need to resolve it among themselves. Do you still want to continue with this transaction?
+        </p>
+        <div class="checkbox-container mt-2">
+          <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus()">
+          <label for="accept">I understand the risk and continue this transaction.</label>
+        </div>
+      </div>
+
       <p class="desc mt-2">
-        Do you understand the purpose of this transaction and have you verified that there is no risk of fraud?
+        Slash Web3 Payment temporarily retains information that uniquely identifies your terminal from the time you connect the wallet until the transaction is completed in order to provide secure payment, can you agree?
+        <br>
+        By connecting your Wallet, you agree to our Privacy Policy.&nbsp;
+        <a target="_blank" href="https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy">Learn more.</a>
       </p>
       <div class="checkbox-container mt-2">
-        <input id="confirm" type="checkbox" ref="confirmed" @click="updateConfirmedStatus">
-        <label for="confirm">I understand the purpose of this transaction and have verified that there is no fear of fraud.</label>
+        <input id="agree" type="checkbox" ref="agreed" @click="updateAgreedStatus()">
+        <label for="agree">I understand and agree.</label>
       </div>
-      <p class="desc mt-2">
-        No refund of funds from us can be made if you are successful in this transaction. If there is a dispute with Payee, the parties will need to resolve it among themselves. Do you still want to continue with this transaction?
-      </p>
-      <div class="checkbox-container mt-2">
-        <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus">
-        <label for="accept">I understand the risk and continue this transaction.</label>
-      </div>
+
       <div class="btn-container mt-3">
         <button
           class="btn __g __l non-translate"
-          :class="{ inactive: !isAccepted }"
-          @click="hideModal"
-        >OK</button>
+          :class="{ inactive: !isAllAccepted }"
+          @click="handleOk()"
+        >
+        OK
+        </button>
         <button
-          v-if="isShowCancelButton"
           class="btn __g __l mt-1 non-translate"
-          @click="returnToMerchant"
-        >Cancel</button>
+          @click="handleCancel()"
+        >
+        Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -43,11 +60,12 @@
 <script>
 
   export default {
-    name: 'errorModal',
+    name: 'cautionPaymentEiskDisclaimerModal',
     data () {
       return {
         confirmed: false,
-        accepted: false
+        accepted: false,
+        agreed: false,
       }
     },
     computed: {
@@ -55,11 +73,13 @@
         const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
         return classes
       },
-      message() {
-        return this.$store.state.modal.params.message
+      isUnVerifiedDomain() {
+        return !this.$store.state.modal.params.isVerifiedDomain
       },
-      isAccepted() {
-        return this.confirmed && this.accepted
+      isAllAccepted() {
+        return this.isUnVerifiedDomain
+          ? this.confirmed && this.accepted && this.agreed
+          : this.agreed
       },
       isShowCancelButton() {
         return 'returnUrl' in this.$store.state.modal.params
@@ -80,6 +100,16 @@
       },
       updateAcceptedStatus() {
         this.accepted = this.$refs.accepted.checked
+      },
+      updateAgreedStatus() {
+        this.agreed = this.$refs.agreed.checked
+      },
+      handleOk() {
+        this.$store.dispatch('payment/updateAllowCookiesStatus', true)
+        this.$store.dispatch('modal/hide')
+      },
+      handleCancel() {
+        this.$router.back()
       }
     }
   }
@@ -96,6 +126,8 @@
     transform: translate(-50%, -50%);
     background:var(--color_bg);
     @include media(pc) {
+      max-height: 70%;
+      overflow: auto;
       &.--small {
         width: 470px;
       }
@@ -192,6 +224,10 @@
     .desc {
       font-weight: 100;
       font-size: 1.6rem;
+      a {
+        color: #5492F5;
+        font-weight: 200;
+      }
     }
     .checkbox-container {
       position: relative;

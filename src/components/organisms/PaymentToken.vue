@@ -4,20 +4,20 @@
       <div class="add-flex j-between billed a-center">
         <div class="add-flex j-between a-center">
           <figure>
-            <img :src="receiveTokenIcon" alt="">
+            <img :src="merchantReceiveTokenIcon" :alt="merchantReceiveTokenSymbol">
           </figure>
           <dl>
             <dt>
               Amount billed
             </dt>
             <dd>
-              {{ receiveTokenSymbol }}
+              {{ merchantReceiveTokenSymbol }}
             </dd>
           </dl>
         </div>
         <div class="usdt-price">
           <p>
-            {{ amount }}
+            {{ merchantReceiveAmount }}
           </p>
         </div>
       </div>
@@ -27,33 +27,33 @@
       <div class="payment-box network">
         <div class="add-flex a-center j-between">
           <div class="add-flex a-center">
-            <img :src="networkIcon">
+            <img :src="currentNetworkIcon" :alt="currentNetworkName">
             <div class="payment-box_desc">
               <p>
-                {{ networkName }}
+                {{ currentNetworkName }}
               </p>
             </div>
           </div>
-          <div class="payment-box_btn" @click="networkModal">
+          <div class="payment-box_btn" @click="switchNetwork()">
             Change
           </div>
         </div>
       </div>
       <div class="body">
         <div class="toggle-btn mb-3 add-flex j-around">
-          <div class="toggle-right" :class="{'active': tab === 'list'}" @click="leftTab">
+          <div class="toggle-right" :class="{ active: isCurrentListTab }" @click="switchTab(LIST_TAB)">
             Lists
           </div>
-          <div class="toggle-left" :class="{'active': tab === 'tokens'}" @click="rightTab">
+          <div class="toggle-left" :class="{ active: isCurrentTokenImportTab }" @click="switchTab(TOKEN_IMPORT_TAB)">
             Tokens
           </div>
         </div>
-        <div class="token-content" v-if="tab === 'list'">
+        <div class="token-content" v-if="isCurrentListTab">
           <p class="token-title">
             Select token
           </p>
           <div class="token-items">
-            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="selectedToken(token)">
+            <div class="token-item add-flex j-between a-center" v-for="(token, key) in tokenList"  :key="key"  @click="handleSelectToken(token)">
               <div class="add-flex j-between a-center">
                 <figure>
                   <img :src="token.icon" alt="">
@@ -75,19 +75,19 @@
             </div>
           </div>
         </div>
-        <div class="manage-content" v-else-if="tab === 'tokens'">
+        <div class="manage-content" v-else-if="isCurrentTokenImportTab">
           <div class="manage-title">
             Enter token contract address
           </div>
           <div class="manage-desc">
             *Does not support tokenomics tokens, which have the property that transactions are subject to TAX 🙅‍♂️
           </div>
-          <input class="token-dsc border" type="text" placeholder="0x0000" v-model="tokenAddress" @keyup.enter="searchToken">
+          <input class="token-dsc border" type="text" placeholder="0x0000" v-model="searchTokenAddress" @keyup.enter="searchToken()">
           <div class="manage-wrap">
-            <div class="manage-warning" v-if="validAddress">
+            <div class="manage-warning" v-if="isInvalidSearchTokenAddress">
               Enter valid token address
             </div>
-            <ul class="manage-item add-flex a-center mb-2" v-for="(token, key) in tokenIdList" :key="key">
+            <ul class="manage-item add-flex a-center mb-2" v-for="(token, key) in searchedTokenList" :key="key">
               <li>
                 <img :src="token.icon">
               </li>
@@ -100,16 +100,16 @@
                     <img src="@/assets/images/link-icon.svg">
                   </figure>
                 </a>
-                <div class="manage-import" @click="importToken(key)">
+                <div class="manage-import" @click="importSearchedToken(key)">
                   Import
                 </div>
               </li>
             </ul>
             <div class="add-flex j-between a-center">
               <div class="manage-none">
-                {{ tokenCount }} Custom Token
+                {{ searchedTokenCount }} Custom Token
               </div>
-              <div class="manage-clear" v-if="tokenCount" @click="clearToken">
+              <div class="manage-clear" v-if="isExistSearchedTokens" @click="clearSearchedTokens()">
                 Clear all
               </div>
             </div>
@@ -122,29 +122,27 @@
 
 <script>
 import NumberFormat from 'number-format.js'
-import VuexRestore from '@/components/mixins/VuexRestore'
-import { NETWORKS } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
   name: 'PaymentToken',
-  mixins: [VuexRestore],
   data() {
     return {
-      tab: "list",
-      tokenAddress: '',
-      tokenCount: 0,
+      tab: 1,
       tokenList: [],
-      tokenIdList: [],
-      validAddress: false,
+      searchTokenAddress: null,
+      searchTokenAddressInvalid: false,
+      searchedTokenList: [],
+      searchedTokenCount: 0,
       contract: {
         address: null,
         abi: null
-      },
-      receiveTokenIcons: {
-        USDT: require('@/assets/images/symbol/usdt.svg'),
-        USDC: require('@/assets/images/symbol/usdc.svg'),
-        DAI: require('@/assets/images/symbol/dai.svg'),
-        JPYC: require('@/assets/images/symbol/jpyc.svg')
       }
     }
   },
@@ -156,59 +154,186 @@ export default {
       )
     }
   },
-  watch: {
-    chainId() {
-      if (this.availableNetworks.includes(this.chainId)) {
-        this.getDefaultTokens()
-      }
-    }
-  },
   computed: {
-    baseUrl() {
+    API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    LIST_TAB() {
+      return 1
+    },
+    TOKEN_IMPORT_TAB() {
+      return 2
+    },
+    paymentToken() {
+      return this.$route.params.token
     },
     web3Instance() {
       return this.$store.state.web3.instance
     },
-    receiveTokenSymbol() {
-      return this.$store.state.payment.symbol
-    },
-    receiveTokenIcon() {
-      return this.receiveTokenIcons[
-        this.$store.state.payment.symbol
-      ]
-    },
-    amount() {
-      return this.$store.state.payment.amount
-    },
-    networkIcon() {
-      return this.chainId
-        ? NETWORKS[this.$store.state.web3.chainId].icon
-        : null
-    },
-    networkName() {
-      return this.chainId
-        ? NETWORKS[this.$store.state.web3.chainId].name
-        : ''
-    },
     chainId() {
       return this.$store.state.web3.chainId
+    },
+    providerType() {
+      return this.$store.state.web3.provider
+    },
+    userAccountAddress() {
+      return this.$store.state.account.address
+    },
+    explorerSiteTokenUrl() {
+      return `${NETWORKS[this.chainId].scanUrl}/token/`
     },
     availableNetworks() {
       return this.$store.state.payment.availableNetworks
     },
-    paymentToken() {
-      return this.$route.params.token
+    availableNetworkCount() {
+      return this.availableNetworks.length
+    },
+    currentNetworkName() {
+      return this.chainId && this.isAvailableCurrentNetwork
+        ? NETWORKS[this.chainId].name
+        : 'Not supported network'
+    },
+    currentNetworkIcon() {
+      if (this.chainId && this.isAvailableCurrentNetwork) {
+        return NETWORKS[this.chainId].icon
+      } else if (this.isDarkTheme) {
+        return require('@/assets/images/network/unknown.svg')
+      } else {
+        return require('@/assets/images/network/unknown-l.svg')
+      }
+    },
+    merchantReceiveTokens() {
+      if (this.isCurrentNetworkEthereum) {
+        return EthereumReceiveTokens
+      } else if (this.isCurrentNetworkBinance) {
+        return BscReceiveTokens
+      } else if (this.isCurrentNetworkMatic) {
+        return MaticReceiveTokens
+      } else if (this.isCurrentNetworkAvalanche) {
+        return AvalacheReceiveTokens
+      } else {
+        return {}
+      }
+    },
+    merchantReceiveAmount() {
+      return this.$store.state.payment.amount
+    },
+    merchantReceiveTokenSymbol() {
+      return this.$store.state.payment.symbol
+    },
+    merchantReceiveTokenIcon() {
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveTokenSymbol in tokens
+        ? tokens[this.merchantReceiveTokenSymbol].icon
+        : require('@/assets/images/symbol/unknown.svg')
+    },
+    isEmptyWeb3Instance() {
+      return this.web3Instance === null
+    },
+    isUseMetaMaskProvider() {
+      return this.providerType === METAMASK
+    },
+    isUseWalletConnectProvider() {
+      return this.providerType === WALLET_CONNECT
+    },
+    isNeedRestoreWeb3Connection() {
+      return this.isEmptyWeb3Instance
+        && (this.isUseMetaMaskProvider || this.isUseWalletConnectProvider)
+    },
+    isCurrentNetworkEthereum() {
+      return this.chainId === NETWORKS[1].chainId
+        || this.chainId === NETWORKS[5].chainId
+    },
+    isCurrentNetworkBinance() {
+      return this.chainId === NETWORKS[56].chainId
+        || this.chainId === NETWORKS[97].chainId
+    },
+    isCurrentNetworkMatic() {
+      return this.chainId === NETWORKS[137].chainId
+        || this.chainId === NETWORKS[80001].chainId
+    },
+    isCurrentNetworkAvalanche() {
+      return this.chainId === NETWORKS[43114].chainId
+        || this.chainId === NETWORKS[43113].chainId
+    },
+    isAvailableCurrentNetwork() {
+      return this.availableNetworks.includes(this.chainId)
+    },
+    isCurrentListTab() {
+      return this.tab === this.LIST_TAB
+    },
+    isCurrentTokenImportTab() {
+      return this.tab === this.TOKEN_IMPORT_TAB
+    },
+    isShowNetworkModal() {
+      return this.$store.state.modal.target === 'network-modal'
+    },
+    isInvalidSearchTokenAddress() {
+      return this.searchTokenAddressInvalid
+    },
+    isExistSearchedTokens() {
+      return this.searchedTokenList.length > 0
+    },
+    isSearchedToken() {
+      const addresses = this.searchedTokenList
+        .filter(data => data.address)
+        .map(data => data.address.toLowerCase())
+      return addresses.includes(this.searchTokenAddress.toLowerCase())
+    },
+    isImportedToken() {
+      const addresses = this.tokenList
+        .filter(data => data.address)
+        .map(data => data.address.toLowerCase())
+      return addresses.includes(this.searchTokenAddress.toLowerCase())
+    },
+    isDarkTheme() {
+      return this.$store.state.theme === 'dark'
     }
   },
   methods: {
-    networkModal() {
-      const availableNetworkCount = this.availableNetworks.length
-      this.$store.dispatch('modal/show', {
-        target: 'network-modal',
-        size: availableNetworkCount > 1 ? 'medium' : 'small',
-        params: { itemCount: availableNetworkCount }
-      })
+    apiGetContract() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/contract`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.paymentToken],
+          ['network_type', this.chainId]])
+      }
+      return this.axios.get(url, request)
+    },
+    updateContractDataFromApi() {
+      return this.apiGetContract()
+        .then((response) => {
+          const data = response.data
+          this.contract.address = data.address
+          this.contract.abi = JSON.parse(data.args)
+        })
+    },
+    getAccountDataFromBlockChain() {
+      const func = this.$web3.getAccountData(this.web3Instance, this.chainId)
+      return func.catch(func)
+    },
+    getDefaultTokens() {
+      const func = this.$web3.getDefaultTokens(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress
+      )
+      return func.catch(func).then((tokens) => { this.tokenList = tokens })
+    },
+    checkBlackListedTokenToBlockChain() {
+      return this.$web3.isBlacklistedFromPayToken(
+        this.web3Instance,
+        this.contract,
+        this.searchTokenAddress
+      )
+    },
+    searchTokenToBlockChain() {
+      console.log('token search')
+      return this.$web3.searchToken(
+        this.web3Instance,
+        this.searchTokenAddress,
+        this.userAccountAddress
+      )
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
@@ -219,195 +344,170 @@ export default {
         }
       })
     },
-    leftTab(){
-      this.tab = "list"
-      this.isActive = true
+    switchNetwork() {
+      this.$store.dispatch('modal/show', {
+        target: 'network-modal',
+        size: this.availableNetworkCount > 1 ? 'medium' : 'small',
+        params: { itemCount: this.availableNetworkCount }
+      })
     },
-    rightTab(){
-      this.tab = "tokens"
-      this.isActive = true
-    },
-    getDefaultTokens() {
-      this.$web3.getDefaultTokens(
-        this.$store.state.web3.instance,
-        this.$store.state.web3.chainId,
-        this.$store.state.account.address
-      ).then((tokens) => { this.tokenList = tokens })
-    },
-    clearToken(){
-      this.tokenAddress = ''
-      this.tokenIdList = []
-      this.tokenCount = 0;
-      this.validAddress = false
-    },
-    apiGetContract() {
-      const url = `${this.baseUrl}/api/v1/payment/contract`
-      const request = { params: new URLSearchParams([
-        ['payment_token', this.$route.params.token],
-        ['network_type', this.$store.state.web3.chainId]
-      ])}
-      return this.axios.get(url, request)
-    },
-    checkTokenExists(tokenAddress) {
-      let exists = false
-      this.tokenList.forEach((token) => {
-        if(tokenAddress && tokenAddress === token.address) {
-          exists = true
+    requireSwitchNetwork() {
+      this.$store.dispatch('modal/show', {
+        target: 'network-modal',
+        size: this.availableNetworkCount > 1 ? 'medium' : 'small',
+        params: {
+          unsupported: true,
+          hideCloseButton: true,
+          itemCount: this.availableNetworkCount
         }
       })
-      return exists
     },
-    searchToken(event) {
-      if(this.checkTokenExists(event.target.value)) {
-        this.showErrorModal(
-          'Input token is already added!'
-        )
+    switchTab(tab) {
+      this.tab = tab
+    },
+    searchToken() {
+      if (this.isSearchedToken) {
+        this.showErrorModal('This token is already searched.')
         return
       }
-
-      this.$web3.isBlacklistedFromPayToken(
-        this.$store.state.web3.instance,
-        this.contract,
-        event.target.value
-      ).then((isBlacklistedFromPayToken) => {
-        if(isBlacklistedFromPayToken) {
-          this.showErrorModal(
-            'Input token is currently not supported!'
-          )
-        } else {
-          this.tokenIdList = []
-          this.tokenCount = 0;
-          this.validAddress = false
-          this.$web3.searchToken(
-            this.$store.state.web3.instance,
-            event.target.value,
-            this.$store.state.account.address
-          ).then((response) => {
-            const scanUrl = NETWORKS[
-              this.$store.state.web3.chainId
-            ].scanUrl
-            this.tokenIdList.push({
-              name: response.name,
-              symbol: response.symbol,
-              decimal: response.decimal,
-              address: response.address,
-              balance: response.balance,
-              icon: response.icon,
-              url: `${scanUrl}/token/${response.address}`
-            })
-            this.tokenCount = this.tokenIdList.length
-          }).catch((error) => {
-            console.log(error)
-            this.tokenCount = 0
-            this.tokenIdList = []
-            this.validAddress = true
-          })
-        }
-      })
+      if (this.isImportedToken) {
+        this.showErrorModal('This token is already imported.')
+        return
+      }
+      this.$parent.loading = true
+      this.checkBlackListedTokenToBlockChain()
+        .then((isListed) => {
+          if (isListed) {
+            this.showErrorModal('This token is not supported.')
+            this.$parent.loading = false
+            return Promise.reject()
+          }
+          return Promise.resolve()
+        })
+        .then(this.searchTokenToBlockChain)
+        .then((data) => {
+          data.url = this.explorerSiteTokenUrl + data.address
+          this.searchedTokenList.push(data)
+          ++this.searchedTokenCount
+          this.$parent.loading = false
+        })
+        .catch((error) => {
+          if (
+            'code' in error
+            && 'message' in error
+            && error.code === -32000
+            && error.message === 'execution reverted'
+          ) {
+            this.showErrorModal('The token you are looking for is not available as it may not comply with the ERC20 standard.')
+          }
+          this.searchTokenAddressInvalid = true
+          this.$parent.loading = false
+        })
     },
-    importToken(index){
-      const token = this.tokenIdList[index]
-      this.tokenList.unshift({
-        name: token.name,
-        symbol: token.symbol,
-        decimal: token.decimal,
-        address: token.address,
-        balance: token.balance,
-        icon: token.icon
-      })
-      this.clearToken()
-      this.tab = 'list'
+    importSearchedToken(targetIndex) {
+      this.tokenList.unshift(
+        this.searchedTokenList[targetIndex]
+      )
+      this.searchedTokenList = this.searchedTokenList
+        .filter((value, index) => index !== targetIndex)
+      this.searchedTokenCount = this.searchedTokenList.length
     },
-    selectedToken(token) {
+    clearSearchedTokens() {
+      this.searchTokenAddress = null
+      this.searchedTokenList = []
+      this.searchedTokenCount = 0
+      this.searchTokenAddressInvalid = false
+    },
+    handleSelectToken(selectedToken) {
       this.$store.dispatch('payment/updateToken', {
-        name: token.name,
-        symbol: token.symbol,
-        decimal: token.decimal,
-        address: token.address,
-        balance: token.balance,
+        name: selectedToken.name,
+        symbol: selectedToken.symbol,
+        decimal: selectedToken.decimal,
+        address: selectedToken.address,
+        balance: selectedToken.balance,
         amount: null,
       })
       this.$router.push({
-        path: `/payment/exchange/${this.paymentToken}`,
+        name: 'exchange',
+        params: { token: this.paymentToken }
       })
     },
-    handleAccountChanged() {
-      this.$web3.getAccountData(this.web3Instance, this.chainId).then((account) => {
-        this.$store.dispatch('account/update', account)
-        this.getDefaultTokens()
-      })
+    handleAccountChangedEvent() {
+      this.$parent.loading = true
+      this.getAccountDataFromBlockChain()
+        .then((account) => {
+          return this.$store.dispatch('account/update', account)
+        })
+        .then(this.getDefaultTokens)
+        .then(() => { this.$parent.loading = false })
     },
-    handleChainChanged(chainId) {
-      if (this.availableNetworks.includes(chainId)) {
-        this.$store.dispatch('web3/updateChainId', chainId)
-        if(this.$store.state.modal.target === 'network-modal') {
+    handleChainChangedEvent(chainId) {
+      chainId = (this.web3Instance.utils.isHex(chainId))
+        ? this.web3Instance.utils.hexToNumber(chainId)
+        : chainId
+
+      this.$store.dispatch('web3/updateChainId', chainId)
+
+      if (this.isAvailableCurrentNetwork) {
+        this.$parent.loading = true
+        if (this.isShowNetworkModal) {
           this.$store.dispatch('modal/hide')
         }
+        const funcList = [
+          this.updateContractDataFromApi(),
+          this.getDefaultTokens()
+        ]
+        Promise.all(funcList).then(() => { this.$parent.loading = false })
       } else {
-        this.$store.dispatch('web3/updateChainId', null)
-        this.$store.dispatch('modal/show', {
-          target: 'network-modal',
-          size: 'medium',
-          params: {
-            unsupported: true,
-            hideCloseButton: true
-          }
-        })
+        this.tokenList = []
+        this.searchedTokenList = []
+        this.searchedTokenCount = 0
+        this.requireSwitchNetwork()
       }
     }
   },
   created() {
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
-    if (this.isNeedRestore) {
+    if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
-        path: `/payment/wallets/${this.paymentToken}`
-      })
-    } else {
-      if (this.availableNetworks.includes(this.chainId)) {
-        this.$web3.getAccountData(this.web3Instance, this.chainId).then((account) => {
-          this.$store.dispatch('account/update', account)
-          this.getDefaultTokens()
-        })
-      } else {
-        const availableNetworkCount = this.availableNetworks.length
-        this.$store.dispatch('modal/show', {
-          target: 'network-modal',
-          size: availableNetworkCount > 1 ? 'medium' : 'small',
-          params: {
-            unsupported: true,
-            hideCloseButton: true,
-            itemCount: availableNetworkCount
-          }
-        })
-      }
-      if (this.web3Instance) {
-        this.web3Instance.currentProvider.on('accountsChanged', () => {
-          this.handleAccountChanged()
-        })
-        this.web3Instance.currentProvider.on('chainChanged', (chainId) => {
-          chainId = (this.web3Instance.utils.isHex(chainId))
-            ? this.web3Instance.utils.hexToNumber(chainId)
-            : chainId
-          this.handleChainChanged(chainId)
-        })
-      }
-      this.apiGetContract().then((response) => {
-        this.contract.address = response.data.address
-        this.contract.abi = JSON.parse(response.data.args)
+        name: 'wallets',
+        params: { token: this.paymentToken }
       })
     }
   },
-  beforeDestroy() {
-    if (this.web3Instance) {
-      this.web3Instance.currentProvider.removeListener(
-        'accountsChanged',
-        this.handleAccountChanged
-      )
-      this.web3Instance.currentProvider.removeListener(
-        'chainChanged',
-        this.handleChainChanged
-      )
+  mounted() {
+    this.$parent.loading = true
+
+    if (this.isNeedRestoreWeb3Connection) {
+      return
     }
+
+    this.web3Instance.currentProvider.on('accountsChanged', this.handleAccountChangedEvent)
+    this.web3Instance.currentProvider.on('chainChanged', this.handleChainChangedEvent)
+
+    if (this.isAvailableCurrentNetwork) {
+      const funcList = [
+        this.updateContractDataFromApi(),
+        this.getDefaultTokens()
+      ]
+      Promise.all(funcList).then(() => { this.$parent.loading = false })
+    } else {
+      this.requireSwitchNetwork()
+    }
+  },
+  beforeDestroy() {
+    this.$parent.loading = false
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$parent.loading = false
+    if (!this.isEmptyWeb3Instance) {
+      this.web3Instance.currentProvider.removeListener('chainChanged', this.handleChainChangedEvent)
+      this.web3Instance.currentProvider.removeListener('accountsChanged', this.handleAccountChangedEvent)
+    }
+    next()
   }
 }
 </script>
@@ -642,7 +742,7 @@ export default {
       .manage-warning{
         font-size: 15px;
         color: #E53F3F;
-        margin-bottom: 8px;
+        margin-bottom: 24px;
       }
       .manage-none{
         font-size: 15px;
