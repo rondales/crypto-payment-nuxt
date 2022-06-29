@@ -29,9 +29,6 @@ export default {
     paymentData() {
       return this.$store.state.payment
     },
-    isVerifiedDomain() {
-      return this.paymentData.isVerifiedDomain
-    },
     isSelectedReceipt() {
       return this.$store.state.payment.isSelectedReceipt
     }
@@ -65,15 +62,6 @@ export default {
           message: message
         }
       })
-    },
-    showWarningModal(returnUrl) {
-      this.$store.dispatch('modal/show', {
-        target: 'warning-domain-unauth-modal',
-        size: 'small',
-        params: {
-          returnUrl: returnUrl
-        }
-      })
     }
   },
   created() {
@@ -97,9 +85,6 @@ export default {
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
-      if (!this.isVerifiedDomain) {
-        this.showWarningModal(receiveResponse.data.return_url)
-      }
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
       }).catch((error) => {

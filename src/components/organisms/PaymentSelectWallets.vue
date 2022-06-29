@@ -42,9 +42,9 @@
         </span>
           WalletConnect
       </button>
-      <button class="btn __m __pg icon-right full" @click="showRegeneratePaymentUrlModal()">
+      <button class="btn __m __pg icon-right full mb-0" @click="showRegeneratePaymentUrlModal()">
         <span class="btn-icon">
-          <img src="@/assets/images/reuse.svg">
+          <img src="@/assets/images/renewal.svg">
         </span>
           Regenerate URL
       </button>
@@ -109,10 +109,11 @@ export default {
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
     },
-    showCookieCautionModal() {
+    showRiskDisclaimerModal() {
       this.$store.dispatch('modal/show', {
-        target: 'confirm-cookies-for-payment-modal',
+        target: 'caution-payment-risk-disclaimer-modal',
         size: 'small',
+        params: { isVerifiedDomain: this.$store.state.payment.isVerifiedDomain }
       })
     },
     showWalletConnectCautionModal() {
@@ -134,7 +135,7 @@ export default {
     this.$store.dispatch('payment/initializeForBeforeConnectWallet')
     this.$store.dispatch('payment/updateSelectReceiptStatus', true)
     if (!this.isAllowCookies) {
-      this.showCookieCautionModal()
+      this.showRiskDisclaimerModal()
     }
   },
   beforeRouteLeave(to, from, next) {
