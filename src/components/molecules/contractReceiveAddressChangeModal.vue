@@ -32,15 +32,29 @@
       </div>
       <div class="invalid-address" v-if="!isValidAddress">Please enter valid address.</div>
       <p class="mt-2 align-left confirmation margin-bottom-small">Confirmation</p>
-      <p class="mt-2 align-left margin-bottom-small">① Is the address you entered the wallet address or the contract address?</p>
+      <p class="mt-2 align-left margin-bottom-small">
+        ① Is the address you entered the wallet address or the contract address?
+      </p>
       <div class="form-attribute form-container align-left margin-bottom-small">
         <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
-        <label for="wallet-address-type"> wallet address</label>
+        <label for="wallet-address-type"> Wallet address</label>
       </div>
       <div class="form-attribute form-container align-left margin-bottom-small">
         <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
-        <label for="contract-address-type"> Contract address</label>
+        <label for="contract-address-type"> SlashPlugin compliant contract address</label>
       </div>
+      <p class="align-left">
+        <span class='caution'>
+          *&nbsp;If a contract address is set, the contract must conform to the SlashPlugin specification.&nbsp;
+        </span>
+        <a
+          class="document-link"
+          target="_blank"
+          href="https://slash-fi.gitbook.io/docs/integration-guide/advanced-options/received-address"
+        >
+          Learn more.
+        </a>
+      </p>
       <p class="invalid-address margin-bottom-small" v-if="!validAddressType">Please select correct address type.</p>
       <p class="mt-2 align-left margin-bottom-small">② Are you using the correct address for the following network? 
         If correct, check the box.
@@ -574,6 +588,24 @@ export default {
       &.__m {
         background: $gradation-double;
       }
+    }
+    span.caution {
+      font-size: 1.2rem;
+      font-weight: 200;
+    }
+    a.document-link {
+      color: #5492F5;
+      font-size: 1.2rem;
+      font-weight: 200;
+    }
+    a.document-link::after {
+      content: "";
+      background: url(/assets/images/link-icon.svg) no-repeat center center;
+      width: 1.2rem;
+      height: 1.2rem;
+      position: absolute;
+      margin-top: 3px;
+      margin-left: 5px;
     }
   }
   .detail-state-padding {
