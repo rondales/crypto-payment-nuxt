@@ -41,11 +41,11 @@
       </div>
       <div class="form-attribute form-container align-left margin-bottom-small">
         <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
-        <label for="contract-address-type"> SlashPlugin compliant contract address</label>
+        <label for="contract-address-type"> SlashCustomPlugin compliant contract address</label>
       </div>
       <p class="align-left">
         <span class='caution'>
-          *&nbsp;If a contract address is set, the contract must conform to the SlashPlugin specification.&nbsp;
+          *&nbsp;If a contract address is set, the contract must conform to the SlashCustomPlugin specification.&nbsp;
         </span>
         <a
           class="document-link"
