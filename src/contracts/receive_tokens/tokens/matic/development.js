@@ -7,9 +7,9 @@ export default {
   USDT: {
     name: 'Tether USD',
     symbol: 'USDT',
-    address: '0x98F7aDb95Ad50E6f53282C9d7178d96b86DC3658',
+    address: '0x3813e82e6f7098b9583FC0F33a962D02018B6803',
     abi: Usdt.abi,
-    url: `${url}/0x98F7aDb95Ad50E6f53282C9d7178d96b86DC3658`,
+    url: `${url}/0x3813e82e6f7098b9583FC0F33a962D02018B6803`,
     icon: require('@/assets/images/symbol/usdt.svg')
   },
   USDC: {
