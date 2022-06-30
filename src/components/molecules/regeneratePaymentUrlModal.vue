@@ -103,7 +103,7 @@ export default {
     },
     metamaskMobileDeeplinkUrl() {
       const url = new URL(this.paymentUrl)
-      return `https://metamask.app.link/dapps/${url.host}${url.pathname}`
+      return `https://metamask.app.link/dapp/${url.host}${url.pathname}`
     },
     isConfirmed() {
       return this.confirmed
