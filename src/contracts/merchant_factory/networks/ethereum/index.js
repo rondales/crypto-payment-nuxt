@@ -1,10 +1,18 @@
 import Production from './production'
 import Development from './develoment'
 
+let contract
+const environment = process.env.NODE_ENV.toLowerCase()
 const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-const environment = isUseMainnet ? Production : Development
+if(isUseMainnet) {
+  contract = Production.mainnet
+} else if(environment === 'production' && !isUseMainnet) {
+  contract = Production.testnet
+} else {
+  contract = Development
+}
 
 export default {
-  chainId: environment.chainId,
-  address: environment.address
+  chainId: contract.chainId,
+  address: contract.address
 }
