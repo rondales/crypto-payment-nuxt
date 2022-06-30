@@ -330,6 +330,9 @@ export default {
     mouseLeave(){
       this.isHover = false;
     }
+  },
+  created() {
+    this.$store.dispatch('wallet/updatePendingStatus', false)
   }
 }
 </script>
