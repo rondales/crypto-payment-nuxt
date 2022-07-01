@@ -336,9 +336,6 @@ export default {
   },
   created() {
     this.initializeWalletPendingStatus()
-  },
-  beforeRouteUpdate() {
-    this.initializeWalletPendingStatus()
   }
 }
 </script>

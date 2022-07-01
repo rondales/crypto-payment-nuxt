@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import { createRouterLayout } from "vue-router-layout";
+import store from "@/store";
 
 Vue.use(Router);
 
@@ -187,6 +188,7 @@ const DEFAULT_TITLE = 'Slash'
 
 router.afterEach((to) => {
   document.title = to.meta.title || DEFAULT_TITLE;
+  store.dispatch('wallet/updatePendingStatus', false)
 });
 
 export default router;
