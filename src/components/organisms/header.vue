@@ -134,7 +134,8 @@
 </template>
 
 <script>
-import { WALLET_CONNECT, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import Web3 from 'web3'
+import { WALLET_CONNECT, METAMASK, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
 import AvailableNetworks from '@/network'
 
 export default {
@@ -142,6 +143,7 @@ export default {
   props: ['width'],
   data() {
     return {
+      monitoringInterval: null,
       receiveTokenIcons: {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
@@ -195,6 +197,9 @@ export default {
     }
   },
   computed: {
+    MONITORING_INTERVAL_CYCLE() {
+      return 3000
+    },
     darkTheme() {
       return DARK_THEME
     },
@@ -286,7 +291,14 @@ export default {
     },
     isWalletPending() {
       return this.$store.state.wallet.pending
-    }
+    },
+    isSetWeb3Instance() {
+      return this.$store.state.web3.instance instanceof Web3
+    },
+    isSetWeb3ProviderType() {
+      return this.$store.state.web3.provider === METAMASK
+              || this.$store.state.web3.provider === WALLET_CONNECT
+    },
   },
   methods: {
     showWalletModal() {
@@ -329,7 +341,23 @@ export default {
     },
     mouseLeave(){
       this.isHover = false;
+    },
+    pollAccountData() {
+      if(this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
+        this.$web3.getAccountData(
+          this.$store.state.web3.instance,
+          this.$store.state.web3.chainId
+        ).then((account) => {
+          this.$store.dispatch('account/update', account)
+        })
+      }
     }
+  },
+  created() {
+    this.monitoringInterval = setInterval(this.pollAccountData, this.MONITORING_INTERVAL_CYCLE)
+  },
+  beforeDestroy() {
+    clearInterval(this.monitoringInterval)
   }
 }
 </script>
