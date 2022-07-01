@@ -1,6 +1,6 @@
 <template>
   <div id="wrapAll">
-    <LpHeader :isEnableEnterApp="isEnableEnterApp" />
+    <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' '">
@@ -11,7 +11,7 @@
             src="@/assets/images/logo-icon.svg"
             alt="Slash payment"
           />
-          <h1 :class="section.mv.class + '__h1'">
+          <h1 :class="section.mv.class + '__h1 non-translate'">
             <span :class="section.mv.class + '__h1__title'">{{
               section.mv.title.title
             }}</span>
@@ -23,11 +23,14 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton v-if="isEnableEnterApp" :link="section.mv.link" type="main" size="m" />
-            <LpButton v-else :link="section.mv.link" class="disable" type="main" size="m" />
-            <LpButton :link="section.mv.link2" type="sub" size="m" />
-            <div v-if="isShowTestnet" :class="section.token.class + '__subbox__link'">
-              <LpButton :link="section.mv.link3" class="disable" type="simple" size="s"  />
+            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+            <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small" />
+            <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small" />
+            <LpButton :link="section.mv.link4" type="main" size="m" />
+
+            <div :class="section.token.class + '__subbox__link'">
+              <LpButton v-if="isUseMainnet" :link="section.mv.link5" type="simple" size="s" />
+              <LpButton v-else :link="section.mv.link6" type="simple" size="s" />
             </div>
           </div>
         </div>
@@ -38,7 +41,7 @@
         <div class="section__wrap">
           <div :class="section.hello.class + '__wrap'">
             <div :class="section.hello.class + '__textwrap'">
-              <h2 :class="section.hello.class + '__h2 scrollAction textMove'">
+              <h2 :class="section.hello.class + '__h2 scrollAction textMove non-translate'">
                 <span :class="section.hello.class + '__h2__title'">{{
                   section.hello.title.title
                 }}</span>
@@ -72,7 +75,7 @@
       <section id="token" :class="section.token.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.token.class + '__title'"
+            :class="section.token.class + '__title '"
             :title="section.token.title"
             color="g"
           />
@@ -88,7 +91,7 @@
             <p :class="section.token.class + '__subbox__text'">
               <span>{{ section.token.sub.text }}</span>
             </p>
-            <div :class="section.token.class + '__subbox__link'">
+            <div :class="section.token.class + '__subbox__link non-translate'">
               <LpButton :link="section.token.sub.link" type="main" size="s" />
             </div>
           </div>
@@ -116,7 +119,7 @@
       <section :class="section.install.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.install.class + '__title'"
+            :class="section.install.class + '__title non-translate'"
             :title="section.install.title"
           />
           <ul :class="section.install.class + '__feature'">
@@ -137,14 +140,15 @@
       <section id="fee-ecosystem" :class="section.fee.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.fee.class + '__title'"
+            :class="section.fee.class + '__title non-translate'"
             :title="section.fee.title"
           />
           <ul :class="section.fee.class + '__feature'">
-            <li v-for="feature in section.fee.features" :key="feature.title">
+            <li v-for="feature in section.fee.features" :key="feature.title" >
               <LpImageText
                 :data="feature"
                 :class="section.install.class + '__feature__list'"
+                :id="feature.addId"
               />
             </li>
           </ul>
@@ -193,7 +197,7 @@
         <!-- <LpAnimation :canvasClass="section.network.class" type="SubCanvas4" /> -->
         <div class="section__wrap">
           <LpTitle
-           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+           :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.network.title"
           />
           <ul :class="section.network.class + '__logos scrollAction listMove'">
@@ -208,7 +212,7 @@
       <section id="roadmap" :class="section.roadmap.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.roadmap.class + '__title'"
+            :class="section.roadmap.class + '__title non-translate'"
             :title="section.roadmap.title"
           />
           <div :class="section.roadmap.class + '__phase'">
@@ -217,7 +221,7 @@
               v-for="phase in section.roadmap.phases"
               :key="phase.title"
             >
-              <h3 :class="section.roadmap.class + '__phase__title'">
+              <h3 :class="section.roadmap.class + '__phase__title non-translate'">
                 <span v-html="phase.title"></span>
               </h3>
               <ul :class="section.roadmap.class + '__phase__list'">
@@ -226,7 +230,7 @@
                     <h4 :class="section.roadmap.class + '__phase__subtitle'">
                       <span>{{ list.title }}</span>
                     </h4>
-                    <ul :class="section.roadmap.class + '__phase__sublist'">
+                    <ul :class="section.roadmap.class + '__phase__sublist non-translate'">
                       <li v-for="li in list.list" :key="li.text">
                         <span :class="{active: li.active}">
                           {{ li.text }}
@@ -245,7 +249,7 @@
       <section id="developers" :class="section.welcome.class">
         <div class="section__wrap">
           <LpTitle
-            :class="section.welcome.class + '__title'"
+            :class="section.welcome.class + '__title non-translate'"
             :title="section.welcome.title"
           />
           <ul :class="section.welcome.class + '__list'">
@@ -266,7 +270,7 @@
         <!-- <LpAnimation :canvasClass="section.cv.class" type="SubCanvas3" /> -->
         <div class="section__wrap ">
           <LpTitle
-            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title'"
+            :class="( $store.state.theme == 'light')?section.cv.class + '__title light':section.cv.class + '__title non-translate'"
             :title="section.cv.title"
           />
           <div :class="section.cv.class + '__wrap'">
@@ -275,8 +279,9 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton v-if="isEnableEnterApp" :link="section.cv.link" type="main" size="m" />
-              <LpButton v-else :link="section.cv.link" class="disable" type="main" size="m" />
+              <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+              <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small"/>
+              <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small"/>
             </div>
             <ul :class="section.cv.class + '__list'">
               <li v-for="list in section.cv.list" :key="list.title">
@@ -287,7 +292,7 @@
         </div>
       </section>
     </main>
-    <LpFooter :isShowTestnet="isShowTestnet" />
+    <LpFooter :isUseMainnet="isUseMainnet" />
   </div>
 </template>
 
@@ -300,7 +305,6 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-import { PRODUCTION, DEVELOPMENT } from "@/constants"
 // used it used at SECTION trial
 // import LpIcon from "@/components/templates/LpParts/Icon";
 
@@ -325,21 +329,42 @@ export default {
             subtitle: "Web3 payment",
           },
           lead: "the next generation of decentralized payment methods,<br>to support any Token payment.",
-          link: {
+          link1: {
             url: "/",
             title: "Enter App",
             // icon: "pointing-up",
             func: "enterApp",
           },
           link2: {
+            url: "/",
+            title: "Coming Soon",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
+          },
+          link3: {
+            url: "/",
+            title: "Launch June 30, 2022",
+            // icon: "pointing-up",
+            func: "enterApp",
+            font: "s"
+          },
+          link4: {
             url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
             title: "Whitepaper",
             icon: "icon/gitbook",
             btnType: "a",
           },
-          link3: {
-            url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
+          link5: {
+            url: "https://testnet.slash.fi/",
             title: "To Testnet",
+            icon: "icon/arrow",
+            iconAfter: true,
+            btnType: "a"
+          },
+          link6: {
+            url: "https://slash.fi/",
+            title: "To Mainnet",
             icon: "icon/arrow",
             iconAfter: true,
             btnType: "a"
@@ -512,6 +537,7 @@ export default {
                 lightSrc: "",
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
+              text2: "Mainnet will launch July 4, 2022.",
               link: {
                 url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",
@@ -621,6 +647,8 @@ export default {
               },
             },
             {
+              show: true,
+              addId: "donate",
               layout: "c",
               title: "Slash automatically donation program",
               image: {
@@ -651,6 +679,7 @@ export default {
             },
             {
               layout: "l",
+              addId: "slash-token",
               tag: {
                 title: "Phase 2",
                 text: "coming soon…",
@@ -716,7 +745,7 @@ export default {
         network: {
           class: "dlp-network",
           title: {
-            title: 'Connected dapps<br class="sp"> & network 🌎',
+            title: 'Connected dapps<br class="sp"> & network',
             subtitle: "",
           },
           logos: [
@@ -982,27 +1011,27 @@ export default {
               btnType: "a"
             },
             {
-              title: "Slash Payment github",
-              icon: "icon/github",
-              url: "https://github.com/slash-fi",
-              btnType: "a"
-            },
-            {
               title: "Media kit",
               icon: "icon/mediakit",
               url: "/media_kit",
               btnType: "router"
             },
             {
-              title: "Slash Recruit information",
-              icon: "icon/recruit",
-              url: "https://slash-fi.gitbook.io/docs/we-are-hiring/jobs-at-slash",
-              btnType: "a"
-            },
-            {
               title: "Support for Slash Payment System",
               icon: "icon/telegram",
               url: "https://slash-fi.gitbook.io/docs/support/help-center#developer-support",
+              btnType: "a"
+            },
+            {
+              title: "Slash Payment github",
+              icon: "icon/github",
+              url: "",
+              btnType: "a"
+            },
+            {
+              title: "Slash Recruit information",
+              icon: "icon/recruit",
+              url: "",
               btnType: "a"
             },
             {
@@ -1155,20 +1184,8 @@ export default {
   },
 
   computed: {
-    ENVIRONMENT() {
-      return process.env.NODE_ENV
-    },
-    isProduction() {
-      return this.ENVIRONMENT === PRODUCTION
-    },
-    isDevelopment() {
-      return this.ENVIRONMENT === DEVELOPMENT
-    },
     isUseMainnet() {
       return JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-    },
-    isShowTestnet() {
-      return (this.isProduction && this.isUseMainnet) || this.isDevelopment
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
@@ -1176,19 +1193,6 @@ export default {
   },
 
   methods: {
-    openModal(target) {
-      this.$store.dispatch("modal/show", { target: target, size: "small" });
-    },
-    changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
-    },
-    toggle(key) {
-      this.$set(this.show, key, !this.show[key]);
-    },
-    // enterApp() {
-    // Button.vueに記述
-    //   this.$store.dispatch("changeTheme", "dark");
-    // },
     scrollAction() {
       const scrollActions = document.querySelectorAll(".scrollAction");
       const windowHeight = this.winH;

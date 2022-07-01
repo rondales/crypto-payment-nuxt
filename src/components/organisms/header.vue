@@ -66,7 +66,7 @@
             <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
             <span v-else class="price unknown">Balance unknown</span>
             <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
-            <div v-else-if="isWalletPending && !isAdminPage" class="id __pg">
+            <div v-else-if="isWalletPending" class="id __pg">
               <div class="loading-wrap-header loading-wrap active">
                   <img class="spin spin-header" src="@/assets/images/loading.svg">
               </div>
@@ -197,6 +197,9 @@ export default {
     }
   },
   computed: {
+    MONITORING_INTERVAL_CYCLE() {
+      return 3000
+    },
     darkTheme() {
       return DARK_THEME
     },
@@ -287,7 +290,7 @@ export default {
       return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
     },
     isWalletPending() {
-      return this.$store.state.payment.walletPending
+      return this.$store.state.wallet.pending
     },
     isSetWeb3Instance() {
       return this.$store.state.web3.instance instanceof Web3
@@ -348,14 +351,13 @@ export default {
           this.$store.dispatch('account/update', account)
         })
       }
-      this.monitoringInterval = setTimeout(this.pollAccountData, 3000)
     }
   },
   created() {
-    this.pollAccountData()
+    this.monitoringInterval = setInterval(this.pollAccountData, this.MONITORING_INTERVAL_CYCLE)
   },
   beforeDestroy() {
-    clearTimeout(this.monitoringInterval)
+    clearInterval(this.monitoringInterval)
   }
 }
 </script>

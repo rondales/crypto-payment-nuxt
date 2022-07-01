@@ -45,7 +45,8 @@
                 <select v-model="environment">
                   <option :value="environmentList.local">Local</option>
                   <option :value="environmentList.staging" selected>Staging</option>
-                  <option :value="environmentList.production">Production</option>
+                  <option :value="environmentList.testnet" selected>Testnet</option>
+                  <option :value="environmentList.mainnet">Mainnet</option>
                 </select>
               </div>
               <p class="mb-1">
@@ -122,7 +123,8 @@ export default {
       environmentList: {
         local: 1,
         staging: 2,
-        production: 3
+        testnet: 3,
+        mainnet: 4
       },
       environment: 2,
       orderToken: '',
@@ -139,7 +141,9 @@ export default {
           return process.env.VUE_APP_API_BASE_URL
         case this.environmentList.staging:
           return 'https://stg.slash.fi'
-        case this.environmentList.production:
+        case this.environmentList.testnet:
+          return 'https://testnet.slash.fi'
+        case this.environmentList.mainnet:
           return 'https://slash.fi'
         default:
           return 'https://stg.slash.fi'

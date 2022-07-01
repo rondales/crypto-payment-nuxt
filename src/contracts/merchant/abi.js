@@ -30,6 +30,25 @@ export default {
       "inputs": [
         {
           "indexed": false,
+          "internalType": "uint256",
+          "name": "oldPercent",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newPercent",
+          "type": "uint256"
+        }
+      ],
+      "name": "CashBackPercentageUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "bytes16",
           "name": "txId",
           "type": "bytes16"
@@ -79,6 +98,12 @@ export default {
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "cashBack",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "timeStamp",
           "type": "uint256"
         }
@@ -116,6 +141,31 @@ export default {
       "inputs": [
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "oldAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
+        }
+      ],
+      "name": "ReceiveAddressUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "uint256",
           "name": "etherAmount",
           "type": "uint256"
@@ -129,51 +179,6 @@ export default {
       "inputs": [],
       "name": "Unpause",
       "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "MAX_TRANSACTION_FEE",
-      "outputs": [
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "_totalTxCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "_userTxCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
     },
     {
       "inputs": [
@@ -230,6 +235,490 @@ export default {
       "name": "excludeFromRecTokenWhitelist",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "includeInPayTokenBlacklist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        }
+      ],
+      "name": "includeInRecTokenWhitelist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "slashController_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "receiveToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merchantOwner_",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_tokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "recoverWrongTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index_",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeExchange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "payingToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountIn_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "requiredAmountOut_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "path_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "feePath_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "string",
+          "name": "paymentId_",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "optional_",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "submitTransaction",
+      "outputs": [
+        {
+          "internalType": "bytes16",
+          "name": "txNumber",
+          "type": "bytes16"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "affiliatePool_",
+          "type": "address"
+        }
+      ],
+      "name": "updateaffiliatePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "affiliatorWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateAffiliatorWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "cashBack_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateCashBackPercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "fee_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateDonationFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "fee_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateDonationFeeCollected",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "donationWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateDonationWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "maxPercent_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateFeeMaxPercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "minPercent_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateFeeMinPercent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "method_",
+          "type": "uint8"
+        }
+      ],
+      "name": "updateFeeProcessingMethod",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "exchange_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "flag_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateMainExchange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "marketingWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMarketingWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantWallet_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMerchantWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "minAmount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateMinAmountToProcessFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiveAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
+        }
+      ],
+      "name": "updateReceiveAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "reserved_",
+          "type": "bytes"
+        }
+      ],
+      "name": "updateReserve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "slashController_",
+          "type": "address"
+        }
+      ],
+      "name": "updateSlashController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "stakingPool_",
+          "type": "address"
+        }
+      ],
+      "name": "updateStakingPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "fee_",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateTransactionFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "web3Balance_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateWeb3BalanceForFreeTx",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "updateWeb3TokenAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "_totalTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "_userTxCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -388,6 +877,11 @@ export default {
             },
             {
               "internalType": "uint256",
+              "name": "cashBack",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
               "name": "timeStamp",
               "type": "uint256"
             }
@@ -451,66 +945,20 @@ export default {
           "type": "address"
         }
       ],
-      "name": "includeInPayTokenBlacklist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token_",
-          "type": "address"
-        }
-      ],
-      "name": "includeInRecTokenWhitelist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "slashController_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "merchantWallet_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "receiveToken_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "merchantOwner_",
-          "type": "address"
-        },
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "initialize",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token_",
-          "type": "address"
-        }
-      ],
       "name": "isBlacklistedFromPayToken",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isReceiveOnContract",
       "outputs": [
         {
           "internalType": "bool",
@@ -542,6 +990,19 @@ export default {
     },
     {
       "inputs": [],
+      "name": "MAX_TRANSACTION_FEE",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "owner",
       "outputs": [
         {
@@ -555,13 +1016,6 @@ export default {
     },
     {
       "inputs": [],
-      "name": "pause",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "paused",
       "outputs": [
         {
@@ -571,98 +1025,6 @@ export default {
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_tokenAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "recoverWrongTokens",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "index_",
-          "type": "uint256"
-        }
-      ],
-      "name": "removeExchange",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "payingToken_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amountIn_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "requiredAmountOut_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address[]",
-          "name": "path_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "address[]",
-          "name": "feePath_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "string",
-          "name": "paymentId_",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "optional_",
-          "type": "string"
-        },
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "submitTransaction",
-      "outputs": [
-        {
-          "internalType": "bytes16",
-          "name": "txNumber",
-          "type": "bytes16"
-        }
-      ],
-      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -695,265 +1057,6 @@ export default {
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "unpause",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "affiliatorWallet_",
-          "type": "address"
-        }
-      ],
-      "name": "updateAffiliatorWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
-          "name": "fee_",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateDonationFee",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "fee_",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateDonationFeeCollected",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address payable",
-          "name": "donationWallet_",
-          "type": "address"
-        }
-      ],
-      "name": "updateDonationWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
-          "name": "maxPercent_",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateFeeMaxPercent",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
-          "name": "minPercent_",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateFeeMinPercent",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint8",
-          "name": "method_",
-          "type": "uint8"
-        }
-      ],
-      "name": "updateFeeProcessingMethod",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "exchange_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "flag_",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateMainExchange",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address payable",
-          "name": "marketingWallet_",
-          "type": "address"
-        }
-      ],
-      "name": "updateMarketingWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "merchantWallet_",
-          "type": "address"
-        }
-      ],
-      "name": "updateMerchantWallet",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "minAmount_",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateMinAmountToProcessFee",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes",
-          "name": "reserved_",
-          "type": "bytes"
-        }
-      ],
-      "name": "updateReserve",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "slashController_",
-          "type": "address"
-        }
-      ],
-      "name": "updateSlashController",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "stakingPool_",
-          "type": "address"
-        }
-      ],
-      "name": "updateStakingPool",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
-          "name": "fee_",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateTransactionFee",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "web3Balance_",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateWeb3BalanceForFreeTx",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "tokenAddress_",
-          "type": "address"
-        }
-      ],
-      "name": "updateWeb3TokenAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "affiliatePool_",
-          "type": "address"
-        }
-      ],
-      "name": "updateaffiliatePool",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "viewAffiliatePool",
       "outputs": [
@@ -974,6 +1077,37 @@ export default {
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewCashBackPercent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewCashBackPercentWithTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "cashBackPercent",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastModified",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1108,6 +1242,32 @@ export default {
     },
     {
       "inputs": [],
+      "name": "viewMerchantReceiveContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMerchantReceiveWallet",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "viewMerchantWallet",
       "outputs": [
         {
@@ -1127,6 +1287,47 @@ export default {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReceiveAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "isContract",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastModified",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewReceiveContractAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1222,10 +1423,6 @@ export default {
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "stateMutability": "payable",
-      "type": "receive"
     }
   ]
 }

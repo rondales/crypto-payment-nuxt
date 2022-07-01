@@ -5,8 +5,8 @@ export const networkList = {
     icon: 'h-eth.svg',
     type: 2
   },
-  3: {
-    name: 'Ropsten',
+  5: {
+    name: 'Goerli',
     symbol: 'ETH',
     icon: 'h-eth.svg',
     type: null

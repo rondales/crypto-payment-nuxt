@@ -42,17 +42,18 @@
         </span>
           WalletConnect
       </button>
+      <button class="btn __m __pg icon-right full mb-0" @click="showRegeneratePaymentUrlModal()">
+        <span class="btn-icon">
+          <img src="@/assets/images/renewal.svg">
+        </span>
+          Regenerate URL
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import {
-  METAMASK,
-  STATUS_PROCESSING,
-  STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS
-} from '@/constants'
+import { METAMASK } from '@/constants'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
 
@@ -97,6 +98,9 @@ export default {
     },
     paymentToken() {
       return this.$route.params.token
+    },
+    isAllowCookies() {
+      return this.$store.state.payment.isAllowCookies
     }
   },
   methods: {
@@ -105,28 +109,42 @@ export default {
       const request = { params: new URLSearchParams([['payment_token', this.$route.params.token]])}
       return this.axios.get(url, request)
     },
+    showRiskDisclaimerModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'caution-payment-risk-disclaimer-modal',
+        size: 'small',
+        params: { isVerifiedDomain: this.$store.state.payment.isVerifiedDomain }
+      })
+    },
     showWalletConnectCautionModal() {
       this.$store.dispatch('modal/show', {
         target: 'caution-wallet-connect-modal',
         size: 'small'
       })
     },
-    pageTransition() {
-      let nextPath
-      switch(this.status) {
-        case STATUS_PROCESSING:
-        case STATUS_RESULT_FAILURE:
-        case STATUS_RESULT_SUCCESS:
-          nextPath = `/payment/detail/${this.paymentToken}`
-          break
-        default:
-          nextPath = `/payment/token/${this.paymentToken}`
-      }
-      this.$router.push({ path: nextPath })
+    showRegeneratePaymentUrlModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'regenerate-payment-url-modal',
+        size: 'small'
+      })
     }
   },
   created() {
-    this.$store.dispatch('payment/updateHeaderInvoice', true)
+    this.$store.dispatch('account/initialize')
+    this.$store.dispatch('web3/initialize')
+    this.$store.dispatch('payment/initializeForBeforeConnectWallet')
+    this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+    if (!this.isAllowCookies) {
+      this.showRiskDisclaimerModal()
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    const connectedWalletPages = ['tokens', 'exchange', 'detail']
+    if (connectedWalletPages.includes(to.name)) {
+      next(false)
+    } else {
+      next()
+    }
   }
 }
 </script>

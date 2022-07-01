@@ -17,7 +17,7 @@
     />
   </button>
   <div v-else>
-    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass" :href="link.url">
+    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass"  :href="link.url" target="_blank">
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
@@ -87,6 +87,9 @@ export default {
       type: String,
       default: "m",
     },
+    font: {
+      type: String,
+    },
   },
   computed: {
     API_BASE_URL() {
@@ -112,7 +115,7 @@ export default {
       return process.env.VUE_APP_UNICEF_MERCHANT_HASH_TOKEN;
     },
     linkClass() {
-      let classname = "lpButton " + this.type + " " + this.size;
+      let classname = "lpButton " + this.type + " " + this.size + " " + this.font;
       return classname;
     },
 
@@ -243,10 +246,11 @@ export default {
     }
   }
   &.disable{
-    opacity: .9 !important;
+    opacity: .8 !important;
     pointer-events:none;
-    &:before {
-      background: $border !important;
+    position: relative;
+    &::before{
+      background: #AAAAAA !important;
     }
   }
   .icon {
@@ -337,6 +341,9 @@ export default {
         margin-left: rem_sp(0.5);
       }
     }
+  }
+  &.small{
+    font-size: 14px
   }
   &.main {
     @extend .lpButton;

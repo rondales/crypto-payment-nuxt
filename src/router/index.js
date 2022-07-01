@@ -31,7 +31,7 @@ const router = new Router({
     if (to.hash) {
       const el = await findEl(to.hash);
 
-      return window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+      return window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset, behavior: 'smooth' });
     }
 
     return { x: 0, y: 0 };
@@ -91,6 +91,12 @@ const router = new Router({
               name: "detail",
               path: "/payment/detail/:token",
               component: () => import("@/components/organisms/PaymentDetail"),
+              meta: { title: 'Slash Payment' }
+            },
+            {
+              name: "result",
+              path: "/payment/result/:token",
+              component: () => import("@/components/organisms/PaymentResult"),
               meta: { title: 'Slash Payment' }
             },
             {

@@ -5,7 +5,7 @@ import Dai from '../../abis/ethereum/dai'
 import Uni from '../../abis/ethereum/uni'
 import Weth from '../../abis/ethereum/weth'
 
-const url = NETWORKS[3].scanUrl + '/address'
+const url = NETWORKS[5].scanUrl + '/address'
 
 export default {
   ETH: {
@@ -19,25 +19,25 @@ export default {
   USDT: {
     name: 'Teher USD',
     symbol: 'USDT',
-    address: '0x110a13FC3efE6A245B50102D2d79B3E76125Ae83',
+    address: '0x6AD196dBcd43996F17638B924d2fdEDFF6Fdd677',
     abi: Usdt.abi,
-    url: `${url}/0x110a13FC3efE6A245B50102D2d79B3E76125Ae83`,
+    url: `${url}/0x6AD196dBcd43996F17638B924d2fdEDFF6Fdd677`,
     icon: require('@/assets/images/symbol/usdt.svg')
   },
   USDC: {
     name: 'USD Coin',
     symbol: 'USDC',
-    address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+    address: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
     abi: Usdc.abi,
-    url: `${url}/0x07865c6E87B9F70255377e024ace6630C1Eaa37F`,
+    url: `${url}/0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C`,
     icon: require('@/assets/images/symbol/usdc.svg')
   },
   DAI: {
     name: 'MakerDAO',
     symbol: 'DAI',
-    address: '0x31F42841c2db5173425b5223809CF3A38FEde360',
+    address: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60',
     abi: Dai.abi,
-    url: `${url}/0x31F42841c2db5173425b5223809CF3A38FEde360`,
+    url: `${url}/0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60`,
     icon: require('@/assets/images/symbol/dai.svg')
   },
   UNI: {
@@ -51,9 +51,9 @@ export default {
   WETH: {
     name: 'Wrapped Ethereum',
     symbol: 'WETH',
-    address: '0xc778417e063141139fce010982780140aa0cd5ab',
+    address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     abi: Weth.abi,
-    url: `${url}/0xc778417e063141139fce010982780140aa0cd5ab`,
+    url: `${url}/0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6`,
     icon: require('@/assets/images/symbol/weth.svg')
   }
 }

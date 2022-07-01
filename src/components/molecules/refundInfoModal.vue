@@ -13,7 +13,11 @@
       </p>
     </div>
     <div class="body add-flex j-between">
-        <div v-if="refundedTokenAmount" class="refund-item mt-2 mb-3">
+      <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
+          <h3>Cashback amount</h3>
+          <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
+        <div v-if="refundedTokenAmount" class="refund-item mb-3">
           <h3>Token refunded amount</h3>
           <p>{{ refundedTokenAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
         </div>
@@ -44,17 +48,23 @@ export default {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
+    params() {
+      return this.$store.state.modal.params
+    },
     refundedTokenAmount() {
-      return this.$store.state.modal.params.refundedTokenAmount
+      return this.params.refundedTokenAmount
     },
     refundedTokenSymbol() {
-      return this.$store.state.payment.symbol
+      return this.params.refundedTokenSymbol
     },
     refundedFeeAmount() {
-      return this.$store.state.modal.params.refundedFeeAmount
+      return this.params.refundedFeeAmount
     },
     refundedFeeSymbol() {
-      return this.$store.state.modal.params.refundedFeeSymbol
+      return this.params.refundedFeeSymbol
+    },
+    cashBackAmount() {
+      return this.params.cashBackAmount
     }
   },
   methods: {

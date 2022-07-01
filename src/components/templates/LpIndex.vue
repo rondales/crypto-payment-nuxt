@@ -314,7 +314,7 @@
                 by a vote.
               </p>
             </div>
-            <div class="lp-third_link inversion" id="donation">
+            <div class="lp-third_link inversion">
               <a href="/">
                 Fee Structure
                 <span v-if="$store.state.theme == 'dark'">
