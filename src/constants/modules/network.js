@@ -60,7 +60,7 @@ export const NETWORKS = {
     type: null
   },
   43114: {
-    name: 'Avalanche Mainnet(C-Chain)',
+    name: 'Avalanche Mainnet C-Chain',
     alias: 'Avalanche',
     symbol: 'AVAX',
     chainId: 43114,
@@ -70,7 +70,7 @@ export const NETWORKS = {
     type: null
   },
   43113: {
-    name: 'Avalanche Testnet(C-Chain)',
+    name: 'Avalanche FUJI C-Chain',
     alias: 'Avalanche',
     symbol: 'AVAX',
     chainId: 43113,
