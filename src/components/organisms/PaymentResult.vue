@@ -191,11 +191,6 @@ export default {
       }
       return this.axios.get(url, request)
     },
-    apiReceiveData() {
-      const url = `${this.API_BASE_URL}/api/v1/payment`
-      const params = new URLSearchParams([['payment_token', this.paymentToken]])
-      return this.axios.get(url, { params })
-    },
     apiGetTransactionStatus() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
       const request = {
@@ -224,6 +219,12 @@ export default {
       this.transactionHash = data.transaction_address
       this.successReturnUrl = data.succeeded_return_url
       this.failureReturnUrl = data.failured_return_url
+      this.$store.dispatch('payment/update', {
+        domain: data.domain,
+        orderCode: data.order_code,
+        isVerifiedDomain: Boolean(data.is_verified_domain),
+        merchantWalletAddress: data.merchant_wallet_address,
+      })
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
@@ -244,14 +245,6 @@ export default {
       if (this.isStatusProcessing) {
         this.pollingTransactionResult()
       }
-    })
-    this.apiReceiveData().then((receiveResponse) => {
-      this.$store.dispatch('payment/update', {
-        domain: receiveResponse.data.domain,
-        orderCode: receiveResponse.data.order_code,
-        isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
-        merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
-      })
     })
   },
   beforeDestroy() {
