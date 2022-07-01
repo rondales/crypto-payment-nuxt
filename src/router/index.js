@@ -174,7 +174,11 @@ const router = new Router({
   ]
 });
 
-if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development') {
+if (
+  process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development'
+  || (process.env.NODE_ENV === 'production' && !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase()))
+) {
+  console.log('add test')
   router.addRoute({
     name: "test",
     path: "/test",

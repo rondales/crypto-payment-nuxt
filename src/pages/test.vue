@@ -38,16 +38,18 @@
               </p>
             </div>
             <div class="payment_receipt">
-              <p class="mb-1">
-                Environment
-              </p>
-              <div class="payment_receipt_form border mb-2">
-                <select v-model="environment">
-                  <option :value="environmentList.local">Local</option>
-                  <option :value="environmentList.staging" selected>Staging</option>
-                  <option :value="environmentList.testnet" selected>Testnet</option>
-                  <option :value="environmentList.mainnet">Mainnet</option>
-                </select>
+              <div v-if="isDevelopmentMode">
+                <p class="mb-1">
+                  Environment
+                </p>
+                <div class="payment_receipt_form border mb-2">
+                  <select v-model="environment">
+                    <option :value="environmentList.local">Local</option>
+                    <option :value="environmentList.staging" selected>Staging</option>
+                    <option :value="environmentList.testnet" selected>Testnet</option>
+                    <option :value="environmentList.mainnet">Mainnet</option>
+                  </select>
+                </div>
               </div>
               <p class="mb-1">
                 Authentication Token
@@ -71,7 +73,7 @@
                 Amount
               </p>
               <div class="payment_receipt_form border mb-2">
-                <input type="text" v-model="amount" placeholder="USDT amount or empty">
+                <input type="text" v-model="amount" placeholder="Payment amount">
               </div>
             </div>
             <button class="btn __g __l mt-4 mb-1" :class="{active: !isProcessing, inactive: isProcessing}" @click="publishPaymentUrl">
@@ -112,6 +114,7 @@
 <script>
 import JsSHA from 'jssha'
 import VueQrcode from '@chenfengyuan/vue-qrcode'
+import { DEVELOPMENT } from '@/constants'
 
 export default {
   name: 'paymentTest',
@@ -136,17 +139,21 @@ export default {
   },
   computed: {
     baseUrl() {
-      switch(this.environment) {
-        case this.environmentList.local:
-          return process.env.VUE_APP_API_BASE_URL
-        case this.environmentList.staging:
-          return 'https://stg.slash.fi'
-        case this.environmentList.testnet:
-          return 'https://testnet.slash.fi'
-        case this.environmentList.mainnet:
-          return 'https://slash.fi'
-        default:
-          return 'https://stg.slash.fi'
+      if (this.isDevelopmentMode) {
+        switch(this.environment) {
+          case this.environmentList.local:
+            return process.env.VUE_APP_API_BASE_URL
+          case this.environmentList.staging:
+            return 'https://stg.slash.fi'
+          case this.environmentList.testnet:
+            return 'https://testnet.slash.fi'
+          case this.environmentList.mainnet:
+            return 'https://slash.fi'
+          default:
+            return 'https://stg.slash.fi'
+        }
+      } else {
+        return 'https://testnet.slash.fi'
       }
     },
     isProcessing() {
@@ -154,6 +161,9 @@ export default {
     },
     isModaiOpen() {
       return this.modalOpen
+    },
+    isDevelopmentMode() {
+      return process.env.NODE_ENV === DEVELOPMENT
     }
   },
   methods: {
