@@ -613,6 +613,21 @@ export default {
         chainId
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
+      })
+    },
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false
+        }
       })
     },
     copy(value) {

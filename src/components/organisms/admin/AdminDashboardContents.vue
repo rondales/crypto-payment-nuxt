@@ -219,7 +219,24 @@ export default {
       this.$web3.switchChain(
         this.$store.state.web3.instance,
         chainId
-      ).then(() => { this.selectTokens = false })
+      ).then(() => {
+         this.selectTokens = false 
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
+      })
+    },
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false
+        }
+      })
     },
     copy(address) {
       this.$store.dispatch('account/copied')
