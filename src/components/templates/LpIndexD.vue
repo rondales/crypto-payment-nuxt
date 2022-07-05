@@ -305,8 +305,7 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-// used it used at SECTION trial
-// import LpIcon from "@/components/templates/LpParts/Icon";
+import LpIcon from "@/components/templates/LpParts/Icon";
 
 export default {
   data() {
@@ -1151,7 +1150,7 @@ export default {
     LpButton,
     LpTitle,
     LpImage,
-    // LpIcon,
+    LpIcon,
     LpImageText,
   },
   mounted() {
