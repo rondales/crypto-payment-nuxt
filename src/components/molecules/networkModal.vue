@@ -98,7 +98,7 @@ export default {
           chainId: chainId,
           hideCloseButton: false,
           lastModalTarget: 'network-modal',
-          lastModalSize: this.$store.state.modal.params.size,
+          lastModalSize: this.$store.state.modal.size,
           lastModalParams: {
             unsupported: this.$store.state.modal.params.unsupported,
             hideCloseButton: this.$store.state.modal.params.hideCloseButton,
