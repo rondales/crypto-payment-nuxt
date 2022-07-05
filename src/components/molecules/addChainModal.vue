@@ -2,94 +2,86 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Select a Network
+        Add Network
       </h3>
-      <p v-if="isSupportedNetwork" class="header__desc">
-        Please select the network you wish to switch to.
-      </p>
-      <p v-else class="header__desc">
-        The currently connected network is not supported.
+      <p class="header__desc">
+        The following networks you tried to switch to are not registered in your wallet.
         <br>
-        Please select a supported network below to switch networks.
+        Do you want to add this network to your wallet?
       </p>
     </div>
     <div class="body add-flex j-between">
-      <button
-        v-for="network in supportedNetworks"
-        :key="network.chainId"
-        class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId) }"
-        @click="switchNetwork(network.chainId)"
-      >
+      <div class="box __m full mb-5">
         <span class="btn-icon">
-          <img :src="network.icon">
+          <img :src="targetNetwork.icon">
         </span>
-          {{network.name}}
-      </button>
+        {{targetNetwork.name}}
+      </div>
+      <button class="btn __g __l mb-0" @click="addChain(targetNetwork.chainId)">Add Network to Wallet</button>
+      <button class="btn __g __l mb-0" @click="cancel()">Cancel</button>
     </div>
-    <button v-if="isSupportedNetwork" class="close" @click="hideModal">
-      <img src="@/assets/images/cross.svg">
+    <button v-if="!isHideCloseButton" class="close" @click="cancel()">
+      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
+      <img v-else src="@/assets/images/cross.svg">
+      Close
     </button>
   </div>
 </template>
 
 <script>
-import AvailableNetworks from '@/network'
+import { NETWORKS } from '@/constants'
 
 export default {
-  name: 'networkModal',
+  name: 'addChainModal',
   computed: {
     classes() {
       const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
       return classes
     },
-    supportedNetworks() {
-      return AvailableNetworks
+    isHideCloseButton() {
+      return this.$store.state.modal.params.hideCloseButton
     },
-    isCurrentNetwork() {
-      return (chainId) => {
-        return chainId === this.$store.state.web3.chainId
-      }
+    chainId() {
+      return this.$store.state.modal.params.chainId
     },
-    isSupportedNetwork() {
-      const systemAvailableNetworks =
-        Object.values(AvailableNetworks)
-          .map((network) => { return network.chainId })
-      return systemAvailableNetworks.includes(
-        this.$store.state.web3.chainId
-      )
+    targetNetwork() {
+      return NETWORKS[this.chainId]
+    },
+    lastModalTarget() {
+      return this.$store.state.modal.params.lastModalTarget
+    },
+    lastModalSize() {
+      return this.$store.state.modal.params.lastModalSize
+    },
+    lastModalParams() {
+      return this.$store.state.modal.params.lastModalParams
     }
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
     },
-    switchNetwork(chainId) {
-      this.$web3.switchChain(
+    addChain() {
+      this.$web3.addChain(
         this.$store.state.web3.instance,
-        chainId
+        this.chainId
       ).then(() => {
-        this.$store.dispatch('web3/updateChainId', chainId)
         this.hideModal()
       }).catch((error) => {
         console.log(error)
-        if (error.code === 4902) {
-          this.showAddChainModal(chainId)
-        }
       })
     },
-    showAddChainModal(chainId) {
-      this.$store.dispatch('modal/show', {
-        target: 'add-chain-modal',
-        size: 'small',
-        params: { 
-          chainId: chainId,
-          hideCloseButton: false,
-          lastModalTarget: 'switch-network-for-admin-modal',
-          lastModalSize: 'medium'
-        }
-      })
-    },
+    cancel() {
+      if(this.lastModalTarget) {
+        this.$store.dispatch('modal/show', {
+        target: this.lastModalTarget,
+        size: this.lastModalSize,
+        params: this.lastModalParams
+        })
+      } else {
+        this.hideModal()
+      }
+    }
   }
 }
 </script>
@@ -182,6 +174,31 @@ export default {
         width: 100% !important;
         &:nth-child(1){
           margin-bottom: 16px;
+        }
+      }
+    }
+    .box{
+      background: var(--color_darken);
+      color: #fff;
+      font-size: 15px;
+      padding: 1.4rem 1rem;
+      height: 6.6rem;
+      line-height: 3.6rem;
+      border-radius: 1rem;
+      text-align: left;
+      width: 100%;
+      font-weight: 400;
+      margin-bottom: 24px;
+      &:nth-child(2){
+      margin-bottom: 0;
+      }
+      .btn-icon{
+        display: inline-block;
+        width: 38px;
+        height: 38px;        
+        margin-right: 8px;
+        img{
+          border-radius: 6px;
         }
       }
     }
