@@ -34,7 +34,6 @@ export default {
     errorForbiddenBackPaymentModal: () => import('@/components/molecules/errorForbiddenBackPaymentModal'),
     switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
     errorModal: () => import('@/components/molecules/errorModal'),
-    requireSwitchNetworkModal: () => import('@/components/molecules/requireSwitchNetworkModal'),
     receiveModal: () => import('@/components/molecules/receiveModal'),
     editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
     accountModal: () => import('@/components/molecules/accountModal'),
@@ -43,6 +42,7 @@ export default {
     contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
     contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
     cautionPaymentRiskDisclaimerModal: () => import('@/components/molecules/cautionPaymentRiskDisclaimerModal'),
+    addChainModal: () => import('@/components/molecules/addChainModal')
   },
   computed: {
     classes() {

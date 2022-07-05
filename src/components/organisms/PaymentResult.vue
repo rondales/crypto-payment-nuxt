@@ -219,6 +219,12 @@ export default {
       this.transactionHash = data.transaction_address
       this.successReturnUrl = data.succeeded_return_url
       this.failureReturnUrl = data.failured_return_url
+      this.$store.dispatch('payment/update', {
+        domain: data.domain,
+        orderCode: data.order_code,
+        isVerifiedDomain: Boolean(data.is_verified_domain),
+        merchantWalletAddress: data.merchant_wallet_address,
+      })
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {

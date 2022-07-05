@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import { createRouterLayout } from "vue-router-layout";
+import store from "@/store";
 
 Vue.use(Router);
 
@@ -174,7 +175,10 @@ const router = new Router({
   ]
 });
 
-if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development') {
+if (
+  process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development'
+  || (process.env.NODE_ENV === 'production' && !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase()))
+) {
   router.addRoute({
     name: "test",
     path: "/test",
@@ -187,6 +191,7 @@ const DEFAULT_TITLE = 'Slash'
 
 router.afterEach((to) => {
   document.title = to.meta.title || DEFAULT_TITLE;
+  store.dispatch('wallet/updatePendingStatus', false)
 });
 
 export default router;
