@@ -156,7 +156,7 @@
       </section>
 
       <!-- SECTION trial -->
-      <!-- <section id="donation" :class="section.trial.class">
+      <section v-if="isShowDonate" id="donation" :class="section.trial.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.trial.class + '__title'"
@@ -190,7 +190,7 @@
             </div>
           </li>
         </ul>
-      </section> -->
+      </section>
 
       <!-- SECTION network -->
       <section :class="section.network.class">
@@ -1189,6 +1189,9 @@ export default {
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    },
+    isShowDonate() {
+      return JSON.parse(process.env.VUE_APP_SHOW_DONATE.toLowerCase())
     }
   },
 
