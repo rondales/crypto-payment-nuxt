@@ -420,6 +420,9 @@ li {
   left: 50%;
   transform: translate(0, -50%);
   z-index: 9999;
+  @include media(sp) {
+    transform: translate(-50%, 0);
+  }
 }
 
 @keyframes fadeOut {
