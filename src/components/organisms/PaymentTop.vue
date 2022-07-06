@@ -2,40 +2,50 @@
   <div class="payment_top">
     <div class="payment_headbox add-flex j-between a-center">
       <div v-if="isInvoiceHeaderMode" class="add-flex a-end j-between">
-        <div v-if="isCurrentRequestConnectWalletPage" class="logo copy" @click="showRegeneratePaymentUrlModal()">
+        <div
+          v-if="isCurrentRequestConnectWalletPage"
+          class="logo copy"
+          @click="showRegeneratePaymentUrlModal()"
+        >
           <figure>
-            <img :src="scanIcon">
+            <img :src="scanIcon" />
           </figure>
         </div>
-        <div v-else-if="isCurrentBeforeSendTransactionPages" class="logo copy" @click="prevPage()">
+        <div
+          v-else-if="isCurrentBeforeSendTransactionPages"
+          class="logo copy"
+          @click="prevPage()"
+        >
           <figure>
-            <img :src="prevIcon">
+            <img :src="prevIcon" />
           </figure>
         </div>
-        <div v-else-if="isCurrentResultPage" class="logo copy" @click="copyLink()">
+        <div
+          v-else-if="isCurrentResultPage"
+          class="logo copy"
+          @click="copyLink()"
+        >
           <figure>
-            <img :src="linkIcon">
+            <img :src="linkIcon" />
           </figure>
         </div>
       </div>
       <div v-if="isInvoiceHeaderMode">
         <div class="logo">
           <figure>
-            <img src="@/assets/images/invoice.svg">
+            <img src="@/assets/images/invoice.svg" />
           </figure>
         </div>
       </div>
       <div v-else class="logo add-flex a-end">
         <figure>
-          <img src="@/assets/images/slash.svg">
+          <img src="@/assets/images/slash.svg" />
         </figure>
-        <div class="product_name">
-          Web3 Payment
-        </div>
+        <div class="product_name">Web3 Payment</div>
       </div>
-      <div class="hamburger" @click="hideMenu" :class="{active: showMenu}">
-        <button type="button" class="menu-btn" >
-          <img :src="hamburgerIcon" alt="">
+      <div class="hamburger" @click="hideMenu" :class="{ active: showMenu }">
+        <button type="button" class="menu-btn">
+          <img :src="hamburgerIcon" alt="" />
         </button>
       </div>
     </div>
@@ -44,121 +54,127 @@
 
 
 <script>
-import VuexRestore from '@/components/mixins/VuexRestore'
+import VuexRestore from "@/components/mixins/VuexRestore";
 
 export default {
-  name: 'PaymentTop',
+  name: "PaymentTop",
   mixins: [VuexRestore],
-  props: ['showMenu'],
+  props: ["showMenu"],
   data() {
-    return{
+    return {
       success: true,
       invoice: false,
       address: "hogefugahogefuga",
-      currentRouteName: ''
-    }
+      currentRouteName: "",
+    };
   },
   watch: {
     $route(route) {
-      this.currentRouteName = route.name
-    }
+      this.currentRouteName = route.name;
+    },
   },
   computed: {
     scanIcon() {
       return this.isDarkTheme
-        ? require('@/assets/images/camera-scan.svg')
-        : require('@/assets/images/camera-scan-l.svg')
+        ? require("@/assets/images/camera-scan.svg")
+        : require("@/assets/images/camera-scan-l.svg");
     },
     linkIcon() {
       return this.isDarkTheme
-        ? require('@/assets/images/link.svg')
-        : require('@/assets/images/link-l.svg')
+        ? require("@/assets/images/link.svg")
+        : require("@/assets/images/link-l.svg");
     },
     prevIcon() {
       return this.isDarkTheme
-        ? require('@/assets/images/left-arrow.svg')
-        : require('@/assets/images/left-arrow-l.svg')
+        ? require("@/assets/images/left-arrow.svg")
+        : require("@/assets/images/left-arrow-l.svg");
     },
     hamburgerIcon() {
       return this.isDarkTheme
-        ? require('@/assets/images/hamburger.svg')
-        : require('@/assets/images/hamburger-light.svg')
+        ? require("@/assets/images/hamburger.svg")
+        : require("@/assets/images/hamburger-light.svg");
     },
     prevMode() {
-      return ((this.currentRouteName === 'exchange' || this.currentRouteName === 'detail') && this.$store.state.payment.status === 1)
+      return (
+        (this.currentRouteName === "exchange" ||
+          this.currentRouteName === "detail") &&
+        this.$store.state.payment.status === 1
+      );
     },
     isInvoiceHeaderMode() {
-      return this.isCurrentRequestConnectWalletPage
-        || this.isCurrentBeforeSendTransactionPages
-        || this.isCurrentResultPage
+      return (
+        this.isCurrentRequestConnectWalletPage ||
+        this.isCurrentBeforeSendTransactionPages ||
+        this.isCurrentResultPage
+      );
     },
     isCurrentRequestConnectWalletPage() {
-      return this.$route.name === 'wallets'
+      return this.$route.name === "wallets";
     },
     isCurrentBeforeSendTransactionPages() {
-      const pages = ['token', 'exchange', 'detail']
-      return pages.includes(this.$route.name)
+      const pages = ["token", "exchange", "detail"];
+      return pages.includes(this.$route.name);
     },
     isCurrentResultPage() {
-      return this.$route.name === 'result'
+      return this.$route.name === "result";
     },
     isDarkTheme() {
-      return this.$store.state.theme === 'dark'
-    }
+      return this.$store.state.theme === "dark";
+    },
   },
   methods: {
     open() {
-      this.$store.dispatch("hamberger", {hamberger: true});
+      this.$store.dispatch("hamberger", { hamberger: true });
     },
     hideMenu() {
-      this.$emit('toggleMenu', !this.showMenu)
+      this.$emit("toggleMenu", !this.showMenu);
     },
     copyLink() {
-      this.$emit('copyLink')
+      this.$emit("copyLink");
     },
     prevPage() {
-      this.$router.back()
+      this.$router.back();
     },
     showRegeneratePaymentUrlModal() {
-      this.$store.dispatch('modal/show', {
-        target: 'regenerate-payment-url-modal',
-        size: 'small'
-      })
-    }
-  }
-}
+      this.$store.dispatch("modal/show", {
+        target: "regenerate-payment-url-modal",
+        size: "small",
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
-.payment_top{
+@import "@/assets/scss/style.scss";
+.payment_top {
   margin-bottom: 16px;
-  .logo{
-    .product_name{
+  .logo {
+    .product_name {
       font-size: 15px;
       margin-left: 16px;
-      font-weight: 100;
+      font-weight: 300;
     }
   }
-  .copy{
+  .copy {
     cursor: pointer;
   }
-  .hamburger{
+  .hamburger {
     display: block;
     position: relative;
     width: 24px;
     height: 24px;
     overflow: hidden;
     z-index: 2;
-    &.active{
-      .menu-btn{
+    &.active {
+      .menu-btn {
         top: 0;
       }
     }
-    .menu-btn{
+    .menu-btn {
       position: absolute;
       top: -23px;
     }
-  } 
+  }
 }
 </style>
