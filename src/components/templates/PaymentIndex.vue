@@ -71,41 +71,6 @@
         <img class="spin" src="@/assets/images/loading.svg" />
       </div>
     </div>
-    <div v-if="showFooterMenu" class="sp">
-      <div class="fixed add-flex j-between a-center">
-        <button
-          class="btn __pg __s sp-fixed"
-          @click="openModal('wallet-modal', 'small')"
-        >
-          <span class="icon-wrap">
-            <img src="@/assets/images/wallet-connect_w.svg" />
-          </span>
-          Connect to a wallet
-        </button>
-        <button class="btn __pg __s sp-fixed" @click="copyLink">
-          <span class="icon-wrap">
-            <img src="@/assets/images/link.svg" />
-          </span>
-          Copy URL
-        </button>
-        <span class="toggle-theme">
-          <button
-            :class="['theme-button', '--light', { 'is-active': isLightTheme }]"
-            @click="switchColorTheme(lightTheme)"
-            v-if="isDarkTheme"
-          >
-            <img src="@/assets/images/light.svg" alt="" />
-          </button>
-          <button
-            :class="['theme-button', '--dark', { 'is-active': isDarkTheme }]"
-            @click="switchColorTheme(darkTheme)"
-            v-if="isLightTheme"
-          >
-            <img src="@/assets/images/dark.svg" alt="" />
-          </button>
-        </span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -123,7 +88,6 @@ export default {
   },
   props: [
     "colorTheme",
-    "showFooterMenu",
     "receiver",
     "isVerifiedDomain",
     "invoiceId",

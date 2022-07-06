@@ -27,30 +27,6 @@
         </div>
       </div>
       <div class="global-header__actions add-flex a-center">
-        <span class="toggle-theme" v-if="isShowSwitchThemeButton">
-          <button
-            :class="[
-              'theme-button',
-              '--light',
-              { 'is-active': isLightTheme },
-            ]"
-            @click="switchColorTheme(lightTheme)"
-            v-if="isDarkTheme"
-          >
-            <img src="@/assets/images/light.svg" alt="">
-          </button>
-          <button
-            :class="[
-              'theme-button',
-              '--dark',
-              { 'is-active': isDarkTheme },
-            ]"
-            @click="switchColorTheme(darkTheme)"
-            v-if="isLightTheme"
-          >
-            <img src="@/assets/images/dark.svg" alt="">
-          </button>
-        </span>
         <div v-if="show" class="pc">
           <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
             :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
@@ -74,9 +50,33 @@
             </div>
           </button>
           <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
-            Connect to a wallet
+            Connect to wallet
           </button>
         </div>
+        <span class="toggle-theme">
+          <button
+            :class="[
+              'theme-button',
+              '--light',
+              { 'is-active': isLightTheme },
+            ]"
+            @click="switchColorTheme(lightTheme)"
+            v-if="isDarkTheme"
+          >
+            <img src="@/assets/images/light.svg" alt="">
+          </button>
+          <button
+            :class="[
+              'theme-button',
+              '--dark',
+              { 'is-active': isDarkTheme },
+            ]"
+            @click="switchColorTheme(darkTheme)"
+            v-if="isLightTheme"
+          >
+            <img src="@/assets/images/dark.svg" alt="">
+          </button>
+        </span>
       </div>
     </div>
     <div v-if="this.$store.state.accountMenu" class="account-menu">
@@ -220,9 +220,6 @@ export default {
     },
     isLightTheme() {
       return this.$store.state.theme === this.lightTheme
-    },
-    isShowSwitchThemeButton() {
-      return (this.$route.name !== 'admin' && ((this.width <= 768 && (this.$route.name === 'entrance' || this.$route.name === 'receipt')) || this.width > 768))
     },
     isAdminPage() {
       return this.$route.name === 'admin'
@@ -568,8 +565,9 @@ export default {
     letter-spacing: 0.05em;
     .price{
       max-width: 115px;
-      margin: 0 10px;
+      margin: 0 8px;
       color: #fff;
+      font-size: 11px;
       &.unknown {
         margin-left: 0px;
       }
@@ -579,11 +577,12 @@ export default {
       height: 2.5rem;
       line-height: 2.5rem;
       border-radius: 8px;
-      padding: 0 16px;
+      padding: 0 10px;
       margin-left: 0;
       margin-right: 0;
       color: #fff;
       box-sizing: border-box;
+      font-size: 11px;
       &.__g {
         background: $gradation;
       }
@@ -603,7 +602,8 @@ export default {
   &.__s {
     @include media(sp) {
       height: 3rem;
-      font-size: 12px;
+      font-size: 10px;
+      padding: 0 1rem;
     }
   }
   &.pointer {
