@@ -248,7 +248,7 @@ export default {
     content: "Slash.fi Web3 Payment ®︎";
     font-size: 11px;
     color: var(--color_font);
-    font-weight: 100;
+    font-weight: 300;
     position: absolute;
     bottom: -60px;
     left: 50%;
@@ -273,7 +273,7 @@ export default {
     a {
       display: block;
       font-size: 18px;
-      font-weight: 100;
+      font-weight: 300;
       margin-bottom: 24px;
     }
   }

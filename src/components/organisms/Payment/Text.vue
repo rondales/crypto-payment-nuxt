@@ -43,17 +43,35 @@ export default {
       font-size: 2rem;
     }
   }
-  // &__lead {
-  //   @include font(16px, $fw, $ls, $lh, $en_go);
-  //   @include media(sp) {
-  //     font-size: 13px;
-  //   }
-  // }
+  &__subtitle {
+    @include font(20px, 500, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 18px;
+    }
+  }
+  &__lead {
+    @include font(18px, 500, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 15px;
+    }
+  }
+
   &__p {
-    @include font(16px, 300, $ls, $lh, $en_go);
+    @include font(15px, 300, $ls, $lh, $en_go);
     @include media(sp) {
       font-size: 13px;
     }
+  }
+  &__cap {
+    @include font(12px, 300, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 11px;
+    }
+  }
+
+  &__connectWallet {
+    @include font(14px, 400, $ls, $lh, $en_go);
+    white-space: nowrap;
   }
 }
 </style>
