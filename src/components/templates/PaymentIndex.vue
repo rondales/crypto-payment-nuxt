@@ -195,6 +195,7 @@ export default {
 .slash-bg {
   width: 100%;
   min-height: 120vh;
+  overflow: hidden;
   @include media(sp) {
     padding-top: 55px;
     min-height: 100vh;
