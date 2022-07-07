@@ -43,7 +43,12 @@
         You can access this page with the MetaMaskMobile browser by scanning the following QR code on a device with MetaMaskMobile installed.
       </p>
       <div class="qr mt-4">
-        <vue-qrcode :value="metamaskMobileDeeplinkUrl" tag="img" />
+        <a :href="metamaskMobileDeeplinkUrl">
+          <vue-qrcode :value="metamaskMobileDeeplinkUrl" tag="img" />
+        </a>
+      </div>
+      <div class="deeplink mt-2">
+        <a :href="metamaskMobileDeeplinkUrl">Access with MetaMask Mobile Browser</a>
       </div>
       <div class="url-wrap add-flex mt-5">
         <div class="url">
@@ -335,8 +340,29 @@ export default {
     .qr {
       width: 100%;
       text-align: center;
+      a {
+        @include media(pc) {
+          pointer-events: none;
+        }
+      }
       img {
         border-radius: 8px;
+      }
+    }
+    .deeplink {
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      @include media(pc) {
+        display: none;
+      }
+      a::after {
+        content: "";
+        background: url(/assets/images/logout.svg) no-repeat center center;
+        width: 17px;
+        height: 17px;
+        position: absolute;
+        margin-left: 5px;
       }
     }
     .url-wrap {
