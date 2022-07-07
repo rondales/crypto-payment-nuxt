@@ -45,7 +45,7 @@
       </div>
     </div>
     <div v-else class="body">
-      <div class="qr_title">
+      <div class="qr_title sp">
         <PaymentText tag="h3" type="subtitle" html="Tap QR cord" />
         <PaymentText tag="p" html="Access with Metamask Mobile Browser" />
       </div>
@@ -73,7 +73,7 @@
         following QR code on a device with MetaMaskMobile installed."
       />
       <div class="deeplink">
-        <a :href="metamaskMobiledeeplinkUrl"
+        <a :href="metamaskMobileDeeplinkUrl"
           ><PaymentText html="Access with MetaMask Mobile Browser"
         /></a>
       </div>
