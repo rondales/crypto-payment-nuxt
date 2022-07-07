@@ -73,5 +73,11 @@ export default {
     @include font(14px, 400, $ls, $lh, $en_go);
     white-space: nowrap;
   }
+  &__copylink {
+    @include font(15px, 300, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 13px;
+    }
+  }
 }
 </style>
