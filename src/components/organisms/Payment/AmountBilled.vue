@@ -33,7 +33,7 @@ export default {
       default: "USDT",
     },
     price: {
-      type: [Number, String],
+      type: [String, Number],
       default: 1,
     },
     priceClass: {

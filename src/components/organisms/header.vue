@@ -53,7 +53,7 @@
             Connect to wallet
           </button>
         </div>
-        <span class="toggle-theme">
+        <span v-if="isPaymentPage" class="toggle-theme">
           <button
             :class="[
               'theme-button',
@@ -223,6 +223,11 @@ export default {
     },
     isAdminPage() {
       return this.$route.name === 'admin'
+    },
+    isPaymentPage() {
+      const currentPath = this.$route.path
+      const pattern = /^\/payment\//
+      return pattern.test(currentPath)
     },
     isConnected() {
       return (this.$store.state.web3.instance)
