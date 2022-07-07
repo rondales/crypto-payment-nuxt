@@ -45,6 +45,10 @@
       </div>
     </div>
     <div v-else class="body">
+      <div class="qr_title">
+        <PaymentText tag="h3" type="subtitle" html="Tap QR cord" />
+        <PaymentText tag="p" html="Access with Metamask Mobile Browser" />
+      </div>
       <div class="qr">
         <div class="qr_wrap">
           <a :href="metamaskMobileDeeplinkUrl">
@@ -375,6 +379,15 @@ export default {
     }
     @include media(sp) {
       padding: 0 40px 0;
+    }
+  }
+  .qr_title {
+    margin-bottom: 1rem;
+    &::v-deep {
+      text-align: center;
+      * {
+        text-align: center;
+      }
     }
   }
   .qr {
