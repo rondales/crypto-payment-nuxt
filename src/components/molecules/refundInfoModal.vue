@@ -8,9 +8,12 @@
         html="Refunded information"
       />
       <PaymentText
+        tag="p"
         html="Slippage collections were refunded.<br />Refund information is below."
       />
       <PaymentText
+        class="cap"
+        tag="p"
         type="cap"
         html=" *&nbsp;Tokens are refunded in merchant's receive token."
       />
@@ -21,33 +24,21 @@
         <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
       </div>
       <div v-if="refundedTokenAmount" class="refund-item mb-3">
-        <PaymentText tag="h3" type="subtitle" html="Token refunded amount" />
-        <p>
-          <PaymentText
-            class="price"
-            type="subtitle"
-            :html="refundedTokenAmount"
-          />
+        <PaymentText tag="h3" type="p" html="Token refunded amount" />
+        <p class="pricewrap">
+          <PaymentText class="price" type="price" :html="refundedTokenAmount" />
           <PaymentText
             class="symbol"
-            type="subtitle"
+            type="symbol"
             :html="refundedTokenSymbol"
           />
         </p>
       </div>
       <div v-if="refundedFeeAmount" class="refund-item">
-        <PaymentText tag="h3" type="subtitle" html="Fee refunded amount" />
-        <p>
-          <PaymentText
-            class="price"
-            type="subtitle"
-            :html="refundedFeeAmount"
-          />
-          <PaymentText
-            class="symbol"
-            type="subtitle"
-            :html="refundedFeeSymbol"
-          />
+        <PaymentText tag="h3" type="p" html="Fee refunded amount" />
+        <p class="pricewrap">
+          <PaymentText class="price" type="price" :html="refundedFeeAmount" />
+          <PaymentText class="symbol" type="symbol" :html="refundedFeeSymbol" />
         </p>
       </div>
     </div>
@@ -129,6 +120,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color_bg);
+  padding: 24px;
   @include media(pc) {
     &.--small {
       width: 470px;
@@ -142,40 +134,19 @@ export default {
   }
 }
 .header {
-  @include media(pc) {
-    padding: 12px;
-    &__title {
-      // font-size: 2.5rem;
-      margin-bottom: 2rem;
-    }
-    // &__desc {
-    //   font-size: 1.7rem;
-    //   .notice {
-    //     font-weight: 100;
-    //     font-size: 1.4rem;
-    //   }
-    // }
-  }
+  margin-bottom: 2rem;
   @include media(sp) {
-    padding: 18px;
-    &__title {
-      // font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  &__title {
+    margin-bottom: 2rem;
+    @include media(sp) {
       margin-bottom: 1rem;
     }
-    &__desc {
-      // font-size: 1.5rem;
-      // .notice {
-      //   font-weight: 100;
-      //   font-size: 1.2rem;
-      // }
-    }
   }
-  // &__title {
-  //   font-weight: 500;
-  // }
-  // &__desc {
-  //   font-weight: 100;
-  // }
+  .cap {
+    margin-top: 0.5rem;
+  }
 }
 .close {
   position: absolute;
@@ -193,24 +164,25 @@ export default {
   }
 }
 .body {
-  @include media(pc) {
-    padding: 5px 24px 40px;
-    font-size: 1.5rem;
-  }
-  @include media(sp) {
-    padding: 12px 12px 48px;
-    flex-wrap: wrap;
-    font-size: 1.5rem;
-  }
+  // @include media(pc) {
+  //   padding: 5px 24px 40px;
+  //   font-size: 1.5rem;
+  // }
+  // @include media(sp) {
+  //   padding: 12px 12px 48px;
+  //   flex-wrap: wrap;
+  //   font-size: 1.5rem;
+  // }
   .refund-item {
     width: 100%;
     h3 {
-      font-weight: 500;
-      font-size: 1.7rem;
+      // font-weight: 500;
+      // font-size: 1.7rem;
+      margin-bottom: 4px;
     }
     p {
-      font-weight: 200;
-      margin-right: 30px;
+      // font-weight: 200;
+      // margin-right: 30px;
       text-align: right;
       .price {
         display: inline-block;
@@ -219,6 +191,10 @@ export default {
         display: inline-block;
         margin-left: 1rem;
       }
+    }
+    .pricewrap {
+      background-color: var(--color_bg_modal);
+      padding: 3px 6px;
     }
   }
 }

@@ -49,6 +49,12 @@ export default {
       font-size: 18px;
     }
   }
+  &__minititle {
+    @include font(16px, 300, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 12px;
+    }
+  }
   &__lead {
     @include font(18px, 500, $ls, $lh, $en_go);
     @include media(sp) {
@@ -77,6 +83,18 @@ export default {
     @include font(15px, 300, $ls, $lh, $en_go);
     @include media(sp) {
       font-size: 13px;
+    }
+  }
+  &__price {
+    @include font(24px, 500, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 22px;
+    }
+  }
+  &__symbol {
+    @include font(16px, 500, $ls, $lh, $en_go);
+    @include media(sp) {
+      font-size: 14px;
     }
   }
 }
