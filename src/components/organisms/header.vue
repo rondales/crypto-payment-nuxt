@@ -225,8 +225,9 @@ export default {
       return this.$route.name === 'admin'
     },
     isPaymentPage() {
-      const pagePath = this.$route.path;
-      return pagePath.indexOf('/payment') != -1
+      const currentPath = this.$route.path
+      const pattern = /^\/payment\//
+      return pattern.test(currentPath)
     },
     isConnected() {
       return (this.$store.state.web3.instance)
