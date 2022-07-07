@@ -15,7 +15,7 @@ export default {
       default: "p",
     },
     html: {
-      type: String,
+      type: [String, Number],
     },
   },
   data() {
