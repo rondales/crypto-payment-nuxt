@@ -2,7 +2,6 @@
   <payment-index
     :initializing="initializing"
     :colorTheme="colorTheme"
-    :showFooterMenu="isShowFooterMenu"
     :receiver="receiver"
     :isVerifiedDomain="isVerifiedDomain"
     :invoiceId="invoiceId"
@@ -87,9 +86,6 @@ export default {
     },
     storedPaymentToken() {
       return this.storedPaymentData.id
-    },
-    isShowFooterMenu() {
-      return this.$route.name === 'wallets'
     },
     isVerifiedDomain() {
       return this.storedPaymentData.isVerifiedDomain
