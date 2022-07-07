@@ -15,7 +15,7 @@
       />
       <button
         class="btn __m __pg icon-right full"
-        @click="connect(METAMASK, false)"
+        @click="handleConnect(METAMASK, false)"
       >
         <div class="loading-wrap" :class="{ active: loadingMeta }">
           <img class="spin mt" src="@/assets/images/loading.svg" />
@@ -56,10 +56,11 @@ import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentText from "@/components/organisms/Payment/Text";
 import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
 import PaymentWalletConnectorMixin from "@/components/mixins/PaymentWalletConnector";
+import CheckMobileBrowserMixin from "@/components/mixins/CheckMobileBrowser";
 
 export default {
   name: "PaymentSelectWallets",
-  mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin],
+  mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin, CheckMobileBrowserMixin],
   components: {
     PaymentAmountBilled,
     PaymentText,
@@ -80,8 +81,11 @@ export default {
     METAMASK() {
       return METAMASK;
     },
-    baseUrl() {
+    API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
+    },
+    currentDomain() {
+      return window.location.hostname
     },
     receiveTokenSymbol() {
       return this.$store.state.payment.symbol;
@@ -101,10 +105,18 @@ export default {
     isAllowCookies() {
       return this.$store.state.payment.isAllowCookies;
     },
+    isMobileAndMetamaskNotInstalled() {
+      return this.isMobile() && !window.ethereum
+    },
+    metamaskDeepLink() {
+      return 'https://metamask.app.link/dapp/' 
+        + this.currentDomain
+        + `/payment/wallets/${this.paymentToken}`
+    }
   },
   methods: {
     apiGetAvailableNetworks() {
-      const url = `${this.baseUrl}/api/v1/payment/contract/network`;
+      const url = `${this.API_BASE_URL}/api/v1/payment/contract/network`;
       const request = {
         params: new URLSearchParams([
           ["payment_token", this.$route.params.token],
@@ -133,6 +145,13 @@ export default {
         size: "small",
       });
     },
+    handleConnect(provider, mode) {
+      if (this.isMobileAndMetamaskNotInstalled) {
+        window.location.href = this.metamaskDeepLink
+      } else {
+        this.connect(provider, mode)
+      }
+    }
   },
   created() {
     this.$store.dispatch("account/initialize");
