@@ -25,6 +25,7 @@
     "decimal.js": "^10.3.1",
     "erc-20-abi": "^1.0.0",
     "file-saver": "^2.0.5",
+    "ismobilejs": "^1.1.1",
     "jssha": "^3.2.0",
     "moment": "^2.29.1",
     "number-format.js": "^2.0.9",
