@@ -102,16 +102,16 @@ export default {
     paymentToken() {
       return this.$route.params.token;
     },
-    isAllowCookies() {
-      return this.$store.state.payment.isAllowCookies;
+    isAgreeRisk() {
+      return this.$store.state.payment.isAgreeRisk;
     },
     isMobileAndMetamaskNotInstalled() {
       return isMobile(window.navigator).any && !window.ethereum
     },
     metamaskDeepLink() {
-      return 'https://metamask.app.link/dapp/' 
+      return 'https://metamask.app.link/dapp/'
         + this.currentDomain
-        + `/payment/wallets/${this.paymentToken}`
+        + `/payment/wallets/${this.paymentToken}?dpl=1`
     }
   },
   methods: {
@@ -158,7 +158,7 @@ export default {
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
     this.$store.dispatch("payment/updateSelectReceiptStatus", true);
-    if (!this.isAllowCookies) {
+    if (!this.isAgreeRisk) {
       this.showRiskDisclaimerModal();
     }
   },

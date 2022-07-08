@@ -40,6 +40,9 @@ export default {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
+    urlQueries() {
+      return this.$route.query
+    },
     storedWeb3Data() {
       return this.$store.state.web3
     },
@@ -173,7 +176,8 @@ export default {
               return resolve(
                 this.$router.replace({
                   name: 'entrance',
-                  params: { token: this.urlPaymentToken }
+                  params: { token: this.urlPaymentToken },
+                  query: this.urlQueries
                 })
               )
             }
