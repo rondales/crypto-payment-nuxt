@@ -105,7 +105,21 @@
         </div>
         <div class="body">
           <div class="qr">
-            <vue-qrcode v-model="paymentUrl" tag="img" />
+            <div class="qr_wrap">
+              <div class="qr_item">
+                <vue-qrcode v-model="paymentUrl" tag="img" />
+                <img
+                  class="logo"
+                  src="@/assets/images/logo-icon.svg"
+                  alt="Web3 Payment"
+                />
+                <img
+                  class="logo2"
+                  src="@/assets/images/logo-text.svg"
+                  alt="Web3 Payment"
+                />
+              </div >
+            </div>
           </div>
           <div class="url mt-5">
             <input type="text" v-model="paymentUrl" disabled />
@@ -447,10 +461,47 @@ export default {
     padding: 16px 12px 48px;
   }
   .qr {
-    width: 100%;
-    text-align: center;
-    img {
-      border-radius: 8px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+    background: $gradation-light;
+    padding: 6px;
+    border-radius: 1rem;
+    overflow: hidden;
+    &_wrap {
+      background-color: #fff;
+      padding-bottom: 1rem;
+    }
+    &_item {
+      position: relative;
+      display: block;
+      @include media(pc) {
+        pointer-events: none;
+      }
+      img {
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+    }
+    .logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 20%;
+      height: auto;
+    }
+    .logo2 {
+      width: 38%;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      margin-top: -1rem;
+      position: relative;
+      z-index: 10;
     }
   }
   .url {
