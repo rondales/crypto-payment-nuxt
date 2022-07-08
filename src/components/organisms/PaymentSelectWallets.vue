@@ -56,11 +56,11 @@ import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentText from "@/components/organisms/Payment/Text";
 import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
 import PaymentWalletConnectorMixin from "@/components/mixins/PaymentWalletConnector";
-import CheckMobileBrowserMixin from "@/components/mixins/CheckMobileBrowser";
+import isMobile from 'ismobilejs';
 
 export default {
   name: "PaymentSelectWallets",
-  mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin, CheckMobileBrowserMixin],
+  mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin],
   components: {
     PaymentAmountBilled,
     PaymentText,
@@ -106,7 +106,7 @@ export default {
       return this.$store.state.payment.isAllowCookies;
     },
     isMobileAndMetamaskNotInstalled() {
-      return this.isMobile() && !window.ethereum
+      return isMobile(window.navigator).any && !window.ethereum
     },
     metamaskDeepLink() {
       return 'https://metamask.app.link/dapp/' 
