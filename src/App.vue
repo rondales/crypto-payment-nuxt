@@ -1,72 +1,81 @@
 <template>
-  <div :class="[classes, { contents_height: isAdminPage }]" >
+  <div :class="[classes, { contents_height: isAdminPage }]">
     <router-view />
     <div v-if="modal.show" class="modal-base">
       <component :is="modal.target" />
     </div>
     <div class="copied" v-if="$store.state.account.isCopied">
-      <img src="@/assets/images/check-mark.svg">
-      <span>
-        copied
-      </span>
+      <img src="@/assets/images/check-mark.svg" />
+      <span> copied </span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   metaInfo: {
-    meta: [
-      { vmid: 'seo-robot-setting', name: 'robots', content: 'none' }
-    ]
+    meta: [{ vmid: "seo-robot-setting", name: "robots", content: "none" }],
   },
   components: {
-    adminContractPausedModal: () => import('@/components/molecules/adminContractPausedModal'),
-    networkModal: () => import('@/components/molecules/networkModal'),
-    refundInfoModal: () => import('@/components/molecules/refundInfoModal'),
-    walletModal: () => import('@/components/molecules/walletModal'),
-    cautionWalletConnectModal: () => import('@/components/molecules/cautionWalletConnectModal'),
-    errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
-    errorMetamaskModal: () => import('@/components/molecules/errorMetamaskModal'),
-    errorCurrentNetworkModal: () => import('@/components/molecules/errorCurrentNetworkModal'),
-    errorNotExistAvailablePaymentContractModal: () => import('@/components/molecules/errorNotExistAvailablePaymentContractModal'),
-    errorForbiddenBackPaymentModal: () => import('@/components/molecules/errorForbiddenBackPaymentModal'),
-    switchNetworkForAdminModal: () => import('@/components/molecules/switchNetworkForAdminModal'),
-    errorModal: () => import('@/components/molecules/errorModal'),
-    receiveModal: () => import('@/components/molecules/receiveModal'),
-    editAccountNoteModal: () => import('@/components/molecules/editAccountNoteModal'),
-    accountModal: () => import('@/components/molecules/accountModal'),
-    contractIssuanceModal: () => import('@/components/molecules/contractIssuanceModal'),
-    regeneratePaymentUrlModal:() => import('@/components/molecules/regeneratePaymentUrlModal'),
-    contractCashbackChangeModal: () => import('@/components/molecules/contractCashbackChangeModal'),
-    contractReceiveAddressChangeModal: () => import('@/components/molecules/contractReceiveAddressChangeModal'),
-    cautionPaymentRiskDisclaimerModal: () => import('@/components/molecules/cautionPaymentRiskDisclaimerModal'),
-    addChainModal: () => import('@/components/molecules/addChainModal')
+    adminContractPausedModal: () =>
+      import("@/components/molecules/adminContractPausedModal"),
+    networkModal: () => import("@/components/molecules/networkModal"),
+    refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
+    walletModal: () => import("@/components/molecules/walletModal"),
+    cautionWalletConnectModal: () =>
+      import("@/components/molecules/cautionWalletConnectModal"),
+    errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
+    errorMetamaskModal: () =>
+      import("@/components/molecules/errorMetamaskModal"),
+    errorCurrentNetworkModal: () =>
+      import("@/components/molecules/errorCurrentNetworkModal"),
+    errorNotExistAvailablePaymentContractModal: () =>
+      import(
+        "@/components/molecules/errorNotExistAvailablePaymentContractModal"
+      ),
+    errorForbiddenBackPaymentModal: () =>
+      import("@/components/molecules/errorForbiddenBackPaymentModal"),
+    switchNetworkForAdminModal: () =>
+      import("@/components/molecules/switchNetworkForAdminModal"),
+    errorModal: () => import("@/components/molecules/errorModal"),
+    receiveModal: () => import("@/components/molecules/receiveModal"),
+    editAccountNoteModal: () =>
+      import("@/components/molecules/editAccountNoteModal"),
+    accountModal: () => import("@/components/molecules/accountModal"),
+    contractIssuanceModal: () =>
+      import("@/components/molecules/contractIssuanceModal"),
+    regeneratePaymentUrlModal: () =>
+      import("@/components/molecules/regeneratePaymentUrlModal"),
+    contractCashbackChangeModal: () =>
+      import("@/components/molecules/contractCashbackChangeModal"),
+    contractReceiveAddressChangeModal: () =>
+      import("@/components/molecules/contractReceiveAddressChangeModal"),
+    cautionPaymentRiskDisclaimerModal: () =>
+      import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
+    addChainModal: () => import("@/components/molecules/addChainModal"),
   },
   computed: {
     classes() {
-      return [
-        'main',
-        `theme--${this.$store.state.theme}`,
-      ];
+      return ["main", `theme--${this.$store.state.theme}`];
     },
     isAdminPage() {
-      return this.$route.name === 'admin'
+      return this.$route.name === "admin";
     },
     modal() {
-      return this.$store.state.modal
+      return this.$store.state.modal;
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/style.scss';
+@import "@/assets/scss/style.scss";
 
-div.main{
-    background: var(--color_bg);
-    color: var(--color_font);
+div.main {
+  background: var(--color_bg);
+  color: var(--color_font);
+  overflow: hidden;
 }
 .theme--light {
   @each $item in $colors-array {
@@ -80,16 +89,18 @@ div.main{
   }
 }
 .modal-base {
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.6);
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  // height: 100vh;
+  width: 100%;
+  height: 100%;
   left: 0;
   top: 0;
   z-index: 9999;
 }
 
-.contents_height{
+.contents_height {
   min-height: calc(100vh - 50px);
   margin-top: 80px;
   position: relative;

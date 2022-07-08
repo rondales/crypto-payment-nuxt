@@ -139,7 +139,7 @@ sup {
 
 input {
   border: none;
-  outline: none;  
+  outline: none;
   border-radius: 0;
 }
 
@@ -278,7 +278,9 @@ progress {
 svg:not(:root) {
   overflow: hidden; /* Internet Explorer 11- */
 }
-p,span,div{
+p,
+span,
+div {
   font-weight: 500;
 }
 audio,
