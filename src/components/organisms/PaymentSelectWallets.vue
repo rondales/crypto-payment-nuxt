@@ -85,7 +85,7 @@ export default {
       return process.env.VUE_APP_API_BASE_URL;
     },
     currentDomain() {
-      return window.location.hostname
+      return window.location.host
     },
     receiveTokenSymbol() {
       return this.$store.state.payment.symbol;
