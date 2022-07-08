@@ -29,8 +29,11 @@ export default {
     paymentData() {
       return this.$store.state.payment
     },
-    isSelectedReceipt() {
-      return this.$store.state.payment.isSelectedReceipt
+    isAccessFromDeepLink() {
+      return 'dpl' in this.$route.query
+    },
+    isAccessFromRegeneratedUrl() {
+      return 'ucnv' in this.$route.query
     }
   },
   methods: {
@@ -98,12 +101,16 @@ export default {
                     this.showComponent = 'PaymentAmount'
                     break;
                   case 'unset_email':
-                    if (this.isSelectedReceipt) {
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
+                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                       this.$router.replace({
                         path: '/payment/wallets/' + this.$route.params.token
                       })
                     } else {
-                      this.showComponent = 'PaymentEmail'
+                      this.$router.replace({
+                        path: '/payment/receipt/' + this.$route.params.token
+                      })
                     }
                     break;
                   case 'unset_token':

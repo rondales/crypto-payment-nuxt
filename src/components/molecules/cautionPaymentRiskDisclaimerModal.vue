@@ -150,7 +150,7 @@ export default {
       this.agreed = this.$refs.agreed.checked;
     },
     handleOk() {
-      this.$store.dispatch("payment/updateAllowCookiesStatus", true);
+      this.$store.dispatch("payment/updateAgreeRiskStatus", true);
       this.$store.dispatch("modal/hide");
     },
     handleCancel() {
