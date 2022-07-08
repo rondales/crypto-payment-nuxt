@@ -8,7 +8,7 @@ const store = {
     isVerifiedDomain: false,
     merchantWalletAddress: null,
     isSelectedReceipt: false,
-    isAllowCookies: false,
+    isAgreeRisk: false,
     orderCode: null,
     amount: null,
     amountWei: null,
@@ -53,8 +53,8 @@ const store = {
     updateSelectReceiptStatus({ commit }, payload) {
       commit('updateSelectReceiptStatus', payload)
     },
-    updateAllowCookiesStatus({ commit }, payload) {
-      commit('updateAllowCookiesStatus', payload)
+    updateAgreeRiskStatus({ commit }, payload) {
+      commit('updateAgreeRiskStatus', payload)
     },
     updateIsVerifiedDomain({ commit }, payload) {
       commit('updateIsVerifiedDomain', payload)
@@ -99,7 +99,7 @@ const store = {
       state.isVerifiedDomain = false
       state.merchantWalletAddress = null
       state.isSelectedReceipt = false
-      state.isAllowCookies = false
+      state.isAgreeRisk = false
       state.orderCode = null
       state.amount = null
       state.amountWei = null
@@ -155,8 +155,8 @@ const store = {
     updateSelectReceiptStatus(state, payload) {
       state.isSelectedReceipt = payload
     },
-    updateAllowCookiesStatus(state, payload) {
-      state.isAllowCookies = payload
+    updateAgreeRiskStatus(state, payload) {
+      state.isAgreeRisk = payload
     },
     updateMerchantWalletAddress(state, payload) {
       state.merchantWalletAddress = payload
