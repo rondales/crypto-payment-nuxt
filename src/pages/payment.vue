@@ -1,6 +1,6 @@
 <template>
   <payment-index
-    :initializing="initializing"
+    ref="paymentIndex"
     :colorTheme="colorTheme"
     :receiver="receiver"
     :isVerifiedDomain="isVerifiedDomain"
@@ -18,9 +18,6 @@ import { STATUS_PUBLISHED } from '@/constants'
 export default {
   name: 'payment',
   components: { PaymentIndex },
-  data() {
-    return { initializing: true }
-  },
   watch: {
     $route() {
       this.checkAndSetAvailableNetworks()
@@ -108,6 +105,9 @@ export default {
     isRequestSelectReceiptPage() {
       return this.$route.name === 'receipt'
     },
+    isRequestedSelectWalletPage() {
+      return this.$route.name === 'wallets'
+    },
     isRequestConnectedWalletPage() {
       const targetPages = ['tokens', 'exchange', 'detail']
       return targetPages.includes(this.$route.name)
@@ -159,43 +159,38 @@ export default {
     handleRedirect() {
       this.apiGetTransactionState()
         .then((response) => {
+          this.$refs.paymentIndex.incrementProgressCompletedSteps()
           const state = response.data.state
-          return new Promise((resolve) => {
-            if (state === 'close' && !this.isRequestResultPage) {
-              return resolve(
-                this.$router.replace({
-                  name: 'result',
-                  params: { token: this.urlPaymentToken }
-                })
-              )
-            }
-            if (
-              (!this.isDifferentPayment && state === 'unset_base_amount' && !this.isRequestEntrancePage)
-              || (this.isDifferentPayment && !this.isRequestEntrancePage && !this.isRequestResultPage)
-            ) {
-              return resolve(
-                this.$router.replace({
-                  name: 'entrance',
-                  params: { token: this.urlPaymentToken },
-                  query: this.urlQueries
-                })
-              )
-            }
-            if (this.isRequestSelectReceiptPage && this.isSelectedReceipt) {
-              return resolve(
-                this.$router.replace({
-                  name: 'wallets',
-                  params: { token: this.urlPaymentToken }
-                })
-              )
-            }
-            return resolve()
-          })
-        })
-        .then(() => {
-          setTimeout(() => {
-            this.initializing = false
-          }, 500)
+          if (state === 'close' && !this.isRequestResultPage) {
+            return this.$router.replace({
+              name: 'result',
+              params: { token: this.urlPaymentToken }
+            })
+          }
+          if (
+            (!this.isDifferentPayment && state === 'unset_base_amount' && !this.isRequestEntrancePage)
+            || (this.isDifferentPayment && !this.isRequestEntrancePage && !this.isRequestResultPage)
+          ) {
+            return this.$router.replace({
+              name: 'entrance',
+              params: { token: this.urlPaymentToken },
+              query: this.urlQueries
+            })
+          }
+          if (this.isRequestSelectReceiptPage && this.isSelectedReceipt) {
+            this.$refs.paymentIndex.updateProgressTotalSteps(
+              this.$refs.paymentIndex.progressCompletedSteps
+            )
+            return this.$router.replace({
+              name: 'wallets',
+              params: { token: this.urlPaymentToken }
+            })
+          }
+          if (this.isRequestSelectReceiptPage || this.isRequestedSelectWalletPage) {
+            this.$refs.paymentIndex.updateProgressTotalSteps(
+              this.$refs.paymentIndex.progressCompletedSteps
+            )
+          }
         })
     },
     handleChainChanged() {

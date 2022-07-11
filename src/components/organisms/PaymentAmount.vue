@@ -87,6 +87,10 @@ import { CURRENCIES } from "@/constants";
 
 export default {
   name: "PaymentAmount",
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number
+  },
   data() {
     return {
       loading: false,
@@ -163,6 +167,10 @@ export default {
             this.requireUpdateExchange = true;
             clearTimeout(this.exchangeTimer);
           }, 120000);
+          this.$emit('incrementProgressCompletedSteps')
+          setTimeout(() => {
+            this.$emit('updateInitializingStatus', false)
+          }, 1500)
         })
         .catch((error) => {
           let message;

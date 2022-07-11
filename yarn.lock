@@ -7349,6 +7349,11 @@
   "resolved" "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
   "version" "2.0.0"
 
+"ismobilejs@^1.1.1":
+  "integrity" "sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw=="
+  "resolved" "https://registry.npmjs.org/ismobilejs/-/ismobilejs-1.1.1.tgz"
+  "version" "1.1.1"
+
 "isnumber@~1.0.0":
   "integrity" "sha1-Dj+XWbWB2Z3YUIbw7Cp0kJz63QE="
   "resolved" "https://registry.npmjs.org/isnumber/-/isnumber-1.0.0.tgz"
@@ -11827,6 +11832,11 @@
   "version" "2.4.0"
   dependencies:
     "deepmerge" "^4.2.2"
+
+"vue-radial-progress@^0.3.2":
+  "integrity" "sha512-F4eA9IFqoY5ZPBJNsqIu3C8J6TQ/5aQxUOAy+6wjVOvK+ljjs/8g8gUpy5CE2/THDH68+avwqov3ibaG1AyZSQ=="
+  "resolved" "https://registry.npmjs.org/vue-radial-progress/-/vue-radial-progress-0.3.2.tgz"
+  "version" "0.3.2"
 
 "vue-route-generator@^1.0.0":
   "integrity" "sha512-u+DjfGwQ5Um8Wvzb5wqlCSwZbUthjiZBC8SY3eCnZlqE1yTCJrKRtp8xN7ffNpcipwllA8IKEyBEga0b5xQSZQ=="
