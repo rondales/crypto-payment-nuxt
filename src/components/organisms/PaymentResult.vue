@@ -73,6 +73,10 @@ export default {
     success: ResultSuccess,
     PaymentAmountBilled,
   },
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number
+  },
   data() {
     return {
       chainId: null,
@@ -249,12 +253,17 @@ export default {
     },
   },
   created() {
+    this.$emit('updateProgressTotalSteps', 2)
     this.showDataInitialize();
     this.apiGetTransaction().then((response) => {
       this.setApiResultData(response.data);
       if (this.isStatusProcessing) {
         this.pollingTransactionResult();
       }
+      this.$emit('incrementProgressCompletedSteps')
+      setTimeout(() => {
+        this.$emit('updateInitializingStatus', false)
+      }, 1500)
     });
   },
   beforeDestroy() {
