@@ -135,6 +135,10 @@
                 </span>
               </p>
             </div>
+            <div v-else class="balance-warning">
+              <p>balance is insufficient</p>
+              <p>for this transaction.</p>
+            </div>
           </div>
           <div v-else-if="!isSetRequreUserPayAmount" class="content-wrap">
             <div v-if="isNotEnoughLiquidity" class="balance-warning">
@@ -474,7 +478,7 @@ export default {
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
           this.reloading = false;
           this.updating = false;
-        })
+        });
     },
     handleTokenApprove() {
       this.$store.dispatch("wallet/updatePendingStatus", true);

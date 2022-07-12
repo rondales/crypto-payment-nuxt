@@ -136,7 +136,7 @@ export default {
     },
     metamaskMobileDeeplinkUrl() {
       const url = new URL(this.paymentUrl);
-      return `https://metamask.app.link/dapp/${url.host}${url.pathname}`;
+      return `https://metamask.app.link/dapp/${url.host}${url.pathname}${url.search}`;
     },
     isConfirmed() {
       return this.confirmed;
@@ -164,7 +164,7 @@ export default {
       this.apiRefreshPaymentToken()
         .then((response) => {
           this.$store.dispatch("payment/updateDeviceId", null);
-          this.paymentUrl = `${location.protocol}//${location.host}/payment/wallets/${response.data.token}`;
+          this.paymentUrl = `${location.protocol}//${location.host}/payment/${response.data.token}?ucnv=1`;
           this.refreshing = false;
           this.refreshed = true;
         })
