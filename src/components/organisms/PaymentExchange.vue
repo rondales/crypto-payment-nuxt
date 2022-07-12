@@ -140,6 +140,12 @@
               <p>for this transaction.</p>
             </div>
           </div>
+          <div v-else class="content-wrap">
+            <div v-if="isNotEnoughLiquidity" class="balance-warning">
+              <p>Liquidity is not enough</p>
+              <p>for this transaction.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -180,6 +186,7 @@ export default {
         address: null,
         abi: null,
       },
+      isNotEnoughLiquidity: false,
     };
   },
   components: {
@@ -401,7 +408,28 @@ export default {
         this.merchantReceiveTokenSymbol,
         this.merchantReceiveAmount,
         this.SLIPPAGE_RATE
-      );
+      )
+      .catch((err) => {
+        if(err.message.includes('ds-math-sub-underflow')) {
+          this.isNotEnoughLiquidity = true
+          this.$parent.loading = false;
+          this.$store.dispatch("modal/show", {
+            target: "error-modal",
+            size: "small",
+            params: {
+              message:
+                "There appears to be no liquidity between \
+                  the token you selected and the \
+                  merchant receive token on this network. \
+                  <br> \
+                  <br> \
+                  Please return to the token selection screen \
+                  and select another token or try paying \
+                  with another network.",
+            },
+          });
+        }
+      })
     },
     getTokenApprovedAmountFromContract() {
       return this.$web3.getTokenApprovedAmount(
@@ -540,7 +568,6 @@ export default {
         funcList.push(this.getTokenApprovedAmountFromContract());
       }
       Promise.all(funcList)
-        .catch(funcList)
         .then((results) => {
           if (!this.isUserSelectedNativeToken) {
             this.userSelectedTokenAllowance = results[1];
@@ -559,7 +586,8 @@ export default {
           this.exchangeRate = results[0].rate;
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
-        });
+        })
+        .catch((err) => { console.log(err) });
     });
   },
   beforeDestroy() {
