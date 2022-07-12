@@ -1,4 +1,4 @@
-import MerchantAbi from './abi'
+import MerchantAbi from './abis'
 
 export default {
   abi: MerchantAbi.abi

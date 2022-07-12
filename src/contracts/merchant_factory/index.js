@@ -1,4 +1,4 @@
-import MerchantFactoryAbi from './abi'
+import MerchantFactoryAbi from './abis'
 import Ethereum from './networks/ethereum'
 import Binance from './networks/binance'
 import Matic from './networks/matic'
