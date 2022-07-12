@@ -1,17 +1,22 @@
 <template>
   <div class="slash-bg">
     <Header :width="windowWidth" @switchColorTheme="switchColorTheme" />
-    <div v-if="initializing" class="payment">
-      <div class="payment_initializing">
-        <img
-          class="mb-2 spin"
-          src="@/assets/images/loading.svg"
-          alt="processing"
-        />
-        <p class="title">Loading...</p>
+    <div v-show="initializing" class="payment initializing">
+      <div class="progress-wrap add-flex j-center a-center">
+        <radial-progress-bar
+          :diameter="150"
+          :animate-speed="400"
+          :start-color="'#D97C87'"
+          :stop-color="'#8A2CE1'"
+          :completed-steps="progressCompletedSteps"
+          :total-steps="progressTotalSteps"
+        >
+          <p class="step">{{ progressCompletedPercent }}<span class="percent">%</span></p>
+          <p class="status">Loading</p>
+        </radial-progress-bar>
       </div>
     </div>
-    <div v-else class="payment">
+    <div v-show="!initializing" class="payment">
       <div class="menu-nav" v-if="showMenu">
         <div class="menu-nav_top">
           <img src="@/assets/images/menu.svg" />
@@ -65,7 +70,13 @@
           </p>
           <p class="payment_invoice-id">Invoice ID：{{ invoiceId }}</p>
         </div>
-        <router-view />
+        <router-view
+          :progressTotalSteps="progressTotalSteps"
+          :progressCompletedSteps="progressCompletedSteps"
+          @updateInitializingStatus="updateInitializingStatus"
+          @updateProgressTotalSteps="updateProgressTotalSteps"
+          @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
+        />
       </div>
       <div v-if="loading" class="loading add-flex j-center a-center">
         <img class="spin" src="@/assets/images/loading.svg" />
@@ -76,6 +87,7 @@
 
 
 <script>
+import RadialProgressBar from 'vue-radial-progress'
 import Header from "@/components/organisms/header";
 import PaymentTop from "@/components/organisms/PaymentTop";
 import { DARK_THEME, LIGHT_THEME } from "@/constants";
@@ -83,6 +95,7 @@ import { DARK_THEME, LIGHT_THEME } from "@/constants";
 export default {
   name: "PaymentIndex",
   components: {
+    RadialProgressBar,
     Header,
     PaymentTop,
   },
@@ -92,13 +105,15 @@ export default {
     "isVerifiedDomain",
     "invoiceId",
     "base64VuexData",
-    "initializing",
   ],
   data() {
     return {
       windowWidth: window.innerWidth,
       showMenu: false,
       loading: false,
+      initializing: true,
+      progressTotalSteps: 20,
+      progressCompletedSteps: 0,
     };
   },
   computed: {
@@ -107,6 +122,11 @@ export default {
     },
     lightTheme() {
       return LIGHT_THEME;
+    },
+    progressCompletedPercent() {
+      return this.progressCompletedSteps && this.progressTotalSteps
+        ? Math.floor(this.progressCompletedSteps / this.progressTotalSteps * 100)
+        : 0
     },
     domainVerifiedIcon() {
       return this.isDarkTheme
@@ -144,13 +164,22 @@ export default {
     toggleMenu(state) {
       this.showMenu = state;
     },
+    updateInitializingStatus(initializing) {
+      this.initializing = initializing
+    },
+    updateProgressTotalSteps(totalSteps) {
+      this.progressTotalSteps = totalSteps
+    },
+    incrementProgressCompletedSteps() {
+      ++this.progressCompletedSteps
+    }
   },
   mounted() {
     window.addEventListener("resize", this.handleWindowResize);
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
-  },
+  }
 };
 </script>
 
@@ -218,6 +247,40 @@ export default {
     left: 50%;
     transform: translate(-50%, 0);
     opacity: 0.7;
+  }
+  &.initializing {
+    @include media(sp) {
+      // top: calc(50% + 12rem);
+      position: relative;
+      top: 0;
+      left: 0;
+      transform: translate(0%, 23vh);
+      margin: 3rem auto;
+    }
+  }
+  .progress-wrap {
+    height: 25vh;
+    .step {
+      font-weight: 400;
+      font-size: 2.5rem;
+      .percent {
+        font-weight: 300;
+        font-size: 1.5rem;
+      }
+    }
+    .status {
+      font-weight: 300;
+      font-size: 1.5rem;
+      animation: flash 1.5s linear infinite;
+    }
+    @keyframes flash {
+      0%,100% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
   }
   .menu-nav {
     position: absolute;
