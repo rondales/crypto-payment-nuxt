@@ -606,6 +606,12 @@ export default {
     "...... ...... ......" 16px
     "item-6 item-6 item-6" auto
     "...... ...... ......" 30px
+    "item-7 item-7 item-7" auto
+    "...... ...... ......" 16px
+    "item-8 item-8 item-8" auto
+    "...... ...... ......" 16px
+    "item-9 item-9 item-9" auto
+    "...... ...... ......" 30px
     / 49% 2% 49%;
   }
   .item{
