@@ -140,7 +140,7 @@
               <p>for this transaction.</p>
             </div>
           </div>
-          <div v-else-if="!isSetRequreUserPayAmount" class="content-wrap">
+          <div v-else class="content-wrap">
             <div v-if="isNotEnoughLiquidity" class="balance-warning">
               <p>Liquidity is not enough</p>
               <p>for this transaction.</p>
