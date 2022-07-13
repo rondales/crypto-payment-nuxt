@@ -10,7 +10,7 @@
     </div>
     <div>
       <TransactionHistory v-if="isHistoryPage"/>
-      <PaymentSettings v-if="isSettingsPage"/>
+      <AdminSettings v-if="isSettingsPage"/>
     </div>
   </div>
 </template>
@@ -18,13 +18,13 @@
 
 <script>
 import TransactionHistory from '@/components/organisms/admin/AdminTransactionHistory'
-import PaymentSettings from '@/components/organisms/admin/AdminPaymentSettings'
+import AdminSettings from '@/components/organisms/admin/AdminSettings'
 
 export default {
   name: 'AdminWeb3Payment',
   components: {
     TransactionHistory,
-    PaymentSettings
+    AdminSettings
   },
   data() {
     return {
