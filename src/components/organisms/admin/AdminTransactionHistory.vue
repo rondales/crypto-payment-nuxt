@@ -125,7 +125,7 @@
                   {{ network(record.network_type) }}
                 </td>
                 <td>
-                  {{ record.base_amount | decimalFormat }} USTD
+                  {{ record.base_amount | decimalFormat }} {{ record.base_symbol }}
                 </td>
               </tr>
             </tbody>
