@@ -41,6 +41,14 @@
                 Test with key
               </a>
             </li>
+            <li v-if="isShowPluginStore" @click="close()">
+              <a
+                target="_blank"
+                :href="PLUGIN_STORE_URL"
+              >
+                Plug in Store
+              </a>
+            </li>
             <li @click="close()">
               <a
                 target="_blank"
@@ -69,6 +77,9 @@
 export default {
   name: 'payment',
   computed: {
+    PLUGIN_STORE_URL() {
+      return process.env.VUE_APP_PLUGIN_STORE_URL
+    },
     isUnselectedReceiveToken() {
       return !(this.$store.state.account.receiveSymbol)
     },
@@ -82,6 +93,14 @@ export default {
     },
     isUseTestnet() {
       return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isShowPluginStore() {
+      try {
+        new URL(this.PLUGIN_STORE_URL)
+        return true
+      } catch(ex) {
+        return false
+      }
     }
   },
   methods: {
