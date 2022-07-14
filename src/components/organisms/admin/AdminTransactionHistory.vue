@@ -198,7 +198,7 @@ export default {
   },
   filters: {
     decimalFormat(amount) {
-      return NumberFormat('0.00', amount)
+      return NumberFormat('0.000000', amount)
     }
   },
   computed: {

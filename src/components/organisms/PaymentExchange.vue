@@ -197,7 +197,7 @@ export default {
       return NumberFormat("0.0000", balance);
     },
     usdFormat(balance) {
-      return NumberFormat("0.00", balance);
+      return NumberFormat("0.000000", balance);
     },
   },
   computed: {

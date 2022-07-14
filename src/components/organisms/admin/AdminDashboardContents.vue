@@ -286,14 +286,14 @@ export default {
   created() {
     this.apiGetPaymentSummary().then((response) => {
       const summary = response.data
-      this.items.monthlyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_amount)
-      this.items.monthlyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_cashback_amount)
+      this.items.monthlyAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.monthly.total_amount)
+      this.items.monthlyCashbackAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.monthly.total_cashback_amount)
       this.items.monthlyCount.value = summary.monthly.total_count
-      this.items.weeklyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_amount)
-      this.items.weeklyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_cashback_amount)
+      this.items.weeklyAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.weekly.total_amount)
+      this.items.weeklyCashbackAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.weekly.total_cashback_amount)
       this.items.weeklyCount.value = summary.weekly.total_count
-      this.items.todayAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_amount)
-      this.items.todayCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_cashback_amount)
+      this.items.todayAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.daily.total_amount)
+      this.items.todayCashbackAmount.value = NumberFormat(`0.000000 ${this.receiveTokenSymbol}`, summary.daily.total_cashback_amount)
       this.items.todayCount.value = summary.daily.total_count
     })
     this.receiveTokens = this.generateReceiveTokenList()
