@@ -65,7 +65,7 @@
           <p class="welcome-receice_name">
             JPYC
             <br>
-            USD-peg
+            JPY-peg
           </p>
           <div class="welcome-receice_box gradation-gray">
             beta ver.

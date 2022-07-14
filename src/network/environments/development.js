@@ -2,11 +2,11 @@ import { NETWORKS } from '@/constants'
 
 export default {
   ethereum: {
-    name: NETWORKS[3].name,
-    alias: NETWORKS[3].alias,
-    chainId: NETWORKS[3].chainId,
-    rpcUrl: NETWORKS[3].rpcUrl,
-    scanUrl: NETWORKS[3].scanUrl,
+    name: NETWORKS[5].name,
+    alias: NETWORKS[5].alias,
+    chainId: NETWORKS[5].chainId,
+    rpcUrl: NETWORKS[5].rpcUrl,
+    scanUrl: NETWORKS[5].scanUrl,
     icon: require('@/assets/images/network/ethereum.svg')
   },
   bsc: {

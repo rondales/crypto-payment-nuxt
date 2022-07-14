@@ -83,8 +83,30 @@ export default {
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', chainId)
         this.hideModal()
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
       })
-    }
+    },
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false,
+          lastModalTarget: 'network-modal',
+          lastModalSize: this.$store.state.modal.size,
+          lastModalParams: {
+            unsupported: this.$store.state.modal.params.unsupported,
+            hideCloseButton: this.$store.state.modal.params.hideCloseButton,
+            itemCount: this.$store.state.modal.params.itemCount
+          }
+        }
+      })
+    },
   },
   created() {
     this.networks = Object.values(AvailableNetworks).filter(

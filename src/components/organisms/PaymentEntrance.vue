@@ -1,5 +1,13 @@
 <template>
-  <component v-if="showComponent" :is="showComponent" />
+  <component
+    v-if="showComponent"
+    :is="showComponent"
+    :progressTotalSteps="progressTotalSteps"
+    :progressCompletedSteps="progressCompletedSteps"
+    @updateInitializingStatus="updateInitializingStatus"
+    @updateProgressTotalSteps="updateProgressTotalSteps"
+    @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
+  />
 </template>
 
 <script>
@@ -13,6 +21,10 @@ export default {
   components: {
     PaymentAmount,
     PaymentEmail
+  },
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number
   },
   data() {
     return {
@@ -29,8 +41,14 @@ export default {
     paymentData() {
       return this.$store.state.payment
     },
-    isVerifiedDomain() {
-      return this.paymentData.isVerifiedDomain
+    isSelectedReceipt() {
+      return this.$store.state.payment.isSelectedReceipt
+    },
+    isAccessFromDeepLink() {
+      return 'dpl' in this.$route.query
+    },
+    isAccessFromRegeneratedUrl() {
+      return 'ucnv' in this.$route.query
     }
   },
   methods: {
@@ -63,17 +81,18 @@ export default {
         }
       })
     },
-    showWarningModal(returnUrl) {
-      this.$store.dispatch('modal/show', {
-        target: 'warning-domain-unauth-modal',
-        size: 'small',
-        params: {
-          returnUrl: returnUrl
-        }
-      })
+    updateInitializingStatus(initializing) {
+      this.$emit('updateInitializingStatus', initializing)
+    },
+    updateProgressTotalSteps(step) {
+      this.$emit('updateProgressTotalSteps', step)
+    },
+    incrementProgressCompletedSteps() {
+      this.$emit('incrementProgressCompletedSteps')
     }
   },
   created() {
+    this.$store.dispatch('wallet/initialize')
     if (this.paymentData.id !== null && this.paymentData.id !== this.paymentToken) {
       this.$store.dispatch('web3/initialize')
       this.$store.dispatch('account/initialize')
@@ -88,36 +107,52 @@ export default {
         domain: receiveResponse.data.domain,
         orderCode: receiveResponse.data.order_code,
         symbol: receiveResponse.data.symbol,
-        isVerifiedDomain: receiveResponse.data.is_verified_domain,
+        isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
         amount: NumberFormat('0.00', receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
-      if (!this.isVerifiedDomain) {
-        this.showWarningModal(receiveResponse.data.return_url)
-      }
+      this.$emit('incrementProgressCompletedSteps')
       this.apiPublishTransaction().then(() => {
         this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
+        this.$emit('updateProgressTotalSteps', 5)
+        this.$emit('incrementProgressCompletedSteps')
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
             this.apiGetTransactionData().then((transactionResponse) => {
+              this.$emit('incrementProgressCompletedSteps')
               this.$store.dispatch('payment/updateAmount', NumberFormat('0.00', transactionResponse.data.base_amount))
               this.apiGetTransactionState().then((response) => {
+                this.$emit('incrementProgressCompletedSteps')
                 switch(response.data.state) {
                   case 'unset_base_amount':
                     this.showComponent = 'PaymentAmount'
+                    this.$emit('updateProgressTotalSteps', 7)
+                    this.$emit('incrementProgressCompletedSteps')
                     break;
                   case 'unset_email':
-                    this.showComponent = 'PaymentEmail'
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
+                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
+                      this.$emit('incrementProgressCompletedSteps')
+                      this.$emit('updateProgressTotalSteps', 5)
+                      this.$router.replace({
+                        path: '/payment/wallets/' + this.$route.params.token
+                      })
+                    } else {
+                      this.$emit('incrementProgressCompletedSteps')
+                      this.$router.replace({
+                        path: '/payment/receipt/' + this.$route.params.token
+                      })
+                    }
                     break;
                   case 'unset_token':
-                    this.$router.push({
+                    this.$emit('incrementProgressCompletedSteps')
+                    this.$router.replace({
                       path: '/payment/wallets/' + this.$route.params.token
                     })
                     break;
-                  case 'close':
-                    this.showErrorModal('This transaction is closed.')
                 }
               }).catch(() => {
                 this.showErrorModal('Please try again after a while.')

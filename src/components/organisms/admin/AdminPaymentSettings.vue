@@ -49,7 +49,10 @@
                 class="manage-contents_item"
                 :class="{ created: contractLoaded && isPublishedContract(chainId) }"
               >
-                <div class="manage-contents_network add-flex a-center j-between">
+                <div
+                  class="manage-contents_network add-flex a-center j-between"
+                  :class="{ 'mb-2': isPublishedContract(chainId) }"
+                >
                   <div class="manage-contents_logo add-flex a-center">
                     <figure>
                       <img :src="contract.icon" :alt="contract.name">
@@ -58,16 +61,25 @@
                       {{ contract.name }}
                     </p>
                   </div>
-                  <div class="manage-contents_box add-flex a-center j-between" v-if="contractLoaded">
-                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copyPaymentContractUrl(chainId)">Copy contract</div>
+                  <div class="manage-contents_box add-flex a-center j-between">
+                    <div v-if="isPublishedContract(chainId)" class="manage-contents_copy" @click="copy(contractUrl(chainId))">Copy contract</div>
                     <div
                       v-if="!contract.support"
                       class="manage-contents_btn other inactive"
                     >
                       Not support
                     </div>
+                    <div 
+                      v-else-if="!contractLoaded"
+                      class="manage-contents_btn other inactive"
+                    >
+                      Loading
+                      <div class="contract-deploying-wrap active">
+                        <img class="spin" src="@/assets/images/loading.svg">
+                      </div>
+                    </div>
                     <div
-                      v-else-if="isPublishedContract(chainId)"
+                      v-else-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
                       class="manage-contents_btn inactive"
                     >
                       Created
@@ -97,27 +109,39 @@
                     </div>
                   </div>
                 </div>
-                <div class="manage-contents_address-wrap" :class="{ available: contract.available, unavailable: !contract.available }" v-if="isPublishedContract(chainId)">
+                <div v-if="isPublishedContract(chainId) && !isCurrentNetwork(chainId)" class="manage-contents_separate-line mb-3"></div>
+                <div
+                  v-if="isPublishedContract(chainId)"
+                  class="manage-contents_address-wrap"
+                  :class="{
+                    available: contract.available,
+                    unavailable: !contract.available,
+                    separate_bottom: isCurrentNetwork(chainId),
+                    separate_upper: !isCurrentNetwork(chainId)
+                  }"
+                >
                   <div class="manage-contents_address">
                     {{ contractUrl(chainId) }}
                   </div>
                 </div>
-                <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom">
+                <div  v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_separate-line mb-2"></div>
+                <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom">
                   <div class="manage-contents_bottom_item mb-2">
                     <div class="manage-contents_bottom_left">
-                      <p :class="{'add-check': isConnect}">
-                        Received address： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      <p>
+                        Received address： <span>Last Updated : {{ receiveAddressLastModified(chainId) }}</span>
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="manage-contents_bottom_box">
-                          0x2AF8Ae03294d28D2098A7bc...
+                          {{ currentContractReceiveAddress(chainId) | addressFormat }}
                           <span>
-                            <img src="@/assets/images/copy-address.svg">
+                            <button @click="copy(currentContractReceiveAddress(chainId))"><img src="@/assets/images/copy-address.svg"></button>
                           </span>
                         </div>
                         <div
                           class="manage-contents_btn"
                           v-if="isPublishedContract(chainId)"
+                          @click="showContractReceiveAddressChangeModal(chainId)"
                         >
                           Change
                         </div>
@@ -130,23 +154,24 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="isPublishedContract(chainId)" class="manage-contents_bottom_item">
+                  <div v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)" class="manage-contents_bottom_item">
                     <div class="manage-contents_bottom_left">
-                      <p :class="{'add-check': isConnect}">
-                        Cash back rate： <span v-if="!isConnect">Default Setting</span> <span v-else class="history">Changed on 06/11/2022</span>
+                      <p>
+                        Cash back rate： <span>{{ cashbackLastModified(chainId) == 0 ? 'Default Setting' : `Last Updated : ${cashbackLastModified(chainId)}` }}</span>
                       </p>
                       <div class="add-flex a-center j-between">
                         <div class="add-flex a-center">
                           <div class="manage-contents_bottom_box lerge-pd">
-                            0.00%
+                            {{ contractCashBackInfo(chainId) }}%
                           </div>
                           <span class="manage-contents_bottom_dsc">
-                              of amount back to the payer
+                            of amount back to the payer
                           </span>
                         </div>
                         <div
                           class="manage-contents_btn"
                           v-if="isPublishedContract(chainId)"
+                          @click="showContractCashbackChangeModal(chainId)"
                         >
                           Change
                         </div>
@@ -285,6 +310,7 @@ import {
 } from '@/contracts/receive_tokens'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
 
 export default {
   name: 'AdminPaymentSetting',
@@ -309,7 +335,7 @@ export default {
         verified: false
       },
       monitoringInterval: null,
-      isConnect: true
+      contractLoaded: false
     }
   },
   computed: {
@@ -360,13 +386,57 @@ export default {
     isAllowAed() {
       return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
     },
-    contractLoaded() {
-      return this.$store.state.contract.loaded
-    },
     contractUrl() {
       return (chainId) => {
         const contract = this.contracts[chainId]
         return `${contract.scanUrl}/address/${contract.address}`
+      }
+    },
+    contractCashBackInfo() {
+      return (chainId) => {
+        return this.contracts[chainId].cashback.rate
+      }
+    },
+    cashbackLastModified() {
+      return (chainId) => {
+        return this.contracts[chainId].cashback.lastModified
+      }
+    },
+    chainId() {
+      return this.$store.state.web3.chainId
+    },
+    currentContractAddress() {
+      return this.chainId && this.contracts[this.chainId] ? this.contracts[this.chainId].address : null
+    },
+    currentContractReceiveAddress() {
+      return (chainId) => {
+        const address = this.contracts[chainId].receiveAddress.address
+        return address ? address : null
+      }
+    },
+    receiveAddressLastModified() {
+      return (chainId) => {
+        return this.contracts[chainId].receiveAddress.lastModified
+      }
+    }
+  },
+  watch: {
+    chainId() {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+    },
+    currentContractAddress() {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+    }
+  },
+  filters: {
+    addressFormat(address) {
+      if ((address)) {
+        const prefix = address.substr(0, 35);
+        return prefix + '…' ;
+      } else {
+        return '';
       }
     }
   },
@@ -448,8 +518,22 @@ export default {
       }
       this.$store.dispatch('contract/updateContractAddress', payload)
     },
-    updateContractsLoaded(loaded) {
-      this.$store.dispatch('contract/updateContractsLoaded', loaded)
+    updateCashbackRate(chainId, cashback) {
+      const payload = {
+        chainId: chainId,
+        cashbackRate: cashback.rate,
+        lastModified: cashback.lastModified
+      }
+      this.$store.dispatch('contract/updateContractCashback', payload)
+    },
+    updateReceiveAddress(chainId, receiveAddress) {
+      const payload = {
+        chainId: chainId,
+        receiveAddress: receiveAddress.address,
+        isContract: receiveAddress.isContract,
+        lastModified: receiveAddress.lastModified
+      }
+      this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
     getPendingTransactions() {
       this.apiGetPendingTransactions().then((response) => {
@@ -469,14 +553,14 @@ export default {
       this.monitoringInterval = setTimeout(this.getPendingTransactions, 3000)
     },
     getContracts() {
-      this.apiGetContracts().then((response) => {
+      return this.apiGetContracts().then((response) => {
         response.data.forEach((contract) => {
           if (contract.payment_type === 1 && contract.network_type in this.contracts) {
             this.updateContractAddress(contract.network_type, contract.address)
             this.updateContractAvailable(contract.network_type, contract.available)
           }
         })
-        this.updateContractsLoaded(true)
+        this.contractLoaded = true
       }).catch((error) => {
         console.log(error)
         this.apiConnectionErrorHandler(error.response.status, error.response.data)
@@ -529,10 +613,26 @@ export default {
         chainId
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', parseInt(chainId, 10))
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
       })
     },
-    copyPaymentContractUrl(chainId) {
-      this.$clipboard(this.contractUrl(chainId))
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false
+        }
+      })
+    },
+    copy(value) {
+      this.$store.dispatch('account/copied')
+      this.$clipboard(value);
     },
     apiConnectionErrorHandler(statusCode, responseData) {
       if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
@@ -567,6 +667,44 @@ export default {
           chainId: chainId
         }
       })
+    },
+    showContractCashbackChangeModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-cashback-change-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
+    },
+    showContractReceiveAddressChangeModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'contract-receive-address-change-modal',
+        size: 'small',
+        params: {
+          chainId: chainId
+        }
+      })
+    },
+    async getCurrentContractCashbackRate(chainId) {
+      const contractAddress = this.contracts[chainId].address
+      if(contractAddress == null) return
+      const result = await this.$web3.viewCashBackPercent(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      this.updateCashbackRate(chainId, result)
+    },
+    async getCurrentContractReceiveAddress(chainId) {
+      const contractAddress = this.contracts[chainId].address
+      if(contractAddress == null) return
+      const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        contractAddress
+      )
+      this.updateReceiveAddress(chainId, receiveAddress)
     }
   },
   created() {
@@ -583,13 +721,25 @@ export default {
         name: network.name,
         address: null,
         scanUrl: network.scanUrl,
+        cashback: {
+          rate: null,
+          lastModified: null
+        },
+        receiveAddress: {
+          address: null,
+          isContract: null,
+          lastModified: null
+        },
         icon: network.icon,
         processing: false,
         support: supportStatuses[network.chainId]
       })
     })
     this.$store.dispatch('contract/addContracts',contractSettings)
-    this.getContracts()
+    this.getContracts().then(() => {
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+    })
     this.getPendingTransactions()
     this.getPaymentSettings()
     this.getDomainSettings()
@@ -646,6 +796,9 @@ export default {
           color:#5390F2;
           cursor: pointer;
         }
+      }
+      &_separate-line {
+        border-bottom: 1px solid #78668D;
       }
       &_item{
         background: #292536;
@@ -716,8 +869,16 @@ export default {
       &_address-wrap{
         padding: 0 32px;
         position: relative;
-        border-bottom: 1px solid #78668D;
-        margin-bottom: 16px;
+        &.separate {
+          &_upper {
+            padding-bottom: 1px;
+          }
+          &_bottom {
+            margin-top: 5px;
+            padding-bottom: 1px;
+            margin-bottom: 5px;
+          }
+        }
         &.available{
           &::after{
             content: "";

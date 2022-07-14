@@ -2,57 +2,36 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        Switch network
+        Error
       </h3>
       <p class="header__desc">
-        The current network does not support this transaction.
-        <br>
-        Please click the button below to switch to the corresponding network.
+        In order to provide secure payment, manipulation of the page by the browser is prohibited.
       </p>
     </div>
-    <div class="body add-flex j-between">
-      <button class="btn __m __pg full" @click="switchNetwork">
-        <span class="btn-icon">
-          <img :src="networkIcon">
-        </span>
-          {{ networkName }}
-      </button>
-    </div>
+    <button class="close" @click="hideModal">
+      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
+      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
+      close
+    </button>
   </div>
 </template>
 
 <script>
-import { NETWORKS } from '@/constants'
 
-export default {
-  name: 'networkModal',
-  computed: {
-    classes() {
-      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      return classes
+  export default {
+    name: 'errorForbiddenBackPaymentModal',
+    computed: {
+      classes() {
+        const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+        return classes
+      }
     },
-    chainId() {
-      return this.$store.state.modal.params.chainId
-    },
-    networkName() {
-      return NETWORKS[this.chainId].name
-    },
-    networkIcon() {
-      return NETWORKS[this.chainId].icon
-    }
-  },
-  methods: {
-    switchNetwork() {
-      this.$web3.switchChain(
-        this.$store.state.web3.instance,
-        this.chainId
-      ).then(() => {
-        this.$store.dispatch('web3/updateChainId', this.chainId)
+    methods: {
+      hideModal() {
         this.$store.dispatch('modal/hide')
-      })
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -76,7 +55,6 @@ export default {
     @include media(sp) {
       width: calc(100vw - 32px);
     }
-
   }
   .header {
     @include media(pc) {
@@ -111,7 +89,6 @@ export default {
     width: 16px;
     height: 16px;
     font-size: 0;
-
     @include media(pc) {
       top: 30px;
       right: 24px;
@@ -123,13 +100,15 @@ export default {
   }
   .body {
     @include media(pc) {
-      padding: 24px 24px;
+      padding: 24px 50px 40px;
     }
     @include media(sp) {
       padding: 24px 12px 48px;
-      flex-wrap: wrap;
-      .btn{
-        width: 100% !important;
+      .btn_content{
+        margin-left: 0;
+        p{
+          font-size: 10px;
+        }
       }
     }
   }

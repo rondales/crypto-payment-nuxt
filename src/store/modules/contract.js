@@ -1,8 +1,7 @@
 const store = {
     namespaced: true,
     state: {
-      contracts: {},
-      loaded: false
+      contracts: {}
     },
     actions: {
       addContracts({ commit }, payload) {
@@ -20,9 +19,18 @@ const store = {
       updateContractAddress({ commit }, payload) {
         commit('updateContractAddress', payload)
       },
-      updateContractsLoaded({ commit }, payload) {
-        commit('updateContractsLoaded', payload)
+      updateContractCashback({ commit }, payload) {
+        commit('updateContractCashback', payload)
       },
+      updateContractCashbackRate({ commit }, payload) {
+        commit('updateContractCashbackRate', payload)
+      },
+      updateContractReceiveAddress({ commit }, payload) {
+        commit('updateContractReceiveAddress', payload)
+      },
+      updateNewReceiveAddress({ commit }, payload) {
+        commit('updateNewReceiveAddress', payload)
+      }
     },
     mutations: {
       addContracts(state, payload) {
@@ -40,9 +48,21 @@ const store = {
       updateContractAddress(state, payload) {
         state.contracts[payload.chainId].address = payload.address
       },
-      updateContractsLoaded(state, payload) {
-        state.loaded = payload
+      updateContractCashback(state, payload) {
+        state.contracts[payload.chainId].cashback.rate = payload.cashbackRate
+        state.contracts[payload.chainId].cashback.lastModified = payload.lastModified
       },
+      updateContractCashbackRate(state, payload) {
+        state.contracts[payload.chainId].cashback.rate = payload.cashbackRate
+      },
+      updateContractReceiveAddress(state, payload) {
+        state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
+        state.contracts[payload.chainId].receiveAddress.isContract = payload.isContract
+        state.contracts[payload.chainId].receiveAddress.lastModified = payload.lastModified
+      },
+      updateNewReceiveAddress(state, payload) {
+        state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
+      }
     }
   }
   

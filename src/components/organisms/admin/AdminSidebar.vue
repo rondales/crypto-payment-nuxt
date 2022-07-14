@@ -33,6 +33,14 @@
                 Keys
               </router-link>
             </li>
+            <li v-if="isUseTestnet" @click="close()">
+              <a
+                target="_blank"
+                href="/test"
+              >
+                Test with key
+              </a>
+            </li>
             <li @click="close()">
               <a
                 target="_blank"
@@ -76,6 +84,9 @@ export default {
         '/admin/payment/settings/domain'
       ]
       return targetPaths.includes(this.$route.path)
+    },
+    isUseTestnet() {
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     }
   },
   methods: {

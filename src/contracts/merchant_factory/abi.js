@@ -1,23 +1,18 @@
 export default {
   abi: [
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "slashAddressResolver_",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
       "anonymous": false,
       "inputs": [
         {
           "indexed": false,
           "internalType": "address",
-          "name": "merchantAddress_",
+          "name": "merchant_",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "controller_",
           "type": "address"
         }
       ],
@@ -42,38 +37,6 @@ export default {
       ],
       "name": "OwnershipTransferred",
       "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "oldResolver_",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "newResolver_",
-          "type": "address"
-        }
-      ],
-      "name": "SlashAddressResolverUpdated",
-      "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "_slashAddressResolver",
-      "outputs": [
-        {
-          "internalType": "contract ISlashAddressResolver",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
     },
     {
       "inputs": [
@@ -121,7 +84,30 @@ export default {
           "type": "bytes"
         }
       ],
-      "name": "deployMerchantWithSpecificController",
+      "name": "deployMerchantWithController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "commonOwner_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merchantImplementation_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "defaultController_",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -137,6 +123,24 @@ export default {
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "recoverWrongTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -163,13 +167,134 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "slashAddressResolver_",
+          "name": "commonOwner_",
           "type": "address"
         }
       ],
-      "name": "updateAddressResolver",
+      "name": "updateCommonOwner",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "controller_",
+          "type": "address"
+        }
+      ],
+      "name": "updateDefaultController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchantImplementation_",
+          "type": "address"
+        }
+      ],
+      "name": "updateMerchantImplementation",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewCommonOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "merchant_",
+          "type": "address"
+        }
+      ],
+      "name": "viewController",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewDefaultController",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMerchantImplementation",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        }
+      ],
+      "name": "viewMerchants",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewMerchantsCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
   ]
