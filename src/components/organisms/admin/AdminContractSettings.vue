@@ -208,10 +208,8 @@ import {
   MaticTokens,
   AvalancheTokens
 } from '@/contracts/receive_tokens'
-import apiMixin from '@/mixins/api'
+import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
-
-const url = `${API_BASE_URL}/api/v1/management/contract`
 
 export default {
   name: 'AdminContractSettings',
@@ -297,18 +295,21 @@ export default {
   },
   methods: {
     apiGetContracts() {
-      return this.axios.get(url, this.getOptions())
+      const url = `${API_BASE_URL}/api/v1/management/contract`
+      return this.axios.get(url, this.$_apiHandler_getOptions())
     },
     apiDeleteContract(chainId, contractAddress) {
+      const url = `${API_BASE_URL}/api/v1/management/contract`
       const data = {
         address: contractAddress,
         network_type: parseInt(chainId, 10),
         payment_type: NORMAL_TYPE_PAYMENT
       }
-      return this.axios.delete(url, data, this.getOptions())
+      return this.axios.delete(url, data, this.$_apiHandler_getOptions())
     },
     apiGetPendingTransactions() {
-      return this.axios.get(`${url}/deploy/status`, this.getOptions())
+      const url = `${API_BASE_URL}/api/v1/management/contract/deploy/status`
+      return this.axios.get(url, this.$_apiHandler_getOptions())
     },
     updateContractProcessing(chainId, processing) {
       const payload = {
@@ -363,7 +364,7 @@ export default {
           this.getContracts()
         })
         .catch((error) => {
-          this.apiConnectionErrorHandler(
+          this.$_apiHandler_apiConnectionErrorHandler(
             error.response.status,
             error.response.data
           )
@@ -392,7 +393,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          this.apiConnectionErrorHandler(
+          this.$_apiHandler_apiConnectionErrorHandler(
             error.response.status,
             error.response.data
           )

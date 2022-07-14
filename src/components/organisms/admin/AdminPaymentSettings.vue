@@ -5,11 +5,7 @@
       <p>
         URL to receive kickbacks sent by SlashPayment after payment is finished.
       </p>
-      <input
-        class="text-box"
-        type="text"
-        v-model="paymentSettings.successNotifyUrl"
-      />
+      <input class="text-box" type="text" v-model="successNotifyUrl" />
     </div>
     <div class="manage-contents_clm">
       <h4>Payment success return URL</h4>
@@ -17,11 +13,7 @@
         A URL for the user to go from SlashPayment to the merchant's website
         after a successful payment.
       </p>
-      <input
-        class="text-box"
-        type="text"
-        v-model="paymentSettings.successReturnUrl"
-      />
+      <input class="text-box" type="text" v-model="successReturnUrl" />
     </div>
     <div class="manage-contents_clm">
       <h4>Payment failure return URL</h4>
@@ -29,20 +21,12 @@
         A URL for the user to go from SlashPayment to the merchant's website
         after a failure payment.
       </p>
-      <input
-        class="text-box"
-        type="text"
-        v-model="paymentSettings.failureReturnUrl"
-      />
+      <input class="text-box" type="text" v-model="failureReturnUrl" />
     </div>
     <div class="manage-contents_clm">
       <h4><span>*</span>Exchange margin rate</h4>
       <p>The margin rate to be added to the actual exchange rate.</p>
-      <input
-        class="text-box"
-        type="text"
-        v-model="paymentSettings.exchangeMarginRate"
-      />
+      <input class="text-box" type="text" v-model="exchangeMarginRate" />
     </div>
     <div class="manage-contents_clm mb-6">
       <h4><span>*</span>Supported Currencies</h4>
@@ -101,86 +85,80 @@
 
 <script>
 import { API_BASE_URL } from '@/constants'
-import apiMixin from '@/mixins/api'
-
-const url = `${API_BASE_URL}/api/v1/management/setting/payment`
+import apiMixin from '@/components/mixins/ApiHandler'
 
 export default {
   name: 'AdminPaymentSettings',
   mixins: [apiMixin],
   data() {
     return {
-      paymentSettings: {
-        successNotifyUrl: '',
-        successReturnUrl: '',
-        failureReturnUrl: '',
-        exchangeMarginRate: '0.0',
-        allowCurrencies: {
-          USD: false,
-          JPY: false,
-          EUR: false,
-          AED: false
-        }
+      successNotifyUrl: '',
+      successReturnUrl: '',
+      failureReturnUrl: '',
+      exchangeMarginRate: '0.0',
+      allowCurrencies: {
+        USD: false,
+        JPY: false,
+        EUR: false,
+        AED: false
       }
     }
   },
   computed: {
     isAllowAllCurrency() {
-      const denyCurrencies = Object.values(
-        this.paymentSettings.allowCurrencies
-      ).filter((setting) => !setting)
+      const denyCurrencies = Object.values(this.allowCurrencies).filter(
+        (setting) => !setting
+      )
       return denyCurrencies.length === 0
     },
     isAllowUsd() {
-      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.USD
+      return this.isAllowAllCurrency || this.allowCurrencies.USD
     },
     isAllowJpy() {
-      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.JPY
+      return this.isAllowAllCurrency || this.allowCurrencies.JPY
     },
     isAllowEur() {
-      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.EUR
+      return this.isAllowAllCurrency || this.allowCurrencies.EUR
     },
     isAllowAed() {
-      return this.isAllowAllCurrency || this.paymentSettings.allowCurrencies.AED
+      return this.isAllowAllCurrency || this.allowCurrencies.AED
     }
   },
   methods: {
-    apiGetPaymentSettings() {
-      return this.axios.get(url, this.getOptions())
+    apiGetSettings() {
+      const url = `${API_BASE_URL}/api/v1/management/setting/payment`
+      return this.axios.get(url, this.$_apiHandler_getOptions())
     },
-    apiUpdatePaymentSettings() {
+    apiUpdateSettings() {
+      const url = `${API_BASE_URL}/api/v1/management/setting/payment`
       const data = {
-        complete_kickback_url: this.paymentSettings.successNotifyUrl,
-        succeeded_return_url: this.paymentSettings.successReturnUrl,
-        failured_return_url: this.paymentSettings.failureReturnUrl,
-        exchange_margin_rate: this.paymentSettings.exchangeMarginRate,
-        allow_currencies: this.paymentSettings.allowCurrencies
+        complete_kickback_url: this.successNotifyUrl,
+        succeeded_return_url: this.successReturnUrl,
+        failured_return_url: this.failureReturnUrl,
+        exchange_margin_rate: this.exchangeMarginRate,
+        allow_currencies: this.allowCurrencies
       }
-      return this.axios.patch(url, data, this.getOptions())
+      return this.axios.patch(url, data, this.$_apiHandler_getOptions())
     },
-    getPaymentSettings() {
-      this.apiGetPaymentSettings()
+    getSettings() {
+      this.apiGetSettings()
         .then((response) => {
-          this.paymentSettings.successNotifyUrl =
-            response.data.complete_kickback_url
-          this.paymentSettings.successReturnUrl =
-            response.data.succeeded_return_url
-          this.paymentSettings.failureReturnUrl =
-            response.data.failured_return_url
-          this.paymentSettings.exchangeMarginRate =
-            response.data.exchange_margin_rate
-          this.paymentSettings.allowCurrencies = response.data.allow_currencies
+          this.successNotifyUrl = response.data.complete_kickback_url
+          this.successReturnUrl = response.data.succeeded_return_url
+          this.failureReturnUrl = response.data.failured_return_url
+          this.exchangeMarginRate = response.data.exchange_margin_rate
+          this.allowCurrencies = response.data.allow_currencies
         })
         .catch((error) => {
-          this.apiConnectionErrorHandler(
+          this.$_apiHandler_apiConnectionErrorHandler(
             error.response.status,
             error.response.data
           )
         })
     },
     updatePaymentSettings() {
-      this.apiUpdatePaymentSettings().catch((error) => {
-        this.apiConnectionErrorHandler(
+      this.apiUpdateSettings().catch((error) => {
+        this.$_apiHandler_apiConnectionErrorHandler(
           error.response.status,
           error.response.data
         )
@@ -188,16 +166,16 @@ export default {
     },
     selectAllCurrency($event) {
       const settingValue = $event.target.checked
-      Object.keys(this.paymentSettings.allowCurrencies).forEach((currency) => {
-        this.paymentSettings.allowCurrencies[currency] = settingValue
+      Object.keys(this.allowCurrencies).forEach((currency) => {
+        this.allowCurrencies[currency] = settingValue
       })
     },
     selectCurrency(event, currency) {
-      this.paymentSettings.allowCurrencies[currency] = event.target.checked
+      this.allowCurrencies[currency] = event.target.checked
     }
   },
   created() {
-    this.getPaymentSettings()
+    this.getSettings()
   }
 }
 </script>

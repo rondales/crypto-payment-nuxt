@@ -11,11 +11,9 @@
         to the user on the payment pages.
       </p>
       <div>
-        <input class="text-box" type="text" v-model="domainSettings.domain" />
+        <input class="text-box" type="text" v-model="domain" />
       </div>
-      <div class="manage-contents_create-url" @click="updateDomainSettings">
-        Save
-      </div>
+      <div class="manage-contents_create-url" @click="updateSettings">Save</div>
     </div>
     <div class="manage-contents_clm">
       <h4>Prove ownership of a domain with TXT records</h4>
@@ -27,69 +25,63 @@
         displayed to the user on the payment pages.
       </p>
       <div>
-        <input
-          class="text-box"
-          type="text"
-          v-model="domainSettings.txt"
-          disabled
-        />
+        <input class="text-box" type="text" v-model="txt" disabled />
       </div>
       <div class="manage-contents_create-url" @click="verifyDomain">Check</div>
-      <div class="verify" v-if="domainSettings.verified">verified</div>
+      <div class="verify" v-if="verified">verified</div>
     </div>
   </div>
 </template>
 
 <script>
 import { API_BASE_URL, HTTP_CODES } from '@/constants'
-import apiMixin from '@/mixins/api'
-
-const url = `${API_BASE_URL}/api/v1/management/setting/domain`
+import apiMixin from '@/components/mixins/ApiHandler'
 
 export default {
   name: 'AdminDomainSettings',
   mixins: [apiMixin],
   data() {
     return {
-      domainSettings: {
-        domain: '',
-        txt: '',
-        verified: false
-      }
+      domain: '',
+      txt: '',
+      verified: false
     }
   },
   methods: {
-    apiGetDomainSettings() {
-      return this.axios.get(url, this.getOptions())
+    apiGetSettings() {
+      const url = `${API_BASE_URL}/api/v1/management/setting/domain`
+      return this.axios.get(url, this.$_apiHandler_getOptions())
     },
-    apiUpdateDomainSettings() {
-      const data = { domain: this.domainSettings.domain }
-      return this.axios.patch(url, data, this.getOptions())
+    apiUpdateSettings() {
+      const url = `${API_BASE_URL}/api/v1/management/setting/domain`
+      const data = { domain: this.domain }
+      return this.axios.patch(url, data, this.$_apiHandler_getOptions())
     },
     apiVerifyDomain() {
-      return this.axios.get(`${url}/verify`, this.getOptions())
+      const url = `${API_BASE_URL}/api/v1/management/setting/domain/verify`
+      return this.axios.get(url, this.$_apiHandler_getOptions())
     },
-    getDomainSettings() {
-      this.apiGetDomainSettings()
+    getSettings() {
+      this.apiGetSettings()
         .then((response) => {
-          this.domainSettings.domain = response.data.domain
-          this.domainSettings.txt = response.data.txt
-          this.domainSettings.verified = response.data.verified
+          this.domain = response.data.domain
+          this.txt = response.data.txt
+          this.verified = response.data.verified
         })
         .catch((error) => {
-          this.apiConnectionErrorHandler(
+          this.$_apiHandler_apiConnectionErrorHandler(
             error.response.status,
             error.response.data
           )
         })
     },
-    updateDomainSettings() {
-      this.apiUpdateDomainSettings()
+    updateSettings() {
+      this.apiUpdateSettings()
         .then((response) => {
-          this.domainSettings.verified = !response.data.re_verify
+          this.verified = !response.data.re_verify
         })
         .catch((error) => {
-          this.apiConnectionErrorHandler(
+          this.$_apiHandler_apiConnectionErrorHandler(
             error.response.status,
             error.response.data
           )
@@ -98,12 +90,12 @@ export default {
     verifyDomain() {
       this.apiVerifyDomain()
         .then(() => {
-          this.domainSettings.verified = true
+          this.verified = true
         })
         .catch((error) => {
           error.response.status === HTTP_CODES.BAD_REQUEST
-            ? (this.domainSettings.verified = false)
-            : this.apiConnectionErrorHandler(
+            ? (this.verified = false)
+            : this.$_apiHandler_apiConnectionErrorHandler(
                 error.response.status,
                 error.response.data
               )
@@ -111,7 +103,7 @@ export default {
     }
   },
   created() {
-    this.getDomainSettings()
+    this.getSettings()
   }
 }
 </script>
