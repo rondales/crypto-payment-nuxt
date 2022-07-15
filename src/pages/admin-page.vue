@@ -88,6 +88,9 @@ export default {
         )
       }
     },
+    handleWalletDisconnect() {
+      this.forceLogout()
+    },
     forceLogout() {
       this.$router.push({ path: '/admin' })
     },
@@ -173,6 +176,7 @@ export default {
         this.handleChainChanged(chainId)
       })
       this.web3.instance.currentProvider.on('accountsChanged', this.handleAccountsChanged)
+      this.web3.instance.currentProvider.on('disconnect', this.handleWalletDisconnect)
     }
   },
   created() {
@@ -193,6 +197,10 @@ export default {
       this.web3.instance.currentProvider.removeListener(
         'accountsChanged',
         this.handleAccountsChanged
+      )
+      this.web3.instance.currentProvider.removeListener(
+        'disconnect',
+        this.handleWalletDisconnect
       )
     }
   }
