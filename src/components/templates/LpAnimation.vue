@@ -5,7 +5,6 @@
 </template>
 <script src="https://unpkg.com/vue-p5"></script>
 <script>
-let p5Instances = []
 export default {
   props: {
     canvasClass: {
@@ -14,6 +13,11 @@ export default {
     type: {
       type: String,
     },
+  },
+  data() {
+    return {
+      p5Instances: []
+    }
   },
   mounted() {
     const P5 = require("p5");
@@ -759,13 +763,13 @@ export default {
     //   }
     // };
 
-    p5Instances.push(new P5(eval(this.type)));
+    this.p5Instances.push(new P5(eval(this.type)));
     // new P5(SubCanvas1);
     // new P5(SubCanvas2);
     // new P5(SubCanvas3);
   },
   beforeDestroy() {
-    p5Instances.forEach((instance) => {
+    this.p5Instances.forEach((instance) => {
       instance.remove()
     })
   }
