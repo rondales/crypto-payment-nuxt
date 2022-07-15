@@ -64,11 +64,11 @@
       />
       <div class="add-flex j-between">
         <div>
-          <p class="payment_Receiver mb-1">
+          <p class="payment_Receiver mb-1 non-translate">
             Payee：{{ receiver }}
             <img v-if="isVerifiedDomain" :src="domainVerifiedIcon" />
           </p>
-          <p class="payment_invoice-id">Invoice ID：{{ invoiceId }}</p>
+          <p class="payment_invoice-id non-translate">Invoice ID：{{ invoiceId }}</p>
         </div>
         <router-view
           :progressTotalSteps="progressTotalSteps"

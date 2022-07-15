@@ -148,7 +148,12 @@ export default {
                     }
                     break;
                   case 'unset_token':
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
+                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
+                    }
                     this.$emit('incrementProgressCompletedSteps')
+                    this.$emit('updateProgressTotalSteps', 5)
                     this.$router.replace({
                       path: '/payment/wallets/' + this.$route.params.token
                     })
