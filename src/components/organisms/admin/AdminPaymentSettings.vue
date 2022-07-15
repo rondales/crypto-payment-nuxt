@@ -86,8 +86,7 @@
 <script>
 import { API_BASE_URL } from '@/constants'
 import apiMixin from '@/components/mixins/ApiHandler'
-import { NETWORKS } from "@/constants";
-import Web3 from "web3"
+
 export default {
   name: 'AdminPaymentSettings',
   mixins: [apiMixin],
