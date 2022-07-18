@@ -214,7 +214,6 @@ import {
 } from '@/contracts/receive_tokens'
 import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
-import {NETWORKS} from "@/constants";
 import Web3 from "web3";
 
 export default {
@@ -280,10 +279,7 @@ export default {
     }
   },
   watch: {
-    chainId() {
-      this.getContractCashbackRate(this.$store.state.web3.chainId)
-      this.getContractReceiveAddress(this.$store.state.web3.chainId)
-    },
+
     currentContractAddress() {
       this.getContractCashbackRate(this.$store.state.web3.chainId)
       this.getContractReceiveAddress(this.$store.state.web3.chainId)
@@ -459,11 +455,32 @@ export default {
         }
       })
     },
+    async getContractCashbacks(web3Instance) {
+      const cashbacks = await this.$web3.viewCashBacks(
+          web3Instance,
+          MerchantContract.abi,
+          this.contracts
+      )
+      for (let [chainId, cashback] of Object.entries(cashbacks)) {
+        this.updateCashbackRate(chainId, cashback)
+      }
+    },
+
+    async getContractReceiveAddresses(web3Instance) {
+      const receiveAddresses = await this.$web3.viewMerchantReceiveAddresses(
+          web3Instance,
+          MerchantContract.abi,
+          this.contracts
+      )
+      for (let [chainId, receiveAddress] of Object.entries(receiveAddresses)) {
+        this.updateReceiveAddress(chainId, receiveAddress)
+      }
+    },
     async getContractCashbackRate(chainId) {
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
       const result = await this.$web3.viewCashBackPercent(
-        new Web3(NETWORKS[chainId].rpcUrl),
+        this.$store.state.web3.instance,
         MerchantContract.abi,
         contractAddress
       )
@@ -473,7 +490,7 @@ export default {
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
       const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
-        new Web3(NETWORKS[chainId].rpcUrl),
+        this.$store.state.web3.instance,
         MerchantContract.abi,
         contractAddress
       )
@@ -514,10 +531,9 @@ export default {
     })
     this.$store.dispatch('contract/addContracts', contractSettings)
     this.getContracts().then(() => {
-      for (let [chainId] of Object.entries(this.contracts)) {
-        this.getContractCashbackRate(chainId)
-        this.getContractReceiveAddress(chainId)
-      }
+      const web3Instance = new Web3();
+      this.getContractCashbacks(web3Instance)
+      this.getContractReceiveAddresses(web3Instance)
     })
     this.getPendingTransactions()
   },
