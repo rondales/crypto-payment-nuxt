@@ -11,13 +11,14 @@
 </template>
 
 <script>
-import NumberFormat from 'number-format.js'
 import PaymentAmount from '@/components/organisms/PaymentAmount'
 import PaymentEmail from '@/components/organisms/PaymentEmail'
 import { errorCodeList } from '@/enum/error_code'
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: 'PaymentEntrance',
+  mixins: [DisplayConfig],
   components: {
     PaymentAmount,
     PaymentEmail
@@ -109,7 +110,7 @@ export default {
         symbol: receiveResponse.data.symbol,
         isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
-        amount: NumberFormat('0.000000', receiveResponse.data.amount)
+        amount: this.$_displayConfig_formatNumber(receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.$emit('incrementProgressCompletedSteps')
@@ -122,7 +123,7 @@ export default {
           if (error.response.data.errors.includes(2110)) {
             this.apiGetTransactionData().then((transactionResponse) => {
               this.$emit('incrementProgressCompletedSteps')
-              this.$store.dispatch('payment/updateAmount', NumberFormat('0.000000', transactionResponse.data.base_amount))
+              this.$store.dispatch('payment/updateAmount', this.$_displayConfig_formatNumber(transactionResponse.data.base_amount))
               this.apiGetTransactionState().then((response) => {
                 this.$emit('incrementProgressCompletedSteps')
                 switch(response.data.state) {
