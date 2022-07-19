@@ -83,6 +83,21 @@
                   placeholder="Payment amount"
                 />
               </div>
+              <div v-if="amount">
+                <p class="mb-1">Currency</p>
+                <div class="payment_receipt_form border mb-2">
+                  <select v-model="amountType">
+                    <option value="">Payee Default Token</option>
+                    <option
+                      v-for="(currency, key) in currencies"
+                      :value="currency.name"
+                      :key="key"
+                    >
+                      {{ currency.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </div>
             <button
               class="btn __g __l mt-4 mb-1"
@@ -138,7 +153,7 @@
 <script>
 import JsSHA from "jssha";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
-import { DEVELOPMENT } from "@/constants";
+import { DEVELOPMENT, CURRENCIES } from "@/constants";
 
 export default {
   name: "paymentTest",
@@ -157,6 +172,7 @@ export default {
       orderToken: "",
       hashToken: "",
       orderCode: "",
+      amountType: "",
       amount: "",
       paymentUrl: "",
     };
@@ -189,6 +205,9 @@ export default {
     isDevelopmentMode() {
       return process.env.NODE_ENV === DEVELOPMENT;
     },
+    currencies() {
+      return CURRENCIES;
+    }
   },
   methods: {
     apiGetPaymentUrl(hash) {
@@ -197,6 +216,7 @@ export default {
         identification_token: this.orderToken,
         order_code: this.orderCode,
         verify_token: hash,
+        amount_type: this.amountType
       };
       if (this.amount !== "") data.amount = this.amount;
       return this.axios.post(url, data);
@@ -305,7 +325,7 @@ export default {
 }
 .slash-bg {
   width: 100%;
-  min-height: 120vh;
+  min-height: 130vh;
   @include media(sp) {
     min-height: 140vh;
   }
@@ -325,7 +345,7 @@ export default {
 }
 .payment {
   position: absolute;
-  top: 60vh;
+  top: 75vh;
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: var(--color_shadow);
@@ -335,7 +355,7 @@ export default {
   border-radius: 8px;
   background: var(--color_bg);
   @include media(sp) {
-    top: calc(50% + 12rem);
+    top: calc(35% + 12rem);
   }
   &::before {
     content: "Slash.fi Web3 Payment ®︎";
