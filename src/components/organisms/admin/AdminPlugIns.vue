@@ -26,13 +26,14 @@
       </div>
     </div>
     <div class="keys-wrap" v-else>
-      <p class="store-desc">Slash Store Apps Login Deeplink Issuance</p>
+      <p class="store-desc">Slash EC Plug-in API Key</p>
       <div class="comfirm-wrap">
         <div @click="create()" class="confirm-btn">Create</div>
         <p>
-          In order to activate the Slash Store Apps, you must issue a deep link
-          to activate your account. If you are using the same account on
-          multiple devices, please issue multiple deeplinks.
+          In order to make Slash.fi EC plug-in works with your account, you must
+          issue an API key. This API key can be used to access your account, so
+          please keep it in a safe place. For the instruction on how to install
+          the Slash.fi EC plug-in, please refer to the Plug-in's documentation.
         </p>
       </div>
     </div>
@@ -41,112 +42,112 @@
 
 
 <script>
-import RequestUtility from "@/utils/request";
+import RequestUtility from '@/utils/request'
 
 export default {
-  name: "AdminPlugIns",
+  name: 'AdminPlugIns',
   data() {
     return {
-      copied: false,
-    };
+      copied: false
+    }
   },
   computed: {
     token() {
-      return this.plugInsToken.token;
+      return this.plugInsToken.token
     },
     plugInsToken() {
-      return this.$store.state.plugInsToken;
-    },
+      return this.$store.state.plugInsToken
+    }
   },
   methods: {
     apiGetPlugInsToken() {
       const url =
-        process.env.VUE_APP_API_BASE_URL + "/api/v1/management/api-key";
+        process.env.VUE_APP_API_BASE_URL + '/api/v1/management/api-key'
       const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
-      return this.axios.get(url, options);
+        headers: { Authorization: RequestUtility.getBearer() }
+      }
+      return this.axios.get(url, options)
     },
     apiCreatePlugInsToken() {
       const url =
-        process.env.VUE_APP_API_BASE_URL + "/api/v1/management/api-key";
+        process.env.VUE_APP_API_BASE_URL + '/api/v1/management/api-key'
       const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
-      return this.axios.post(url, null, options);
+        headers: { Authorization: RequestUtility.getBearer() }
+      }
+      return this.axios.post(url, null, options)
     },
     copy(value) {
-      this.$store.dispatch("account/copied");
-      this.$clipboard(value);
+      this.$store.dispatch('account/copied')
+      this.$clipboard(value)
     },
     create() {
       this.apiCreatePlugInsToken()
         .then((response) => {
           this.$store.dispatch(
-            "plugInsToken/updateToken",
+            'plugInsToken/updateToken',
             response.data.api_key
-          );
+          )
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            this.logout();
+            this.logout()
           } else {
-            alert("Please try again.");
+            alert('Please try again.')
           }
-        });
+        })
     },
     tokenRefresh() {
-      this.$store.dispatch("modal/show", {
-        target: "plug-ins-token-refresh-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'plug-ins-token-refresh-modal',
+        size: 'small',
         params: {
-          token: this.token,
-        },
-      });
+          token: this.token
+        }
+      })
     },
     deleteToken() {
-      this.$store.dispatch("modal/show", {
-        target: "plug-ins-token-delete-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'plug-ins-token-delete-modal',
+        size: 'small',
         params: {
-          token: this.token,
-        },
-      });
+          token: this.token
+        }
+      })
     },
     logout() {
-      localStorage.removeItem("login_token");
+      localStorage.removeItem('login_token')
       this.$router.push({
-        path: "/admin",
-      });
-    },
+        path: '/admin'
+      })
+    }
   },
   created() {
     this.apiGetPlugInsToken()
       .then((response) => {
-        this.$store.dispatch("plugInsToken/updateToken", response.data.api_key);
+        this.$store.dispatch('plugInsToken/updateToken', response.data.api_key)
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          this.logout();
+          this.logout()
         } else {
-          alert("Please try again.");
+          alert('Please try again.')
         }
-      });
+      })
   },
   filters: {
     omittedText(text) {
       if (window.innerWidth <= 768) {
-        return text.length > 32 ? text.slice(0, 32) + "…" : text;
+        return text.length > 32 ? text.slice(0, 32) + '…' : text
       } else {
-        return text;
+        return text
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import '@/assets/scss/style.scss';
 .keys-wrap {
   margin-bottom: 48px;
 }
@@ -230,7 +231,7 @@ export default {
   cursor: pointer;
   margin-bottom: 16px;
   &::after {
-    content: "";
+    content: '';
     background: url(/assets/images/copy-address.svg) no-repeat center center;
     width: 20px;
     height: 20px;
