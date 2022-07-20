@@ -38,6 +38,7 @@
           <PaymentText type="h5" html="AML Policy" />
         </a>
       </div>
+      <!-- TODO SPの時、この中にwalletとかを表示したい -->
     </div>
     <div class="pay__box">
       <div class="pay__box__wrap">

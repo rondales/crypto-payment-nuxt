@@ -8,13 +8,17 @@
       :price="merchantReceiveAmount"
       size="big"
     />
-    <PaymentTitle
-      class="exchange__title"
-      type="h2_g"
-      html="Your Balance"
-      icon="reload"
-      @click.native="updateTokenExchangeData(true)"
-    />
+
+    <!-- TODO 確認reloadボタン -->
+    <PaymentTitle type="h2_g" html="Your Balance">
+      <PaymentButton
+        icon="reload"
+        color="icon"
+        size="icon"
+        @click.native="updateTokenExchangeData(faltruese)"
+      />
+    </PaymentTitle>
+
     <PaymentAmountBilled
       class="exchange__balance"
       :symbol="userSelectedTokenSymbol"

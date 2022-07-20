@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO spのstyle -->
   <header class="header" :class="{ admin: isAdminPage }">
     <div class="header__wrap">
       <div class="header__inner">

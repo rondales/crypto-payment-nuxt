@@ -13,7 +13,23 @@
       :price="merchantReceiveAmount | amountFormat"
     />
     <!-- TODO transaction分岐を作る モーダルにも同じパーツがあるので、同じコンポーネントを使用したい-->
-    <PaymentTransaction type="success" title="Transaction Submitted" />
+    <!-- <PaymentTransaction type="success" title="Transaction Submitted" /> -->
+    <pending
+      v-if="isStatusProcessing"
+      :urls="linkUrlData"
+      :transaction="transactionData"
+    />
+    <failure
+      v-else-if="isStatusFailured"
+      :urls="linkUrlData"
+      :isReceiptMode="isReceiptMode"
+    />
+    <success
+      v-else
+      :urls="linkUrlData"
+      :token="paymentToken"
+      :isReceiptMode="isReceiptMode"
+    />
 
     <!-- <div class="payment_handleprice-pricewrap">
       <PaymentAmountBilled
@@ -64,11 +80,11 @@
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 import { Decimal as BigJs } from "decimal.js";
-// import ResultPending from "@/components/organisms/PaymentResultPending";
-// import ResultFailure from "@/components/organisms/PaymentResultFailure";
-// import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
+import ResultPending from "@/components/organisms/PaymentResultPending";
+import ResultFailure from "@/components/organisms/PaymentResultFailure";
+import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -85,12 +101,12 @@ import {
 export default {
   name: "PaymentResult",
   components: {
-    // pending: ResultPending,
-    // failure: ResultFailure,
-    // success: ResultSuccess,
+    pending: ResultPending,
+    failure: ResultFailure,
+    success: ResultSuccess,
     PaymentAmountBilled,
     PaymentTitle,
-    PaymentTransaction,
+    // PaymentTransaction,
   },
   data() {
     return {

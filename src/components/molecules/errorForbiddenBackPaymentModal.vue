@@ -1,6 +1,7 @@
 <template>
   <div>
     <PaymentModal title="Error">
+      <!-- TODO 確認の仕方 -->
       <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <PaymentText
         html="In order to provide secure payment, manipulation of the page by the browser is prohibited."

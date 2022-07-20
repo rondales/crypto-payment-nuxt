@@ -4,7 +4,8 @@
       title="Refunded information"
       text="Slippage collections were refunded.<br />Refund information is below."
     >
-      <p class="d-todo">{{ $options.name }}</p>
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <PaymentText
         class="cap"
         tag="p"
@@ -14,7 +15,9 @@
       <div class="body add-flex j-between">
         <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
           <PaymentText tag="h3" type="subtitle" html="Cashback amount" />
-          <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+          <PaymentText
+            :html="cashBackAmount + '&nbsp;' + refundedTokenSymbol"
+          />
         </div>
         <div v-if="refundedTokenAmount" class="refund-item mb-3">
           <PaymentText tag="h3" type="p" html="Token refunded amount" />
@@ -43,10 +46,6 @@
           </p>
         </div>
       </div>
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"

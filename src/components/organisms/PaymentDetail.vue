@@ -6,20 +6,23 @@
       :icon="merchantReceiveTokenIcon"
       :price="merchantReceiveAmount"
     />
-    <!-- TODO reloadボタン -->
-    <PaymentTitle
-      type="h2_g"
-      html="Payment detail"
-      icon="reload"
-      v-if="!isWalletConfirming"
-      :class="{ loading: isReloading }"
-      @click="updateTokenExchangeData(true)"
-    />
+    <!-- TODO 確認reloadボタン -->
+    <PaymentTitle type="h2_g" html="Payment detail">
+      <PaymentButton
+        v-if="!isWalletConfirming"
+        icon="reload"
+        color="icon"
+        size="icon"
+        @click.native="updateTokenExchangeData(faltruese)"
+        :class="{ loading: isReloading }"
+      />
+    </PaymentTitle>
     <PaymentAmountBilled
       :symbol="userSelectedTokenSymbol"
       :icon="userSelectedTokenIcon"
       :price="userSelectedTokenPaymentAmount"
     />
+
     <PaymentAction
       class="exchange__update"
       v-if="!isWalletConfirming && isExpiredExchange"

@@ -4,17 +4,16 @@
       title="Select a Wallet"
       text="Error connecting. <br />Try Again"
     >
-      <p class="d-todo">{{ $options.name }}</p>
-      <a class="btn __m __pg full hight add-flex a-center mb-0" @click="retry">
-        <span class="btn-icon">
-          <img src="@/assets/images/metamask-fox.svg" />
-        </span>
-        <div class="btn_content">
-          <h4>MetaMask</h4>
-          <p>Easy-to-use Browser extension</p>
-        </div>
-      </a>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <PaymentButton
+        size="l"
+        text="MetaMask"
+        subtext="Easy-to-use Browser extension"
+        icon="wallet-metamask"
+        layout="wallet"
+        @click.native="retry()"
+      />
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"

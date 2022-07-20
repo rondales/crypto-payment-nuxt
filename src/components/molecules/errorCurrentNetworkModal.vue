@@ -4,18 +4,15 @@
       title="Network Error"
       text="The network currently selected for your wallet is not supported.<br />Please operate the your wallet and change to the supported network."
     >
-      <p class="d-todo">{{ $options.name }}</p>
-      <h4 class="title">Supported Networks</h4>
-      <PaymentText html="" />
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <PaymentText type="h4g" html="Supported Networks" />
       <ul class="list_network">
         <li v-for="network in supportedNetworks" :key="network.chainId">
-          {{ network.name }}
+          <PaymentText :html="network.name" />
         </li>
       </ul>
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
+
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"

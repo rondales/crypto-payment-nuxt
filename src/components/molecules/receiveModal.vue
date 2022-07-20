@@ -1,26 +1,20 @@
 <template>
   <div>
     <PaymentModal title="Receive Token">
-      <p class="d-todo">{{ $options.name }}</p>
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <figure>
         <img :src="tokenIcon" />
       </figure>
-      <h4>
-        {{ tokenName }}
-      </h4>
-      <PaymentText html="" />
+      <PaymentText type="h4b" :html="tokenName" />
       <p>
         <a :href="tokenMarketUrl" target="_blank" rel="noopener noreferrer">{{
           tokenMarketUrl
         }}</a>
       </p>
-      <button @click="confirm" class="btn __m">Submit</button>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <span> Submited cannot be changed later. </span>
-      <PaymentText html="" />
-      <!-- <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
+      <PaymentButton text="Submit" size="m" @click.native="confirm()" />
+      <PaymentText html="Submited cannot be changed later." />
+
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"

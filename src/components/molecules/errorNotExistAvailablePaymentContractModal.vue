@@ -1,25 +1,12 @@
 <template>
   <div>
     <PaymentModal title="Error" emoji="&#x1F501;">
-      <p class="d-todo">{{ $options.name }}</p>
-
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <PaymentText
         html="This payment cannot be continued due to merchant's circumstances.<br />Please contact the merchant for details."
       />
-      <a class="btn __g __l mb-0" :href="returnUrl"> Back to Merchant </a>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <!-- <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
-      <!-- <div class="d-btnwrap bottomCloseBtn">
-        <PaymentButton
-          color="cancel"
-          text="CLOSE"
-          icon="dismiss"
-          size="s"
-          @click.native="hideModal()"
-        />
-      </div> -->
+      <PaymentButton :url="returnUrl" text="Back to Merchant" size="m" />
     </PaymentModal>
     <!-- <div :class="classes">
       <div class="header">

@@ -1,45 +1,43 @@
 <template>
   <div>
     <PaymentModal title="Change of Received address">
-      <p class="d-todo">{{ $options.name }}</p>
-
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <div class="header-caution" v-if="isConfirmationState">
-        <h3 class="header-caution__title">Risk Disclaimer</h3>
-        <p class="header-caution__desc">
-          This action will change the Cash back rate of your ethereum payment
-          agreement. Please read the Risk Disclaimer carefully and review the
-          options below before proceeding.
-        </p>
-        <PaymentText html="" />
+        <PaymentText type="h4b" html="Risk Disclaimer" />
+        <PaymentText
+          html="This action will change the Cash back rate of your ethereum payment agreement. Please read the Risk  Disclaimer carefully and review the options below before proceeding."
+        />
       </div>
-      <div class="separate-line" v-if="isConfirmationState"></div>
-      <div class="body detail-state-padding" v-if="isDetailState">
+      <div v-if="isDetailState">
         <figure>
           <img src="@/assets/images/receive-address.svg" />
         </figure>
-        <p class="margin-bottom-small">
-          Current： {{ isDefaultSetting ? "Default Setting" : "" }}
-        </p>
-        <p class="margin-bottom-small">
-          {{ receiveAddress }}
-        </p>
+        <PaymentText
+          type="cap"
+          :html="isDefaultSetting ? 'Current : Default Setting' : 'Current : '"
+        />
+        <PaymentText type="cap" :html="receiveAddress" />
+
         <p class="margin-bottom-small">
           <img src="@/assets/images/double-caret.svg" />
         </p>
-        <p class="margin-bottom-small">Changed address</p>
+        <PaymentText type="cap" html="Changed address" />
         <div class="box margin-bottom-small">
           <input v-model="newReceiveAddress" placeholder="Enter address" />
         </div>
         <div class="invalid-address" v-if="!isValidAddress">
           Please enter valid address.
+          <PaymentText
+            type="p"
+            color="red"
+            html=" Please enter valid address."
+          />
         </div>
-        <p class="mt-2 align-left confirmation margin-bottom-small">
-          Confirmation
-        </p>
-        <p class="mt-2 align-left margin-bottom-small">
-          ① Is the address you entered the wallet address or the contract
-          address?
-        </p>
+        <PaymentText class="confirmation" html="Confirmation" />
+        <PaymentText
+          html="① Is the address you entered the wallet address or the contract address?"
+        />
         <div
           class="form-attribute form-container align-left margin-bottom-small"
         >
@@ -67,10 +65,10 @@
           >
         </div>
         <p class="align-left">
-          <span class="caution">
-            *&nbsp;If a contract address is set, the contract must conform to
-            the SlashCustomPlugin specification.&nbsp;
-          </span>
+          <PaymentText
+            type="cap"
+            html="*&nbsp;If a contract address is set, the contract must conform to the SlashCustomPlugin specification.&nbsp;"
+          />
           <a
             class="document-link"
             target="_blank"
@@ -79,13 +77,18 @@
             Learn more.
           </a>
         </p>
-        <p class="invalid-address margin-bottom-small" v-if="!validAddressType">
-          Please select correct address type.
-        </p>
-        <p class="mt-2 align-left margin-bottom-small">
-          ② Are you using the correct address for the following network? If
-          correct, check the box.
-        </p>
+
+        <PaymentText
+          class="invalid-address"
+          v-if="!validAddressType"
+          color="red"
+          html=" Please select correct address type."
+        />
+
+        <PaymentText
+          html="② Are you using the correct address for the following network? If
+          correct, check the box."
+        />
         <div class="align-left margin-bottom-small add-flex a-center">
           <img class="network-icon" :src="networkIcon" />
           <span class="network-name">{{ networkName }}</span>
@@ -99,12 +102,10 @@
             <label for="accept">Yes. Correct.</label>
           </div>
         </div>
-        <p class="mt-2 align-left margin-bottom-small">
-          Please set the changed EVM (Ethereum Virtual Machine) compatible
-          address at your own risk. Please be sure to set this address at your
-          own risk. If you enter an incorrect address and lose your funds, we
-          will not be held responsible.
-        </p>
+        <PaymentText
+          html="Please set the changed EVM (Ethereum Virtual Machine) compatible address at your own risk. Please be sure to set this address at your own risk. If you enter an incorrect address and lose your funds, we will not be held responsible."
+        />
+
         <button
           class="btn __g __l mb-0"
           :class="{ inactive: !isFormDataConfirmed }"
@@ -117,136 +118,97 @@
         </button>
       </div>
       <div class="body" v-if="isConfirmationState">
-        <p class="margin-bottom-small">Current：Default Setting</p>
-        <p class="current-receive-address margin-bottom-small">
-          {{ receiveAddress }}
-        </p>
+        <PaymentText html="Current：Default Setting" />
+        <PaymentText class="current-receive-address" :html="receiveAddress" />
         <p class="margin-bottom-small">
           <img src="@/assets/images/double-caret.svg" />
         </p>
-        <p class="margin-bottom-small">Changed address</p>
-        <p class="new-receive-address">
-          {{ newReceiveAddress }}
-        </p>
-        <p class="desc align-left mt-2">
-          Please be sure to make this change at your own discretion. We are not
-          responsible for any loss of funds due to incorrectly entered wallet
-          addresses or malfunction of contract addresses created by the customer
-          themselves. Do you understand this risk?
-        </p>
-        <div class="checkbox-container align-left mt-2">
-          <input
-            id="accept"
-            type="checkbox"
-            ref="riskAgreed"
-            @click="updateRiskAgreedStatus"
-          />
-          <label for="accept"
-            >I understand the risk and continue this address change.</label
-          >
-        </div>
-        <button
-          class="btn __g __l mt-4 mb-0"
-          :class="{ inactive: !isRiskAgreed }"
-          @click="changeReceiveAddress(chainId)"
-        >
-          Change address
-          <div class="loading-wrap" :class="{ active: isProcessing }">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
-        </button>
-      </div>
-      <div class="body" v-else-if="isProcessingState">
-        <figure>
-          <img
-            class="mb-2 spin"
-            src="@/assets/images/loading.svg"
-            alt="processing"
-          />
-        </figure>
-        <p>Waiting for Confimation</p>
-        <p class="desc mt-2">
-          Do not close the screen until the payment contract has been
-          successfully deployed. It may take some time due to network
-          congestion.
-        </p>
-        <p>
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __g __l inactive mb-0">Processing...</button>
-      </div>
-      <div class="body" v-else-if="isSuccessedState">
-        <figure>
-          <img
-            src="@/assets/images/cash-back-success.svg"
-            alt="Update Success"
-          />
-        </figure>
-        <p>contract update Submitted</p>
-        <p class="desc mt-2">Current：Changed on {{ currentDate }}</p>
-        <p class="new-receive-address">{{ newReceiveAddress }}</p>
-        <p>
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <div class="body" v-else-if="isFailuredState">
-        <figure>
-          <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure" />
-        </figure>
-        <p>Failed to update contract</p>
-        <p class="desc mt-2">The transaction cannot succeed due to error:</p>
-        <p>
-          <a
-            class="payment-status_btn"
-            v-if="transactionUrl"
-            target="_blank"
-            :href="transactionUrl"
-          >
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <figure v-if="isProcessingState" class="reload close" @click="refresh">
-        <img
-          v-if="$store.state.theme == 'dark'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload.svg"
+        <PaymentText html="Changed address" />
+        <PaymentText class="new-receive-address" :html="newReceiveAddress" />
+        <PaymentText
+          html="  Please be sure to make this change at your own discretion. We are not responsible for any loss of funds due to incorrectly entered wallet addresses or malfunction of contract addresses created by the customer
+          themselves. Do you understand this risk?"
         />
-        <img
-          v-if="$store.state.theme == 'light'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload-l.svg"
+        <PaymentConfirmCheckbox
+          id="accept"
+          ref="riskAgreed"
+          text="I understand the risk and continue this address change."
+          @clickCheckbox="updateRiskAgreedStatus()"
         />
-      </figure>
-
-      <button class="close" v-else-if="!isProcessingState" @click="hideModal">
-        <img src="@/assets/images/cross.svg" />
-        close
-      </button>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div>
-      <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
-          color="cancel"
-          text="CLOSE"
-          icon="dismiss"
-          size="s"
-          @click.native="hideModal()"
+          text="Change address"
+          size="m"
+          :color="!isRiskAgreed ? 'inactive' : 'primary'"
+          @click.native="changeReceiveAddress(chainId)"
+          :loading="isProcessing"
         />
-      </div> -->
+      </div>
+      <div v-else-if="isProcessingState">
+        <PaymentTransaction
+          type="loading"
+          title="Waiting for Confimation"
+          cap=" Do not close the screen until the payment contract has been successfully deployed. It may take some time due to network
+          congestion."
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton text="Processing..." size="m" color="inactive" />
+      </div>
+      <div v-else-if="isSuccessedState">
+        <PaymentTransaction
+          type="success"
+          title="Contract update Submitted"
+          :text="
+            'Current：Changed on ' + currentDate + '<br>' + newReceiveAddress
+          "
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+      <div v-else-if="isFailuredState">
+        <PaymentTransaction
+          type="dismiss"
+          title="Failed to update contract"
+          cap="The transaction cannot succeed due to error:"
+          :link="{
+            url: transactionUrl ? transactionUrl : '',
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+      <PaymentButton
+        v-if="isProcessingState"
+        size="icon"
+        color="icon"
+        icon="reload"
+        @click.native="refresh"
+      />
+      <PaymentButton
+        v-else-if="!isProcessingState"
+        text="Close"
+        size="m"
+        color="cancel"
+        @click.native="hideModal"
+      />
     </PaymentModal>
     <!-- <div :class="classes">
       <div class="header" v-if="!isConfirmationState">
@@ -489,12 +451,16 @@ import MerchantContract from "@/contracts/merchant";
 import PaymentModal from "@/components/organisms/Payment/Modal";
 import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
+// import PaymentConfirmCheckbox from "@/components/organisms/Payment/ConfirmCheckbox";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: "contractReceiveAddressChangeModal",
   components: {
     PaymentText,
     PaymentButton,
     PaymentModal,
+    PaymentTransaction,
+    // PaymentConfirmCheckbox,
   },
   data() {
     return {

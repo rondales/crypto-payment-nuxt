@@ -4,21 +4,16 @@
       title="Select a Wallet"
       text="Error connecting.<br />Try Again"
     >
-      <p class="d-todo">{{ $options.name }}</p>
-      <a class="btn __m __pg full hight add-flex a-center mb-0" @click="retry">
-        <span class="btn-icon">
-          <img src="@/assets/images/wallet-connect.svg" />
-        </span>
-        <div class="btn_content">
-          <h4>WalletConnect.</h4>
-          <p>Connect Trust Wallet,Rainbow Wallet and more…</p>
-        </div>
-      </a>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <PaymentButton
+        size="l"
+        text="WalletConnect."
+        subtext="Connect Trust Wallet,Rainbow Wallet and more…"
+        icon="wallet-walletconnect"
+        layout="wallet"
+        @click.native="retry"
+      />
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"

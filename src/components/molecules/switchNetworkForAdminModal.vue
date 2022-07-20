@@ -8,20 +8,19 @@
           : 'The currently connected network is not supported.<br />Please select a supported network below to switch networks.'
       "
     >
-      <p class="d-todo">{{ $options.name }}</p>
-      <button
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+
+      <!-- iconをファイル名で取得したい -->
+      <PaymentButton
         v-for="network in supportedNetworks"
         :key="network.chainId"
-        class="btn __m half"
         :class="{ __pg: isCurrentNetwork(network.chainId) }"
-        @click="switchNetwork(network.chainId)"
-      >
-        <span class="btn-icon">
-          <img :src="network.icon" />
-        </span>
-        {{ network.name }}
-      </button>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
+        icon="network.icon"
+        :text="Canetwork.namencel"
+        size="m"
+        @click.native="switchNetwork(network.chainId)"
+      />
 
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton

@@ -8,7 +8,7 @@
     />
     <span v-if="emoji" class="emoji" v-html="emoji"></span>
     <PaymentIcon v-if="icon" class="icon" :path="icon" />
-    <slot />
+    <slot v-if="this.$slots" />
   </div>
 </template>
 

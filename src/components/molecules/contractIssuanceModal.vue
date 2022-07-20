@@ -1,7 +1,8 @@
 <template>
   <div>
     <PaymentModal title="Payment contract issuance">
-      <p class="d-todo">{{ $options.name }}</p>
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <div v-if="isDetailState">
         <figure>
           <img src="@/assets/images/contract-integration.svg" />

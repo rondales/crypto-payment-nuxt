@@ -1,15 +1,9 @@
 <template>
   <div>
     <PaymentModal title="Account Note">
-      <p class="d-todo">{{ $options.name }}</p>
-      <p class="sub-title">
-        Apps terminal Note
-        <span v-if="isUpdateSuccess">
-          <img src="/assets/images/check-mark.svg" class="check-wrap" />
-          Note Saved!
-        </span>
-      </p>
-      <PaymentText html="" />
+      <!-- TODO 確認の仕方 -->
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <PaymentText html="Apps terminal Note <span></span> Note Saved!" />
       <div class="text-wrap">
         <textarea
           name=""
@@ -20,15 +14,12 @@
           v-model="note"
         ></textarea>
       </div>
-      <button @click="updateNote" class="save-note">
-        Save Note
-        <img src="@/assets/images/edit.svg" alt="" />
-      </button>
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
-      </div> -->
+      <PaymentButton
+        text="Save Note"
+        size="m"
+        icon="edit"
+        @click.native="updateNote()"
+      />
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"
