@@ -178,7 +178,7 @@ export default {
 
 .comfirm-wrap {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
   gap: 35px;
