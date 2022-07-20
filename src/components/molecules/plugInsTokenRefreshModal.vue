@@ -3,11 +3,11 @@
     <div class="header">
       <h3 class="header__title">
         <img src="@/assets/images/url-refresh.svg" />
-        Token Refresh
+        API Key Refresh
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current Token</p>
+      <p class="sub-title">Current Key</p>
       <div class="text-wrap">
         <p>
           {{ token }}
@@ -15,7 +15,7 @@
         <img class="copy" @click="copy(token)" src="@/assets/images/copy.svg" />
       </div>
       <div class="dsc-wrap">
-        <span class="mb-3"> Would you like to Refresh this token? </span>
+        <span class="mb-3"> Would you like to Refresh this key? </span>
       </div>
       <button @click="confirm" class="btn __l add-flex j-center a-center">
         <img src="@/assets/images/url-refresh.svg" />
@@ -30,78 +30,78 @@
 </template>
 
 <script>
-import RequestUtility from "@/utils/request";
-import { errorCodeList } from "@/enum/error_code";
+import RequestUtility from '@/utils/request'
+import { errorCodeList } from '@/enum/error_code'
 
 export default {
-  name: "walletModal",
+  name: 'walletModal',
   data() {
     return {
-      token: "",
-    };
+      token: ''
+    }
   },
   computed: {
     classes() {
-      return ["modal-box", `--${this.$store.state.modal.size}`];
+      return ['modal-box', `--${this.$store.state.modal.size}`]
     },
     params() {
-      return this.$store.state.modal.params;
+      return this.$store.state.modal.params
     },
     baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL;
-    },
+      return process.env.VUE_APP_API_BASE_URL
+    }
   },
   methods: {
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     copy(value) {
-      this.$store.dispatch("account/copied");
-      this.$clipboard(value);
+      this.$store.dispatch('account/copied')
+      this.$clipboard(value)
     },
     // Refresh this URL and QR code
     confirm() {
       this.apiRefreshPlugInsToken()
         .then((res) => {
-          this.$store.dispatch("plugInsToken/updateToken", res.data.api_key);
-          this.hideModal();
+          this.$store.dispatch('plugInsToken/updateToken', res.data.api_key)
+          this.hideModal()
         })
         .catch((error) => {
-          let message;
+          let message
           if (error.response.status === 400) {
-            message = errorCodeList[error.response.data.errors.shift()].msg;
+            message = errorCodeList[error.response.data.errors.shift()].msg
           } else {
-            message = "Please try again after a while.";
+            message = 'Please try again after a while.'
           }
-          this.showErrorModal(message);
-        });
+          this.showErrorModal(message)
+        })
     },
     apiRefreshPlugInsToken() {
-      const url = `${this.baseUrl}/api/v1/management/api-key`;
+      const url = `${this.baseUrl}/api/v1/management/api-key`
       const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
+        headers: { Authorization: RequestUtility.getBearer() }
+      }
 
-      return this.axios.post(url, null, options);
+      return this.axios.post(url, null, options)
     },
     showErrorModal(message) {
-      this.$store.dispatch("modal/show", {
-        target: "error-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'error-modal',
+        size: 'small',
         params: {
-          message: message,
-        },
-      });
-    },
+          message: message
+        }
+      })
+    }
   },
   mounted() {
-    this.token = this.params.token;
-  },
-};
+    this.token = this.params.token
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import '@/assets/scss/style.scss';
 
 .modal-box {
   border-radius: 10px;

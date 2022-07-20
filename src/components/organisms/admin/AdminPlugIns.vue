@@ -2,7 +2,7 @@
   <div>
     <div class="copied" v-if="copied">copied</div>
     <div class="keys-wrap" v-if="token">
-      <div class="title">Authentication Token</div>
+      <div class="title">Slash EC Plug-in API Key</div>
       <div class="address">
         {{ token | omittedText }}
       </div>
@@ -14,15 +14,14 @@
         </button>
         <button class="btn delete" @click="deleteToken()">
           <img src="@/assets/images/trash-box.svg" />
-          delete
+          Delete
         </button>
       </div>
       <div class="desc">
-        This is the authentication token used when making a payment request to
-        Slash Payment.
+        This is the Slash.fi EC Plug-in API Key. Specify this value in the API
+        Key text field when setting up the EC Plug-in on your site.
         <br />
-        Specify this value in the "order_token" field of the request parameter
-        when sending a request to the "Payment Request API".
+        Please refer to the Plug-in's documentation for more details.
       </div>
     </div>
     <div class="keys-wrap" v-else>
