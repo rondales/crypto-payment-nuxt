@@ -560,7 +560,6 @@ export default {
 }
 
 .manage-table{
-  position: absolute;
   z-index: 10;
   width: calc(100% - 228px);
   @include media(sp) {
@@ -582,6 +581,7 @@ export default {
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;
