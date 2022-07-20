@@ -2,6 +2,7 @@ import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/binance/usdt'
 import Usdc from '../../abis/binance/usdc'
 import Dai from '../../abis/binance/dai'
+import Weth from '../../abis/binance/weth'
 
 const url = NETWORKS[56].scanUrl + '/token'
 
@@ -37,5 +38,13 @@ export default {
     abi: null,
     url: null,
     icon: require('@/assets/images/symbol/jpyc.svg')
+  },
+  WETH: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
+    address: '0x4DB5a66E937A9F4473fA95b1cAF1d1E1D62E29EA',
+    abi: Weth.abi,
+    url: `${url}/0x4DB5a66E937A9F4473fA95b1cAF1d1E1D62E29EA`,
+    icon: require('@/assets/images/symbol/eth.svg')
   },
 }

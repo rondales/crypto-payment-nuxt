@@ -40,19 +40,22 @@ export default {
         USDT: 'Tether USD',
         USDC: 'USD Coin',
         DAI: 'Maker DAO',
-        JPYC: 'JPY Coin'
+        JPYC: 'JPY Coin',
+        WETH: 'Wrapped ETH'
       },
       tokenIcons: {
         USDT: require('@/assets/images/icon/usdt-l.svg'),
         USDC: require('@/assets/images/icon/usdc-l.svg'),
         DAI: require('@/assets/images/icon/dai-l.svg'),
-        JPYC: require('@/assets/images/icon/jpyc-l.svg')
+        JPYC: require('@/assets/images/icon/jpyc-l.svg'),
+        WETH: require('@/assets/images/icon/eth.svg')
       },
       tokenMarketUrls: {
         USDT: 'https://coinmarketcap.com/currencies/tether/',
         USDC: 'https://coinmarketcap.com/currencies/usd-coin/',
         DAI: 'https://coinmarketcap.com/currencies/multi-collateral-dai/',
-        JPYC: 'https://coinmarketcap.com/currencies/jpycoin/'
+        JPYC: 'https://coinmarketcap.com/currencies/jpycoin/',
+        WETH: 'https://coinmarketcap.com/currencies/weth/'
       }
     }
   },
@@ -174,6 +177,9 @@ export default {
       height: 70px;
       margin: 0 auto 16px;
       display: inline-block;
+      img {
+        width: 100%;
+      }
     }
     h4{
       font-size: 15px;

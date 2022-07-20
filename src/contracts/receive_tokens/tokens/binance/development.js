@@ -36,4 +36,12 @@ export default {
     url: null,
     icon: require('@/assets/images/symbol/jpyc.svg')
   },
+  WETH: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
+    address: null,
+    abi: null,
+    url: null,
+    icon: require('@/assets/images/symbol/eth.svg')
+  },
 }
