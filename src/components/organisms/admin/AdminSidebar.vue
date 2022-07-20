@@ -51,6 +51,22 @@
                 Test with key
               </a>
             </li>
+            <li v-if="isEnableStoreApps" @click="close()">
+              <router-link
+                to="/admin/store"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                Store apps
+              </router-link>
+            </li>
+            <li v-if="isEnableEcPlugin" @click="close()">
+              <router-link
+                to="/admin/plug-ins"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                EC Plug in
+              </router-link>
+            </li>
             <li v-if="isShowPluginStore" @click="close()">
               <a
                 target="_blank"
@@ -60,22 +76,6 @@
               </a>
             </li>
             <li @click="close()">
-              <router-link
-                to="/admin/store"
-                :class="{ inactive: isUnselectedReceiveToken }"
-              >
-                Store apps
-              </router-link>
-            </li>
-            <li @click="close()">
-              <router-link
-                to="/admin/plug-ins"
-                :class="{ inactive: isUnselectedReceiveToken }"
-              >
-                Plug-ins
-              </router-link>
-            </li>
-            <li @click="close()">
               <a
                 target="_blank"
                 href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
@@ -83,17 +83,6 @@
                 Documents
               </a>
             </li>
-            <!--
-            @todo external connection specification page will be released as soon as it is completed
-            <li @click="close()">
-              <a
-                target="_blank"
-                href="https://slash-fi.gitbook.io/docs/integration-guide/introduction"
-              >
-                Documents
-              </a>
-            </li>
-            -->
             <li @click="close()">
               <a
                 target="_blank"
@@ -137,6 +126,14 @@ export default {
       } catch(ex) {
         return false
       }
+    },
+    isEnableStoreApps() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_STORE_APPS.toLowerCase())
+    },
+    isEnableEcPlugin() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_EC_PLUGIN.toLowerCase())
     }
   },
   methods: {

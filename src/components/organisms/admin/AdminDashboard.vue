@@ -5,7 +5,6 @@
       :contractsStatus="contractsStatus"
     />
     <AdminDashboardPreSetting v-else />
-    <AdminSidebar />
   </div>
 </template>
 
@@ -14,14 +13,12 @@ import AdminDashboardPreSetting from "@/components/organisms/admin/AdminDashboar
 import AdminDashboardContents from "@/components/organisms/admin/AdminDashboardContents";
 import RequestUtility from "@/utils/request";
 import AvailableNetworks from "@/network";
-import AdminSidebar from "@/components/organisms/admin/AdminSidebar";
 
 export default {
   name: "PaymentTop",
   components: {
     AdminDashboardPreSetting,
-    AdminDashboardContents,
-    AdminSidebar,
+    AdminDashboardContents
   },
   data() {
     return {
