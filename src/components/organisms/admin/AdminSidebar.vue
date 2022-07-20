@@ -43,6 +43,22 @@
                 Keys
               </router-link>
             </li>
+            <li v-if="isUseTestnet" @click="close()">
+              <a
+                target="_blank"
+                href="/test"
+              >
+                Test with key
+              </a>
+            </li>
+            <li v-if="isShowPluginStore" @click="close()">
+              <a
+                target="_blank"
+                :href="PLUGIN_STORE_URL"
+              >
+                Plug in Store
+              </a>
+            </li>
             <li @click="close()">
               <router-link
                 to="/admin/store"
@@ -97,17 +113,31 @@
 export default {
   name: "AdminSidebar",
   computed: {
+    PLUGIN_STORE_URL() {
+      return process.env.VUE_APP_PLUGIN_STORE_URL
+    },
     isUnselectedReceiveToken() {
       return !this.$store.state.account.receiveSymbol;
     },
     isSettingsPage() {
       const targetPaths = [
-        "/admin/payment/settings/basic",
-        "/admin/payment/settings/contract",
-        "/admin/payment/settings/domain",
-      ];
-      return targetPaths.includes(this.$route.path);
+        '/admin/payment/settings/basic',
+        '/admin/payment/settings/contract',
+        '/admin/payment/settings/domain'
+      ]
+      return targetPaths.includes(this.$route.path)
     },
+    isUseTestnet() {
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isShowPluginStore() {
+      try {
+        new URL(this.PLUGIN_STORE_URL)
+        return true
+      } catch(ex) {
+        return false
+      }
+    }
   },
   methods: {
     close() {

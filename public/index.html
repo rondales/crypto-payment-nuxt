@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="robots" content="none">
     <link rel="icon" href="<%= BASE_URL %>img/icon/favicon.ico">
     <link rel="icon" type="image/png" size="16x16" href="<%= BASE_URL %>img/icon/favicon-sm.png">
     <link rel="icon" type="image/png" size="32x32" href="<%= BASE_URL %>img/icon/favicon-lg.png">
@@ -16,8 +15,13 @@
     <meta name="author" content="Slash">
     <meta property="og:title" content="Slash Payment">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://slash.fi/">
-    <meta property="og:image" content="<%= BASE_URL %>img/icon/ogp.png">
+    <% if (VUE_APP_USE_MAINNET==="true" ) { %>
+      <meta property="og:url" content="https://slash.fi/">
+      <meta property="og:image" content="https://slash.fi/img/icon/ogp.png">
+    <% } else { %>
+      <meta property="og:url" content="https://testnet.slash.fi/">
+      <meta property="og:image" content="https://testnet.slash.fi/img/icon/ogp.png">
+    <% } %>
     <meta property="og:site_name" content="Slash Payment">
     <meta property="og:description" content="Slash is the next generation of decentralized payment methods that supports any token payment. With Slash payment, merchants can accept tokens as payment from customers using the Web3 wallet.">
     <meta name="twitter:card" content="summary_large_image">

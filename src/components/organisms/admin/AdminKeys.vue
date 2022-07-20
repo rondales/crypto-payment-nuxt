@@ -98,7 +98,7 @@ export default {
 
 .title{
   font-size: 22px;
-  font-weight: 100;
+  font-weight: 400;
   margin-bottom: 16px;
 }
 .address{
@@ -106,7 +106,7 @@ export default {
   padding: 8px 24px;
   border-radius: 8px;
   font-size: 18px;
-  font-weight: 100;
+  font-weight: 300;
   margin-bottom: 16px;
   @include media(sp) {
     font-size: 14px;
@@ -117,7 +117,7 @@ export default {
   font-size: 17px;
   position: relative;
   display: inline-block;
-  font-weight: 200;
+  font-weight: 300;
   cursor: pointer;
   margin-bottom: 16px;
   &::after{
@@ -142,6 +142,6 @@ export default {
 
 .desc{
   font-size: 17px;
-  font-weight: 100;
+  font-weight: 300;
 }
 </style>

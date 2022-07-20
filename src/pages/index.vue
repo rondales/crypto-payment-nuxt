@@ -12,6 +12,10 @@ export default {
   components: {
     LpIndex,
   },
+  metaInfo() {
+    const meta = [{ vmid: 'seo-robot-setting', name: 'robots', content: 'all' }]
+    return {meta}
+  }
 };
 </script>
 

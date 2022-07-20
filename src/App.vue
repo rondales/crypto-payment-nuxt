@@ -14,15 +14,31 @@
 <script>
 export default {
   name: "App",
+  metaInfo: {
+    meta: [{ vmid: "seo-robot-setting", name: "robots", content: "none" }],
+  },
   components: {
+    adminContractPausedModal: () =>
+      import("@/components/molecules/adminContractPausedModal"),
     networkModal: () => import("@/components/molecules/networkModal"),
+    refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
+    cautionWalletConnectModal: () =>
+      import("@/components/molecules/cautionWalletConnectModal"),
     errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
-    errorMetamaskModal: () => import("@/components/molecules/errorMetamaskModal"),
-    errorCurrentNetworkModal: () => import("@/components/molecules/errorCurrentNetworkModal"),
-    switchNetworkForAdminModal: () => import("@/components/molecules/switchNetworkForAdminModal"),
+    errorMetamaskModal: () =>
+      import("@/components/molecules/errorMetamaskModal"),
+    errorCurrentNetworkModal: () =>
+      import("@/components/molecules/errorCurrentNetworkModal"),
+    errorNotExistAvailablePaymentContractModal: () =>
+      import(
+        "@/components/molecules/errorNotExistAvailablePaymentContractModal"
+      ),
+    errorForbiddenBackPaymentModal: () =>
+      import("@/components/molecules/errorForbiddenBackPaymentModal"),
+    switchNetworkForAdminModal: () =>
+      import("@/components/molecules/switchNetworkForAdminModal"),
     errorModal: () => import("@/components/molecules/errorModal"),
-    requireSwitchNetworkModal: () => import("@/components/molecules/requireSwitchNetworkModal"),
     receiveModal: () => import("@/components/molecules/receiveModal"),
     editNoteModal: () => import("@/components/molecules/editNoteModal"),
     urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
@@ -31,13 +47,20 @@ export default {
     deleteRowModal: () => import("@/components/molecules/deleteRowModal"),
     createDeeplinkModal: () => import("@/components/molecules/createDeeplinkModal"),
     openQrModal: () => import("@/components/molecules/openQrModal"),
-    adminContractPausedModal: () => import("@/components/molecules/adminContractPausedModal"),
-    refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
-    cautionWalletConnectModal: () => import("@/components/molecules/cautionWalletConnectModal"),
-    editAccountNoteModal: () => import("@/components/molecules/editAccountNoteModal"),
+    editAccountNoteModal: () =>
+      import("@/components/molecules/editAccountNoteModal"),
     accountModal: () => import("@/components/molecules/accountModal"),
-    warningDomainUnauthModal: () => import("@/components/molecules/warningDomainUnauthModal"),
-    contractIssuanceModal: () => import("@/components/molecules/contractIssuanceModal")
+    contractIssuanceModal: () =>
+      import("@/components/molecules/contractIssuanceModal"),
+    regeneratePaymentUrlModal: () =>
+      import("@/components/molecules/regeneratePaymentUrlModal"),
+    contractCashbackChangeModal: () =>
+      import("@/components/molecules/contractCashbackChangeModal"),
+    contractReceiveAddressChangeModal: () =>
+      import("@/components/molecules/contractReceiveAddressChangeModal"),
+    cautionPaymentRiskDisclaimerModal: () =>
+      import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
+    addChainModal: () => import("@/components/molecules/addChainModal"),
   },
   computed: {
     classes() {
@@ -59,6 +82,7 @@ export default {
 div.main {
   background: var(--color_bg);
   color: var(--color_font);
+  overflow: hidden;
 }
 .theme--light {
   @each $item in $colors-array {
@@ -74,8 +98,10 @@ div.main {
 .modal-base {
   background: rgba(0, 0, 0, 0.6);
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  // height: 100vh;
+  width: 100%;
+  height: 100%;
   left: 0;
   top: 0;
   z-index: 9999;

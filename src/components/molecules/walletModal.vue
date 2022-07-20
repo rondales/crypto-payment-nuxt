@@ -43,6 +43,9 @@
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
       },
+      METAMASK() {
+        return METAMASK
+      },
       isAdminLoginMode() {
         const path = /^\/admin$/
         return path.test(this.$route.path)

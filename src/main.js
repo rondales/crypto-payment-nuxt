@@ -12,12 +12,17 @@ import App from './App.vue'
 import router from './router'
 import store from '@/store'
 import Clipboard from "v-clipboard"
+import VueMeta from 'vue-meta'
 
 
 Vue.use(Clipboard);
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
 Vue.use(Web3)
+Vue.use(VueMeta, {
+  refreshOnceOnNavigation: true
+})
+
 Vue.config.productionTip = false
 
 if (process.env.VUE_APP_SENTRY_DSN !== '') {

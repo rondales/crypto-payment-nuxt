@@ -1,6 +1,6 @@
 import { NETWORKS } from '@/constants'
 
 export default {
-  chainId: NETWORKS[3].chainId,
-  address: '0xA27604b207617689e638803E5537CA2A6d1A2713'
+  chainId: NETWORKS[5].chainId,
+  address: '0x84Ee24cbEFD046BDf4F92Ba43d30BBbd89F57980'
 }

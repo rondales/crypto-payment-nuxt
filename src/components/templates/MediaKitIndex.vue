@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lp-header />
+    <lp-header :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
     <article class="media_kit lp display">
       <section>
         <div class="title">
@@ -245,6 +245,12 @@ export default {
     LpFooter,
   },
   computed: {
+    isUseMainnet() {
+      return JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isEnableEnterApp() {
+      return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    }
   },
   methods: {
     download() {

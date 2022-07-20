@@ -121,10 +121,13 @@ export default {
       selectTokens: false,
       items: {
         monthlyAmount: {value: '0', text: 'monthly total amount'},
+        monthlyCashbackAmount: {value: '0', text: 'monthly total cash back amount'},
         monthlyCount: {value: '0', text: 'monthly total count'},
         weeklyAmount: {value: '0 ', text: 'weekly total amount'},
+        weeklyCashbackAmount: {value: '0', text: 'weekly total cash back amount'},
         weeklyCount: {value: '0', text: 'weekly total count'},
         todayAmount: {value: '0', text: 'today total amount'},
+        todayCashbackAmount: {value: '0', text: 'today total cash back amount'},
         todayCount: {value: '0', text: 'today total count'}
       },
       receiveTokenIcons: {
@@ -219,7 +222,24 @@ export default {
       this.$web3.switchChain(
         this.$store.state.web3.instance,
         chainId
-      ).then(() => { this.selectTokens = false })
+      ).then(() => {
+         this.selectTokens = false 
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
+      })
+    },
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false
+        }
+      })
     },
     copy(address) {
       this.$store.dispatch('account/copied')
@@ -267,10 +287,13 @@ export default {
     this.apiGetPaymentSummary().then((response) => {
       const summary = response.data
       this.items.monthlyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_amount)
+      this.items.monthlyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_cashback_amount)
       this.items.monthlyCount.value = summary.monthly.total_count
       this.items.weeklyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_amount)
+      this.items.weeklyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_cashback_amount)
       this.items.weeklyCount.value = summary.weekly.total_count
       this.items.todayAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_amount)
+      this.items.todayCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_cashback_amount)
       this.items.todayCount.value = summary.daily.total_count
     })
     this.receiveTokens = this.generateReceiveTokenList()
@@ -560,11 +583,13 @@ export default {
   max-width: 1000px;
   display: grid;
   grid-template:
-  "item-1 ...... item-2 ...... item-3 ...... item-4" auto
-  "...... ...... ...... ...... ...... ...... ......" 32px
-  "item-5 ...... item-6 ...... ...... ...... ......" auto
-  "...... ...... ...... ...... ...... ...... ......" 32px
-  / 23% 2.66% 23% 2.66% 23% 2.66% 23%;
+  "item-1 ...... item-2 ...... item-3" auto
+  "...... ...... ...... ...... ......" 32px
+  "item-4 ...... item-5 ...... item-6" auto
+  "...... ...... ...... ...... ......" 32px
+  "item-7 ...... item-8 ...... item-9" auto
+  "...... ...... ...... ...... ......" 32px
+  / 31% 3.5% 31% 3.5% 31%;
   @include media(sp) {
     grid-template:
     "head   head   head"
@@ -580,6 +605,12 @@ export default {
     "item-5 item-5 item-5" auto
     "...... ...... ......" 16px
     "item-6 item-6 item-6" auto
+    "...... ...... ......" 30px
+    "item-7 item-7 item-7" auto
+    "...... ...... ......" 16px
+    "item-8 item-8 item-8" auto
+    "...... ...... ......" 16px
+    "item-9 item-9 item-9" auto
     "...... ...... ......" 30px
     / 49% 2% 49%;
   }

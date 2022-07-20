@@ -156,7 +156,7 @@
       </section>
 
       <!-- SECTION trial -->
-      <!-- <section id="donation" :class="section.trial.class">
+      <section v-if="isShowDonate" id="donation" :class="section.trial.class">
         <div class="section__wrap">
           <LpTitle
             :class="section.trial.class + '__title'"
@@ -190,7 +190,7 @@
             </div>
           </li>
         </ul>
-      </section> -->
+      </section>
 
       <!-- SECTION network -->
       <section :class="section.network.class">
@@ -305,8 +305,7 @@ import LpButton from "@/components/templates/LpParts/Button";
 import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
-// used it used at SECTION trial
-// import LpIcon from "@/components/templates/LpParts/Icon";
+import LpIcon from "@/components/templates/LpParts/Icon";
 
 export default {
   data() {
@@ -337,14 +336,14 @@ export default {
           },
           link2: {
             url: "/",
-            title: "Launch July 4, 2022",
+            title: "Coming Soon",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"
           },
           link3: {
             url: "/",
-            title: "Launch June 27, 2022",
+            title: "Launch June 30, 2022",
             // icon: "pointing-up",
             func: "enterApp",
             font: "s"
@@ -1151,7 +1150,7 @@ export default {
     LpButton,
     LpTitle,
     LpImage,
-    // LpIcon,
+    LpIcon,
     LpImageText,
   },
   mounted() {
@@ -1189,6 +1188,9 @@ export default {
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    },
+    isShowDonate() {
+      return JSON.parse(process.env.VUE_APP_SHOW_DONATE.toLowerCase())
     }
   },
 

@@ -34,6 +34,9 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
+    updateAddress({ commit }, payload) {
+      commit('updateAddress', payload)
+    },
     updateReceiveSymbol({ commit }, payload) {
       commit('updateReceiveSymbol', payload)
     },
@@ -65,6 +68,9 @@ const store = {
       state.address = payload.address
       state.balance = payload.balance
       state.symbol = payload.symbol
+    },
+    updateAddress(state, payload) {
+      state.address = payload
     },
     updateReceiveSymbol(state, payload) {
       state.receiveSymbol = payload
