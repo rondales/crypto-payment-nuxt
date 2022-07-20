@@ -83,7 +83,6 @@
                   placeholder="Payment amount"
                 />
               </div>
-              <div v-if="amount">
                 <p class="mb-1">Currency</p>
                 <div class="payment_receipt_form border mb-2">
                   <select v-model="amountType">
@@ -97,7 +96,6 @@
                     </option>
                   </select>
                 </div>
-              </div>
             </div>
             <button
               class="btn __g __l mt-4 mb-1"
