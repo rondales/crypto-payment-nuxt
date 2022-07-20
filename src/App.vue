@@ -101,8 +101,10 @@ div.main {
 }
 
 .contents_height {
-  min-height: calc(100vh - 50px);
-  margin-top: 80px;
+  // min-height: calc(100vh - 50px);
+  min-height: 100vh;
+  // margin-top: 80px;
+  padding-top: 80px;
   position: relative;
   @include media(sp) {
     margin-top: 55px;

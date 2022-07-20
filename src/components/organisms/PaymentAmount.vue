@@ -1,86 +1,144 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_desc mb-3 mt-3">
-      <p>Enter the payment amount</p>
-      <span>&#128591;</span>
-    </div>
-    <div class="payment_handleprice-pricewrap">
-      <p class="payment_handleprice-desc mb-1">How much would you pay?</p>
-      <div class="payment_handleprice-price add-flex border j-between">
-        <input
-          v-model="legalCurrencyAmount"
-          class="price"
-          type="text"
-          placeholder="0"
-        />
-        <div class="add-flex currency a-center">
-          <figure>
-            <img :src="selectedCurrencyIcon" />
-          </figure>
-          <!-- <select name="currency" v-model="selectedCurrency">
-            <option disabled value="">{{ selectedCurrencyName }}</option>
-            <option v-for="(currency, key) in currencies" :value="currency.name" :key="key">
-              {{ currency.name }}
-            </option>
-          </select> -->
-          <select name="currency" v-model="selectedCurrency">
-            <!-- <option disabled value="">{{ selectedCurrencyName }}</option> -->
-            <option
-              v-for="(currency, key) in currencies"
-              :value="currency.name"
-              :key="key"
-            >
-              {{ currency.name }}
-            </option>
-          </select>
-        </div>
-      </div>
-      <PaymentAmountBilled
-        :symbol="receiveTokenSymbol"
-        :icon="receiveTokenIcon"
-        :price="exchangedAmount"
-        :priceClass="{ inactive: requireUpdateExchange }"
+  <div>
+    <p class="d-todo">{{ $options.name }}</p>
+    <PaymentTitle
+      type="h3_g"
+      html="Enter the payment amount"
+      emoji="&#128591;"
+      layout="c"
+    />
+    <PaymentTitle type="h3" html="How much would you pay?" layout="c" />
+    <PaymentForm>
+      <input
+        v-model="legalCurrencyAmount"
+        class="price"
+        type="text"
+        placeholder="0"
       />
-      <div v-if="!requireUpdateExchange" class="payment-with">
-        Payment with Web3 Wallet
+      <div class="add-flex currency a-center">
+        <figure>
+          <img :src="selectedCurrencyIcon" />
+        </figure>
+        <select name="currency" v-model="selectedCurrency">
+          <option
+            v-for="(currency, key) in currencies"
+            :value="currency.name"
+            :key="key"
+          >
+            {{ currency.name }}
+          </option>
+        </select>
       </div>
-      <div>
-        <div class="payment-box" v-if="requireUpdateExchange">
-          <div class="add-flex a-center j-between">
-            <div class="add-flex a-center">
-              <img src="@/assets/images/warning.svg" alt="" />
-              <div class="payment-box_desc">
-                <p>Price Updated</p>
+    </PaymentForm>
+    <PaymentAmountBilled
+      :symbol="receiveTokenSymbol"
+      :icon="receiveTokenIcon"
+      :price="exchangedAmount"
+      :priceClass="{ inactive: requireUpdateExchange }"
+    />
+    <PaymentTitle
+      v-if="!requireUpdateExchange"
+      type="h3"
+      html="Payment with Web3 Wallet"
+      layout="c"
+    />
+    <PaymentAction
+      v-if="requireUpdateExchange"
+      icon="warning"
+      text="Price Updated"
+      @click.native="updateExchangeData()"
+    >
+      Accept
+    </PaymentAction>
+
+    <PaymentButton
+      size="l"
+      text="Go Payment"
+      icon="logo-icon"
+      :loading="loading"
+      @click.native="next"
+    />
+    <!-- <div class="payment_handleprice">
+      <p class="todotitle">PaymentAmount</p>
+      <div class="payment_desc mb-3 mt-3">
+        <p>Enter the payment amount</p>
+        <span>&#128591;</span>
+      </div>
+      <div class="payment_handleprice-pricewrap">
+        <p class="payment_handleprice-desc mb-1">How much would you pay?</p>
+        <div class="payment_handleprice-price add-flex border j-between">
+          <input
+            v-model="legalCurrencyAmount"
+            class="price"
+            type="text"
+            placeholder="0"
+          />
+          <div class="add-flex currency a-center">
+            <figure>
+              <img :src="selectedCurrencyIcon" />
+            </figure>
+            <select name="currency" v-model="selectedCurrency">
+              <option
+                v-for="(currency, key) in currencies"
+                :value="currency.name"
+                :key="key"
+              >
+                {{ currency.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <PaymentAmountBilled
+          :symbol="receiveTokenSymbol"
+          :icon="receiveTokenIcon"
+          :price="exchangedAmount"
+          :priceClass="{ inactive: requireUpdateExchange }"
+        />
+        <div v-if="!requireUpdateExchange" class="payment-with">
+          Payment with Web3 Wallet
+        </div>
+        <div>
+          <div class="payment-box" v-if="requireUpdateExchange">
+            <div class="add-flex a-center j-between">
+              <div class="add-flex a-center">
+                <img src="@/assets/images/warning.svg" alt="" />
+                <div class="payment-box_desc">
+                  <p>Price Updated</p>
+                </div>
+              </div>
+              <div class="payment-box_btn" @click="updateExchangeData()">
+                Accept
               </div>
             </div>
-            <div class="payment-box_btn" @click="updateExchangeData()">
-              Accept
+          </div>
+          <button
+            :class="{ inactive: requireUpdateExchange }"
+            class="payment-btn btn __g __l"
+            @click="next"
+          >
+            <img
+              v-if="requireUpdateExchange"
+              src="@/assets/images/slash-s_inactive.svg"
+              alt=""
+            />
+            <img v-else src="@/assets/images/slash-s.svg" alt="" />
+            Go Payment
+            <div class="loading-wrap" :class="{ active: loading }">
+              <img class="spin" src="@/assets/images/loading.svg" />
             </div>
-          </div>
+          </button>
         </div>
-        <button
-          :class="{ inactive: requireUpdateExchange }"
-          class="payment-btn btn __g __l"
-          @click="next"
-        >
-          <img
-            v-if="requireUpdateExchange"
-            src="@/assets/images/slash-s_inactive.svg"
-            alt=""
-          />
-          <img v-else src="@/assets/images/slash-s.svg" alt="" />
-          Go Payment
-          <div class="loading-wrap" :class="{ active: loading }">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
-        </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentForm from "@/components/organisms/Payment/Form";
+import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentAction from "@/components/organisms/Payment/Action";
 import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
@@ -107,6 +165,10 @@ export default {
   },
   components: {
     PaymentAmountBilled,
+    PaymentButton,
+    PaymentTitle,
+    PaymentForm,
+    PaymentAction,
   },
   watch: {
     legalCurrencyAmount: function () {
@@ -235,104 +297,104 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
+// .payment_handleprice {
+//   width: 100%;
 
-.payment_handleprice {
-  width: 100%;
+//   dl {
+//     dt {
+//       font-weight: 400;
+//       font-size: 15px;
+//     }
+//   }
 
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
-  }
+//   .payment_desc {
+//     p {
+//       background: $gradation-pale;
+//       -webkit-background-clip: text;
+//       -webkit-text-fill-color: transparent;
+//       background-size: 150% 150%;
+//       display: inline;
+//     }
+//   }
 
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
-  }
+//   .payment_handleprice-pricewrap {
+//     width: 100%;
+//   }
 
-  .payment_handleprice-pricewrap {
-    width: 100%;
-  }
+//   .payment_handleprice-desc {
+//     font-size: 15px;
+//     font-weight: 400;
+//   }
 
-  .payment_handleprice-desc {
-    font-size: 15px;
-    font-weight: 400;
-  }
+//   .payment_handleprice-price {
+//     padding: 0;
+//     width: 100%;
+//     min-width: auto;
+//     input {
+//       line-height: 53px;
+//       height: 53px;
+//       font-weight: 500;
+//       font-size: 18px;
+//       width: 65%;
+//       padding-left: 16px;
+//       @include media(sp) {
+//         width: 55%;
+//       }
+//     }
+//     .currency {
+//       width: 35%;
+//       line-height: 53px;
+//       position: relative;
+//       &::before {
+//         position: absolute;
+//         content: "";
+//         width: 1px;
+//         height: 33px;
+//         background: #6b6b6c;
+//         left: -12px;
+//       }
+//       &::after {
+//         content: "▲";
+//         position: absolute;
+//         right: 12px;
+//         color: #6b6b6c;
+//         font-size: 14px;
+//         transform: rotate(-180deg);
+//       }
+//       figure {
+//         line-height: 53px;
+//         position: absolute;
+//         img {
+//           vertical-align: sub;
+//         }
+//       }
+//       select {
+//         padding-left: 36px;
+//         font-weight: 400;
+//         width: 100%;
+//         border: none;
+//         outline: none;
+//       }
+//     }
+//     span {
+//       vertical-align: middle;
+//       font-size: 11px;
+//     }
+//   }
 
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
-    input {
-      line-height: 53px;
-      height: 53px;
-      font-weight: 500;
-      font-size: 18px;
-      width: 65%;
-      padding-left: 16px;
-      @include media(sp) {
-        width: 55%;
-      }
-    }
-    .currency {
-      width: 35%;
-      line-height: 53px;
-      position: relative;
-      &::before {
-        position: absolute;
-        content: "";
-        width: 1px;
-        height: 33px;
-        background: #6b6b6c;
-        left: -12px;
-      }
-      &::after {
-        content: "▲";
-        position: absolute;
-        right: 12px;
-        color: #6b6b6c;
-        font-size: 14px;
-        transform: rotate(-180deg);
-      }
-      figure {
-        line-height: 53px;
-        position: absolute;
-        img {
-          vertical-align: sub;
-        }
-      }
-      select {
-        padding-left: 36px;
-        font-weight: 400;
-        width: 100%;
-        border: none;
-        outline: none;
-      }
-    }
-    span {
-      vertical-align: middle;
-      font-size: 11px;
-    }
-  }
+//   .payment-with {
+//     text-align: center;
+//     font-size: 18px;
+//     font-weight: 200;
+//     padding-top: 8px;
+//     padding-bottom: 24px;
+//   }
 
-  .payment-with {
-    text-align: center;
-    font-size: 18px;
-    font-weight: 200;
-    padding-top: 8px;
-    padding-bottom: 24px;
-  }
-
-  .payment-btn {
-    img {
-      padding-top: 0;
-    }
-  }
-}
+//   .payment-btn {
+//     img {
+//       padding-top: 0;
+//     }
+//   }
+// }
 </style>

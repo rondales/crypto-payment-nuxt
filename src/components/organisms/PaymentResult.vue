@@ -1,10 +1,25 @@
 <template>
   <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
+    <p class="d-todo">{{ $options.name }}</p>
+    <PaymentAmountBilled
+      :symbol="merchantReceiveSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount | amountFormat"
+    />
+    <PaymentTitle html="Payment detail" />
+    <PaymentAmountBilled
+      :symbol="merchantReceiveSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount | amountFormat"
+    />
+    <!-- TODO transaction分岐を作る モーダルにも同じパーツがあるので、同じコンポーネントを使用したい-->
+    <PaymentTransaction type="success" title="Transaction Submitted" />
+
+    <!-- <div class="payment_handleprice-pricewrap">
       <PaymentAmountBilled
-        :symbol="merchantReceiveSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount | amountFormat"
+        :symbol="userPaidSymbol"
+        :icon="userPaidTokenIcon"
+        :price="userPaidAmount | amountFormat"
       />
       <div class="payment_detailwrap">
         <div class="payment_desc add-flex j-between mb-2">
@@ -42,16 +57,18 @@
           :isReceiptMode="isReceiptMode"
         />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 import { Decimal as BigJs } from "decimal.js";
-import ResultPending from "@/components/organisms/PaymentResultPending";
-import ResultFailure from "@/components/organisms/PaymentResultFailure";
-import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
+// import ResultPending from "@/components/organisms/PaymentResultPending";
+// import ResultFailure from "@/components/organisms/PaymentResultFailure";
+// import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -68,10 +85,12 @@ import {
 export default {
   name: "PaymentResult",
   components: {
-    pending: ResultPending,
-    failure: ResultFailure,
-    success: ResultSuccess,
+    // pending: ResultPending,
+    // failure: ResultFailure,
+    // success: ResultSuccess,
     PaymentAmountBilled,
+    PaymentTitle,
+    PaymentTransaction,
   },
   data() {
     return {
@@ -272,7 +291,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
+@import "@/assets/scss/delaunay.scss";
 .payment_handleprice {
   width: 100%;
   dl {

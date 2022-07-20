@@ -1,143 +1,263 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveTokenSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount"
-      />
-      <PaymentText
-        class="payment-with"
-        tag="p"
-        html="Select the network and currency you wish to pay for. If the currency you
+  <div :class="classes">
+    <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- TODO 確認の仕方 -->
+    <PaymentAmountBilled
+      :symbol="merchantReceiveTokenSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount"
+      class="token__bill"
+      size="big"
+    />
+    <PaymentText
+      class="token__text"
+      tag="p"
+      html="Select the network and currency you wish to pay for. If the currency you
         want is not on the list, you can import it by contract address &#x1f44d;"
-      />
-      <div class="payment-box network">
-        <div class="add-flex a-center j-between">
-          <div class="add-flex a-center">
-            <img :src="currentNetworkIcon" :alt="currentNetworkName" />
-            <div class="payment-box_desc">
-              <p>
-                {{ currentNetworkName }}
-              </p>
-            </div>
-          </div>
-          <div class="payment-box_btn" @click="switchNetwork()">Change</div>
+    />
+    <PaymentAction
+      class="token__network"
+      :icon="currentNetworkIcon"
+      :text="currentNetworkName"
+    >
+      <PaymentButton size="s" text="Change" @click.native="switchNetwork()" />
+    </PaymentAction>
+    <PaymentTab
+      :status="isCurrentTokenImportTab"
+      @changeToList="switchTab(LIST_TAB)"
+      @changeToToken="switchTab(TOKEN_IMPORT_TAB)"
+    >
+      <div v-if="isCurrentListTab">
+        <PaymentText
+          class="tokentab__title"
+          tag="p"
+          type="subtitle"
+          html="Select token"
+        />
+        <div
+          class="tokentab__items"
+          v-for="(token, key) in tokenList"
+          :key="key"
+          @click="handleSelectToken(token)"
+        >
+          <!-- TODO iconのpathをiconフォルダのファイル名に変更 -->
+          <PaymentAmountBilled
+            :icon="token.iconPath"
+            :symbol="token.symbol"
+            :symboltext="token.name"
+            :price="token.balance | balanceFormat"
+            size="bg"
+          />
         </div>
       </div>
-      <div class="body">
-        <div class="toggle-btn mb-3 add-flex j-around">
-          <div
-            class="toggle-right"
-            :class="{ active: isCurrentListTab }"
-            @click="switchTab(LIST_TAB)"
+      <div v-else-if="isCurrentTokenImportTab">
+        <div class="tokentab">
+          <PaymentText
+            class="tokentab__title"
+            tag="h3"
+            type="h4b"
+            html="Enter token contract address"
+          />
+          <PaymentText
+            class="tokentab__cap"
+            tag="p"
+            type="cap"
+            html="*Does not support tokenomics tokens, which have the property that transactions are subject to TAX 🙅‍♂️"
+          />
+          <PaymentForm
+            class="tokentab__form"
+            :error="
+              isInvalidSearchTokenAddress ? 'Enter valid token address' : ''
+            "
           >
-            Lists
+            <input
+              type="text"
+              placeholder="0x0000"
+              v-model="searchTokenAddress"
+              @keyup.enter="searchToken()"
+            />
+          </PaymentForm>
+          <div
+            class="tokentab__tokenlist"
+            v-for="(token, key) in searchedTokenList"
+            :key="key"
+          >
+            <!-- TODO iconのpathをiconフォルダのファイル名に変更 -->
+            <PaymentAction
+              class="tokentab__tokenlist__items"
+              :icon="token.iconPath"
+              :text="token.symbol"
+              :link="token.url"
+            >
+              <PaymentButton
+                size="s"
+                text="Import"
+                @click.native="importSearchedToken(key)"
+              />
+            </PaymentAction>
           </div>
-          <div
-            class="toggle-left"
-            :class="{ active: isCurrentTokenImportTab }"
-            @click="switchTab(TOKEN_IMPORT_TAB)"
-          >
-            Tokens
+          <div class="foot">
+            <PaymentText
+              tag="h3"
+              type="h5"
+              :html="searchedTokenCount + ' Custom Token'"
+            />
+            <PaymentButton
+              @click.native="clearSearchedTokens()"
+              size="s"
+              v-if="isExistSearchedTokens"
+              color="cancel"
+              text="Crear All"
+            />
           </div>
         </div>
-        <div class="token-content" v-if="isCurrentListTab">
-          <PaymentText
-            class="token-title"
-            tag="p"
-            type="subtitle"
-            html="Select token"
-          />
-          <div class="token-items">
-            <div
-              class="token-item add-flex j-between a-center"
-              v-for="(token, key) in tokenList"
-              :key="key"
-              @click="handleSelectToken(token)"
-            >
-              <div class="add-flex j-between a-center">
-                <figure>
-                  <img :src="token.icon" alt="" />
-                </figure>
-                <dl>
-                  <dt>
-                    <PaymentText type="cap" :html="token.symbol" />
-                  </dt>
-                  <dd>
-                    <PaymentText type="lead" :html="token.name" />
-                  </dd>
-                </dl>
-              </div>
-              <div class="usdt-price">
+      </div>
+    </PaymentTab>
+    <!-- <div class="payment_handleprice">
+      <div class="payment_handleprice-pricewrap">
+        <PaymentAmountBilled
+          :symbol="merchantReceiveTokenSymbol"
+          :icon="merchantReceiveTokenIcon"
+          :price="merchantReceiveAmount"
+        />
+        <PaymentText
+          class="payment-with"
+          tag="p"
+          html="Select the network and currency you wish to pay for. If the currency you
+        want is not on the list, you can import it by contract address &#x1f44d;"
+        />
+        <div class="payment-box network">
+          <div class="add-flex a-center j-between">
+            <div class="add-flex a-center">
+              <img :src="currentNetworkIcon" :alt="currentNetworkName" />
+              <div class="payment-box_desc">
                 <p>
-                  {{ token.balance | balanceFormat }}
+                  {{ currentNetworkName }}
                 </p>
               </div>
             </div>
+            <div class="payment-box_btn" @click="switchNetwork()">Change</div>
           </div>
         </div>
-        <div class="manage-content" v-else-if="isCurrentTokenImportTab">
-          <div class="manage-title">Enter token contract address</div>
-          <div class="manage-desc">
-            *Does not support tokenomics tokens, which have the property that
-            transactions are subject to TAX 🙅‍♂️
-          </div>
-          <input
-            class="token-dsc border"
-            type="text"
-            placeholder="0x0000"
-            v-model="searchTokenAddress"
-            @keyup.enter="searchToken()"
-          />
-          <div class="manage-wrap">
-            <div class="manage-warning" v-if="isInvalidSearchTokenAddress">
-              Enter valid token address
-            </div>
-            <ul
-              class="manage-item add-flex a-center mb-2"
-              v-for="(token, key) in searchedTokenList"
-              :key="key"
+        <div class="body">
+          <div class="toggle-btn mb-3 add-flex j-around">
+            <div
+              class="toggle-right"
+              :class="{ active: isCurrentListTab }"
+              @click="switchTab(LIST_TAB)"
             >
-              <li>
-                <img :src="token.icon" />
-              </li>
-              <li class="token-name">
-                {{ token.symbol }}
-              </li>
-              <li class="manage-item--right add-flex a-center j-between">
-                <a :href="token.url" target="_brank">
-                  <figure>
-                    <img src="@/assets/images/link-icon.svg" />
-                  </figure>
-                </a>
-                <div class="manage-import" @click="importSearchedToken(key)">
-                  Import
-                </div>
-              </li>
-            </ul>
-            <div class="add-flex j-between a-center">
-              <div class="manage-none">
-                {{ searchedTokenCount }} Custom Token
-              </div>
+              Lists
+            </div>
+            <div
+              class="toggle-left"
+              :class="{ active: isCurrentTokenImportTab }"
+              @click="switchTab(TOKEN_IMPORT_TAB)"
+            >
+              Tokens
+            </div>
+          </div>
+          <div class="token-content" v-if="isCurrentListTab">
+            <PaymentText
+              class="token-title"
+              tag="p"
+              type="subtitle"
+              html="Select token"
+            />
+            <div class="token-items">
               <div
-                class="manage-clear"
-                v-if="isExistSearchedTokens"
-                @click="clearSearchedTokens()"
+                class="token-item add-flex j-between a-center"
+                v-for="(token, key) in tokenList"
+                :key="key"
+                @click="handleSelectToken(token)"
               >
-                Clear all
+                <div class="add-flex j-between a-center">
+                  <figure>
+                    <img :src="token.icon" alt="" />
+                  </figure>
+                  <dl>
+                    <dt>
+                      <PaymentText type="cap" :html="token.symbol" />
+                    </dt>
+                    <dd>
+                      <PaymentText type="lead" :html="token.name" />
+                    </dd>
+                  </dl>
+                </div>
+                <div class="usdt-price">
+                  <p>
+                    {{ token.balance | balanceFormat }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="manage-content" v-else-if="isCurrentTokenImportTab">
+            <div class="manage-title">Enter token contract address</div>
+            <div class="manage-desc">
+              *Does not support tokenomics tokens, which have the property that
+              transactions are subject to TAX 🙅‍♂️
+            </div>
+            <input
+              class="token-dsc border"
+              type="text"
+              placeholder="0x0000"
+              v-model="searchTokenAddress"
+              @keyup.enter="searchToken()"
+            />
+            <div class="manage-wrap">
+              <div class="manage-warning" v-if="isInvalidSearchTokenAddress">
+                Enter valid token address
+              </div>
+              <ul
+                class="manage-item add-flex a-center mb-2"
+                v-for="(token, key) in searchedTokenList"
+                :key="key"
+              >
+                <li>
+                  <img :src="token.icon" />
+                </li>
+                <li class="token-name">
+                  {{ token.symbol }}
+                </li>
+                <li class="manage-item--right add-flex a-center j-between">
+                  <a :href="token.url" target="_brank">
+                    <figure>
+                      <img src="@/assets/images/link-icon.svg" />
+                    </figure>
+                  </a>
+                  <div class="manage-import" @click="importSearchedToken(key)">
+                    Import
+                  </div>
+                </li>
+              </ul>
+              <div class="add-flex j-between a-center">
+                <div class="manage-none">
+                  {{ searchedTokenCount }} Custom Token
+                </div>
+                <div
+                  class="manage-clear"
+                  v-if="isExistSearchedTokens"
+                  @click="clearSearchedTokens()"
+                >
+                  Clear all
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentTab from "@/components/organisms/Payment/Tab";
+import PaymentForm from "@/components/organisms/Payment/Form";
+import PaymentButton from "@/components/organisms/Payment/Button";
+
 import NumberFormat from "number-format.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
 import {
@@ -166,6 +286,10 @@ export default {
   components: {
     PaymentAmountBilled,
     PaymentText,
+    PaymentAction,
+    PaymentTab,
+    PaymentForm,
+    PaymentButton,
   },
   filters: {
     balanceFormat(balance) {
@@ -173,6 +297,11 @@ export default {
     },
   },
   computed: {
+    classes() {
+      let array = { token: true };
+      // array[this.size] = true;
+      return array;
+    },
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
     },
@@ -212,12 +341,17 @@ export default {
         : "Not supported network";
     },
     currentNetworkIcon() {
+      // if (this.chainId && this.isAvailableCurrentNetwork) {
+      //   return NETWORKS[this.chainId].icon;
+      // } else if (this.isDarkTheme) {
+      //   return require("@/assets/images/network/unknown.svg");
+      // } else {
+      //   return require("@/assets/images/network/unknown-l.svg");
+      // }
       if (this.chainId && this.isAvailableCurrentNetwork) {
-        return NETWORKS[this.chainId].icon;
-      } else if (this.isDarkTheme) {
-        return require("@/assets/images/network/unknown.svg");
+        return NETWORKS[this.chainId].iconPath;
       } else {
-        return require("@/assets/images/network/unknown-l.svg");
+        return "network-unknown";
       }
     },
     merchantReceiveTokens() {
@@ -241,9 +375,12 @@ export default {
     },
     merchantReceiveTokenIcon() {
       const tokens = this.merchantReceiveTokens;
+      // return this.merchantReceiveTokenSymbol in tokens
+      //   ? tokens[this.merchantReceiveTokenSymbol].icon
+      //   : require("@/assets/images/symbol/unknown.svg");
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
+        : "network-unknown";
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;
@@ -569,261 +706,296 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
+@import "@/assets/scss/delaunay.scss";
+.token {
+  &__bill {
+    margin-bottom: 2rem;
+  }
+  &__text {
+    margin-bottom: 2rem;
+  }
+  &__network {
+    margin-bottom: 2rem;
+  }
+}
+.tokentab {
+  &__title {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  &__items {
+    & + * {
+      margin-top: 0.5rem;
     }
   }
-
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
+  &__cap {
+    margin-bottom: 1rem;
   }
-  .payment_handleprice-pricewrap {
-    width: 100%;
+  &__form {
+    margin-bottom: 1rem;
   }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
-    input {
-      line-height: 53px;
-      height: 53px;
-      font-weight: 500;
-      font-size: 18px;
-      width: 65%;
-      padding-left: 16px;
-      @include media(sp) {
-        width: 55%;
-      }
-    }
-    .currency {
-      width: 35%;
-      line-height: 53px;
-      position: relative;
-      &::before {
-        position: absolute;
-        content: "";
-        width: 1px;
-        height: 33px;
-        background: #6b6b6c;
-        left: -12px;
-      }
-      &::after {
-        content: "▲";
-        position: absolute;
-        right: 12px;
-        color: #6b6b6c;
-        font-size: 14px;
-        transform: rotate(-180deg);
-      }
-      figure {
-        line-height: 53px;
-        position: absolute;
-        img {
-          padding-top: 14px;
-        }
-      }
-      select {
-        padding-left: 36px;
-        font-weight: 400;
-        width: 100%;
-        border: none;
-        outline: none;
-      }
-    }
-    span {
-      vertical-align: middle;
-      font-size: 11px;
-    }
-  }
-  .token-title {
-    // font-size: 17px;
-    // font-weight: 100;
-    margin-bottom: 8px;
-  }
-  .token-item {
-    padding-bottom: 8px;
-    margin: 4px 0;
-    figure {
-      img {
-        height: 38px;
-        width: 38px;
-        border-radius: 50%;
-      }
-    }
-    dl {
-      margin-left: 16px;
-      dt,
-      dd {
-        line-height: 1;
-        font-size: 0;
-      }
-      // dt {
-      //   font-size: 15px;
-      //   font-weight: 100;
-      // }
-      // dd {
-      //   font-size: 14px;
-      //   font-weight: 300;
-      // }
-    }
-  }
-  .payment-with {
-    text-align: left;
-    // font-size: 12px;
-    // font-weight: 100;
-    // padding-top: 8px;
-    // padding-bottom: 24px;
-    margin-top: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .payment-box {
-    background: #4e455a;
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 16px;
-    color: #fff;
-    img {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-    }
-    &_desc {
-      font-size: 11px;
-      padding-left: 8px;
-      font-weight: 100;
-    }
-    &_btn {
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 200;
-      background: $gradation-pale;
-      padding: 4px 12px;
-      border-radius: 10px;
-    }
-  }
-  .payment_receiptwrap {
-    width: 100%;
-  }
-  .payment_receipt {
-    p {
-      font-size: 15px;
-    }
-    &_form {
-      height: 56px;
-      .mail {
-        height: 51px;
-        padding: 0 16px;
-        font-size: 15px;
-        width: 100%;
-      }
-    }
-  }
-  .body {
-    .toggle-btn {
-      background: var(--color_darken);
-      padding: 8px;
-      border-radius: 10px;
-    }
-    .token-dsc {
-      font-size: 14px;
-      font-weight: 100;
-      padding: 16px;
-      margin-bottom: 24px;
-      width: 100%;
-    }
-    .toggle-right,
-    .toggle-left {
-      width: 48%;
-      text-align: center;
-      height: 38px;
-      line-height: 38px;
-      margin: 0 1%;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 100;
-      &.active {
-        background: var(--color_inner);
-      }
-    }
-    .token-items {
-      overflow: hidden;
-      overflow-y: auto;
-      height: 20vh;
-      &::-webkit-scrollbar {
-        display: none;
-      }
-      .token-item {
-        cursor: pointer;
-      }
-    }
-    .manage-content {
-      .manage-title {
-        font-size: 15px;
-        margin-bottom: 8px;
-      }
-      .manage-desc {
-        font-size: 12px;
-        font-weight: 100;
-        margin-bottom: 16px;
-      }
-      .manage-warning {
-        font-size: 15px;
-        color: #e53f3f;
-        margin-bottom: 24px;
-      }
-      .manage-none {
-        font-size: 15px;
-        font-weight: 100;
-      }
-      .manage-clear {
-        font-size: 14px;
-        font-weight: 100;
-        background: var(--color_darken);
-        border-radius: 10px;
-        padding: 4px 24px;
-        cursor: pointer;
-      }
-      .manage-item {
-        font-size: 14px;
-        width: 100%;
-        .token-name {
-          width: 60%;
-          font-weight: 100;
-          padding-left: 17px;
-        }
-      }
-      .manage-item--right {
-        margin-left: auto;
-        width: 100px;
-        .manage-import {
-          height: 27px;
-          background: $gradation-pale;
-          padding: 4px 16px;
-          border-radius: 10px;
-          font-size: 12px;
-          font-weight: 100;
-          cursor: pointer;
-          color: #fff;
-        }
-        figure {
-          img {
-            vertical-align: inherit;
-          }
-        }
-      }
+  &__tokenlist {
+    margin-bottom: 1rem;
+    &__items {
+      margin-bottom: 0.5rem;
     }
   }
 }
+
+// .payment_handleprice {
+//   width: 100%;
+//   dl {
+//     dt {
+//       font-weight: 400;
+//       font-size: 15px;
+//     }
+//   }
+
+//   .payment_desc {
+//     p {
+//       background: $gradation-pale;
+//       -webkit-background-clip: text;
+//       -webkit-text-fill-color: transparent;
+//       background-size: 150% 150%;
+//       display: inline;
+//     }
+//   }
+//   .payment_handleprice-pricewrap {
+//     width: 100%;
+//   }
+//   .payment_handleprice-price {
+//     padding: 0;
+//     width: 100%;
+//     min-width: auto;
+//     input {
+//       line-height: 53px;
+//       height: 53px;
+//       font-weight: 500;
+//       font-size: 18px;
+//       width: 65%;
+//       padding-left: 16px;
+//       @include media(sp) {
+//         width: 55%;
+//       }
+//     }
+//     .currency {
+//       width: 35%;
+//       line-height: 53px;
+//       position: relative;
+//       &::before {
+//         position: absolute;
+//         content: "";
+//         width: 1px;
+//         height: 33px;
+//         background: #6b6b6c;
+//         left: -12px;
+//       }
+//       &::after {
+//         content: "▲";
+//         position: absolute;
+//         right: 12px;
+//         color: #6b6b6c;
+//         font-size: 14px;
+//         transform: rotate(-180deg);
+//       }
+//       figure {
+//         line-height: 53px;
+//         position: absolute;
+//         img {
+//           padding-top: 14px;
+//         }
+//       }
+//       select {
+//         padding-left: 36px;
+//         font-weight: 400;
+//         width: 100%;
+//         border: none;
+//         outline: none;
+//       }
+//     }
+//     span {
+//       vertical-align: middle;
+//       font-size: 11px;
+//     }
+//   }
+//   .token-title {
+//     // font-size: 17px;
+//     // font-weight: 100;
+//     margin-bottom: 8px;
+//   }
+//   .token-item {
+//     padding-bottom: 8px;
+//     margin: 4px 0;
+//     figure {
+//       img {
+//         height: 38px;
+//         width: 38px;
+//         border-radius: 50%;
+//       }
+//     }
+//     dl {
+//       margin-left: 16px;
+//       dt,
+//       dd {
+//         line-height: 1;
+//         font-size: 0;
+//       }
+//       // dt {
+//       //   font-size: 15px;
+//       //   font-weight: 100;
+//       // }
+//       // dd {
+//       //   font-size: 14px;
+//       //   font-weight: 300;
+//       // }
+//     }
+//   }
+//   .payment-with {
+//     text-align: left;
+//     // font-size: 12px;
+//     // font-weight: 100;
+//     // padding-top: 8px;
+//     // padding-bottom: 24px;
+//     margin-top: 0.5rem;
+//     margin-bottom: 1.5rem;
+//   }
+//   .payment-box {
+//     background: #4e455a;
+//     padding: 12px;
+//     border-radius: 12px;
+//     margin-bottom: 16px;
+//     color: #fff;
+//     img {
+//       width: 38px;
+//       height: 38px;
+//       border-radius: 10px;
+//     }
+//     &_desc {
+//       font-size: 11px;
+//       padding-left: 8px;
+//       font-weight: 100;
+//     }
+//     &_btn {
+//       cursor: pointer;
+//       font-size: 12px;
+//       font-weight: 200;
+//       background: $gradation-pale;
+//       padding: 4px 12px;
+//       border-radius: 10px;
+//     }
+//   }
+//   .payment_receiptwrap {
+//     width: 100%;
+//   }
+//   .payment_receipt {
+//     p {
+//       font-size: 15px;
+//     }
+//     &_form {
+//       height: 56px;
+//       .mail {
+//         height: 51px;
+//         padding: 0 16px;
+//         font-size: 15px;
+//         width: 100%;
+//       }
+//     }
+//   }
+//   .body {
+//     .toggle-btn {
+//       background: var(--color_darken);
+//       padding: 8px;
+//       border-radius: 10px;
+//     }
+//     .token-dsc {
+//       font-size: 14px;
+//       font-weight: 100;
+//       padding: 16px;
+//       margin-bottom: 24px;
+//       width: 100%;
+//     }
+//     .toggle-right,
+//     .toggle-left {
+//       width: 48%;
+//       text-align: center;
+//       height: 38px;
+//       line-height: 38px;
+//       margin: 0 1%;
+//       border-radius: 10px;
+//       cursor: pointer;
+//       font-size: 16px;
+//       font-weight: 100;
+//       &.active {
+//         background: var(--color_inner);
+//       }
+//     }
+//     .token-items {
+//       overflow: hidden;
+//       overflow-y: auto;
+//       height: 20vh;
+//       &::-webkit-scrollbar {
+//         display: none;
+//       }
+//       .token-item {
+//         cursor: pointer;
+//       }
+//     }
+//     .manage-content {
+//       .manage-title {
+//         font-size: 15px;
+//         margin-bottom: 8px;
+//       }
+//       .manage-desc {
+//         font-size: 12px;
+//         font-weight: 100;
+//         margin-bottom: 16px;
+//       }
+//       .manage-warning {
+//         font-size: 15px;
+//         color: #e53f3f;
+//         margin-bottom: 24px;
+//       }
+//       .manage-none {
+//         font-size: 15px;
+//         font-weight: 100;
+//       }
+//       .manage-clear {
+//         font-size: 14px;
+//         font-weight: 100;
+//         background: var(--color_darken);
+//         border-radius: 10px;
+//         padding: 4px 24px;
+//         cursor: pointer;
+//       }
+//       .manage-item {
+//         font-size: 14px;
+//         width: 100%;
+//         .token-name {
+//           width: 60%;
+//           font-weight: 100;
+//           padding-left: 17px;
+//         }
+//       }
+//       .manage-item--right {
+//         margin-left: auto;
+//         width: 100px;
+//         .manage-import {
+//           height: 27px;
+//           background: $gradation-pale;
+//           padding: 4px 16px;
+//           border-radius: 10px;
+//           font-size: 12px;
+//           font-weight: 100;
+//           cursor: pointer;
+//           color: #fff;
+//         }
+//         figure {
+//           img {
+//             vertical-align: inherit;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 </style>

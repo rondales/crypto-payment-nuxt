@@ -1,95 +1,124 @@
 <template>
   <div>
-    <div class="payment-status mt-3 mb-3">
+    <p class="d-todo">{{ $options.name }}</p>
+    <PaymentTransaction type="success" title="Transaction Submitted" />
+    <!-- <div class="payment-status mt-3 mb-3">
       <div>
-        <img class="mb-2" src="@/assets/images/check.svg" alt="success">
-        <p class="payment-status_title mb-1">
-          Transaction Submitted
-        </p>
+        <img class="mb-2" src="@/assets/images/check.svg" alt="success" />
+        <p class="payment-status_title mb-1">Transaction Submitted</p>
       </div>
-      <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
+      <a
+        v-if="hasReturnUrl && !isReceiptMode"
+        class="payment-status_btn"
+        target="_blank"
+        :href="urls.explorer"
+      >
         View on explorer
-        <img src="@/assets/images/link-icon.svg" alt="another">
+        <img src="@/assets/images/link-icon.svg" alt="another" />
       </a>
     </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
-      <button class="btn __g __l mb-2">
-        Back to Payee’s Services
-      </button>
+      <button class="btn __g __l mb-2">Back to Payee’s Services</button>
     </a>
     <a v-else target="_blank" :href="urls.explorer">
       <button class="btn __g __l mb-2">
         View on explorer
-        <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="another">
+        <img
+          class="new-tab-icon"
+          src="@/assets/images/link-icon.svg"
+          alt="another"
+        />
       </button>
-    </a>
+    </a> -->
   </div>
 </template>
 
 <script>
-import { STATUS_RESULT_SUCCESS } from '@/constants'
-
+import { STATUS_RESULT_SUCCESS } from "@/constants";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
-  name: 'PaymentResultSuccess',
+  name: "PaymentResultSuccess",
   props: {
     urls: Object,
     token: String,
-    isReceiptMode: Boolean
+    isReceiptMode: Boolean,
+  },
+  components: {
+    PaymentTransaction,
   },
   computed: {
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL
+      return process.env.VUE_APP_API_BASE_URL;
     },
     hasReturnUrl() {
-      return (this.urls.success)
-    }
+      return this.urls.success;
+    },
+  },
+  data() {
+    return {
+      link: {
+        url: "",
+        icon: "",
+        title: "",
+        color: "g",
+      },
+    };
   },
   methods: {
     apiGetTransactionRefundedData() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`;
       const request = {
-        params: new URLSearchParams([['payment_token', this.token]])
-      }
-      return this.axios.get(url, request)
-    }
+        params: new URLSearchParams([["payment_token", this.token]]),
+      };
+      return this.axios.get(url, request);
+    },
   },
   created() {
     if (!this.isReceiptMode) {
-      this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
+      this.$store.dispatch("payment/updateStatus", STATUS_RESULT_SUCCESS);
       this.apiGetTransactionRefundedData().then((response) => {
-        this.$store.dispatch('modal/show', {
-          target: 'refund-info-modal',
-          size: 'small',
+        this.$store.dispatch("modal/show", {
+          target: "refund-info-modal",
+          size: "small",
           params: {
             refundedTokenAmount: response.data.refunded_token_amount,
             refundedTokenSymbol: response.data.refunded_token_symbol,
             refundedFeeAmount: response.data.refunded_fee_amount,
             refundedFeeSymbol: response.data.refunded_fee_symbol,
             cashBackAmount: response.data.cashback_amount,
-            cashBackSymbol: response.data.cashback_symbol
-          }
-        })
-      })
+            cashBackSymbol: response.data.cashback_symbol,
+          },
+        });
+      });
     }
-  }
-}
+    if (this.hasReturnUrl && !this.isReceiptMode) {
+      this.link.url = this.urls.explorer;
+      this.link.icon = "outerlink";
+      this.link.title = "View on explorer";
+    } else {
+      this.link.url = this.urls.failure;
+      this.link.title = "Back to Payee’s Services";
+    }
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
 
-.payment-status{
+.payment-status {
   text-align: center;
   margin: auto;
-  &_title{
+  &_title {
     font-size: 18px;
     font-weight: 100;
   }
-  &_desc{
+  &_desc {
     font-size: 10px;
     font-weight: 100;
   }
-  &_btn{
+  &_btn {
     font-size: 12px;
     font-weight: 100;
     cursor: pointer;
@@ -97,13 +126,13 @@ export default {
     padding: 4px 16px;
     border-radius: 10px;
     color: #fff;
-    img{
+    img {
       margin-left: 4px;
       vertical-align: middle;
     }
   }
 }
 .new-tab-icon {
-  padding: 0!important;
+  padding: 0 !important;
 }
 </style>

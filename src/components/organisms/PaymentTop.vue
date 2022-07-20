@@ -1,71 +1,85 @@
 <template>
-  <div class="payment_top">
-    <div class="payment_headbox add-flex j-between a-center">
-      <div v-if="isInvoiceHeaderMode" class="add-flex a-end j-between">
+  <div class="">
+    <div v-if="isInvoiceHeaderMode" class="payhead">
+      <PaymentTitle type="h2_g" html="INVOICE" />
+      <div>
+        <PaymentButton
+          :icon="invoiceIcon.icon"
+          @click.native="handle_function_call(invoiceIcon.func)"
+          size="icon"
+          color="icon"
+        />
+      </div>
+    </div>
+    <div v-else class="payhead">
+      <!-- <PaymentIcon class="" path="logo-text" />
+        <PaymentText tag="p" type="h5" html="Web3 Payment" /> -->
+    </div>
+    <!-- <div class="payment_top">
+      <div v-if="isInvoiceHeaderMode">
         <div
           v-if="isCurrentRequestConnectWalletPage"
           class="logo copy"
           @click="showRegeneratePaymentUrlModal()"
         >
-          <figure>
-            <img :src="scanIcon" />
-          </figure>
+          <PaymentIcon path="scan" />
         </div>
         <div
           v-else-if="isCurrentBeforeSendTransactionPages"
           class="logo copy"
           @click="prevPage()"
         >
-          <figure>
-            <img :src="prevIcon" />
-          </figure>
+          <PaymentIcon path="left-arrow" />
         </div>
         <div
           v-else-if="isCurrentResultPage"
           class="logo copy"
           @click="copyLink()"
         >
-          <figure>
-            <img :src="linkIcon" />
-          </figure>
+          <PaymentIcon path="link" />
         </div>
+        <PaymentTitle type="h2_g" html="INVOICE" layout="c" />
       </div>
-      <div v-if="isInvoiceHeaderMode">
-        <div class="logo">
-          <figure>
-            <img src="@/assets/images/invoice.svg" />
-          </figure>
-        </div>
-      </div>
-      <div v-else class="logo add-flex a-end">
-        <figure>
-          <img src="@/assets/images/slash.svg" />
-        </figure>
-        <div class="product_name">Web3 Payment</div>
+      <div v-else>
+        <PaymentIcon class="" path="logo-text" />
+        <PaymentText tag="p" type="h5" html="Web3 Payment" />
       </div>
       <div class="hamburger" @click="hideMenu" :class="{ active: showMenu }">
         <button type="button" class="menu-btn">
-          <img :src="hamburgerIcon" alt="" />
+          <span>a</span>
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 
 <script>
 import VuexRestore from "@/components/mixins/VuexRestore";
-
+import PaymentTitle from "@/components/organisms/Payment/Title";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentIcon from "@/components/organisms/Payment/Icon";
+import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "PaymentTop",
   mixins: [VuexRestore],
   props: ["showMenu"],
+  components: {
+    PaymentTitle,
+    // PaymentText,
+    // PaymentIcon,
+    PaymentButton,
+  },
   data() {
     return {
       success: true,
       invoice: false,
       address: "hogefugahogefuga",
       currentRouteName: "",
+      invoiceIcon: {
+        icon: "",
+        func: "",
+      },
     };
   },
   watch: {
@@ -141,40 +155,84 @@ export default {
         size: "small",
       });
     },
+    handle_function_call(function_name) {
+      console.log(function_name);
+      if (function_name == "showRegeneratePaymentUrlModal") {
+        this.showRegeneratePaymentUrlModal();
+      } else if (function_name == "prevPage") {
+        this.prevPage();
+      } else if (function_name == "copyLink") {
+        this.copyLink();
+      }
+    },
+  },
+  created() {
+    if (this.isInvoiceHeaderMode) {
+      if (this.isCurrentRequestConnectWalletPage) {
+        this.invoiceIcon.icon = "scan";
+        this.invoiceIcon.func = "showRegeneratePaymentUrlModal";
+      } else if (this.isCurrentBeforeSendTransactionPages) {
+        this.invoiceIcon.icon = "left-arrow";
+        this.invoiceIcon.func = "prevPage";
+      } else if (this.isCurrentResultPage) {
+        this.invoiceIcon.icon = "link";
+        this.invoiceIcon.func = "copyLink";
+      }
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-.payment_top {
-  margin-bottom: 16px;
-  .logo {
-    .product_name {
-      font-size: 15px;
-      margin-left: 16px;
-      font-weight: 300;
+@import "@/assets/scss/delaunay.scss";
+.payhead {
+  margin-top: 3rem;
+  @include flex(space-between, center);
+  margin-bottom: 2rem;
+  & > * {
+    &:nth-child(2) {
+      width: auto;
+    }
+    &:nth-child(1),
+    &:nth-child(3) {
+      width: 2.5rem;
+      font-size: 0;
     }
   }
-  .copy {
-    cursor: pointer;
-  }
-  .hamburger {
-    display: block;
-    position: relative;
-    width: 24px;
-    height: 24px;
-    overflow: hidden;
-    z-index: 2;
-    &.active {
-      .menu-btn {
-        top: 0;
-      }
-    }
-    .menu-btn {
-      position: absolute;
-      top: -23px;
-    }
-  }
+  // padding: 4rem 0;
+  // .svg {
+  //   margin-bottom: 0.5rem;
+  // }
 }
+// .payment_top {
+//   margin-bottom: 16px;
+//   .logo {
+//     .product_name {
+//       font-size: 15px;
+//       margin-left: 16px;
+//       font-weight: 300;
+//     }
+//   }
+//   .copy {
+//     cursor: pointer;
+//   }
+//   .hamburger {
+//     display: block;
+//     position: relative;
+//     width: 24px;
+//     height: 24px;
+//     overflow: hidden;
+//     z-index: 2;
+//     &.active {
+//       .menu-btn {
+//         top: 0;
+//       }
+//     }
+//     .menu-btn {
+//       position: absolute;
+//       top: -23px;
+//     }
+//   }
+// }
 </style>

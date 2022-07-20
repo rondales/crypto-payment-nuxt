@@ -1,64 +1,132 @@
 <template>
-  <div :class="classes">
-    <div class="header">
-      <PaymentText
-        class="header__title"
-        tag="h3"
-        type="modalTitle"
-        html="Refunded information"
-      />
-      <PaymentText
-        tag="p"
-        html="Slippage collections were refunded.<br />Refund information is below."
-      />
+  <div>
+    <PaymentModal
+      title="Refunded information"
+      text="Slippage collections were refunded.<br />Refund information is below."
+    >
+      <p class="d-todo">{{ $options.name }}</p>
       <PaymentText
         class="cap"
         tag="p"
         type="cap"
         html=" *&nbsp;Tokens are refunded in merchant's receive token."
       />
-    </div>
-    <div class="body add-flex j-between">
-      <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
-        <PaymentText tag="h3" type="subtitle" html="Cashback amount" />
-        <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+      <div class="body add-flex j-between">
+        <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
+          <PaymentText tag="h3" type="subtitle" html="Cashback amount" />
+          <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
+        <div v-if="refundedTokenAmount" class="refund-item mb-3">
+          <PaymentText tag="h3" type="p" html="Token refunded amount" />
+          <p class="pricewrap">
+            <PaymentText
+              class="price"
+              type="price"
+              :html="refundedTokenAmount"
+            />
+            <PaymentText
+              class="symbol"
+              type="symbol"
+              :html="refundedTokenSymbol"
+            />
+          </p>
+        </div>
+        <div v-if="refundedFeeAmount" class="refund-item">
+          <PaymentText tag="h3" type="p" html="Fee refunded amount" />
+          <p class="pricewrap">
+            <PaymentText class="price" type="price" :html="refundedFeeAmount" />
+            <PaymentText
+              class="symbol"
+              type="symbol"
+              :html="refundedFeeSymbol"
+            />
+          </p>
+        </div>
       </div>
-      <div v-if="refundedTokenAmount" class="refund-item mb-3">
-        <PaymentText tag="h3" type="p" html="Token refunded amount" />
-        <p class="pricewrap">
-          <PaymentText class="price" type="price" :html="refundedTokenAmount" />
-          <PaymentText
-            class="symbol"
-            type="symbol"
-            :html="refundedTokenSymbol"
-          />
-        </p>
+      <!-- <PaymentText :html="message" />
+      <div v-if="isShowCustomizeButton">
+        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
+      </div> -->
+      <div class="d-btnwrap bottomCloseBtn">
+        <PaymentButton
+          color="cancel"
+          text="CLOSE"
+          icon="dismiss"
+          size="s"
+          @click.native="hideModal()"
+        />
       </div>
-      <div v-if="refundedFeeAmount" class="refund-item">
-        <PaymentText tag="h3" type="p" html="Fee refunded amount" />
-        <p class="pricewrap">
-          <PaymentText class="price" type="price" :html="refundedFeeAmount" />
-          <PaymentText class="symbol" type="symbol" :html="refundedFeeSymbol" />
-        </p>
+    </PaymentModal>
+    <!-- <div :class="classes">
+      <div class="header">
+        <PaymentText
+          class="header__title"
+          tag="h3"
+          type="modalTitle"
+          html="Refunded information"
+        />
+        <PaymentText
+          tag="p"
+          html="Slippage collections were refunded.<br />Refund information is below."
+        />
+        <PaymentText
+          class="cap"
+          tag="p"
+          type="cap"
+          html=" *&nbsp;Tokens are refunded in merchant's receive token."
+        />
       </div>
-    </div>
-    <button class="close" @click="hideModal">
-      <img
-        v-if="$store.state.theme == 'dark'"
-        src="@/assets/images/cross.svg"
-      />
-      <img
-        v-if="$store.state.theme == 'light'"
-        src="@/assets/images/cross-l.svg"
-      />
-      close
-    </button>
+      <div class="body add-flex j-between">
+        <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
+          <PaymentText tag="h3" type="subtitle" html="Cashback amount" />
+          <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
+        </div>
+        <div v-if="refundedTokenAmount" class="refund-item mb-3">
+          <PaymentText tag="h3" type="p" html="Token refunded amount" />
+          <p class="pricewrap">
+            <PaymentText
+              class="price"
+              type="price"
+              :html="refundedTokenAmount"
+            />
+            <PaymentText
+              class="symbol"
+              type="symbol"
+              :html="refundedTokenSymbol"
+            />
+          </p>
+        </div>
+        <div v-if="refundedFeeAmount" class="refund-item">
+          <PaymentText tag="h3" type="p" html="Fee refunded amount" />
+          <p class="pricewrap">
+            <PaymentText class="price" type="price" :html="refundedFeeAmount" />
+            <PaymentText
+              class="symbol"
+              type="symbol"
+              :html="refundedFeeSymbol"
+            />
+          </p>
+        </div>
+      </div>
+      <button class="close" @click="hideModal">
+        <img
+          v-if="$store.state.theme == 'dark'"
+          src="@/assets/images/cross.svg"
+        />
+        <img
+          v-if="$store.state.theme == 'light'"
+          src="@/assets/images/cross-l.svg"
+        />
+        close
+      </button>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PaymentText from "@/components/organisms/Payment/Text";
-// import Payment from "../../pages/payment.vue";
+import PaymentModal from "@/components/organisms/Payment/Modal";
+import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "networkModal",
   data() {
@@ -66,7 +134,12 @@ export default {
       networks: [],
     };
   },
-  components: { PaymentText },
+  components: {
+    PaymentText,
+    PaymentButton,
+    PaymentModal,
+  },
+
   computed: {
     classes() {
       const classes = ["modal-box", `--${this.$store.state.modal.size}`];
@@ -101,7 +174,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
+@import "@/assets/scss/delaunay.scss";
 @include media(pc) {
   .btn:nth-child(n + 3) {
     margin-top: 25px;

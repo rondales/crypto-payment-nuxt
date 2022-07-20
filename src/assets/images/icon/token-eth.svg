@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_イヤー_1" data-name="レイヤー 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" style="fill: #eceff0;"/>
+  <polygon points="49.99 17.97 49.56 19.43 49.56 61.79 49.99 62.22 69.66 50.59 49.99 17.97" style="fill: #343434;"/>
+  <polygon points="49.99 17.97 30.33 50.59 49.99 62.22 49.99 41.66 49.99 17.97" style="fill: #8c8c8c;"/>
+  <polygon points="49.99 65.94 49.75 66.24 49.75 81.33 49.99 82.03 69.67 54.32 49.99 65.94" style="fill: #3c3c3b;"/>
+  <polygon points="49.99 82.03 49.99 65.94 30.33 54.32 49.99 82.03" style="fill: #8c8c8c;"/>
+  <polygon points="49.99 62.22 69.66 50.59 49.99 41.66 49.99 62.22" style="fill: #141414;"/>
+  <polygon points="30.33 50.59 49.99 62.22 49.99 41.66 30.33 50.59" style="fill: #393939;"/>
+</svg>

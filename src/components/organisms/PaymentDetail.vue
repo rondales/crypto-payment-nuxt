@@ -1,75 +1,181 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveTokenSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount"
+  <div>
+    <p class="d-todo">{{ $options.name }}</p>
+    <PaymentAmountBilled
+      :symbol="merchantReceiveTokenSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount"
+    />
+    <!-- TODO reloadボタン -->
+    <PaymentTitle
+      type="h2_g"
+      html="Payment detail"
+      icon="reload"
+      v-if="!isWalletConfirming"
+      :class="{ loading: isReloading }"
+      @click="updateTokenExchangeData(true)"
+    />
+    <PaymentAmountBilled
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      :price="userSelectedTokenPaymentAmount"
+    />
+    <PaymentAction
+      class="exchange__update"
+      v-if="!isWalletConfirming && isExpiredExchange"
+      icon="attention"
+      text="Price Updated"
+    >
+      <PaymentButton
+        text="Accept"
+        size="s"
+        @click.native="updateTokenExchangeData(false)"
       />
-      <div class="payment_detailwrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
-          <figure
-            v-if="!isWalletConfirming"
-            class="reload"
-            :class="{ loading: isReloading }"
-            @click="updateTokenExchangeData(true)"
-          >
-            <img v-if="isDarkTheme" src="@/assets/images/reload.svg" />
-            <img v-else src="@/assets/images/reload-l.svg" />
-          </figure>
-        </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
-            <figure>
-              <img
-                :src="userSelectedTokenIcon"
-                :alt="userSelectedTokenSymbol"
-              />
+    </PaymentAction>
+    <PaymentTable />
+    <div>
+      <PaymentText type="h5" html="Exchange Rate" />
+      <PaymentText
+        :html="
+          '1 ' +
+          merchantReceiveTokenSymbol +
+          ' &#65309; ' +
+          userSelectedTokenExchangeRate +
+          ' ' +
+          userSelectedTokenSymbol
+        "
+      />
+      <img src="@/assets/images/exchange.svg" alt="" />
+    </div>
+    <div>
+      <PaymentText type="h5" html="Route" />
+      <PaymentText :html="tradeRoute" />
+    </div>
+
+    <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
+      <div v-if="isDifferentToken" class="dattail-list add-flex j-between mb-1">
+        <p>Slippage tolerance</p>
+        <p>{{ SLIPPAGE_RATE }}%</p>
+      </div>
+      <div class="dattail-list add-flex j-between mb-2">
+        <p>Platform Fee</p>
+        <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
+      </div>
+      <p class="dattail-list_desc">
+        Output is estimated. You will receive at least
+        {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
+        transaction will revert.
+      </p>
+    </div>
+    <div v-else class="payment-status mt-3 mb-3">
+      <PaymentTransaction
+        type="loading"
+        title="Waiting for Confimation"
+        :text="
+          'Pay ' +
+          userSelectedTokenPaymentAmount +
+          ' ' +
+          userSelectedTokenSymbol +
+          ' ' +
+          ' for ' +
+          merchantReceiveAmount +
+          ' ' +
+          merchantReceiveTokenSymbol
+        "
+        :link="{
+          url: 'https://www.google.com/',
+          icon: 'outerlink',
+          title: 'View on explorer',
+        }"
+      />
+    </div>
+    <PaymentButton
+      v-if="isExchangeDataUpdating"
+      color="cancel"
+      text="Price Updating..."
+      :loading="true"
+    />
+    <PaymentButton
+      v-else-if="isWalletConfirming"
+      color="cancel"
+      text="Please confirm Wallet"
+    />
+    <PaymentButton
+      v-else
+      :color="isExpiredExchange ? 'cancel' : 'g'"
+      text="Confirm Wallet"
+      @click.native="executePayment()"
+    />
+    <!-- <div class="payment_handleprice">
+      <div class="payment_handleprice-pricewrap">
+        <PaymentAmountBilled
+          :symbol="merchantReceiveTokenSymbol"
+          :icon="merchantReceiveTokenIcon"
+          :price="merchantReceiveAmount"
+        />
+        <div class="payment_detailwrap">
+          <div class="payment_desc add-flex j-between mb-2">
+            <p class="grd">Payment detail</p>
+            <figure
+              v-if="!isWalletConfirming"
+              class="reload"
+              :class="{ loading: isReloading }"
+              @click="updateTokenExchangeData(true)"
+            >
+              <img v-if="isDarkTheme" src="@/assets/images/reload.svg" />
+              <img v-else src="@/assets/images/reload-l.svg" />
             </figure>
-            <p>
-              {{ userSelectedTokenSymbol }}
-            </p>
           </div>
-          <div class="payment_detail-value">
-            <p>
-              {{ userSelectedTokenPaymentAmount }}
-            </p>
+          <div class="payment_detail add-flex j-between mb-1">
+            <div class="payment_detail-name add-flex a-center mb-1">
+              <figure>
+                <img
+                  :src="userSelectedTokenIcon"
+                  :alt="userSelectedTokenSymbol"
+                />
+              </figure>
+              <p>
+                {{ userSelectedTokenSymbol }}
+              </p>
+            </div>
+            <div class="payment_detail-value">
+              <p>
+                {{ userSelectedTokenPaymentAmount }}
+              </p>
+            </div>
           </div>
-        </div>
-        <div
-          class="payment-box"
-          v-if="!isWalletConfirming && isExpiredExchange"
-        >
-          <div class="add-flex a-center j-between">
-            <div class="add-flex a-center">
-              <img src="@/assets/images/warning.svg" alt="" />
-              <div class="payment-box_desc">
-                <p>Price Updated</p>
+          <div
+            class="payment-box"
+            v-if="!isWalletConfirming && isExpiredExchange"
+          >
+            <div class="add-flex a-center j-between">
+              <div class="add-flex a-center">
+                <img src="@/assets/images/warning.svg" alt="" />
+                <div class="payment-box_desc">
+                  <p>Price Updated</p>
+                </div>
+              </div>
+              <div
+                class="payment-box_btn"
+                @click="updateTokenExchangeData(false)"
+              >
+                Accept
               </div>
             </div>
-            <div
-              class="payment-box_btn"
-              @click="updateTokenExchangeData(false)"
-            >
-              Accept
+          </div>
+          <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
+            <div class="dattail-list add-flex j-between mb-1">
+              <p>Exchange Rate</p>
+              <p>
+                1 {{ merchantReceiveTokenSymbol }} &#65309;
+                {{ userSelectedTokenExchangeRate }} {{ userSelectedTokenSymbol
+                }}<img src="@/assets/images/exchange.svg" alt="" />
+              </p>
             </div>
-          </div>
-        </div>
-        <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Rate</p>
-            <p>
-              1 {{ merchantReceiveTokenSymbol }} &#65309;
-              {{ userSelectedTokenExchangeRate }} {{ userSelectedTokenSymbol
-              }}<img src="@/assets/images/exchange.svg" alt="" />
-            </p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Route</p>
-            <p v-html="tradeRoute"></p>
-          </div>
-          <!--
+            <div class="dattail-list add-flex j-between mb-1">
+              <p>Route</p>
+              <p v-html="tradeRoute"></p>
+            </div>
           @todo Implement it when you are able to get various data from the contract
           <div class="dattail-list add-flex j-between mb-1">
             <p>Minimum received</p>
@@ -83,72 +189,87 @@
             <p>Liquidity Provider Fee</p>
             <p>0.002367 BNB</p>
           </div>
-          -->
-          <div
-            v-if="isDifferentToken"
-            class="dattail-list add-flex j-between mb-1"
-          >
-            <p>Slippage tolerance</p>
-            <p>{{ SLIPPAGE_RATE }}%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-2">
-            <p>Platform Fee</p>
-            <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
-          </div>
-          <p class="dattail-list_desc">
-            Output is estimated. You will receive at least
-            {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
-            transaction will revert.
-          </p>
-        </div>
-        <div v-else class="payment-status mt-3 mb-3">
-          <div>
-            <img
-              class="mb-2 spin"
-              src="@/assets/images/loading.svg"
-              alt="waiting"
-            />
-            <p class="payment-status_title">Waiting for Confirmation</p>
-            <p class="payment-status_desc mb-2">
-              Pay {{ userSelectedTokenPaymentAmount }}
-              {{ userSelectedTokenSymbol }} for {{ merchantReceiveAmount }}
-              {{ merchantReceiveTokenSymbol }}
+
+
+            <div
+              v-if="isDifferentToken"
+              class="dattail-list add-flex j-between mb-1"
+            >
+              <p>Slippage tolerance</p>
+              <p>{{ SLIPPAGE_RATE }}%</p>
+            </div>
+            <div class="dattail-list add-flex j-between mb-2">
+              <p>Platform Fee</p>
+              <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
+            </div>
+            <p class="dattail-list_desc">
+              Output is estimated. You will receive at least
+              {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or
+              the transaction will revert.
             </p>
           </div>
-        </div>
-        <button v-if="isExchangeDataUpdating" class="btn __g __l mb-2 inactive">
-          Price Updating...
-          <div class="loading-wrap active">
-            <img class="spin" src="@/assets/images/loading.svg" alt="loading" />
+          <div v-else class="payment-status mt-3 mb-3">
+            <div>
+              <img
+                class="mb-2 spin"
+                src="@/assets/images/loading.svg"
+                alt="waiting"
+              />
+              <p class="payment-status_title">Waiting for Confirmation</p>
+              <p class="payment-status_desc mb-2">
+                Pay {{ userSelectedTokenPaymentAmount }}
+                {{ userSelectedTokenSymbol }} for {{ merchantReceiveAmount }}
+                {{ merchantReceiveTokenSymbol }}
+              </p>
+            </div>
           </div>
-        </button>
-        <button
-          v-else-if="isWalletConfirming"
-          class="btn __g __l mb-2 inactive"
-        >
-          Please confirm Wallet
-        </button>
-        <button
-          v-else
-          class="btn __g __l mb-2"
-          :class="{ inactive: isExpiredExchange }"
-          @click="executePayment()"
-        >
-          Confirm Wallet
-        </button>
-        <p class="via">
-          via Slash Payment
-          <span>
-            <img src="@/assets/images/slash-s.svg" alt="slash" />
-          </span>
-        </p>
+          <button
+            v-if="isExchangeDataUpdating"
+            class="btn __g __l mb-2 inactive"
+          >
+            Price Updating...
+            <div class="loading-wrap active">
+              <img
+                class="spin"
+                src="@/assets/images/loading.svg"
+                alt="loading"
+              />
+            </div>
+          </button>
+          <button
+            v-else-if="isWalletConfirming"
+            class="btn __g __l mb-2 inactive"
+          >
+            Please confirm Wallet
+          </button>
+          <button
+            v-else
+            class="btn __g __l mb-2"
+            :class="{ inactive: isExpiredExchange }"
+            @click="executePayment()"
+          >
+            Confirm Wallet
+          </button>
+          <p class="via">
+            via Slash Payment
+            <span>
+              <img src="@/assets/images/slash-s.svg" alt="slash" />
+            </span>
+          </p>
+        </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentTable from "@/components/organisms/Payment/Table";
 import {
   METAMASK,
   WALLET_CONNECT,
@@ -172,6 +293,12 @@ export default {
   name: "PaymentDetail",
   components: {
     PaymentAmountBilled,
+    PaymentButton,
+    PaymentTransaction,
+    PaymentAction,
+    PaymentText,
+    PaymentTitle,
+    PaymentTable,
   },
   data() {
     return {
@@ -557,126 +684,143 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
-  }
-
-  .payment_desc {
+@import "@/assets/scss/delaunay.scss";
+.dattail-lists {
+  .dattail-list {
     p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
-  }
-  .payment_handleprice-pricewrap {
-    width: 100%;
-  }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
-  }
-
-  .dattail-lists {
-    .dattail-list {
-      p {
-        font-size: 11px;
-        font-weight: 100;
-        img {
-          margin-left: 8px;
-        }
-      }
-    }
-    .dattail-list_desc {
       font-size: 11px;
       font-weight: 100;
-      padding-bottom: 16px;
-      margin-bottom: 16px;
-    }
-  }
-  .reload {
-    cursor: pointer;
-    img {
-      vertical-align: middle;
-    }
-    &.loading {
-      animation: 3s linear infinite spin;
-      from {
-        transform: rotateZ(0deg);
-      }
-      to {
-        transform: rotateZ(360deg);
-      }
-    }
-  }
-  .payment_detail {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-left: 7px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 20px;
-      font-weight: 100;
-      margin-left: 16px;
-    }
-  }
-  .payment-status {
-    text-align: center;
-    margin: auto;
-    &_title {
-      font-size: 18px;
-      font-weight: 100;
-    }
-    &_desc {
-      font-size: 10px;
-      font-weight: 100;
-    }
-    &_btn {
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
       img {
-        margin-left: 4px;
-        vertical-align: middle;
+        margin-left: 8px;
       }
     }
   }
-  .via {
-    font-size: 12px;
+  .dattail-list_desc {
+    font-size: 11px;
     font-weight: 100;
-    text-align: center;
-    line-height: 20px;
-    img {
-      width: 20px;
-      height: 20px;
-      margin-left: 5px;
-    }
-  }
-  .new-tab-icon {
-    padding: 0 !important;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
   }
 }
+// .payment_handleprice {
+//   width: 100%;
+//   dl {
+//     dt {
+//       font-weight: 400;
+//       font-size: 15px;
+//     }
+//   }
+
+//   .payment_desc {
+//     p {
+//       background: $gradation-pale;
+//       -webkit-background-clip: text;
+//       -webkit-text-fill-color: transparent;
+//       background-size: 150% 150%;
+//       display: inline;
+//     }
+//   }
+//   .payment_handleprice-pricewrap {
+//     width: 100%;
+//   }
+//   .payment_handleprice-price {
+//     padding: 0;
+//     width: 100%;
+//     min-width: auto;
+//   }
+
+//   .dattail-lists {
+//     .dattail-list {
+//       p {
+//         font-size: 11px;
+//         font-weight: 100;
+//         img {
+//           margin-left: 8px;
+//         }
+//       }
+//     }
+//     .dattail-list_desc {
+//       font-size: 11px;
+//       font-weight: 100;
+//       padding-bottom: 16px;
+//       margin-bottom: 16px;
+//     }
+//   }
+//   .reload {
+//     cursor: pointer;
+//     img {
+//       vertical-align: middle;
+//     }
+//     &.loading {
+//       animation: 3s linear infinite spin;
+//       from {
+//         transform: rotateZ(0deg);
+//       }
+//       to {
+//         transform: rotateZ(360deg);
+//       }
+//     }
+//   }
+//   .payment_detail {
+//     &-name {
+//       p {
+//         font-size: 16px;
+//         font-weight: 400;
+//         line-height: 25px;
+//         margin-left: 7px;
+//       }
+//       figure {
+//         width: 25px;
+//         height: 25px;
+//         img {
+//           vertical-align: baseline;
+//         }
+//       }
+//     }
+//     &-value {
+//       font-size: 20px;
+//       font-weight: 100;
+//       margin-left: 16px;
+//     }
+//   }
+//   .payment-status {
+//     text-align: center;
+//     margin: auto;
+//     &_title {
+//       font-size: 18px;
+//       font-weight: 100;
+//     }
+//     &_desc {
+//       font-size: 10px;
+//       font-weight: 100;
+//     }
+//     &_btn {
+//       font-size: 12px;
+//       font-weight: 100;
+//       cursor: pointer;
+//       background: $gradation-pale;
+//       padding: 4px 16px;
+//       border-radius: 10px;
+//       color: #fff;
+//       img {
+//         margin-left: 4px;
+//         vertical-align: middle;
+//       }
+//     }
+//   }
+//   .via {
+//     font-size: 12px;
+//     font-weight: 100;
+//     text-align: center;
+//     line-height: 20px;
+//     img {
+//       width: 20px;
+//       height: 20px;
+//       margin-left: 5px;
+//     }
+//   }
+//   .new-tab-icon {
+//     padding: 0 !important;
+//   }
+// }
 </style>

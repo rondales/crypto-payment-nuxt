@@ -1,0 +1,293 @@
+<template>
+  <div class="style">
+    <div class="d-payboxwrap">
+      <PaymentTitle type="h3" html="Color Valiation" layout="c" />
+      <ul class="color">
+        <li v-for="n in 10" :key="n"></li>
+      </ul>
+      <PaymentIcon class="icon" path="logo-icon" />
+      <PaymentTitle type="h2_g" html="Your Balance" icon="reload" />
+      <PaymentTitle
+        type="h3_g"
+        html="Do you want a receipt?"
+        emoji="&#x1F9FE;"
+        layout="c"
+      />
+      <PaymentTitle
+        type="h3_g"
+        html="Enter the payment amount"
+        emoji="&#128591;"
+        layout="c"
+      />
+      <PaymentTitle type="h2" html="Waiting for Confimation" layout="c" />
+      <PaymentTitle type="h3" html="Payment with Web3 Wallet" layout="c" />
+      <PaymentText type="h2b" html="Payment with Web3 Wallet" />
+      <PaymentText type="h2" html="Payment with Web3 Wallet" />
+      <PaymentText type="h3b" html="Payment with Web3 Wallet" />
+      <PaymentText type="h3" html="Payment with Web3 Wallet" />
+      <PaymentText type="h4b" html="Payment with Web3 Wallet" />
+      <PaymentText type="h4" html="Payment with Web3 Wallet" />
+      <PaymentText type="h5" html="Payment with Web3 Wallet" />
+      <PaymentText
+        tag="p"
+        type="p"
+        html="Select the network and currency you wish to pay for.  If the currency you want is not on the list, you can import it by contract address 👍"
+      />
+      <PaymentText
+        tag="p"
+        type="cap"
+        html="Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert."
+      />
+      <PaymentText
+        tag="p"
+        type="p"
+        color="red"
+        html="balance is insufficient  for this transaction."
+      />
+    </div>
+
+    <PaymentAmountBilled symbol="USDT" icon="usdt" price="1000.00" />
+    <PaymentAmountBilled
+      title="Amount Billed"
+      symbol="USDT"
+      icon="usdt"
+      price="1000.00"
+    />
+    <PaymentAmountBilled
+      symboltext="Tether USD"
+      symbol="USDT"
+      icon="usdt"
+      :table="[
+        {
+          title: 'Balance',
+          price: '2340',
+          symbol: 'USDT',
+        },
+        {
+          title: 'Balance',
+          price: '2340',
+          symbol: 'USDT',
+        },
+      ]"
+    />
+    <div class="d-payboxwrap">
+      <PaymentTable />
+      <PaymentTransaction
+        type="loading"
+        title="Waiting for Confimation"
+        text="Pay 1000.00 USDT for 1000.00 USDT"
+        :link="{
+          url: 'https://www.google.com/',
+          icon: 'outerlink',
+          title: 'View on explorer',
+        }"
+      />
+      <PaymentTransaction
+        type="success"
+        title="Transaction Submitted"
+        :link="{
+          url: 'https://www.google.com/',
+          icon: 'outerlink',
+          title: 'View on explorer',
+        }"
+      />
+      <PaymentTransaction
+        type="dismiss"
+        cap="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."
+        :link="{
+          url: 'https://www.google.com/',
+          icon: 'outerlink',
+          title: 'View on explorer',
+        }"
+      />
+
+      <PaymentVia />
+    </div>
+    <PaymentPrice symbol="USDT" cap="499 USDT equivalent" price="499.00" />
+    <PaymentPrice
+      symbol="USDT"
+      cap="499 USDT equivalent"
+      price="499.00"
+      status="error"
+    />
+
+    <!-- <PaymentIdTable /> -->
+    <div class="d-payboxwrap">
+      <PaymentForm error="Enter valid token address">
+        <input type="text" placeholder="000000000" />
+      </PaymentForm>
+      <PaymentSelectToken />
+      <PaymentToken symbol="USDT" icon="usdt" />
+      <PaymentAction icon="network-ethereum" text="Ethereum Main net" />
+      <PaymentAction icon="network-matic" text="Matic Main net" />
+      <PaymentAction icon="network-avalanche" text="Avalanche Main net" />
+      <PaymentAction icon="network-unknown" text="Unknown Main net" />
+      <PaymentTab
+        status="1"
+        @changeToList="switchTab('list')"
+        @changeToToken="switchTab('token')"
+      ></PaymentTab>
+
+      <PaymentNav :list="['Lists', 'Tokens']" :active="0" />
+      <div class="button">
+        <div class="pay__btnwrap">
+          <PaymentButton text="Confirm Wallet" color="inactive" />
+        </div>
+        <div class="pay__btnwrap">
+          <PaymentButton text="Confirm Pay" />
+        </div>
+        <div class="pay__btnwrap">
+          <PaymentButton text="Button Text" />
+          <PaymentButton color="cancel" text="Button Text" />
+        </div>
+        <PaymentButton size="l" text="MetaMask" icon="wallet-metamask" />
+        <PaymentButton
+          size="l"
+          text="MetaMask"
+          subtext="Easy-to-use Browser extension"
+          icon="wallet-metamask"
+          layout="wallet"
+        />
+        <PaymentButton
+          size="l"
+          text="WalletConnect"
+          icon="wallet-walletconnect"
+        />
+        <PaymentButton size="l" text="Go Payment" icon="logo-icon" />
+
+        <PaymentButton size="l" text="Button Text" />
+        <PaymentButton text="Button Text" />
+        <PaymentButton
+          text="Binance Smart Chain Mainnet"
+          icon="usdt"
+          layout="left"
+        />
+        <PaymentButton size="icon" color="icon" icon="usdt" />
+        <PaymentButton size="s" icon="light" text="aaaaaa" />
+        <PaymentButton
+          size="s"
+          color="secondary"
+          icon="light"
+          text="aaaaaa"
+          layout="reverse"
+        />
+        <PaymentButton size="s" color="cancel" icon="light" text="aaaaaa" />
+        <PaymentButton size="s" color="inactive" icon="light" text="aaaaaa" />
+        <PaymentButton size="s" color="danger" icon="light" text="aaaaaa" />
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentIcon from "@/components/organisms/Payment/Icon";
+import PaymentTable from "@/components/organisms/Payment/Table";
+import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+import PaymentVia from "@/components/organisms/Payment/Via";
+import PaymentPrice from "@/components/organisms/Payment/Price";
+// import PaymentIdTable from "@/components/organisms/Payment/IdTable";
+import PaymentForm from "@/components/organisms/Payment/Form";
+import PaymentToken from "@/components/organisms/Payment/Token";
+import PaymentSelectToken from "@/components/organisms/Payment/SelectToken";
+import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentTab from "@/components/organisms/Payment/Tab";
+import PaymentNav from "@/components/organisms/Payment/Nav";
+
+export default {
+  name: "PaymentIndex",
+  components: {
+    PaymentButton,
+    PaymentTitle,
+    PaymentText,
+    PaymentAmountBilled,
+    PaymentIcon,
+    PaymentTable,
+    PaymentTransaction,
+    PaymentVia,
+    PaymentPrice,
+    // PaymentIdTable,
+    PaymentForm,
+    PaymentToken,
+    PaymentSelectToken,
+    PaymentAction,
+    PaymentTab,
+    PaymentNav,
+  },
+  props: [],
+  data() {
+    return {};
+  },
+  computed: {},
+  methods: {
+    switchTab(tab) {
+      console.log("aaaa");
+      console.log(tab);
+    },
+  },
+  mounted() {},
+  beforeDestroy() {},
+};
+</script>
+
+<style lang="scss" scoped>
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
+.style {
+  // display: none;
+  padding: 5rem 0;
+  & > * {
+    margin-bottom: 3rem;
+  }
+
+  .d-payboxwrap {
+  }
+  .color {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    li {
+      border: 1px solid var(--SubText);
+      border-radius: 100%;
+      &::before {
+        content: "";
+        display: block;
+        width: 100%;
+        padding-top: 100%;
+      }
+      &:nth-child(1) {
+        background: var(--Text);
+      }
+      &:nth-child(2) {
+        background: var(--SubText);
+      }
+      &:nth-child(3) {
+        background: var(--Base);
+      }
+      &:nth-child(4) {
+        background: var(--Base2);
+      }
+      &:nth-child(5) {
+        background: var(--Border);
+      }
+      &:nth-child(6) {
+        background: var(--Success);
+      }
+      &:nth-child(7) {
+        background: var(--Alert);
+      }
+      &:nth-child(8) {
+        background: $gradation-pale;
+      }
+      &:nth-child(9) {
+        background: var(--Button2);
+      }
+      &:nth-child(10) {
+        background: var(--Button3);
+      }
+    }
+  }
+}
+</style>
