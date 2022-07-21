@@ -1,4 +1,5 @@
 import { PRODUCTION, DEVELOPMENT } from './modules/environment'
+import { API_BASE_URL } from './modules/api'
 import { LOGIN_TOKEN } from './modules/admin'
 import {
   NORMAL_TYPE_PAYMENT,
@@ -27,6 +28,7 @@ import {
 } from './modules/scan_block_number_limit'
 
 export { PRODUCTION, DEVELOPMENT }
+export { API_BASE_URL }
 export { LOGIN_TOKEN }
 export {
   NORMAL_TYPE_PAYMENT,

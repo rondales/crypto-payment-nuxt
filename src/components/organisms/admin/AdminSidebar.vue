@@ -1,22 +1,29 @@
 <template>
   <div>
-    <div class="side-bar" :class="{'active': $store.state.hamberger === true}">
+    <div class="side-bar" :class="{ active: $store.state.hamberger === true }">
       <div class="side-bar--top"></div>
       <div class="side-bar--content">
         <div class="side-bar--inner">
           <ul>
             <li @click="close()">
-              <router-link to="/admin/dashboard">
-                Dashboard
-              </router-link>
+              <router-link to="/admin/dashboard"> Dashboard </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/payment/history" :class="{ inactive: isUnselectedReceiveToken }">
+              <router-link
+                to="/admin/payment/history"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
                 History
               </router-link>
             </li>
             <li @click="close()">
-              <router-link to="/admin/payment/settings/contract" :class="{ inactive: isUnselectedReceiveToken, 'router-link-active': isSettingsPage }">
+              <router-link
+                to="/admin/payment/settings/contract"
+                :class="{
+                  inactive: isUnselectedReceiveToken,
+                  'router-link-active': isSettingsPage,
+                }"
+              >
                 Settings
               </router-link>
             </li>
@@ -29,7 +36,10 @@
             </li>
             -->
             <li @click="close()">
-              <router-link to="/admin/keys" :class="{ inactive: isUnselectedReceiveToken }">
+              <router-link
+                to="/admin/keys"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
                 Keys
               </router-link>
             </li>
@@ -41,10 +51,34 @@
                 Test with key
               </a>
             </li>
+            <li v-if="isEnableStoreApps" @click="close()">
+              <router-link
+                to="/admin/store"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                Store apps
+              </router-link>
+            </li>
+            <li v-if="isEnableEcPlugin" @click="close()">
+              <router-link
+                to="/admin/plug-ins"
+                :class="{ inactive: isUnselectedReceiveToken }"
+              >
+                EC Plug in
+              </router-link>
+            </li>
+            <li v-if="isShowPluginStore" @click="close()">
+              <a
+                target="_blank"
+                :href="PLUGIN_STORE_URL"
+              >
+                Plug in Store
+              </a>
+            </li>
             <li @click="close()">
               <a
                 target="_blank"
-                href="https://slash-fi.gitbook.io/docs/integration-guide/introduction"
+                href="https://slash-fi.gitbook.io/slash-web3-payment-api-docs/introduction-english"
               >
                 Documents
               </a>
@@ -65,12 +99,14 @@
 </template>
 
 <script>
-
 export default {
-  name: 'payment',
+  name: "AdminSidebar",
   computed: {
+    PLUGIN_STORE_URL() {
+      return process.env.VUE_APP_PLUGIN_STORE_URL
+    },
     isUnselectedReceiveToken() {
-      return !(this.$store.state.account.receiveSymbol)
+      return !this.$store.state.account.receiveSymbol;
     },
     isSettingsPage() {
       const targetPaths = [
@@ -82,28 +118,44 @@ export default {
     },
     isUseTestnet() {
       return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
+    },
+    isShowPluginStore() {
+      try {
+        new URL(this.PLUGIN_STORE_URL)
+        return true
+      } catch(ex) {
+        return false
+      }
+    },
+    isEnableStoreApps() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_STORE_APPS.toLowerCase())
+    },
+    isEnableEcPlugin() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_EC_PLUGIN.toLowerCase())
     }
   },
   methods: {
-    close(){
-      this.$store.state.hamberger = false
-    }
-  }
-}
+    close() {
+      this.$store.state.hamberger = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
-.side-bar{
+@import "@/assets/scss/style.scss";
+.side-bar {
   position: fixed;
   top: 80px;
   bottom: 0;
   left: 0;
   width: 170px;
-  border-right: 1px solid #58466E;
+  border-right: 1px solid #58466e;
   @include media(sp) {
     display: none;
-    &.active{
+    &.active {
       display: block;
       top: 0;
       width: 100%;
@@ -112,26 +164,26 @@ export default {
       padding-top: 64px;
     }
   }
-  &--top{
+  &--top {
     margin-top: 46px;
   }
-  &--content{
+  &--content {
     overflow-y: auto;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       display: none;
     }
   }
-  &--inner{
+  &--inner {
     width: 170px;
-    ul{
-      li{
+    ul {
+      li {
         padding: 8px 24px;
         margin-bottom: 20px;
         font-size: 15px;
-        a{
+        a {
           color: #fff;
           text-decoration: none;
-          &.inactive{
+          &.inactive {
             pointer-events: none;
             color: #838383;
           }
@@ -140,9 +192,9 @@ export default {
     }
   }
 }
-.router-link-active{
-  color: #8B2AE1;
-  background: linear-gradient(120deg, #5294F5 30%, #705CEA 50%, #8B2AE1 66%);
+.router-link-active {
+  color: #8b2ae1;
+  background: linear-gradient(120deg, #5294f5 30%, #705cea 50%, #8b2ae1 66%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 150% 150%;
