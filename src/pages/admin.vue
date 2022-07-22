@@ -62,7 +62,7 @@ export default {
       })
     }
   },
-  created() {
+  mounted() {
     this.$store.dispatch("changeTheme", "dark");
     localStorage.removeItem(LOGIN_TOKEN)
     this.$store.dispatch('web3/initialize')
