@@ -71,8 +71,25 @@ export default {
       ).then(() => {
         this.$store.dispatch('web3/updateChainId', chainId)
         this.hideModal()
+      }).catch((error) => {
+        console.log(error)
+        if (error.code === 4902) {
+          this.showAddChainModal(chainId)
+        }
       })
-    }
+    },
+    showAddChainModal(chainId) {
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
+        params: { 
+          chainId: chainId,
+          hideCloseButton: false,
+          lastModalTarget: 'switch-network-for-admin-modal',
+          lastModalSize: 'medium'
+        }
+      })
+    },
   }
 }
 </script>

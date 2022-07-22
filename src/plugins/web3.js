@@ -46,6 +46,7 @@ export default {
           isBlacklistedFromPayToken: isBlacklistedFromPayToken,
           importToken: importToken,
           switchChain: switchChain,
+          addChain: addChain,
           addToken: addToken,
           getTokenExchangeData: getTokenExchangeData,
           checkTokenApproved: checkTokenApproved,
@@ -245,15 +246,29 @@ const getBalance = async function(web3, walletAddress, tokenContract = null) {
 }
 
 const switchChain = async function(web3, chainId) {
-  try {
-    await web3.currentProvider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: web3.utils.toHex(chainId) }]
-    })
-  } catch(e) {
-    console.log(e)
-    throw new Error(e.message)
-  }
+  return await web3.currentProvider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: web3.utils.toHex(chainId) }]
+  })
+}
+
+const addChain = function(web3, chainId) {
+  const params = [
+    {
+      chainId: web3.utils.toHex(chainId),
+      chainName: NETWORKS[chainId].name,
+      nativeCurrency: {
+        symbol: NETWORKS[chainId].symbol,
+        decimals: 18
+      },
+      rpcUrls: [NETWORKS[chainId].rpcUrl],
+      blockExplorerUrls: [NETWORKS[chainId].scanUrl]
+    }
+  ]
+  return web3.currentProvider.request({
+    method: 'wallet_addEthereumChain',
+    params: params
+  })
 }
 
 const addToken = async function(web3, tokenAddress, tokenAbi) {

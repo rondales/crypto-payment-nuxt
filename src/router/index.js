@@ -164,8 +164,20 @@ const router = new Router({
             },
             {
               name: "admin",
+              path: "/admin/store",
+              component: () => import("@/components/organisms/admin/AdminStore"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
               path: "/admin/documents",
               component: () => import("@/components/organisms/admin/AdminDocuments"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/plug-ins",
+              component: () => import("@/components/organisms/admin/AdminPlugIns"),
               meta: { title: 'Slash Apps' }
             },
           ]
@@ -175,7 +187,10 @@ const router = new Router({
   ]
 });
 
-if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development') {
+if (
+  process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development'
+  || (process.env.NODE_ENV === 'production' && !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase()))
+) {
   router.addRoute({
     name: "test",
     path: "/test",

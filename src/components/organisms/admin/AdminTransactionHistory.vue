@@ -125,7 +125,7 @@
                   {{ network(record.network_type) }}
                 </td>
                 <td>
-                  {{ record.base_amount | decimalFormat }} USTD
+                  {{ record.base_amount | decimalFormat }} {{ record.base_symbol }}
                 </td>
               </tr>
             </tbody>
@@ -582,6 +582,7 @@ export default {
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;

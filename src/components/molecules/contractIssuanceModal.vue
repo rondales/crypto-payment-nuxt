@@ -290,7 +290,7 @@ export default {
       then((receipt) => {
         this.pageState = this.pageStateList.successed
         this.updateContractAvailable(chainId, true)
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchantAddress_
+        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchant_
         const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
         this.$store.dispatch('wallet/updatePendingStatus', false)

@@ -735,7 +735,6 @@ export default {
   }
 }
 .manage-table{
-  position: absolute;
   z-index: 10;
   width: calc(100% - 228px);
   &::-webkit-scrollbar{
@@ -759,6 +758,7 @@ export default {
       overflow-x: scroll;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;

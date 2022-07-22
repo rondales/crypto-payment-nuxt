@@ -5,12 +5,14 @@
       <div class="global-header__inner">
         <div class="add-flex a-center">
           <h1 class="logo">
-            <img class="pc" src="@/assets/images/logo.svg" alt="Web3 Payment">
-            <img class="sp" src="@/assets/images/logo-sp.svg" alt="Web3 Payment">
+            <img class="pc" src="@/assets/images/logo.svg" alt="Web3 Payment" />
+            <img
+              class="sp"
+              src="@/assets/images/logo-sp.svg"
+              alt="Web3 Payment"
+            />
           </h1>
-          <p class="logo-sub">
-            Test Page
-          </p>
+          <p class="logo-sub">Test Page</p>
         </div>
       </div>
     </header>
@@ -21,11 +23,9 @@
         <div class="payment_headbox add-flex j-between a-center">
           <div class="logo add-flex a-end">
             <figure>
-              <img src="@/assets/images/slash.svg">
+              <img src="@/assets/images/slash.svg" />
             </figure>
-            <div class="product_name">
-              Generate Payment URL
-            </div>
+            <div class="product_name">Generate Payment URL</div>
           </div>
         </div>
       </div>
@@ -33,51 +33,65 @@
         <div class="payment_handleprice">
           <div class="payment_receiptwrap">
             <div class="payment_desc mb-2 mt-1">
-              <p>
-                You can issue a Payment URL
-              </p>
+              <p>You can issue a Payment URL</p>
             </div>
             <div class="payment_receipt">
-              <p class="mb-1">
-                Environment
-              </p>
-              <div class="payment_receipt_form border mb-2">
-                <select v-model="environment">
-                  <option :value="environmentList.local">Local</option>
-                  <option :value="environmentList.staging" selected>Staging</option>
-                  <option :value="environmentList.testnet" selected>Testnet</option>
-                  <option :value="environmentList.mainnet">Mainnet</option>
-                </select>
+              <div v-if="isDevelopmentMode">
+                <p class="mb-1">Environment</p>
+                <div class="payment_receipt_form border mb-2">
+                  <select v-model="environment">
+                    <option :value="environmentList.local">Local</option>
+                    <option :value="environmentList.staging" selected>
+                      Staging
+                    </option>
+                    <option :value="environmentList.testnet" selected>
+                      Testnet
+                    </option>
+                    <option :value="environmentList.mainnet">Mainnet</option>
+                  </select>
+                </div>
               </div>
-              <p class="mb-1">
-                Authentication Token
-              </p>
+              <p class="mb-1">Authentication Token</p>
               <div class="payment_receipt_form border mb-2">
-                <input type="text" v-model="orderToken" placeholder="Reference AdminPage">
+                <input
+                  type="text"
+                  v-model="orderToken"
+                  placeholder="Reference AdminPage"
+                />
               </div>
-              <p class="mb-1">
-                Hash Token
-              </p>
+              <p class="mb-1">Hash Token</p>
               <div class="payment_receipt_form border mb-2">
-                <input type="text" v-model="hashToken" placeholder="Reference AdminPage">
+                <input
+                  type="text"
+                  v-model="hashToken"
+                  placeholder="Reference AdminPage"
+                />
               </div>
-              <p class="mb-1">
-                Order Code
-              </p>
+              <p class="mb-1">Order Code</p>
               <div class="payment_receipt_form border mb-2">
-                <input type="text" v-model="orderCode" placeholder="Unique order code">
+                <input
+                  type="text"
+                  v-model="orderCode"
+                  placeholder="Unique order code"
+                />
               </div>
-              <p class="mb-1">
-                Amount
-              </p>
+              <p class="mb-1">Amount</p>
               <div class="payment_receipt_form border mb-2">
-                <input type="text" v-model="amount" placeholder="USDT amount or empty">
+                <input
+                  type="text"
+                  v-model="amount"
+                  placeholder="Payment amount"
+                />
               </div>
             </div>
-            <button class="btn __g __l mt-4 mb-1" :class="{active: !isProcessing, inactive: isProcessing}" @click="publishPaymentUrl">
+            <button
+              class="btn __g __l mt-4 mb-1"
+              :class="{ active: !isProcessing, inactive: isProcessing }"
+              @click="publishPaymentUrl"
+            >
               Publish
-              <div class="loading-wrap" :class="{active: isProcessing}">
-                <img class="spin" src="@/assets/images/loading.svg">
+              <div class="loading-wrap" :class="{ active: isProcessing }">
+                <img class="spin" src="@/assets/images/loading.svg" />
               </div>
             </button>
           </div>
@@ -87,21 +101,33 @@
     <div v-if="isModaiOpen" class="modal-base">
       <div class="modal-box --small">
         <div class="header">
-          <h3 class="header__title">
-            Payment URL
-          </h3>
+          <h3 class="header__title">Payment URL</h3>
         </div>
         <div class="body">
           <div class="qr">
-            <vue-qrcode v-model="paymentUrl" tag="img" />
+            <div class="qr_wrap">
+              <div class="qr_item">
+                <vue-qrcode v-model="paymentUrl" tag="img" />
+                <img
+                  class="logo"
+                  src="@/assets/images/logo-icon.svg"
+                  alt="Web3 Payment"
+                />
+                <img
+                  class="logo2"
+                  src="@/assets/images/logo-text.svg"
+                  alt="Web3 Payment"
+                />
+              </div >
+            </div>
           </div>
           <div class="url mt-5">
-            <input type="text" v-model="paymentUrl" disabled>
+            <input type="text" v-model="paymentUrl" disabled />
           </div>
           <div class="copy mt-2" @click="copyPaymentUrl">Copy Address</div>
         </div>
         <button class="close" @click="hideModal">
-          <img src="@/assets/images/cross.svg">
+          <img src="@/assets/images/cross.svg" />
           閉じる
         </button>
       </div>
@@ -110,11 +136,12 @@
 </template>
 
 <script>
-import JsSHA from 'jssha'
-import VueQrcode from '@chenfengyuan/vue-qrcode'
+import JsSHA from "jssha";
+import VueQrcode from "@chenfengyuan/vue-qrcode";
+import { DEVELOPMENT } from "@/constants";
 
 export default {
-  name: 'paymentTest',
+  name: "paymentTest",
   components: { VueQrcode },
   data() {
     return {
@@ -124,98 +151,107 @@ export default {
         local: 1,
         staging: 2,
         testnet: 3,
-        mainnet: 4
+        mainnet: 4,
       },
       environment: 2,
-      orderToken: '',
-      hashToken: '',
-      orderCode: '',
-      amount: '',
-      paymentUrl: ''
-    }
+      orderToken: "",
+      hashToken: "",
+      orderCode: "",
+      amount: "",
+      paymentUrl: "",
+    };
   },
   computed: {
     baseUrl() {
-      switch(this.environment) {
-        case this.environmentList.local:
-          return process.env.VUE_APP_API_BASE_URL
-        case this.environmentList.staging:
-          return 'https://stg.slash.fi'
-        case this.environmentList.testnet:
-          return 'https://testnet.slash.fi'
-        case this.environmentList.mainnet:
-          return 'https://slash.fi'
-        default:
-          return 'https://stg.slash.fi'
+      if (this.isDevelopmentMode) {
+        switch (this.environment) {
+          case this.environmentList.local:
+            return process.env.VUE_APP_API_BASE_URL;
+          case this.environmentList.staging:
+            return "https://stg.slash.fi";
+          case this.environmentList.testnet:
+            return "https://testnet.slash.fi";
+          case this.environmentList.mainnet:
+            return "https://slash.fi";
+          default:
+            return "https://stg.slash.fi";
+        }
+      } else {
+        return "https://testnet.slash.fi";
       }
     },
     isProcessing() {
-      return this.processing
+      return this.processing;
     },
     isModaiOpen() {
-      return this.modalOpen
-    }
+      return this.modalOpen;
+    },
+    isDevelopmentMode() {
+      return process.env.NODE_ENV === DEVELOPMENT;
+    },
   },
   methods: {
     apiGetPaymentUrl(hash) {
-      const url = `${this.baseUrl}/api/v1/payment/receive`
+      const url = `${this.baseUrl}/api/v1/payment/receive`;
       let data = {
         identification_token: this.orderToken,
         order_code: this.orderCode,
-        verify_token: hash
-      }
-      if (this.amount !== '') data.amount = this.amount
-      return this.axios.post(url, data)
+        verify_token: hash,
+      };
+      if (this.amount !== "") data.amount = this.amount;
+      return this.axios.post(url, data);
     },
     publishPaymentUrl() {
-      this.processing = true
-      const hashRaw = `${this.orderCode}::${this.amount}::${this.hashToken}`
-      const sha = new JsSHA('SHA-256', 'TEXT')
-      sha.update(hashRaw)
-      this.apiGetPaymentUrl(sha.getHash('HEX')).then((response) => {
-        this.paymentUrl = response.data.url
-        this.modalOpen = true
-        this.processing = false
-      }).catch(() => {
-        this.$store.dispatch('modal/show', {
-          target: 'error-modal',
-          size: 'small',
-          params: {
-            message: 'Failed to publish the Payment URL.'
-          }
+      this.processing = true;
+      const hashRaw = `${this.orderCode}::${this.amount}::${this.hashToken}`;
+      const sha = new JsSHA("SHA-256", "TEXT");
+      sha.update(hashRaw);
+      this.apiGetPaymentUrl(sha.getHash("HEX"))
+        .then((response) => {
+          this.paymentUrl = response.data.url;
+          this.modalOpen = true;
+          this.processing = false;
         })
-        this.processing = false
-      })
+        .catch(() => {
+          this.$store.dispatch("modal/show", {
+            target: "error-modal",
+            size: "small",
+            params: {
+              message: "Failed to publish the Payment URL.",
+            },
+          });
+          this.processing = false;
+        });
     },
     hideModal() {
-      this.modalOpen = false
+      this.modalOpen = false;
     },
     copyPaymentUrl() {
-      this.$store.dispatch('account/copied')
+      this.$store.dispatch("account/copied");
       this.$clipboard(this.paymentUrl);
-    }
+    },
   },
   created() {
-    const strSet = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    const strLength = strSet.length
-    let generated = ''
-    for (let i=0; i<16; i++) {
-      generated += strSet[Math.floor(Math.random() * strLength)]
+    const strSet = "abcdefghijklmnopqrstuvwxyz0123456789";
+    const strLength = strSet.length;
+    let generated = "";
+    for (let i = 0; i < 16; i++) {
+      generated += strSet[Math.floor(Math.random() * strLength)];
     }
-    this.orderCode = `test-${generated}`
-  }
-}
+    this.orderCode = `test-${generated}`;
+  },
+};
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/style.scss';
+@import "@/assets/scss/style.scss";
 
 // Header
 .global-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom:var(--color_border);
+  border-bottom: var(--color_border);
   width: 100%;
   position: fixed;
   top: 0;
@@ -234,7 +270,7 @@ export default {
     .logo {
       height: 36px;
     }
-    .logo-sub{
+    .logo-sub {
       margin-top: 10px;
       margin-left: 16px;
       font-size: 14px;
@@ -247,7 +283,7 @@ export default {
     .logo {
       height: 29px;
     }
-    .logo-sub{
+    .logo-sub {
       display: none;
     }
   }
@@ -256,26 +292,25 @@ export default {
   }
 }
 
-
 // Content
-.payment_top{
+.payment_top {
   margin-bottom: 16px;
-  .logo{
-    .product_name{
+  .logo {
+    .product_name {
       font-size: 15px;
       margin-left: 16px;
-      font-weight: 100;
+      font-weight: 300;
     }
   }
 }
-.slash-bg{
+.slash-bg {
   width: 100%;
   min-height: 120vh;
   @include media(sp) {
     min-height: 140vh;
   }
   position: relative;
-  &::before{
+  &::before {
     content: "";
     background: url(/assets/images/slash-bg.png) no-repeat center center;
     width: 100%;
@@ -288,11 +323,11 @@ export default {
     }
   }
 }
-.payment{
+.payment {
   position: absolute;
   top: 60vh;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   box-shadow: var(--color_shadow);
   width: 100%;
   max-width: 36.1rem;
@@ -302,22 +337,22 @@ export default {
   @include media(sp) {
     top: calc(50% + 12rem);
   }
-  &::before{
+  &::before {
     content: "Slash.fi Web3 Payment ®︎";
     font-size: 11px;
     color: var(--color_font);
-    font-weight: 100;
+    font-weight: 300;
     position: absolute;
     bottom: -60px;
     left: 50%;
     transform: translate(-50%, 0);
-    opacity: .7;
+    opacity: 0.7;
   }
 }
-.payment_handleprice{
+.payment_handleprice {
   width: 100%;
-  .payment_desc{
-    p{
+  .payment_desc {
+    p {
       background: $gradation-pale;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -325,17 +360,18 @@ export default {
       display: inline;
     }
   }
-  .payment_receiptwrap{
+  .payment_receiptwrap {
     width: 100%;
   }
-  .payment_receipt{
-    p{
+  .payment_receipt {
+    p {
       font-size: 15px;
       font-weight: 400;
     }
-    &_form{
+    &_form {
       height: 56px;
-      input,select{
+      input,
+      select {
         width: 100%;
         height: 51px;
         padding: 0 16px;
@@ -344,15 +380,14 @@ export default {
       }
     }
   }
-  .btn{
+  .btn {
     position: relative;
   }
 }
 
-
 // Modal
 .modal-base {
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.6);
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -366,7 +401,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background:var(--color_bg);
+  background: var(--color_bg);
   @include media(pc) {
     &.--small {
       width: 470px;
@@ -400,7 +435,7 @@ export default {
     font-weight: 500;
   }
   &__desc {
-    font-weight: 100;
+    font-weight: 300;
   }
 }
 .close {
@@ -426,10 +461,47 @@ export default {
     padding: 16px 12px 48px;
   }
   .qr {
-    width: 100%;
-    text-align: center;
-    img {
-      border-radius: 8px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+    background: $gradation-light;
+    padding: 6px;
+    border-radius: 1rem;
+    overflow: hidden;
+    &_wrap {
+      background-color: #fff;
+      padding-bottom: 1rem;
+    }
+    &_item {
+      position: relative;
+      display: block;
+      @include media(pc) {
+        pointer-events: none;
+      }
+      img {
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+    }
+    .logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 20%;
+      height: auto;
+    }
+    .logo2 {
+      width: 38%;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      margin-top: -1rem;
+      position: relative;
+      z-index: 10;
     }
   }
   .url {
@@ -439,19 +511,19 @@ export default {
       height: 56px;
       padding-left: 10px;
       padding-right: 10px;
-      border: 1px solid #78668D;
+      border: 1px solid #78668d;
       border-radius: 8px;
       font-size: 17px;
     }
   }
   .copy {
-    color: #8E86AD;
+    color: #8e86ad;
     font-size: 17px;
     position: relative;
     display: inline-block;
     font-weight: 300;
     cursor: pointer;
-    &::after{
+    &::after {
       content: "";
       background: url(/assets/images/copy-address.svg) no-repeat center center;
       width: 20px;

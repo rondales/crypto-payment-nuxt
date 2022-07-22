@@ -52,7 +52,7 @@ export default {
     font-weight: 400;
     font-size: 16px;
   }
-  @for $i from 1 through 7 {
+  @for $i from 1 through 9 {
     &:nth-child(#{$i}){
       grid-area: item-#{$i};
     }

@@ -412,6 +412,8 @@ export default {
     transform: translate(-50%, -50%);
     background:#292536;
     @include media(pc) {
+      max-height: 90%;
+      overflow: auto;
       &.--small {
         width: 470px;
       }
@@ -421,8 +423,9 @@ export default {
     }
     @include media(sp) {
       width: calc(100vw - 32px);
+      max-height: 85%;
+      overflow: auto;
     }
-
   }
   .header {
     @include media(pc) {
