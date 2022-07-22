@@ -61,7 +61,9 @@ export default {
           getTokenUnit: getTokenUnit,
           convertFromWei: convertFromWei,
           viewMerchantReceiveAddress: viewMerchantReceiveAddress,
+          viewMerchantReceiveAddresses: viewMerchantReceiveAddresses,
           viewCashBackPercent: viewCashBackPercent,
+          viewCashBacks: viewCashBacks,
           isContractAddress: isContractAddress,
           updateMerchantReceiveAddress: updateMerchantReceiveAddress,
           updateCashbackPercent: updateCashbackPercent
@@ -537,6 +539,34 @@ const viewMerchantReceiveAddress = async function(web3, contractAbi, contractAdd
   return receiveAddress
 }
 
+const viewMerchantReceiveAddresses = async function (web3, contractAbi, contracts) {
+  let receiveAddresses = {}
+  for (let [chainId, contract] of Object.entries(contracts)) {
+    const contractAddress = contract.address;
+    if (contractAddress) {
+      const rpcUrl = NETWORKS[chainId].rpcUrl
+      web3.setProvider(rpcUrl)
+      let receiveAddress = {}
+      const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+      const result = await merchantContract.methods.viewReceiveAddress().call()
+      receiveAddress.isContract = result.isContract
+      if (result.isContract) {
+        receiveAddress.address = result.contractAddress
+      } else {
+        receiveAddress.address = result.walletAddress
+      }
+      const lastModifiedTime = new Date(result.lastModified * 1000)
+      receiveAddress.lastModified = lastModifiedTime.getDate()
+        + '/' + (lastModifiedTime.getMonth() + 1)
+        + '/' + lastModifiedTime.getFullYear()
+
+      receiveAddresses[chainId] = receiveAddress
+    }
+  }
+
+  return receiveAddresses
+}
+
 const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {
   let cashback = {}
   const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
@@ -554,6 +584,36 @@ const viewCashBackPercent = async function(web3, contractAbi, contractAddress) {
   
   return cashback
 }
+
+const viewCashBacks = async function (web3, contractAbi, contracts) {
+  let cashbacks = {}
+
+  for (let [chainId, contract] of Object.entries(contracts)) {
+    const contractAddress = contract.address;
+
+    if (contractAddress) {
+      const rpcUrl = NETWORKS[chainId].rpcUrl
+      web3.setProvider(rpcUrl)
+
+      let cashback = {}
+      const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+      const result = await merchantContract.methods.viewCashBackPercentWithTime().call()
+
+      cashback.rate = parseInt(result.cashBackPercent, 10) / 100
+      if (result.lastModified == 0) {
+        cashback.lastModified = 0
+      } else {
+        const lastModifiedTime = new Date(result.lastModified * 1000)
+        cashback.lastModified = lastModifiedTime.getDate()
+          + '/' + (lastModifiedTime.getMonth() + 1)
+          + '/' + lastModifiedTime.getFullYear()
+      }
+      cashbacks[chainId] = cashback
+    }
+  }
+  return cashbacks
+}
+
 const isContractAddress = async function(web3, address) {
   const code = await web3.eth.getCode(address)
   return code == '0x' ? false : true
