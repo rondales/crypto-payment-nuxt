@@ -99,10 +99,6 @@
             </div>
           </div>
           <div
-            v-if="isPublishedContract(chainId) && !isCurrentNetwork(chainId)"
-            class="manage-contents_separate-line mb-3"
-          ></div>
-          <div
             v-if="isPublishedContract(chainId)"
             class="manage-contents_address-wrap"
             :class="{
@@ -117,7 +113,7 @@
             </div>
           </div>
           <div
-            v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+            v-if="isPublishedContract(chainId)"
             class="manage-contents_separate-line mb-2"
           ></div>
           <div
