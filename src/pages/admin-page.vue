@@ -74,12 +74,22 @@ export default {
         this.$store.dispatch('account/update', accountData)
       })
     },
-    handleAccountsChanged() {
-      this.authentification(
-        this.$store.state.web3.provider,
-        false,
-        false
-      )
+    handleAccountsChanged(account) {
+      if(!account[0]) {
+        this.forceLogout()
+        return
+      }
+      const newAccAddress = account[0].toLowerCase()
+      if(this.account.address && newAccAddress != this.account.address.toLowerCase()) {
+        this.authentification(
+          this.$store.state.web3.provider,
+          false,
+          false
+        )
+      }
+    },
+    handleWalletDisconnect() {
+      this.forceLogout()
     },
     forceLogout() {
       this.$router.push({ path: '/admin' })
@@ -165,12 +175,8 @@ export default {
           : chainId
         this.handleChainChanged(chainId)
       })
-      this.web3.instance.currentProvider.on('accountsChanged', (account) => {
-        const newAccAddress = account[0].toLowerCase()
-        if(newAccAddress != this.account.address.toLowerCase()) {
-          this.handleAccountsChanged()
-        }
-      })
+      this.web3.instance.currentProvider.on('accountsChanged', this.handleAccountsChanged)
+      this.web3.instance.currentProvider.on('disconnect', this.handleWalletDisconnect)
     }
   },
   created() {
@@ -191,6 +197,10 @@ export default {
       this.web3.instance.currentProvider.removeListener(
         'accountsChanged',
         this.handleAccountsChanged
+      )
+      this.web3.instance.currentProvider.removeListener(
+        'disconnect',
+        this.handleWalletDisconnect
       )
     }
   }
