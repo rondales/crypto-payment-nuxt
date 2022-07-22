@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <component :is="userWithImage.img" />
+    <component :is="IconArry.img" />
   </div>
 </template>
 
@@ -15,15 +15,13 @@ export default {
       default: "text",
     },
   },
-  mounted(){
-  },
   computed: {
     classes() {
       let array = { svg: true };
       array["color__" + this.color] = true;
       return array;
     },
-  userWithImage () {
+  IconArry () {
     return {
       ...this.path, 
       img: this.path && require(`@/assets/images/icon/${this.path}.svg?component`)
@@ -31,6 +29,7 @@ export default {
   }
   },
   created() {},
+  mounted(){},
   components: {},
 };
 </script>
