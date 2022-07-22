@@ -581,6 +581,7 @@ export default {
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;

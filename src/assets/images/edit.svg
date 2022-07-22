@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="19.63" height="19.629" viewBox="0 0 19.63 19.629">
-  <g id="pen_1_" data-name="pen (1)" transform="translate(0 -0.005)">
-    <path id="パス_59330" data-name="パス 59330" d="M73.936,4.072,69.869,0,58.145,11.73l-1.674,5.74,5.74-1.674Zm-14.467,7.96,8.3-8.3,2.44,2.44-8.3,8.3Zm12.84-7.96L71.02,5.361l-2.44-2.44,1.289-1.289ZM58.936,13.125l1.88,1.88-2.653.774Z" transform="translate(-54.306 0)" fill="#fff"/>
-    <path id="パス_59331" data-name="パス 59331" d="M0,482H19.63v1.15H0Z" transform="translate(0 -463.514)" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="13.616" height="13.616" viewBox="0 0 13.616 13.616">
+  <g id="pen_1_" data-name="pen (1)" transform="translate(0 0)">
+    <path id="パス_59330" data-name="パス 59330" d="M68.585,2.826,65.765,0,57.632,8.138,56.471,12.12l3.982-1.161ZM58.55,8.348l5.756-5.756L66,4.284,60.243,10.04Zm8.907-5.522-.894.894L64.87,2.028l.894-.894Zm-9.276,6.28,1.3,1.3-1.84.537Z" transform="translate(-54.969 -0.005)" fill="#fff"/>
+    <path id="パス_59331" data-name="パス 59331" d="M0,482H13.616v.8H0Z" transform="translate(0 -469.18)" fill="#fff"/>
   </g>
 </svg>
