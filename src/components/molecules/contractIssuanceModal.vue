@@ -221,6 +221,7 @@ import MerchantContract from "@/contracts/merchant";
 import PaymentModal from "@/components/organisms/Payment/Modal";
 import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: "contractIssuanceModal",
   data() {
@@ -239,6 +240,7 @@ export default {
     PaymentText,
     PaymentButton,
     PaymentModal,
+    PaymentTransaction
   },
   computed: {
     classes() {

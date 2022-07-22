@@ -187,6 +187,17 @@ if (
   })
 }
 
+if (
+  process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development'
+) {
+  router.addRoute({
+    name: "debug",
+    path: "/debug",
+    component: () => import("@/pages/debug"),
+    meta: { title: 'Slash Payment' },
+  })
+}
+
 const DEFAULT_TITLE = 'Slash'
 
 router.afterEach((to) => {

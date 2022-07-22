@@ -156,10 +156,10 @@ export default {
       exchangeMarginRate: null,
       exchangeTimer: null,
       receiveTokenIcons: {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        USDT: "usdt",
+        USDC: "usdc",
+        DAI: "dai",
+        JPYC: "jpyc",
       },
     };
   },

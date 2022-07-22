@@ -43,6 +43,10 @@ export default {
       type: String,
       default: "s",
     },
+    tag: {
+      type: [String, Number],
+      default: "",
+    },
   },
   data() {
     return {

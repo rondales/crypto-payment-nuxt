@@ -34,6 +34,10 @@ export default {
       type: String,
       default: "",
     },
+    url: {
+      type: String,
+      default: "",
+    }
   },
   data() {
     return {};

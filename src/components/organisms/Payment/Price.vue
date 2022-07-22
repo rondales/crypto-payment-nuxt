@@ -29,7 +29,7 @@ export default {
       default: "",
     },
     price: {
-      type: String,
+      type: [String, Number],
       default: "0",
     },
     status: {

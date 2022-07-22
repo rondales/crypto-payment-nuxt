@@ -42,7 +42,7 @@
         >
           <!-- TODO iconのpathをiconフォルダのファイル名に変更 -->
           <PaymentAmountBilled
-            :icon="token.iconPath"
+            :icon="token.path"
             :symbol="token.symbol"
             :symboltext="token.name"
             :price="token.balance | balanceFormat"
@@ -85,7 +85,7 @@
             <!-- TODO iconのpathをiconフォルダのファイル名に変更 -->
             <PaymentAction
               class="tokentab__tokenlist__items"
-              :icon="token.iconPath"
+              :icon="token.path"
               :text="token.symbol"
               :link="token.url"
             >
@@ -349,7 +349,7 @@ export default {
       //   return require("@/assets/images/network/unknown-l.svg");
       // }
       if (this.chainId && this.isAvailableCurrentNetwork) {
-        return NETWORKS[this.chainId].iconPath;
+        return NETWORKS[this.chainId].path;
       } else {
         return "network-unknown";
       }
@@ -379,7 +379,7 @@ export default {
       //   ? tokens[this.merchantReceiveTokenSymbol].icon
       //   : require("@/assets/images/symbol/unknown.svg");
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].iconPath
+        ? tokens[this.merchantReceiveTokenSymbol].path
         : "network-unknown";
     },
     isEmptyWeb3Instance() {

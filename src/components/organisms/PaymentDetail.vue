@@ -401,7 +401,7 @@ export default {
     merchantReceiveTokenIcon() {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].icon
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
         : require("@/assets/images/symbol/unknown.svg");
     },
     userSelectedToken() {
@@ -419,7 +419,7 @@ export default {
     userSelectedTokenIcon() {
       const tokens = this.defaultPaymentTokens;
       return this.userSelectedTokenSymbol in tokens
-        ? tokens[this.userSelectedTokenSymbol].icon
+        ? tokens[this.userSelectedTokenSymbol].iconPath
         : require("@/assets/images/symbol/unknown.svg");
     },
     userSelectedTokenExchangeRate() {

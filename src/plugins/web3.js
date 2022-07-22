@@ -162,14 +162,14 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
         walletAddress,
         tokenContract
       )
-
       return {
         name: defaultToken.name,
         symbol: defaultToken.symbol,
         decimal: decimal,
         address: defaultToken.address,
         balance: balance,
-        icon: defaultToken.icon
+        icon: defaultToken.icon,
+        path: defaultToken.iconPath
       }
     })
   )
@@ -189,7 +189,8 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     decimal: decimal,
     balance: balance,
     address: contractAddress,
-    icon: require('@/assets/images/symbol/unknown.svg')
+    icon: require('@/assets/images/symbol/unknown.svg'),
+    path: require('@/assets/images/symbol/unknown.svg')
   }
 }
 
@@ -207,7 +208,8 @@ const importToken = async function(web3, contractAddress, walletAddress) {
     name: name,
     symbol: symbol,
     balance: balance,
-    icon: require('@/assets/images/symbol/unknown.svg')
+    icon: require('@/assets/images/symbol/unknown.svg'),
+    path: require('@/assets/images/symbol/unknown.svg')
   }
 }
 

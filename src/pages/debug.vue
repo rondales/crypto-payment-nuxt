@@ -236,13 +236,32 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .style {
-  // display: none;
+    width: 35rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 8px 2rem rgba(139, 42, 225, 0.7),
+      0px -8px 2rem rgba(62, 185, 252, 0.7);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    // box-shadow: rgba(139, 42, 225, 0.4) 5px 5px,
+    //   rgba(139, 42, 225, 0.3) 10px 10px, rgba(139, 42, 225, 0.2) 15px 15px,
+    //   rgba(139, 42, 225, 0.1) 20px 20px, rgba(139, 42, 225, 0.05) 25px 25px;
+    box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
+      rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
+    @include media(sp) {
+      width: 90%;
+      width: 100%;
+      box-shadow: none;
+      // border: 0px solid #eee;
+    }
   padding: 5rem 0;
   & > * {
     margin-bottom: 3rem;
   }
 
   .d-payboxwrap {
+    padding: 2rem;
   }
   .color {
     display: grid;
