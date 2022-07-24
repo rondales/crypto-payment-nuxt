@@ -1,24 +1,27 @@
 <template>
-  <div>
-    <p class="d-todo">{{ $options.name }}</p>
+  <div :class="classes">
     <PaymentTitle
+      class="amount__title"
       type="h3_g"
       html="Enter the payment amount"
       emoji="&#128591;"
       layout="c"
     />
-    <PaymentTitle type="h3" html="How much would you pay?" layout="c" />
-    <PaymentForm>
+    <PaymentTitle
+      class="amount__subtitle"
+      type="h3"
+      html="How much would you pay?"
+      layout="c"
+    />
+    <PaymentForm class="amount__form">
       <input
         v-model="legalCurrencyAmount"
         class="price"
         type="text"
         placeholder="0"
       />
-      <div class="add-flex currency a-center">
-        <figure>
-          <img :src="selectedCurrencyIcon" />
-        </figure>
+      <div class="selectwrap">
+        <PaymentIcon :path="selectedCurrencyIcon" />
         <select name="currency" v-model="selectedCurrency">
           <option
             v-for="(currency, key) in currencies"
@@ -31,33 +34,43 @@
       </div>
     </PaymentForm>
     <PaymentAmountBilled
+      class="amount__bill"
       :symbol="receiveTokenSymbol"
       :icon="receiveTokenIcon"
       :price="exchangedAmount"
       :priceClass="{ inactive: requireUpdateExchange }"
     />
-    <PaymentTitle
-      v-if="!requireUpdateExchange"
-      type="h3"
-      html="Payment with Web3 Wallet"
-      layout="c"
-    />
-    <PaymentAction
-      v-if="requireUpdateExchange"
-      icon="warning"
-      text="Price Updated"
-      @click.native="updateExchangeData()"
-    >
-      Accept
-    </PaymentAction>
+    <div class="amount__pay">
+      <PaymentTitle
+        class="amount__pay__title"
+        v-if="!requireUpdateExchange"
+        type="h3"
+        html="Payment with Web3 Wallet"
+        layout="c"
+      />
+      <PaymentAction
+        class="amount__pay__action"
+        v-if="requireUpdateExchange"
+        icon="warning"
+        text="Price Updated"
+      >
+        <PaymentButton
+          text="Accept"
+          size="s"
+          @click.native="updateExchangeData()"
+        />
+      </PaymentAction>
 
-    <PaymentButton
-      size="l"
-      text="Go Payment"
-      icon="logo-icon"
-      :loading="loading"
-      @click.native="next"
-    />
+      <PaymentButton
+        class="amount__pay__button"
+        size="l"
+        text="Go Payment"
+        icon="logo-icon"
+        :loading="loading"
+        @click.native="next"
+      />
+      <PaymentVia />
+    </div>
     <!-- <div class="payment_handleprice">
       <p class="todotitle">PaymentAmount</p>
       <div class="payment_desc mb-3 mt-3">
@@ -139,6 +152,8 @@ import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentForm from "@/components/organisms/Payment/Form";
 import PaymentButton from "@/components/organisms/Payment/Button";
 import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentVia from "@/components/organisms/Payment/Via";
+import PaymentIcon from "@/components/organisms/Payment/Icon";
 import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
@@ -147,7 +162,7 @@ export default {
   name: "PaymentAmount",
   props: {
     progressTotalSteps: Number,
-    progressCompletedSteps: Number
+    progressCompletedSteps: Number,
   },
   data() {
     return {
@@ -173,6 +188,8 @@ export default {
     PaymentTitle,
     PaymentForm,
     PaymentAction,
+    PaymentVia,
+    PaymentIcon,
   },
   watch: {
     legalCurrencyAmount: function () {
@@ -204,7 +221,13 @@ export default {
       return CURRENCIES[this.selectedCurrency].name;
     },
     selectedCurrencyIcon() {
-      return CURRENCIES[this.selectedCurrency].icon;
+      return CURRENCIES[this.selectedCurrency].iconPath;
+      // return CURRENCIES[this.selectedCurrency].icon;
+    },
+    classes() {
+      let array = { amount: true };
+      // array[this.type] = true;
+      return array;
     },
   },
   methods: {
@@ -229,10 +252,10 @@ export default {
             this.requireUpdateExchange = true;
             clearTimeout(this.exchangeTimer);
           }, 120000);
-          this.$emit('incrementProgressCompletedSteps')
+          this.$emit("incrementProgressCompletedSteps");
           setTimeout(() => {
-            this.$emit('updateInitializingStatus', false)
-          }, 1500)
+            this.$emit("updateInitializingStatus", false);
+          }, 1500);
         })
         .catch((error) => {
           let message;
@@ -306,6 +329,41 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+.amount {
+  &__title {
+    margin-bottom: 2rem;
+  }
+  &__subtitle {
+    margin-bottom: 0.5rem;
+  }
+  &__form {
+    margin-bottom: 2rem;
+    .selectwrap {
+      @include flex(flex-start, center);
+      width: auto;
+      padding-left: 1rem;
+      border-left: 1px solid var(--Border);
+      .svg {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+    }
+  }
+  &__bill {
+    margin-bottom: 4rem;
+  }
+  &__pay {
+    &__title {
+      margin-bottom: 2rem;
+    }
+    &__action {
+      margin-bottom: 1rem;
+    }
+    &__button {
+      margin: 1rem;
+    }
+  }
+}
 // .payment_handleprice {
 //   width: 100%;
 

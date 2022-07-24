@@ -6,8 +6,12 @@
         <dt><PaymentText type="cap" :html="item.title" /></dt>
         <dd>
           <PaymentText type="cap" :html="item.text" />
-          <!-- TODO Payeeの時表示するか確認？ -->
-          <!-- <img v-if="isVerifiedDomain" :src="domainVerifiedIcon" /> -->
+          {{ item.verified }}
+          <PaymentIcon
+            v-if="item.verified"
+            class="verified"
+            path="domain-verified"
+          />
         </dd>
       </dl>
     </div>
@@ -26,6 +30,9 @@ export default {
   props: {
     table: {
       type: Array,
+    },
+    isVerifiedDomain: {
+      type: Boolean,
     },
   },
   data() {
@@ -80,6 +87,14 @@ export default {
   dd {
     // width: 10rem;
     width: auto;
+    display: inline-flex;
+    align-items: center;
+    .verified {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      margin-left: 0.5rem;
+    }
   }
 }
 </style>

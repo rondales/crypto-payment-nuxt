@@ -275,7 +275,7 @@ export default {
     }
     &_cancel {
       background-color: transparent;
-      border: var(--color_border);
+      border: 1px solid var(--Border);
       &::v-deep {
         .svg {
           svg {
@@ -289,13 +289,13 @@ export default {
     }
     &_inactive {
       cursor: not-allowed;
-      border: 1px solid var(--color_inactive);
-      background-color: var(--color_inactive);
+      border: 1px solid var(--Button3);
+      background-color: var(--Button3);
       &::v-deep {
         .svg {
           opacity: 0.6;
           svg {
-            fill: var(--color_font);
+            fill: var(--SubText);
           }
         }
         span {
@@ -304,8 +304,8 @@ export default {
       }
     }
     &_danger {
-      background-color: #fc7b7b;
-      border: 1px solid #fc7b7b;
+      background-color: var(--Alert);
+      border: 1px solid var(--Alert);
       &::v-deep {
         .svg {
           svg {
@@ -317,14 +317,14 @@ export default {
         color: #fff;
       }
       &:hover {
-        background-color: rgba(#fc7b7b, 0.6);
+        background-color: rgba(var(--Alert), 0.6);
       }
     }
     &_icon {
       &::v-deep {
         .svg {
           svg {
-            fill: var(--color_font);
+            fill: var(--Text);
           }
         }
       }

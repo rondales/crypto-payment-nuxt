@@ -21,15 +21,17 @@ export default {
       array["color__" + this.color] = true;
       return array;
     },
-  IconArry () {
-    return {
-      ...this.path, 
-      img: this.path && require(`@/assets/images/icon/${this.path}.svg?component`)
-    }
-  }
+    IconArry() {
+      return {
+        ...this.path,
+        img:
+          this.path &&
+          require(`@/assets/images/icon/${this.path}.svg?component`),
+      };
+    },
   },
   created() {},
-  mounted(){},
+  mounted() {},
   components: {},
 };
 </script>
@@ -45,20 +47,6 @@ export default {
         fill: var(--color_font);
       }
     }
-  }
-
-  &::before {
-    // iconの真ん中合わせ用
-    // content: "";
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    transform-origin: center center;
-    transform: translate3d(-50%, -50%, 0) rotate(0deg) scale(1, 1);
-    top: 50%;
-    left: 50%;
-    border-radius: 100%;
   }
 }
 svg {

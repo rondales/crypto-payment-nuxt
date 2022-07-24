@@ -106,7 +106,11 @@ export default {
       progressTotalSteps: 20,
       progressCompletedSteps: 0,
       idTable: [
-        { title: "Payee", text: this.receiver },
+        {
+          title: "Payee",
+          text: this.receiver,
+          verified: this.isVerifiedDomain,
+        },
         { title: "Invoice ID", text: this.invoiceId },
       ],
       navList: [

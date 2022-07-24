@@ -1,58 +1,125 @@
 <template>
   <div class="style">
-    <div class="d-payboxwrap">
-      <PaymentButton
-        v-for="(m, index) in modalList"
-        :key="index"
-        :text="m.name"
-        size="s"
-        :color="m.doneStatus ? 'primary' : 'cancel'"
-        @click.native="showModal(m.name)"
-      />
-      <PaymentTitle type="h3" html="Color Valiation" layout="c" />
-      <ul class="color">
-        <li v-for="n in 10" :key="n"></li>
-      </ul>
-      <PaymentIcon class="icon" path="logo-icon" />
-      <PaymentTitle type="h2_g" html="Your Balance" icon="reload" />
+    <div class="amount">
       <PaymentTitle
-        type="h3_g"
-        html="Do you want a receipt?"
-        emoji="&#x1F9FE;"
-        layout="c"
-      />
-      <PaymentTitle
+        class="amount__title"
         type="h3_g"
         html="Enter the payment amount"
         emoji="&#128591;"
         layout="c"
       />
-      <PaymentTitle type="h2" html="Waiting for Confimation" layout="c" />
-      <PaymentTitle type="h3" html="Payment with Web3 Wallet" layout="c" />
-      <PaymentText type="h2b" html="Payment with Web3 Wallet" />
-      <PaymentText type="h2" html="Payment with Web3 Wallet" />
-      <PaymentText type="h3b" html="Payment with Web3 Wallet" />
-      <PaymentText type="h3" html="Payment with Web3 Wallet" />
-      <PaymentText type="h4b" html="Payment with Web3 Wallet" />
-      <PaymentText type="h4" html="Payment with Web3 Wallet" />
-      <PaymentText type="h5" html="Payment with Web3 Wallet" />
-      <PaymentText
-        tag="p"
-        type="p"
-        html="Select the network and currency you wish to pay for.  If the currency you want is not on the list, you can import it by contract address 👍"
+      <PaymentTitle
+        class="amount__subtitle"
+        type="h4"
+        html="How much would you pay?"
+        layout=""
       />
-      <PaymentText
-        tag="p"
-        type="cap"
-        html="Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert."
+      <PaymentForm class="amount__form">
+        <input
+          v-model="legalCurrencyAmount"
+          class="price"
+          type="text"
+          placeholder="0"
+        />
+        <div class="selectwrap">
+          <PaymentIcon path="token-usdt" />
+          <select name="currency" v-model="selectedCurrency">
+            <option
+              v-for="(currency, key) in currencies"
+              :value="currency.name"
+              :key="key"
+            >
+              {{ currency.name }}
+            </option>
+          </select>
+        </div>
+      </PaymentForm>
+      <PaymentAmountBilled
+        class="amount__bill"
+        :symbol="receiveTokenSymbol"
+        icon="token-usdt"
+        :price="exchangedAmount"
+        :priceClass="{ inactive: requireUpdateExchange }"
+        size="big"
       />
-      <PaymentText
-        tag="p"
-        type="p"
-        color="red"
-        html="balance is insufficient  for this transaction."
-      />
+      <div class="amount__pay">
+        <PaymentTitle
+          class="amount__pay__title"
+          type="h3"
+          html="Payment with Web3 Wallet"
+          layout="c"
+        />
+        <PaymentAction
+          class="amount__pay__action"
+          icon="warning"
+          text="Price Updated"
+        >
+          <PaymentButton text="Accept" size="s" @click.native="test" />
+        </PaymentAction>
+
+        <PaymentButton
+          class="amount__pay__button"
+          size="l"
+          text="Go Payment"
+          icon="logo-icon"
+          :loading="loading"
+          @click.native="test"
+        />
+        <PaymentVia />
+      </div>
     </div>
+
+    <PaymentButton
+      v-for="(m, index) in modalList"
+      :key="index"
+      :text="m.name"
+      size="s"
+      :color="m.doneStatus ? 'primary' : 'cancel'"
+      @click.native="showModal(m.name)"
+    />
+    <PaymentTitle type="h3" html="Color Valiation" layout="c" />
+    <ul class="color">
+      <li v-for="n in 10" :key="n"></li>
+    </ul>
+    <PaymentIcon class="icon" path="logo-icon" />
+    <PaymentTitle type="h2_g" html="Your Balance" icon="reload" />
+    <PaymentTitle
+      type="h3_g"
+      html="Do you want a receipt?"
+      emoji="&#x1F9FE;"
+      layout="c"
+    />
+    <PaymentTitle
+      type="h3_g"
+      html="Enter the payment amount"
+      emoji="&#128591;"
+      layout="c"
+    />
+    <PaymentTitle type="h2" html="Waiting for Confimation" layout="c" />
+    <PaymentTitle type="h3" html="Payment with Web3 Wallet" layout="c" />
+    <PaymentText type="h2b" html="Payment with Web3 Wallet" />
+    <PaymentText type="h2" html="Payment with Web3 Wallet" />
+    <PaymentText type="h3b" html="Payment with Web3 Wallet" />
+    <PaymentText type="h3" html="Payment with Web3 Wallet" />
+    <PaymentText type="h4b" html="Payment with Web3 Wallet" />
+    <PaymentText type="h4" html="Payment with Web3 Wallet" />
+    <PaymentText type="h5" html="Payment with Web3 Wallet" />
+    <PaymentText
+      tag="p"
+      type="p"
+      html="Select the network and currency you wish to pay for.  If the currency you want is not on the list, you can import it by contract address 👍"
+    />
+    <PaymentText
+      tag="p"
+      type="cap"
+      html="Output is estimated. You will receive at least 1001.00 USDT or the transaction will revert."
+    />
+    <PaymentText
+      tag="p"
+      type="p"
+      color="red"
+      html="balance is insufficient  for this transaction."
+    />
 
     <PaymentAmountBilled symbol="USDT" icon="usdt" price="1000.00" />
     <PaymentAmountBilled
@@ -134,69 +201,68 @@
     />
 
     <!-- <PaymentIdTable /> -->
-    <div class="d-payboxwrap">
-      <PaymentForm error="Enter valid token address">
-        <input type="text" placeholder="000000000" />
-      </PaymentForm>
-      <PaymentSelectToken />
-      <PaymentToken symbol="USDT" icon="usdt" />
-      <PaymentAction icon="network-ethereum" text="Ethereum Main net" />
-      <PaymentAction icon="network-matic" text="Matic Main net" />
-      <PaymentAction icon="network-avalanche" text="Avalanche Main net" />
-      <PaymentAction icon="network-unknown" text="Unknown Main net" />
-      <PaymentTab
-        status="1"
-        @changeToList="switchTab('list')"
-        @changeToToken="switchTab('token')"
-      ></PaymentTab>
 
-      <PaymentNav :list="['Lists', 'Tokens']" :active="0" />
-      <div class="button">
-        <div class="pay__btnwrap">
-          <PaymentButton text="Confirm Wallet" color="inactive" />
-        </div>
-        <div class="pay__btnwrap">
-          <PaymentButton text="Confirm Pay" />
-        </div>
-        <div class="pay__btnwrap">
-          <PaymentButton text="Button Text" />
-          <PaymentButton color="cancel" text="Button Text" />
-        </div>
-        <PaymentButton size="l" text="MetaMask" icon="wallet-metamask" />
-        <PaymentButton
-          size="l"
-          text="MetaMask"
-          subtext="Easy-to-use Browser extension"
-          icon="wallet-metamask"
-          layout="wallet"
-        />
-        <PaymentButton
-          size="l"
-          text="WalletConnect"
-          icon="wallet-walletconnect"
-        />
-        <PaymentButton size="l" text="Go Payment" icon="logo-icon" />
+    <PaymentForm error="Enter valid token address">
+      <input type="text" placeholder="000000000" />
+    </PaymentForm>
+    <PaymentSelectToken />
+    <PaymentToken symbol="USDT" icon="usdt" />
+    <PaymentAction icon="network-ethereum" text="Ethereum Main net" />
+    <PaymentAction icon="network-matic" text="Matic Main net" />
+    <PaymentAction icon="network-avalanche" text="Avalanche Main net" />
+    <PaymentAction icon="network-unknown" text="Unknown Main net" />
+    <PaymentTab
+      status="1"
+      @changeToList="switchTab('list')"
+      @changeToToken="switchTab('token')"
+    ></PaymentTab>
 
-        <PaymentButton size="l" text="Button Text" />
-        <PaymentButton text="Button Text" />
-        <PaymentButton
-          text="Binance Smart Chain Mainnet"
-          icon="usdt"
-          layout="left"
-        />
-        <PaymentButton size="icon" color="icon" icon="usdt" />
-        <PaymentButton size="s" icon="light" text="aaaaaa" />
-        <PaymentButton
-          size="s"
-          color="secondary"
-          icon="light"
-          text="aaaaaa"
-          layout="reverse"
-        />
-        <PaymentButton size="s" color="cancel" icon="light" text="aaaaaa" />
-        <PaymentButton size="s" color="inactive" icon="light" text="aaaaaa" />
-        <PaymentButton size="s" color="danger" icon="light" text="aaaaaa" />
+    <PaymentNav :list="['Lists', 'Tokens']" :active="0" />
+    <div class="button">
+      <div class="pay__btnwrap">
+        <PaymentButton text="Confirm Wallet" color="inactive" />
       </div>
+      <div class="pay__btnwrap">
+        <PaymentButton text="Confirm Pay" />
+      </div>
+      <div class="pay__btnwrap">
+        <PaymentButton text="Button Text" />
+        <PaymentButton color="cancel" text="Button Text" />
+      </div>
+      <PaymentButton size="l" text="MetaMask" icon="wallet-metamask" />
+      <PaymentButton
+        size="l"
+        text="MetaMask"
+        subtext="Easy-to-use Browser extension"
+        icon="wallet-metamask"
+        layout="wallet"
+      />
+      <PaymentButton
+        size="l"
+        text="WalletConnect"
+        icon="wallet-walletconnect"
+      />
+      <PaymentButton size="l" text="Go Payment" icon="logo-icon" />
+
+      <PaymentButton size="l" text="Button Text" />
+      <PaymentButton text="Button Text" />
+      <PaymentButton
+        text="Binance Smart Chain Mainnet"
+        icon="usdt"
+        layout="left"
+      />
+      <PaymentButton size="icon" color="icon" icon="usdt" />
+      <PaymentButton size="s" icon="light" text="aaaaaa" />
+      <PaymentButton
+        size="s"
+        color="secondary"
+        icon="light"
+        text="aaaaaa"
+        layout="reverse"
+      />
+      <PaymentButton size="s" color="cancel" icon="light" text="aaaaaa" />
+      <PaymentButton size="s" color="inactive" icon="light" text="aaaaaa" />
+      <PaymentButton size="s" color="danger" icon="light" text="aaaaaa" />
     </div>
   </div>
 </template>
@@ -217,7 +283,7 @@ import PaymentSelectToken from "@/components/organisms/Payment/SelectToken";
 import PaymentAction from "@/components/organisms/Payment/Action";
 import PaymentTab from "@/components/organisms/Payment/Tab";
 import PaymentNav from "@/components/organisms/Payment/Nav";
-
+import { CURRENCIES } from "@/constants";
 export default {
   name: "PaymentIndex",
   components: {
@@ -269,7 +335,19 @@ export default {
       ],
     };
   },
-  computed: {},
+  computed: {
+    currencies() {
+      let list = {};
+      Object.entries(this.$store.state.payment.allowCurrencies).forEach(
+        ([key, value]) => {
+          if (value) {
+            list[key] = CURRENCIES[key];
+          }
+        }
+      );
+      return list;
+    },
+  },
   methods: {
     switchTab(tab) {
       console.log("aaaa");
@@ -284,6 +362,9 @@ export default {
         },
       });
     },
+    test() {
+      alert("aaaaaaa");
+    },
   },
   mounted() {},
   beforeDestroy() {},
@@ -293,8 +374,45 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+
+.amount {
+  &__title {
+    margin-bottom: 2rem;
+  }
+  &__subtitle {
+    margin-bottom: 0.5rem;
+  }
+  &__form {
+    margin-bottom: 2rem;
+    .selectwrap {
+      @include flex(flex-start, center);
+      width: auto;
+      padding-left: 1rem;
+      border-left: 1px solid var(--Border);
+      .svg {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+    }
+  }
+  &__bill {
+    margin-bottom: 4rem;
+  }
+  &__pay {
+    &__title {
+      margin-bottom: 2rem;
+    }
+    &__action {
+      margin-bottom: 1rem;
+    }
+    &__button {
+      margin: 1rem;
+    }
+  }
+}
 .style {
   width: 35rem;
+  margin: 5rem auto;
   margin-left: auto;
   margin-right: auto;
   border-radius: 1rem;
@@ -313,7 +431,10 @@ export default {
     box-shadow: none;
     // border: 0px solid #eee;
   }
-  padding: 5rem 0;
+  padding: 5rem 2rem;
+  @include media(sp) {
+    padding: 5rem 5vw;
+  }
   & > * {
     margin-bottom: 3rem;
   }
@@ -324,9 +445,7 @@ export default {
   &__title {
     margin-bottom: 2rem;
   }
-  .d-payboxwrap {
-    padding: 2rem;
-  }
+
   .color {
     display: grid;
     grid-template-columns: repeat(5, 1fr);

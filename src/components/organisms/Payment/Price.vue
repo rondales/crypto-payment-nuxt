@@ -66,7 +66,6 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .priceBox {
-  // background-color: var(--color_bg_parts);
   border: 1px solid var(--Border);
   padding: 1.5rem;
   border-radius: 1rem;

@@ -141,11 +141,11 @@ export default {
       a {
         margin-top: 0.5rem;
         display: inline-block;
-        color: #5492f5;
+        color: var(--Textlink);
         text-decoration: underline;
         &::v-deep {
           span {
-            color: #5492f5;
+            color: var(--Textlink);
           }
         }
       }

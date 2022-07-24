@@ -237,11 +237,11 @@ export default {
     margin-top: 0;
   }
   a {
-    color: #5492f5;
+    color: var(--Textlink);
     text-decoration: underline;
     &::v-deep {
       span {
-        color: #5492f5;
+        color: var(--Textlink);
       }
     }
   }

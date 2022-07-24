@@ -48,7 +48,7 @@ export default {
 .form {
   $formh: 2rem;
   &__wrap {
-    border: var(--color_border);
+    border: 1px solid var(--Border);
     border-radius: 6px;
     @include flex(flex-start, center);
     padding: 0.8rem;
@@ -60,10 +60,9 @@ export default {
         flex: 1;
       }
       select {
-        width: 8rem;
+        width: 5rem;
         text-align: center;
         padding: 0rem 0.5rem;
-        border-left: var(--color_border);
         @include font(1rem, 600, $ls, $formh, $en_go);
       }
     }

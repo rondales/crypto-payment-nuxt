@@ -894,7 +894,7 @@ export default {
     font-weight: 200;
   }
   a.document-link {
-    color: #5492f5;
+    color: var(--Textlink);
     font-size: 1.2rem;
     font-weight: 200;
   }

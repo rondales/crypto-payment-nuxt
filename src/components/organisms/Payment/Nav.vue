@@ -1,5 +1,6 @@
 <template>
   <div :class="classes">
+    <!-- 未使用のため、削除予定 -->
     <div><PaymentIcon path="left-arrow" /></div>
     <PaymentText tag="p" type="h1b" color="g" html="INVOICE" />
     <div><PaymentIcon path="cancel" /></div>

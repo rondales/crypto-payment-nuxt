@@ -122,6 +122,7 @@ $sp-screen-size: 768px;
   --SubText: rgba(255, 255, 255, 0.6);
   --Base: #161421;
   --Base2: #292536;
+  --Base2: #1d1a28;
   --Base3: #484150;
   --Border: #58466e;
   --Success: #44d866;
@@ -129,6 +130,7 @@ $sp-screen-size: 768px;
   // --Button1: $gradation-pale;
   --Button2: #6a68ed;
   --Button3: rgba(255, 255, 255, 0.6);
+  --Textlink: #5492f5;
 }
 .main {
   &.theme--light {
@@ -136,6 +138,7 @@ $sp-screen-size: 768px;
     --SubText: rgba(41, 37, 54, 0.6);
     --Base: #ffffff;
     --Base2: #bdc2c4;
+    --Base2: #dfe3e5;
     --Base3: #efefef;
     --Border: #58466e;
     // --Success: #eee;

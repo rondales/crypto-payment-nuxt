@@ -364,7 +364,7 @@ export default {
     display: none;
   }
   a {
-    color: #5492f5;
+    color: var(--Textlink);
     text-decoration: underline;
   }
   a::after {
