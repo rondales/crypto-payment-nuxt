@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- TODO 確認の仕方 -->
+    <!-- TODO 大野さんへ：画面の確認方法がわかりませんでした・・ -->
     <PaymentAmountBilled class="bill" size="big" />
     <PaymentEmail
       @noRequireReceipt="next"

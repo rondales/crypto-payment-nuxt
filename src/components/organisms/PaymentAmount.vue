@@ -1,5 +1,6 @@
 <template>
   <div :class="classes">
+    <!-- TODO 大野さんへ：画面の確認方法がわかりませんでした・・ -->
     <PaymentTitle
       class="amount__title"
       type="h3_g"
