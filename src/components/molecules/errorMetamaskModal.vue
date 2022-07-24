@@ -4,8 +4,6 @@
       title="Select a Wallet"
       text="Error connecting. <br />Try Again"
     >
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <PaymentButton
         size="l"
         text="MetaMask"

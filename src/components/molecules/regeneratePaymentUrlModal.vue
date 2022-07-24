@@ -1,7 +1,6 @@
 <template>
   <div>
     <PaymentModal title="Regenerate URL" emoji="&#x1F501;">
-      <p class="d-todo">{{ $options.name }}</p>
       <div v-if="!isPaymentUrlRefreshed">
         <PaymentText
           tag="p"

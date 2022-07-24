@@ -137,6 +137,19 @@ export default {
     @include media(sp) {
       margin-top: 1rem;
     }
+    &::v-deep {
+      a {
+        margin-top: 0.5rem;
+        display: inline-block;
+        color: #5492f5;
+        text-decoration: underline;
+        &::v-deep {
+          span {
+            color: #5492f5;
+          }
+        }
+      }
+    }
   }
   &__body {
     // margin-top: 2rem;

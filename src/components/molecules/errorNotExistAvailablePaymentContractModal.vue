@@ -1,11 +1,10 @@
 <template>
   <div>
-    <PaymentModal title="Error" emoji="&#x1F501;">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
-      <PaymentText
-        html="This payment cannot be continued due to merchant's circumstances.<br />Please contact the merchant for details."
-      />
+    <PaymentModal
+      title="Error"
+      emoji="&#x1F501;"
+      text="This payment cannot be continued due to merchant's circumstances.<br />Please contact the merchant for details."
+    >
       <PaymentButton :url="returnUrl" text="Back to Merchant" size="m" />
     </PaymentModal>
     <!-- <div :class="classes">
@@ -26,12 +25,12 @@
 
 <script>
 import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "errorNotExistAvailablePaymentContractModal",
   components: {
-    PaymentText,
+    // PaymentText,
     PaymentButton,
     PaymentModal,
   },

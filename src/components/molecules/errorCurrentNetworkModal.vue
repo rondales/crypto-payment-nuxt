@@ -4,7 +4,6 @@
       title="Network Error"
       text="The network currently selected for your wallet is not supported.<br />Please operate the your wallet and change to the supported network."
     >
-      <!-- TODO 確認の仕方 -->
       <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <PaymentText type="h4g" html="Supported Networks" />
       <ul class="list_network">

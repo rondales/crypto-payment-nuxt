@@ -2,7 +2,7 @@
   <div class="">
     <component :is="tag" :href="url != null ? url : ''" :class="classes">
       <Icon v-if="icon" :path="icon" />
-      <div>
+      <div class="textwrap">
         <PaymentText v-if="text" :type="textsize[size]" :html="text" />
         <PaymentText
           v-if="subtext"
@@ -11,7 +11,6 @@
           :html="subtext"
         />
       </div>
-      <!-- TODO 動作確認loading -->
       <Icon
         class="loading spin"
         :class="{ active: loading }"
@@ -346,8 +345,14 @@ export default {
       @include flex(space-between, center);
       flex-direction: row-reverse;
       padding: 1.5rem;
+      flex-wrap: nowrap;
       .subtext {
-        margin-top: 0.8rem;
+        margin-top: 0.5rem;
+        &::v-deep {
+          span {
+            line-height: 1.6;
+          }
+        }
       }
       &::v-deep {
         .svg {
@@ -356,9 +361,13 @@ export default {
         .text {
           text-align: left;
         }
+        .textwrap {
+          flex: 1;
+        }
 
         span {
           line-height: 1;
+          padding-left: 0;
         }
       }
     }

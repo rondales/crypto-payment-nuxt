@@ -8,15 +8,14 @@
           : 'The currently connected network is not supported.<br />Please select a supported network below to switch networks.'
       "
     >
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <p class="d-todo">{{ $options.name }}</p>
 
       <!-- iconをファイル名で取得したい -->
       <PaymentButton
         v-for="network in supportedNetworks"
         :key="network.chainId"
         :class="{ __pg: isCurrentNetwork(network.chainId) }"
-        icon="network.icon"
+        :icon="network.iconPath"
         :text="Canetwork.namencel"
         size="m"
         @click.native="switchNetwork(network.chainId)"

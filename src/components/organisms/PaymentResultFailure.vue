@@ -1,13 +1,14 @@
 <template>
   <div>
-    <p class="d-todo">{{ $options.name }}</p>
+    <!-- 未使用コンポーネント、問題なければ削除 -->
+    <!-- <p class="d-todo">{{ $options.name }}</p> -->
     <PaymentTransaction
       type="dismiss"
       title="Waiting for Confimation"
       text="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."
       :link="link"
     />
-    <!-- <div class="payment-status mt-3 mb-3">
+    <div class="payment-status mt-3 mb-3">
       <div>
         <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure" />
         <p class="payment-status_desc mb-2">
@@ -28,8 +29,8 @@
     </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.failure">
       <button class="btn __g __l mb-2">Back to Payee’s Services</button>
-    </a> -->
-    <!-- <a v-else target="_blank" :href="urls.explorer">
+    </a>
+    <a v-else target="_blank" :href="urls.explorer">
       <button class="btn __g __l mb-2">
         View on explorer
         <img
@@ -38,7 +39,7 @@
           alt="another"
         />
       </button>
-    </a> -->
+    </a>
   </div>
 </template>
 

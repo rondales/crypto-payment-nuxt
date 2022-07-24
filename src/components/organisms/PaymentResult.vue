@@ -1,19 +1,34 @@
 <template>
-  <div class="payment_handleprice">
-    <p class="d-todo">{{ $options.name }}</p>
+  <div class="result">
     <PaymentAmountBilled
+      class="result__bill"
       :symbol="merchantReceiveSymbol"
       :icon="merchantReceiveTokenIcon"
-      :price="merchantReceiveAmount | amountFormat"
+      :price="filterMerchantReceiveAmount"
+      size="big"
     />
-    <PaymentTitle html="Payment detail" />
+    <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
     <PaymentAmountBilled
-      :symbol="merchantReceiveSymbol"
-      :icon="merchantReceiveTokenIcon"
-      :price="merchantReceiveAmount | amountFormat"
+      class="result__receivedToken"
+      :symbol="userPaidSymbol"
+      :icon="userPaidTokenIcon"
+      :price="filterUserPaidAmount"
     />
-    <!-- TODO transaction分岐を作る モーダルにも同じパーツがあるので、同じコンポーネントを使用したい-->
-    <!-- <PaymentTransaction type="success" title="Transaction Submitted" /> -->
+
+    <PaymentTransaction
+      class="result__transaction"
+      :type="transaction.type"
+      :title="transaction.title"
+      :text="transaction.text"
+      :link="transaction.link"
+      :explorerUrl="transaction.explorerUrl"
+    />
+    <!--
+    <div v-if="isStatusProcessing">
+      <PaymentButton color="inactive" text="Processing…" />
+      <PaymentVia />
+    </div>
+    {{ isStatusFailured }}
     <pending
       v-if="isStatusProcessing"
       :urls="linkUrlData"
@@ -29,9 +44,9 @@
       :urls="linkUrlData"
       :token="paymentToken"
       :isReceiptMode="isReceiptMode"
-    />
+    /> -->
 
-    <!-- <div class="payment_handleprice-pricewrap">
+    <!--   <div class="payment_handleprice"><div class="payment_handleprice-pricewrap">
       <PaymentAmountBilled
         :symbol="userPaidSymbol"
         :icon="userPaidTokenIcon"
@@ -73,6 +88,7 @@
           :isReceiptMode="isReceiptMode"
         />
       </div>
+      </div>
     </div> -->
   </div>
 </template>
@@ -80,11 +96,13 @@
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTitle from "@/components/organisms/Payment/Title";
-// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+// import PaymentVia from "@/components/organisms/Payment/Via";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 import { Decimal as BigJs } from "decimal.js";
-import ResultPending from "@/components/organisms/PaymentResultPending";
-import ResultFailure from "@/components/organisms/PaymentResultFailure";
-import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
+// import ResultPending from "@/components/organisms/PaymentResultPending";
+// import ResultFailure from "@/components/organisms/PaymentResultFailure";
+// import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -101,12 +119,14 @@ import {
 export default {
   name: "PaymentResult",
   components: {
-    pending: ResultPending,
-    failure: ResultFailure,
-    success: ResultSuccess,
+    // pending: ResultPending,
+    // failure: ResultFailure,
+    // success: ResultSuccess,
     PaymentAmountBilled,
     PaymentTitle,
-    // PaymentTransaction,
+    PaymentTransaction,
+    // PaymentVia,
+    // PaymentButton,
   },
   data() {
     return {
@@ -125,6 +145,57 @@ export default {
         USDC: "usdc",
         DAI: "dai",
         JPYC: "jpyc",
+      },
+      transactionMode: "loading",
+      transaction: {
+        type: "loading",
+        title: "",
+        text: "",
+        explorerUrl: "",
+        link: {
+          url: "",
+          title: "",
+          color: "",
+        },
+        // loading: {
+        //   type: "loading",
+        //   title: "",
+        //   text: "",
+        //   explorerUrl: this.linkUrlData.explorer
+        //     ? this.linkUrlData.explorer
+        //     : "",
+        //   link: {
+        //     url: "",
+        //     title: "",
+        //     color: "",
+        //   },
+        // },
+        // dismiss: {
+        //   type: "dismiss",
+        //   title: "",
+        //   text: "",
+        //   explorerUrl: this.linkUrlData.explorer
+        //     ? this.linkUrlData.explorer
+        //     : "",
+        //   link: {
+        //     url: "",
+        //     title: "",
+        //     color: "",
+        //   },
+        // },
+        // success: {
+        //   type: "success",
+        //   title: "",
+        //   text: "",
+        //   explorerUrl: this.linkUrlData.explorer
+        //     ? this.linkUrlData.explorer
+        //     : "",
+        //   link: {
+        //     url: "",
+        //     title: "",
+        //     color: "",
+        //   },
+        // },
       },
     };
   },
@@ -161,12 +232,19 @@ export default {
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens;
+      // if (tokens) {
+      //   return this.userPaidSymbol in tokens
+      //     ? tokens[this.userPaidSymbol].icon
+      //     : require("@/assets/images/symbol/unknown.svg");
+      // } else {
+      //   return require("@/assets/images/symbol/unknown.svg");
+      // }
       if (tokens) {
         return this.userPaidSymbol in tokens
-          ? tokens[this.userPaidSymbol].icon
-          : require("@/assets/images/symbol/unknown.svg");
+          ? tokens[this.userPaidSymbol].iconPath
+          : "network-unknown";
       } else {
-        return require("@/assets/images/symbol/unknown.svg");
+        return "network-unknown";
       }
     },
     transactionData() {
@@ -190,12 +268,15 @@ export default {
       return "rcpt" in this.$route.query;
     },
     isStatusProcessing() {
+      // this.transactionMode = "loading";
       return this.status === STATUS_PROCESSING;
     },
     isStatusFailured() {
+      // this.transactionMode = "dismiss";
       return this.status === STATUS_RESULT_FAILURE;
     },
     isStatusSucceeded() {
+      // this.transactionMode = "success";
       return this.status === STATUS_RESULT_SUCCESS;
     },
     isPaidEthereum() {
@@ -222,6 +303,23 @@ export default {
         this.chainId === NETWORKS[43113].chainId
       );
     },
+    filterMerchantReceiveAmount() {
+      return new BigJs(this.merchantReceiveAmount).toString();
+    },
+    filterUserPaidAmount() {
+      return new BigJs(this.userPaidAmount).toString();
+    },
+    // constructTransactionText(transactionData) {
+    //   // return transactionData.userPaidAmount;
+    //   return (
+    //     "Pay " +
+    //     amountFormat(transactionData.userPaidAmount) +
+    //     transactionData.userPaidSymbol +
+    //     " for " +
+    //     amountFormat(transactionData.merchantReceiveAmount) +
+    //     transactionData.merchantReceiveSymbol
+    //   );
+    // },
   },
   methods: {
     apiGetTransaction() {
@@ -291,6 +389,55 @@ export default {
         this.pollingTransactionResult();
       }
     });
+
+    if (this.linkUrlData.explorer) {
+      this.transaction.explorerUrl = this.linkUrlData.explorer;
+    }
+
+    if (this.status === STATUS_PROCESSING) {
+      this.transaction.type = "loading";
+      this.transaction.title = "Waiting for Confimation";
+      let paidAmount = new BigJs(
+        this.transactionData.userPaidAmount
+      ).toString();
+      let merchantReceiveAmount = new BigJs(
+        this.transactionData.merchantReceiveAmount
+      ).toString();
+      this.transaction.text =
+        "Pay " +
+        paidAmount +
+        " " +
+        this.transactionData.userPaidSymbol +
+        " for " +
+        merchantReceiveAmount +
+        " " +
+        this.transactionData.merchantReceiveSymbol;
+      if (this.linkUrlData.explorer) {
+        this.transaction.link.url = this.linkUrlData.explorer;
+        this.transaction.link.icon = "outerlink";
+        this.transaction.link.title = "View on explorer";
+        this.transaction.link.url = "";
+        this.transaction.link.title = "Processing...";
+        this.transaction.link.color = "inactive";
+      }
+    } else if (this.status === STATUS_RESULT_FAILURE) {
+      this.transaction.type = "dismiss";
+      this.transaction.text =
+        "The transaction cannot succeed due to error: execution <br />Check the reason for the reverted from Explorer.";
+
+      if (this.linkUrlData.explorer && !this.isReceiptMode) {
+        this.transaction.link.url = this.linkUrlData.failure;
+        this.transaction.link.title = "Back to Payee’s Services";
+      }
+    } else if (this.status === STATUS_RESULT_SUCCESS) {
+      this.transaction.type = "success";
+      this.transaction.title = "Transaction Submitted";
+      this.transaction.text = "";
+      if (this.linkUrlData.success) {
+        this.transaction.link.url = this.linkUrlData.success;
+        this.transaction.link.title = "Back to Payee’s Services";
+      }
+    }
   },
   beforeDestroy() {
     clearInterval(this.resultPollingTimer);
@@ -308,54 +455,77 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
+.result {
+  &__bill {
+    margin-bottom: 2rem;
   }
-
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
+  &__title {
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-pricewrap {
-    width: 100%;
+  &__balance {
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
+  &__update {
+    margin-bottom: 2rem;
   }
-
-  .payment_detail {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-left: 7px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 20px;
-      font-weight: 100;
-      margin-left: 16px;
+  &__price {
+    margin-bottom: 2rem;
+  }
+  &__btnwrap {
+    margin-top: 2rem;
+    div + div {
+      margin-top: 0.5rem;
     }
   }
 }
+// .payment_handleprice {
+//   width: 100%;
+//   dl {
+//     dt {
+//       font-weight: 400;
+//       font-size: 15px;
+//     }
+//   }
+
+//   .payment_desc {
+//     p {
+//       background: $gradation-pale;
+//       -webkit-background-clip: text;
+//       -webkit-text-fill-color: transparent;
+//       background-size: 150% 150%;
+//       display: inline;
+//     }
+//   }
+//   .payment_handleprice-pricewrap {
+//     width: 100%;
+//   }
+//   .payment_handleprice-price {
+//     padding: 0;
+//     width: 100%;
+//     min-width: auto;
+//   }
+
+//   .payment_detail {
+//     &-name {
+//       p {
+//         font-size: 16px;
+//         font-weight: 400;
+//         line-height: 25px;
+//         margin-left: 7px;
+//       }
+//       figure {
+//         width: 25px;
+//         height: 25px;
+//         img {
+//           vertical-align: baseline;
+//         }
+//       }
+//     }
+//     &-value {
+//       font-size: 20px;
+//       font-weight: 100;
+//       margin-left: 16px;
+//     }
+//   }
+// }
 </style>

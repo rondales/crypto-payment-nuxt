@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <!-- <p class="d-todo">{{ $options.name }}</p> -->
+  <div class="exchange">
     <PaymentAmountBilled
       class="exchange__bill"
       :symbol="merchantReceiveTokenSymbol"
@@ -9,13 +8,12 @@
       size="big"
     />
 
-    <!-- TODO 確認reloadボタン -->
-    <PaymentTitle type="h2_g" html="Your Balance">
+    <PaymentTitle class="exchange__title" type="h2_g" html="Your Balance">
       <PaymentButton
         icon="reload"
         color="icon"
         size="icon"
-        @click.native="updateTokenExchangeData(faltruese)"
+        @click.native="updateTokenExchangeData(true)"
       />
     </PaymentTitle>
 
@@ -23,18 +21,7 @@
       class="exchange__balance"
       :symbol="userSelectedTokenSymbol"
       :icon="userSelectedTokenIcon"
-      :table="[
-        {
-          title: 'Balance',
-          price: userSelectedTokenBalance | balanceFormat,
-          symbol: userSelectedTokenSymbol,
-        },
-        {
-          title: 'Equivalent',
-          price: balanceEquivalentAmount | balanceFormat,
-          symbol: equivalentSymbol,
-        },
-      ]"
+      :table="balanceTable"
     />
     <PaymentAction
       class="exchange__update"
@@ -53,7 +40,6 @@
         @click.native="updateTokenExchangeData(false)"
       />
     </PaymentAction>
-
     <PaymentPrice
       :symbol="userSelectedTokenSymbol"
       :cap="userSelectedTokenPayAmountEquivalent | usdFormat"
@@ -78,7 +64,7 @@
 
         <PaymentButton
           v-if="isExchangeDataUpdating"
-          color=""
+          color="inactive"
           size="l"
           text="Price Updating..."
           :loading="true"
@@ -296,6 +282,7 @@ export default {
         address: null,
         abi: null,
       },
+      balanceTable: [],
     };
   },
   components: {
@@ -507,6 +494,12 @@ export default {
     isDarkTheme() {
       return this.$store.state.theme === "dark";
     },
+    filterUserSelectedTokenBalance() {
+      return NumberFormat("0.0000", this.userSelectedTokenBalance);
+    },
+    filterBalanceEquivalentAmount() {
+      return NumberFormat("0.0000", this.balanceEquivalentAmount);
+    },
   },
   methods: {
     apiGetContract() {
@@ -635,6 +628,9 @@ export default {
       this.$store.dispatch("account/updateAddress", address[0]);
       this.$router.push({ path: `/payment/token/${this.paymentToken}` });
     },
+    filterUserSelectedTokenPayAmountEquivalent() {
+      return NumberFormat("0.00", this.userSelectedTokenPayAmountEquivalent);
+    },
   },
   created() {
     if (this.isNeedRestoreWeb3Connection) {
@@ -688,6 +684,16 @@ export default {
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
         });
+    });
+    this.balanceTable.push({
+      title: "Balance",
+      price: NumberFormat("0.0000", this.userSelectedTokenBalance),
+      symbol: this.userSelectedTokenSymbol,
+    });
+    this.balanceTable.push({
+      title: "Equivalent",
+      price: NumberFormat("0.0000", this.balanceEquivalentAmount),
+      symbol: this.equivalentSymbol,
     });
   },
   beforeDestroy() {

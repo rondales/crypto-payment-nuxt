@@ -4,8 +4,7 @@
       title="Refunded information"
       text="Slippage collections were refunded.<br />Refund information is below."
     >
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <p class="d-todo">{{ $options.name }}</p>
       <PaymentText
         class="cap"
         tag="p"

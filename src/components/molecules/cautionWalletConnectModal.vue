@@ -2,24 +2,27 @@
   <div>
     <PaymentModal
       title="Caution"
-      text="Operation cannot be guaranteed when connecting with WalletConnect.<br />See the documentation for more information."
+      text='Operation cannot be guaranteed when connecting with WalletConnect.<br />See the documentation for more information.<br><a
+        href="https://slash-fi.gitbook.io/docs/support/help-center/notes-on-wallet-connect"
+        class="textlink"
+        ><span>See to Document</span></a
+      >'
     >
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+      <div class="btnwrap">
+        <PaymentButton
+          text=" I understood and will connect"
+          size="m"
+          @click.native="connector()"
+        />
 
-      <PaymentButton
-        text="See to Document"
-        size="m"
-        url="https://slash-fi.gitbook.io/docs/support/help-center/notes-on-wallet-connect"
-      />
+        <PaymentButton
+          text="Cancel"
+          color="cancel"
+          size="m"
+          @click.native="hideModal()"
+        />
+      </div>
 
-      <PaymentButton
-        text=" I understood and will connect"
-        size="m"
-        @click.native="connector()"
-      />
-
-      <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"
@@ -124,108 +127,116 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
-// import PaymentModal from "@/components/organisms/Payment/Modal";// import PaymentText from "@/components/organisms/Payment/Text";
-.modal-box {
-  border-radius: 10px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--color_bg);
-  @include media(pc) {
-    &.--small {
-      width: 470px;
-    }
-    &.--medium {
-      width: 760px;
-    }
-  }
-  @include media(sp) {
-    width: calc(100vw - 32px);
-  }
-}
-.header {
-  @include media(pc) {
-    padding: 24px;
-    &__title {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-    }
-    &__desc {
-      font-size: 2rem;
-    }
-    & .link {
-      font-weight: 300;
-      font-size: 1.5rem;
-    }
-  }
-  @include media(sp) {
-    padding: 18px;
-    &__title {
-      font-size: 1.7rem;
-    }
-    &__desc {
-      font-size: 1.6rem;
-    }
-    & .link {
-      font-size: 1.4rem;
-    }
-  }
-  &__title {
-    font-weight: 500;
-  }
-  &__desc {
-    font-weight: 100;
-  }
-  & .link {
-    font-weight: 300;
-  }
-  & .link::after {
-    content: "";
-    background: url(/assets/images/link-icon.svg) no-repeat center center;
-    width: 17px;
-    height: 17px;
-    position: absolute;
-    margin-top: 8px;
-    margin-left: 8px;
-  }
-}
-.close {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  font-size: 0;
 
-  @include media(pc) {
-    top: 30px;
-    right: 24px;
-  }
-  @include media(sp) {
-    top: 24px;
-    right: 24px;
+.textlink {
+  @include font(1rem, $fw, $ls, $lh, $ff);
+}
+.btnwrap {
+  & > * + * {
+    margin-top: 0.5rem;
   }
 }
-.body {
-  @include media(pc) {
-    padding: 24px 24px 40px;
-  }
-  @include media(sp) {
-    padding: 16px 12px 48px;
-  }
-  // .btn {
-  //   &.__m {
-  //     background: $gradation-pale;
-  //   }
-  // }
-}
-.footer {
-  text-align: center;
+// .modal-box {
+//   border-radius: 10px;
+//   position: fixed;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   background: var(--color_bg);
+//   @include media(pc) {
+//     &.--small {
+//       width: 470px;
+//     }
+//     &.--medium {
+//       width: 760px;
+//     }
+//   }
+//   @include media(sp) {
+//     width: calc(100vw - 32px);
+//   }
+// }
+// .header {
+//   @include media(pc) {
+//     padding: 24px;
+//     &__title {
+//       font-size: 2.5rem;
+//       margin-bottom: 2rem;
+//     }
+//     &__desc {
+//       font-size: 2rem;
+//     }
+//     & .link {
+//       font-weight: 300;
+//       font-size: 1.5rem;
+//     }
+//   }
+//   @include media(sp) {
+//     padding: 18px;
+//     &__title {
+//       font-size: 1.7rem;
+//     }
+//     &__desc {
+//       font-size: 1.6rem;
+//     }
+//     & .link {
+//       font-size: 1.4rem;
+//     }
+//   }
+//   &__title {
+//     font-weight: 500;
+//   }
+//   &__desc {
+//     font-weight: 100;
+//   }
+//   & .link {
+//     font-weight: 300;
+//   }
+//   & .link::after {
+//     content: "";
+//     background: url(/assets/images/link-icon.svg) no-repeat center center;
+//     width: 17px;
+//     height: 17px;
+//     position: absolute;
+//     margin-top: 8px;
+//     margin-left: 8px;
+//   }
+// }
+// .close {
+//   position: absolute;
+//   width: 16px;
+//   height: 16px;
+//   font-size: 0;
 
-  @include media(pc) {
-    padding: 0 40px 40px;
-  }
-  @include media(sp) {
-    padding: 0 32px 32px;
-  }
-}
+//   @include media(pc) {
+//     top: 30px;
+//     right: 24px;
+//   }
+//   @include media(sp) {
+//     top: 24px;
+//     right: 24px;
+//   }
+// }
+// .body {
+//   @include media(pc) {
+//     padding: 24px 24px 40px;
+//   }
+//   @include media(sp) {
+//     padding: 16px 12px 48px;
+//   }
+//   // .btn {
+//   //   &.__m {
+//   //     background: $gradation-pale;
+//   //   }
+//   // }
+// }
+// .footer {
+//   text-align: center;
+
+//   @include media(pc) {
+//     padding: 0 40px 40px;
+//   }
+//   @include media(sp) {
+//     padding: 0 32px 32px;
+//   }
+// }
 </style>

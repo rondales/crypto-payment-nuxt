@@ -37,7 +37,7 @@ export default {
     url: {
       type: String,
       default: "",
-    }
+    },
   },
   data() {
     return {};
@@ -62,12 +62,12 @@ export default {
 .action {
   @include flex(space-between, center);
   // background-color: var(--Base2);
-  border: 1px solid var(--Border);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  @include media(sp) {
-    padding: 0.5rem;
-  }
+  // border: 1px solid var(--Border);
+  // padding: 0.5rem;
+  // border-radius: 0.5rem;
+  // @include media(sp) {
+  //   padding: 0.5rem;
+  // }
   .textwrap {
     flex: 1;
   }

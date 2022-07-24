@@ -22,7 +22,7 @@
       }"
       @click.native="switchNetwork(network.chainId)"
       :text="network.name"
-      :icon="network.icon"
+      :icon="network.iconPath"
       size="m"
     />
     <div class="d-btnwrap bottomCloseBtn" v-if="!unsupported">

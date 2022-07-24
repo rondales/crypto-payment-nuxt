@@ -1,17 +1,16 @@
 <template>
   <div :class="classes">
-    <!-- <PaymentIcon path="logo-icon" /> -->
-    <dl>
-      <dt><PaymentText html="Minimum received" /></dt>
-      <dd><PaymentText html="1,000 USDT" /></dd>
-    </dl>
-    <dl>
-      <dt><PaymentText html="Minimum received" /></dt>
-      <dd>
-        <PaymentText type="h4b" html="1,000" />
-        <PaymentText html="USDT" />
-      </dd>
-    </dl>
+    <ul>
+      <li v-for="(v, index) in table" :key="index">
+        <dl v-if="v.title">
+          <dt><PaymentText :html="v.title" /></dt>
+          <dd>
+            <PaymentText type="h4b" :html="v.price" />
+            <PaymentText :html="v.text" />
+          </dd>
+        </dl>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -25,9 +24,8 @@ export default {
     // PaymentIcon,
   },
   props: {
-    type: {
-      type: String,
-      default: "span",
+    table: {
+      type: Array,
     },
   },
   data() {
@@ -37,7 +35,7 @@ export default {
   computed: {
     classes() {
       let array = { table: true };
-      array[this.type] = true;
+      // array[this.type] = true;
       return array;
     },
   },
@@ -58,12 +56,14 @@ export default {
       line-height: 1;
     }
   }
+  li {
+    & + li {
+      margin-top: 1.2rem;
+    }
+  }
   dl {
     @include flex(space-between, center);
     flex-wrap: nowrap;
-    & + dl {
-      margin-top: 1.2rem;
-    }
   }
   dd {
     display: inline-flex;

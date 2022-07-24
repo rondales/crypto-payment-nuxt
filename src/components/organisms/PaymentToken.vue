@@ -1,7 +1,5 @@
 <template>
   <div :class="classes">
-    <!-- <p class="d-todo">{{ $options.name }}</p> -->
-    <!-- TODO 確認の仕方 -->
     <PaymentAmountBilled
       :symbol="merchantReceiveTokenSymbol"
       :icon="merchantReceiveTokenIcon"
@@ -17,8 +15,8 @@
     />
     <PaymentAction
       class="token__network"
-      :icon="currentNetworkIcon"
       :text="currentNetworkName"
+      :icon="currentNetworkIcon"
     >
       <PaymentButton size="s" text="Change" @click.native="switchNetwork()" />
     </PaymentAction>
@@ -40,7 +38,6 @@
           :key="key"
           @click="handleSelectToken(token)"
         >
-          <!-- TODO iconのpathをiconフォルダのファイル名に変更 -->
           <PaymentAmountBilled
             :icon="token.path"
             :symbol="token.symbol"
@@ -349,7 +346,7 @@ export default {
       //   return require("@/assets/images/network/unknown-l.svg");
       // }
       if (this.chainId && this.isAvailableCurrentNetwork) {
-        return NETWORKS[this.chainId].path;
+        return NETWORKS[this.chainId].iconPath;
       } else {
         return "network-unknown";
       }
@@ -379,7 +376,7 @@ export default {
       //   ? tokens[this.merchantReceiveTokenSymbol].icon
       //   : require("@/assets/images/symbol/unknown.svg");
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].path
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
         : "network-unknown";
     },
     isEmptyWeb3Instance() {

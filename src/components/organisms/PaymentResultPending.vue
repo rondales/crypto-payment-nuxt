@@ -1,14 +1,15 @@
 <template>
   <div>
+    <!-- 未使用コンポーネント、問題なければ削除 -->
     <p class="d-todo">{{ $options.name }}</p>
-    <PaymentTransaction
+    <!-- <PaymentTransaction
       type="loading"
       title="Waiting for Confimation"
       :text="setText"
       :link="link"
-    />
-    <PaymentVia />
-    <!-- <div class="payment-status mt-3 mb-3">
+    /> -->
+    <!-- <PaymentVia /> -->
+    <div class="payment-status mt-3 mb-3">
       <div>
         <img
           class="mb-2 spin"
@@ -34,7 +35,7 @@
       </a>
     </div>
     <button class="btn __g __l mb-2 inactive">processing…</button>
-    <PaymentVia /> -->
+    <PaymentVia />
   </div>
 </template>
 
@@ -43,7 +44,7 @@ import { Decimal as BigJs } from "decimal.js";
 // import PaymentTitle from "@/components/organisms/Payment/Title";
 // import PaymentForm from "@/components/organisms/Payment/Form";
 // import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 import PaymentVia from "@/components/organisms/Payment/Via";
 export default {
   name: "PaymentResultPending",
@@ -62,7 +63,7 @@ export default {
     };
   },
   components: {
-    PaymentTransaction,
+    // PaymentTransaction,
     PaymentVia,
   },
   filters: {
@@ -83,15 +84,16 @@ export default {
       );
     },
     setText() {
-      let text =
-        "Pay " +
-        this.amountFormat(this.transaction.userPaidAmount) +
-        this.transaction.userPaidSymbol +
-        " for " +
-        this.amountFormat(this.transaction.merchantReceiveAmount) +
-        this.transaction.merchantReceiveSymbol;
+      // let text =
+      //   "Pay " +
+      //   this.amountFormat(this.transaction.userPaidAmount) +
+      //   this.transaction.userPaidSymbol +
+      //   " for " +
+      //   this.amountFormat(this.transaction.merchantReceiveAmount) +
+      //   this.transaction.merchantReceiveSymbol;
 
-      return text;
+      // return text;
+      return "";
     },
   },
   created() {

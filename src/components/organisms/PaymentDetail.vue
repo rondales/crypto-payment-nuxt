@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <p class="d-todo">{{ $options.name }}</p>
+  <div class="detail">
     <PaymentAmountBilled
+      class="detail__bill"
       :symbol="merchantReceiveTokenSymbol"
       :icon="merchantReceiveTokenIcon"
       :price="merchantReceiveAmount"
+      size="big"
     />
-    <!-- TODO 確認reloadボタン -->
-    <PaymentTitle type="h2_g" html="Payment detail">
+    <PaymentTitle class="detail__title" type="h2_g" html="Payment detail">
       <PaymentButton
         v-if="!isWalletConfirming"
         icon="reload"
@@ -17,14 +17,9 @@
         :class="{ loading: isReloading }"
       />
     </PaymentTitle>
-    <PaymentAmountBilled
-      :symbol="userSelectedTokenSymbol"
-      :icon="userSelectedTokenIcon"
-      :price="userSelectedTokenPaymentAmount"
-    />
 
     <PaymentAction
-      class="exchange__update"
+      class="detail__update"
       v-if="!isWalletConfirming && isExpiredExchange"
       icon="attention"
       text="Price Updated"
@@ -35,80 +30,99 @@
         @click.native="updateTokenExchangeData(false)"
       />
     </PaymentAction>
-    <PaymentTable />
-    <div>
-      <PaymentText type="h5" html="Exchange Rate" />
-      <PaymentText
-        :html="
-          '1 ' +
-          merchantReceiveTokenSymbol +
-          ' &#65309; ' +
-          userSelectedTokenExchangeRate +
-          ' ' +
-          userSelectedTokenSymbol
-        "
+    <PaymentAmountBilled
+      class="detail__selectedToken"
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      :price="userSelectedTokenPaymentAmount"
+    />
+    <div class="detail__table">
+      <PaymentTable
+        :table="[
+          {
+            title: 'Exchange Rate',
+            price: '',
+            text:
+              '1 ' +
+              merchantReceiveTokenSymbol +
+              ' &#65309; ' +
+              userSelectedTokenExchangeRate +
+              ' ' +
+              userSelectedTokenSymbol,
+            icon: 'exchange',
+          },
+          {
+            title: 'Route',
+            text: tradeRoute,
+          },
+          {
+            title:
+              !isWalletConfirming && isDifferentToken
+                ? 'Slippage tolerance'
+                : '',
+            price: SLIPPAGE_RATE,
+            text: '%',
+          },
+          {
+            title: !isWalletConfirming ? 'Platform Fee' : '',
+            price: platformFee,
+            text: nativeTokenSymbol,
+          },
+        ]"
       />
-      <img src="@/assets/images/exchange.svg" alt="" />
-    </div>
-    <div>
-      <PaymentText type="h5" html="Route" />
-      <PaymentText :html="tradeRoute" />
-    </div>
-
-    <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
-      <div v-if="isDifferentToken" class="dattail-list add-flex j-between mb-1">
-        <p>Slippage tolerance</p>
-        <p>{{ SLIPPAGE_RATE }}%</p>
-      </div>
-      <div class="dattail-list add-flex j-between mb-2">
-        <p>Platform Fee</p>
-        <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
-      </div>
-      <p class="dattail-list_desc">
-        Output is estimated. You will receive at least
-        {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
-        transaction will revert.
-      </p>
-    </div>
-    <div v-else class="payment-status mt-3 mb-3">
-      <PaymentTransaction
-        type="loading"
-        title="Waiting for Confimation"
-        :text="
-          'Pay ' +
-          userSelectedTokenPaymentAmount +
-          ' ' +
-          userSelectedTokenSymbol +
-          ' ' +
-          ' for ' +
+      <PaymentText
+        v-if="!isWalletConfirming"
+        type="cap"
+        :html="
+          'Output is estimated. You will receive at least ' +
           merchantReceiveAmount +
           ' ' +
-          merchantReceiveTokenSymbol
+          merchantReceiveTokenSymbol +
+          ' or the transaction will revert.'
         "
-        :link="{
-          url: 'https://www.google.com/',
-          icon: 'outerlink',
-          title: 'View on explorer',
-        }"
+      />
+      <div v-else>
+        <PaymentTransaction
+          type="loading"
+          title="Waiting for Confimation"
+          :text="
+            'Pay ' +
+            userSelectedTokenPaymentAmount +
+            ' ' +
+            userSelectedTokenSymbol +
+            ' ' +
+            ' for ' +
+            merchantReceiveAmount +
+            ' ' +
+            merchantReceiveTokenSymbol
+          "
+          :link="{
+            url: 'https://www.google.com/',
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+      </div>
+    </div>
+    <div class="detail__btnwrap">
+      <PaymentButton
+        v-if="isExchangeDataUpdating"
+        color="inactive"
+        text="Price Updating..."
+        :loading="true"
+      />
+      <PaymentButton
+        v-else-if="isWalletConfirming"
+        color="inactive"
+        text="Please confirm Wallet"
+      />
+      <PaymentButton
+        v-else
+        :color="isExpiredExchange ? 'inactive' : 'primary'"
+        text="Confirm Wallet"
+        @click.native="executePayment()"
       />
     </div>
-    <PaymentButton
-      v-if="isExchangeDataUpdating"
-      color="cancel"
-      text="Price Updating..."
-      :loading="true"
-    />
-    <PaymentButton
-      v-else-if="isWalletConfirming"
-      color="cancel"
-      text="Please confirm Wallet"
-    />
-    <PaymentButton
-      v-else
-      :color="isExpiredExchange ? 'cancel' : 'g'"
-      text="Confirm Wallet"
-      @click.native="executePayment()"
-    />
     <!-- <div class="payment_handleprice">
       <div class="payment_handleprice-pricewrap">
         <PaymentAmountBilled
@@ -688,23 +702,46 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
-.dattail-lists {
-  .dattail-list {
-    p {
-      font-size: 11px;
-      font-weight: 100;
-      img {
-        margin-left: 8px;
-      }
+.detail {
+  &__bill {
+    margin-bottom: 2rem;
+  }
+  &__title {
+    margin-bottom: 2rem;
+  }
+  &__balance {
+    margin-bottom: 2rem;
+  }
+  &__update {
+    margin-bottom: 2rem;
+  }
+  &__price {
+    margin-bottom: 2rem;
+  }
+  &__btnwrap {
+    margin-top: 2rem;
+    div + div {
+      margin-top: 0.5rem;
     }
   }
-  .dattail-list_desc {
-    font-size: 11px;
-    font-weight: 100;
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-  }
 }
+// .dattail-lists {
+//   .dattail-list {
+//     p {
+//       font-size: 11px;
+//       font-weight: 100;
+//       img {
+//         margin-left: 8px;
+//       }
+//     }
+//   }
+//   .dattail-list_desc {
+//     font-size: 11px;
+//     font-weight: 100;
+//     padding-bottom: 16px;
+//     margin-bottom: 16px;
+//   }
+// }
 // .payment_handleprice {
 //   width: 100%;
 //   dl {

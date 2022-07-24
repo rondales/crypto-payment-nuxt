@@ -1,8 +1,9 @@
 <template>
   <div>
+    <!-- 未使用コンポーネント、問題なければ削除 -->
     <p class="d-todo">{{ $options.name }}</p>
     <PaymentTransaction type="success" title="Transaction Submitted" />
-    <!-- <div class="payment-status mt-3 mb-3">
+    <div class="payment-status mt-3 mb-3">
       <div>
         <img class="mb-2" src="@/assets/images/check.svg" alt="success" />
         <p class="payment-status_title mb-1">Transaction Submitted</p>
@@ -29,7 +30,7 @@
           alt="another"
         />
       </button>
-    </a> -->
+    </a>
   </div>
 </template>
 

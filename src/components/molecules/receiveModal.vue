@@ -13,7 +13,7 @@
         }}</a>
       </p>
       <PaymentButton text="Submit" size="m" @click.native="confirm()" />
-      <PaymentText html="Submited cannot be changed later." />
+      <PaymentText type="cap" html="Submited cannot be changed later." />
 
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton

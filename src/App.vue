@@ -89,7 +89,7 @@ div.main {
   }
 }
 .modal-base {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8);
   position: fixed;
   // width: 100vw;
   // height: 100vh;

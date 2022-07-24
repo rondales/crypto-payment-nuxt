@@ -1,6 +1,14 @@
 <template>
   <div class="style">
     <div class="d-payboxwrap">
+      <PaymentButton
+        v-for="(m, index) in modalList"
+        :key="index"
+        :text="m.name"
+        size="s"
+        :color="m.doneStatus ? 'primary' : 'cancel'"
+        @click.native="showModal(m.name)"
+      />
       <PaymentTitle type="h3" html="Color Valiation" layout="c" />
       <ul class="color">
         <li v-for="n in 10" :key="n"></li>
@@ -71,7 +79,20 @@
       ]"
     />
     <div class="d-payboxwrap">
-      <PaymentTable />
+      <PaymentTable
+        :table="[
+          {
+            title: 'Minimum received',
+            price: '',
+            text: '1,000 USDT',
+          },
+          {
+            title: 'Minimum received',
+            price: '1,000',
+            text: 'USDT',
+          },
+        ]"
+      />
       <PaymentTransaction
         type="loading"
         title="Waiting for Confimation"
@@ -218,13 +239,49 @@ export default {
   },
   props: [],
   data() {
-    return {};
+    return {
+      modalList: [
+        { doneStatus: false, name: "accountModal" },
+        { doneStatus: false, name: "addChainModal" },
+        { doneStatus: false, name: "adminContractPausedModal" },
+        { doneStatus: true, name: "cautionPaymentRiskDisclaimerModal" },
+        { doneStatus: true, name: "cautionWalletConnectModal" },
+        { doneStatus: false, name: "contractCashbackChangeModal" },
+        { doneStatus: false, name: "contractIssuanceModal" },
+        { doneStatus: false, name: "contractReceiveAddressChangeModal" },
+        { doneStatus: false, name: "editAccountNoteModal" },
+        { doneStatus: false, name: "errorCurrentNetworkModal" },
+        { doneStatus: true, name: "errorForbiddenBackPaymentModal" },
+        { doneStatus: true, name: "errorMetamaskModal" },
+        { doneStatus: true, name: "errorModal" },
+        {
+          doneStatus: true,
+          name: "errorNotExistAvailablePaymentContractModal",
+        },
+        { doneStatus: true, name: "errorWalletModal" },
+        { doneStatus: true, name: "networkModal" },
+        { doneStatus: false, name: "receiveModal" },
+        { doneStatus: false, name: "refundInfoModal" },
+        { doneStatus: false, name: "regeneratePaymentUrlModal" },
+        { doneStatus: false, name: "switchNetworkForAdminModal" },
+        { doneStatus: true, name: "walletModal" },
+      ],
+    };
   },
   computed: {},
   methods: {
     switchTab(tab) {
       console.log("aaaa");
       console.log(tab);
+    },
+    showModal(target) {
+      this.$store.dispatch("modal/show", {
+        target: target,
+        size: "small",
+        params: {
+          message: "This is dummy massage.",
+        },
+      });
     },
   },
   mounted() {},
@@ -236,30 +293,36 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .style {
-    width: 35rem;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0px 8px 2rem rgba(139, 42, 225, 0.7),
-      0px -8px 2rem rgba(62, 185, 252, 0.7);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    // box-shadow: rgba(139, 42, 225, 0.4) 5px 5px,
-    //   rgba(139, 42, 225, 0.3) 10px 10px, rgba(139, 42, 225, 0.2) 15px 15px,
-    //   rgba(139, 42, 225, 0.1) 20px 20px, rgba(139, 42, 225, 0.05) 25px 25px;
-    box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
-      rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
-    @include media(sp) {
-      width: 90%;
-      width: 100%;
-      box-shadow: none;
-      // border: 0px solid #eee;
-    }
+  width: 35rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0px 8px 2rem rgba(139, 42, 225, 0.7),
+    0px -8px 2rem rgba(62, 185, 252, 0.7);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  // box-shadow: rgba(139, 42, 225, 0.4) 5px 5px,
+  //   rgba(139, 42, 225, 0.3) 10px 10px, rgba(139, 42, 225, 0.2) 15px 15px,
+  //   rgba(139, 42, 225, 0.1) 20px 20px, rgba(139, 42, 225, 0.05) 25px 25px;
+  box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
+    rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
+  @include media(sp) {
+    width: 90%;
+    width: 100%;
+    box-shadow: none;
+    // border: 0px solid #eee;
+  }
   padding: 5rem 0;
   & > * {
     margin-bottom: 3rem;
   }
 
+  &__box {
+    margin-bottom: 5rem;
+  }
+  &__title {
+    margin-bottom: 2rem;
+  }
   .d-payboxwrap {
     padding: 2rem;
   }

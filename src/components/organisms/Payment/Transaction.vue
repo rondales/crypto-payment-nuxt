@@ -1,9 +1,9 @@
 <template>
   <div :class="classes">
-    <div class="icon">
+    <div class="transaction__icon">
       <PaymentIcon :class="iconClasses" :path="imgArr[type]" />
     </div>
-    <div class="textwrap">
+    <div class="transaction__textwrap">
       <PaymentText
         v-if="title"
         class="title"
@@ -14,15 +14,24 @@
       <PaymentText v-if="text" class="text" tag="p" :html="text" />
       <PaymentText v-if="cap" tag="p" type="cap" :html="cap" />
       <PaymentButton
-        v-if="link"
+        v-if="explorerUrl"
         class="button"
         size="s"
-        :icon="link.icon"
+        icon="outerlink"
+        text="lView on explorer"
+        :url="explorerUrl"
+        layout="reverse"
+      />
+    </div>
+    <div class="transaction__foot">
+      <PaymentButton
+        v-if="link"
         :text="link.title"
         :url="link.url"
         :color="link.color"
         layout="reverse"
       />
+      <PaymentVia />
     </div>
   </div>
 </template>
@@ -31,12 +40,14 @@
 import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentIcon from "@/components/organisms/Payment/Icon";
 import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentVia from "@/components/organisms/Payment/Via";
 export default {
   name: "PaymentAmountBilled",
   components: {
     PaymentButton,
     PaymentText,
     PaymentIcon,
+    PaymentVia,
   },
   props: {
     type: {
@@ -52,6 +63,10 @@ export default {
       default: "",
     },
     cap: {
+      type: String,
+      default: "",
+    },
+    explorerUrl: {
       type: String,
       default: "",
     },
@@ -110,28 +125,34 @@ export default {
       }
     }
   }
-  .icon {
+  &__icon {
     max-width: 10rem;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
   }
-  .textwrap {
+  &__textwrap {
     text-align: center;
     max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
+    .title {
+      margin-bottom: 0.5rem;
+    }
+    .text {
+      margin-bottom: 0.5rem;
+    }
+    .button {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 2rem;
+    }
   }
-  .title {
-    margin-bottom: 0.5rem;
-  }
-  .text {
-    margin-bottom: 0.5rem;
-  }
-  .button {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2rem;
+  &__foot {
+    margin-top: 1rem;
+    & > * + * {
+      margin-top: 1rem;
+    }
   }
 }
 </style>
