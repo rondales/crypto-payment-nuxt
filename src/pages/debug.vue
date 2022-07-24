@@ -97,28 +97,29 @@
         type="loading"
         title="Waiting for Confimation"
         text="Pay 1000.00 USDT for 1000.00 USDT"
+        explorerUrl="https://www.google.com/"
         :link="{
           url: 'https://www.google.com/',
-          icon: 'outerlink',
-          title: 'View on explorer',
+          title: 'Processing...',
+          color: 'inactive',
         }"
       />
       <PaymentTransaction
         type="success"
         title="Transaction Submitted"
+        explorerUrl="https://www.google.com/"
         :link="{
           url: 'https://www.google.com/',
-          icon: 'outerlink',
-          title: 'View on explorer',
+          title: 'Back to Payee’s Services',
         }"
       />
       <PaymentTransaction
         type="dismiss"
         cap="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."
+        explorerUrl="https://www.google.com/"
         :link="{
           url: 'https://www.google.com/',
-          icon: 'outerlink',
-          title: 'View on explorer',
+          title: 'Back to Payee’s Services',
         }"
       />
 

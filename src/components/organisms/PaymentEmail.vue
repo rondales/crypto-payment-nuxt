@@ -67,6 +67,10 @@ import { errorCodeList } from "@/enum/error_code";
 
 export default {
   name: "PaymentEmail",
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number
+  },
   data() {
     return {
       email: "",
@@ -145,7 +149,13 @@ export default {
   },
   created() {
     this.$store.dispatch("payment/updateHeaderInvoice", false);
+    this.$emit('updateProgressTotalSteps', this.progressCompletedSteps)
   },
+  mounted() {
+    setTimeout(() => {
+      this.$emit('updateInitializingStatus', false)
+    }, 1500)
+  }
 };
 </script>
 

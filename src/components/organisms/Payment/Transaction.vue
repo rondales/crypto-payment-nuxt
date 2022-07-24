@@ -18,7 +18,7 @@
         class="button"
         size="s"
         icon="outerlink"
-        text="lView on explorer"
+        text="View on explorer"
         :url="explorerUrl"
         layout="reverse"
       />

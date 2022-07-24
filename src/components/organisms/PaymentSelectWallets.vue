@@ -108,6 +108,10 @@ export default {
     PaymentTitle,
     PaymentButton,
   },
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number
+  },
   data() {
     return {
       loadingMeta: false,
@@ -153,6 +157,9 @@ export default {
     },
     paymentToken() {
       return this.$route.params.token;
+    },
+    isInitialized() {
+      return this.$parent.initializing
     },
     isAgreeRisk() {
       return this.$store.state.payment.isAgreeRisk;
@@ -212,9 +219,17 @@ export default {
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
     this.$store.dispatch("payment/updateSelectReceiptStatus", true);
-    if (!this.isAgreeRisk) {
+    if (!this.isAgreeRisk && this.isInitialized) {
       this.showRiskDisclaimerModal();
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$emit('updateInitializingStatus', false)
+      if (!this.isAgreeRisk) {
+        this.showRiskDisclaimerModal();
+      }
+    }, 1500)
   },
   beforeRouteLeave(to, from, next) {
     const connectedWalletPages = ["tokens", "exchange", "detail"];

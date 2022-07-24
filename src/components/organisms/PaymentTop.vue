@@ -169,8 +169,8 @@ export default {
   created() {
     if (this.isInvoiceHeaderMode) {
       if (this.isCurrentRequestConnectWalletPage) {
-        this.invoiceIcon.icon = "scan";
-        this.invoiceIcon.func = "showRegeneratePaymentUrlModal";
+        // this.invoiceIcon.icon = "scan";
+        // this.invoiceIcon.func = "showRegeneratePaymentUrlModal";
       } else if (this.isCurrentBeforeSendTransactionPages) {
         this.invoiceIcon.icon = "left-arrow";
         this.invoiceIcon.func = "prevPage";

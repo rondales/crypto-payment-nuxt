@@ -1,6 +1,13 @@
 <template>
-  <!-- TODO 確認の仕方 -->
-  <component v-if="showComponent" :is="showComponent" />
+  <component
+    v-if="showComponent"
+    :is="showComponent"
+    :progressTotalSteps="progressTotalSteps"
+    :progressCompletedSteps="progressCompletedSteps"
+    @updateInitializingStatus="updateInitializingStatus"
+    @updateProgressTotalSteps="updateProgressTotalSteps"
+    @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
+  />
 </template>
 
 <script>
@@ -8,12 +15,15 @@ import NumberFormat from "number-format.js";
 import PaymentAmount from "@/components/organisms/PaymentAmount";
 import PaymentEmail from "@/components/organisms/PaymentEmail";
 import { errorCodeList } from "@/enum/error_code";
-
 export default {
   name: "PaymentEntrance",
   components: {
     PaymentAmount,
     PaymentEmail,
+  },
+  props: {
+    progressTotalSteps: Number,
+    progressCompletedSteps: Number,
   },
   data() {
     return {
@@ -29,6 +39,9 @@ export default {
     },
     paymentData() {
       return this.$store.state.payment;
+    },
+    isSelectedReceipt() {
+      return this.$store.state.payment.isSelectedReceipt;
     },
     isAccessFromDeepLink() {
       return "dpl" in this.$route.query;
@@ -75,6 +88,15 @@ export default {
         },
       });
     },
+    updateInitializingStatus(initializing) {
+      this.$emit("updateInitializingStatus", initializing);
+    },
+    updateProgressTotalSteps(step) {
+      this.$emit("updateProgressTotalSteps", step);
+    },
+    incrementProgressCompletedSteps() {
+      this.$emit("incrementProgressCompletedSteps");
+    },
   },
   created() {
     this.$store.dispatch("wallet/initialize");
@@ -104,32 +126,40 @@ export default {
           "payment/updateAllowCurrencies",
           receiveResponse.data.allow_currencies
         );
+        this.$emit("incrementProgressCompletedSteps");
         this.apiPublishTransaction()
           .then(() => {
             this.showComponent =
               receiveResponse.data.amount === null
                 ? "PaymentAmount"
                 : "PaymentEmail";
+            this.$emit("updateProgressTotalSteps", 5);
+            this.$emit("incrementProgressCompletedSteps");
           })
           .catch((error) => {
             if (error.response.status === 400) {
               if (error.response.data.errors.includes(2110)) {
                 this.apiGetTransactionData()
                   .then((transactionResponse) => {
+                    this.$emit("incrementProgressCompletedSteps");
                     this.$store.dispatch(
                       "payment/updateAmount",
                       NumberFormat("0.00", transactionResponse.data.base_amount)
                     );
                     this.apiGetTransactionState()
                       .then((response) => {
+                        this.$emit("incrementProgressCompletedSteps");
                         switch (response.data.state) {
                           case "unset_base_amount":
                             this.showComponent = "PaymentAmount";
+                            this.$emit("updateProgressTotalSteps", 7);
+                            this.$emit("incrementProgressCompletedSteps");
                             break;
                           case "unset_email":
                             if (
                               this.isAccessFromDeepLink ||
-                              this.isAccessFromRegeneratedUrl
+                              this.isAccessFromRegeneratedUrl ||
+                              this.isSelectedReceipt
                             ) {
                               this.$store.dispatch(
                                 "payment/updateSelectReceiptStatus",
@@ -139,12 +169,15 @@ export default {
                                 "payment/updateAgreeRiskStatus",
                                 true
                               );
+                              this.$emit("incrementProgressCompletedSteps");
+                              this.$emit("updateProgressTotalSteps", 5);
                               this.$router.replace({
                                 path:
                                   "/payment/wallets/" +
                                   this.$route.params.token,
                               });
                             } else {
+                              this.$emit("incrementProgressCompletedSteps");
                               this.$router.replace({
                                 path:
                                   "/payment/receipt/" +
@@ -153,6 +186,7 @@ export default {
                             }
                             break;
                           case "unset_token":
+                            this.$emit("incrementProgressCompletedSteps");
                             this.$router.replace({
                               path:
                                 "/payment/wallets/" + this.$route.params.token,
@@ -189,8 +223,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
-</style>

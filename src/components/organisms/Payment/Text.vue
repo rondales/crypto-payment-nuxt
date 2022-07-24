@@ -72,6 +72,11 @@ export default {
     @extend .text;
     @include font(3.1rem, 600, $ls, $lh, $en_go);
   }
+  &__h1 {
+    // process percent
+    @extend .text;
+    @include font(2.45rem, 600, $ls, $lh, $en_go);
+  }
   &__h1b {
     // INVOICE title
     @extend .text;
