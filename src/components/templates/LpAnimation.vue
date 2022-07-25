@@ -14,6 +14,11 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      p5Instances: []
+    }
+  },
   mounted() {
     const P5 = require("p5");
     const store = this.$store;
@@ -66,7 +71,7 @@ export default {
         thisDom.style.height = window.innerHeight;
         SizeMin = mv.min(thisDom.clientWidth, thisDom.clientHeight);
         SizeMax = mv.max(thisDom.clientWidth, thisDom.clientHeight);
-
+        if (SizeMax == 0 || SizeMin == 0) return;
         mv.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
@@ -210,7 +215,7 @@ export default {
       s1.windowResized = (_) => {
         SizeMin = s1.min(thisDom.clientWidth, thisDom.clientHeight);
         SizeMax = s1.max(thisDom.clientWidth, thisDom.clientHeight);
-
+        if (SizeMax == 0 || SizeMin == 0) return;
         s1.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
@@ -365,7 +370,7 @@ export default {
       s2.windowResized = (_) => {
         SizeMin = s2.min(thisDom.clientWidth, thisDom.clientHeight);
         SizeMax = s2.max(thisDom.clientWidth, thisDom.clientHeight);
-
+        if (SizeMax == 0 || SizeMin == 0) return;
         s2.resizeCanvas(SizeMax, SizeMax);
         for (let i = 0; i < shapes.length; i++) {
           let shape = shapes[i];
@@ -513,7 +518,7 @@ export default {
     //   s3.windowResized = (_) => {
     //     SizeMin = s3.min(thisDom.clientWidth, thisDom.clientHeight);
     //     SizeMax = s3.max(thisDom.clientWidth, thisDom.clientHeight);
-
+    //     if (SizeMax == 0 || SizeMin == 0) return;
     //     s3.resizeCanvas(SizeMax, SizeMax);
     //     for (let i = 0; i < shapes.length; i++) {
     //       let shape = shapes[i];
@@ -654,7 +659,7 @@ export default {
     //   s4.windowResized = (_) => {
     //     SizeMin = s4.min(thisDom.clientWidth, thisDom.clientHeight);
     //     SizeMax = s4.max(thisDom.clientWidth, thisDom.clientHeight);
-
+    //     if (SizeMax == 0 || SizeMin == 0) return;
     //     s4.resizeCanvas(SizeMax, SizeMax);
     //     for (let i = 0; i < shapes.length; i++) {
     //       let shape = shapes[i];
@@ -758,11 +763,16 @@ export default {
     //   }
     // };
 
-    new P5(eval(this.type));
+    this.p5Instances.push(new P5(eval(this.type)));
     // new P5(SubCanvas1);
     // new P5(SubCanvas2);
     // new P5(SubCanvas3);
   },
+  beforeDestroy() {
+    this.p5Instances.forEach((instance) => {
+      instance.remove()
+    })
+  }
 };
 </script>
 <style lang="scss" scoped>

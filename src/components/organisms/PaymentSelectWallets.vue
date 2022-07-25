@@ -159,7 +159,7 @@ export default {
       return this.$route.params.token;
     },
     isInitialized() {
-      return this.$parent.initializing
+      return !this.$parent.initializing
     },
     isAgreeRisk() {
       return this.$store.state.payment.isAgreeRisk;
@@ -215,7 +215,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("account/initialize");
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
     this.$store.dispatch("payment/updateSelectReceiptStatus", true);
