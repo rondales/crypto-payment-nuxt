@@ -190,7 +190,7 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     balance: balance,
     address: contractAddress,
     icon: require('@/assets/images/symbol/unknown.svg'),
-    path: require('@/assets/images/symbol/unknown.svg')
+    path: "unknown"
   }
 }
 
@@ -209,7 +209,7 @@ const importToken = async function(web3, contractAddress, walletAddress) {
     symbol: symbol,
     balance: balance,
     icon: require('@/assets/images/symbol/unknown.svg'),
-    path: require('@/assets/images/symbol/unknown.svg')
+    path: "unknown"
   }
 }
 
