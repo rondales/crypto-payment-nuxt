@@ -560,6 +560,7 @@ export default {
 }
 
 .manage-table{
+  position: absolute;
   z-index: 10;
   width: calc(100% - 228px);
   @include media(sp) {
