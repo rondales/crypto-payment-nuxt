@@ -216,6 +216,59 @@ export default {
           this.showErrorModal(
             errorCodeList[error.response.data.errors.shift()].msg
           );
+          if (error.response.data.errors.includes(2110)) {
+            this.apiGetTransactionData().then((transactionResponse) => {
+              this.$emit('incrementProgressCompletedSteps')
+              this.$store.dispatch('payment/updateAmount', NumberFormat('0.00', transactionResponse.data.base_amount))
+              this.apiGetTransactionState().then((response) => {
+                this.$emit('incrementProgressCompletedSteps')
+                switch(response.data.state) {
+                  case 'unset_base_amount':
+                    this.showComponent = 'PaymentAmount'
+                    this.$emit('updateProgressTotalSteps', 7)
+                    this.$emit('incrementProgressCompletedSteps')
+                    break;
+                  case 'unset_email':
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
+                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
+                      this.$emit('incrementProgressCompletedSteps')
+                      this.$emit('updateProgressTotalSteps', 5)
+                      this.$router.replace({
+                        path: '/payment/wallets/' + this.$route.params.token
+                      })
+                    } else {
+                      this.$emit('incrementProgressCompletedSteps')
+                      this.$router.replace({
+                        path: '/payment/receipt/' + this.$route.params.token
+                      })
+                    }
+                    break;
+                  case 'unset_token':
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
+                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
+                    }
+                    this.$emit('incrementProgressCompletedSteps')
+                    this.$emit('updateProgressTotalSteps', 5)
+                    this.$router.replace({
+                      path: '/payment/wallets/' + this.$route.params.token
+                    })
+                    break;
+                }
+              }).catch(() => {
+                this.showErrorModal('Please try again after a while.')
+              })
+            }).catch(() => {
+              this.showErrorModal('Please try again after a while.')
+            })
+          } else {
+            this.showErrorModal(
+              errorCodeList[
+                error.response.data.errors.shift()
+              ].msg
+            )
+          }
         } else {
           this.showErrorModal("Please try again after a while.");
         }
