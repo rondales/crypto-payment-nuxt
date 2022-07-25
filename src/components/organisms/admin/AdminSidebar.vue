@@ -127,14 +127,14 @@ export default {
         return false
       }
     },
-    //// @todo This consideration is not necessary after the feature release is complete
-    // isEnableStoreApps() {
-    //   return JSON.parse(process.env.VUE_APP_ENABLE_STORE_APPS.toLowerCase())
-    // },
-    //// @todo This consideration is not necessary after the feature release is complete
-    // isEnableEcPlugin() {
-    //   return JSON.parse(process.env.VUE_APP_ENABLE_EC_PLUGIN.toLowerCase())
-    // }
+    isEnableStoreApps() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_STORE_APPS.toLowerCase())
+    },
+    isEnableEcPlugin() {
+      // @todo This consideration is not necessary after the feature release is complete
+      return JSON.parse(process.env.VUE_APP_ENABLE_EC_PLUGIN.toLowerCase())
+    }
   },
   methods: {
     close() {
