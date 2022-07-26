@@ -80,8 +80,9 @@
 </template>
 
 <script>
+import { Decimal } from "decimal.js";
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import MathExtend from "@/utils/math_extend";
+// import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
 
@@ -147,10 +148,12 @@ export default {
   },
   methods: {
     calculationExchange() {
-      this.exchangedAmount = MathExtend.ceilDecimal(
-        this.legalCurrencyAmount / this.exchangeRate,
-        2
-      );
+      if (this.legalCurrencyAmount && this.exchangeRate) {
+        this.exchangedAmount = Decimal
+          .div(this.legalCurrencyAmount, this.exchangeRate)
+          .toDP(6, Decimal.ROUND_CEIL)
+          .toString()
+      }
     },
     updateDefaultCurrency() {
       this.selectedCurrency = Object.values(this.currencies)[0].name;

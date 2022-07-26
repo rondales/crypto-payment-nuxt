@@ -99,10 +99,6 @@
             </div>
           </div>
           <div
-            v-if="isPublishedContract(chainId) && !isCurrentNetwork(chainId)"
-            class="manage-contents_separate-line mb-3"
-          ></div>
-          <div
             v-if="isPublishedContract(chainId)"
             class="manage-contents_address-wrap"
             :class="{
@@ -117,11 +113,11 @@
             </div>
           </div>
           <div
-            v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+            v-if="isPublishedContract(chainId)"
             class="manage-contents_separate-line mb-2"
           ></div>
           <div
-            v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+            v-if="isPublishedContract(chainId)"
             class="manage-contents_bottom"
           >
             <div class="manage-contents_bottom_item mb-2">
@@ -144,21 +140,23 @@
                       </button>
                     </span>
                   </div>
-                  <div
-                    class="manage-contents_btn"
-                    v-if="isPublishedContract(chainId)"
-                    @click="showContractReceiveAddressChangeModal(chainId)"
-                  >
-                    Change
-                  </div>
-                  <div v-else class="manage-contents_btn other">
-                    switch network
-                  </div>
+                  <template v-if="isCurrentNetwork(chainId)">
+                    <div
+                      class="manage-contents_btn"
+                      v-if="isPublishedContract(chainId)"
+                      @click="showContractReceiveAddressChangeModal(chainId)"
+                    >
+                      Change
+                    </div>
+                    <div v-else class="manage-contents_btn other">
+                      switch network
+                    </div>
+                  </template>
                 </div>
               </div>
             </div>
             <div
-              v-if="isPublishedContract(chainId) && isCurrentNetwork(chainId)"
+              v-if="isPublishedContract(chainId)"
               class="manage-contents_bottom_item"
             >
               <div class="manage-contents_bottom_left">
@@ -179,16 +177,18 @@
                       of amount back to the payer
                     </span>
                   </div>
-                  <div
-                    class="manage-contents_btn"
-                    v-if="isPublishedContract(chainId)"
-                    @click="showContractCashbackChangeModal(chainId)"
-                  >
-                    Change
+                  <template v-if="isCurrentNetwork(chainId)">
+                    <div
+                      class="manage-contents_btn"
+                      v-if="isPublishedContract(chainId)"
+                      @click="showContractCashbackChangeModal(chainId)"
+                    >
+                      Change
+                    </div>
+                    <div v-else class="manage-contents_btn other">
+                      switch network
                   </div>
-                  <div v-else class="manage-contents_btn other">
-                    switch network
-                  </div>
+                  </template>
                 </div>
               </div>
             </div>
@@ -210,6 +210,7 @@ import {
 } from '@/contracts/receive_tokens'
 import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
+import Web3 from "web3";
 
 export default {
   name: 'AdminContractSettings',
@@ -217,7 +218,7 @@ export default {
   data() {
     return {
       monitoringInterval: null,
-      contractLoaded: false
+      contractLoaded: false,
     }
   },
   computed: {
@@ -274,13 +275,10 @@ export default {
     }
   },
   watch: {
-    chainId() {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
-    },
+
     currentContractAddress() {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+      this.getContractCashbackRate(this.$store.state.web3.chainId)
+      this.getContractReceiveAddress(this.$store.state.web3.chainId)
     }
   },
   filters: {
@@ -453,7 +451,28 @@ export default {
         }
       })
     },
-    async getCurrentContractCashbackRate(chainId) {
+    async getContractCashbacks(web3Instance) {
+      const cashbacks = await this.$web3.viewCashBacks(
+          web3Instance,
+          MerchantContract.abi,
+          this.contracts
+      )
+      for (let [chainId, cashback] of Object.entries(cashbacks)) {
+        this.updateCashbackRate(chainId, cashback)
+      }
+    },
+
+    async getContractReceiveAddresses(web3Instance) {
+      const receiveAddresses = await this.$web3.viewMerchantReceiveAddresses(
+          web3Instance,
+          MerchantContract.abi,
+          this.contracts
+      )
+      for (let [chainId, receiveAddress] of Object.entries(receiveAddresses)) {
+        this.updateReceiveAddress(chainId, receiveAddress)
+      }
+    },
+    async getContractCashbackRate(chainId) {
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
       const result = await this.$web3.viewCashBackPercent(
@@ -463,7 +482,7 @@ export default {
       )
       this.updateCashbackRate(chainId, result)
     },
-    async getCurrentContractReceiveAddress(chainId) {
+    async getContractReceiveAddress(chainId) {
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
       const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
@@ -476,6 +495,7 @@ export default {
   },
   created() {
     const receiveTokenSymbol = this.$store.state.account.receiveSymbol
+
     const supportStatuses = {
       [AvailableNetworks.ethereum.chainId]:
         EthereumTokens[receiveTokenSymbol].address,
@@ -507,8 +527,9 @@ export default {
     })
     this.$store.dispatch('contract/addContracts', contractSettings)
     this.getContracts().then(() => {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
+      const web3Instance = new Web3();
+      this.getContractCashbacks(web3Instance)
+      this.getContractReceiveAddresses(web3Instance)
     })
     this.getPendingTransactions()
   },

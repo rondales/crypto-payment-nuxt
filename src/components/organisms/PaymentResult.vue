@@ -48,7 +48,7 @@
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import { Decimal as BigJs } from "decimal.js";
+import StringExtend from "@/utils/string_extend";
 import ResultPending from "@/components/organisms/PaymentResultPending";
 import ResultFailure from "@/components/organisms/PaymentResultFailure";
 import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
@@ -99,7 +99,15 @@ export default {
   },
   filters: {
     amountFormat(amount) {
-      return new BigJs(amount).toString();
+      const splitAmount = amount.split('.')
+      if (splitAmount.length > 1) {
+        splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
+      }
+      if(splitAmount[1]) {
+        return splitAmount.join('.')
+      } else {
+        return splitAmount[0]
+      }
     },
   },
   computed: {

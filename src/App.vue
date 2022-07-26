@@ -40,6 +40,13 @@ export default {
       import("@/components/molecules/switchNetworkForAdminModal"),
     errorModal: () => import("@/components/molecules/errorModal"),
     receiveModal: () => import("@/components/molecules/receiveModal"),
+    editNoteModal: () => import("@/components/molecules/editNoteModal"),
+    urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
+    plugInsTokenRefreshModal: () => import("@/components/molecules/plugInsTokenRefreshModal"),
+    plugInsTokenDeleteModal: () => import("@/components/molecules/plugInsTokenDeleteModal"),
+    deleteRowModal: () => import("@/components/molecules/deleteRowModal"),
+    createDeeplinkModal: () => import("@/components/molecules/createDeeplinkModal"),
+    openQrModal: () => import("@/components/molecules/openQrModal"),
     editAccountNoteModal: () =>
       import("@/components/molecules/editAccountNoteModal"),
     accountModal: () => import("@/components/molecules/accountModal"),
