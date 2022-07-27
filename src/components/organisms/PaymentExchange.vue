@@ -271,9 +271,11 @@ import {
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
 import NumberFormat from "number-format.js";
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: "PaymentExchange",
+  mixins: [DisplayConfig],
   data() {
     return {
       expired: false,
@@ -304,9 +306,6 @@ export default {
   filters: {
     balanceFormat(balance) {
       return NumberFormat("0.0000", balance);
-    },
-    usdFormat(balance) {
-      return NumberFormat("0.00", balance);
     },
   },
   computed: {
@@ -509,6 +508,9 @@ export default {
     },
   },
   methods: {
+    formatNumber(number) {
+      return this.$_displayConfig_formatNumber(number)
+    },
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
       const request = {
