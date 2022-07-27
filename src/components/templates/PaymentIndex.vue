@@ -139,6 +139,17 @@ export default {
       ],
     };
   },
+  watch: {
+    receiver(value) {
+      this.idTable[0].text = value
+    },
+    isVerifiedDomain(value) {
+      this.idTable[0].verified = value
+    },
+    invoiceId(value) {
+      this.idTable[1].text = value
+    }
+  },
   computed: {
     darkTheme() {
       return DARK_THEME;
