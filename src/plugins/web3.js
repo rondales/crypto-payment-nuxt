@@ -24,6 +24,7 @@ import {
   MaticTokens,
   AvalancheTokens
 } from '@/contracts/tokens'
+import ReceiveTokens from '@/contracts/receive_tokens'
 
 export default {
   install(Vue) {
@@ -304,7 +305,7 @@ const getTokenExchangeData = async function(
   slippageTolerance
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const defaultTokens = getNetworkDefaultTokens(chainId)
+  const defaultTokens = getMerchantReceiveTokens(chainId)
   const requestToken = defaultTokens[paymentRequestSymbol]
   const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
   const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
@@ -623,6 +624,26 @@ const convertFromWei = function convertFromWei(web3, wei, unit) {
 }
 
 function getNetworkDefaultTokens(chainId) {
+  switch(chainId) {
+    case NETWORKS[1].chainId:
+    case NETWORKS[5].chainId:
+      return EthereumTokens
+    case NETWORKS[56].chainId:
+    case NETWORKS[97].chainId:
+      return BscTokens
+    case NETWORKS[137].chainId:
+    case NETWORKS[80001].chainId:
+      return MaticTokens
+    case NETWORKS[43113].chainId:
+    case NETWORKS[43114].chainId:
+      return AvalancheTokens
+  }
+}
+
+function getMerchantReceiveTokens(chainId) {
+  const { EthereumTokens, BscTokens, MaticTokens, AvalancheTokens } =
+    ReceiveTokens
+
   switch(chainId) {
     case NETWORKS[1].chainId:
     case NETWORKS[5].chainId:
