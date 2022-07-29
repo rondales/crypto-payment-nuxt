@@ -66,7 +66,7 @@
             </div>
           </div>
         </div>
-        <div class="payment_balance-topken border mb-2">
+        <div class="payment_balance-topken border">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
               {{ userSelectedTokenSymbol }}
@@ -89,6 +89,9 @@
               v-if="isEnoughUserSelectedTokenBalance"
               class="btn-content-wrap"
             >
+              <p class="estimate mb-2">
+                * This amount is an estimate and is subject to change
+              </p>
               <button
                 v-if="isNeedApprove"
                 class="btn __g __l mb-2 approve-token-btn"
@@ -718,6 +721,10 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+  .estimate {
+    font-size: 12px;
+    font-weight: 100;
   }
   .via {
     font-size: 12px;
