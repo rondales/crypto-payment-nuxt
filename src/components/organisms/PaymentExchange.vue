@@ -723,7 +723,7 @@ export default {
     }
   }
   .estimate {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 100;
   }
   .via {
