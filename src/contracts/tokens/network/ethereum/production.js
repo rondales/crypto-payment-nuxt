@@ -7,7 +7,7 @@ import Sushi from '../../abis/ethereum/sushi'
 import Weth from '../../abis/ethereum/weth'
 import Jpyc from '../../abis/matic/jpyc'
 
-const url = NETWORKS[1].scanUrl + '/address'
+const url = NETWORKS[1].scanUrl + '/token'
 
 export default {
   ETH: {

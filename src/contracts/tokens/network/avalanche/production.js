@@ -5,7 +5,7 @@ import Wavax from '../../abis/avalanche/wavax'
 import Dai from '../../abis/matic/dai'
 import Jpyc from '../../abis/matic/jpyc'
 
-const url = NETWORKS[43114].scanUrl + '/address'
+const url = NETWORKS[43114].scanUrl + '/token'
 
 export default {
   AVAX: {

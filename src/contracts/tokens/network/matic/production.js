@@ -5,7 +5,7 @@ import Wmatic from '../../abis/matic/wmatic'
 import Dai from '../../abis/matic/dai'
 import Jpyc from '../../abis/matic/jpyc'
 
-const url = NETWORKS[137].scanUrl + '/address'
+const url = NETWORKS[137].scanUrl + '/token'
 
 export default {
   MATIC: {

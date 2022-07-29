@@ -6,7 +6,7 @@ import Cake from '../../abis/binance/cake'
 import Wbnb from '../../abis/binance/wbnb'
 import Dai from '../../abis/matic/dai'
 
-const url = NETWORKS[56].scanUrl + '/address'
+const url = NETWORKS[56].scanUrl + '/token'
 
 export default {
   BNB: {
