@@ -4,7 +4,6 @@ import Busd from '../../abis/binance/busd'
 import Usdc from '../../abis/binance/usdc'
 import Cake from '../../abis/binance/cake'
 import Wbnb from '../../abis/binance/wbnb'
-import Dai from '../../abis/matic/dai'
 
 const url = NETWORKS[56].scanUrl + '/token'
 
@@ -56,13 +55,5 @@ export default {
     abi: Wbnb.abi,
     url: `${url}/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c`,
     icon: require('@/assets/images/symbol/wbnb.svg')
-  },
-  DAI: {
-    name: 'Maker DAO',
-    symbol: 'DAI',
-    address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
-    abi: Dai.abi,
-    url: `${url}/0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3`,
-    icon: require('@/assets/images/symbol/dai.svg')
   }
 }
