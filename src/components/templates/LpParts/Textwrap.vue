@@ -8,7 +8,6 @@
 
     <div class="absTest">
       <p class="text scrollAction op"><span v-html="textData.text"></span></p>
-      <p class="text scrollAction op mt-2"><span v-html="textData.text2"></span></p>
       <div v-if="textData.app" class="app">
         <div class="app_wrap">
           <p v-if="textData.app.coming" class="app_title non-translate">
