@@ -3,7 +3,7 @@ import Usdt from '../../abis/matic/usdt'
 import Usdc from '../../abis/matic/usdc'
 import Wmatic from '../../abis/matic/wmatic'
 
-const url = NETWORKS[137].scanUrl + '/address'
+const url = NETWORKS[137].scanUrl + '/token'
 
 export default {
   MATIC: {

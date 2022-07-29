@@ -6,7 +6,7 @@ import Uni from '../../abis/ethereum/uni'
 import Sushi from '../../abis/ethereum/sushi'
 import Weth from '../../abis/ethereum/weth'
 
-const url = NETWORKS[1].scanUrl + '/address'
+const url = NETWORKS[1].scanUrl + '/token'
 
 export default {
   ETH: {

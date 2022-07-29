@@ -536,7 +536,6 @@ export default {
                 lightSrc: "",
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
-              text2: "Mainnet will launch July 4, 2022.",
               link: {
                 url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",

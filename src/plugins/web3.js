@@ -19,11 +19,17 @@ import {
 import AvailableNetworks from '@/network'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
-  EthereumTokens,
-  BscTokens,
-  MaticTokens,
-  AvalancheTokens
+  EthereumTokens as EthereumDefaultTokens,
+  BscTokens as BscDefaultTokens,
+  MaticTokens as MaticDefaultTokens,
+  AvalancheTokens as AvalancheDefaultTokens
 } from '@/contracts/tokens'
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalancheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
   install(Vue) {
@@ -306,7 +312,7 @@ const getTokenExchangeData = async function(
   slippageTolerance
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const defaultTokens = getNetworkDefaultTokens(chainId)
+  const defaultTokens = getMerchantReceiveTokens(chainId)
   const requestToken = defaultTokens[paymentRequestSymbol]
   const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
   const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
@@ -686,16 +692,33 @@ function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
     case NETWORKS[5].chainId:
-      return EthereumTokens
+      return EthereumDefaultTokens
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
-      return BscTokens
+      return BscDefaultTokens
     case NETWORKS[137].chainId:
     case NETWORKS[80001].chainId:
-      return MaticTokens
+      return MaticDefaultTokens
     case NETWORKS[43113].chainId:
     case NETWORKS[43114].chainId:
-      return AvalancheTokens
+      return AvalancheDefaultTokens
+  }
+}
+
+function getMerchantReceiveTokens(chainId) {
+  switch(chainId) {
+    case NETWORKS[1].chainId:
+    case NETWORKS[5].chainId:
+      return EthereumReceiveTokens
+    case NETWORKS[56].chainId:
+    case NETWORKS[97].chainId:
+      return BscReceiveTokens
+    case NETWORKS[137].chainId:
+    case NETWORKS[80001].chainId:
+      return MaticReceiveTokens
+    case NETWORKS[43113].chainId:
+    case NETWORKS[43114].chainId:
+      return AvalancheReceiveTokens
   }
 }
 

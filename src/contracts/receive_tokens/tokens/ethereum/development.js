@@ -5,7 +5,7 @@ import Dai from '../../abis/ethereum/dai'
 import Jpyc from '../../abis/ethereum/dai'
 
 
-const url = NETWORKS[5].scanUrl + '/address'
+const url = NETWORKS[5].scanUrl + '/token'
 
 export default {
   USDT: {
