@@ -5,9 +5,8 @@ import Dai from '../../abis/ethereum/dai'
 import Uni from '../../abis/ethereum/uni'
 import Sushi from '../../abis/ethereum/sushi'
 import Weth from '../../abis/ethereum/weth'
-import Jpyc from '../../abis/matic/jpyc'
 
-const url = NETWORKS[1].scanUrl + '/address'
+const url = NETWORKS[1].scanUrl + '/token'
 
 export default {
   ETH: {
@@ -65,13 +64,5 @@ export default {
     abi: Weth.abi,
     url: `${url}/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`,
     icon: require('@/assets/images/symbol/weth.svg')
-  },
-  JPYC: {
-    name: 'JPY Coin',
-    symbol: 'JPYC',
-    address: '0x2370f9d504c7a6E775bf6E14B3F12846b594cD53',
-    abi: Jpyc.abi,
-    url: `${url}/0x2370f9d504c7a6E775bf6E14B3F12846b594cD53`,
-    icon: require('@/assets/images/symbol/jpyc.svg')
-  },
+  }
 }
