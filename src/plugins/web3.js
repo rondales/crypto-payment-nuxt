@@ -19,12 +19,17 @@ import {
 import AvailableNetworks from '@/network'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
-  EthereumTokens,
-  BscTokens,
-  MaticTokens,
-  AvalancheTokens
+  EthereumTokens as EthereumDefaultTokens,
+  BscTokens as BscDefaultTokens,
+  MaticTokens as MaticDefaultTokens,
+  AvalancheTokens as AvalancheDefaultTokens
 } from '@/contracts/tokens'
-import ReceiveTokens from '@/contracts/receive_tokens'
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalancheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
   install(Vue) {
@@ -627,36 +632,33 @@ function getNetworkDefaultTokens(chainId) {
   switch(chainId) {
     case NETWORKS[1].chainId:
     case NETWORKS[5].chainId:
-      return EthereumTokens
+      return EthereumDefaultTokens
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
-      return BscTokens
+      return BscDefaultTokens
     case NETWORKS[137].chainId:
     case NETWORKS[80001].chainId:
-      return MaticTokens
+      return MaticDefaultTokens
     case NETWORKS[43113].chainId:
     case NETWORKS[43114].chainId:
-      return AvalancheTokens
+      return AvalancheDefaultTokens
   }
 }
 
 function getMerchantReceiveTokens(chainId) {
-  const { EthereumTokens, BscTokens, MaticTokens, AvalancheTokens } =
-    ReceiveTokens
-
   switch(chainId) {
     case NETWORKS[1].chainId:
     case NETWORKS[5].chainId:
-      return EthereumTokens
+      return EthereumReceiveTokens
     case NETWORKS[56].chainId:
     case NETWORKS[97].chainId:
-      return BscTokens
+      return BscReceiveTokens
     case NETWORKS[137].chainId:
     case NETWORKS[80001].chainId:
-      return MaticTokens
+      return MaticReceiveTokens
     case NETWORKS[43113].chainId:
     case NETWORKS[43114].chainId:
-      return AvalancheTokens
+      return AvalancheReceiveTokens
   }
 }
 
