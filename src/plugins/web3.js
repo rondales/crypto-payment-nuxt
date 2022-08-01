@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
-import { Decimal as BigJs } from 'decimal.js'
 import {
   METAMASK,
   WALLET_CONNECT,
@@ -426,7 +425,8 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
     if (token.symbol === defaultToken.symbol) tokenAbi = defaultToken.abi
   })
   if (!tokenAbi) tokenAbi = Erc20Abi
-  const uint256 = new BigJs(2).pow(256).minus(1).toFixed(0)
+  const BN = web3.utils.BN
+  const uint256 = (new BN(2)).pow(new BN(256)).sub(new BN(1))
   const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
