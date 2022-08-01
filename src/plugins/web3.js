@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Erc20Abi from 'erc-20-abi'
-import { Decimal as BigJs } from 'decimal.js'
 import {
   METAMASK,
   WALLET_CONNECT,
