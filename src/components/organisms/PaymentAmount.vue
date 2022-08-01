@@ -322,6 +322,7 @@ export default {
         line-height: 53px;
         position: absolute;
         img {
+          max-width: 25px;
           vertical-align: sub;
         }
       }
