@@ -6,6 +6,7 @@ export default {
     alias: NETWORKS[1].alias,
     chainId: NETWORKS[1].chainId,
     rpcUrl: NETWORKS[1].rpcUrl,
+    scanUrl: NETWORKS[1].scanUrl,
     icon: require('@/assets/images/network/ethereum.svg')
   },
   bsc: {
@@ -13,6 +14,7 @@ export default {
     alias: NETWORKS[56].alias,
     chainId: NETWORKS[56].chainId,
     rpcUrl: NETWORKS[56].rpcUrl,
+    scanUrl: NETWORKS[56].scanUrl,
     icon: require('@/assets/images/network/binance.svg')
   },
   matic: {
@@ -20,6 +22,7 @@ export default {
     alias: NETWORKS[137].alias,
     chainId: NETWORKS[137].chainId,
     rpcUrl: NETWORKS[137].rpcUrl,
+    scanUrl: NETWORKS[137].scanUrl,
     icon: require('@/assets/images/network/matic.svg')
   },
   avalanche: {
@@ -27,6 +30,7 @@ export default {
     alias: NETWORKS[43114].alias,
     chainId: NETWORKS[43114].chainId,
     rpcUrl: NETWORKS[43114].rpcUrl,
+    scanUrl: NETWORKS[43114].scanUrl,
     icon: require('@/assets/images/network/avalanche.svg')
   }
 }
