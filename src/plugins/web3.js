@@ -16,7 +16,6 @@ import {
   AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
 } from '@/constants'
 import AvailableNetworks from '@/network'
-import MerchantFactoryContract from '@/contracts/merchant_factory'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -63,8 +62,10 @@ export default {
           publishMerchantContract: publishMerchantContract,
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
+          getNetworkGasPrice: getNetworkGasPrice,
           getTokenUnit: getTokenUnit,
           convertFromWei: convertFromWei,
+          getScanBlockNumberMaxLimit: getScanBlockNumberMaxLimit,
           viewMerchantReceiveAddress: viewMerchantReceiveAddress,
           viewCashBackPercent: viewCashBackPercent,
           isContractAddress: isContractAddress,
@@ -445,7 +446,7 @@ const getTokenDecimalUnit = function(web3, chainId, token) {
   return tokenContract.methods.decimals().call()
 }
 
-const sendPaymentTransaction = function(
+const sendPaymentTransaction = async function(
   web3,
   chainId,
   walletAddress,
@@ -477,7 +478,7 @@ const sendPaymentTransaction = function(
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
 
-  return merchantContract.methods.submitTransaction(
+  const estimatedGas = await merchantContract.methods.submitTransaction(
     paymentTokenAddress,
     userTokenAmountWei,
     requestAmountWei,
@@ -486,10 +487,35 @@ const sendPaymentTransaction = function(
     paymentIdParam,
     optionalParam,
     reservedParam
-  ).send({
+  ).estimateGas({
     from: walletAddress,
     to: contract.address,
     value: msgValue
+  })
+  const gasPrice = await getNetworkGasPrice(web3)
+  return new Promise(function(resolve, reject) {
+    merchantContract.methods.submitTransaction(
+      paymentTokenAddress,
+      userTokenAmountWei,
+      requestAmountWei,
+      path,
+      feePath,
+      paymentIdParam,
+      optionalParam,
+      reservedParam
+    ).send({
+      from: walletAddress,
+      to: contract.address,
+      value: msgValue,
+      gas: estimatedGas,
+      gasPrice: gasPrice
+    },(error, txHash) => {
+      if(error) {
+        reject(error)
+      } else {
+        resolve(txHash)
+      }
+    })
   })
 }
 
@@ -498,31 +524,22 @@ const monitoringTransaction = function(web3, transactionHash) {
 }
 
 const publishMerchantContract = function(
-  web3,
-  chainId,
+  factoryContract,
   merchantWalletAddress,
-  receiveTokenAddress
+  receiveTokenAddress,
+  reservedParam,
+  estimatedGas,
+  gasPrice
 ) {
-  if (!MerchantFactoryContract.addresses[chainId]) {
-    throw new Error('Currently, this network has stopped issuing contracts.')
-  }
-  const reservedParam = '0x'
-  const scanBlockNumberMaxLimit = getScanBlockNumberMaxLimit(chainId)
-  const factoryContract = new web3.eth.Contract(
-    MerchantFactoryContract.abi,
-    MerchantFactoryContract.addresses[chainId],
-    { transactionBlockTimeout: scanBlockNumberMaxLimit }
-  )
-
-  try {
-    return factoryContract.methods.deployMerchant(
-        merchantWalletAddress,
-        receiveTokenAddress,
-        reservedParam
-      ).send({ from: merchantWalletAddress })
-  } catch(error) {
-    throw new Error(error)
-  }
+  return factoryContract.methods.deployMerchant(
+      merchantWalletAddress,
+      receiveTokenAddress,
+      reservedParam
+    ).send({ 
+      from: merchantWalletAddress,
+      gas: estimatedGas,
+      gasPrice: gasPrice
+    })
 }
 
 const viewMerchantReceiveAddress = async function(web3, contractAbi, contractAddress) {
@@ -566,30 +583,31 @@ const isContractAddress = async function(web3, address) {
 }
 
 const updateMerchantReceiveAddress = function(
-  web3,
-  contractAbi,
-  contractAddress,
+  merchantContract,
   receiveAddress,
   isContractAddress,
-  merchantWalletAddress
+  merchantWalletAddress,
+  estimatedGas,
+  gasPrice
 ) {
-  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
   return merchantContract.methods.updateReceiveAddress(receiveAddress,isContractAddress).send({
-    from: merchantWalletAddress
+    from: merchantWalletAddress,
+    gas: estimatedGas,
+    gasPrice: gasPrice
   })
 }
 
 const updateCashbackPercent = function(
-  web3,
-  contractAbi,
-  contractAddress,
-  cashbackValue,
-  merchantWalletAddress
+  merchantContract,
+  cashbackPercent,
+  merchantWalletAddress,
+  estimatedGas,
+  gasPrice
 ) {
-  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
-  const cashbackPercent = parseInt((parseFloat(cashbackValue) * 100).toFixed(2), 10)
   return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
-    from: merchantWalletAddress
+    from: merchantWalletAddress,
+    gas: estimatedGas,
+    gasPrice: gasPrice
   })
 }
 
@@ -614,6 +632,10 @@ const signWithPrivateKey = function(web3, address) {
 //   }
 //   return result
 // }
+
+const getNetworkGasPrice = function(web3) {
+  return web3.eth.getGasPrice()
+}
 
 const getTokenUnit = function getTokenUnit(decimal) {
   const wei = (10 ** decimal).toString()
@@ -672,7 +694,7 @@ function getWrappedToken(chainId) {
   return wrappedToken
 }
 
-function getScanBlockNumberMaxLimit(chainId) {
+const getScanBlockNumberMaxLimit = function getScanBlockNumberMaxLimit(chainId) {
   switch(parseInt(chainId, 10)) {
     case NETWORKS[1].chainId:
       return ETEHREUM_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
