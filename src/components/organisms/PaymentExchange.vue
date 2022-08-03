@@ -415,7 +415,7 @@ export default {
         this.SLIPPAGE_RATE
       )
       .catch((err) => {
-        if(err.message.includes('ds-math-sub-underflow')) {
+        if(err.message.includes('execution reverted: No valid exchange')) {
           this.isNotEnoughLiquidity = true
           this.$parent.loading = false;
           this.$store.dispatch("modal/show", {
