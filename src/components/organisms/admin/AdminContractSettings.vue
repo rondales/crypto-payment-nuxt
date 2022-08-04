@@ -452,7 +452,6 @@ export default {
       })
     },
     async getCurrentContractCashbackRate(chainId) {
-      // clear it avoids multi-loop
       clearInterval(this.monitoringCashbackRateInterval)
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
@@ -471,7 +470,6 @@ export default {
       }, 1000)
     },
     async getCurrentContractReceiveAddress(chainId) {
-      // clear it avoids multi-loop
       clearInterval(this.monitoringReceiveAddressInterval)
 
       const contractAddress = this.contracts[chainId].address
@@ -524,10 +522,7 @@ export default {
       })
     })
     this.$store.dispatch('contract/addContracts', contractSettings)
-    this.getContracts().then(() => {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
-    })
+    this.getContracts()
     this.getPendingTransactions()
   },
   beforeDestroy() {
