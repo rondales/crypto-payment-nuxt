@@ -107,6 +107,13 @@ export default {
         USDC: require("@/assets/images/symbol/usdc.svg"),
         DAI: require("@/assets/images/symbol/dai.svg"),
         JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        SGD: require("@/assets/images/symbol/jpyc.svg"),
+        HKD: require("@/assets/images/symbol/jpyc.svg"),
+        CAD: require("@/assets/images/symbol/jpyc.svg"),
+        IDR: require("@/assets/images/symbol/jpyc.svg"),
+        PHP: require("@/assets/images/symbol/jpyc.svg"),
+        INR: require("@/assets/images/symbol/jpyc.svg"),
+        KRW: require("@/assets/images/symbol/jpyc.svg"),
       },
     };
   },
@@ -315,6 +322,7 @@ export default {
         line-height: 53px;
         position: absolute;
         img {
+          max-width: 25px;
           vertical-align: sub;
         }
       }
