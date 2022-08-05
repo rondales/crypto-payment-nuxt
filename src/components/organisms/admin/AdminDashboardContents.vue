@@ -101,7 +101,6 @@
 
 <script>
 import moment from 'moment'
-import NumberFormat from 'number-format.js'
 import RequestUtility from '@/utils/request'
 import AvailableNetworks from '@/network'
 import {
@@ -111,9 +110,11 @@ import {
   AvalancheTokens
 } from '@/contracts/receive_tokens'
 import DashItem from "@/components/organisms/admin/AdminDashItem"
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: 'AdminDashboardContents',
+  mixins: [DisplayConfig],
   components: { DashItem },
   props: ['contractsStatus'],
   data() {
@@ -286,14 +287,14 @@ export default {
   created() {
     this.apiGetPaymentSummary().then((response) => {
       const summary = response.data
-      this.items.monthlyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_amount)
-      this.items.monthlyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.monthly.total_cashback_amount)
+      this.items.monthlyAmount.value = this.$_displayConfig_formatNumber(summary.monthly.total_amount) + " " + this.receiveTokenSymbol
+      this.items.monthlyCashbackAmount.value = this.$_displayConfig_formatNumber(summary.monthly.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.monthlyCount.value = summary.monthly.total_count
-      this.items.weeklyAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_amount)
-      this.items.weeklyCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.weekly.total_cashback_amount)
+      this.items.weeklyAmount.value = this.$_displayConfig_formatNumber(summary.weekly.total_amount) + " " + this.receiveTokenSymbol
+      this.items.weeklyCashbackAmount.value = this.$_displayConfig_formatNumber(summary.weekly.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.weeklyCount.value = summary.weekly.total_count
-      this.items.todayAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_amount)
-      this.items.todayCashbackAmount.value = NumberFormat(`0.00 ${this.receiveTokenSymbol}`, summary.daily.total_cashback_amount)
+      this.items.todayAmount.value = this.$_displayConfig_formatNumber(summary.daily.total_amount) + " " + this.receiveTokenSymbol
+      this.items.todayCashbackAmount.value = this.$_displayConfig_formatNumber(summary.daily.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.todayCount.value = summary.daily.total_count
     })
     this.receiveTokens = this.generateReceiveTokenList()

@@ -43,37 +43,13 @@
           />
           <label for="item1"> All Currencies </label>
         </div>
-        <div class="bases mb-1">
+        <div class="bases mb-1"  v-for="currency in currencies" :key="currency.name">
           <input
             type="checkbox"
-            @click="selectCurrency($event, 'USD')"
-            :checked="isAllowUsd"
+            @click="selectCurrency($event, currency.name)"
+            :checked="isAllowCurrency(currency.name)"
           />
-          <label for="item2"> USD </label>
-        </div>
-        <div class="bases mb-1">
-          <input
-            type="checkbox"
-            @click="selectCurrency($event, 'JPY')"
-            :checked="isAllowJpy"
-          />
-          <label for="item3"> JPY </label>
-        </div>
-        <div class="bases mb-1">
-          <input
-            type="checkbox"
-            @click="selectCurrency($event, 'EUR')"
-            :checked="isAllowEur"
-          />
-          <label for="item4"> EUR </label>
-        </div>
-        <div class="bases mb-1">
-          <input
-            type="checkbox"
-            @click="selectCurrency($event, 'AED')"
-            :checked="isAllowAed"
-          />
-          <label for="item5"> AED </label>
+          <label for="item2"> {{currency.name}} </label>
         </div>
       </div>
     </div>
@@ -84,7 +60,7 @@
 </template>
 
 <script>
-import { API_BASE_URL } from '@/constants'
+import {API_BASE_URL, CURRENCIES} from '@/constants'
 import apiMixin from '@/components/mixins/ApiHandler'
 
 export default {
@@ -92,6 +68,7 @@ export default {
   mixins: [apiMixin],
   data() {
     return {
+      currencies: CURRENCIES,
       successNotifyUrl: '',
       successReturnUrl: '',
       failureReturnUrl: '',
@@ -100,7 +77,14 @@ export default {
         USD: false,
         JPY: false,
         EUR: false,
-        AED: false
+        AED: false,
+        SGD: false,
+        HKD: false,
+        CAD: false,
+        IDR: false,
+        PHP: false,
+        INR: false,
+        KRW: false
       }
     }
   },
@@ -110,24 +94,15 @@ export default {
         (setting) => !setting
       )
       return denyCurrencies.length === 0
-    },
-    isAllowUsd() {
-      return this.isAllowAllCurrency || this.allowCurrencies.USD
-    },
-    isAllowJpy() {
-      return this.isAllowAllCurrency || this.allowCurrencies.JPY
-    },
-    isAllowEur() {
-      return this.isAllowAllCurrency || this.allowCurrencies.EUR
-    },
-    isAllowAed() {
-      return this.isAllowAllCurrency || this.allowCurrencies.AED
     }
   },
   methods: {
     apiGetSettings() {
       const url = `${API_BASE_URL}/api/v1/management/setting/payment`
       return this.axios.get(url, this.$_apiHandler_getOptions())
+    },
+    isAllowCurrency(currencyName) {
+      return this.isAllowAllCurrency || this.allowCurrencies[currencyName]
     },
     apiUpdateSettings() {
       const url = `${API_BASE_URL}/api/v1/management/setting/payment`
