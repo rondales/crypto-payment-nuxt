@@ -216,6 +216,8 @@ export default {
   mixins: [apiMixin],
   data() {
     return {
+      monitoringReceiveAddressInterval: null,
+      monitoringCashbackRateInterval: null,
       monitoringInterval: null,
       contractLoaded: false
     }
@@ -274,10 +276,6 @@ export default {
     }
   },
   watch: {
-    chainId() {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
-    },
     currentContractAddress() {
       this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
       this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
@@ -454,24 +452,42 @@ export default {
       })
     },
     async getCurrentContractCashbackRate(chainId) {
+      clearInterval(this.monitoringCashbackRateInterval)
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
-      const result = await this.$web3.viewCashBackPercent(
-        this.$store.state.web3.instance,
-        MerchantContract.abi,
-        contractAddress
-      )
-      this.updateCashbackRate(chainId, result)
+
+      this.monitoringCashbackRateInterval = setInterval(() => {
+        this.$web3.viewCashBackPercent(
+          this.$store.state.web3.instance,
+          MerchantContract.abi,
+          contractAddress
+        ).then((result) => {
+          this.updateCashbackRate(chainId, result)
+          clearInterval(this.monitoringCashbackRateInterval)
+        }).catch(error => {
+          console.log(error)
+        })
+      }, 1000)
     },
     async getCurrentContractReceiveAddress(chainId) {
+      clearInterval(this.monitoringReceiveAddressInterval)
+
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
-      const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
-        this.$store.state.web3.instance,
-        MerchantContract.abi,
-        contractAddress
-      )
-      this.updateReceiveAddress(chainId, receiveAddress)
+
+      this.monitoringReceiveAddressInterval = setInterval(() => {
+        this.$web3.viewMerchantReceiveAddress(
+          this.$store.state.web3.instance,
+          MerchantContract.abi,
+          contractAddress
+        ).then(receiveAddress => {
+          this.updateReceiveAddress(chainId, receiveAddress)
+          clearInterval(this.monitoringReceiveAddressInterval)
+        }).catch(error => {
+          console.log(error)
+        })
+      }, 1000)
+
     }
   },
   created() {
@@ -506,14 +522,13 @@ export default {
       })
     })
     this.$store.dispatch('contract/addContracts', contractSettings)
-    this.getContracts().then(() => {
-      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
-      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
-    })
+    this.getContracts()
     this.getPendingTransactions()
   },
   beforeDestroy() {
     clearTimeout(this.monitoringInterval)
+    clearInterval(this.monitoringReceiveAddressInterval)
+    clearInterval(this.monitoringCashbackRateInterval)
   }
 }
 </script>
