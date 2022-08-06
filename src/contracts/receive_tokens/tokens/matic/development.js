@@ -1,5 +1,6 @@
 import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/matic/usdt'
+import Weth from '../../abis/matic/weth'
 
 const url = NETWORKS[80001].scanUrl + '/token'
 
@@ -39,9 +40,9 @@ export default {
   WETH: {
     name: 'Wrapped ETH',
     symbol: 'WETH',
-    address: null,
-    abi: null,
-    url: null,
+    address: '0x43e833406286FfA76DBd456368594B1e5614aa06',
+    abi: Weth.abi,
+    url: `${url}/0x43e833406286FfA76DBd456368594B1e5614aa06`,
     icon: require('@/assets/images/symbol/eth.svg')
   },
 }
