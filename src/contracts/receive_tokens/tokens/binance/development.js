@@ -1,7 +1,7 @@
 import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/binance/usdt'
 
-const url = NETWORKS[97].scanUrl + '/address'
+const url = NETWORKS[97].scanUrl + '/token'
 
 export default {
   USDT: {

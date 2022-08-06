@@ -470,7 +470,7 @@ export default {
     executePayment() {
       this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
-        .on("transactionHash", (txHash) => {
+        .then((txHash) => {
           this.$store.dispatch("payment/updateStatus", STATUS_PROCESSING);
           this.apiUpdateTransaction(txHash)
             .then(() => {
@@ -483,7 +483,8 @@ export default {
               console.log(error.data);
             });
         })
-        .on("error", () => {
+        .catch((error) => {
+          console.log(error)
           this.$store.dispatch("wallet/updatePendingStatus", false);
         });
     },

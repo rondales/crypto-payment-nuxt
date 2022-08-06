@@ -125,7 +125,7 @@
                   {{ network(record.network_type) }}
                 </td>
                 <td>
-                  {{ record.base_amount | decimalFormat }} {{ record.base_symbol }}
+                  {{ formatNumber(record.base_amount) }} {{ record.base_symbol }}
                 </td>
               </tr>
             </tbody>
@@ -164,10 +164,11 @@ import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 import moment from 'moment'
 import { saveAs } from 'file-saver';
-import NumberFormat from 'number-format.js'
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: 'AdminTransactionHistory',
+  mixins: [DisplayConfig],
   components: {
     DatetimePicker,
     Paginate
@@ -194,11 +195,6 @@ export default {
         total: null,
         records: []
       }
-    }
-  },
-  filters: {
-    decimalFormat(amount) {
-      return NumberFormat('0.00', amount)
     }
   },
   computed: {
@@ -233,6 +229,9 @@ export default {
     }
   },
   methods: {
+    formatNumber(number) {
+      return this.$_displayConfig_formatNumber(number)
+    },
     apiGetHistory() {
       const url = `${this.baseUrl}/api/v1/management/transaction/normal`
       const inputedParams = Object.entries(this.searchParams).map(([key, param]) => {
@@ -582,6 +581,7 @@ export default {
       overflow-x: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      margin-bottom: 0;
     }
     thead,tbody{
       width: 100%;

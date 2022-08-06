@@ -80,8 +80,9 @@
 </template>
 
 <script>
+import { Decimal } from "decimal.js";
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import MathExtend from "@/utils/math_extend";
+// import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
 
@@ -106,7 +107,14 @@ export default {
         USDC: require("@/assets/images/symbol/usdc.svg"),
         DAI: require("@/assets/images/symbol/dai.svg"),
         JPYC: require("@/assets/images/symbol/jpyc.svg"),
-        WETH: require('@/assets/images/symbol/eth.svg')
+        WETH: require('@/assets/images/symbol/eth.svg'),
+        SGD: require("@/assets/images/symbol/jpyc.svg"),
+        HKD: require("@/assets/images/symbol/jpyc.svg"),
+        CAD: require("@/assets/images/symbol/jpyc.svg"),
+        IDR: require("@/assets/images/symbol/jpyc.svg"),
+        PHP: require("@/assets/images/symbol/jpyc.svg"),
+        INR: require("@/assets/images/symbol/jpyc.svg"),
+        KRW: require("@/assets/images/symbol/jpyc.svg"),
       },
     };
   },
@@ -148,10 +156,12 @@ export default {
   },
   methods: {
     calculationExchange() {
-      this.exchangedAmount = MathExtend.ceilDecimal(
-        this.legalCurrencyAmount / this.exchangeRate,
-        2
-      );
+      if (this.legalCurrencyAmount && this.exchangeRate) {
+        this.exchangedAmount = Decimal
+          .div(this.legalCurrencyAmount, this.exchangeRate)
+          .toDP(6, Decimal.ROUND_CEIL)
+          .toString()
+      }
     },
     updateDefaultCurrency() {
       this.selectedCurrency = Object.values(this.currencies)[0].name;
@@ -313,6 +323,7 @@ export default {
         line-height: 53px;
         position: absolute;
         img {
+          max-width: 25px;
           vertical-align: sub;
         }
       }

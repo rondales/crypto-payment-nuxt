@@ -1,7 +1,7 @@
 import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/matic/usdt'
 
-const url = NETWORKS[80001].scanUrl + '/address'
+const url = NETWORKS[80001].scanUrl + '/token'
 
 export default {
   USDT: {

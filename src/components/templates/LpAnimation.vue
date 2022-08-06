@@ -14,6 +14,11 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      p5Instances: []
+    }
+  },
   mounted() {
     const P5 = require("p5");
     const store = this.$store;
@@ -758,11 +763,16 @@ export default {
     //   }
     // };
 
-    new P5(eval(this.type));
+    this.p5Instances.push(new P5(eval(this.type)));
     // new P5(SubCanvas1);
     // new P5(SubCanvas2);
     // new P5(SubCanvas3);
   },
+  beforeDestroy() {
+    this.p5Instances.forEach((instance) => {
+      instance.remove()
+    })
+  }
 };
 </script>
 <style lang="scss" scoped>
