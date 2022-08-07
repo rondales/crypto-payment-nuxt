@@ -342,25 +342,16 @@ export default {
       )
       return this.updateReceiveAddress(chainId, receiveAddress)
     },
-    async changeReceiveAddress(chainId) {
+    changeReceiveAddress(chainId) {
       if (this.isProcessing) return
       this.receiveAddressProcessing = true
-      const merchantContract = new this.$store.state.web3.instance.eth.Contract(
-        MerchantContract.abi,
-        this.contractSetting.address)
-      
-      const estimatedGas = await merchantContract.methods.updateReceiveAddress(
-        this.newReceiveAddress,
-        this.isContractAddress
-        ).estimateGas({ from: this.$store.state.account.address })
-      const gasPrice = await this.$web3.getNetworkGasPrice(this.$store.state.web3.instance)
       this.$web3.updateMerchantReceiveAddress(
-        merchantContract,
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        this.contractSetting.address,
         this.newReceiveAddress,
         this.isContractAddress,
-        this.$store.state.account.address,
-        estimatedGas,
-        gasPrice
+        this.$store.state.account.address
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
         this.$store.dispatch('wallet/updatePendingStatus', true)
