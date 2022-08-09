@@ -492,15 +492,12 @@ export default {
           if (!receipt.status) {
             Promise.reject();
           }
-          const tokenWeiUnit = this.$web3.getTokenUnit(
-            this.userSelectedTokenDecimal
-          );
           const approvedAmountInWei =
             receipt.events["Approval"].returnValues.value;
           this.userSelectedTokenAllowance = this.$web3.convertFromWei(
             this.web3Instance,
             approvedAmountInWei,
-            tokenWeiUnit
+            this.userSelectedTokenDecimal
           );
           this.$store.dispatch("wallet/updatePendingStatus", false);
         })
@@ -592,7 +589,7 @@ export default {
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
         })
-        .catch((err) => { console.log(err) });
+        .catch((err) => { console.error(err) });
     });
   },
   beforeDestroy() {
