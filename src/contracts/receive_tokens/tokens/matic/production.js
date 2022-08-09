@@ -3,6 +3,7 @@ import Usdt from '../../abis/matic/usdt'
 import Usdc from '../../abis/matic/usdc'
 import Dai from '../../abis/matic/dai'
 import Jpyc from '../../abis/matic/jpyc'
+import Weth from '../../abis/matic/weth'
 
 const url = NETWORKS[137].scanUrl + '/token'
 
@@ -38,5 +39,13 @@ export default {
     abi: Jpyc.abi,
     url: `${url}/0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB`,
     icon: require('@/assets/images/symbol/jpyc.svg')
-  }
+  },
+  WETH: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
+    address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    abi: Weth.abi,
+    url: `${url}/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619`,
+    icon: require('@/assets/images/symbol/eth.svg')
+  },
 }
