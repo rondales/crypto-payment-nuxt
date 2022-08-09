@@ -66,7 +66,7 @@
             </div>
           </div>
         </div>
-        <div class="payment_balance-topken border mb-2">
+        <div class="payment_balance-topken border">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
               {{ userSelectedTokenSymbol }}
@@ -75,7 +75,7 @@
               class="payment_balance-equivalent"
               :class="{ warning: !isEnoughUserSelectedTokenBalance }"
             >
-              {{ userSelectedTokenPayAmountEquivalent | usdFormat }}
+              {{ formatNumber(userSelectedTokenPayAmountEquivalent) }}
               {{ equivalentSymbol }} equivalent
             </div>
           </div>
@@ -89,6 +89,9 @@
               v-if="isEnoughUserSelectedTokenBalance"
               class="btn-content-wrap"
             >
+              <p class="estimate mb-2">
+                * This amount is an estimate and is subject to change
+              </p>
               <button
                 v-if="isNeedApprove"
                 class="btn __g __l mb-2 approve-token-btn"
@@ -169,9 +172,11 @@ import {
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
 import NumberFormat from "number-format.js";
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: "PaymentExchange",
+  mixins: [DisplayConfig],
   data() {
     return {
       expired: false,
@@ -195,9 +200,6 @@ export default {
   filters: {
     balanceFormat(balance) {
       return NumberFormat("0.0000", balance);
-    },
-    usdFormat(balance) {
-      return NumberFormat("0.00", balance);
     },
   },
   computed: {
@@ -388,6 +390,9 @@ export default {
     },
   },
   methods: {
+    formatNumber(number) {
+      return this.$_displayConfig_formatNumber(number)
+    },
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
       const request = {
@@ -410,7 +415,7 @@ export default {
         this.SLIPPAGE_RATE
       )
       .catch((err) => {
-        if(err.message.includes('ds-math-sub-underflow')) {
+        if(err.message.includes('execution reverted: No valid exchange')) {
           this.isNotEnoughLiquidity = true
           this.$parent.loading = false;
           this.$store.dispatch("modal/show", {
@@ -716,6 +721,10 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+  .estimate {
+    font-size: 10px;
+    font-weight: 100;
   }
   .via {
     font-size: 12px;

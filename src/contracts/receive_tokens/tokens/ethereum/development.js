@@ -3,9 +3,10 @@ import Usdt from '../../abis/ethereum/usdt'
 import Usdc from '../../abis/ethereum/usdc'
 import Dai from '../../abis/ethereum/dai'
 import Jpyc from '../../abis/ethereum/dai'
+import Weth from '../../abis/ethereum/weth'
 
 
-const url = NETWORKS[5].scanUrl + '/address'
+const url = NETWORKS[5].scanUrl + '/token'
 
 export default {
   USDT: {
@@ -39,5 +40,13 @@ export default {
     abi: Jpyc.abi,
     url: null,
     icon: require('@/assets/images/symbol/jpyc.svg')
+  },
+  WETH: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
+    address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+    abi: Weth.abi,
+    url: `${url}/0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6`,
+    icon: require('@/assets/images/symbol/eth.svg')
   },
 }

@@ -209,7 +209,7 @@ export default {
         USDT: require("@/assets/images/symbol/usdt.svg"),
         USDC: require("@/assets/images/symbol/usdc.svg"),
         DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        JPYC: require("@/assets/images/symbol/jpyc.svg")
       };
     },
     EXCHANGE_RATE_EXPIRE_TIME() {
@@ -470,7 +470,7 @@ export default {
     executePayment() {
       this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
-        .on("transactionHash", (txHash) => {
+        .then((txHash) => {
           this.$store.dispatch("payment/updateStatus", STATUS_PROCESSING);
           this.apiUpdateTransaction(txHash)
             .then(() => {
@@ -483,7 +483,8 @@ export default {
               console.log(error.data);
             });
         })
-        .on("error", () => {
+        .catch((error) => {
+          console.log(error)
           this.$store.dispatch("wallet/updatePendingStatus", false);
         });
     },

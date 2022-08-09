@@ -1,7 +1,8 @@
 import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/avalanche/usdt'
+import Weth from '../../abis/avalanche/weth'
 
-const url = NETWORKS[43113].scanUrl + '/address'
+const url = NETWORKS[43113].scanUrl + '/token'
 
 export default {
   USDT: {
@@ -35,5 +36,13 @@ export default {
     abi: null,
     url: null,
     icon: require('@/assets/images/symbol/avax.svg')
-  }
+  },
+  WETH: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH',
+    address: '0x371345f4D90e95d1DdBe69C547028f311AdecA38',
+    abi: Weth.abi,
+    url: `${url}/0x371345f4D90e95d1DdBe69C547028f311AdecA38`,
+    icon: require('@/assets/images/symbol/eth.svg')
+  },
 }
