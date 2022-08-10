@@ -504,17 +504,17 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "slashController_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
           "name": "merchantWallet_",
           "type": "address"
         },
         {
           "internalType": "address",
           "name": "receiveToken_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "slashResolver_",
           "type": "address"
         },
         {
@@ -948,11 +948,11 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "slashController_",
+          "name": "slashResolver_",
           "type": "address"
         }
       ],
-      "name": "updateSlashController",
+      "name": "updateSlashResolver",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1328,6 +1328,19 @@ export default {
     {
       "inputs": [],
       "name": "viewSlashCore",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewSlashResolver",
       "outputs": [
         {
           "internalType": "address",
