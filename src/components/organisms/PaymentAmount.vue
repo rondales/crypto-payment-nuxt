@@ -107,6 +107,7 @@ export default {
         USDC: require("@/assets/images/symbol/usdc.svg"),
         DAI: require("@/assets/images/symbol/dai.svg"),
         JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/symbol/eth.svg'),
         SGD: require("@/assets/images/symbol/jpyc.svg"),
         HKD: require("@/assets/images/symbol/jpyc.svg"),
         CAD: require("@/assets/images/symbol/jpyc.svg"),

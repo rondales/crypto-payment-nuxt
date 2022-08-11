@@ -71,6 +71,19 @@
             beta ver.
           </div>
         </div>
+        <div class="welcome-receice_token five" @click="selectToken(symbols.weth)" :class="{ active: isTokenSelected(symbols.weth) }">
+          <figure>
+            <img src="@/assets/images/icon/eth.svg">
+          </figure>
+          <p class="welcome-receice_name">
+            WETH
+            <br>
+            WETH
+          </p>
+          <div class="welcome-receice_box gradation-gray">
+            beta ver.
+          </div>
+        </div>
       </div>
         <button @click="showConfirmModal" class="welcome-receice_btn">
           Confirm
@@ -118,7 +131,8 @@ export default {
         usdt: 'USDT',
         usdc: 'USDC',
         jpyc: 'JPYC',
-        dai: 'DAI'
+        dai: 'DAI',
+        weth: 'WETH'
       }
     }
   },
@@ -210,7 +224,7 @@ export default {
     @include media(sp) {
       justify-content: space-evenly;
     }
-    .one, .two, .tree, .four{
+    .one, .two, .tree, .four, .five{
       text-align: center;
       padding: 8px 16px;
       border-radius: 10px;
@@ -224,6 +238,9 @@ export default {
       figure{
         margin: 0 auto 10px;
         width: 70px;
+        img {
+          width: 100%;
+        }
       }
       &.active{
         background: #4E455A;
@@ -236,7 +253,7 @@ export default {
         margin-right: 0;
       }
     }
-    .four{
+    .five{
       margin-right: 0;
     }
     .welcome-receice_name{

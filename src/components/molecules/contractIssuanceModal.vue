@@ -287,11 +287,10 @@ export default {
         this.apiRegistTransaction(chainId,hash).catch((error) => {
           console.log(error)
         })
-      }).
-      then((receipt) => {
+      }).then((receipt) => {
         this.pageState = this.pageStateList.successed
         this.updateContractAvailable(chainId, true)
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchant_
+        const merchantContractAddess = receipt.events[0].address
         const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
         this.$store.dispatch('wallet/updatePendingStatus', false)
