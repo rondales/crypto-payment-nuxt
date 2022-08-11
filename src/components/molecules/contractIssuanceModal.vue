@@ -93,7 +93,6 @@ import { NETWORKS, HTTP_CODES, LOGIN_TOKEN, NORMAL_TYPE_PAYMENT } from '@/consta
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 import MerchantContract from '@/contracts/merchant'
-import MerchantFactoryContract from '@/contracts/merchant_factory'
 
 export default {
   name: 'contractIssuanceModal',
@@ -270,32 +269,16 @@ export default {
         })
       }
     },
-    async publishMerchantContract(chainId) {
+    publishMerchantContract(chainId) {
       if (this.isProcessing) return
       this.updateContractProcessing(this.chainId, true)
       const merchantWalletAddress = this.$store.state.account.address
       const receiveTokenAddress = this.contractSetting.support
-      const scanBlockNumberMaxLimit = this.$web3.getScanBlockNumberMaxLimit(chainId)
-      const factoryContract = new this.$store.state.web3.instance.eth.Contract(
-        MerchantFactoryContract.abi,
-        MerchantFactoryContract.addresses[chainId],
-        { transactionBlockTimeout: scanBlockNumberMaxLimit }
-      )
-      const reservedParam = '0x'
-      const estimatedGas = await factoryContract.methods.deployMerchant(
-        merchantWalletAddress,
-        receiveTokenAddress,
-        reservedParam
-      ).estimateGas({ from: merchantWalletAddress })
-
-      const gasPrice = await this.$web3.getNetworkGasPrice(this.$store.state.web3.instance)
       this.$web3.publishMerchantContract(
-        factoryContract,
+        this.$store.state.web3.instance,
+        chainId,
         merchantWalletAddress,
-        receiveTokenAddress,
-        reservedParam,
-        estimatedGas,
-        gasPrice
+        receiveTokenAddress
       )
       .on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing

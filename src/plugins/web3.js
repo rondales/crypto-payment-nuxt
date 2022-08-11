@@ -28,6 +28,7 @@ import {
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalancheReceiveTokens
 } from '@/contracts/receive_tokens'
+import MerchantFactoryContract from '@/contracts/merchant_factory'
 
 export default {
   install(Vue) {
@@ -437,7 +438,11 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
   const gasPrice = await getNetworkGasPrice(web3)
   return await tokenContract.methods
     .approve(slashCoreContractAddress, uint256)
-    .send({ from: walletAddress, gas: estimatedGas, gasPrice: gasPrice })
+    .send({ 
+      from: walletAddress,
+      maxPriorityFeePerGas: null,
+      maxFeePerGas: null
+    })
 }
 
 const getTokenDecimalUnit = function(web3, chainId, token) {
@@ -483,22 +488,6 @@ const sendPaymentTransaction = async function(
   const msgValue = token.address === null
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
-
-  const estimatedGas = await merchantContract.methods.submitTransaction(
-    paymentTokenAddress,
-    userTokenAmountWei,
-    requestAmountWei,
-    path,
-    feePath,
-    paymentIdParam,
-    optionalParam,
-    reservedParam
-  ).estimateGas({
-    from: walletAddress,
-    to: contract.address,
-    value: msgValue
-  })
-  const gasPrice = await getNetworkGasPrice(web3)
   return new Promise(function(resolve, reject) {
     merchantContract.methods.submitTransaction(
       paymentTokenAddress,
@@ -513,8 +502,8 @@ const sendPaymentTransaction = async function(
       from: walletAddress,
       to: contract.address,
       value: msgValue,
-      gas: estimatedGas,
-      gasPrice: gasPrice
+      maxPriorityFeePerGas: null,
+      maxFeePerGas: null
     },(error, txHash) => {
       if(error) {
         reject(error)
@@ -530,21 +519,30 @@ const monitoringTransaction = function(web3, transactionHash) {
 }
 
 const publishMerchantContract = function(
-  factoryContract,
+  web3,
+  chainId,
   merchantWalletAddress,
-  receiveTokenAddress,
-  reservedParam,
-  estimatedGas,
-  gasPrice
+  receiveTokenAddress
 ) {
+  if (!MerchantFactoryContract.addresses[chainId]) {
+    throw new Error('Currently, this network has stopped issuing contracts.')
+  }
+  const reservedParam = '0x'
+  const scanBlockNumberMaxLimit = getScanBlockNumberMaxLimit(chainId)
+  const factoryContract = new web3.eth.Contract(
+    MerchantFactoryContract.abi,
+    MerchantFactoryContract.addresses[chainId],
+    { transactionBlockTimeout: scanBlockNumberMaxLimit }
+  )
+
   return factoryContract.methods.deployMerchant(
       merchantWalletAddress,
       receiveTokenAddress,
       reservedParam
     ).send({ 
       from: merchantWalletAddress,
-      gas: estimatedGas,
-      gasPrice: gasPrice
+      maxPriorityFeePerGas: null,
+      maxFeePerGas: null
     })
 }
 
@@ -647,31 +645,36 @@ const isContractAddress = async function(web3, address) {
 }
 
 const updateMerchantReceiveAddress = function(
-  merchantContract,
+  web3,
+  contractAbi,
+  contractAddress,
   receiveAddress,
   isContractAddress,
-  merchantWalletAddress,
-  estimatedGas,
-  gasPrice
+  merchantWalletAddress
 ) {
-  return merchantContract.methods.updateReceiveAddress(receiveAddress,isContractAddress).send({
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  return merchantContract.methods
+    .updateReceiveAddress(receiveAddress,isContractAddress)
+    .send({
     from: merchantWalletAddress,
-    gas: estimatedGas,
-    gasPrice: gasPrice
+    maxPriorityFeePerGas: null,
+    maxFeePerGas: null
   })
 }
 
 const updateCashbackPercent = function(
-  merchantContract,
-  cashbackPercent,
-  merchantWalletAddress,
-  estimatedGas,
-  gasPrice
+  web3,
+  contractAbi,
+  contractAddress,
+  cashbackValue,
+  merchantWalletAddress
 ) {
+  const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+  const cashbackPercent = parseInt((parseFloat(cashbackValue) * 100).toFixed(2), 10)
   return merchantContract.methods.updateCashBackPercent(cashbackPercent).send({
     from: merchantWalletAddress,
-    gas: estimatedGas,
-    gasPrice: gasPrice
+    maxPriorityFeePerGas: null,
+    maxFeePerGas: null
   })
 }
 
