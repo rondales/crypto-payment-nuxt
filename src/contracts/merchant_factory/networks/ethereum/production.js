@@ -3,7 +3,7 @@ import { NETWORKS } from '@/constants'
 export default {
   mainnet: {
     chainId: NETWORKS[1].chainId,
-    address: '0xCB110fa0D7114Fc8E2FA7c9Da86690341877Eea8'
+    address: '0x3D71f4B8403B98DdEf4efF583D73E46C673db9De'
   },
   testnet: {
     chainId: NETWORKS[5].chainId,
