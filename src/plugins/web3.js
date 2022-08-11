@@ -432,10 +432,6 @@ const tokenApprove = async function(web3, chainId, walletAddress, contract, toke
   const tokenContract = new web3.eth.Contract(tokenAbi, token.address)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
-  const estimatedGas = await tokenContract.methods
-    .approve(slashCoreContractAddress, uint256)
-    .estimateGas({ from: walletAddress })
-  const gasPrice = await getNetworkGasPrice(web3)
   return await tokenContract.methods
     .approve(slashCoreContractAddress, uint256)
     .send({ 
