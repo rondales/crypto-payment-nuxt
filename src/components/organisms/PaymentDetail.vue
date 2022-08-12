@@ -463,6 +463,7 @@ export default {
         this.contract,
         this.userSelectedToken,
         this.userSelectedTokenPaymentAmount,
+        this.$store.state.payment.symbol,
         this.platformFee,
         this.merchantReceiveWeiAmount
       );
