@@ -326,9 +326,20 @@ const getTokenExchangeData = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  const path = token.address === null || token.address === wrappedToken.address
-    ? [wrappedToken.address, requestToken.address]
-    : [token.address, wrappedToken.address, requestToken.address]
+  let path
+  if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
+    if(token.address === null || token.address === wrappedToken.address) {
+      path = [wrappedToken.address, requestToken.address]
+    } else {
+      path = [token.address, requestToken.address]
+    }
+  } else {
+    if(token.address === null || token.address === wrappedToken.address) {
+      path = [wrappedToken.address, requestToken.address]
+    } else {
+      path = [token.address, wrappedToken.address, requestToken.address]
+    }
+  }
   const payingTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
@@ -460,12 +471,13 @@ const sendPaymentTransaction = async function(
   contract,
   token,
   paymentAmount,
+  paymentRequestSymbol,
   platformFee,
   requestAmountWei
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const defaultTokens = getNetworkDefaultTokens(chainId)
-  const requestToken = defaultTokens.USDT
+  const defaultTokens = getMerchantReceiveTokens(chainId)
+  const requestToken = defaultTokens[paymentRequestSymbol]
   const userTokenWeiUnit = getTokenUnit(token.decimal)
   const userTokenAmountWei = web3.utils.toWei(paymentAmount, userTokenWeiUnit)
   const wrappedToken = getWrappedToken(chainId)
@@ -474,9 +486,20 @@ const sendPaymentTransaction = async function(
   const paymentIdParam = ''
   const optionalParam = ''
   const reservedParam = '0x'
-  const path = token.address === null || token.address === wrappedToken.address
-    ? [wrappedToken.address, requestToken.address]
-    : [token.address, wrappedToken.address, requestToken.address]
+  let path
+  if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
+    if(token.address != null || token.address != wrappedToken.address) {
+      path = [wrappedToken.address, requestToken.address]
+    } else {
+      path = [token.address, requestToken.address]
+    }
+  } else {
+    if(token.address === null || token.address === wrappedToken.address) {
+      path = [wrappedToken.address, requestToken.address]
+    } else {
+      path = [token.address, wrappedToken.address, requestToken.address]
+    }
+  }
   const feePath = [wrappedToken.address, requestToken.address]
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
