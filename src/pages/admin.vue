@@ -18,12 +18,12 @@
               </span>
               MetaMask
             </button>
-            <button class="btn __m icon-right full" @click="showWalletConnectCautionModal()">
+            <!-- <button class="btn __m icon-right full" @click="showWalletConnectCautionModal()">
               <span class="btn-icon">
                 <img src="@/assets/images/wallet-connect.svg">
               </span>
               WalletConnect
-            </button>
+            </button> -->
           </dd>
         </dl>
       </div>
