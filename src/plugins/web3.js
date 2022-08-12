@@ -500,7 +500,7 @@ const sendPaymentTransaction = async function(
       path = [token.address, wrappedToken.address, requestToken.address]
     }
   }
-  const feePath = [wrappedToken.address, requestToken.address]
+  const feePath = []
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
