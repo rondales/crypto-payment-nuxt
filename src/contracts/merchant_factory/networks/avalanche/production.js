@@ -7,6 +7,6 @@ export default {
   },
   testnet: {
     chainId: NETWORKS[43113].chainId,
-    address: '0xABd63fABe23558A359b95334764D297d82aee4f9'
+    address: '0xfC9F098331F95566Fe989504Ba1D6DDB5C6aA77b'
   }
 }
