@@ -12,7 +12,7 @@
         </span>
           MetaMask
       </button>
-      <button class="btn __m __pg icon-right full" @click="showWalletConnectCautionModal()">
+      <button v-if="isPaymentPage" class="btn __m __pg icon-right full" @click="showWalletConnectCautionModal()">
         <span class="btn-icon">
           <img src="@/assets/images/wallet-connect_w.svg">
         </span>
@@ -42,6 +42,11 @@
     computed: {
       classes() {
         return [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      },
+      isPaymentPage() {
+        const currentPath = this.$route.path
+        const pattern = /^\/payment\//
+        return pattern.test(currentPath)
       },
       METAMASK() {
         return METAMASK

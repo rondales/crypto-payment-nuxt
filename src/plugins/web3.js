@@ -488,7 +488,7 @@ const sendPaymentTransaction = async function(
   const reservedParam = '0x'
   let path
   if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
-    if(token.address != null || token.address != wrappedToken.address) {
+    if(token.address === null || token.address === wrappedToken.address) {
       path = [wrappedToken.address, requestToken.address]
     } else {
       path = [token.address, requestToken.address]
@@ -500,7 +500,7 @@ const sendPaymentTransaction = async function(
       path = [token.address, wrappedToken.address, requestToken.address]
     }
   }
-  const feePath = [wrappedToken.address, requestToken.address]
+  const feePath = []
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
     : token.address
