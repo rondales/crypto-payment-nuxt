@@ -65,12 +65,6 @@ const router = new Router({
               meta: { title: 'Slash Payment' }
             },
             {
-              name: "receipt",
-              path: "/payment/receipt/:token",
-              component: () => import("@/components/organisms/PaymentEmail"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
               name: "wallets",
               path: "/payment/wallets/:token",
               component: () => import("@/components/organisms/PaymentSelectWallets"),

@@ -23,6 +23,9 @@
         <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="another">
       </button>
     </a>
+    <div class="payment-status_receipt">
+      <a v-if="isPaymentSuccessfully" @click="openPaymentReceiptModal">Click here to get a receipt</a>
+    </div>
   </div>
 </template>
 
@@ -42,6 +45,9 @@ export default {
     },
     hasReturnUrl() {
       return (this.urls.success)
+    },
+    isPaymentSuccessfully(){
+      return this.$store.state.payment.status === STATUS_RESULT_SUCCESS
     }
   },
   methods: {
@@ -51,6 +57,12 @@ export default {
         params: new URLSearchParams([['payment_token', this.token]])
       }
       return this.axios.get(url, request)
+    },
+    openPaymentReceiptModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'payment-receipt-modal',
+        size: 'small'
+      })
     }
   },
   created() {
@@ -100,6 +112,18 @@ export default {
     img{
       margin-left: 4px;
       vertical-align: middle;
+    }
+  }
+  &_receipt {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 13px;
+    font-weight: 300;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    a {
+      cursor: pointer;
     }
   }
 }

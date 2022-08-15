@@ -12,7 +12,6 @@
 
 <script>
 import PaymentAmount from '@/components/organisms/PaymentAmount'
-import PaymentEmail from '@/components/organisms/PaymentEmail'
 import { errorCodeList } from '@/enum/error_code'
 import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
@@ -20,8 +19,7 @@ export default {
   name: 'PaymentEntrance',
   mixins: [DisplayConfig],
   components: {
-    PaymentAmount,
-    PaymentEmail
+    PaymentAmount
   },
   props: {
     progressTotalSteps: Number,
@@ -115,9 +113,13 @@ export default {
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.$emit('incrementProgressCompletedSteps')
       this.apiPublishTransaction().then(() => {
-        this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
         this.$emit('updateProgressTotalSteps', 5)
         this.$emit('incrementProgressCompletedSteps')
+        if (!receiveResponse.data.amount) {
+          this.showComponent ='PaymentAmount'
+        } else {
+          this.$router.push({ name: 'wallets', params: { token: this.paymentToken } })
+        }
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
