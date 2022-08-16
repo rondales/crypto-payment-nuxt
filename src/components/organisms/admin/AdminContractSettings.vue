@@ -141,14 +141,14 @@
                     </span>
                   </div>
                   <template v-if="isCurrentNetwork(chainId)">
-                    <div
+                    <!-- <div
                       class="manage-contents_btn"
                       v-if="isPublishedContract(chainId)"
                       @click="showContractReceiveAddressChangeModal(chainId)"
                     >
                       Change
-                    </div>
-                    <div v-else class="manage-contents_btn other">
+                    </div> -->
+                    <div v-if="!isPublishedContract(chainId)" class="manage-contents_btn other">
                       switch network
                     </div>
                   </template>
@@ -217,6 +217,8 @@ export default {
   mixins: [apiMixin],
   data() {
     return {
+      monitoringReceiveAddressInterval: null,
+      monitoringCashbackRateInterval: null,
       monitoringInterval: null,
       contractLoaded: false,
     }
@@ -275,10 +277,9 @@ export default {
     }
   },
   watch: {
-
     currentContractAddress() {
-      this.getContractCashbackRate(this.$store.state.web3.chainId)
-      this.getContractReceiveAddress(this.$store.state.web3.chainId)
+      this.getCurrentContractCashbackRate(this.$store.state.web3.chainId)
+      this.getCurrentContractReceiveAddress(this.$store.state.web3.chainId)
     }
   },
   filters: {
@@ -472,30 +473,46 @@ export default {
         this.updateReceiveAddress(chainId, receiveAddress)
       }
     },
-    async getContractCashbackRate(chainId) {
+    async getCurrentContractCashbackRate(chainId) {
+      clearInterval(this.monitoringCashbackRateInterval)
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
-      const result = await this.$web3.viewCashBackPercent(
-        this.$store.state.web3.instance,
-        MerchantContract.abi,
-        contractAddress
-      )
-      this.updateCashbackRate(chainId, result)
+
+      this.monitoringCashbackRateInterval = setInterval(() => {
+        this.$web3.viewCashBackPercent(
+          this.$store.state.web3.instance,
+          MerchantContract.abi,
+          contractAddress
+        ).then((result) => {
+          this.updateCashbackRate(chainId, result)
+          clearInterval(this.monitoringCashbackRateInterval)
+        }).catch(error => {
+          console.log(error)
+        })
+      }, 1000)
     },
-    async getContractReceiveAddress(chainId) {
+    async getCurrentContractReceiveAddress(chainId) {
+      clearInterval(this.monitoringReceiveAddressInterval)
       const contractAddress = this.contracts[chainId].address
       if (contractAddress == null) return
-      const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
-        this.$store.state.web3.instance,
-        MerchantContract.abi,
-        contractAddress
-      )
-      this.updateReceiveAddress(chainId, receiveAddress)
+
+      this.monitoringReceiveAddressInterval = setInterval(() => {
+        this.$web3.viewMerchantReceiveAddress(
+          this.$store.state.web3.instance,
+          MerchantContract.abi,
+          contractAddress
+        ).then(receiveAddress => {
+          this.updateReceiveAddress(chainId, receiveAddress)
+          clearInterval(this.monitoringReceiveAddressInterval)
+        }).catch(error => {
+          console.log(error)
+        })
+      }, 1000)
+
     }
   },
   created() {
     const receiveTokenSymbol = this.$store.state.account.receiveSymbol
-
     const supportStatuses = {
       [AvailableNetworks.ethereum.chainId]:
         EthereumTokens[receiveTokenSymbol].address,
@@ -535,6 +552,8 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.monitoringInterval)
+    clearInterval(this.monitoringReceiveAddressInterval)
+    clearInterval(this.monitoringCashbackRateInterval)
   }
 }
 </script>

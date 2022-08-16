@@ -269,25 +269,16 @@ export default {
       )
       return this.updateCashbackRate(chainId, result)
     },
-    async changeCashbackRate(chainId) {
+    changeCashbackRate(chainId) {
       if (this.isProcessing) return
       this.cashbackRateProcessing = true
-      const merchantContract = new this.$store.state.web3.instance.eth.Contract(
-        MerchantContract.abi,
-        this.contractSetting.address)
-      
-      const cashbackPercent = parseInt((parseFloat(this.newCashbackRate) * 100).toFixed(2), 10)
-      const estimatedGas = await merchantContract.methods.updateCashBackPercent(
-        cashbackPercent
-        ).estimateGas({ from: this.$store.state.account.address })
-      const gasPrice = await this.$web3.getNetworkGasPrice(this.$store.state.web3.instance)
     
       this.$web3.updateCashbackPercent(
-        merchantContract,
-        cashbackPercent,
-        this.$store.state.account.address,
-        estimatedGas,
-        gasPrice
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        this.contractSetting.address,
+        this.newCashbackRate,
+        this.$store.state.account.address
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
         this.$store.dispatch('wallet/updatePendingStatus', true)
