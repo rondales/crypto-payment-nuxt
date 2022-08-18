@@ -12,7 +12,7 @@
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
     </div>
-    <div class="payment-status_receipt mb-4">
+    <div class="payment-status_receipt mb-3">
       <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
     </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
