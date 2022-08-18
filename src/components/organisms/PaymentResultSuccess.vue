@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="payment-status mt-3 mb-3">
+    <div class="payment-status mt-3 mb-2">
       <div>
         <img class="mb-2" src="@/assets/images/check.svg" alt="success">
         <p class="payment-status_title mb-1">
@@ -11,6 +11,9 @@
         View on explorer
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
+    </div>
+    <div class="payment-status_receipt mb-4">
+      <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
     </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
       <button class="btn __g __l mb-2">
@@ -23,9 +26,6 @@
         <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="another">
       </button>
     </a>
-    <div class="payment-status_receipt">
-      <a v-if="isPaymentSuccessfully" @click="openPaymentReceiptModal">Click here to get a receipt</a>
-    </div>
   </div>
 </template>
 
@@ -45,9 +45,6 @@ export default {
     },
     hasReturnUrl() {
       return (this.urls.success)
-    },
-    isPaymentSuccessfully(){
-      return this.$store.state.payment.status === STATUS_RESULT_SUCCESS
     }
   },
   methods: {

@@ -19,7 +19,7 @@ export const errorCodeList = {
   2510: { msg: 'Empty payment receipt.' },
   2520: { msg: 'Please enter your email address.' },
   2530: { msg: 'Email invalid, plese try again.' },
-  2540: { msg: 'Payment receipt sent.' },
+  2540: { msg: 'The receipt email has already been sent.' },
   2550: { msg: 'Please try again.' },
   3020: { msg: 'The domain value is invalid.' },
   3030: { msg: 'Please enter the success notification URL in the correct format.' },
