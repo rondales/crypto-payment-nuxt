@@ -2,6 +2,8 @@
 import { METAMASK, WALLET_CONNECT, LOGIN_TOKEN } from '@/constants'
 import AvailableNetworks from '@/network'
 import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
+import Web3 from 'web3'
 
 export default {
   name: 'MerchantAdminAuthentification',
@@ -135,11 +137,41 @@ export default {
         return connectInfo
       })
     },
-    $_merchantAdminAuthentification_apiGetMerchantPausedNetworks(authorizedData) {
+    $_merchantAdminAuthentification_apiGetMerchantPausedNetworks(
+      authorizedData
+    ) {
       const url = `${this.$_merchantAdminAuthentification_API_BASE_URL}/api/v1/management/merchant/status`
-      const request = { headers: { Authorization: RequestUtility.getBearer(authorizedData.authorized.login_token) } }
+      const request = {
+        headers: {
+          Authorization: RequestUtility.getBearer(
+            authorizedData.authorized.login_token
+          )
+        }
+      }
       return this.axios.get(url, request).then((apiResponse) => {
-        this.$store.dispatch('merchant/updatePausedNetworkStatus', apiResponse.data)
+        const status = {}
+        const funcGetContractPaused = []
+        const web3Instance = new Web3()
+        for (const chainId in apiResponse.data) {
+          funcGetContractPaused.push(
+            this.$web3.checkMerchantContractPaused(
+              web3Instance,
+              MerchantContract.abi,
+              { chainId, address: apiResponse.data[chainId] }
+            )
+          )
+          status[chainId] = true
+        }
+        Promise.all(funcGetContractPaused).then((response) => {
+          for (const result of response) {
+            status[result.chainId] = result.paused
+          }
+
+          this.$store.dispatch(
+            'merchant/updatePausedNetworkStatus',
+            status
+          )
+        })
       })
     },
     $_merchantAdminAuthentification_authorizedAfrer(authorizedData, loginMode, modalMode) {
