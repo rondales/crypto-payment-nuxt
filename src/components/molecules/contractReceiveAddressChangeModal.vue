@@ -33,15 +33,15 @@
       <div class="invalid-address" v-if="!isValidAddress">Please enter valid address.</div>
       <p class="mt-2 align-left confirmation margin-bottom-small">Confirmation</p>
       <p class="mt-2 align-left margin-bottom-small">
-        ① Is the address you entered the wallet address or the contract address?
+        ① Is the address you entered SlashCustomPlugin compliant contract address?
       </p>
-      <div class="form-attribute form-container align-left margin-bottom-small">
-        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
-        <label for="wallet-address-type"> Wallet address</label>
-      </div>
       <div class="form-attribute form-container align-left margin-bottom-small">
         <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
         <label for="contract-address-type"> SlashCustomPlugin compliant contract address</label>
+      </div>
+      <div class="form-attribute form-container align-left margin-bottom-small">
+        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
+        <label for="wallet-address-type"> Other address</label>
       </div>
       <p class="align-left">
         <span class='caution'>
@@ -297,7 +297,7 @@ export default {
       this.$store.dispatch('modal/hide')
     },
     validateAddress(address) {
-      return address.match(/^0x([a-z]|[A-Z]|[0-9]){40}$/) != null;
+      return this.$store.state.web3.instance.utils.isAddress(address)
     },
     checkAddressFormat(address) {
       if(this.validateAddress(address)) {
