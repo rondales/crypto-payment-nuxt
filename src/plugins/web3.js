@@ -64,7 +64,6 @@ export default {
           deleteMerchantContract: deleteMerchantContract,
           signWithPrivateKey: signWithPrivateKey,
           getNetworkGasPrice: getNetworkGasPrice,
-          getTokenUnit: getTokenUnit,
           convertFromWei: convertFromWei,
           getScanBlockNumberMaxLimit: getScanBlockNumberMaxLimit,
           viewMerchantReceiveAddress: viewMerchantReceiveAddress,
@@ -237,21 +236,19 @@ const getTokenContract = function(web3, chainId, tokenAddress) {
 }
 
 const getBalance = async function(web3, walletAddress, tokenContract = null) {
-  let unit
+  let decimal = 18;
   let balance = `${0}`
 
   if (tokenContract === null) {
-    unit = 'ether'
     balance = await web3.eth.getBalance(walletAddress)
   } else {
-    const decimal = await tokenContract.methods.decimals().call()
-    unit = getTokenUnit(decimal)
+    decimal = await tokenContract.methods.decimals().call()
     balance = await tokenContract.methods
       .balanceOf(walletAddress)
       .call({ from: walletAddress })
   }
 
-  return web3.utils.fromWei(balance, unit)
+  return convertFromWei(web3, balance, decimal)
 }
 
 const switchChain = async function(web3, chainId) {
@@ -317,11 +314,9 @@ const getTokenExchangeData = async function(
   const requestToken = defaultTokens[paymentRequestSymbol]
   const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
   const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
-  const requestTokenWeiUnit = getTokenUnit(requestTokenDecimal)
-  const userTokenWeiUnit = getTokenUnit(token.decimal)
-  const userTokenBalanceWei = web3.utils.toWei(token.balance, userTokenWeiUnit)
-  const perRequestTokenWei = web3.utils.toWei(`${1}`, requestTokenWeiUnit)
-  const requestAmountWei = web3.utils.toWei(`${paymentRequestAmount}`, requestTokenWeiUnit)
+  const userTokenBalanceWei = convertToWei(web3, token.balance, token.decimal)
+  const perRequestTokenWei = convertToWei(web3, '1', requestTokenDecimal)
+  const requestAmountWei = convertToWei(web3, paymentRequestAmount, requestTokenDecimal)
   const wrappedToken = getWrappedToken(chainId)
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
@@ -378,10 +373,10 @@ const getTokenExchangeData = async function(
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
   const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
   return {
-    requireAmount: web3.utils.fromWei(requireAmountWithSlippage, userTokenWeiUnit),
+    requireAmount: convertFromWei(web3, requireAmountWithSlippage, token.decimal),
     requestAmountWei: requestAmountWei,
-    equivalentAmount: web3.utils.fromWei(userTokenToRequestToken, requestTokenWeiUnit),
-    rate: web3.utils.fromWei(perRequestTokenToUserTokenRate, userTokenWeiUnit),
+    equivalentAmount: convertFromWei(web3, userTokenToRequestToken, requestTokenDecimal),
+    rate: convertFromWei(web3, perRequestTokenToUserTokenRate, token.decimal),
     fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
     requestTokenDecimal: requestTokenDecimal
   }
@@ -422,12 +417,11 @@ const getTokenApprovedAmount = async function(web3, chainId, walletAddress, cont
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const slashCoreContractAddress = await merchantContract.methods.viewSlashCore().call()
   const tokenDecimalUnit = await tokenContract.methods.decimals().call()
-  const tokenWeiUnit = getTokenUnit(tokenDecimalUnit)
   const allowanceAmountInWei = await tokenContract.methods.allowance(
     walletAddress,
     slashCoreContractAddress
   ).call({ from: walletAddress })
-  const allowanceAmount = web3.utils.fromWei(allowanceAmountInWei, tokenWeiUnit)
+  const allowanceAmount = convertFromWei(web3, allowanceAmountInWei, tokenDecimalUnit)
   return allowanceAmount
 }
 
@@ -478,8 +472,7 @@ const sendPaymentTransaction = async function(
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
   const requestToken = defaultTokens[paymentRequestSymbol]
-  const userTokenWeiUnit = getTokenUnit(token.decimal)
-  const userTokenAmountWei = web3.utils.toWei(paymentAmount, userTokenWeiUnit)
+  const userTokenAmountWei = convertToWei(web3, paymentAmount, token.decimal)
   const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
@@ -723,17 +716,28 @@ const getNetworkGasPrice = function(web3) {
   return web3.eth.getGasPrice()
 }
 
-const getTokenUnit = function getTokenUnit(decimal) {
-  const wei = (10 ** decimal).toString()
-  const unitMap = Web3.utils.unitMap
-  const units = Object.keys(unitMap).filter((key) => {
-    return unitMap[key] === wei
-  })
-  return units.length > 0 ? units[0] : 'ether'
+const convertToWei = function convertToWei(web3, amount, decimal) {
+  const comps = amount.split('.');
+  let whole = comps[0], fraction = comps[1];
+  if (!whole) { whole = '0' }
+  if (!fraction) { fraction = '0' }
+  while (fraction.length < decimal) {
+    fraction += '0';
+  }
+  
+  return (web3.utils.toBN(whole).mul(web3.utils.toBN(web3.utils.toBN(`1${'0'.repeat(decimal)}`))))
+    .add(web3.utils.toBN(fraction))
+    .toString(10)
 }
 
-const convertFromWei = function convertFromWei(web3, wei, unit) {
-  return web3.utils.fromWei(wei, unit)
+const convertFromWei = function convertFromWei(web3, wei, decimal) {
+  let fraction = web3.utils.toBN(wei.toString()).mod(web3.utils.toBN(`1${'0'.repeat(decimal)}`)).toString(10)
+  while (fraction.length < decimal) {
+    fraction = `0${fraction}`;
+  }
+  const whole = web3.utils.toBN(wei.toString()).div(web3.utils.toBN(`1${'0'.repeat(decimal)}`)).toString(10)
+  
+  return `${whole}${fraction == '0' ? '' : `.${fraction}`}`;
 }
 
 function getNetworkDefaultTokens(chainId) {
