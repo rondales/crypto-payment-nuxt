@@ -17,14 +17,6 @@ export default {
     url: null,
     icon: require('@/assets/images/symbol/bnb.svg')
   },
-  USDT: {
-    name: 'Tether USD',
-    symbol: 'USDT',
-    address: '0x55d398326f99059ff775485246999027b3197955',
-    abi: Usdt.abi,
-    url: `${url}/0x55d398326f99059ff775485246999027b3197955`,
-    icon: require('@/assets/images/symbol/usdt.svg')
-  },
   BUSD: {
     name: 'Binance USD',
     symbol: 'BUSD',
@@ -33,14 +25,6 @@ export default {
     url: `${url}/0xe9e7cea3dedca5984780bafc599bd69add087d56`,
     icon: require('@/assets/images/symbol/busd.svg')
   },
-  USDC: {
-    name: 'USD Coin',
-    symbol: 'USDC',
-    address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-    abi: Usdc.abi,
-    url: `${url}/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d`,
-    icon: require('@/assets/images/symbol/usdc.svg')
-  },
   CAKE: {
     name: 'PancakeSwap',
     symbol: 'CAKE',
@@ -48,6 +32,30 @@ export default {
     abi: Cake.abi,
     url: `${url}/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82`,
     icon: require('@/assets/images/symbol/cake.svg')
+  },
+  BTCB: {
+    name: 'Binance Bitcoin"',
+    symbol: 'BTCB',
+    address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+    abi: Erc20Abi,
+    url: `${url}/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c`,
+    icon: 'https://assets.coingecko.com/coins/images/14108/thumb/Binance-bitcoin.png?1617332330'
+  },
+  USDT: {
+    name: 'Tether USD',
+    symbol: 'USDT',
+    address: '0x55d398326f99059ff775485246999027b3197955',
+    abi: Usdt.abi,
+    url: `${url}/0x55d398326f99059ff775485246999027b3197955`,
+    icon: require('@/assets/images/symbol/usdt.svg')
+  },
+  USDC: {
+    name: 'USD Coin',
+    symbol: 'USDC',
+    address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+    abi: Usdc.abi,
+    url: `${url}/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d`,
+    icon: require('@/assets/images/symbol/usdc.svg')
   },
   WBNB: {
     name: 'Wrapped BNB',
@@ -208,13 +216,5 @@ export default {
     abi: Erc20Abi,
     url: `${url}/0x67654acD0fA49f98c2A9a6a6135D0CCB88836A85`,
     icon: 'https://assets.coingecko.com/coins/images/23125/thumb/R4y30VWE_400x400.jpg?1643268068'
-  },
-  $DEFI: {
-    name: 'BNBDeFi',
-    symbol: "$DEFI",
-    address: "0x455dedAcbe41c178953119847F2b95E2d9AD0a1D",
-    abi: Erc20Abi,
-    url: `${url}/0x455dedAcbe41c178953119847F2b95E2d9AD0a1D`,
-    icon: 'https://assets.coingecko.com/coins/images/24469/thumb/_defi.png?1647768034'
   },
 }

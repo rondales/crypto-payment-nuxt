@@ -18,13 +18,13 @@ export default {
     url: null,
     icon: require('@/assets/images/symbol/eth.svg')
   },
-  USDT: {
-    name: 'Tether USD',
-    symbol: 'USDT',
-    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    abi: Usdt.abi,
-    url: `${url}/0xdac17f958d2ee523a2206206994597c13d831ec7`,
-    icon: require('@/assets/images/symbol/usdt.svg')
+  DAI: {
+    name: 'MakerDAO',
+    symbol: 'DAI',
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    abi: Dai.abi,
+    url: `${url}/0x6B175474E89094C44Da98b954EedeAC495271d0F`,
+    icon: require('@/assets/images/symbol/dai.svg')
   },
   USDC: {
     name: 'USD Coin',
@@ -34,13 +34,29 @@ export default {
     url: `${url}/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`,
     icon: require('@/assets/images/symbol/usdc.svg')
   },
-  DAI: {
-    name: 'MakerDAO',
-    symbol: 'DAI',
-    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-    abi: Dai.abi,
-    url: `${url}/0x6B175474E89094C44Da98b954EedeAC495271d0F`,
-    icon: require('@/assets/images/symbol/dai.svg')
+  USDT: {
+    name: 'Tether USD',
+    symbol: 'USDT',
+    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+    abi: Usdt.abi,
+    url: `${url}/0xdac17f958d2ee523a2206206994597c13d831ec7`,
+    icon: require('@/assets/images/symbol/usdt.svg')
+  },
+  WBTC: {
+    name: 'Wrapped BTC',
+    symbol: 'WBTC',
+    address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    abi: Erc20Abi,
+    url: `${url}/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599`,
+    icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png'
+  },
+  WETH: {
+    name: 'Wrapped Ethereum',
+    symbol: 'WETH',
+    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    abi: Weth.abi,
+    url: `${url}/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`,
+    icon: require('@/assets/images/symbol/weth.svg')
   },
   UNI: {
     name: 'Uniswap',
@@ -57,14 +73,6 @@ export default {
     abi: Sushi.abi,
     url: `${url}/0x6B3595068778DD592e39A122f4f5a5cF09C90fE2`,
     icon: require('@/assets/images/symbol/sushi.svg')
-  },
-  WETH: {
-    name: 'Wrapped Ethereum',
-    symbol: 'WETH',
-    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-    abi: Weth.abi,
-    url: `${url}/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`,
-    icon: require('@/assets/images/symbol/weth.svg')
   },
   "1INCH": {
     name: '1inch',
@@ -217,13 +225,5 @@ export default {
     abi: Erc20Abi,
     url: `${url}/0x845576c64f9754CF09d87e45B720E82F3EeF522C`,
     icon: 'https://assets.coingecko.com/coins/images/19727/thumb/ewnektoB_400x400.png?1635767094'
-  },
-  AXS: {
-    name: 'Axie Infinity',
-    symbol: 'AXS',
-    address: '0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b',
-    abi: Erc20Abi,
-    url: `${url}/0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b`,
-    icon: 'https://assets.coingecko.com/coins/images/13029/thumb/axie_infinity_logo.png?1604471082'
-  },
+  }
 }

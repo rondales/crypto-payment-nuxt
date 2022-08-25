@@ -15,13 +15,21 @@ export default {
     url: null,
     icon: require('@/assets/images/symbol/matic.svg')
   },
-  USDT: {
-    name: 'Tether USD',
-    symbol: 'USDT',
-    address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
-    abi: Usdt.abi,
-    url: `${url}/0xc2132D05D31c914a87C6611C10748AEb04B58e8F`,
-    icon: require('@/assets/images/symbol/usdt.svg')
+  WMATIC: {
+    name: 'Wrapped MATIC',
+    symbol: "WMATIC",
+    address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+    abi: Wmatic.abi,
+    url: `${url}/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270`,
+    icon: require('@/assets/images/symbol/wmatic.svg')
+  },
+  DAI: {
+    name: 'Dai Stablecoin',
+    symbol: "DAI",
+    address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+    abi: Erc20Abi,
+    url: `${url}/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063`,
+    icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png'
   },
   USDC: {
     name: 'USD Coin',
@@ -31,13 +39,61 @@ export default {
     url: `${url}/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174`,
     icon: require('@/assets/images/symbol/usdc.svg')
   },
-  WMATIC: {
-    name: 'Wrapped MATIC',
-    symbol: "WMATIC",
-    address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-    abi: Wmatic.abi,
-    url: `${url}/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270`,
-    icon: require('@/assets/images/symbol/wmatic.svg')
+  USDT: {
+    name: 'Tether USD',
+    symbol: 'USDT',
+    address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+    abi: Usdt.abi,
+    url: `${url}/0xc2132D05D31c914a87C6611C10748AEb04B58e8F`,
+    icon: require('@/assets/images/symbol/usdt.svg')
+  },
+  'QUICK(OLD)': {
+    name: 'QuickSwap(OLD)',
+    symbol: 'QUICK(OLD)',
+    address: '0x831753DD7087CaC61aB5644b308642cc1c33Dc13',
+    abi: Erc20Abi,
+    url: `${url}/0x831753DD7087CaC61aB5644b308642cc1c33Dc13`,
+    icon: 'https://raw.githubusercontent.com/sameepsi/quickswap-interface/master/public/favicon.jpeg'
+  },
+  'QUICK(NEW)': {
+    name: 'QuickSwap(NEW)',
+    symbol: 'QUICK(NEW)',
+    address: '0xB5C064F955D8e7F38fE0460C556a72987494eE17',
+    abi: Erc20Abi,
+    url: `${url}/0xB5C064F955D8e7F38fE0460C556a72987494eE17`,
+    icon: 'https://i.ibb.co/HGWTLM7/Quick-Icon-V2.png'
+  },
+  ETH: {
+    name: 'Ether',
+    symbol: 'ETH',
+    address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    abi: Erc20Abi,
+    url: `${url}/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619`,
+    icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'
+  },
+  WBTC: {
+    name: 'Wrapped BTC',
+    symbol: 'WBTC',
+    address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
+    abi: Erc20Abi,
+    url: `${url}/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6`,
+    icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png'
+  },
+  SAND: {
+    name: 'SAND',
+    symbol: 'SAND',
+    address: '0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683',
+    abi: Erc20Abi,
+    url: `${url}/0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683`,
+    icon: 'https://assets.coingecko.com/coins/images/12129/small/sandbox_logo.jpg?1597397942'
+  },
+  MAI: {
+    name: 'MAI',
+    symbol: 'MAI',
+    address: '0xa3Fa99A148fA48D14Ed51d610c367C61876997F1',
+    abi: Erc20Abi,
+    url: `${url}/0xa3Fa99A148fA48D14Ed51d610c367C61876997F1`,
+    icon: 'https://raw.githubusercontent.com/0xlaozi/qidao/main/images/mimatic-red.png'
   },
   '4INT': {
     name: '4INT',
@@ -142,61 +198,5 @@ export default {
     abi: Erc20Abi,
     url: `${url}/0x0b68782eFF3177f1F9240B64A7e2F8E0497e2454`,
     icon: 'https://assets.coingecko.com/coins/images/19362/small/atl.png?1635209629'
-  },
-  ATOM: {
-    name: 'Cosmos',
-    symbol: 'ATOM',
-    address: '0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b',
-    abi: Erc20Abi,
-    url: `${url}/0xac51C4c48Dc3116487eD4BC16542e27B5694Da1b`,
-    icon: 'https://assets.coingecko.com/coins/images/1481/small/cosmos_hub.png?1555657960'
-  },
-  AVAX: {
-    name: 'Avalanche Token',
-    symbol: 'AVAX',
-    address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b',
-    abi: Erc20Abi,
-    url: `${url}/0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b`,
-    icon: 'https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818'
-  },
-  AWS: {
-    name: 'AurusSILVER',
-    symbol: 'AWS',
-    address: '0xA96D47c621a8316d4F9539E3B38180C7067e84CA',
-    abi: Erc20Abi,
-    url: `${url}/0xA96D47c621a8316d4F9539E3B38180C7067e84CA`,
-    icon: 'https://assets.coingecko.com/coins/images/14965/small/2021-12-06-Aurus-tokens-for-coingecko-AWS-flat-color-v1-r1-AS.png?1640223368'
-  },
-  AWX: {
-    name: 'AurusDeFi',
-    symbol: 'AWX',
-    address: '0x56A0eFEFC9F1FBb54FBd25629Ac2aA764F1b56F7',
-    abi: Erc20Abi,
-    url: `${url}/0x56A0eFEFC9F1FBb54FBd25629Ac2aA764F1b56F7`,
-    icon: 'https://assets.coingecko.com/coins/images/12684/small/2021-12-06-Aurus-tokens-for-coingecko-AWX-flat-color-v1-r1-AS.png?1640223413'
-  },
-  BANANA: {
-    name: 'Banana',
-    symbol: 'BANANA',
-    address: '0xbC91347e80886453F3f8bBd6d7aC07C122D87735',
-    abi: Erc20Abi,
-    url: `${url}/0xbC91347e80886453F3f8bBd6d7aC07C122D87735`,
-    icon: 'https://assets.coingecko.com/coins/images/17521/small/banana-token-cg.png?1646285527'
-  },
-  BCMC: {
-    name: 'Blockchain Monster Coin',
-    symbol: 'BCMC',
-    address: '0xc10358f062663448a3489fC258139944534592ac',
-    abi: Erc20Abi,
-    url: `${url}/0xc10358f062663448a3489fC258139944534592ac`,
-    icon: 'https://bcmhunt.com/bcmc-coin-512x512.png'
-  },
-  BETS: {
-    name: 'BetSwirl Token',
-    symbol: 'BETS',
-    address: '0x9246a5F10A79a5a939b0C2a75A3AD196aAfDB43b',
-    abi: Erc20Abi,
-    url: `${url}/0x9246a5F10A79a5a939b0C2a75A3AD196aAfDB43b`,
-    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/18453.png'
   }
 }
