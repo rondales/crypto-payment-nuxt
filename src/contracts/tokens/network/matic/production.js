@@ -53,7 +53,7 @@ export default {
     address: '0x831753DD7087CaC61aB5644b308642cc1c33Dc13',
     abi: Erc20Abi,
     url: `${url}/0x831753DD7087CaC61aB5644b308642cc1c33Dc13`,
-    icon: 'https://raw.githubusercontent.com/sameepsi/quickswap-interface/master/public/favicon.jpeg'
+    icon: 'https://assets.coingecko.com/coins/images/25393/small/quickswap.jpg?1651680141'
   },
   'QUICK(NEW)': {
     name: 'QuickSwap(NEW)',
