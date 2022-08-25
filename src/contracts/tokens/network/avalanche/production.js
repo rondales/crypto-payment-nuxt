@@ -47,14 +47,6 @@ export default {
     url: `${url}/0xC931f61B1534EB21D8c11B24f3f5Ab2471d4aB50`,
     icon: 'https://raw.githubusercontent.com/pangolindex/tokens/main/assets/0xC931f61B1534EB21D8c11B24f3f5Ab2471d4aB50/logo.png'
   },
-  aAVAXb: {
-    name: 'Ankr Avalanche Reward Earning Bond',
-    symbol: 'aAVAXb',
-    address: '0x6C6f910A79639dcC94b4feEF59Ff507c2E843929',
-    abi: Erc20Abi,
-    url: `${url}/0x6C6f910A79639dcC94b4feEF59Ff507c2E843929`,
-    icon: 'https://raw.githubusercontent.com/pangolindex/tokens/main/assets/0x6C6f910A79639dcC94b4feEF59Ff507c2E843929/logo.png'
-  },
   'AAVE.e': {
     name: 'Aave Token',
     symbol: 'AAVE.e',
@@ -198,5 +190,13 @@ export default {
     abi: Erc20Abi,
     url: `${url}/0xe19A1684873faB5Fb694CfD06607100A632fF21c`,
     icon: 'https://raw.githubusercontent.com/pangolindex/tokens/main/assets/0xe19A1684873faB5Fb694CfD06607100A632fF21c/logo.png'
+  },
+  BLUE: {
+    name: 'Blue Token',
+    symbol: "BLUE",
+    address: '0xc12e249FaBe1c5Eb7C558E5F50D187687a244E31',
+    abi: Erc20Abi,
+    url: `${url}/0xc12e249FaBe1c5Eb7C558E5F50D187687a244E31`,
+    icon: 'https://raw.githubusercontent.com/pangolindex/tokens/main/assets/0xc12e249FaBe1c5Eb7C558E5F50D187687a244E31/logo.png'
   },
 }
