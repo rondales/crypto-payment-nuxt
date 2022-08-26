@@ -36,11 +36,11 @@
         ① Is the address you entered SlashCustomPlugin compliant contract address?
       </p>
       <div class="form-attribute form-container align-left margin-bottom-small">
-        <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
+        <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isSlashCustomPlugin" />
         <label for="contract-address-type"> SlashCustomPlugin compliant contract address</label>
       </div>
       <div class="form-attribute form-container align-left margin-bottom-small">
-        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
+        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isSlashCustomPlugin" />
         <label for="wallet-address-type"> Other address</label>
       </div>
       <p class="align-left">
@@ -182,6 +182,7 @@
 <script>
 import { NETWORKS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
+import SlashCustomPlugin from '@/contracts/slash_custom_plugin'
 
 export default {
   name: 'contractReceiveAddressChangeModal',
@@ -203,7 +204,7 @@ export default {
       riskAgreed: false,
       validAddress: true,
       validAddressType: true,
-      isContractAddress: null,
+      isSlashCustomPlugin: null,
     }
   },
   computed: {
@@ -215,7 +216,7 @@ export default {
       return this.riskAgreed
     },
     isFormDataConfirmed() {
-      return this.newReceiveAddress != null && this.isContractAddress != null && this.networkConfirmed
+      return this.newReceiveAddress != null && this.isSlashCustomPlugin != null && this.networkConfirmed
     },
     isReloadSpinning() {
       return this.reloadSpinning
@@ -307,8 +308,12 @@ export default {
       }
     },
     async checkAddressType(address) {
-      const isContractAddress = await this.$web3.isContractAddress(this.$store.state.web3.instance, address)
-      return this.validAddressType = this.isContractAddress === isContractAddress
+      const isSlashCustomPlugin = await this.$web3.isSlashCustomPlugin(
+        this.$store.state.web3.instance,
+        SlashCustomPlugin.abi,
+        address
+      )
+      return this.validAddressType = this.isSlashCustomPlugin === isSlashCustomPlugin
     },
     async changePageToConfirmationState() {
       if(!this.validateAddress(this.newReceiveAddress)) return
@@ -327,7 +332,7 @@ export default {
       const payload = {
         chainId: chainId,
         receiveAddress: receiveAddress.address,
-        isContract: receiveAddress.isContract,
+        isSlashCustomPlugin: receiveAddress.isSlashCustomPlugin,
         lastModified: receiveAddress.lastModified
       }
       this.$store.dispatch('contract/updateContractReceiveAddress', payload)
@@ -350,7 +355,7 @@ export default {
         MerchantContract.abi,
         this.contractSetting.address,
         this.newReceiveAddress,
-        this.isContractAddress,
+        this.isSlashCustomPlugin,
         this.$store.state.account.address
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
