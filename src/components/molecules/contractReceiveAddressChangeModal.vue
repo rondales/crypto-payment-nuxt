@@ -35,26 +35,23 @@
       <p class="mt-2 align-left margin-bottom-small">
         ① Is the address you entered SlashCustomPlugin compliant contract address?
       </p>
-      <div class="form-attribute form-container align-left margin-bottom-small">
+      <div class="form-attribute form-container align-left mb-0">
         <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isSlashCustomPlugin" />
         <label for="contract-address-type"> SlashCustomPlugin compliant contract address</label>
       </div>
+      <p class="mt-0 align-left margin-bottom-small">
+        <a
+          class="document-link align-left"
+          target="_blank"
+          href="https://slash-fi.gitbook.io/docs/integration-guide/advanced-options/received-address"
+        >
+          &nbsp;&nbsp;&nbsp;&nbsp;Learn more.
+        </a>
+      </p>
       <div class="form-attribute form-container align-left margin-bottom-small">
         <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isSlashCustomPlugin" />
         <label for="wallet-address-type"> Other address</label>
       </div>
-      <p class="align-left">
-        <span class='caution'>
-          *&nbsp;If a contract address is set, the contract must conform to the SlashCustomPlugin specification.&nbsp;
-        </span>
-        <a
-          class="document-link"
-          target="_blank"
-          href="https://slash-fi.gitbook.io/docs/integration-guide/advanced-options/received-address"
-        >
-          Learn more.
-        </a>
-      </p>
       <p class="invalid-address margin-bottom-small" v-if="!validAddressType">Please select correct address type.</p>
       <p class="mt-2 align-left margin-bottom-small">② Are you using the correct address for the following network? 
         If correct, check the box.
@@ -68,7 +65,7 @@
         </div>
       </div>
       <p class="mt-2 align-left margin-bottom-small">
-        Please set the changed EVM (Ethereum Virtual Machine) compatible address at your own risk. 
+        Please set a correct address at your own risk. 
         Please be sure to set this address at your own risk. 
         If you enter an incorrect address and lose your funds, we will not be held responsible.
       </p>
@@ -518,7 +515,7 @@ export default {
 
   .form-attribute {
     font-size: 1.2rem !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 10px;
     cursor: pointer;
   }
   .radio-button-type {
