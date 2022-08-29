@@ -1035,7 +1035,7 @@ export default {
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
-              url: "https://discord.gg/ZFNP2Mfr",
+              url: "https://discord.com/invite/gk25cyBs78",
               btnType: "a"
             },
             {
