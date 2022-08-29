@@ -57,7 +57,7 @@ const store = {
       },
       updateContractReceiveAddress(state, payload) {
         state.contracts[payload.chainId].receiveAddress.address = payload.receiveAddress
-        state.contracts[payload.chainId].receiveAddress.isContract = payload.isContract
+        state.contracts[payload.chainId].receiveAddress.isSlashCustomPlugin = payload.isSlashCustomPlugin
         state.contracts[payload.chainId].receiveAddress.lastModified = payload.lastModified
       },
       updateNewReceiveAddress(state, payload) {

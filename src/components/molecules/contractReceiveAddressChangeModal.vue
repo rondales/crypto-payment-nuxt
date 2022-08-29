@@ -33,28 +33,25 @@
       <div class="invalid-address" v-if="!isValidAddress">Please enter valid address.</div>
       <p class="mt-2 align-left confirmation margin-bottom-small">Confirmation</p>
       <p class="mt-2 align-left margin-bottom-small">
-        ① Is the address you entered the wallet address or the contract address?
+        ① Is the address you entered SlashCustomPlugin compliant contract address?
       </p>
-      <div class="form-attribute form-container align-left margin-bottom-small">
-        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isContractAddress" />
-        <label for="wallet-address-type"> Wallet address</label>
-      </div>
-      <div class="form-attribute form-container align-left margin-bottom-small">
-        <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isContractAddress" />
+      <div class="form-attribute form-container align-left mb-0">
+        <input type="radio" class="radio-button-type" id="contract-address-type" :value="true" v-model="isSlashCustomPlugin" />
         <label for="contract-address-type"> SlashCustomPlugin compliant contract address</label>
       </div>
-      <p class="align-left">
-        <span class='caution'>
-          *&nbsp;If a contract address is set, the contract must conform to the SlashCustomPlugin specification.&nbsp;
-        </span>
+      <p class="mt-0 align-left margin-bottom-small">
         <a
-          class="document-link"
+          class="document-link align-left"
           target="_blank"
           href="https://slash-fi.gitbook.io/docs/integration-guide/advanced-options/received-address"
         >
-          Learn more.
+          &nbsp;&nbsp;&nbsp;&nbsp;Learn more.
         </a>
       </p>
+      <div class="form-attribute form-container align-left margin-bottom-small">
+        <input type="radio" class="radio-button-type" id="wallet-address-type" :value="false" v-model="isSlashCustomPlugin" />
+        <label for="wallet-address-type"> Other address</label>
+      </div>
       <p class="invalid-address margin-bottom-small" v-if="!validAddressType">Please select correct address type.</p>
       <p class="mt-2 align-left margin-bottom-small">② Are you using the correct address for the following network? 
         If correct, check the box.
@@ -68,7 +65,7 @@
         </div>
       </div>
       <p class="mt-2 align-left margin-bottom-small">
-        Please set the changed EVM (Ethereum Virtual Machine) compatible address at your own risk. 
+        Please set a correct address at your own risk. 
         Please be sure to set this address at your own risk. 
         If you enter an incorrect address and lose your funds, we will not be held responsible.
       </p>
@@ -182,6 +179,7 @@
 <script>
 import { NETWORKS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
+import SlashCustomPlugin from '@/contracts/slash_custom_plugin'
 
 export default {
   name: 'contractReceiveAddressChangeModal',
@@ -203,7 +201,7 @@ export default {
       riskAgreed: false,
       validAddress: true,
       validAddressType: true,
-      isContractAddress: null,
+      isSlashCustomPlugin: null,
     }
   },
   computed: {
@@ -215,7 +213,7 @@ export default {
       return this.riskAgreed
     },
     isFormDataConfirmed() {
-      return this.newReceiveAddress != null && this.isContractAddress != null && this.networkConfirmed
+      return this.newReceiveAddress != null && this.isSlashCustomPlugin != null && this.networkConfirmed
     },
     isReloadSpinning() {
       return this.reloadSpinning
@@ -297,7 +295,7 @@ export default {
       this.$store.dispatch('modal/hide')
     },
     validateAddress(address) {
-      return address.match(/^0x([a-z]|[A-Z]|[0-9]){40}$/) != null;
+      return this.$store.state.web3.instance.utils.isAddress(address)
     },
     checkAddressFormat(address) {
       if(this.validateAddress(address)) {
@@ -307,8 +305,12 @@ export default {
       }
     },
     async checkAddressType(address) {
-      const isContractAddress = await this.$web3.isContractAddress(this.$store.state.web3.instance, address)
-      return this.validAddressType = this.isContractAddress === isContractAddress
+      const isSlashCustomPlugin = await this.$web3.isSlashCustomPlugin(
+        this.$store.state.web3.instance,
+        SlashCustomPlugin.abi,
+        address
+      )
+      return this.validAddressType = this.isSlashCustomPlugin === isSlashCustomPlugin
     },
     async changePageToConfirmationState() {
       if(!this.validateAddress(this.newReceiveAddress)) return
@@ -327,7 +329,7 @@ export default {
       const payload = {
         chainId: chainId,
         receiveAddress: receiveAddress.address,
-        isContract: receiveAddress.isContract,
+        isSlashCustomPlugin: receiveAddress.isSlashCustomPlugin,
         lastModified: receiveAddress.lastModified
       }
       this.$store.dispatch('contract/updateContractReceiveAddress', payload)
@@ -350,7 +352,7 @@ export default {
         MerchantContract.abi,
         this.contractSetting.address,
         this.newReceiveAddress,
-        this.isContractAddress,
+        this.isSlashCustomPlugin,
         this.$store.state.account.address
       ).on('transactionHash', (hash) => {
         this.pageState = this.pageStateList.processing
@@ -513,7 +515,7 @@ export default {
 
   .form-attribute {
     font-size: 1.2rem !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 10px;
     cursor: pointer;
   }
   .radio-button-type {
