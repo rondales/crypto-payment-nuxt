@@ -9,8 +9,6 @@
       <h3 class="header-caution__title">
         Risk Disclaimer
       </h3>
-      <p class="header-caution__desc">This action will change the Cash back rate of your ethereum payment agreement. 
-        Please read the Risk Disclaimer carefully and review the options below before proceeding.</p>
     </div>
     <div class="separate-line" v-if="isConfirmationState"></div>
     <div class="body detail-state-padding" v-if="isDetailState">
@@ -93,9 +91,8 @@
         {{ newReceiveAddress }}
       </p>
       <p class="desc align-left mt-2">
-        Please be sure to make this change at your own discretion. 
-        We are not responsible for any loss of funds due to incorrectly entered wallet 
-        addresses or malfunction of contract addresses created by the customer themselves. 
+        Please be sure to make this change at your own risk. 
+        We are not responsible for any loss of funds due to incorrectly or malfunction of contract address. 
         Do you understand this risk?
       </p>
       <div class="checkbox-container align-left mt-2">
