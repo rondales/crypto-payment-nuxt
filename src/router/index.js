@@ -53,6 +53,11 @@ const router = new Router({
           component: () => import("@/pages/media_kit"),
         },
         {
+          name: "qr-code",
+          path: "/qr-code/:qr_code",
+          component: () => import("@/components/organisms/PaymentQrCode")
+        },
+        {
           name: "payment",
           path: "/payment",
           component: () => import("@/pages/payment"),
@@ -105,7 +110,7 @@ const router = new Router({
               path: "/payment/invoice",
               component: () => import("@/components/organisms/PaymentInvoice"),
               meta: { title: 'Slash Payment' }
-            }
+            },
           ]
         },
         {
@@ -147,6 +152,12 @@ const router = new Router({
             {
               name: "admin",
               path: "/admin/payment/settings/domain",
+              component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/payment/settings/qr-code",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
               meta: { title: 'Slash Apps' }
             },

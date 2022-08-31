@@ -16,6 +16,8 @@ export const errorCodeList = {
   2340: { msg: 'No currency is selected.' },
   2341: { msg: 'Please select the currency again.' },
   2350: { msg: 'Please reinput the amount.' },
+  2510: { msg: 'Please try again.' },
+  2511: { msg: 'Qr Code invalid' },
   3020: { msg: 'The domain value is invalid.' },
   3030: { msg: 'Please enter the success notification URL in the correct format.' },
   3031: { msg: 'Please enter the successful payment return URL in the correct format.' },

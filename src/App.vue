@@ -61,6 +61,8 @@ export default {
     cautionPaymentRiskDisclaimerModal: () =>
       import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
     addChainModal: () => import("@/components/molecules/addChainModal"),
+    paymentQrCodeDeleteModal: () => import("@/components/molecules/paymentQrCodeDeleteModal"),
+    paymentQrCodeRefreshModal: () => import("@/components/molecules/paymentQrCodeRefreshModal"),
   },
   computed: {
     classes() {
