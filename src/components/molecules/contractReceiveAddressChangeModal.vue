@@ -448,6 +448,7 @@
 <script>
 import { NETWORKS } from "@/constants";
 import MerchantContract from "@/contracts/merchant";
+import SlashCustomPlugin from '@/contracts/slash_custom_plugin'
 import PaymentModal from "@/components/organisms/Payment/Modal";
 import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
