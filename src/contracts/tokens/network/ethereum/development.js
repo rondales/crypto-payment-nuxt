@@ -5,7 +5,7 @@ import Dai from "../../abis/ethereum/dai";
 import Uni from "../../abis/ethereum/uni";
 import Weth from "../../abis/ethereum/weth";
 
-const url = NETWORKS[5].scanUrl + "/address";
+const url = NETWORKS[5].scanUrl + '/token'
 
 export default {
   ETH: {

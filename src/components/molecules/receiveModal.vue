@@ -62,22 +62,25 @@ export default {
   data() {
     return {
       tokenNames: {
-        USDT: "Tether USD",
-        USDC: "USD Coin",
-        DAI: "Maker DAO",
-        JPYC: "JPY Coin",
+        USDT: 'Tether USD',
+        USDC: 'USD Coin',
+        DAI: 'Maker DAO',
+        JPYC: 'JPY Coin',
+        WETH: 'Wrapped ETH'
       },
       tokenIcons: {
-        USDT: require("@/assets/images/icon/usdt-l.svg"),
-        USDC: require("@/assets/images/icon/usdc-l.svg"),
-        DAI: require("@/assets/images/icon/dai-l.svg"),
-        JPYC: require("@/assets/images/icon/jpyc-l.svg"),
+        USDT: require('@/assets/images/icon/usdt-l.svg'),
+        USDC: require('@/assets/images/icon/usdc-l.svg'),
+        DAI: require('@/assets/images/icon/dai-l.svg'),
+        JPYC: require('@/assets/images/icon/jpyc-l.svg'),
+        WETH: require('@/assets/images/icon/eth.svg')
       },
       tokenMarketUrls: {
         USDT: "https://coinmarketcap.com/currencies/tether/",
         USDC: "https://coinmarketcap.com/currencies/usd-coin/",
         DAI: "https://coinmarketcap.com/currencies/multi-collateral-dai/",
         JPYC: "https://coinmarketcap.com/currencies/jpycoin/",
+        WETH: 'https://coinmarketcap.com/currencies/weth/'
       },
     };
   },
@@ -88,48 +91,46 @@ export default {
   },
   computed: {
     baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     classes() {
-      return ["modal-box", `--${this.$store.state.modal.size}`];
+      return [ 'modal-box', `--${this.$store.state.modal.size}` ]
     },
     tokenIcon() {
-      return this.tokenIcons[this.tokenSymbol];
+      return this.tokenIcons[this.tokenSymbol]
     },
     tokenName() {
-      return this.tokenNames[this.tokenSymbol];
+      return this.tokenNames[this.tokenSymbol]
     },
     tokenMarketUrl() {
-      return this.tokenMarketUrls[this.tokenSymbol];
+      return this.tokenMarketUrls[this.tokenSymbol]
     },
     tokenSymbol() {
-      return this.$store.state.modal.params.symbol;
-    },
+      return this.$store.state.modal.params.symbol
+    }
   },
   methods: {
     apiSetMerchantReceiveSymbol(symbol) {
-      const url = `${this.baseUrl}/api/v1/management/setting/token`;
-      const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
-      const data = { symbol: symbol };
-      return this.axios.patch(url, data, options);
+      const url = `${this.baseUrl}/api/v1/management/setting/token`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
+      const data = { symbol: symbol }
+      return this.axios.patch(url, data, options)
     },
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     confirm() {
       this.apiSetMerchantReceiveSymbol(this.tokenSymbol).then(() => {
-        this.$store.dispatch("account/updateReceiveSymbol", this.tokenSymbol);
-        this.hideModal();
-      });
+        this.$store.dispatch('account/updateReceiveSymbol', this.tokenSymbol)
+        this.hideModal()
+      })
     },
-    slectedToken() {
-      this.$store.dispatch("account/selectReceiveToken");
-      this.$store.dispatch("modal/hide");
-    },
-  },
-};
+    slectedToken(){
+      this.$store.dispatch('account/selectReceiveToken')
+      this.$store.dispatch('modal/hide')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

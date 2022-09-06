@@ -223,14 +223,14 @@ import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
 import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
-  name: "contractIssuanceModal",
+  name: 'contractIssuanceModal',
   data() {
     return {
       pageStateList: {
         detail: 1,
         processing: 2,
         successed: 3,
-        failured: 4,
+        failured: 4
       },
       pageState: 1,
       reloadSpinning: false,
@@ -244,237 +244,218 @@ export default {
   },
   computed: {
     classes() {
-      const classes = ["modal-box", `--${this.$store.state.modal.size}`];
-      return classes;
+      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      return classes
     },
     isReloadSpinning() {
-      return this.reloadSpinning;
+      return this.reloadSpinning
     },
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     allowClose() {
-      return "allowClose" in this.$store.state.modal.params
+      return ('allowClose' in this.$store.state.modal.params)
         ? this.$store.state.modal.param
-        : true;
+        : true
     },
     chainId() {
-      return this.$store.state.modal.params.chainId;
+      return this.$store.state.modal.params.chainId
     },
     contractSetting() {
-      return this.$store.state.contract.contracts[this.chainId];
+      return this.$store.state.contract.contracts[this.chainId]
     },
     isPublishedContract() {
-      return Boolean(this.contractSetting.address);
+      return Boolean(this.contractSetting.address)
     },
     isProcessing() {
-      return this.contractSetting.processing;
+      return this.contractSetting.processing
     },
     networkName() {
-      return NETWORKS[this.$store.state.web3.chainId].name;
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].name
     },
     networkIcon() {
-      return NETWORKS[this.$store.state.web3.chainId].icon;
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
     },
     symbol() {
-      return this.$store.state.account.symbol;
+      return this.$store.state.account.symbol
     },
     isDetailState() {
-      return this.pageState === this.pageStateList.detail;
+      return this.pageState === this.pageStateList.detail
     },
     isProcessingState() {
-      return this.pageState === this.pageStateList.processing;
+      return this.pageState === this.pageStateList.processing
     },
     isSuccessedState() {
-      return this.pageState === this.pageStateList.successed;
+      return this.pageState === this.pageStateList.successed
     },
     isFailuredState() {
-      return this.pageState === this.pageStateList.failured;
+      return this.pageState === this.pageStateList.failured
     },
     transactionUrl() {
-      const transactionHash = this.contractSetting.transactionAddess;
-      const scanSiteUrl = NETWORKS[this.chainId].scanUrl;
+      const transactionHash = this.contractSetting.transactionAddess
+      const scanSiteUrl = NETWORKS[this.chainId].scanUrl
       if (transactionHash) {
-        return `${scanSiteUrl}/tx/${transactionHash}`;
+        return `${scanSiteUrl}/tx/${transactionHash}`
       } else {
-        return "";
+        return ''
       }
     },
     isWalletPending() {
-      return this.$store.state.wallet.pending;
-    },
+      return this.$store.state.wallet.pending
+    }
   },
   methods: {
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     apiRegistTransaction(chainId, transactionAddress) {
-      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/transaction`;
-      const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
+      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/transaction`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
         network_type: parseInt(chainId, 10),
         payment_type: NORMAL_TYPE_PAYMENT,
-        transaction_address: transactionAddress,
-      };
-      return this.axios.post(url, data, options);
+        transaction_address: transactionAddress
+      }
+      return this.axios.post(url, data, options)
     },
-    apiUpdateContract(
-      chainId,
-      transactionAddress,
-      contractAddress,
-      contractAbi
-    ) {
-      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/update`;
-      const options = {
-        headers: { Authorization: RequestUtility.getBearer() },
-      };
+    apiUpdateContract(chainId, transactionAddress, contractAddress, contractAbi) {
+      const url = `${this.API_BASE_URL}/api/v1/management/contract/deploy/update`
+      const options = { headers: { Authorization: RequestUtility.getBearer() } }
       const data = {
         address: contractAddress,
         transaction_address: transactionAddress,
         args: JSON.stringify(contractAbi),
         network_type: parseInt(chainId, 10),
-        payment_type: NORMAL_TYPE_PAYMENT,
-      };
-      return this.axios.post(url, data, options);
+        payment_type: NORMAL_TYPE_PAYMENT
+      }
+      return this.axios.post(url, data, options)
     },
     apiConnectionErrorHandler(statusCode, responseData) {
       if (statusCode === HTTP_CODES.UN_AUTHORIZED) {
-        localStorage.removeItem(LOGIN_TOKEN);
-        this.$router.push({ path: "/admin" });
+        localStorage.removeItem(LOGIN_TOKEN)
+        this.$router.push({ path: '/admin' })
       } else {
-        if ("errors" in responseData && responseData.errors.length) {
-          this.$store.dispatch("modal/show", {
-            target: "error-modal",
-            size: "small",
+        if ('errors' in responseData && responseData.errors.length) {
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
             params: {
-              message: errorCodeList[responseData.errors.shift()].msg,
-            },
-          });
+              message: errorCodeList[responseData.errors.shift()].msg
+            }
+          })
         }
       }
     },
     updateContractProcessing(chainId, processing) {
       const payload = {
         chainId: chainId,
-        processing: processing,
-      };
-      this.$store.dispatch("contract/updateContractProcessing", payload);
+        processing: processing
+      }
+      this.$store.dispatch('contract/updateContractProcessing', payload)
     },
     updateContractAvailable(chainId, available) {
       const payload = {
         chainId: chainId,
-        available: available,
-      };
-      this.$store.dispatch("contract/updateContractAvailable", payload);
+        available: available
+      }
+      this.$store.dispatch('contract/updateContractAvailable', payload)
     },
     updateContractTxAddess(chainId, address) {
       const payload = {
         chainId: chainId,
-        address: address,
-      };
-      this.$store.dispatch("contract/updateContractTxAddess", payload);
+        address: address
+      }
+      this.$store.dispatch('contract/updateContractTxAddess', payload)
     },
     updateContractAddress(chainId, address) {
       const payload = {
         chainId: chainId,
-        address: address,
-      };
-      this.$store.dispatch("contract/updateContractAddress", payload);
+        address: address
+      }
+      this.$store.dispatch('contract/updateContractAddress', payload)
     },
     refresh() {
-      if (this.isReloadSpinning) return;
-      this.reloadSpinning = true;
-      const transactionHash = this.contractSetting.transactionAddess;
-      if (transactionHash != null) {
-        this.$web3
-          .monitoringTransaction(
-            this.$store.state.web3.instance,
-            this.contractSetting.transactionAddess
-          )
-          .then((receipt) => {
-            if (receipt) {
-              if (receipt.status) {
-                this.$store.dispatch("wallet/updatePendingStatus", false);
-                this.pageState = this.pageStateList.successed;
-              } else {
-                this.$store.dispatch("wallet/updatePendingStatus", false);
-                this.pageState = this.pageStateList.failured;
-              }
+      if(this.isReloadSpinning) return
+      this.reloadSpinning = true
+      const transactionHash = this.contractSetting.transactionAddess
+      if(transactionHash != null) {
+        this.$web3.monitoringTransaction(
+          this.$store.state.web3.instance,
+          this.contractSetting.transactionAddess
+        ).then((receipt) => {
+          if (receipt) {
+            if (receipt.status) {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
+              this.pageState = this.pageStateList.successed
+            } else {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
+              this.pageState = this.pageStateList.failured
             }
-            this.reloadSpinning = false;
-          })
-          .catch((error) => {
-            console.log(error);
-            this.reloadSpinning = false;
-          });
+          }
+          this.reloadSpinning = false
+        }).catch((error) => {
+          console.log(error)
+          this.reloadSpinning = false
+        })
       }
     },
     publishMerchantContract(chainId) {
-      if (this.isProcessing) return;
-      this.updateContractProcessing(this.chainId, true);
-      const merchantWalletAddress = this.$store.state.account.address;
-      const receiveTokenAddress = this.contractSetting.support;
-      this.$web3
-        .publishMerchantContract(
-          this.$store.state.web3.instance,
+      if (this.isProcessing) return
+      this.updateContractProcessing(this.chainId, true)
+      const merchantWalletAddress = this.$store.state.account.address
+      const receiveTokenAddress = this.contractSetting.support
+      this.$web3.publishMerchantContract(
+        this.$store.state.web3.instance,
+        chainId,
+        merchantWalletAddress,
+        receiveTokenAddress
+      )
+      .on('transactionHash', (hash) => {
+        this.pageState = this.pageStateList.processing
+        this.$store.dispatch('wallet/updatePendingStatus', true)
+        this.updateContractTxAddess(chainId, hash)
+        this.apiRegistTransaction(chainId,hash).catch((error) => {
+          console.log(error)
+        })
+      }).
+      then((receipt) => {
+        this.pageState = this.pageStateList.successed
+        this.updateContractAvailable(chainId, true)
+        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchant_
+        const transactionAddress = receipt.transactionHash
+        const merchantContractAbi = MerchantContract.abi
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+        this.apiUpdateContract(
           chainId,
-          merchantWalletAddress,
-          receiveTokenAddress
-        )
-        .on("transactionHash", (hash) => {
-          this.pageState = this.pageStateList.processing;
-          this.$store.dispatch("wallet/updatePendingStatus", true);
-          this.updateContractTxAddess(chainId, hash);
-          this.apiRegistTransaction(chainId, hash).catch((error) => {
-            console.log(error);
-          });
+          transactionAddress,
+          merchantContractAddess,
+          merchantContractAbi,
+        ).then(() => {
+          this.updateContractAddress(chainId, merchantContractAddess)
+          this.updateContractProcessing(chainId, false)
+        }).catch((error) => {
+          if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
+          if (error.response.data.errors.shift() === 3530) {
+            this.updateContractAddress(chainId, merchantContractAddess)
+          } else {
+            this.apiConnectionErrorHandler(error.response.status, error.response.data)
+          }
+          this.updateContractProcessing(chainId, false)
         })
-        .then((receipt) => {
-          this.pageState = this.pageStateList.successed;
-          this.updateContractAvailable(chainId, true);
-          const merchantContractAddess =
-            receipt.events["NewMerchantDeployed"].returnValues.merchant_;
-          const transactionAddress = receipt.transactionHash;
-          const merchantContractAbi = MerchantContract.abi;
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-          this.apiUpdateContract(
-            chainId,
-            transactionAddress,
-            merchantContractAddess,
-            merchantContractAbi
-          )
-            .then(() => {
-              this.updateContractAddress(chainId, merchantContractAddess);
-              this.updateContractProcessing(chainId, false);
-            })
-            .catch((error) => {
-              if (error.response.status !== HTTP_CODES.BAD_REQUEST) {
-                this.apiConnectionErrorHandler(
-                  error.response.status,
-                  error.response.data
-                );
-              }
-              if (error.response.data.errors.shift() === 3530) {
-                this.updateContractAddress(chainId, merchantContractAddess);
-              } else {
-                this.apiConnectionErrorHandler(
-                  error.response.status,
-                  error.response.data
-                );
-              }
-              this.updateContractProcessing(chainId, false);
-            });
-        })
-        .catch(() => {
-          this.pageState = this.pageStateList.failured;
-          this.updateContractProcessing(chainId, false);
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        });
-    },
-  },
-};
+      }).catch(() => {
+        this.pageState = this.pageStateList.failured
+        this.updateContractProcessing(chainId, false)
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

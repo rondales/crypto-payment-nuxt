@@ -121,6 +121,7 @@ export default {
         USDC: require("@/assets/images/symbol/usdc.svg"),
         DAI: require("@/assets/images/symbol/dai.svg"),
         JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/symbol/eth.svg')
       },
       receiveTokenIconPath: {
         USDT: "usdt",
@@ -218,16 +219,18 @@ export default {
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
     this.$store.dispatch("payment/updateSelectReceiptStatus", true);
-    if (!this.isAgreeRisk && this.isInitialized) {
-      this.showRiskDisclaimerModal();
-    }
+    // NOTE Temporarily commented out by issue #622
+    // if (!this.isAgreeRisk && this.isInitialized) {
+    //   this.showRiskDisclaimerModal();
+    // }
   },
   mounted() {
     setTimeout(() => {
       this.$emit('updateInitializingStatus', false)
-      if (!this.isAgreeRisk) {
-        this.showRiskDisclaimerModal();
-      }
+      // NOTE Temporarily commented out by issue #622
+      // if (!this.isAgreeRisk) {
+      //   this.showRiskDisclaimerModal();
+      // }
     }, 1500)
   },
   beforeRouteLeave(to, from, next) {

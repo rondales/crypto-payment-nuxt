@@ -2,7 +2,7 @@ import { NETWORKS } from "@/constants";
 import Wavax from "../../abis/avalanche/wavax";
 import Usdt from "../../abis/avalanche/usdt";
 
-const url = NETWORKS[43113].scanUrl + "/address";
+const url = NETWORKS[43113].scanUrl + '/token'
 
 export default {
   AVAX: {

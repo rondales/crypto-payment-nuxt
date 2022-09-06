@@ -235,6 +235,7 @@
               </div>
             </div>
           </div>
+          </div>
           <div v-else class="content-wrap">
             <div v-if="isNotEnoughLiquidity" class="balance-warning">
               <p>Liquidity is not enough</p>
@@ -533,7 +534,7 @@ export default {
         this.SLIPPAGE_RATE
       )
       .catch((err) => {
-        if(err.message.includes('ds-math-sub-underflow')) {
+        if(err.message.includes('execution reverted: No valid exchange')) {
           this.isNotEnoughLiquidity = true
           this.$parent.loading = false;
           this.$store.dispatch("modal/show", {
@@ -610,15 +611,12 @@ export default {
           if (!receipt.status) {
             Promise.reject();
           }
-          const tokenWeiUnit = this.$web3.getTokenUnit(
-            this.userSelectedTokenDecimal
-          );
           const approvedAmountInWei =
             receipt.events["Approval"].returnValues.value;
           this.userSelectedTokenAllowance = this.$web3.convertFromWei(
             this.web3Instance,
             approvedAmountInWei,
-            tokenWeiUnit
+            this.userSelectedTokenDecimal
           );
           this.$store.dispatch("wallet/updatePendingStatus", false);
         })
@@ -713,7 +711,7 @@ export default {
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
         })
-        .catch((err) => { console.log(err) });
+        .catch((err) => { console.error(err) });
     });
     this.balanceTable.push({
       title: "Balance",

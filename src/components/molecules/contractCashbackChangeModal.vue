@@ -335,7 +335,7 @@ export default {
         confirmation: 2,
         processing: 3,
         successed: 4,
-        failured: 5,
+        failured: 5
       },
       cashbackRateTxAddress: null,
       cashbackRateProcessing: false,
@@ -343,191 +343,180 @@ export default {
       reloadSpinning: false,
       newCashbackRate: null,
       validCashbackRate: true,
-      accepted: false,
-    };
+      accepted: false
+    }
   },
   computed: {
     classes() {
-      const classes = ["modal-box", `--${this.$store.state.modal.size}`];
-      return classes;
+      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
+      return classes
     },
     isAccepted() {
-      return this.accepted;
-    },
+        return this.accepted
+      },
     isReloadSpinning() {
-      return this.reloadSpinning;
+      return this.reloadSpinning
     },
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     allowClose() {
-      return "allowClose" in this.$store.state.modal.params
+      return ('allowClose' in this.$store.state.modal.params)
         ? this.$store.state.modal.param
-        : true;
+        : true
     },
     chainId() {
-      return this.$store.state.modal.params.chainId;
+      return this.$store.state.modal.params.chainId
     },
     contractSetting() {
-      return this.$store.state.contract.contracts[this.chainId];
+      return this.$store.state.contract.contracts[this.chainId]
     },
     isProcessing() {
-      return this.cashbackRateProcessing;
+      return this.cashbackRateProcessing
     },
     isDetailState() {
-      return this.pageState === this.pageStateList.detail;
+      return this.pageState === this.pageStateList.detail
     },
     isConfirmationState() {
-      return this.pageState === this.pageStateList.confirmation;
+      return this.pageState === this.pageStateList.confirmation
     },
     isProcessingState() {
-      return this.pageState === this.pageStateList.processing;
+      return this.pageState === this.pageStateList.processing
     },
     isSuccessedState() {
-      return this.pageState === this.pageStateList.successed;
+      return this.pageState === this.pageStateList.successed
     },
     isFailuredState() {
-      return this.pageState === this.pageStateList.failured;
+      return this.pageState === this.pageStateList.failured
     },
     transactionUrl() {
-      const transactionHash = this.cashbackRateTxAddress;
-      const scanSiteUrl = NETWORKS[this.chainId].scanUrl;
+      const transactionHash = this.cashbackRateTxAddress
+      const scanSiteUrl = NETWORKS[this.chainId].scanUrl
       if (transactionHash) {
-        return `${scanSiteUrl}/tx/${transactionHash}`;
+        return `${scanSiteUrl}/tx/${transactionHash}`
       } else {
-        return "";
+        return ''
       }
     },
     cashbackRate() {
-      return this.contractSetting.cashback.rate;
+      return this.contractSetting.cashback.rate
     },
     isCashbackDefaultSetting() {
-      return this.contractSetting.cashback.rate == 0;
+      return this.contractSetting.cashback.rate == 0
     },
     isWalletPending() {
-      return this.$store.state.wallet.pending;
+      return this.$store.state.wallet.pending
     },
     currentDate() {
       const current = new Date();
-      const date = `${current.getDate()}/${
-        current.getMonth() + 1
-      }/${current.getFullYear()}`;
+      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       return date;
-    },
+    }
   },
   watch: {
     newCashbackRate(value) {
-      this.newCashbackRate = value;
-      this.checkCashbackRateFormat(value);
-    },
+      this.newCashbackRate = value
+      this.checkCashbackRateFormat(value)
+    }
   },
   methods: {
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     validateCashbackRate(rate) {
       return rate.match(/^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$/) != null;
     },
     checkCashbackRateFormat() {
-      if (
-        this.newCashbackRate &&
-        this.validateCashbackRate(this.newCashbackRate)
-      ) {
-        this.validCashbackRate = true;
+      if(this.newCashbackRate && this.validateCashbackRate(this.newCashbackRate)) {
+        this.validCashbackRate = true
       } else {
-        this.validCashbackRate = false;
+        this.validCashbackRate = false
       }
     },
     changePageToConfirmationState() {
-      this.checkCashbackRateFormat();
-      if (this.validCashbackRate) {
-        this.pageState = this.pageStateList.confirmation;
+      this.checkCashbackRateFormat()
+      if(this.validCashbackRate){
+        this.pageState = this.pageStateList.confirmation
       }
     },
     updateAcceptedStatus() {
-      this.accepted = this.$refs.accepted.checked;
+        this.accepted = this.$refs.accepted.checked
     },
     updateCashbackRate(chainId, cashback) {
       const payload = {
         chainId: chainId,
         cashbackRate: cashback.rate,
-        lastModified: cashback.lastModified,
-      };
-      this.$store.dispatch("contract/updateContractCashback", payload);
+        lastModified: cashback.lastModified
+      }
+      this.$store.dispatch('contract/updateContractCashback', payload)
     },
     async getCurrentContractCashbackRate(chainId) {
-      const contractAddress = this.contractSetting.address;
-      if (contractAddress == null) return;
+      const contractAddress = this.contractSetting.address
+      if(contractAddress == null) return
       const result = await this.$web3.viewCashBackPercent(
         this.$store.state.web3.instance,
         MerchantContract.abi,
         contractAddress
-      );
-      return this.updateCashbackRate(chainId, result);
+      )
+      return this.updateCashbackRate(chainId, result)
     },
     changeCashbackRate(chainId) {
-      if (this.isProcessing) return;
-      this.cashbackRateProcessing = true;
-      this.$web3
-        .updateCashbackPercent(
-          this.$store.state.web3.instance,
-          MerchantContract.abi,
-          this.contractSetting.address,
-          this.newCashbackRate,
-          this.$store.state.account.address
-        )
-        .on("transactionHash", (hash) => {
-          this.pageState = this.pageStateList.processing;
-          this.$store.dispatch("wallet/updatePendingStatus", true);
-          this.cashbackRateTxAddress = hash;
-        })
-        .then((receipt) => {
-          if (receipt.status) {
-            this.getCurrentContractCashbackRate(chainId).then(() => {
-              this.pageState = this.pageStateList.successed;
-            });
-          } else {
-            this.pageState = this.pageStateList.failured;
-          }
-          this.cashbackRateProcessing = false;
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        })
-        .catch(() => {
-          this.pageState = this.pageStateList.failured;
-          this.cashbackRateProcessing = false;
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        });
+      if (this.isProcessing) return
+      this.cashbackRateProcessing = true
+    
+      this.$web3.updateCashbackPercent(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        this.contractSetting.address,
+        this.newCashbackRate,
+        this.$store.state.account.address
+      ).on('transactionHash', (hash) => {
+        this.pageState = this.pageStateList.processing
+        this.$store.dispatch('wallet/updatePendingStatus', true)
+        this.cashbackRateTxAddress = hash
+      }).then((receipt) => {
+        if(receipt.status) {
+          this.getCurrentContractCashbackRate(chainId).then(() => {
+            this.pageState = this.pageStateList.successed
+          })
+        } else {
+          this.pageState = this.pageStateList.failured
+        }
+        this.cashbackRateProcessing = false
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+      }).catch(() => {
+        this.pageState = this.pageStateList.failured
+        this.cashbackRateProcessing = false
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+      })
     },
     refresh() {
-      if (this.isReloadSpinning) return;
-      this.reloadSpinning = true;
-      const transactionHash = this.cashbackRateTxAddress;
-      if (transactionHash != null) {
-        this.$web3
-          .monitoringTransaction(
-            this.$store.state.web3.instance,
-            transactionHash
-          )
-          .then((receipt) => {
-            if (receipt) {
-              if (receipt.status) {
-                this.$store.dispatch("wallet/updatePendingStatus", false);
-                this.pageState = this.pageStateList.successed;
-              } else {
-                this.$store.dispatch("wallet/updatePendingStatus", false);
-                this.pageState = this.pageStateList.failured;
-              }
+      if(this.isReloadSpinning) return
+      this.reloadSpinning = true
+      const transactionHash = this.cashbackRateTxAddress
+      if(transactionHash != null) {
+        this.$web3.monitoringTransaction(
+          this.$store.state.web3.instance,
+          transactionHash
+        ).then((receipt) => {
+          if (receipt) {
+            if (receipt.status) {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
+              this.pageState = this.pageStateList.successed
+            } else {
+              this.$store.dispatch('wallet/updatePendingStatus', false)
+              this.pageState = this.pageStateList.failured
             }
-            this.reloadSpinning = false;
-          })
-          .catch((error) => {
-            console.log(error);
-            this.reloadSpinning = false;
-          });
+          }
+          this.reloadSpinning = false
+        }).catch((error) => {
+          console.log(error)
+          this.reloadSpinning = false
+        })
       }
     },
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>

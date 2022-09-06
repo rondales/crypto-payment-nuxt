@@ -536,7 +536,6 @@ export default {
                 lightSrc: "",
               },
               text: "To become a merchant, simply click ［Enter App］and connect your Web3 wallet. There is no screening process. From that day on, your store or service will be able to accept cryptocurrency payments. Also, the payment will be delivered to your Web3 Wallet at that very moment.",
-              text2: "Mainnet will launch July 4, 2022.",
               link: {
                 url: "https://slash-fi.gitbook.io/docs/integration-guide/quick-start",
                 title: "See Quick Start",
@@ -885,9 +884,9 @@ export default {
                 {
                   title: "Open Source Plugins",
                   list: [
-                    { text: "Woocommerce", active: true },
-                    { text: "Wellcart", active: true },
-                    { text: "EC CUBE", active: true },
+                    { text: "Woocommerce", active: false },
+                    { text: "Wellcart", active: false },
+                    { text: "EC CUBE", active: false },
                     { text: "Magento", active: false },
                     { text: "OpenCart", active: false },
                     { text: "Drupal", active: false },
@@ -1036,7 +1035,8 @@ export default {
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
-              url: "",
+              url: "https://discord.com/invite/gk25cyBs78",
+              btnType: "a"
             },
             {
               title: "FAQ about system implementation",

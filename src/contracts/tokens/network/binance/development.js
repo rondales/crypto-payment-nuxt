@@ -4,7 +4,7 @@ import Busd from "../../abis/binance/busd";
 import Cake from "../../abis/binance/cake";
 import Wbnb from "../../abis/binance/wbnb";
 
-const url = NETWORKS[97].scanUrl + "/address";
+const url = NETWORKS[97].scanUrl + '/token'
 
 export default {
   BNB: {

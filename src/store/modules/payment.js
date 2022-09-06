@@ -22,7 +22,14 @@ const store = {
       USD: false,
       JPY: false,
       EUR: false,
-      AED: false
+      AED: false,
+      SGD: false,
+      HKD: false,
+      CAD: false,
+      IDR: false,
+      PHP: false,
+      INR: false,
+      KRW: false
     },
     token: {
       name: null,

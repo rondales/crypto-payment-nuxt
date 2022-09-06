@@ -480,8 +480,8 @@ export default {
       riskAgreed: false,
       validAddress: true,
       validAddressType: true,
-      isContractAddress: null,
-    };
+      isSlashCustomPlugin: null,
+    }
   },
   computed: {
     classes() {
@@ -492,175 +492,166 @@ export default {
       return this.riskAgreed;
     },
     isFormDataConfirmed() {
-      return (
-        this.newReceiveAddress != null &&
-        this.isContractAddress != null &&
-        this.networkConfirmed
-      );
+      return this.newReceiveAddress != null && this.isSlashCustomPlugin != null && this.networkConfirmed
     },
     isReloadSpinning() {
-      return this.reloadSpinning;
+      return this.reloadSpinning
     },
     isValidAddress() {
-      return this.validAddress;
+      return this.validAddress
     },
     allowClose() {
-      return "allowClose" in this.$store.state.modal.params
+      return ('allowClose' in this.$store.state.modal.params)
         ? this.$store.state.modal.param
-        : true;
+        : true
     },
     networkName() {
-      return NETWORKS[this.$store.state.web3.chainId].name;
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].name
     },
     networkIcon() {
-      return NETWORKS[this.$store.state.web3.chainId].icon;
+      return NETWORKS[
+        this.$store.state.web3.chainId
+      ].icon
     },
     chainId() {
-      return this.$store.state.modal.params.chainId;
+      return this.$store.state.modal.params.chainId
     },
     contractSetting() {
-      return this.$store.state.contract.contracts[this.chainId];
+      return this.$store.state.contract.contracts[this.chainId]
     },
     isProcessing() {
-      return this.receiveAddressProcessing;
+      return this.receiveAddressProcessing
     },
     isDetailState() {
-      return this.pageState === this.pageStateList.detail;
+      return this.pageState === this.pageStateList.detail
     },
     isConfirmationState() {
-      return this.pageState === this.pageStateList.confirmation;
+      return this.pageState === this.pageStateList.confirmation
     },
     isProcessingState() {
-      return this.pageState === this.pageStateList.processing;
+      return this.pageState === this.pageStateList.processing
     },
     isSuccessedState() {
-      return this.pageState === this.pageStateList.successed;
+      return this.pageState === this.pageStateList.successed
     },
     isFailuredState() {
-      return this.pageState === this.pageStateList.failured;
+      return this.pageState === this.pageStateList.failured
     },
     transactionUrl() {
-      const transactionHash = this.receiveAddressTxAddress;
-      const scanSiteUrl = NETWORKS[this.chainId].scanUrl;
+      const transactionHash = this.receiveAddressTxAddress
+      const scanSiteUrl = NETWORKS[this.chainId].scanUrl
       if (transactionHash) {
-        return `${scanSiteUrl}/tx/${transactionHash}`;
+        return `${scanSiteUrl}/tx/${transactionHash}`
       } else {
-        return "";
+        return ''
       }
     },
     receiveAddress() {
-      return this.contractSetting.receiveAddress.address;
+      return this.contractSetting.receiveAddress.address
     },
     isDefaultSetting() {
-      return (
-        this.contractSetting.receiveAddress.address ==
-        this.$store.state.account.address
-      );
+      return this.contractSetting.receiveAddress.address == this.$store.state.account.address
     },
     isWalletPending() {
-      return this.$store.state.wallet.pending;
+      return this.$store.state.wallet.pending
     },
     currentDate() {
       const current = new Date();
-      const date = `${current.getDate()}/${
-        current.getMonth() + 1
-      }/${current.getFullYear()}`;
+      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       return date;
     },
   },
   watch: {
     newReceiveAddress(value) {
-      this.newReceiveAddress = value;
-      this.checkAddressFormat(value);
-    },
+      this.newReceiveAddress = value
+      this.checkAddressFormat(value)
+    }
   },
   methods: {
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     validateAddress(address) {
-      return address.match(/^0x([a-z]|[A-Z]|[0-9]){40}$/) != null;
+      return this.$store.state.web3.instance.utils.isAddress(address)
     },
     checkAddressFormat(address) {
-      if (this.validateAddress(address)) {
-        this.validAddress = true;
+      if(this.validateAddress(address)) {
+        this.validAddress = true
       } else {
-        this.validAddress = false;
+        this.validAddress = false
       }
     },
     async checkAddressType(address) {
-      const isContractAddress = await this.$web3.isContractAddress(
+      const isSlashCustomPlugin = await this.$web3.isSlashCustomPlugin(
         this.$store.state.web3.instance,
+        SlashCustomPlugin.abi,
         address
-      );
-      return (this.validAddressType =
-        this.isContractAddress === isContractAddress);
+      )
+      return this.validAddressType = this.isSlashCustomPlugin === isSlashCustomPlugin
     },
     async changePageToConfirmationState() {
-      if (!this.validateAddress(this.newReceiveAddress)) return;
-      await this.checkAddressType(this.newReceiveAddress);
-      if (this.validAddressType) {
-        this.pageState = this.pageStateList.confirmation;
+      if(!this.validateAddress(this.newReceiveAddress)) return
+      await this.checkAddressType(this.newReceiveAddress)
+      if(this.validAddressType){
+        this.pageState = this.pageStateList.confirmation
       }
     },
     updateNetworkConfirmedStatus() {
-      this.networkConfirmed = this.$refs.networkConfirm.checked;
+      this.networkConfirmed = this.$refs.networkConfirm.checked
     },
     updateRiskAgreedStatus() {
-      this.riskAgreed = this.$refs.riskAgreed.checked;
+        this.riskAgreed = this.$refs.riskAgreed.checked
     },
     updateReceiveAddress(chainId, receiveAddress) {
       const payload = {
         chainId: chainId,
         receiveAddress: receiveAddress.address,
-        isContract: receiveAddress.isContract,
-        lastModified: receiveAddress.lastModified,
-      };
-      this.$store.dispatch("contract/updateContractReceiveAddress", payload);
+        isSlashCustomPlugin: receiveAddress.isSlashCustomPlugin,
+        lastModified: receiveAddress.lastModified
+      }
+      this.$store.dispatch('contract/updateContractReceiveAddress', payload)
     },
     async getCurrentContractReceiveAddress(chainId) {
-      const contractAddress = this.contractSetting.address;
-      if (contractAddress == null) return;
+      const contractAddress = this.contractSetting.address
+      if(contractAddress == null) return
       const receiveAddress = await this.$web3.viewMerchantReceiveAddress(
         this.$store.state.web3.instance,
         MerchantContract.abi,
         contractAddress
-      );
-      return this.updateReceiveAddress(chainId, receiveAddress);
+      )
+      return this.updateReceiveAddress(chainId, receiveAddress)
     },
     changeReceiveAddress(chainId) {
-      if (this.isProcessing) return;
-      this.receiveAddressProcessing = true;
-      this.$web3
-        .updateMerchantReceiveAddress(
-          this.$store.state.web3.instance,
-          MerchantContract.abi,
-          this.contractSetting.address,
-          this.newReceiveAddress,
-          this.isContractAddress,
-          this.$store.state.account.address
-        )
-        .on("transactionHash", (hash) => {
-          this.pageState = this.pageStateList.processing;
-          this.$store.dispatch("wallet/updatePendingStatus", true);
-          this.receiveAddressTxAddress = hash;
-        })
-        .then((receipt) => {
-          if (receipt.status) {
-            this.getCurrentContractReceiveAddress(chainId).then(() => {
-              this.pageState = this.pageStateList.successed;
-            });
-          } else {
-            this.pageState = this.pageStateList.failured;
-          }
-          this.receiveAddressProcessing = false;
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        })
-        .catch(() => {
-          this.pageState = this.pageStateList.failured;
-          this.receiveAddressProcessing = false;
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        });
+      if (this.isProcessing) return
+      this.receiveAddressProcessing = true
+      this.$web3.updateMerchantReceiveAddress(
+        this.$store.state.web3.instance,
+        MerchantContract.abi,
+        this.contractSetting.address,
+        this.newReceiveAddress,
+        this.isSlashCustomPlugin,
+        this.$store.state.account.address
+      ).on('transactionHash', (hash) => {
+        this.pageState = this.pageStateList.processing
+        this.$store.dispatch('wallet/updatePendingStatus', true)
+        this.receiveAddressTxAddress = hash
+      }).then((receipt) => {
+        if(receipt.status) {
+          this.getCurrentContractReceiveAddress(chainId).then(() => {
+            this.pageState = this.pageStateList.successed
+          })
+        } else {
+          this.pageState = this.pageStateList.failured
+        }
+        this.receiveAddressProcessing = false
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+      }).catch(() => {
+        this.pageState = this.pageStateList.failured
+        this.receiveAddressProcessing = false
+        this.$store.dispatch('wallet/updatePendingStatus', false)
+      })
     },
     refresh() {
       if (this.isReloadSpinning) return;
