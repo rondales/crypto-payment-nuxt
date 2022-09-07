@@ -5,11 +5,11 @@
         class="header__title"
         tag="h3"
         type="modalTitle"
-        html="Refunded information"
+        html="Cashback information"
       />
       <PaymentText
         tag="p"
-        html="Slippage collections were refunded.<br />Refund information is below."
+        html="A portion of the payment amount was cashbacked by the merchant.<br />The amount of cashback is as follows."
       />
       <PaymentText
         class="cap"
@@ -19,26 +19,11 @@
       />
     </div>
     <div class="body add-flex j-between">
-      <div v-if="cashBackAmount != '0'" class="refund-item mt-2 mb-3">
-        <PaymentText tag="h3" type="subtitle" html="Cashback amount" />
-        <p>{{ cashBackAmount }}&nbsp;{{ refundedTokenSymbol }}</p>
-      </div>
-      <div v-if="refundedTokenAmount" class="refund-item mb-3">
-        <PaymentText tag="h3" type="p" html="Token refunded amount" />
+      <div class="refund-item mt-2">
+        <PaymentText tag="h3" type="p" html="Cashback amount" />
         <p class="pricewrap">
-          <PaymentText class="price" type="price" :html="refundedTokenAmount" />
-          <PaymentText
-            class="symbol"
-            type="symbol"
-            :html="refundedTokenSymbol"
-          />
-        </p>
-      </div>
-      <div v-if="refundedFeeAmount" class="refund-item">
-        <PaymentText tag="h3" type="p" html="Fee refunded amount" />
-        <p class="pricewrap">
-          <PaymentText class="price" type="price" :html="refundedFeeAmount" />
-          <PaymentText class="symbol" type="symbol" :html="refundedFeeSymbol" />
+          <PaymentText class="price" type="price" :html="cashBackTokenAmount" />
+          <PaymentText class="symbol" type="symbol" :html="cashbackTokenSymbol" />
         </p>
       </div>
     </div>
@@ -58,14 +43,9 @@
 
 <script>
 import PaymentText from "@/components/organisms/Payment/Text";
-// import Payment from "../../pages/payment.vue";
+
 export default {
-  name: "networkModal",
-  data() {
-    return {
-      networks: [],
-    };
-  },
+  name: "PaymentCashbackInfoModal",
   components: { PaymentText },
   computed: {
     classes() {
@@ -75,21 +55,12 @@ export default {
     params() {
       return this.$store.state.modal.params;
     },
-    refundedTokenAmount() {
-      return this.params.refundedTokenAmount;
+    cashBackTokenAmount() {
+      return this.params.cashBackTokenAmount;
     },
-    refundedTokenSymbol() {
-      return this.params.refundedTokenSymbol;
-    },
-    refundedFeeAmount() {
-      return this.params.refundedFeeAmount;
-    },
-    refundedFeeSymbol() {
-      return this.params.refundedFeeSymbol;
-    },
-    cashBackAmount() {
-      return this.params.cashBackAmount;
-    },
+    cashbackTokenSymbol() {
+      return this.params.cashBackTokenSymbol;
+    }
   },
   methods: {
     hideModal() {

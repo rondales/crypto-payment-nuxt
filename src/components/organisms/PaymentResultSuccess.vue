@@ -57,18 +57,17 @@ export default {
     if (!this.isReceiptMode) {
       this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
       this.apiGetTransactionRefundedData().then((response) => {
-        this.$store.dispatch('modal/show', {
-          target: 'refund-info-modal',
-          size: 'small',
-          params: {
-            refundedTokenAmount: response.data.refunded_token_amount,
-            refundedTokenSymbol: response.data.refunded_token_symbol,
-            refundedFeeAmount: response.data.refunded_fee_amount,
-            refundedFeeSymbol: response.data.refunded_fee_symbol,
-            cashBackAmount: response.data.cashback_amount,
-            cashBackSymbol: response.data.cashback_symbol
-          }
-        })
+        const responseParams = response.data
+        if (responseParams.cashback_token_amount !== '0') {
+          this.$store.dispatch('modal/show', {
+            target: 'payment-cashback-info-modal',
+            size: 'small',
+            params: {
+              cashBackTokenAmount: responseParams.cashback_token_amount,
+              cashBackTokenSymbol: responseParams.cashback_token_symbol
+            }
+          })
+        }
       })
     }
   }
