@@ -7,28 +7,22 @@
       <div class="qr">
         <div class="qr_wrap">
           <a :href="qrCode">
-            <vue-qrcode
-                id="qrblock"
-                value="test"
-                :options="{
-                  width: 325,
-                }"
-            />
+            <vue-qrcode id="qrblock" :value="qrCodeUrl" :options="{ width: 325}" />
             <img
-                class="logo"
-                src="@/assets/images/logo-icon.svg"
-                alt="Web3 Payment"
+              class="logo"
+              src="@/assets/images/logo-icon.svg"
+              alt="Web3 Payment"
             />
           </a>
           <img
-              class="logo2"
-              src="@/assets/images/logo-text.svg"
-              alt="Web3 Payment"
+            class="logo2"
+            src="@/assets/images/logo-text.svg"
+            alt="Web3 Payment"
           />
         </div>
       </div>
       <button class="btn __l add-flex j-center a-center" @click="downLoad">
-        <span> Download </span>
+        <span>Download</span>
       </button>
     </div>
     <button class="close" @click="hideModal">
@@ -55,6 +49,9 @@ export default {
   computed: {
     classes() {
       return ["modal-box", `--${this.$store.state.modal.size}`];
+    },
+    params() {
+      return this.$store.state.modal.params
     },
     qrCodeUrl() {
       return `${location.protocol}//${location.host}/qr-code/${this.qrCode}`;
