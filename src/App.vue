@@ -21,7 +21,6 @@ export default {
     adminContractPausedModal: () =>
       import("@/components/molecules/adminContractPausedModal"),
     networkModal: () => import("@/components/molecules/networkModal"),
-    paymentCashbackInfoModal: () => import("@/components/molecules/paymentCashbackInfoModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
     cautionWalletConnectModal: () =>
       import("@/components/molecules/cautionWalletConnectModal"),
