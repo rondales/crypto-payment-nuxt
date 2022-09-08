@@ -1,47 +1,27 @@
-// import { NETWORKS } from '@/constants'
-import Erc20Abi from 'erc-20-abi'
-
-// const url = NETWORKS[5].scanUrl + '/token'
-
 export default {
   USDT: {
     name: 'Teher USD',
     symbol: 'USDT',
-    address: null,
-    abi: Erc20Abi,
-    url: null,
-    icon: require('@/assets/images/symbol/usdt.svg')
+    address: '0x6AD196dBcd43996F17638B924d2fdEDFF6Fdd677'
   },
   USDC: {
     name: 'USD Coin',
     symbol: 'USDC',
-    address: null,
-    abi: Erc20Abi,
-    url: null,
-    icon: require('@/assets/images/symbol/usdc.svg')
+    address: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C'
   },
   BUSD: {
     name: 'Binance USD',
     symbol: 'BUSD',
-    address: null,
-    abi: Erc20Abi,
-    url: null,
-    icon: require('@/assets/images/symbol/busd.svg')
+    address: null
   },
   DAI: {
-    name: 'MakerDAO',
+    name: 'Maker DAO',
     symbol: 'DAI',
-    address: null,
-    abi: Erc20Abi,
-    url: null,
-    icon: require('@/assets/images/symbol/dai.svg')
+    address: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'
   },
   JPYC: {
     name: 'JPY Coin',
     symbol: 'JPYC',
-    address: null,
-    abi: Erc20Abi,
-    url: null,
-    icon: require('@/assets/images/symbol/jpyc.svg')
+    address: null
   }
 }
