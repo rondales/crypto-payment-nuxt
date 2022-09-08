@@ -33,7 +33,7 @@
               class="setting-toggle-left"
               :class="{ active: isDomainQrTab }"
           >
-            Qr Code
+            QR Payment Setting
           </router-link>
         </div>
         <AdminContractSettings v-if="isContractSettingTab" />

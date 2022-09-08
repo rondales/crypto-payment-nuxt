@@ -3,7 +3,7 @@
     <div class="header">
       <h3 class="header__title">
         <img src="@/assets/images/url-refresh.svg" />
-        Refresh
+        Refresh Payment URL
       </h3>
     </div>
     <div class="body">

@@ -1,8 +1,9 @@
 <template>
   <div>
     <div class="copied" v-if="copied">copied</div>
+    <div class="title">Payment URL</div>
+    <p class="description"> User can access this link to create new payment link.</p>
     <div class="keys-wrap" v-if="qrCode">
-      <div class="title">QR Code URL</div>
       <div class="address">
         {{ qrCodeUrl }}
       </div>
@@ -39,10 +40,9 @@
       </div>
     </div>
     <div class="keys-wrap" v-else>
-      <p class="qr-desc">Qr Code</p>
       <div class="comfirm-wrap">
         <div @click="createQrCode()" class="confirm-btn">Create</div>
-        <p>Create Qr Code</p>
+        <p>Create Payment URL</p>
       </div>
     </div>
   </div>
@@ -167,6 +167,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+
+.description {
+  font-weight: 200;
+  font-size: 17px;
+  margin-bottom: 10px;
+}
 .keys-wrap {
   margin-bottom: 48px;
   .qr {

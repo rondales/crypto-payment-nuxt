@@ -3,23 +3,19 @@
     <div class="header">
       <h3 class="header__title">
         <img src="@/assets/images/trash-box.svg" />
-        Delete
+        Delete Payment URL
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current Qr Code Url</p>
+      <div class="dsc-wrap">
+        <span class="mb-3"> Do you want to remove this url? </span>
+      </div>
+      <p class="sub-title">Current Url</p>
       <div class="text-wrap">
         <p>
           {{ qrCodeUrl }}
         </p>
         <img class="copy" @click="copy()" src="@/assets/images/copy.svg" />
-      </div>
-      <div class="dsc-wrap">
-        <span class="mb-3"> Do you want to remove this qr code url? </span>
-        <span>
-          Any site that uses this key will stop working with Slash.fi Payment
-          System.
-        </span>
       </div>
       <button @click="deleteClm" class="btn __l add-flex j-center a-center">
         <img src="@/assets/images/trash-box.svg" />
