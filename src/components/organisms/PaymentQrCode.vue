@@ -1,29 +1,29 @@
 <template>
   <div class="slash-bg">
     <div class="payment">
-      <div class="loading-wrap" :class="{ active: loading }">
-        <img class="spin" src="@/assets/images/loading.svg" />
-      </div>
       <div class="payment_top">
         <div class="payment_headbox add-flex j-between a-center">
           <div class="logo add-flex a-end">
             <figure>
-              <img src="@/assets/images/slash.svg" />
+              <img src="@/assets/images/slash.svg"/>
             </figure>
             <div class="product_name">Generate Payment URL</div>
           </div>
         </div>
       </div>
       <div class="add-flex j-between">
-        <div class="payment_handleprice">
-          <div class="payment_receiptwrap">
-            <div class="payment_desc mb-2 mt-1">
-              <p>Please wait for Generate</p>
-              <p>Payment URL</p>
-              <button class="btn __g __l mb-2 mt-2" v-if="!loading" @click="refresh">
-                Refresh
-              </button>
+        <div class="payment_handle_price">
+          <div class="payment_desc mb-2 mt-1">
+            <p>Please wait for Generate</p>
+            <p>Payment URL</p>
+            <div class="payment_loading mt-2 mb-2" v-if="loading">
+              <div class="loading-wrap" :class="{ active: loading }">
+                <img class="spin" src="@/assets/images/loading.svg"/>
+              </div>
             </div>
+            <button class="btn __g __l mb-2 mt-2" v-else @click="refresh">
+              Refresh
+            </button>
           </div>
         </div>
       </div>
@@ -32,19 +32,14 @@
 </template>
 
 <script>
-
 import {errorCodeList} from "@/enum/error_code";
 
 export default {
   name: "PaymentQrCode",
-  props: {
-  },
   data() {
     return {
       loading: false,
     };
-  },
-  components: {
   },
   computed: {
     API_BASE_URL() {
@@ -64,11 +59,10 @@ export default {
     processPayment() {
       this.loading = true
       this.apiGetPaymentToken().then(response => {
-        this.loading = false
-        this.$router.push({ name: 'entrance', params: { token: response.data.token} })
+        this.$router.push({name: 'entrance', params: {token: response.data.token}})
       }).catch((error) => {
         this.loading = false
-        console.log({ error })
+        console.log({error})
         let message;
         if (error.response.status === 400) {
           message = errorCodeList[error.response.data.errors.shift()].msg;
@@ -101,6 +95,7 @@ export default {
   width: 100%;
   min-height: 100vh;
   position: relative;
+
   &::before {
     content: "";
     background: url(/assets/images/slash-bg.png) no-repeat center center;
@@ -114,6 +109,7 @@ export default {
       top: 70px;
     }
   }
+
   .payment {
     position: absolute;
     top: 45vh;
@@ -128,6 +124,7 @@ export default {
     @include media(sp) {
       top: calc(35% + 12rem);
     }
+
     &::before {
       content: "Slash.fi Web3 Payment ®︎";
       font-size: 11px;
@@ -139,12 +136,10 @@ export default {
       transform: translate(-50%, 0);
       opacity: 0.7;
     }
-    .loading-wrap {
-      top:45vh;
-      background: none;
-    }
+
     .payment_top {
       margin-bottom: 16px;
+
       .logo {
         .product_name {
           font-size: 15px;
@@ -153,14 +148,29 @@ export default {
         }
       }
     }
-    .payment_handleprice {
+
+    .payment_handle_price {
       width: 100%;
+
       .payment_desc {
         p {
           background: $gradation-pale;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-size: 150% 150%;
+        }
+      }
+
+      .payment_loading {
+        height: 40px;
+        display: flex;
+        position: relative;
+        background: #ffff;
+        width: 40px;
+        margin: 0 auto;
+
+        .loading-wrap {
+          background: none;
         }
       }
     }

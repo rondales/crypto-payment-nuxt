@@ -9,33 +9,16 @@
       </div>
       <div class="actions">
         <div class="copy" @click="copy()">Copy</div>
+        <button class="btn qr" @click="showQrCode()">
+          Show QR Code
+        </button>
         <button class="btn refresh" @click="qrCodeRefresh()">
-          <img src="@/assets/images/url-refresh.svg" />
+          <img src="@/assets/images/url-refresh.svg"/>
           Refresh
         </button>
         <button class="btn delete" @click="deleteQrCode()">
-          <img src="@/assets/images/trash-box.svg" />
+          <img src="@/assets/images/trash-box.svg"/>
           Delete
-        </button>
-      </div>
-      <div class="qr" v-if="qrCode">
-        <div class="qr_wrap">
-          <a :href="qrCodeUrl">
-            <vue-qrcode :value="qrCodeUrl" tag="img" />
-            <img
-                class="logo"
-                src="@/assets/images/logo-icon.svg"
-                alt="Web3 Payment"
-            />
-          </a>
-          <img
-              class="logo2"
-              src="@/assets/images/logo-text.svg"
-              alt="Web3 Payment"
-          />
-        </div>
-        <button class="btn download">
-          Download
         </button>
       </div>
     </div>
@@ -50,14 +33,10 @@
 
 <script>
 import RequestUtility from '@/utils/request'
-import VueQrcode from "@chenfengyuan/vue-qrcode";
 import {errorCodeList} from "@/enum/error_code";
 
 export default {
   name: 'AdminQrCodeSetting',
-  components: {
-    VueQrcode,
-  },
   data() {
     return {
       copied: false,
@@ -78,14 +57,14 @@ export default {
     apiGetPaymentToken() {
       const url = `${this.API_BASE_URL}/api/v1/management/qr-code`
       const options = {
-        headers: { Authorization: RequestUtility.getBearer() }
+        headers: {Authorization: RequestUtility.getBearer()}
       }
       return this.axios.get(url, options)
     },
     apiCreatePaymentTokenToken() {
       const url = `${this.API_BASE_URL}/api/v1/management/qr-code`
       const options = {
-        headers: { Authorization: RequestUtility.getBearer() }
+        headers: {Authorization: RequestUtility.getBearer()}
       }
       return this.axios.post(url, null, options)
     },
@@ -95,25 +74,25 @@ export default {
     },
     createQrCode() {
       this.apiCreatePaymentTokenToken()
-        .then((response) => {
-          this.$store.dispatch(
-              'payment/updateQrCode',
-              response.data.qr_code
-          )
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            this.logout()
-          } else {
-            let message;
-            if (error.response.status === 400) {
-              message = errorCodeList[error.response.data.errors.shift()].msg;
+          .then((response) => {
+            this.$store.dispatch(
+                'payment/updateQrCode',
+                response.data.qr_code
+            )
+          })
+          .catch((error) => {
+            if (error.response.status === 401) {
+              this.logout()
             } else {
-              message = "Please try again after a while.";
+              let message;
+              if (error.response.status === 400) {
+                message = errorCodeList[error.response.data.errors.shift()].msg;
+              } else {
+                message = "Please try again after a while.";
+              }
+              this.showErrorModal(message);
             }
-            this.showErrorModal(message);
-          }
-        })
+          })
     },
     qrCodeRefresh() {
       this.$store.dispatch('modal/show', {
@@ -132,6 +111,15 @@ export default {
           message: message,
         },
       });
+    },
+    showQrCode() {
+      this.$store.dispatch('modal/show', {
+        target: 'payment-qr-code-modal',
+        size: 'small',
+        params: {
+          qr_code: this.qrCode
+        }
+      })
     },
     deleteQrCode() {
       this.$store.dispatch('modal/show', {
@@ -173,59 +161,9 @@ export default {
   font-size: 17px;
   margin-bottom: 10px;
 }
+
 .keys-wrap {
   margin-bottom: 48px;
-  .qr {
-    width: 30%;
-    margin-bottom: 3rem;
-    background: $gradation-light;
-    padding: 6px;
-    border-radius: 1rem;
-    overflow: hidden;
-    @include media(sp) {
-      width: 100%;
-    }
-    &_wrap {
-      background-color: #fff;
-      padding-bottom: 1rem;
-    }
-    a {
-      position: relative;
-      display: block;
-      @include media(pc) {
-        pointer-events: none;
-      }
-      img {
-        width: 100%;
-        position: relative;
-        z-index: 1;
-        border-radius: 1rem;
-      }
-    }
-    .logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      width: 20%;
-      height: auto;
-    }
-    .logo2 {
-      width: 38%;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-      margin-top: -1rem;
-      position: relative;
-      z-index: 10;
-    }
-
-    .download {
-      margin: 10px auto;
-      background: #4e455a;
-    }
-  }
 }
 
 .title {
@@ -233,6 +171,7 @@ export default {
   font-weight: 100;
   margin-bottom: 16px;
 }
+
 .address {
   border: 1px solid #78668d;
   padding: 8px 24px;
@@ -248,6 +187,7 @@ export default {
 .qr-desc {
   font-size: 20px;
   margin-bottom: 32px;
+
   span {
     font-size: 15px;
   }
@@ -272,6 +212,7 @@ export default {
       margin-bottom: 32px;
     }
   }
+
   p {
     font-size: 12px;
     font-weight: 300;
@@ -294,10 +235,12 @@ export default {
     width: 100%;
     text-align: center;
   }
+
   &:hover {
     opacity: 0.8;
   }
 }
+
 .copy {
   color: #8e86ad;
   font-size: 17px;
@@ -306,6 +249,7 @@ export default {
   font-weight: 200;
   cursor: pointer;
   margin-bottom: 16px;
+
   &::after {
     content: '';
     background: url(/assets/images/copy-address.svg) no-repeat center center;
@@ -317,6 +261,7 @@ export default {
     transform: translate(-50%, -60%);
   }
 }
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -336,18 +281,32 @@ export default {
   flex-direction: row;
   align-items: baseline;
   margin-bottom: 20px;
+
   .copy {
     margin-right: 50px;
   }
-  .refresh {
+
+  .qr {
     background: #4e455a;
     margin-right: 20px;
+
     img {
       margin-top: -4px;
     }
   }
+
+  .refresh {
+    background: #4e455a;
+    margin-right: 20px;
+
+    img {
+      margin-top: -4px;
+    }
+  }
+
   .delete {
     background: #4e455a;
+
     img {
       margin-top: -4px;
     }

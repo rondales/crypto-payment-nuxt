@@ -63,6 +63,7 @@ export default {
     addChainModal: () => import("@/components/molecules/addChainModal"),
     paymentQrCodeDeleteModal: () => import("@/components/molecules/paymentQrCodeDeleteModal"),
     paymentQrCodeRefreshModal: () => import("@/components/molecules/paymentQrCodeRefreshModal"),
+    paymentQrCodeModal: () => import("@/components/molecules/paymentQrCodeModal"),
   },
   computed: {
     classes() {
