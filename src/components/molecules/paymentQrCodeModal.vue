@@ -4,10 +4,10 @@
       <h3 class="header__title">QR Code</h3>
     </div>
     <div class="body">
-      <div class="qr">
+      <div class="qr" id="qrblock">
         <div class="qr_wrap">
           <a :href="qrCode">
-            <vue-qrcode id="qrblock" :value="qrCodeUrl" :options="{ width: 325}" />
+            <vue-qrcode :value="qrCodeUrl" tag="img" />
             <img
               class="logo"
               src="@/assets/images/logo-icon.svg"
@@ -35,6 +35,7 @@
 <script>
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import moment from "moment";
+import html2canvas from 'html2canvas'
 
 export default {
   name: "paymentQrCodeModal",
@@ -58,11 +59,11 @@ export default {
     }
   },
   methods: {
-    downLoad() {
-      const canvas = document.getElementById('qrblock')
+    async downLoad() {
+      const element = document.getElementById('qrblock')
       const link = document.createElement('a');
       link.download = `qr_code_${moment().format('DDMMYYYYhhmm')}.png`;
-      link.href = canvas.toDataURL()
+      link.href = (await html2canvas(element)).toDataURL();
       link.click();
     },
     hideModal() {
