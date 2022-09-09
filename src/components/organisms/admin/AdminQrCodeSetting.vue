@@ -146,7 +146,13 @@ export default {
           if (error.response.status === 401) {
             this.logout()
           } else {
-            alert('Please try again.')
+            let message;
+            if (error.response.status === 400) {
+              message = errorCodeList[error.response.data.errors.shift()].msg;
+            } else {
+              message = "Please try again after a while.";
+            }
+            this.showErrorModal(message);
           }
         })
   }
