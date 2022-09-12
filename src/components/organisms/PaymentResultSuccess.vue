@@ -1,5 +1,25 @@
 <template>
   <div>
+    <div v-if="hasCashback">
+      <div class="payment_desc add-flex j-between mb-2">
+        <p class="grd">Cash Back</p>
+      </div>
+      <div class="payment_detail add-flex j-between mb-1">
+        <div class="payment_detail-name add-flex a-center mb-1">
+          <figure>
+            <img :src="cashbackTokenIcon" :alt="cashbackTokenSymbol" />
+          </figure>
+          <p>
+            {{ cashbackTokenSymbol }}
+          </p>
+        </div>
+        <div class="payment_detail-value">
+          <p>
+            {{ cashbackTokenAmount }}
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="payment-status mt-3 mb-3">
       <div>
         <img class="mb-2" src="@/assets/images/check.svg" alt="success">
@@ -36,9 +56,28 @@ export default {
     token: String,
     isReceiptMode: Boolean
   },
+  data() {
+    return {
+      cashbackTokenAmount: '',
+      cashbackTokenSymbol: '',
+      cashbackTokenIcon: ''
+    }
+  },
   computed: {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    MERCHANT_RECEIVE_ICONS() {
+      return {
+        USDT: require("@/assets/images/symbol/usdt.svg"),
+        USDC: require("@/assets/images/symbol/usdc.svg"),
+        DAI: require("@/assets/images/symbol/dai.svg"),
+        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/symbol/eth.svg')
+      }
+    },
+    hasCashback() {
+      return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
     },
     hasReturnUrl() {
       return (this.urls.success)
@@ -57,18 +96,10 @@ export default {
     if (!this.isReceiptMode) {
       this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
       this.apiGetTransactionRefundedData().then((response) => {
-        this.$store.dispatch('modal/show', {
-          target: 'refund-info-modal',
-          size: 'small',
-          params: {
-            refundedTokenAmount: response.data.refunded_token_amount,
-            refundedTokenSymbol: response.data.refunded_token_symbol,
-            refundedFeeAmount: response.data.refunded_fee_amount,
-            refundedFeeSymbol: response.data.refunded_fee_symbol,
-            cashBackAmount: response.data.cashback_amount,
-            cashBackSymbol: response.data.cashback_symbol
-          }
-        })
+        const responseParams = response.data
+        this.cashbackTokenAmount = responseParams.cashback_token_amount
+        this.cashbackTokenSymbol = responseParams.cashback_token_symbol
+        this.cashbackTokenIcon = this.MERCHANT_RECEIVE_ICONS[responseParams.cashback_token_symbol]
       })
     }
   }
@@ -77,6 +108,39 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+
+.payment_desc {
+  p {
+    background: $gradation-pale;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 150% 150%;
+    display: inline;
+  }
+}
+
+.payment_detail {
+  &-name {
+    p {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 25px;
+      margin-left: 7px;
+    }
+    figure {
+      width: 25px;
+      height: 25px;
+      img {
+        vertical-align: baseline;
+      }
+    }
+  }
+  &-value {
+    font-size: 20px;
+    font-weight: 100;
+    margin-left: 16px;
+  }
+}
 
 .payment-status{
   text-align: center;
