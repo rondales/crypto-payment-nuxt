@@ -4,9 +4,9 @@
 
 <script>
 export default {
-  name: "payment-uiswitchable",
+  name: "payments-uiswitchable",
   created() {
-    console.log("This is payment-uiswitchable component.")
+    console.log("This is payments-uiswitchable component.")
   }
 }
 </script>

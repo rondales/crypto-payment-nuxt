@@ -53,15 +53,15 @@ const router = new Router({
           component: () => import("@/pages/media_kit"),
         },
         {
-          name: "payment-uiswitchable",
-          path: "/payment-uiswitchable",
-          component: () => import("@/pages/payment-uiswitchable"),
+          name: "payments-uiswitchable",
+          path: "/payments-uiswitchable",
+          component: () => import("@/pages/payments-uiswitchable"),
           meta: { title: 'Slash Payment' },
           children: [
             {
               //Window widget payment entrance component
               name: "ww-entrance",
-              path: "/payment-uiswitchable/:token/ww",
+              path: "/payments-uiswitchable/:token/ww",
               component: () => import("@/components/organisms/Payment/ww/PaymentEntrance"),
               meta: { title: 'Slash Payment' }
             }
@@ -76,56 +76,56 @@ const router = new Router({
             {
               name: "entrance",
               path: "/payment/:token",
-              alias: ["/payment-uiswitchable/:token/basic", "/payment-uiswitchable/:token"],
+              alias: ["/payments-uiswitchable/:token/basic", "/payments-uiswitchable/:token"],
               component: () => import("@/components/organisms/PaymentEntrance"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "receipt",
               path: "/payment/receipt/:token",
-              alias: ["/payment-uiswitchable/receipt/:token/basic", "/payment-uiswitchable/receipt/:token"],
+              alias: ["/payments-uiswitchable/receipt/:token/basic", "/payments-uiswitchable/receipt/:token"],
               component: () => import("@/components/organisms/PaymentEmail"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "wallets",
               path: "/payment/wallets/:token",
-              alias: ["/payment-uiswitchable/wallets/:token/basic", "/payment-uiswitchable/wallets/:token"],
+              alias: ["/payments-uiswitchable/wallets/:token/basic", "/payments-uiswitchable/wallets/:token"],
               component: () => import("@/components/organisms/PaymentSelectWallets"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "token",
               path: "/payment/token/:token",
-              alias: ["/payment-uiswitchable/token/:token/basic", "/payment-uiswitchable/token/:token"],
+              alias: ["/payments-uiswitchable/token/:token/basic", "/payments-uiswitchable/token/:token"],
               component: () => import("@/components/organisms/PaymentToken"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "exchange",
               path: "/payment/exchange/:token",
-              alias: ["/payment-uiswitchable/exchange/:token/basic", "/payment-uiswitchable/exchange/:token"],
+              alias: ["/payments-uiswitchable/exchange/:token/basic", "/payments-uiswitchable/exchange/:token"],
               component: () => import("@/components/organisms/PaymentExchange"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "detail",
               path: "/payment/detail/:token",
-              alias: ["/payment-uiswitchable/detail/:token/basic", "/payment-uiswitchable/detail/:token" ],
+              alias: ["/payments-uiswitchable/detail/:token/basic", "/payments-uiswitchable/detail/:token" ],
               component: () => import("@/components/organisms/PaymentDetail"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "result",
               path: "/payment/result/:token",
-              alias: ["/payment-uiswitchable/result/:token/basic","/payment-uiswitchable/result/:token"],
+              alias: ["/payments-uiswitchable/result/:token/basic","/payments-uiswitchable/result/:token"],
               component: () => import("@/components/organisms/PaymentResult"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "invoice",
               path: "/payment/invoice",
-              alias: ["/payment-uiswitchable/invoice/:token/basic", "/payment-uiswitchable/invoice/:token" ],
+              alias: ["/payments-uiswitchable/invoice/:token/basic", "/payments-uiswitchable/invoice/:token" ],
               component: () => import("@/components/organisms/PaymentInvoice"),
               meta: { title: 'Slash Payment' }
             }
