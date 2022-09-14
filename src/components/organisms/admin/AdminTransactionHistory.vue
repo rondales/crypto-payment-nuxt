@@ -285,7 +285,7 @@ export default {
             ? errorCodeList[error.response.data.errors.shift()].msg
             : 'Please try again.'
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: {
               message: message
@@ -308,7 +308,7 @@ export default {
             ? errorCodeList[error.response.data.errors.shift()].msg
             : 'Please try again.'
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: {
               message: message
@@ -328,7 +328,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .search-wrap{
   margin-bottom: 32px;

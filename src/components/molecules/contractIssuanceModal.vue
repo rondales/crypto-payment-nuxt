@@ -1,8 +1,8 @@
 <template>
   <div>
-    <PaymentModal title="Payment contract issuance">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- <PaymentModal title="Payment contract issuance">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <div v-if="isDetailState">
         <figure>
           <img src="@/assets/images/contract-integration.svg" />
@@ -100,8 +100,8 @@
         color="cancel"
         @click.native="hideModal"
       />
-    </PaymentModal>
-    <!-- <div :class="classes">
+    </PaymentModal> -->
+    <div :class="classes">
       <div class="header">
         <h3 class="header__title">Payment contract issuance</h3>
       </div>
@@ -204,7 +204,7 @@
         <img src="@/assets/images/cross.svg" />
         close
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -218,10 +218,11 @@ import {
 import { errorCodeList } from "@/enum/error_code";
 import RequestUtility from "@/utils/request";
 import MerchantContract from "@/contracts/merchant";
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: 'contractIssuanceModal',
   data() {
@@ -237,10 +238,11 @@ export default {
     };
   },
   components: {
-    PaymentText,
-    PaymentButton,
-    PaymentModal,
-    PaymentTransaction
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
+    // PaymentTransaction
   },
   computed: {
     classes() {
@@ -341,7 +343,7 @@ export default {
       } else {
         if ('errors' in responseData && responseData.errors.length) {
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: {
               message: errorCodeList[responseData.errors.shift()].msg
@@ -459,8 +461,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+*/
 .modal-box {
   border-radius: 10px;
   position: fixed;

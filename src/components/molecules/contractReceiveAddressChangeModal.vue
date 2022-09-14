@@ -1,8 +1,8 @@
 <template>
   <div>
-    <PaymentModal title="Change of Received address">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- <PaymentModal title="Change of Received address">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <div class="header-caution" v-if="isConfirmationState">
         <PaymentText type="h4b" html="Risk Disclaimer" />
         <PaymentText
@@ -209,8 +209,8 @@
         color="cancel"
         @click.native="hideModal"
       />
-    </PaymentModal>
-    <!-- <div :class="classes">
+    </PaymentModal> -->
+    <div :class="classes">
       <div class="header" v-if="!isConfirmationState">
         <h3 class="header__title">Change of Received address</h3>
       </div>
@@ -441,7 +441,7 @@
         <img src="@/assets/images/cross.svg" />
         close
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -449,18 +449,20 @@
 import { NETWORKS } from "@/constants";
 import MerchantContract from "@/contracts/merchant";
 import SlashCustomPlugin from '@/contracts/slash_custom_plugin'
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 // import PaymentConfirmCheckbox from "@/components/organisms/Payment/ConfirmCheckbox";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: "contractReceiveAddressChangeModal",
   components: {
-    PaymentText,
-    PaymentButton,
-    PaymentModal,
-    PaymentTransaction,
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
+    // PaymentTransaction,
     // PaymentConfirmCheckbox,
   },
   data() {
@@ -687,8 +689,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+*/
 .modal-box {
   border-radius: 10px;
   position: fixed;

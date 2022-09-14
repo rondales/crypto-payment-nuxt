@@ -1,50 +1,24 @@
 <template>
   <div>
-    <!-- <PaymentModal
-      title="Warning"
-      text="The following contracts have been suspended for various reasons.<br />Please contact the help desk for details."
-    >
-      // INFO: This is new UI code
-      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
-      <PaymentText tag="h4" type="h5" html="Suspended contracts" />
-      <ul class="list_network">
-        <li v-for="network in contractSuspendedNetworks" :key="network.chainId">
-          <PaymentText :html="network.name" />
-        </li>
-      </ul>
-      <div class="d-btnwrap bottomCloseBtn">
-        <PaymentButton
-          color="cancel"
-          text="CLOSE"
-          icon="dismiss"
-          size="s"
-          @click.native="hideModal()"
-        />
-      </div>
-    </PaymentModal> -->
     <div :class="classes">
       <div class="header">
-        <h3 class="header__title">Warning</h3>
+        <h3 class="header__title">Network Error</h3>
         <p class="header__desc">
-          The following contracts have been suspended for various reasons.
+          The network currently selected for your wallet is not supported.
           <br />
-          Please contact the help desk for details.
+          Please operate the your wallet and change to the supported network.
         </p>
       </div>
       <div class="body">
-        <h4 class="title">Suspended contracts</h4>
+        <h4 class="title">Supported Networks</h4>
         <ul class="list_network">
-          <li
-            v-for="network in contractSuspendedNetworks"
-            :key="network.chainId"
-          >
+          <li v-for="network in supportedNetworks" :key="network.chainId">
             {{ network.name }}
           </li>
         </ul>
       </div>
       <button class="close" @click="hideModal">
         <img src="@/assets/images/cross.svg" />
-        close
       </button>
     </div>
   </div>
@@ -52,35 +26,15 @@
 
 <script>
 import AvailableNetworks from "@/network";
-// TODO: Uncomment the following when applying the new UI
-// import PaymentModal from "@/components/organisms/Payment/Modal";
-// import PaymentText from "@/components/organisms/Payment/Text";
-// import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
-  name: "contractStatusModal",
-  components: {
-    // TODO: Uncomment the following when applying the new UI
-    // PaymentText,
-    // PaymentButton,
-    // PaymentModal,
-  },
-  data() {
-    return {
-      networks: [],
-    };
-  },
+  name: "errorCurrentNetworkForAdminModal",
   computed: {
     classes() {
       const classes = ["modal-box", `--${this.$store.state.modal.size}`];
       return classes;
     },
-    paymentAvailableNetworks() {
-      return this.$store.state.modal.params.availableNetworks;
-    },
-    contractSuspendedNetworks() {
-      return Object.values(AvailableNetworks).filter((network) =>
-        this.paymentAvailableNetworks.includes(network.chainId)
-      );
+    supportedNetworks() {
+      return AvailableNetworks;
     },
   },
   methods: {
@@ -92,21 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// TODO: Delete the following when applying the new UI
 @import "@/assets/scss/old/style.scss";
-/*
-TODO: Uncomment the following when applying the new UI
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
-*/
-.list_network {
-  margin: 1rem 0;
-  li {
-    margin-left: 25px;
-  }
-}
-
-// Below, for old UI
 .modal-box {
   border-radius: 10px;
   position: fixed;

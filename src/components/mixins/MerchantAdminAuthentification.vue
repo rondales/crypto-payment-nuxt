@@ -46,7 +46,7 @@ export default {
               && /^(\/admin|\/admin\/)$/.test(this.$route.path)
             ) {
               this.$store.dispatch('modal/show', {
-                target: 'error-current-network-modal',
+                target: 'error-current-network-for-admin-modal',
                 size: 'small'
               })
             }
@@ -61,18 +61,18 @@ export default {
         if (useProvider === METAMASK) {
           if (error.name === 'MetamaskNotInstalledError') {
             this.$store.dispatch('modal/show', {
-              target: 'error-modal',
+              target: 'error-for-admin-modal',
               size: 'small',
               params: { message: error.message }
             })
           } else {
-            this.$store.dispatch('modal/show', { target: 'error-metamask-modal', size: 'small'})
+            this.$store.dispatch('modal/show', { target: 'error-metamask-for-admin-modal', size: 'small'})
           }
         } else if (useProvider === WALLET_CONNECT) {
-          this.$store.dispatch('modal/show', { target: 'error-wallet-modal', size: 'small'})
+          this.$store.dispatch('modal/show', { target: 'error-wallet-for-admin-modal', size: 'small'})
         } else {
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: { message: 'Please authenticate again.' }
           })

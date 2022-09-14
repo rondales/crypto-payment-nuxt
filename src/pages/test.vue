@@ -232,7 +232,7 @@ export default {
         })
         .catch(() => {
           this.$store.dispatch("modal/show", {
-            target: "error-modal",
+            target: "error-for-admin-modal",
             size: "small",
             params: {
               message: "Failed to publish the Payment URL.",
@@ -262,7 +262,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/style.scss";
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import "@/assets/scss/old/style.scss";
 
 // Header
 .global-header {

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Header from "@/components/organisms/header";
+import Header from "@/components/organisms/admin/header";
 import SideBar from "@/components/organisms/admin/AdminSidebar";
 
 export default {

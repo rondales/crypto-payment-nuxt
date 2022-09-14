@@ -23,13 +23,21 @@ export default {
     networkModal: () => import("@/components/molecules/networkModal"),
     refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
+    walletForAdminModal: () => import("@/components/molecules/walletForAdminModal"),
     cautionWalletConnectModal: () =>
       import("@/components/molecules/cautionWalletConnectModal"),
+    cautionWalletConnectForAdminModal: () =>
+      import("@/components/molecules/cautionWalletConnectForAdminModal"),
     errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
+    errorWalletForAdminModal: () => import("@/components/molecules/errorWalletForAdminModal"),
     errorMetamaskModal: () =>
       import("@/components/molecules/errorMetamaskModal"),
+    errorMetamaskForAdminModal: () =>
+      import("@/components/molecules/errorMetamaskForAdminModal"),
     errorCurrentNetworkModal: () =>
       import("@/components/molecules/errorCurrentNetworkModal"),
+    errorCurrentNetworkForAdminModal: () =>
+      import("@/components/molecules/errorCurrentNetworkForAdminModal"),
     errorNotExistAvailablePaymentContractModal: () =>
       import(
         "@/components/molecules/errorNotExistAvailablePaymentContractModal"
@@ -38,7 +46,10 @@ export default {
       import("@/components/molecules/errorForbiddenBackPaymentModal"),
     switchNetworkForAdminModal: () =>
       import("@/components/molecules/switchNetworkForAdminModal"),
+    switchNetworkForPaymentModal: () =>
+      import("@/components/molecules/switchNetworkForPaymentModal"),
     errorModal: () => import("@/components/molecules/errorModal"),
+    errorForAdminModal: () => import("@/components/molecules/errorForAdminModal"),
     receiveModal: () => import("@/components/molecules/receiveModal"),
     editNoteModal: () => import("@/components/molecules/editNoteModal"),
     urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
@@ -61,6 +72,7 @@ export default {
     cautionPaymentRiskDisclaimerModal: () =>
       import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
     addChainModal: () => import("@/components/molecules/addChainModal"),
+    addChainForAdminModal: () => import("@/components/molecules/addChainForAdminModal"),
   },
   computed: {
     classes() {

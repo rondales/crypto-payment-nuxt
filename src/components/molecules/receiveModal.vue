@@ -1,8 +1,8 @@
 <template>
   <div>
-    <PaymentModal title="Receive Token">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- <PaymentModal title="Receive Token">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <figure>
         <img :src="tokenIcon" />
       </figure>
@@ -24,8 +24,8 @@
           @click.native="hideModal()"
         />
       </div>
-    </PaymentModal>
-    <!-- <div :class="classes">
+    </PaymentModal> -->
+    <div :class="classes">
       <div class="header">
         <h3 class="header__title">Receive Token</h3>
       </div>
@@ -48,15 +48,16 @@
         <img src="@/assets/images/cross.svg" />
         閉じる
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
 import RequestUtility from "@/utils/request";
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "receiveModal",
   data() {
@@ -85,9 +86,10 @@ export default {
     };
   },
   components: {
-    PaymentText,
-    PaymentButton,
-    PaymentModal,
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
   },
   computed: {
     baseUrl() {
@@ -134,8 +136,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+*/
 .modal-box {
   border-radius: 10px;
   position: fixed;

@@ -1,6 +1,37 @@
 <template>
   <div>
-    <div :class="classes">
+    <PaymentModal
+      title="Select a Network"
+      :text="
+        isSupportedNetwork
+          ? 'Please select the network you wish to switch to.'
+          : 'The currently connected network is not supported.<br />Please select a supported network below to switch networks.'
+      "
+    >
+      <p class="d-todo">{{ $options.name }}</p>
+
+      <!-- iconをファイル名で取得したい -->
+      <PaymentButton
+        v-for="network in supportedNetworks"
+        :key="network.chainId"
+        :class="{ __pg: isCurrentNetwork(network.chainId) }"
+        :icon="network.iconPath"
+        :text="Canetwork.namencel"
+        size="m"
+        @click.native="switchNetwork(network.chainId)"
+      />
+
+      <div class="d-btnwrap bottomCloseBtn">
+        <PaymentButton
+          color="cancel"
+          text="CLOSE"
+          icon="dismiss"
+          size="s"
+          @click.native="hideModal()"
+        />
+      </div>
+    </PaymentModal>
+    <!-- <div :class="classes">
       <div class="header">
         <h3 class="header__title">Select a Network</h3>
         <p v-if="isSupportedNetwork" class="header__desc">
@@ -29,14 +60,23 @@
       <button v-if="isSupportedNetwork" class="close" @click="hideModal">
         <img src="@/assets/images/cross.svg" />
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import AvailableNetworks from "@/network";
+import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
-  name: "switchNetworkForAdminModal",
+  name: "networkModal",
+  components: {
+    // PaymentText,
+    PaymentButton,
+    // PaymentTitle,
+    PaymentModal,
+  },
   computed: {
     classes() {
       const classes = ["modal-box", `--${this.$store.state.modal.size}`];
@@ -79,7 +119,7 @@ export default {
     },
     showAddChainModal(chainId) {
       this.$store.dispatch("modal/show", {
-        target: "add-chain-for-admin-modal",
+        target: "add-chain-modal",
         size: "small",
         params: {
           chainId: chainId,
@@ -94,7 +134,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/old/style.scss";
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
 @include media(pc) {
   .btn:nth-child(n + 3) {
     margin-top: 25px;

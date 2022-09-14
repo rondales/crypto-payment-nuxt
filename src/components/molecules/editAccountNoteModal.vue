@@ -1,8 +1,8 @@
 <template>
   <div>
-    <PaymentModal title="Account Note">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- <PaymentModal title="Account Note">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <PaymentText html="Apps terminal Note <span></span> Note Saved!" />
       <div class="text-wrap">
         <textarea
@@ -29,8 +29,8 @@
           @click.native="hideModal()"
         />
       </div>
-    </PaymentModal>
-    <!-- <div :class="classes">
+    </PaymentModal> -->
+    <div :class="classes">
       <div class="header">
         <h3 class="header__title">Account Note</h3>
       </div>
@@ -61,7 +61,7 @@
         <img src="@/assets/images/cross.svg" />
         閉じる
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -69,15 +69,17 @@
 import RequestUtility from "@/utils/request";
 import { LOGIN_TOKEN, HTTP_CODES } from "@/constants";
 import { errorCodeList } from "@/enum/error_code";
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "walletModal",
   components: {
-    PaymentText,
-    PaymentButton,
-    PaymentModal,
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
   },
   data() {
     return {
@@ -104,7 +106,7 @@ export default {
       } else {
         if ("errors" in responseData && responseData.errors.length) {
           this.$store.dispatch("modal/show", {
-            target: "error-modal",
+            target: "error-for-admin-modal",
             size: "small",
             params: {
               message: errorCodeList[responseData.errors.shift()].msg,
@@ -142,8 +144,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+*/
 .modal-box {
   border-radius: 10px;
   position: fixed;

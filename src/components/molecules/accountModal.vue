@@ -1,8 +1,8 @@
 <template>
   <div>
-    <PaymentModal title="Account">
-      <!-- TODO 確認の仕方 -->
-      <!-- <p class="d-todo">{{ $options.name }}</p> -->
+    <!-- <PaymentModal title="Account">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <PaymentText type="h5" html="Connected with Metamask" />
       <PaymentText :html="currentAddress | omittedText" />
       <PaymentButton
@@ -32,9 +32,9 @@
           @click.native="hideModal()"
         />
       </div>
-    </PaymentModal>
-    <!-- <div :class="classes">
-      <p class="d-todo">{{ $options.name }}</p>
+    </PaymentModal> -->
+    <div :class="classes">
+      <!-- <p class="d-todo">{{ $options.name }}</p> -->
       <div class="header">
         <h3 class="header__title">Account</h3>
       </div>
@@ -68,21 +68,23 @@
         <img src="@/assets/images/cross.svg" />
         閉じる
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
 import { NETWORKS } from "@/constants";
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
   name: "walletModal",
   components: {
-    PaymentText,
-    PaymentButton,
-    PaymentModal,
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
   },
   computed: {
     classes() {
@@ -126,8 +128,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
+*/
 .modal-box {
   border-radius: 10px;
   position: fixed;
