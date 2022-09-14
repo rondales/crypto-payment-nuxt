@@ -123,18 +123,16 @@ export default {
           url: "https://slash-fi.gitbook.io/docs/support/help-center",
         },
         {
-          title: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
-          url: "Terms of Service",
+          title: "Terms of Service",
+          url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
         },
         {
-          title:
-            "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
-          url: "Privacy Policy",
+          title: "Privacy Policy",
+          url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
         },
         {
-          title:
-            "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
-          url: "AML Policy",
+          title: "AML Policy",
+          url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
         },
       ],
     };
