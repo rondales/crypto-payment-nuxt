@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- <PaymentModal title="Payment contract issuance">
+  <!-- <div>
+    <PaymentModal title="Payment contract issuance">
       // INFO: This is new UI code
       <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <div v-if="isDetailState">
@@ -100,111 +100,94 @@
         color="cancel"
         @click.native="hideModal"
       />
-    </PaymentModal> -->
-    <div :class="classes">
-      <div class="header">
-        <h3 class="header__title">Payment contract issuance</h3>
-      </div>
-      <div class="body" v-if="isDetailState">
-        <figure>
-          <img src="@/assets/images/contract-integration.svg" />
-          <img class="network-icon" :src="networkIcon" />
-        </figure>
-        <p>
-          Deploy your own Slash payment contract to the
-          {{ networkName }} network.
-        </p>
-        <p class="desc mt-2">
-          This contract issuance process requires the preparation of
-          {{ symbol }} in the Web3 wallet that will be collected in the network
-          as gas fee.
-        </p>
-        <button
-          class="btn __g __l mb-0"
-          v-if="!isPublishedContract"
-          @click="publishMerchantContract(chainId)"
-        >
-          Create Contract
-          <div class="loading-wrap" :class="{ active: isProcessing }">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
-        </button>
-      </div>
-      <div class="body" v-else-if="isProcessingState">
-        <figure>
-          <img
-            class="mb-2 spin"
-            src="@/assets/images/loading.svg"
-            alt="processing"
-          />
-        </figure>
-        <p>Waiting for Confimation</p>
-        <p class="desc mt-2">
-          Do not close the screen until the payment contract has been
-          successfully deployed. It may take some time due to network
-          congestion.
-        </p>
-        <p>
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __g __l inactive mb-0">Processing...</button>
-      </div>
-      <div class="body" v-else-if="isSuccessedState">
-        <figure>
-          <img src="@/assets/images/congratulation.svg" alt="congratulation" />
-        </figure>
-        <p>contract issuance Submitted</p>
-        <p class="desc mt-2">
-          Your exclusive Slash Payment Contract has been issued on the
-          {{ networkName }} Network.
-        </p>
-        <p>
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <div class="body" v-else-if="isFailuredState">
-        <figure>
-          <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure" />
-        </figure>
-        <p>Failed to issue contract</p>
-        <p class="desc mt-2">The transaction cannot succeed due to error:</p>
-        <p>
-          <a
-            class="payment-status_btn"
-            v-if="transactionUrl"
-            target="_blank"
-            :href="transactionUrl"
-          >
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <figure v-if="isProcessingState" class="reload close" @click="refresh">
-        <img
-          v-if="$store.state.theme == 'dark'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload.svg"
-        />
-        <img
-          v-if="$store.state.theme == 'light'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload-l.svg"
-        />
+    </PaymentModal>
+  </div> -->
+  <div :class="classes">
+    <div class="header">
+      <h3 class="header__title">
+        Payment contract issuance 
+      </h3>
+    </div>
+    <div class="body" v-if="isDetailState">
+      <figure>
+        <img src="@/assets/images/contract-integration.svg">
+        <img class="network-icon" :src="networkIcon">
       </figure>
-      <button class="close" v-else-if="!isProcessingState" @click="hideModal">
-        <img src="@/assets/images/cross.svg" />
-        close
+      <p>
+        Deploy your own Slash payment contract to the {{ networkName }} network.
+      </p>
+      <p class="desc mt-2">This contract issuance process requires the preparation of 
+        {{ symbol }} in the Web3 wallet that will be collected in the network as gas fee.</p>
+      <button class="btn __g __l mb-0" v-if="!isPublishedContract" @click="publishMerchantContract(chainId)">
+        Create Contract
+        <div class="loading-wrap" :class="{active: isProcessing}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
       </button>
     </div>
+    <div class="body" v-else-if="isProcessingState">
+      <figure>
+        <img class="mb-2 spin" src="@/assets/images/loading.svg" alt="processing">
+      </figure>
+      <p>
+        Waiting for Confimation
+      </p>
+      <p class="desc mt-2">Do not close the screen until the payment contract has been successfully deployed. 
+        It may take some time due to network congestion.</p>
+      <p>
+        <a class="payment-status_btn" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </p>
+      <button class="btn __g __l inactive mb-0" >
+        Processing...
+      </button>
+    </div>
+    <div class="body" v-else-if="isSuccessedState">
+      <figure>
+        <img src="@/assets/images/congratulation.svg" alt="congratulation">
+      </figure>
+      <p>
+        contract issuance Submitted
+      </p>
+      <p class="desc mt-2">Your exclusive Slash Payment Contract has been issued on the {{ networkName }} Network.</p>
+      <p>
+        <a class="payment-status_btn" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </p>
+      <button class="btn __m mb-0" @click="hideModal" >
+        Close
+      </button>
+    </div>
+    <div class="body" v-else-if="isFailuredState">
+      <figure>
+        <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure">
+      </figure>
+      <p>
+        Failed to issue contract
+      </p>
+      <p class="desc mt-2">The transaction cannot succeed due to error:</p>
+      <p>
+        <a class="payment-status_btn" v-if="transactionUrl" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </p>
+      <button class="btn __m mb-0" @click="hideModal" >
+        Close
+      </button>
+    </div>
+    <figure v-if="isProcessingState" class="reload close" @click="refresh">
+      <img v-if="$store.state.theme == 'dark'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload.svg">
+      <img v-if="$store.state.theme == 'light'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload-l.svg">
+    </figure>
+    <button class="close" v-else-if="!isProcessingState" @click="hideModal">
+      <img src="@/assets/images/cross.svg">
+      close
+    </button>
   </div>
 </template>
 
@@ -213,11 +196,11 @@ import {
   NETWORKS,
   HTTP_CODES,
   LOGIN_TOKEN,
-  NORMAL_TYPE_PAYMENT,
-} from "@/constants";
-import { errorCodeList } from "@/enum/error_code";
-import RequestUtility from "@/utils/request";
-import MerchantContract from "@/contracts/merchant";
+  NORMAL_TYPE_PAYMENT
+} from '@/constants'
+import { errorCodeList } from '@/enum/error_code'
+import RequestUtility from '@/utils/request'
+import MerchantContract from '@/contracts/merchant'
 // TODO: Uncomment the following when applying the new UI
 // import PaymentModal from "@/components/organisms/Payment/Modal";
 // import PaymentText from "@/components/organisms/Payment/Text";
@@ -235,7 +218,7 @@ export default {
       },
       pageState: 1,
       reloadSpinning: false,
-    };
+    }
   },
   components: {
     // TODO: Uncomment the following when applying the new UI
@@ -423,11 +406,10 @@ export default {
         this.apiRegistTransaction(chainId,hash).catch((error) => {
           console.log(error)
         })
-      }).
-      then((receipt) => {
+      }).then((receipt) => {
         this.pageState = this.pageStateList.successed
         this.updateContractAvailable(chainId, true)
-        const merchantContractAddess = receipt.events['NewMerchantDeployed'].returnValues.merchant_
+        const merchantContractAddess = receipt.events[0].address
         const transactionAddress = receipt.transactionHash
         const merchantContractAbi = MerchantContract.abi
         this.$store.dispatch('wallet/updatePendingStatus', false)

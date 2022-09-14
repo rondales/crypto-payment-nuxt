@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- <PaymentModal title="Change of Cash back rate">
+  <!-- <div>
+    <PaymentModal title="Change of Cash back rate">
       // INFO: This is new UI code
       <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <div class="caution" v-if="isConfirmationState">
@@ -146,174 +146,143 @@
         color="cancel"
         @click.native="hideModal"
       />
-    </PaymentModal> -->
-    <div :class="classes">
-      <div class="header" v-if="!isConfirmationState">
-        <h3 class="header__title">Change of Cash back rate</h3>
-      </div>
-      <div class="header-caution" v-if="isConfirmationState">
-        <h3 class="header-caution__title">Risk Disclaimer</h3>
-        <p class="header-caution__desc">
-          This action will change the Cash back rate of your ethereum payment
-          agreement. Please read the Risk Disclaimer carefully and review the
-          options below before proceeding.
-        </p>
-      </div>
-      <div class="separate-line" v-if="isConfirmationState"></div>
-      <div class="body" v-if="isDetailState">
-        <figure>
-          <img src="@/assets/images/cash-back.svg" />
-        </figure>
-        <p class="margin-bottom-small">
-          Cash back rate：{{
-            isCashbackDefaultSetting ? "Default Setting" : `${cashbackRate}%`
-          }}
-        </p>
-        <p class="margin-bottom-small">
-          <img src="@/assets/images/double-caret.svg" />
-        </p>
-        <p class="margin-bottom-small">Changed rate</p>
-        <div class="box">
-          <input v-model="newCashbackRate" placeholder="0.00%" />
-        </div>
-        <div class="invalid-rate" v-if="!validCashbackRate">
-          Please enter number from 0.00 ~ 100.00
-        </div>
-        <p class="desc mt-2">of amount back to the payer</p>
-        <p class="desc mt-2">
-          It is always your responsibility to set the cash back percentage. We
-          cannot be held responsible for lost funds due to incorrectly entered
-          values.
-        </p>
-        <button
-          class="btn __g __l mb-0"
-          @click="changePageToConfirmationState()"
-        >
-          Confirm
-          <div class="loading-wrap" :class="{ active: isProcessing }">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
-        </button>
-      </div>
-      <div class="body" v-if="isConfirmationState">
-        <p>Changed Cash back rate</p>
-        <div class="changed-cashback-rate">{{ newCashbackRate }}%</div>
-        <p class="desc mt-2">of amount back to the payer</p>
-        <p class="desc mt-2">
-          It is always your responsibility to set the cash back percentage. We
-          cannot be held responsible for lost funds due to incorrectly entered
-          values. Do you understand this risk?
-        </p>
-        <div class="checkbox-container mt-2">
-          <input
-            id="accept"
-            type="checkbox"
-            ref="accepted"
-            @click="updateAcceptedStatus"
-          />
-          <label for="accept"
-            >I understand the risk and continue this transaction.</label
-          >
-        </div>
-        <button
-          class="btn __g __l mb-0"
-          :class="{ inactive: !isAccepted }"
-          @click="changeCashbackRate(chainId)"
-        >
-          Change Rate
-          <div class="loading-wrap" :class="{ active: isProcessing }">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
-        </button>
-      </div>
-      <div class="body" v-else-if="isProcessingState">
-        <figure>
-          <img
-            class="mb-2 spin"
-            src="@/assets/images/loading.svg"
-            alt="processing"
-          />
-        </figure>
-        <p>Waiting for Confimation</p>
-        <p class="desc mt-2">
-          Do not close the screen until the payment contract has been
-          successfully deployed. It may take some time due to network
-          congestion.
-        </p>
-        <p>
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </p>
-        <button class="btn __g __l inactive mb-0">Processing...</button>
-      </div>
-      <div class="body" v-else-if="isSuccessedState">
-        <figure>
-          <img
-            src="@/assets/images/cash-back-success.svg"
-            alt="Update Success"
-          />
-        </figure>
-        <p class="margin-bottom-md">contract update Submitted</p>
-        <p class="desc margin-bottom-md">
-          Current：Changed on {{ currentDate }}
-        </p>
-        <p class="desc margin-bottom-md">
-          Cash back rate
-          <span class="changed-cashback-rate">{{ cashbackRate }}%</span>
-          of amount back to the payer
-        </p>
-        <div class="desc">
-          <a class="payment-status_btn" target="_blank" :href="transactionUrl">
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </div>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <div class="body" v-else-if="isFailuredState">
-        <figure>
-          <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure" />
-        </figure>
-        <p>Failed to update contract</p>
-        <p class="desc mt-2">The transaction cannot succeed due to error:</p>
-        <div class="desc">
-          <a
-            class="payment-status_btn"
-            v-if="transactionUrl"
-            target="_blank"
-            :href="transactionUrl"
-          >
-            View on explorer
-            <img src="@/assets/images/link-icon.svg" alt="" />
-          </a>
-        </div>
-        <button class="btn __m mb-0" @click="hideModal">Close</button>
-      </div>
-      <figure v-if="isProcessingState" class="reload close" @click="refresh">
-        <img
-          v-if="$store.state.theme == 'dark'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload.svg"
-        />
-        <img
-          v-if="$store.state.theme == 'light'"
-          :class="{ spinning: isReloadSpinning }"
-          src="@/assets/images/reload-l.svg"
-        />
+    </PaymentModal>
+  </div> -->
+  <div :class="classes">
+    <div class="header" v-if="!isConfirmationState">
+      <h3 class="header__title" >
+        Change of Cash back rate 
+      </h3>
+    </div>
+    <div class="header-caution" v-if="isConfirmationState">
+      <h3 class="header-caution__title">
+        Risk Disclaimer
+      </h3>
+      <p class="header-caution__desc">This action will change the Cash back rate of your ethereum payment agreement. 
+        Please read the Risk Disclaimer carefully and review the options below before proceeding.</p>
+    </div>
+    <div class="separate-line" v-if="isConfirmationState"></div>
+    <div class="body" v-if="isDetailState">
+      <figure>
+        <img src="@/assets/images/cash-back.svg">
       </figure>
-      <button class="close" v-else-if="!isProcessingState" @click="hideModal">
-        <img src="@/assets/images/cross.svg" />
-        close
+      <p class="margin-bottom-small">
+        Cash back rate：{{ isCashbackDefaultSetting ? 'Default Setting' : `${cashbackRate}%` }}
+      </p>
+      <p class="margin-bottom-small">
+        <img src="@/assets/images/double-caret.svg">
+      </p>
+      <p class="margin-bottom-small">
+        Changed rate
+      </p>
+      <div class="box"><input v-model="newCashbackRate" placeholder="0.00%"></div>
+      <div class="invalid-rate" v-if="!validCashbackRate">Please enter number from 0.00 ~ 100.00</div>
+      <p class="desc mt-2">of amount back to the payer</p>
+      <p class="desc mt-2">It is always your responsibility to set the cash back percentage. 
+        We cannot be held responsible for lost funds due to incorrectly entered values.</p>
+      <button class="btn __g __l mb-0" @click="changePageToConfirmationState()">
+        Confirm
+        <div class="loading-wrap" :class="{active: isProcessing}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
       </button>
     </div>
+    <div class="body" v-if="isConfirmationState">
+      <p>
+        Changed Cash back rate
+      </p>
+      <div class="changed-cashback-rate">
+        {{ newCashbackRate }}%
+      </div>
+      <p class="desc mt-2">of amount back to the payer</p>
+      <p class="desc mt-2">It is always your responsibility to set the cash back percentage. 
+        We cannot be held responsible for lost funds due to incorrectly entered values.
+        Do you understand this risk?
+      </p>
+      <div class="checkbox-container mt-2">
+        <input id="accept" type="checkbox" ref="accepted" @click="updateAcceptedStatus">
+        <label for="accept">I understand the risk and continue this transaction.</label>
+      </div>
+      <button class="btn __g __l mb-0" :class="{ inactive: !isAccepted }" @click="changeCashbackRate(chainId)">
+        Change Rate
+        <div class="loading-wrap" :class="{active: isProcessing}">
+          <img class="spin" src="@/assets/images/loading.svg">
+        </div>
+      </button>
+    </div>
+    <div class="body" v-else-if="isProcessingState">
+      <figure>
+        <img class="mb-2 spin" src="@/assets/images/loading.svg" alt="processing">
+      </figure>
+      <p>
+        Waiting for Confimation
+      </p>
+      <p class="desc mt-2">Do not close the screen until the payment contract has been successfully deployed. 
+        It may take some time due to network congestion.</p>
+      <p>
+        <a class="payment-status_btn" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </p>
+      <button class="btn __g __l inactive mb-0" >
+        Processing...
+      </button>
+    </div>
+    <div class="body" v-else-if="isSuccessedState">
+      <figure>
+        <img src="@/assets/images/cash-back-success.svg" alt="Update Success">
+      </figure>
+      <p class="margin-bottom-md">
+        contract update Submitted
+      </p>
+      <p class="desc margin-bottom-md">Current：Changed on {{ currentDate }}</p>
+      <p class="desc margin-bottom-md">Cash back rate
+        <span class="changed-cashback-rate">{{ cashbackRate }}%</span>
+        of amount back to the payer
+      </p>
+      <div class="desc">
+        <a class="payment-status_btn" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </div>
+      <button class="btn __m mb-0" @click="hideModal" >
+        Close
+      </button>
+    </div>
+    <div class="body" v-else-if="isFailuredState">
+      <figure>
+        <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure">
+      </figure>
+      <p>
+        Failed to update contract
+      </p>
+      <p class="desc mt-2">The transaction cannot succeed due to error:</p>
+      <div class="desc">
+        <a class="payment-status_btn" v-if="transactionUrl" target="_blank" :href="transactionUrl">
+          View on explorer
+          <img src="@/assets/images/link-icon.svg" alt="">
+        </a>
+      </div>
+      <button class="btn __m mb-0" @click="hideModal" >
+        Close
+      </button>
+    </div>
+    <figure v-if="isProcessingState" class="reload close" @click="refresh">
+      <img v-if="$store.state.theme == 'dark'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload.svg">
+      <img v-if="$store.state.theme == 'light'" :class="{spinning: isReloadSpinning}" src="@/assets/images/reload-l.svg">
+    </figure>
+    <button class="close" v-else-if="!isProcessingState" @click="hideModal">
+      <img src="@/assets/images/cross.svg">
+      close
+    </button>
   </div>
 </template>
 
 <script>
-import { NETWORKS } from "@/constants";
-import MerchantContract from "@/contracts/merchant";
+import { NETWORKS } from '@/constants'
+import MerchantContract from '@/contracts/merchant'
 // TODO: Uncomment the following when applying the new UI
 // import PaymentModal from "@/components/organisms/Payment/Modal";
 // import PaymentText from "@/components/organisms/Payment/Text";
@@ -321,7 +290,7 @@ import MerchantContract from "@/contracts/merchant";
 // import PaymentConfirmCheckbox from "@/components/organisms/Payment/ConfirmCheckbox";
 // import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
-  name: "contractCashbackChangeModal",
+  name: 'contractCashbackChangeModal',
   components: {
     // TODO: Uncomment the following when applying the new UI
     // PaymentText,
