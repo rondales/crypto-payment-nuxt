@@ -115,10 +115,10 @@ export default {
       this.apiPublishTransaction().then(() => {
         this.$emit('updateProgressTotalSteps', 5)
         this.$emit('incrementProgressCompletedSteps')
-        if (!receiveResponse.data.amount) {
-          this.showComponent ='PaymentAmount'
-        } else {
+        if (receiveResponse.data.amount) {
           this.$router.push({ name: 'wallets', params: { token: this.paymentToken } })
+        } else {
+          this.showComponent ='PaymentAmount'
         }
       }).catch((error) => {
         if (error.response.status === 400) {
