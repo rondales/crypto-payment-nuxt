@@ -1,6 +1,5 @@
 <template>
   <div :class="classes">
-    <!-- TODO 大野さんへ：画面の確認方法がわかりませんでした・・ -->
     <PaymentTitle
       class="amount__title"
       type="h3_g"
@@ -70,80 +69,7 @@
         :loading="loading"
         @click.native="next"
       />
-      <PaymentVia />
     </div>
-    <!-- <div class="payment_handleprice">
-      <p class="todotitle">PaymentAmount</p>
-      <div class="payment_desc mb-3 mt-3">
-        <p>Enter the payment amount</p>
-        <span>&#128591;</span>
-      </div>
-      <div class="payment_handleprice-pricewrap">
-        <p class="payment_handleprice-desc mb-1">How much would you pay?</p>
-        <div class="payment_handleprice-price add-flex border j-between">
-          <input
-            v-model="legalCurrencyAmount"
-            class="price"
-            type="text"
-            placeholder="0"
-          />
-          <div class="add-flex currency a-center">
-            <figure>
-              <img :src="selectedCurrencyIcon" />
-            </figure>
-            <select name="currency" v-model="selectedCurrency">
-              <option
-                v-for="(currency, key) in currencies"
-                :value="currency.name"
-                :key="key"
-              >
-                {{ currency.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <PaymentAmountBilled
-          :symbol="receiveTokenSymbol"
-          :icon="receiveTokenIcon"
-          :price="exchangedAmount"
-          :priceClass="{ inactive: requireUpdateExchange }"
-        />
-        <div v-if="!requireUpdateExchange" class="payment-with">
-          Payment with Web3 Wallet
-        </div>
-        <div>
-          <div class="payment-box" v-if="requireUpdateExchange">
-            <div class="add-flex a-center j-between">
-              <div class="add-flex a-center">
-                <img src="@/assets/images/warning.svg" alt="" />
-                <div class="payment-box_desc">
-                  <p>Price Updated</p>
-                </div>
-              </div>
-              <div class="payment-box_btn" @click="updateExchangeData()">
-                Accept
-              </div>
-            </div>
-          </div>
-          <button
-            :class="{ inactive: requireUpdateExchange }"
-            class="payment-btn btn __g __l"
-            @click="next"
-          >
-            <img
-              v-if="requireUpdateExchange"
-              src="@/assets/images/slash-s_inactive.svg"
-              alt=""
-            />
-            <img v-else src="@/assets/images/slash-s.svg" alt="" />
-            Go Payment
-            <div class="loading-wrap" :class="{ active: loading }">
-              <img class="spin" src="@/assets/images/loading.svg" />
-            </div>
-          </button>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -154,9 +80,7 @@ import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentForm from "@/components/organisms/Payment/Form";
 import PaymentButton from "@/components/organisms/Payment/Button";
 import PaymentAction from "@/components/organisms/Payment/Action";
-import PaymentVia from "@/components/organisms/Payment/Via";
 import PaymentIcon from "@/components/organisms/Payment/Icon";
-// import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
 
@@ -190,7 +114,6 @@ export default {
     PaymentTitle,
     PaymentForm,
     PaymentAction,
-    PaymentVia,
     PaymentIcon,
   },
   watch: {

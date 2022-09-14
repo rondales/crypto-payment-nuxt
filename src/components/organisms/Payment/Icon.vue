@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <component :is="IconArry.img" />
+    <component :is="IconArray.img" />
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
       array["color__" + this.color] = true;
       return array;
     },
-    IconArry() {
+    IconArray() {
       return {
         ...this.path,
         img:
@@ -39,9 +39,9 @@ export default {
 .svg {
   font-size: 0;
   position: relative;
+  display: flex;
+  align-items: center;
   &.color {
-    &__color {
-    }
     &__text {
       svg {
         fill: var(--color_font);
