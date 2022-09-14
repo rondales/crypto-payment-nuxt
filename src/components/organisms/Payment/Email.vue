@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     requireReceipt() {
-      this.$emit("requireReceipt");
+      this.email != '' && this.$emit("requireReceipt", this.email);
     },
     noRequireReceipt() {
       this.$emit("noRequireReceipt");
