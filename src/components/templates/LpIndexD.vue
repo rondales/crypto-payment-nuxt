@@ -884,9 +884,9 @@ export default {
                 {
                   title: "Open Source Plugins",
                   list: [
-                    { text: "Woocommerce", active: true },
-                    { text: "Wellcart", active: true },
-                    { text: "EC CUBE", active: true },
+                    { text: "Woocommerce", active: false },
+                    { text: "Wellcart", active: false },
+                    { text: "EC CUBE", active: false },
                     { text: "Magento", active: false },
                     { text: "OpenCart", active: false },
                     { text: "Drupal", active: false },
@@ -1035,7 +1035,8 @@ export default {
             {
               title: "Slash Developer Community",
               icon: "icon/discord",
-              url: "",
+              url: "https://discord.com/invite/gk25cyBs78",
+              btnType: "a"
             },
             {
               title: "FAQ about system implementation",

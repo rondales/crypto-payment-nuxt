@@ -219,8 +219,8 @@ export default {
         },
         discord: {
           icon: "icon/discord",
-          link: "",
-          status: false,
+          link: "https://discord.com/invite/gk25cyBs78",
+          status: true,
         },
         mail: {
           icon: "icon/arroba",

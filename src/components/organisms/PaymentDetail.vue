@@ -84,12 +84,16 @@
             <p>0.002367 BNB</p>
           </div>
           -->
+          <!--
+          INFO:
+          Commented out due to the implementation of the fee collection feature.
+          Ref issue: https://github.com/beperson/web3payment-front/issues/633
           <div
             v-if="isDifferentToken"
             class="dattail-list add-flex j-between mb-1"
           >
             <p>Slippage tolerance</p>
-            <p>{{ SLIPPAGE_RATE }}%</p>
+            <p>{{ PAYMENT_FEE_RATE }}%</p>
           </div>
           <div class="dattail-list add-flex j-between mb-2">
             <p>Platform Fee</p>
@@ -100,6 +104,7 @@
             {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
             transaction will revert.
           </p>
+          -->
         </div>
         <div v-else class="payment-status mt-3 mb-3">
           <div>
@@ -162,6 +167,12 @@ import {
   AvalancheTokens as AvalancheDefaultTokens,
 } from "@/contracts/tokens";
 import {
+  EthereumTokens as EthereumStableTokens,
+  BscTokens as BscStableTokens,
+  MaticTokens as MaticStableTokens,
+  AvalancheTokens as AvalancheStableTokens,
+} from "@/contracts/stable_tokens";
+import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
@@ -189,8 +200,15 @@ export default {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
     },
-    SLIPPAGE_RATE() {
-      return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE;
+    GAS_FEE_RATE() {
+      return process.env.VUE_APP_PAYMENT_GAS_FEE_RATE
+    },
+    PAYMENT_FEE_RATE() {
+      if (this.isSelectedStableToken) {
+        return process.env.VUE_APP_PAYMENT_STABLE_TOKEN_FEE_RATE
+      } else {
+        return process.env.VUE_APP_PAYMENT_NON_STABLE_TOKEN_FEE_RATE
+      }
     },
     NATIVE_TOKEN_SYMBOLS() {
       return {
@@ -252,6 +270,19 @@ export default {
         return MaticDefaultTokens;
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalancheDefaultTokens;
+      } else {
+        return {};
+      }
+    },
+    stableTokens() {
+      if (this.isCurrentNetworkEthereum) {
+        return EthereumStableTokens;
+      } else if (this.isCurrentNetworkBinance) {
+        return BscStableTokens;
+      } else if (this.isCurrentNetworkMatic) {
+        return MaticStableTokens;
+      } else if (this.isCurrentNetworkAvalanche) {
+        return AvalancheStableTokens;
       } else {
         return {};
       }
@@ -391,6 +422,16 @@ export default {
     isDarkTheme() {
       return this.$store.state.theme === "dark";
     },
+    isSelectedStableToken() {
+      if (!this.userSelectedToken.address) {
+        // for native token
+        return false
+      }
+      return Object.values(this.stableTokens)
+        .map(token => token.address ? token.address.toLowerCase() : token.address)
+        .filter(address => address)
+        .includes(this.userSelectedToken.address.toLowerCase())
+    }
   },
   methods: {
     apiGetContract() {
@@ -429,7 +470,8 @@ export default {
         this.userSelectedToken,
         this.merchantReceiveTokenSymbol,
         this.merchantReceiveAmount,
-        this.SLIPPAGE_RATE
+        this.GAS_FEE_RATE,
+        this.PAYMENT_FEE_RATE
       );
     },
     updateTokenExchangeData(reload) {
