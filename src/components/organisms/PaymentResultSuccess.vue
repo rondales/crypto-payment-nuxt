@@ -32,6 +32,9 @@
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
     </div>
+    <div class="payment-status_receipt mb-3">
+      <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
+    </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
       <button class="btn __g __l mb-2">
         Back to Payee’s Services
@@ -90,6 +93,12 @@ export default {
         params: new URLSearchParams([['payment_token', this.token]])
       }
       return this.axios.get(url, request)
+    },
+    openPaymentReceiptModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'payment-receipt-modal',
+        size: 'small'
+      })
     }
   },
   created() {
@@ -164,6 +173,18 @@ export default {
     img{
       margin-left: 4px;
       vertical-align: middle;
+    }
+  }
+  &_receipt {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 13px;
+    font-weight: 300;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    a {
+      cursor: pointer;
     }
   }
 }
