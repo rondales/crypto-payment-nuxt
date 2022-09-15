@@ -21,7 +21,7 @@ export default {
       default: "USDT",
     },
     cap: {
-      type: String,
+      type: [String, Number],
       default: "",
     },
     cap2: {
