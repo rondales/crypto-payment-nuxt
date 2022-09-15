@@ -6,36 +6,23 @@
     >
       <!-- TODO 確認の仕方 -->
       <!-- <p class="d-todo">{{ $options.name }}</p> -->
-      <div class="">
-        <span class="icon">
-          <img :src="targetNetwork.icon" />
-        </span>
-        <PaymentText :html="targetNetwork.name" />
-      </div>
-
-      <PaymentButton
-        text=" Add Network to Wallet"
-        size="m"
-        @click.native="addChain(targetNetwork.chainId)"
-      />
-      <PaymentButton
-        text="Cancel"
-        color="cancel"
-        size="s"
-        @click.native="cancel"
-      />
-      <PaymentButton
-        v-if="!isHideCloseButton"
-        text="Close"
-        size="s"
-        icon="dismiss"
-        @click.native="cancel"
+      <PaymentAction
+        :icon="targetNetwork.iconPath"
+        :text="targetNetwork.name"
       />
 
-      <!-- <PaymentText :html="message" />
-      <div v-if="isShowCustomizeButton">
-        <PaymentButton :text="buttonText" size="m" :url="buttonUrl" />
+      <div class="d-btnwrap">
+        <PaymentButton
+          text=" Yes"
+          @click.native="addChain(targetNetwork.chainId)"
+        />
+        <PaymentButton
+          text="No"
+          color="cancel"
+          @click.native="cancel"
+        />
       </div>
+
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"
@@ -44,56 +31,22 @@
           size="s"
           @click.native="hideModal()"
         />
-      </div> -->
+      </div>
     </PaymentModal>
-    <!-- <div :class="classes">
-      <div class="header">
-        <h3 class="header__title">Add Network</h3>
-        <p class="header__desc">
-          The following networks you tried to switch to are not registered in
-          your wallet.
-          <br />
-          Do you want to add this network to your wallet?
-        </p>
-      </div>
-      <div class="body add-flex j-between">
-        <div class="box __m full mb-5">
-          <span class="btn-icon">
-            <img :src="targetNetwork.icon" />
-          </span>
-          {{ targetNetwork.name }}
-        </div>
-        <button
-          class="btn __g __l mb-0"
-          @click="addChain(targetNetwork.chainId)"
-        >
-          Add Network to Wallet
-        </button>
-        <button class="btn __g __l mb-0" @click="cancel()">Cancel</button>
-      </div>
-      <button v-if="!isHideCloseButton" class="close" @click="cancel()">
-        <img
-          v-if="$store.state.theme == 'light'"
-          src="@/assets/images/cross-l.svg"
-        />
-        <img v-else src="@/assets/images/cross.svg" />
-        Close
-      </button>
-    </div> -->
   </div>
 </template>
 
 <script>
 import { NETWORKS } from "@/constants";
 import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentAction from "@/components/organisms/Payment/Action";
 export default {
   name: "addChainModal",
   components: {
-    PaymentText,
     PaymentButton,
     PaymentModal,
+    PaymentAction,
   },
   computed: {
     classes() {

@@ -30,7 +30,7 @@ import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
-  name: "cautionPaymentEiskDisclaimerModal",
+  name: "Modal",
   components: {
     PaymentText,
     PaymentButton,
