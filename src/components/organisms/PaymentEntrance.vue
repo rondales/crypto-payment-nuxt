@@ -40,9 +40,6 @@ export default {
     paymentData() {
       return this.$store.state.payment
     },
-    isSelectedReceipt() {
-      return this.$store.state.payment.isSelectedReceipt
-    },
     isAccessFromDeepLink() {
       return 'dpl' in this.$route.query
     },
@@ -135,8 +132,7 @@ export default {
                     this.$emit('incrementProgressCompletedSteps')
                     break;
                   case 'unset_email':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
-                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
                       this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                       this.$emit('incrementProgressCompletedSteps')
                       this.$emit('updateProgressTotalSteps', 5)
@@ -146,13 +142,12 @@ export default {
                     } else {
                       this.$emit('incrementProgressCompletedSteps')
                       this.$router.replace({
-                        path: '/payment/receipt/' + this.$route.params.token
+                        path: '/payment/wallets/' + this.$route.params.token
                       })
                     }
                     break;
                   case 'unset_token':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
-                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
                       this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                     }
                     this.$emit('incrementProgressCompletedSteps')
