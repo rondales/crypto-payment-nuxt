@@ -39,55 +39,6 @@
         />
       </div>
     </div>
-    <!-- <div class="payment_handleprice">
-      <div class="payment_handleprice-pricewrap">
-        <PaymentAmountBilled
-          :symbol="receiveTokenSymbol"
-          :icon="receiveTokenIcon"
-          :price="amount"
-        />
-
-        <PaymentText
-          class="payment-with"
-          tag="p"
-          type="connectWallet"
-          html="Connect Web3 wallet to make a payment"
-        />
-        <button
-          class="btn __m __pg icon-right full"
-          @click="handleConnect(METAMASK, false)"
-        >
-          <div class="loading-wrap" :class="{ active: loadingMeta }">
-            <img class="spin mt" src="@/assets/images/loading.svg" />
-          </div>
-          <span class="btn-icon">
-            <img src="@/assets/images/metamask-fox.svg" />
-          </span>
-          MetaMask
-        </button>
-        <button
-          class="btn __m __pg icon-right full"
-          @click="showWalletConnectCautionModal()"
-        >
-          <div class="loading-wrap" :class="{ active: loadingWallet }">
-            <img class="spin mt" src="@/assets/images/loading.svg" />
-          </div>
-          <span class="btn-icon">
-            <img src="@/assets/images/wallet-connect_w.svg" />
-          </span>
-          WalletConnect
-        </button>
-        <button
-          class="btn __m __pg icon-right full mb-0"
-          @click="showRegeneratePaymentUrlModal()"
-        >
-          <span class="btn-icon">
-            <img src="@/assets/images/renewal.svg" />
-          </span>
-          Regenerate URL
-        </button>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -116,19 +67,6 @@ export default {
     return {
       loadingMeta: false,
       loadingWallet: false,
-      receiveTokenIcons: {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
-        WETH: require('@/assets/images/symbol/eth.svg')
-      },
-      receiveTokenIconPath: {
-        USDT: "usdt",
-        USDC: "usdc",
-        DAI: "dai",
-        JPYC: "jpyc",
-      },
     };
   },
   computed: {
@@ -138,17 +76,23 @@ export default {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
     },
+    RECEIVED_TOKEN_ICON_PATH() {
+      return {
+        USDT: "crypto_currency/usdt",
+        USDC: "crypto_currency/usdc",
+        DAI: "crypto_currency/dai",
+        JPYC: "crypto_currency/jpyc",
+        WETH: "crypto_currency/weth",
+      };
+    },
     currentDomain() {
-      return window.location.host;
+      return window.location.host
     },
     receiveTokenSymbol() {
       return this.$store.state.payment.symbol;
     },
-    receiveTokenIcon() {
-      return this.receiveTokenIcons[this.$store.state.payment.symbol];
-    },
     setIconPath() {
-      return this.receiveTokenIconPath[this.$store.state.payment.symbol];
+      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol];
     },
     amount() {
       return this.$store.state.payment.amount;
@@ -166,15 +110,13 @@ export default {
       return this.$store.state.payment.isAgreeRisk;
     },
     isMobileAndMetamaskNotInstalled() {
-      return isMobile(window.navigator).any && !window.ethereum;
+      return isMobile(window.navigator).any && !window.ethereum
     },
     metamaskDeepLink() {
-      return (
-        "https://metamask.app.link/dapp/" +
-        this.currentDomain +
-        `/payment/wallets/${this.paymentToken}?dpl=1`
-      );
-    },
+      return 'https://metamask.app.link/dapp/'
+        + this.currentDomain
+        + `/payment/wallets/${this.paymentToken}?dpl=1`
+    }
   },
   methods: {
     apiGetAvailableNetworks() {
@@ -209,11 +151,11 @@ export default {
     },
     handleConnect(provider, mode) {
       if (this.isMobileAndMetamaskNotInstalled) {
-        window.location.href = this.metamaskDeepLink;
+        window.location.href = this.metamaskDeepLink
       } else {
-        this.connect(provider, mode);
+        this.connect(provider, mode)
       }
-    },
+    }
   },
   created() {
     this.$store.dispatch("web3/initialize");
@@ -267,104 +209,4 @@ export default {
     }
   }
 }
-// .payment_handleprice {
-//   width: 100%;
-//   dl {
-//     dt {
-//       font-weight: 400;
-//       font-size: 15px;
-//     }
-//   }
-
-//   .payment_desc {
-//     p {
-//       background: $gradation-pale;
-//       -webkit-background-clip: text;
-//       -webkit-text-fill-color: transparent;
-//       background-size: 150% 150%;
-//       display: inline;
-//     }
-//   }
-//   .payment_handleprice-pricewrap {
-//     width: 100%;
-//   }
-//   .payment_handleprice-price {
-//     padding: 0;
-//     width: 100%;
-//     min-width: auto;
-//     input {
-//       line-height: 53px;
-//       height: 53px;
-//       font-weight: 500;
-//       font-size: 18px;
-//       width: 65%;
-//       padding-left: 16px;
-//       @include media(sp) {
-//         width: 55%;
-//       }
-//     }
-//     .currency {
-//       width: 35%;
-//       line-height: 53px;
-//       position: relative;
-//       &::before {
-//         position: absolute;
-//         content: "";
-//         width: 1px;
-//         height: 33px;
-//         background: #6b6b6c;
-//         left: -12px;
-//       }
-//       &::after {
-//         content: "▲";
-//         position: absolute;
-//         right: 12px;
-//         color: #6b6b6c;
-//         font-size: 14px;
-//         transform: rotate(-180deg);
-//       }
-//       figure {
-//         line-height: 53px;
-//         position: absolute;
-//         img {
-//           padding-top: 14px;
-//         }
-//       }
-//       select {
-//         padding-left: 36px;
-//         font-weight: 400;
-//         width: 100%;
-//         border: none;
-//         outline: none;
-//       }
-//     }
-//     span {
-//       vertical-align: middle;
-//       font-size: 11px;
-//     }
-//   }
-
-//   .payment-with {
-//     text-align: center;
-//     margin-top: 0.5rem;
-//     margin-bottom: 1.5rem;
-//   }
-//   .payment_receiptwrap {
-//     width: 100%;
-//   }
-//   .payment_receipt {
-//     p {
-//       font-size: 15px;
-//     }
-//     &_form {
-//       height: 56px;
-//       .mail {
-//         height: 51px;
-//         padding: 0 16px;
-//         font-size: 15px;
-//         width: 100%;
-//       }
-//     }
-//   }
-// }
 </style>
