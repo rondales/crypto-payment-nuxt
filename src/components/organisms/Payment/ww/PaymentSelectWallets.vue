@@ -55,7 +55,7 @@ import { METAMASK } from "@/constants";
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentText from "@/components/organisms/Payment/Text";
 import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
-import WwPaymentWalletConnectorMixin from "@/components/organisms/Payment/ww/mixins/WwPaymentWalletConnector";
+import WwPaymentWalletConnectorMixin from "@/components/mixins/ww/PaymentWalletConnector";
 import isMobile from 'ismobilejs';
 
 export default {
