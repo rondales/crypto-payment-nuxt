@@ -164,17 +164,18 @@ export default {
   created() {
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
-    this.$store.dispatch("payment/updateSelectReceiptStatus", true);
-    if (!this.isAgreeRisk && this.isInitialized) {
-      this.showRiskDisclaimerModal();
-    }
+    // NOTE Temporarily commented out by issue #622
+    // if (!this.isAgreeRisk && this.isInitialized) {
+    //   this.showRiskDisclaimerModal();
+    // }
   },
   mounted() {
     setTimeout(() => {
       this.$emit('updateInitializingStatus', false)
-      if (!this.isAgreeRisk) {
-        this.showRiskDisclaimerModal();
-      }
+      // NOTE Temporarily commented out by issue #622
+      // if (!this.isAgreeRisk) {
+      //   this.showRiskDisclaimerModal();
+      // }
     }, 1500)
   },
   beforeRouteLeave(to, from, next) {

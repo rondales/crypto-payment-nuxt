@@ -141,14 +141,14 @@
                     </span>
                   </div>
                   <template v-if="isCurrentNetwork(chainId)">
-                    <!-- <div
+                    <div
                       class="manage-contents_btn"
                       v-if="isPublishedContract(chainId)"
                       @click="showContractReceiveAddressChangeModal(chainId)"
                     >
                       Change
-                    </div> -->
-                    <div v-if="!isPublishedContract(chainId)" class="manage-contents_btn other">
+                    </div>
+                    <div v-else class="manage-contents_btn other">
                       switch network
                     </div>
                   </template>

@@ -7,7 +7,6 @@ const store = {
     domain: null,
     isVerifiedDomain: false,
     merchantWalletAddress: null,
-    isSelectedReceipt: false,
     isAgreeRisk: false,
     orderCode: null,
     amount: null,
@@ -58,9 +57,6 @@ const store = {
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
     },
-    updateSelectReceiptStatus({ commit }, payload) {
-      commit('updateSelectReceiptStatus', payload)
-    },
     updateAgreeRiskStatus({ commit }, payload) {
       commit('updateAgreeRiskStatus', payload)
     },
@@ -109,7 +105,6 @@ const store = {
       state.domain = null
       state.isVerifiedDomain = false
       state.merchantWalletAddress = null
-      state.isSelectedReceipt = false
       state.isAgreeRisk = false
       state.orderCode = null
       state.amount = null
@@ -165,9 +160,6 @@ const store = {
     },
     updateIsVerifiedDomain(state, payload) {
       state.isVerifiedDomain = payload
-    },
-    updateSelectReceiptStatus(state, payload) {
-      state.isSelectedReceipt = payload
     },
     updateAgreeRiskStatus(state, payload) {
       state.isAgreeRisk = payload

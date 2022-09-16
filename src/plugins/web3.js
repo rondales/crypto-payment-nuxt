@@ -70,7 +70,7 @@ export default {
           viewMerchantReceiveAddresses: viewMerchantReceiveAddresses,
           viewCashBackPercent: viewCashBackPercent,
           viewCashBacks: viewCashBacks,
-          isContractAddress: isContractAddress,
+          isSlashCustomPlugin: isSlashCustomPlugin,
           updateMerchantReceiveAddress: updateMerchantReceiveAddress,
           updateCashbackPercent: updateCashbackPercent
         }
@@ -307,7 +307,8 @@ const getTokenExchangeData = async function(
   token,
   paymentRequestSymbol,
   paymentRequestAmount,
-  slippageTolerance
+  gasFeeRate,
+  paymentFeeRate
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
@@ -356,7 +357,7 @@ const getTokenExchangeData = async function(
     ? requestTokenToUserToken
     : String(
         Math.round(
-          parseInt(requestTokenToUserToken, 10) * (1 + (slippageTolerance / 100))
+          parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
         )
       )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
@@ -371,7 +372,7 @@ const getTokenExchangeData = async function(
       reservedParam
     ).call({ from: walletAddress })
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
-  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
+  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (gasFeeRate / 100))))
   return {
     requireAmount: convertFromWei(web3, requireAmountWithSlippage, token.decimal),
     requestAmountWei: requestAmountWei,
@@ -651,9 +652,16 @@ const viewCashBacks = async function (web3, contractAbi, contracts) {
   return cashbacks
 }
 
-const isContractAddress = async function(web3, address) {
-  const code = await web3.eth.getCode(address)
-  return code == '0x' ? false : true
+// Check if given address is SlashCustomPlugin compatible
+const isSlashCustomPlugin = async function (web3, slashCustomPluginAbi, address) {
+  let isSlashCustomPlugin
+  const slashCustomPlugin = new web3.eth.Contract(slashCustomPluginAbi, address)
+  try {
+    isSlashCustomPlugin = await slashCustomPlugin.methods.supportSlashExtensionInterface().call()
+  } catch(e) {
+    isSlashCustomPlugin = false
+  }
+  return isSlashCustomPlugin
 }
 
 const updateMerchantReceiveAddress = function(
@@ -661,12 +669,12 @@ const updateMerchantReceiveAddress = function(
   contractAbi,
   contractAddress,
   receiveAddress,
-  isContractAddress,
+  isSlashCustomPlugin,
   merchantWalletAddress
 ) {
   const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
   return merchantContract.methods
-    .updateReceiveAddress(receiveAddress,isContractAddress)
+    .updateReceiveAddress(receiveAddress,isSlashCustomPlugin)
     .send({
     from: merchantWalletAddress,
     maxPriorityFeePerGas: null,

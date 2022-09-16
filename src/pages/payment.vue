@@ -93,17 +93,11 @@ export default {
     isDifferentPayment() {
       return this.urlPaymentToken !== this.storedPaymentToken
     },
-    isSelectedReceipt() {
-      return this.storedPaymentData.isSelectedReceipt
-    },
     isSentTransactionToBlockChain() {
       return this.storedPaymentData.status !== STATUS_PUBLISHED
     },
     isRequestEntrancePage() {
       return this.$route.name === 'entrance'
-    },
-    isRequestSelectReceiptPage() {
-      return this.$route.name === 'receipt'
     },
     isRequestedSelectWalletPage() {
       return this.$route.name === 'wallets'
@@ -177,16 +171,7 @@ export default {
               query: this.urlQueries
             })
           }
-          if (this.isRequestSelectReceiptPage && this.isSelectedReceipt) {
-            this.$refs.paymentIndex.updateProgressTotalSteps(
-              this.$refs.paymentIndex.progressCompletedSteps
-            )
-            return this.$router.replace({
-              name: 'wallets',
-              params: { token: this.urlPaymentToken }
-            })
-          }
-          if (this.isRequestSelectReceiptPage || this.isRequestedSelectWalletPage) {
+          if (this.isRequestedSelectWalletPage) {
             this.$refs.paymentIndex.updateProgressTotalSteps(
               this.$refs.paymentIndex.progressCompletedSteps
             )

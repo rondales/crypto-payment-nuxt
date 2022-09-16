@@ -219,7 +219,7 @@ export default {
         },
         discord: {
           icon: "icon/discord",
-          link: "https://discord.gg/ZFNP2Mfr",
+          link: "https://discord.com/invite/gk25cyBs78",
           status: true,
         },
         mail: {
