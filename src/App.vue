@@ -21,7 +21,6 @@ export default {
     adminContractPausedModal: () =>
       import("@/components/molecules/adminContractPausedModal"),
     networkModal: () => import("@/components/molecules/networkModal"),
-    refundInfoModal: () => import("@/components/molecules/refundInfoModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
     cautionWalletConnectModal: () =>
       import("@/components/molecules/cautionWalletConnectModal"),
@@ -61,6 +60,8 @@ export default {
     cautionPaymentRiskDisclaimerModal: () =>
       import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
     addChainModal: () => import("@/components/molecules/addChainModal"),
+    paymentReceiptModal: () => import("@/components/molecules/paymentReceiptModal"),
+    paymentReceiptEmailModal: () => import("@/components/molecules/paymentReceiptEmailModal"),
   },
   computed: {
     classes() {
