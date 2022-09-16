@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <PaymentText tag="p" type="cap" html="via Uniswap : Slash Payment " />
+    <PaymentText tag="p" type="cap" html="via Slash Payment " />
     <PaymentIcon class="icon" path="logo-icon" />
   </div>
 </template>

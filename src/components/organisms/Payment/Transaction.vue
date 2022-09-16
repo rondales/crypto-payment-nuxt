@@ -42,7 +42,7 @@ import PaymentIcon from "@/components/organisms/Payment/Icon";
 import PaymentButton from "@/components/organisms/Payment/Button";
 import PaymentVia from "@/components/organisms/Payment/Via";
 export default {
-  name: "PaymentAmountBilled",
+  name: "PaymentTransaction",
   components: {
     PaymentButton,
     PaymentText,
