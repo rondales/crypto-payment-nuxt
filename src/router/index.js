@@ -55,7 +55,7 @@ const router = new Router({
         {
           name: "payments-uiswitchable",
           path: "/payments-uiswitchable",
-          component: () => import("@/pages/payments-uiswitchable"),
+          component: () => import("@/pages/ww-payment"),
           meta: { title: 'Slash Payment' },
           children: [
             {
