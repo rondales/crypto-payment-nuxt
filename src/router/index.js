@@ -117,13 +117,6 @@ const router = new Router({
               meta: { title: 'Slash Payment' }
             },
             {
-              name: "receipt",
-              path: "/payment/receipt/:token",
-              alias: ["/payments-uiswitchable/receipt/:token/basic", "/payments-uiswitchable/receipt/:token"],
-              component: () => import("@/components/organisms/PaymentEmail"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
               name: "wallets",
               path: "/payment/wallets/:token",
               alias: ["/payments-uiswitchable/wallets/:token/basic", "/payments-uiswitchable/wallets/:token"],

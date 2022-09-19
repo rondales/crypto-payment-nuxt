@@ -60,6 +60,8 @@ export default {
     cautionPaymentRiskDisclaimerModal: () =>
       import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
     addChainModal: () => import("@/components/molecules/addChainModal"),
+    paymentReceiptModal: () => import("@/components/molecules/paymentReceiptModal"),
+    paymentReceiptEmailModal: () => import("@/components/molecules/paymentReceiptEmailModal"),
   },
   computed: {
     classes() {
