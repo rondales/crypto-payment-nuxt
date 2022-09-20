@@ -23,73 +23,6 @@
       :link="transaction.link"
       :explorerUrl="transaction.explorerUrl"
     />
-    <!--
-    <div v-if="isStatusProcessing">
-      <PaymentButton color="inactive" text="Processing…" />
-      <PaymentVia />
-    </div>
-    {{ isStatusFailured }}
-    <pending
-      v-if="isStatusProcessing"
-      :urls="linkUrlData"
-      :transaction="transactionData"
-    />
-    <failure
-      v-else-if="isStatusFailured"
-      :urls="linkUrlData"
-      :isReceiptMode="isReceiptMode"
-    />
-    <success
-      v-else
-      :urls="linkUrlData"
-      :token="paymentToken"
-      :isReceiptMode="isReceiptMode"
-    /> -->
-
-    <!--   <div class="payment_handleprice"><div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="userPaidSymbol"
-        :icon="userPaidTokenIcon"
-        :price="userPaidAmount | amountFormat"
-      />
-      <div class="payment_detailwrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
-        </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
-            <figure>
-              <img :src="userPaidTokenIcon" :alt="userPaidSymbol" />
-            </figure>
-            <p>
-              {{ userPaidSymbol }}
-            </p>
-          </div>
-          <div class="payment_detail-value">
-            <p>
-              {{ userPaidAmount | amountFormat }}
-            </p>
-          </div>
-        </div>
-        <pending
-          v-if="isStatusProcessing"
-          :urls="linkUrlData"
-          :transaction="transactionData"
-        />
-        <failure
-          v-else-if="isStatusFailured"
-          :urls="linkUrlData"
-          :isReceiptMode="isReceiptMode"
-        />
-        <success
-          v-else
-          :urls="linkUrlData"
-          :token="paymentToken"
-          :isReceiptMode="isReceiptMode"
-        />
-      </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -97,14 +30,8 @@
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentTransaction from "@/components/organisms/Payment/Transaction";
-// import PaymentVia from "@/components/organisms/Payment/Via";
-// import PaymentButton from "@/components/organisms/Payment/Button";
 import { Decimal as BigJs } from "decimal.js";
 import StringExtend from "@/utils/string_extend";
-// import ResultPending from "@/components/organisms/PaymentResultPending";
-// import ResultFailure from "@/components/organisms/PaymentResultFailure";
-// import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
-
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -121,14 +48,9 @@ import {
 export default {
   name: "PaymentResult",
   components: {
-    // pending: ResultPending,
-    // failure: ResultFailure,
-    // success: ResultSuccess,
     PaymentAmountBilled,
     PaymentTitle,
     PaymentTransaction,
-    // PaymentVia,
-    // PaymentButton,
   },
   props: {
     progressTotalSteps: Number,
@@ -162,46 +84,7 @@ export default {
           url: "",
           title: "",
           color: "",
-        },
-        // loading: {
-        //   type: "loading",
-        //   title: "",
-        //   text: "",
-        //   explorerUrl: this.linkUrlData.explorer
-        //     ? this.linkUrlData.explorer
-        //     : "",
-        //   link: {
-        //     url: "",
-        //     title: "",
-        //     color: "",
-        //   },
-        // },
-        // dismiss: {
-        //   type: "dismiss",
-        //   title: "",
-        //   text: "",
-        //   explorerUrl: this.linkUrlData.explorer
-        //     ? this.linkUrlData.explorer
-        //     : "",
-        //   link: {
-        //     url: "",
-        //     title: "",
-        //     color: "",
-        //   },
-        // },
-        // success: {
-        //   type: "success",
-        //   title: "",
-        //   text: "",
-        //   explorerUrl: this.linkUrlData.explorer
-        //     ? this.linkUrlData.explorer
-        //     : "",
-        //   link: {
-        //     url: "",
-        //     title: "",
-        //     color: "",
-        //   },
-        // },
+        }
       },
     };
   },
@@ -217,6 +100,11 @@ export default {
         return splitAmount[0]
       }
     },
+  },
+  watch: {
+    status: function() {
+      this.checkStatus()
+    }
   },
   computed: {
     API_BASE_URL() {
@@ -246,13 +134,6 @@ export default {
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens;
-      // if (tokens) {
-      //   return this.userPaidSymbol in tokens
-      //     ? tokens[this.userPaidSymbol].icon
-      //     : require("@/assets/images/symbol/unknown.svg");
-      // } else {
-      //   return require("@/assets/images/symbol/unknown.svg");
-      // }
       if (tokens) {
         return this.userPaidSymbol in tokens
           ? tokens[this.userPaidSymbol].iconPath
@@ -282,15 +163,12 @@ export default {
       return "rcpt" in this.$route.query;
     },
     isStatusProcessing() {
-      // this.transactionMode = "loading";
       return this.status === STATUS_PROCESSING;
     },
     isStatusFailured() {
-      // this.transactionMode = "dismiss";
       return this.status === STATUS_RESULT_FAILURE;
     },
     isStatusSucceeded() {
-      // this.transactionMode = "success";
       return this.status === STATUS_RESULT_SUCCESS;
     },
     isPaidEthereum() {
@@ -323,17 +201,6 @@ export default {
     filterUserPaidAmount() {
       return new BigJs(this.userPaidAmount).toString();
     },
-    // constructTransactionText(transactionData) {
-    //   // return transactionData.userPaidAmount;
-    //   return (
-    //     "Pay " +
-    //     amountFormat(transactionData.userPaidAmount) +
-    //     transactionData.userPaidSymbol +
-    //     " for " +
-    //     amountFormat(transactionData.merchantReceiveAmount) +
-    //     transactionData.merchantReceiveSymbol
-    //   );
-    // },
   },
   methods: {
     apiGetTransaction() {
@@ -345,6 +212,13 @@ export default {
     },
     apiGetTransactionStatus() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`;
+      const request = {
+        params: new URLSearchParams([["payment_token", this.paymentToken]]),
+      };
+      return this.axios.get(url, request);
+    },
+    apiGetTransactionRefundedData() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`;
       const request = {
         params: new URLSearchParams([["payment_token", this.paymentToken]]),
       };
@@ -394,6 +268,80 @@ export default {
         });
       }, this.RESULT_CHECK_CYCLE);
     },
+    checkStatus() {
+      if (this.linkUrlData.explorer) {
+        this.transaction.explorerUrl = this.linkUrlData.explorer;
+      }
+      if (this.status === STATUS_PROCESSING) {
+        this.transaction.type = "loading";
+        this.transaction.title = "Waiting for Confirmation";
+        let paidAmount = new BigJs(
+          this.transactionData.userPaidAmount
+        ).toString();
+        let merchantReceiveAmount = new BigJs(
+          this.transactionData.merchantReceiveAmount
+        ).toString();
+        this.transaction.text =
+          "Pay " +
+          paidAmount +
+          " " +
+          this.transactionData.userPaidSymbol +
+          " for " +
+          merchantReceiveAmount +
+          " " +
+          this.transactionData.merchantReceiveSymbol;
+        if (this.linkUrlData.explorer) {
+          this.transaction.link.url = null;
+          this.transaction.link.title = "Processing...";
+          this.transaction.link.color = "inactive";
+        }
+      } else if (this.status === STATUS_RESULT_FAILURE) {
+        this.transaction.type = "dismiss";
+        this.transaction.title = "Transaction Failed";
+        this.transaction.text =
+          "The transaction cannot succeed due to error: execution <br />Check the reason for the reverted from Explorer.";
+        if (this.linkUrlData.failure && !this.isReceiptMode) {
+          this.transaction.link.url = this.linkUrlData.failure;
+          this.transaction.link.title = "Back to Payee’s Services";
+          this.transaction.link.icon = "outerlink";
+          this.transaction.link.color = "primary";
+          this.transaction.link.target = "_blank";
+        } else {
+          this.transaction.link.url = "";
+          this.transaction.link.title = "";
+          this.transaction.link.color = "";
+        }
+      } else if (this.status === STATUS_RESULT_SUCCESS) {
+        this.transaction.type = "success";
+        this.transaction.title = "Transaction Submitted";
+        this.transaction.text = "";
+        if (this.linkUrlData.success) {
+          this.transaction.link.url = this.linkUrlData.success;
+          this.transaction.link.title = "Back to Payee’s Services";
+          this.transaction.link.icon = "outerlink";
+          this.transaction.link.color = "primary";
+          this.transaction.link.target = "_blank";
+        } else {
+          this.transaction.link.url = "";
+          this.transaction.link.title = "";
+          this.transaction.link.color = "";
+        }
+        this.apiGetTransactionRefundedData().then((response) => {
+          this.$store.dispatch("modal/show", {
+            target: "refund-info-modal",
+            size: "small",
+            params: {
+              refundedTokenAmount: response.data.refunded_token_amount,
+              refundedTokenSymbol: response.data.refunded_token_symbol,
+              refundedFeeAmount: response.data.refunded_fee_amount,
+              refundedFeeSymbol: response.data.refunded_fee_symbol,
+              cashBackAmount: response.data.cashback_amount,
+              cashBackSymbol: response.data.cashback_symbol,
+            },
+          });
+        });
+      }
+    }
   },
   created() {
     this.$emit('updateProgressTotalSteps', 2)
@@ -407,6 +355,7 @@ export default {
       setTimeout(() => {
         this.$emit('updateInitializingStatus', false)
       }, 1500)
+      this.checkStatus();
     });
 
     if (this.linkUrlData.explorer) {
@@ -497,54 +446,4 @@ export default {
     }
   }
 }
-// .payment_handleprice {
-//   width: 100%;
-//   dl {
-//     dt {
-//       font-weight: 400;
-//       font-size: 15px;
-//     }
-//   }
-
-//   .payment_desc {
-//     p {
-//       background: $gradation-pale;
-//       -webkit-background-clip: text;
-//       -webkit-text-fill-color: transparent;
-//       background-size: 150% 150%;
-//       display: inline;
-//     }
-//   }
-//   .payment_handleprice-pricewrap {
-//     width: 100%;
-//   }
-//   .payment_handleprice-price {
-//     padding: 0;
-//     width: 100%;
-//     min-width: auto;
-//   }
-
-//   .payment_detail {
-//     &-name {
-//       p {
-//         font-size: 16px;
-//         font-weight: 400;
-//         line-height: 25px;
-//         margin-left: 7px;
-//       }
-//       figure {
-//         width: 25px;
-//         height: 25px;
-//         img {
-//           vertical-align: baseline;
-//         }
-//       }
-//     }
-//     &-value {
-//       font-size: 20px;
-//       font-weight: 100;
-//       margin-left: 16px;
-//     }
-//   }
-// }
 </style>
