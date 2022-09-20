@@ -2,24 +2,24 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        <img src="@/assets/images/url-refresh.svg" />
-        Refresh Payment URL
+        <img src="@/assets/images/trash-box.svg" />
+        Delete Payment URL
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current URL</p>
+      <div class="dsc-wrap">
+        <span class="mb-3"> Do you want to remove this url? </span>
+      </div>
+      <p class="sub-title">Current Url</p>
       <div class="text-wrap">
         <p>
-          {{ qrCodeUrl }}
+          {{ paymentUrl }}
         </p>
         <img class="copy" @click="copy()" src="@/assets/images/copy.svg" />
       </div>
-      <div class="dsc-wrap">
-        <span class="mb-3"> Would you like to Refresh this url? </span>
-      </div>
-      <button @click="confirm" class="btn __l add-flex j-center a-center">
-        <img src="@/assets/images/url-refresh.svg" />
-        <span> Refresh </span>
+      <button @click="deletePaymentToken" class="btn __l add-flex j-center a-center">
+        <img src="@/assets/images/trash-box.svg" />
+        <span> Delete </span>
       </button>
     </div>
     <button class="close" @click="hideModal">
@@ -34,24 +34,24 @@ import RequestUtility from '@/utils/request'
 import { errorCodeList } from '@/enum/error_code'
 
 export default {
-  name: 'paymentQrCodeRefreshModal',
+  name: 'paymentTokenDeleteModal',
   data() {
     return {
-      qrCode: ''
+      paymentToken: ''
     }
   },
   computed: {
+    API_BASE_URL() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
     classes() {
       return ['modal-box', `--${this.$store.state.modal.size}`]
     },
     params() {
       return this.$store.state.modal.params
     },
-    API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL
-    },
-    qrCodeUrl() {
-      return `${location.protocol}//${location.host}/qr-code/${this.qrCode}`;
+    paymentUrl() {
+      return `${location.protocol}//${location.host}/payment-merchant/${this.paymentToken}`;
     },
   },
   methods: {
@@ -60,32 +60,33 @@ export default {
     },
     copy() {
       this.$store.dispatch('account/copied')
-      this.$clipboard(this.qrCodeUrl)
+      this.$clipboard(this.paymentUrl)
     },
-    // Refresh this URL and QR code
-    confirm() {
-      this.apiRefreshPaymentToken()
-          .then((res) => {
-            this.$store.dispatch('payment/updateQrCode', res.data.qr_code)
+    deletePaymentToken() {
+      this.apiDeletePaymentToken()
+        .then((res) => {
+          if (res.data.updated) {
+            this.$store.dispatch('payment/updatePaymentToken', null)
             this.hideModal()
-          })
-          .catch((error) => {
-            let message
-            if (error.response.status === 400) {
-              message = errorCodeList[error.response.data.errors.shift()].msg
-            } else {
-              message = 'Please try again after a while.'
-            }
-            this.showErrorModal(message)
-          })
+          }
+        })
+        .catch((error) => {
+          let message
+          if (error.response.status === 400) {
+            message = errorCodeList[error.response.data.errors.shift()].msg
+          } else {
+            message = 'Please try again after a while.'
+          }
+          this.showErrorModal(message)
+        })
     },
-    apiRefreshPaymentToken() {
-      const url = `${this.API_BASE_URL}/api/v1/management/qr-code`
+    apiDeletePaymentToken() {
+      const url = `${this.API_BASE_URL}/api/v1/management/payment-token`
       const options = {
         headers: { Authorization: RequestUtility.getBearer() }
       }
 
-      return this.axios.post(url, null, options)
+      return this.axios.delete(url, options)
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
@@ -98,7 +99,7 @@ export default {
     }
   },
   mounted() {
-    this.qrCode = this.params.qr_code
+    this.paymentToken = this.params.payment_token
   }
 }
 </script>
@@ -131,9 +132,6 @@ export default {
     &__title {
       font-size: 2.5rem;
       margin-bottom: 4rem;
-      img {
-        width: 20px;
-      }
     }
     &__desc {
       font-size: 2rem;
@@ -143,9 +141,6 @@ export default {
     padding: 18px;
     &__title {
       font-size: 2.3rem;
-      img {
-        width: 20px;
-      }
     }
   }
   &__title {
@@ -214,8 +209,8 @@ export default {
     width: 70%;
     margin: auto;
     img {
-      padding: 0 12px 0 0 !important;
-      width: 34px;
+      padding: 0 12px 4px 0 !important;
+      width: 30px;
     }
   }
 }

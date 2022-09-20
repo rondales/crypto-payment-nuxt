@@ -39,7 +39,7 @@ const store = {
       amount: null,
       rate: null
     },
-    qr_code: null
+    payment_token: null
   },
   actions: {
     initialize({ commit }) {
@@ -93,8 +93,8 @@ const store = {
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
     },
-    updateQrCode({ commit }, payload) {
-      commit('updateQrCode', payload)
+    updatePaymentToken({ commit }, payload) {
+      commit('updatePaymentToken', payload)
     }
   },
   mutations: {
@@ -152,8 +152,8 @@ const store = {
     updateDeviceId(state, payload) {
       state.deviceId = payload
     },
-    updateQrCode(state, payload) {
-      state.qr_code = payload
+    updatePaymentToken(state, payload) {
+      state.payment_token = payload
     },
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload

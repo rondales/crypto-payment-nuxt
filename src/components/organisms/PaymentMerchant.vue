@@ -48,9 +48,9 @@ export default {
   },
   methods: {
     apiGetPaymentToken() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/qr-code`
+      const url = `${this.API_BASE_URL}/api/v1/payment/merchant`
       return this.axios.post(url, {
-        qr_code: this.$route.params.qr_code
+        payment_token: this.$route.params.payment_token
       });
     },
     refresh() {

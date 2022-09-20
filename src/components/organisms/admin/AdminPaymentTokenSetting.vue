@@ -3,16 +3,16 @@
     <div class="copied" v-if="copied">copied</div>
     <div class="title">Payment URL</div>
     <p class="description"> User can access this link to create new payment link.</p>
-    <div class="keys-wrap" v-if="qrCode">
+    <div class="keys-wrap" v-if="paymentToken">
       <div class="address">
-        {{ qrCodeUrl }}
+        {{ paymentUrl }}
       </div>
       <div class="actions">
         <div class="copy" @click="copy()">Copy</div>
         <button class="btn qr" @click="showQrCode()">
           Show QR Code
         </button>
-        <button class="btn refresh" @click="qrCodeRefresh()">
+        <button class="btn refresh" @click="paymentTokenRefresh()">
           <img src="@/assets/images/url-refresh.svg"/>
           Refresh
         </button>
@@ -24,7 +24,7 @@
     </div>
     <div class="keys-wrap" v-else>
       <div class="comfirm-wrap">
-        <div @click="createQrCode()" class="confirm-btn">Create</div>
+        <div @click="createPaymentTokenCode()" class="confirm-btn">Create</div>
         <p>Create Payment URL</p>
       </div>
     </div>
@@ -36,33 +36,33 @@ import RequestUtility from '@/utils/request'
 import {errorCodeList} from "@/enum/error_code";
 
 export default {
-  name: 'AdminQrCodeSetting',
+  name: 'AdminPaymentTokenSetting',
   data() {
     return {
       copied: false,
     }
   },
   computed: {
-    qrCode() {
-      return this.$store.state.payment.qr_code
+    paymentToken() {
+      return this.$store.state.payment.payment_token
     },
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
-    qrCodeUrl() {
-      return `${location.protocol}//${location.host}/qr-code/${this.qrCode}`;
+    paymentUrl() {
+      return `${location.protocol}//${location.host}/payment-merchant/${this.paymentToken}`;
     }
   },
   methods: {
     apiGetPaymentToken() {
-      const url = `${this.API_BASE_URL}/api/v1/management/qr-code`
+      const url = `${this.API_BASE_URL}/api/v1/management/payment-token`
       const options = {
         headers: {Authorization: RequestUtility.getBearer()}
       }
       return this.axios.get(url, options)
     },
     apiCreatePaymentTokenToken() {
-      const url = `${this.API_BASE_URL}/api/v1/management/qr-code`
+      const url = `${this.API_BASE_URL}/api/v1/management/payment-token`
       const options = {
         headers: {Authorization: RequestUtility.getBearer()}
       }
@@ -70,14 +70,14 @@ export default {
     },
     copy() {
       this.$store.dispatch('account/copied')
-      this.$clipboard(this.qrCodeUrl)
+      this.$clipboard(this.paymentUrl)
     },
-    createQrCode() {
+    createPaymentTokenCode() {
       this.apiCreatePaymentTokenToken()
           .then((response) => {
             this.$store.dispatch(
-                'payment/updateQrCode',
-                response.data.qr_code
+                'payment/updatePaymentToken',
+                response.data.payment_token
             )
           })
           .catch((error) => {
@@ -94,12 +94,12 @@ export default {
             }
           })
     },
-    qrCodeRefresh() {
+    paymentTokenRefresh() {
       this.$store.dispatch('modal/show', {
-        target: 'payment-qr-code-refresh-modal',
+        target: 'payment-token-refresh-modal',
         size: 'small',
         params: {
-          qr_code: this.qrCode
+          payment_token: this.paymentToken
         }
       })
     },
@@ -114,19 +114,19 @@ export default {
     },
     showQrCode() {
       this.$store.dispatch('modal/show', {
-        target: 'payment-qr-code-modal',
+        target: 'payment-token-modal',
         size: 'small',
         params: {
-          qr_code: this.qrCode
+          payment_token: this.paymentToken
         }
       })
     },
     deleteQrCode() {
       this.$store.dispatch('modal/show', {
-        target: 'payment-qr-code-delete-modal',
+        target: 'payment-token-delete-modal',
         size: 'small',
         params: {
-          qr_code: this.qrCode
+          payment_token: this.paymentToken
         }
       })
     },
@@ -140,7 +140,7 @@ export default {
   created() {
     this.apiGetPaymentToken()
         .then((response) => {
-          this.$store.dispatch('payment/updateQrCode', response.data.qr_code)
+          this.$store.dispatch('payment/updatePaymentToken', response.data.payment_token)
         })
         .catch((error) => {
           if (error.response.status === 401) {

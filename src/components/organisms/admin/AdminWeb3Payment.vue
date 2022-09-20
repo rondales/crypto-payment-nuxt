@@ -42,7 +42,7 @@ export default {
         '/admin/payment/settings/basic',
         '/admin/payment/settings/contract',
         '/admin/payment/settings/domain',
-        '/admin/payment/settings/qr-code',
+        '/admin/payment/settings/payment-token',
       ]
       return targetPaths.includes(this.$route.path)
     }

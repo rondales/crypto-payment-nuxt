@@ -6,8 +6,8 @@
     <div class="body">
       <div class="qr" id="qrblock">
         <div class="qr_wrap">
-          <a :href="qrCode">
-            <vue-qrcode :value="qrCodeUrl" tag="img" />
+          <a :href="paymentToken">
+            <vue-qrcode :value="paymentUrl" tag="img" />
             <img
               class="logo"
               src="@/assets/images/logo-icon.svg"
@@ -38,10 +38,10 @@ import moment from "moment";
 import html2canvas from 'html2canvas'
 
 export default {
-  name: "paymentQrCodeModal",
+  name: "paymentTokenModal",
   data() {
     return {
-      qrCode: '',
+      paymentToken: '',
     };
   },
   components: {
@@ -54,8 +54,8 @@ export default {
     params() {
       return this.$store.state.modal.params
     },
-    qrCodeUrl() {
-      return `${location.protocol}//${location.host}/qr-code/${this.qrCode}`;
+    paymentUrl() {
+      return `${location.protocol}//${location.host}/payment-merchant/${this.paymentToken}`;
     }
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
     }
   },
   mounted() {
-    this.qrCode = this.params.qr_code
+    this.paymentToken = this.params.payment_token
   },
 };
 </script>

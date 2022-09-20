@@ -68,9 +68,9 @@ const router = new Router({
           ]
         },
         {
-          name: "qr-code",
-          path: "/qr-code/:qr_code",
-          component: () => import("@/components/organisms/PaymentQrCode")
+          name: "payment-merchant",
+          path: "/payment-merchant/:payment_token",
+          component: () => import("@/components/organisms/PaymentMerchant")
         },
         {
           name: "payment",
@@ -173,7 +173,7 @@ const router = new Router({
             },
             {
               name: "admin",
-              path: "/admin/payment/settings/qr-code",
+              path: "/admin/payment/settings/payment-token",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
               meta: { title: 'Slash Apps' }
             },
