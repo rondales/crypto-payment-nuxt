@@ -12,7 +12,6 @@
 
 <script>
 import PaymentAmount from '@/components/organisms/PaymentAmount'
-import PaymentEmail from '@/components/organisms/PaymentEmail'
 import { errorCodeList } from '@/enum/error_code'
 import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
@@ -20,85 +19,73 @@ export default {
   name: 'PaymentEntrance',
   mixins: [DisplayConfig],
   components: {
-    PaymentAmount,
-    PaymentEmail,
+    PaymentAmount
   },
   props: {
     progressTotalSteps: Number,
-    progressCompletedSteps: Number,
+    progressCompletedSteps: Number
   },
   data() {
     return {
-      showComponent: null,
-    };
+      showComponent: null
+    }
   },
   computed: {
     baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     paymentToken() {
-      return this.$route.params.token;
+      return this.$route.params.token
     },
     paymentData() {
-      return this.$store.state.payment;
-    },
-    isSelectedReceipt() {
-      return this.$store.state.payment.isSelectedReceipt;
+      return this.$store.state.payment
     },
     isAccessFromDeepLink() {
-      return "dpl" in this.$route.query;
+      return 'dpl' in this.$route.query
     },
     isAccessFromRegeneratedUrl() {
-      return "ucnv" in this.$route.query;
-    },
+      return 'ucnv' in this.$route.query
+    }
   },
   methods: {
     apiReceiveData() {
-      const url = `${this.baseUrl}/api/v1/payment`;
-      const params = new URLSearchParams([
-        ["payment_token", this.paymentToken],
-      ]);
-      return this.axios.get(url, { params });
+      const url = `${this.baseUrl}/api/v1/payment`
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
+      return this.axios.get(url, { params })
     },
     apiPublishTransaction() {
-      const url = `${this.baseUrl}/api/v1/payment/transaction`;
-      const params = new URLSearchParams([
-        ["payment_token", this.paymentToken],
-      ]);
-      return this.axios.post(url, params);
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
+      return this.axios.post(url, params)
     },
     apiGetTransactionData() {
-      const url = `${this.baseUrl}/api/v1/payment/transaction`;
-      const params = new URLSearchParams([
-        ["payment_token", this.paymentToken],
-      ]);
-      return this.axios.get(url, { params });
+      const url = `${this.baseUrl}/api/v1/payment/transaction`
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
+      return this.axios.get(url, { params })
     },
     apiGetTransactionState() {
-      const url = `${this.baseUrl}/api/v1/payment/transaction/state`;
-      const params = new URLSearchParams([
-        ["payment_token", this.paymentToken],
-      ]);
-      return this.axios.get(url, { params });
+      const url = `${this.baseUrl}/api/v1/payment/transaction/state`
+      const params = new URLSearchParams([['payment_token', this.paymentToken]])
+      return this.axios.get(url, { params })
     },
     showErrorModal(message) {
-      this.$store.dispatch("modal/show", {
-        target: "error-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'error-modal',
+        size: 'small',
         params: {
-          message: message,
-        },
-      });
+          message: message
+        }
+      })
     },
     updateInitializingStatus(initializing) {
-      this.$emit("updateInitializingStatus", initializing);
+      this.$emit('updateInitializingStatus', initializing)
     },
     updateProgressTotalSteps(step) {
-      this.$emit("updateProgressTotalSteps", step);
+      this.$emit('updateProgressTotalSteps', step)
     },
     incrementProgressCompletedSteps() {
-      this.$emit("incrementProgressCompletedSteps");
-    },
+      this.$emit('incrementProgressCompletedSteps')
+    }
   },
   created() {
     this.$store.dispatch('wallet/initialize')
@@ -123,9 +110,13 @@ export default {
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.$emit('incrementProgressCompletedSteps')
       this.apiPublishTransaction().then(() => {
-        this.showComponent = (receiveResponse.data.amount === null) ? 'PaymentAmount' : 'PaymentEmail'
         this.$emit('updateProgressTotalSteps', 5)
         this.$emit('incrementProgressCompletedSteps')
+        if (receiveResponse.data.amount) {
+          this.$router.push({ name: 'wallets', params: { token: this.paymentToken } })
+        } else {
+          this.showComponent ='PaymentAmount'
+        }
       }).catch((error) => {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
@@ -141,8 +132,7 @@ export default {
                     this.$emit('incrementProgressCompletedSteps')
                     break;
                   case 'unset_email':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
-                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
                       this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                       this.$emit('incrementProgressCompletedSteps')
                       this.$emit('updateProgressTotalSteps', 5)
@@ -152,13 +142,12 @@ export default {
                     } else {
                       this.$emit('incrementProgressCompletedSteps')
                       this.$router.replace({
-                        path: '/payment/receipt/' + this.$route.params.token
+                        path: '/payment/wallets/' + this.$route.params.token
                       })
                     }
                     break;
                   case 'unset_token':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl || this.isSelectedReceipt) {
-                      this.$store.dispatch('payment/updateSelectReceiptStatus', true)
+                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
                       this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                     }
                     this.$emit('incrementProgressCompletedSteps')

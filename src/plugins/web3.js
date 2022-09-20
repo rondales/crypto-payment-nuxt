@@ -309,7 +309,8 @@ const getTokenExchangeData = async function(
   token,
   paymentRequestSymbol,
   paymentRequestAmount,
-  slippageTolerance
+  gasFeeRate,
+  paymentFeeRate
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
@@ -358,7 +359,7 @@ const getTokenExchangeData = async function(
     ? requestTokenToUserToken
     : String(
         Math.round(
-          parseInt(requestTokenToUserToken, 10) * (1 + (slippageTolerance / 100))
+          parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
         )
       )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
@@ -373,7 +374,7 @@ const getTokenExchangeData = async function(
       reservedParam
     ).call({ from: walletAddress })
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
-  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
+  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (gasFeeRate / 100))))
   return {
     requireAmount: convertFromWei(web3, requireAmountWithSlippage, token.decimal),
     requestAmountWei: requestAmountWei,

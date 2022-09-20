@@ -221,7 +221,7 @@ export default {
         .then(() => {
           this.$store.dispatch("payment/updateAmount", this.exchangedAmount);
           this.$router.replace({
-            path: "receipt/" + this.$route.params.token,
+            path: "wallets/" + this.$route.params.token,
           });
         })
         .catch((error) => {

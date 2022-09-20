@@ -118,6 +118,12 @@ import {
   AvalancheTokens as AvalancheDefaultTokens,
 } from "@/contracts/tokens";
 import {
+  EthereumTokens as EthereumStableTokens,
+  BscTokens as BscStableTokens,
+  MaticTokens as MaticStableTokens,
+  AvalancheTokens as AvalancheStableTokens,
+} from "@/contracts/stable_tokens";
+import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
@@ -164,8 +170,15 @@ export default {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
     },
-    SLIPPAGE_RATE() {
-      return process.env.VUE_APP_PAYMENT_SLIPPAGE_TOLERANCE;
+    GAS_FEE_RATE() {
+      return process.env.VUE_APP_PAYMENT_GAS_FEE_RATE
+    },
+    PAYMENT_FEE_RATE() {
+      if (this.isSelectedStableToken) {
+        return process.env.VUE_APP_PAYMENT_STABLE_TOKEN_FEE_RATE
+      } else {
+        return process.env.VUE_APP_PAYMENT_NON_STABLE_TOKEN_FEE_RATE
+      }
     },
     EXCHANGE_RATE_EXPIRE_TIME() {
       return 30000;
@@ -210,6 +223,19 @@ export default {
         return MaticDefaultTokens;
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalancheDefaultTokens;
+      } else {
+        return {};
+      }
+    },
+    stableTokens() {
+      if (this.isCurrentNetworkEthereum) {
+        return EthereumStableTokens;
+      } else if (this.isCurrentNetworkBinance) {
+        return BscStableTokens;
+      } else if (this.isCurrentNetworkMatic) {
+        return MaticStableTokens;
+      } else if (this.isCurrentNetworkAvalanche) {
+        return AvalancheStableTokens;
       } else {
         return {};
       }
@@ -346,6 +372,16 @@ export default {
     isDarkTheme() {
       return this.$store.state.theme === "dark";
     },
+    isSelectedStableToken() {
+      if (!this.userSelectedToken.address) {
+        // for native token
+        return false
+      }
+      return Object.values(this.stableTokens)
+        .map(token => token.address ? token.address.toLowerCase() : token.address)
+        .filter(address => address)
+        .includes(this.userSelectedToken.address.toLowerCase())
+    },
     filterUserSelectedTokenBalance() {
       return NumberFormat("0.0000", this.userSelectedTokenBalance);
     },
@@ -376,7 +412,8 @@ export default {
         this.userSelectedToken,
         this.merchantReceiveTokenSymbol,
         this.merchantReceiveAmount,
-        this.SLIPPAGE_RATE
+        this.GAS_FEE_RATE,
+        this.PAYMENT_FEE_RATE
       )
       .catch((err) => {
         if(err.message.includes('execution reverted: No valid exchange')) {

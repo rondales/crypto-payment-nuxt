@@ -18,6 +18,9 @@
         <img src="@/assets/images/link-icon.svg" alt="another" />
       </a>
     </div>
+    <div class="payment-status_receipt mb-3">
+      <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
+    </div>
     <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
       <button class="btn __g __l mb-2">Back to Payee’s Services</button>
     </a>
@@ -47,9 +50,28 @@ export default {
   components: {
     PaymentTransaction,
   },
+  data() {
+    return {
+      cashbackTokenAmount: '',
+      cashbackTokenSymbol: '',
+      cashbackTokenIcon: ''
+    }
+  },
   computed: {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL;
+    },
+    MERCHANT_RECEIVE_ICONS() {
+      return {
+        USDT: require("@/assets/images/symbol/usdt.svg"),
+        USDC: require("@/assets/images/symbol/usdc.svg"),
+        DAI: require("@/assets/images/symbol/dai.svg"),
+        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/symbol/eth.svg')
+      }
+    },
+    hasCashback() {
+      return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
     },
     hasReturnUrl() {
       return this.urls.success;
@@ -69,39 +91,29 @@ export default {
     apiGetTransactionRefundedData() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`;
       const request = {
-        params: new URLSearchParams([["payment_token", this.token]]),
-      };
-      return this.axios.get(url, request);
+        params: new URLSearchParams([['payment_token', this.token]])
+      }
+      return this.axios.get(url, request)
     },
+    openPaymentReceiptModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'payment-receipt-modal',
+        size: 'small'
+      })
+    }
   },
   created() {
     if (!this.isReceiptMode) {
       this.$store.dispatch("payment/updateStatus", STATUS_RESULT_SUCCESS);
       this.apiGetTransactionRefundedData().then((response) => {
-        this.$store.dispatch("modal/show", {
-          target: "refund-info-modal",
-          size: "small",
-          params: {
-            refundedTokenAmount: response.data.refunded_token_amount,
-            refundedTokenSymbol: response.data.refunded_token_symbol,
-            refundedFeeAmount: response.data.refunded_fee_amount,
-            refundedFeeSymbol: response.data.refunded_fee_symbol,
-            cashBackAmount: response.data.cashback_amount,
-            cashBackSymbol: response.data.cashback_symbol,
-          },
-        });
-      });
+        const responseParams = response.data
+        this.cashbackTokenAmount = responseParams.cashback_token_amount
+        this.cashbackTokenSymbol = responseParams.cashback_token_symbol
+        this.cashbackTokenIcon = this.MERCHANT_RECEIVE_ICONS[responseParams.cashback_token_symbol]
+      })
     }
-    if (this.hasReturnUrl && !this.isReceiptMode) {
-      this.link.url = this.urls.explorer;
-      this.link.icon = "outerlink";
-      this.link.title = "View on explorer";
-    } else {
-      this.link.url = this.urls.failure;
-      this.link.title = "Back to Payee’s Services";
-    }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -130,6 +142,18 @@ export default {
     img {
       margin-left: 4px;
       vertical-align: middle;
+    }
+  }
+  &_receipt {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 13px;
+    font-weight: 300;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    a {
+      cursor: pointer;
     }
   }
 }
