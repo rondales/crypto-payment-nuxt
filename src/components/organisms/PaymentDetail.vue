@@ -55,20 +55,7 @@
           {
             title: 'Route',
             text: tradeRoute,
-          },
-          {
-            title:
-              !isWalletConfirming && isDifferentToken
-                ? 'Slippage tolerance'
-                : '',
-            price: SLIPPAGE_RATE,
-            text: '%',
-          },
-          {
-            title: !isWalletConfirming ? 'Platform Fee' : '',
-            price: platformFee,
-            text: nativeTokenSymbol,
-          },
+          }
         ]"
       />
       <PaymentText
