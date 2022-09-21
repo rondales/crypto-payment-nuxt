@@ -250,7 +250,7 @@ export default {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
         ? tokens[this.merchantReceiveTokenSymbol].iconPath
-        : "unknown";
+        : "crypto_currency/unknown";
     },
     userSelectedToken() {
       return this.$store.state.payment.token;
