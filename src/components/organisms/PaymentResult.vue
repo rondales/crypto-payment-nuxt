@@ -7,6 +7,7 @@
       :price="filterMerchantReceiveAmount"
       size="big"
     />
+
     <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
     <PaymentAmountBilled
       class="result__receivedToken"
@@ -15,13 +16,28 @@
       :price="filterUserPaidAmount"
     />
 
-    <PaymentTransaction
-      class="result__transaction"
-      :type="transaction.type"
-      :title="transaction.title"
-      :text="transaction.text"
-      :link="transaction.link"
-      :explorerUrl="transaction.explorerUrl"
+    <PaymentResultPending
+      v-if="isStatusProcessing"
+      :explorer-url="explorerUrl"
+      :merchant-receive-symbol="merchantReceiveSymbol"
+      :merchant-receive-amount="filterMerchantReceiveAmount"
+      :user-paid-symbol="userPaidSymbol"
+      :user-paid-amount="filterUserPaidAmount"
+    />
+    <PaymentResultFailure
+      v-else-if="isStatusFailured"
+      :explorer-url="explorerUrl"
+      :back-url="failureReturnUrl"
+    />
+    <PaymentResultSuccess
+      v-else-if="isStatusSucceeded"
+      :payment-token="paymentToken"
+      :explorer-url="explorerUrl"
+      :back-url="successReturnUrl"
+      :is-paid-ethereum="isPaidEthereum"
+      :is-paid-binance="isPaidBinance"
+      :is-paid-matic="isPaidMatic"
+      :is-paid-avalanche="isPaidAvalanche"
     />
   </div>
 </template>
@@ -29,15 +45,22 @@
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+import PaymentResultPending from "@/components/organisms/PaymentResultPending";
+import PaymentResultFailure from "@/components/organisms/PaymentResultFailure";
+import PaymentResultSuccess from "@/components/organisms/PaymentResultSuccess";
 import { Decimal as BigJs } from "decimal.js";
-import StringExtend from "@/utils/string_extend";
 import {
   NETWORKS,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS,
 } from "@/constants";
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens,
+} from "@/contracts/receive_tokens";
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -50,7 +73,9 @@ export default {
   components: {
     PaymentAmountBilled,
     PaymentTitle,
-    PaymentTransaction,
+    PaymentResultPending,
+    PaymentResultFailure,
+    PaymentResultSuccess
   },
   props: {
     progressTotalSteps: Number,
@@ -67,44 +92,8 @@ export default {
       successReturnUrl: null,
       failureReturnUrl: null,
       status: STATUS_PROCESSING,
-      resultPollingTimer: null,
-      merchantReceiveTokenIcons: {
-        USDT: "usdt",
-        USDC: "usdc",
-        DAI: "dai",
-        JPYC: "jpyc",
-      },
-      transactionMode: "loading",
-      transaction: {
-        type: "loading",
-        title: "",
-        text: "",
-        explorerUrl: "",
-        link: {
-          url: "",
-          title: "",
-          color: "",
-        }
-      },
+      resultPollingTimer: null
     };
-  },
-  filters: {
-    amountFormat(amount) {
-      const splitAmount = amount.split('.')
-      if (splitAmount.length > 1) {
-        splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
-      }
-      if(splitAmount[1]) {
-        return splitAmount.join('.')
-      } else {
-        return splitAmount[0]
-      }
-    },
-  },
-  watch: {
-    status: function() {
-      this.checkStatus()
-    }
   },
   computed: {
     API_BASE_URL() {
@@ -115,6 +104,19 @@ export default {
     },
     paymentToken() {
       return this.$route.params.token;
+    },
+    merchantReceiveTokens() {
+      if (this.isPaidEthereum) {
+        return EthereumReceiveTokens;
+      } else if (this.isPaidBinance) {
+        return BscReceiveTokens;
+      } else if (this.isPaidMatic) {
+        return MaticReceiveTokens;
+      } else if (this.isPaidAvalanche) {
+        return AvalacheReceiveTokens;
+      } else {
+        return {};
+      }
     },
     paidNetworkDefaultTokens() {
       if (this.isPaidEthereum) {
@@ -130,34 +132,25 @@ export default {
       }
     },
     merchantReceiveTokenIcon() {
-      return this.merchantReceiveTokenIcons[this.merchantReceiveSymbol];
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveSymbol in tokens
+        ? tokens[this.merchantReceiveSymbol].iconPath
+        : "crypto_currency/unknown";
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens;
       if (tokens) {
         return this.userPaidSymbol in tokens
           ? tokens[this.userPaidSymbol].iconPath
-          : "network-unknown";
+          : "crypto_currency/unknown";
       } else {
-        return "network-unknown";
+        return "crypto_currency/unknown";
       }
     },
-    transactionData() {
-      return {
-        merchantReceiveAmount: this.merchantReceiveAmount,
-        merchantReceiveSymbol: this.merchantReceiveSymbol,
-        userPaidAmount: this.userPaidAmount,
-        userPaidSymbol: this.userPaidSymbol,
-      };
-    },
-    linkUrlData() {
-      const scanSiteUrl =
-        this.chainId !== null ? NETWORKS[this.chainId].scanUrl : "";
-      return {
-        explorer: `${scanSiteUrl}/tx/${this.transactionHash}`,
-        success: this.successReturnUrl,
-        failure: this.failureReturnUrl,
-      };
+    explorerUrl() {
+      return this.chainId !== null && this.chainId in NETWORKS
+        ? `${NETWORKS[this.chainId].scanUrl}/tx/${this.transactionHash}`
+        : ''
     },
     isReceiptMode() {
       return "rcpt" in this.$route.query;
@@ -217,13 +210,6 @@ export default {
       };
       return this.axios.get(url, request);
     },
-    apiGetTransactionRefundedData() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`;
-      const request = {
-        params: new URLSearchParams([["payment_token", this.paymentToken]]),
-      };
-      return this.axios.get(url, request);
-    },
     showDataInitialize() {
       this.chainId = this.$store.state.web3.chainId;
       this.merchantReceiveAmount =
@@ -247,6 +233,7 @@ export default {
       this.transactionHash = data.transaction_address;
       this.successReturnUrl = data.succeeded_return_url;
       this.failureReturnUrl = data.failured_return_url;
+      this.status = data.status
       this.$store.dispatch("payment/update", {
         domain: data.domain,
         orderCode: data.order_code,
@@ -267,80 +254,6 @@ export default {
           }
         });
       }, this.RESULT_CHECK_CYCLE);
-    },
-    checkStatus() {
-      if (this.linkUrlData.explorer) {
-        this.transaction.explorerUrl = this.linkUrlData.explorer;
-      }
-      if (this.status === STATUS_PROCESSING) {
-        this.transaction.type = "loading";
-        this.transaction.title = "Waiting for Confirmation";
-        let paidAmount = new BigJs(
-          this.transactionData.userPaidAmount
-        ).toString();
-        let merchantReceiveAmount = new BigJs(
-          this.transactionData.merchantReceiveAmount
-        ).toString();
-        this.transaction.text =
-          "Pay " +
-          paidAmount +
-          " " +
-          this.transactionData.userPaidSymbol +
-          " for " +
-          merchantReceiveAmount +
-          " " +
-          this.transactionData.merchantReceiveSymbol;
-        if (this.linkUrlData.explorer) {
-          this.transaction.link.url = null;
-          this.transaction.link.title = "Processing...";
-          this.transaction.link.color = "inactive";
-        }
-      } else if (this.status === STATUS_RESULT_FAILURE) {
-        this.transaction.type = "dismiss";
-        this.transaction.title = "Transaction Failed";
-        this.transaction.text =
-          "The transaction cannot succeed due to error: execution <br />Check the reason for the reverted from Explorer.";
-        if (this.linkUrlData.failure && !this.isReceiptMode) {
-          this.transaction.link.url = this.linkUrlData.failure;
-          this.transaction.link.title = "Back to Payee’s Services";
-          this.transaction.link.icon = "outerlink";
-          this.transaction.link.color = "primary";
-          this.transaction.link.target = "_blank";
-        } else {
-          this.transaction.link.url = "";
-          this.transaction.link.title = "";
-          this.transaction.link.color = "";
-        }
-      } else if (this.status === STATUS_RESULT_SUCCESS) {
-        this.transaction.type = "success";
-        this.transaction.title = "Transaction Submitted";
-        this.transaction.text = "";
-        if (this.linkUrlData.success) {
-          this.transaction.link.url = this.linkUrlData.success;
-          this.transaction.link.title = "Back to Payee’s Services";
-          this.transaction.link.icon = "outerlink";
-          this.transaction.link.color = "primary";
-          this.transaction.link.target = "_blank";
-        } else {
-          this.transaction.link.url = "";
-          this.transaction.link.title = "";
-          this.transaction.link.color = "";
-        }
-        this.apiGetTransactionRefundedData().then((response) => {
-          this.$store.dispatch("modal/show", {
-            target: "refund-info-modal",
-            size: "small",
-            params: {
-              refundedTokenAmount: response.data.refunded_token_amount,
-              refundedTokenSymbol: response.data.refunded_token_symbol,
-              refundedFeeAmount: response.data.refunded_fee_amount,
-              refundedFeeSymbol: response.data.refunded_fee_symbol,
-              cashBackAmount: response.data.cashback_amount,
-              cashBackSymbol: response.data.cashback_symbol,
-            },
-          });
-        });
-      }
     }
   },
   created() {
@@ -355,57 +268,7 @@ export default {
       setTimeout(() => {
         this.$emit('updateInitializingStatus', false)
       }, 1500)
-      this.checkStatus();
-    });
-
-    if (this.linkUrlData.explorer) {
-      this.transaction.explorerUrl = this.linkUrlData.explorer;
-    }
-
-    if (this.status === STATUS_PROCESSING) {
-      this.transaction.type = "loading";
-      this.transaction.title = "Waiting for Confimation";
-      let paidAmount = new BigJs(
-        this.transactionData.userPaidAmount
-      ).toString();
-      let merchantReceiveAmount = new BigJs(
-        this.transactionData.merchantReceiveAmount
-      ).toString();
-      this.transaction.text =
-        "Pay " +
-        paidAmount +
-        " " +
-        this.transactionData.userPaidSymbol +
-        " for " +
-        merchantReceiveAmount +
-        " " +
-        this.transactionData.merchantReceiveSymbol;
-      if (this.linkUrlData.explorer) {
-        this.transaction.link.url = this.linkUrlData.explorer;
-        this.transaction.link.icon = "outerlink";
-        this.transaction.link.title = "View on explorer";
-        this.transaction.link.url = "";
-        this.transaction.link.title = "Processing...";
-        this.transaction.link.color = "inactive";
-      }
-    } else if (this.status === STATUS_RESULT_FAILURE) {
-      this.transaction.type = "dismiss";
-      this.transaction.text =
-        "The transaction cannot succeed due to error: execution <br />Check the reason for the reverted from Explorer.";
-
-      if (this.linkUrlData.explorer && !this.isReceiptMode) {
-        this.transaction.link.url = this.linkUrlData.failure;
-        this.transaction.link.title = "Back to Payee’s Services";
-      }
-    } else if (this.status === STATUS_RESULT_SUCCESS) {
-      this.transaction.type = "success";
-      this.transaction.title = "Transaction Submitted";
-      this.transaction.text = "";
-      if (this.linkUrlData.success) {
-        this.transaction.link.url = this.linkUrlData.success;
-        this.transaction.link.title = "Back to Payee’s Services";
-      }
-    }
+    })
   },
   beforeDestroy() {
     clearInterval(this.resultPollingTimer);

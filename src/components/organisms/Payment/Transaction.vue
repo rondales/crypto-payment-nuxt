@@ -25,7 +25,7 @@
     </div>
     <div class="transaction__foot">
       <PaymentButton
-        v-if="link"
+        v-if="hasLink"
         :text="link.title"
         :url="link.url"
         :color="link.color"
@@ -72,6 +72,13 @@ export default {
     },
     link: {
       type: Object,
+      default: () => {
+        return {
+          color: '',
+          title: '',
+          url: ''
+        }
+      }
     },
   },
   data() {
@@ -98,10 +105,12 @@ export default {
       }
       return array;
     },
-  },
-  methods: {},
-  created() {},
-  beforeDestroy() {},
+    hasLink() {
+      return this.link.color
+        && this.link.title
+        && this.link.url
+    }
+  }
 };
 </script>
 

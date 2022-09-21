@@ -1,60 +1,57 @@
 <template>
   <div>
-    <!-- 未使用コンポーネント、問題なければ削除 -->
-    <p class="d-todo">{{ $options.name }}</p>
-    <PaymentTransaction type="success" title="Transaction Submitted" />
-    <div class="payment-status mt-3 mb-3">
-      <div>
-        <img class="mb-2" src="@/assets/images/check.svg" alt="success" />
-        <p class="payment-status_title mb-1">Transaction Submitted</p>
-      </div>
-      <a
-        v-if="hasReturnUrl && !isReceiptMode"
-        class="payment-status_btn"
-        target="_blank"
-        :href="urls.explorer"
-      >
-        View on explorer
-        <img src="@/assets/images/link-icon.svg" alt="another" />
-      </a>
-    </div>
-    <div class="payment-status_receipt mb-3">
-      <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
-    </div>
-    <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
-      <button class="btn __g __l mb-2">Back to Payee’s Services</button>
-    </a>
-    <a v-else target="_blank" :href="urls.explorer">
-      <button class="btn __g __l mb-2">
-        View on explorer
-        <img
-          class="new-tab-icon"
-          src="@/assets/images/link-icon.svg"
-          alt="another"
-        />
-      </button>
-    </a>
+    <PaymentTitle v-if="hasCashback" class="mt-2 result__title" type="h2_g" html="Cash Back" />
+    <PaymentAmountBilled
+      v-if="hasCashback"
+      class="result__receivedToken"
+      :icon="cashbackTokenIcon"
+      :symbol="cashbackTokenSymbol"
+      :price="cashbackTokenAmount"
+    />
+
+    <PaymentTransaction
+      class="result__transaction"
+      type="success"
+      title="Transaction Submitted"
+      text=""
+      :explorer-url="explorerUrl"
+      :link="linkData"
+    />
   </div>
 </template>
 
 <script>
 import { STATUS_RESULT_SUCCESS } from "@/constants";
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens,
+} from "@/contracts/receive_tokens";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: "PaymentResultSuccess",
   props: {
-    urls: Object,
-    token: String,
+    paymentToken: String,
+    explorerUrl: String,
+    backUrl: String,
     isReceiptMode: Boolean,
+    isPaidEthereum: Boolean,
+    isPaidBinance: Boolean,
+    isPaidMatic: Boolean,
+    isPaidAvalanche: Boolean
   },
   components: {
-    PaymentTransaction,
+    PaymentTitle,
+    PaymentAmountBilled,
+    PaymentTransaction
   },
   data() {
     return {
       cashbackTokenAmount: '',
-      cashbackTokenSymbol: '',
-      cashbackTokenIcon: ''
+      cashbackTokenSymbol: ''
     }
   },
   computed: {
@@ -70,6 +67,31 @@ export default {
         WETH: require('@/assets/images/symbol/eth.svg')
       }
     },
+    merchantReceiveTokens() {
+      if (this.isPaidEthereum) {
+        return EthereumReceiveTokens;
+      } else if (this.isPaidBinance) {
+        return BscReceiveTokens;
+      } else if (this.isPaidMatic) {
+        return MaticReceiveTokens;
+      } else if (this.isPaidAvalanche) {
+        return AvalacheReceiveTokens;
+      } else {
+        return {};
+      }
+    },
+    cashbackTokenIcon() {
+      return this.cashbackTokenSymbol in this.merchantReceiveTokens
+        ? this.merchantReceiveTokens[this.cashbackTokenSymbol].iconPath
+        : 'crypto_currency/unknown'
+    },
+    linkData() {
+      return {
+        color: 'primary',
+        title: 'Back to Payee’s Services',
+        url: this.backUrl
+      }
+    },
     hasCashback() {
       return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
     },
@@ -77,21 +99,11 @@ export default {
       return this.urls.success;
     },
   },
-  data() {
-    return {
-      link: {
-        url: "",
-        icon: "",
-        title: "",
-        color: "g",
-      },
-    };
-  },
   methods: {
     apiGetTransactionRefundedData() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`;
       const request = {
-        params: new URLSearchParams([['payment_token', this.token]])
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
       return this.axios.get(url, request)
     },
@@ -106,10 +118,8 @@ export default {
     if (!this.isReceiptMode) {
       this.$store.dispatch("payment/updateStatus", STATUS_RESULT_SUCCESS);
       this.apiGetTransactionRefundedData().then((response) => {
-        const responseParams = response.data
-        this.cashbackTokenAmount = responseParams.cashback_token_amount
-        this.cashbackTokenSymbol = responseParams.cashback_token_symbol
-        this.cashbackTokenIcon = this.MERCHANT_RECEIVE_ICONS[responseParams.cashback_token_symbol]
+        this.cashbackTokenAmount = response.data.cashback_token_amount
+        this.cashbackTokenSymbol = response.data.cashback_token_symbol
       })
     }
   }
@@ -120,44 +130,9 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 
-.payment-status {
-  text-align: center;
-  margin: auto;
-  &_title {
-    font-size: 18px;
-    font-weight: 100;
+.result {
+  &__title {
+    margin-bottom: 2rem;
   }
-  &_desc {
-    font-size: 10px;
-    font-weight: 100;
-  }
-  &_btn {
-    font-size: 12px;
-    font-weight: 100;
-    cursor: pointer;
-    background: $gradation-pale;
-    padding: 4px 16px;
-    border-radius: 10px;
-    color: #fff;
-    img {
-      margin-left: 4px;
-      vertical-align: middle;
-    }
-  }
-  &_receipt {
-    text-align: center;
-    text-decoration: underline;
-    font-size: 13px;
-    font-weight: 300;
-    font-family: "Poppins", sans-serif;
-    letter-spacing: 0.02em;
-    line-height: 1.5;
-    a {
-      cursor: pointer;
-    }
-  }
-}
-.new-tab-icon {
-  padding: 0 !important;
 }
 </style>
