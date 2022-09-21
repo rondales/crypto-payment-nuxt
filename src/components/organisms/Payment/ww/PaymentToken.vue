@@ -136,8 +136,8 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
+import PaymentText from "@/components/organisms/Payment/ww/Text";
 import NumberFormat from "number-format.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
 import {

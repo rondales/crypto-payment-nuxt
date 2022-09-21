@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 export default {
   name: "PaymentInvoice",
   data() {

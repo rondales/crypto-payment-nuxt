@@ -81,7 +81,7 @@
 
 <script>
 import { Decimal } from "decimal.js";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 // import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
