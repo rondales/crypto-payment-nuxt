@@ -3,9 +3,9 @@
     <PaymentIcon class="icon" path="logo-icon" />
     <div class="table">
       <dl v-for="(item, index) in table" :key="index">
-        <dt><PaymentText type="cap" :html="item.title" /></dt>
+        <dt><PaymentText type="cap" :html="item.title" :non-translate="true" /></dt>
         <dd>
-          <PaymentText type="cap" :html="item.text" />
+          <PaymentText type="cap" :html="item.text" :non-translate="true" />
           {{ item.verified }}
           <PaymentIcon
             v-if="item.verified"

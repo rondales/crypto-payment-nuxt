@@ -27,6 +27,10 @@ export default {
       type: String,
       default: "",
     },
+    nonTranslate: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {};
@@ -38,6 +42,9 @@ export default {
       let array = {};
       array["text__" + this.type] = true;
       array["color__" + this.color] = true;
+      if (this.nonTranslate) {
+        array["non-translate"] = true;
+      }
       return array;
     },
   },
