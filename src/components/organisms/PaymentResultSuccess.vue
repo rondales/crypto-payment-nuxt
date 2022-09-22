@@ -76,7 +76,7 @@ export default {
       }
     },
     hasCashback() {
-      return this.cashbackAmount && this.cashbackAmount !== '0'
+      return this.cashbackAmount && this.cashbackAmount != 0
     },
     hasReturnUrl() {
       return (this.urls.success)
