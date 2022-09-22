@@ -510,11 +510,11 @@ export default {
     font-size: 0;
     position: absolute;
     left: 2px;
-    bottom: 0;
+    bottom: -12px;
     transform-origin: left bottom;
     transform: scale(0.7);
     @include media(sp) {
-      bottom: -1rem;
+      bottom: -1.3rem;
     }
     &__hover {
       position: absolute;
