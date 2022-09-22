@@ -71,16 +71,16 @@
 
 
 <script>
-import RadialProgressBar from "vue-radial-progress";
-import Header from "@/components/organisms/header";
-import PaymentTop from "@/components/organisms/PaymentTop";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentIdTable from "@/components/organisms/Payment/IdTable";
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import { DARK_THEME, LIGHT_THEME } from "@/constants";
+import RadialProgressBar from 'vue-radial-progress'
+import Header from '@/components/organisms/header'
+import PaymentTop from '@/components/organisms/PaymentTop'
+import PaymentText from '@/components/organisms/Payment/Text'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentIdTable from '@/components/organisms/Payment/IdTable'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import { DARK_THEME, LIGHT_THEME } from '@/constants'
 export default {
-  name: "PaymentIndex",
+  name: 'PaymentIndex',
   components: {
     RadialProgressBar,
     Header,
@@ -88,14 +88,14 @@ export default {
     PaymentText,
     PaymentIdTable,
     PaymentTitle,
-    PaymentIcon,
+    PaymentIcon
   },
   props: [
-    "colorTheme",
-    "receiver",
-    "isVerifiedDomain",
-    "invoiceId",
-    "base64VuexData",
+    'colorTheme',
+    'receiver',
+    'isVerifiedDomain',
+    'invoiceId',
+    'base64VuexData'
   ],
   data() {
     return {
@@ -107,35 +107,35 @@ export default {
       progressCompletedSteps: 0,
       idTable: [
         {
-          title: "Payee",
+          title: 'Payee',
           text: this.receiver,
-          verified: this.isVerifiedDomain,
+          verified: this.isVerifiedDomain
         },
-        { title: "Invoice ID", text: this.invoiceId },
+        { title: 'Invoice ID', text: this.invoiceId }
       ],
       navList: [
         {
-          title: "About Slash.fi",
-          url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+          title: 'About Slash.fi',
+          url: 'https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper'
         },
         {
-          title: "FAQ",
-          url: "https://slash-fi.gitbook.io/docs/support/help-center",
+          title: 'FAQ',
+          url: 'https://slash-fi.gitbook.io/docs/support/help-center'
         },
         {
-          title: "Terms of Service",
-          url: "https://slash-fi.gitbook.io/docs/support/terms-of-use",
+          title: 'Terms of Service',
+          url: 'https://slash-fi.gitbook.io/docs/support/terms-of-use'
         },
         {
-          title: "Privacy Policy",
-          url: "https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy",
+          title: 'Privacy Policy',
+          url: 'https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy'
         },
         {
-          title: "AML Policy",
-          url: "https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy",
-        },
-      ],
-    };
+          title: 'AML Policy',
+          url: 'https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy'
+        }
+      ]
+    }
   },
   watch: {
     receiver(value) {
@@ -150,76 +150,76 @@ export default {
   },
   computed: {
     darkTheme() {
-      return DARK_THEME;
+      return DARK_THEME
     },
     lightTheme() {
-      return LIGHT_THEME;
+      return LIGHT_THEME
     },
     progressCompletedPercent() {
       return this.progressCompletedSteps && this.progressTotalSteps
         ? Math.floor(
             (this.progressCompletedSteps / this.progressTotalSteps) * 100
           )
-        : 0;
+        : 0
     },
     domainVerifiedIcon() {
       return this.isDarkTheme
-        ? require("@/assets/images/domain-verified.svg")
-        : require("@/assets/images/domain-verified-l.svg");
+        ? require('@/assets/images/domain-verified.svg')
+        : require('@/assets/images/domain-verified-l.svg')
     },
     isDarkTheme() {
-      return this.colorTheme === this.darkTheme;
+      return this.colorTheme === this.darkTheme
     },
     isLightTheme() {
-      return this.colorTheme === this.lightTheme;
+      return this.colorTheme === this.lightTheme
     },
     isShowMenu() {
-      return this.showMenu;
-    },
+      return this.showMenu
+    }
   },
   methods: {
     openModal(target, size) {
-      this.$emit("openModal", target, size);
+      this.$emit('openModal', target, size)
     },
     switchColorTheme(color) {
-      this.$emit("switchColorTheme", color);
+      this.$emit('switchColorTheme', color)
     },
     handleWindowResize() {
-      this.windowWidth = window.innerWidth;
+      this.windowWidth = window.innerWidth
     },
     copyLink() {
-      this.$store.dispatch("account/copied");
-      const uri = new URL(window.location.href);
-      const token = this.$route.params.token;
+      this.$store.dispatch('account/copied')
+      const uri = new URL(window.location.href)
+      const token = this.$route.params.token
       this.$clipboard(
         `${uri.protocol}//${uri.host}/payment/result/${token}?rcpt=1`
-      );
+      )
     },
     toggleMenu(state) {
-      this.showMenu = state;
+      this.showMenu = state
     },
     updateInitializingStatus(initializing) {
-      this.initializing = initializing;
+      this.initializing = initializing
     },
     updateProgressTotalSteps(totalSteps) {
-      this.progressTotalSteps = totalSteps;
+      this.progressTotalSteps = totalSteps
     },
     incrementProgressCompletedSteps() {
-      ++this.progressCompletedSteps;
-    },
+      ++this.progressCompletedSteps
+    }
   },
   mounted() {
-    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener('resize', this.handleWindowResize)
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
-  },
-};
+    window.removeEventListener('resize', this.handleResize)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .pay {
   min-height: 100vh;
   padding-top: 100px;
@@ -280,7 +280,7 @@ export default {
       position: relative;
       top: 0;
       left: 0;
-      transform: translate(0%, 23vh);
+      // transform: translate(0%, 23vh);
       margin: 3rem auto;
     }
     .progress-wrap {
