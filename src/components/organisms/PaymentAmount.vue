@@ -105,6 +105,7 @@ export default {
         USDC: "usdc",
         DAI: "dai",
         JPYC: "jpyc",
+        WETH: "eth"
       },
     };
   },
@@ -147,11 +148,9 @@ export default {
     },
     selectedCurrencyIcon() {
       return CURRENCIES[this.selectedCurrency].iconPath;
-      // return CURRENCIES[this.selectedCurrency].icon;
     },
     classes() {
       let array = { amount: true };
-      // array[this.type] = true;
       return array;
     },
   },
@@ -291,103 +290,4 @@ export default {
     }
   }
 }
-// .payment_handleprice {
-//   width: 100%;
-
-//   dl {
-//     dt {
-//       font-weight: 400;
-//       font-size: 15px;
-//     }
-//   }
-
-//   .payment_desc {
-//     p {
-//       background: $gradation-pale;
-//       -webkit-background-clip: text;
-//       -webkit-text-fill-color: transparent;
-//       background-size: 150% 150%;
-//       display: inline;
-//     }
-//   }
-
-//   .payment_handleprice-pricewrap {
-//     width: 100%;
-//   }
-
-//   .payment_handleprice-desc {
-//     font-size: 15px;
-//     font-weight: 400;
-//   }
-
-//   .payment_handleprice-price {
-//     padding: 0;
-//     width: 100%;
-//     min-width: auto;
-//     input {
-//       line-height: 53px;
-//       height: 53px;
-//       font-weight: 500;
-//       font-size: 18px;
-//       width: 65%;
-//       padding-left: 16px;
-//       @include media(sp) {
-//         width: 55%;
-//       }
-//     }
-//     .currency {
-//       width: 35%;
-//       line-height: 53px;
-//       position: relative;
-//       &::before {
-//         position: absolute;
-//         content: "";
-//         width: 1px;
-//         height: 33px;
-//         background: #6b6b6c;
-//         left: -12px;
-//       }
-//       &::after {
-//         content: "▲";
-//         position: absolute;
-//         right: 12px;
-//         color: #6b6b6c;
-//         font-size: 14px;
-//         transform: rotate(-180deg);
-//       }
-//       figure {
-//         line-height: 53px;
-//         position: absolute;
-//         img {
-//           vertical-align: sub;
-//         }
-//       }
-//       select {
-//         padding-left: 36px;
-//         font-weight: 400;
-//         width: 100%;
-//         border: none;
-//         outline: none;
-//       }
-//     }
-//     span {
-//       vertical-align: middle;
-//       font-size: 11px;
-//     }
-//   }
-
-//   .payment-with {
-//     text-align: center;
-//     font-size: 18px;
-//     font-weight: 200;
-//     padding-top: 8px;
-//     padding-bottom: 24px;
-//   }
-
-//   .payment-btn {
-//     img {
-//       padding-top: 0;
-//     }
-//   }
-// }
 </style>

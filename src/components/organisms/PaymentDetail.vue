@@ -191,14 +191,6 @@ export default {
         WAVAX: "WAVAX",
       };
     },
-    MERCHNAT_RECEIVE_TOKEN_ICONS() {
-      return {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg")
-      };
-    },
     EXCHANGE_RATE_EXPIRE_TIME() {
       return 30000;
     },
@@ -272,7 +264,7 @@ export default {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
         ? tokens[this.merchantReceiveTokenSymbol].iconPath
-        : require("@/assets/images/symbol/unknown.svg");
+        : "crypto_currency/unknown";
     },
     userSelectedToken() {
       return this.$store.state.payment.token;
@@ -290,7 +282,7 @@ export default {
       const tokens = this.defaultPaymentTokens;
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].iconPath
-        : require("@/assets/images/symbol/unknown.svg");
+        : "crypto_currency/unknown";
     },
     userSelectedTokenExchangeRate() {
       return this.$store.state.payment.token.rate;

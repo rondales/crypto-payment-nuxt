@@ -293,7 +293,7 @@ export default {
       const tokens = this.defaultPaymentTokens;
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].iconPath
-        : "unknown";
+        : "crypto_currency/unknown";
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;

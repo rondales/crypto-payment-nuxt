@@ -233,7 +233,7 @@ export default {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
         ? tokens[this.merchantReceiveTokenSymbol].iconPath
-        : "network-unknown";
+        : "crypto_currency/unknown";
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;
