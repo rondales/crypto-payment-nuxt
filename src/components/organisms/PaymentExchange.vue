@@ -98,6 +98,17 @@
         />
       </div>
     </div>
+    <div v-else>
+      <div v-if="isNotEnoughLiquidity">
+        <PaymentText
+          class="blancewarning"
+          tag="p"
+          type="p"
+          color="red"
+          html="Liquidity is not enough<br>for this transaction."
+        />
+      </div>
+    </div>
   </div>
 </template>
 
