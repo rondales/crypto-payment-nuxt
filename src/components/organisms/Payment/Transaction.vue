@@ -22,6 +22,13 @@
         :url="explorerUrl"
         layout="reverse"
       />
+      <PaymentButton
+        class="mb-2 button"
+        size="s"
+        color="cancel"
+        text="Click here to get a receipt"
+        @click.native="showGetReceiptModal"
+      />
     </div>
     <div class="transaction__foot">
       <PaymentButton
@@ -31,7 +38,6 @@
         :color="link.color"
         layout="reverse"
       />
-      <PaymentVia />
     </div>
   </div>
 </template>
@@ -40,14 +46,12 @@
 import PaymentText from "@/components/organisms/Payment/Text";
 import PaymentIcon from "@/components/organisms/Payment/Icon";
 import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentVia from "@/components/organisms/Payment/Via";
 export default {
   name: "PaymentTransaction",
   components: {
     PaymentButton,
     PaymentText,
-    PaymentIcon,
-    PaymentVia,
+    PaymentIcon
   },
   props: {
     type: {
@@ -109,6 +113,14 @@ export default {
       return this.link.color
         && this.link.title
         && this.link.url
+    }
+  },
+  methods: {
+    showGetReceiptModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'payment-receipt-modal',
+        size: 'small'
+      })
     }
   }
 };

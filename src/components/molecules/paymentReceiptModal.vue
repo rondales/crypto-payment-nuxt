@@ -1,50 +1,62 @@
 <template>
-  <div :class="classes">
-    <div class="header">
-      <h3 class="header__title">Get payment receipt</h3>
-      <button class="close" @click="hideModal">
-        <img
-          v-if="$store.state.theme == 'dark'"
-          src="@/assets/images/cross.svg"
-        />
-        <img
-          v-if="$store.state.theme == 'light'"
-          src="@/assets/images/cross-l.svg"
-        />
-        close
-      </button>
-    </div>
-    <div class="body">
-      <p class="body__desc">You can get a receipt for this payment.</p>
-      <p class="body__desc">Receipts can be obtained either by email or by downloading a PDF file.</p>
-      <p class="body__desc mb-4">Please select your preferred acquisition method.</p>
-      <button @click="openPaymentReceiptEmailModal" class="btn __l">
-        Send Email
-      </button>
-      <button @click="downloadPdf" class="btn __l" :class="{ inactive: loading}">
-        Download PDF
-        <div class="loading-wrap" :class="{ active: loading }">
-          <img class="spin" src="@/assets/images/loading.svg" />
-        </div>
-      </button>
-    </div>
+  <div>
+    <PaymentModal title="Get payment receipt">
+      <PaymentText
+        tag="p"
+        html="You can get a receipt for this payment."
+      />
+      <PaymentText
+        tag="p"
+        html="Receipts can be obtained either by email or by downloading a PDF file."
+      />
+      <PaymentText
+        tag="p"
+        html="Please select your preferred acquisition method."
+      />
 
-    <div class="footer">
-      <button class="btn __lg btn__cancel" @click="hideModal">
-        Cancel
-      </button>
-    </div>
+      <div class="mt-3">
+        <PaymentButton
+          :color="loading ? 'inactive' : 'primary'"
+          text="Send Email"
+          @click.native="openPaymentReceiptEmailModal"
+        />
+        <PaymentButton
+          class="mt-1"
+          :color="loading ? 'inactive' : 'primary'"
+          text="Download PDF"
+          :loading="loading"
+          @click.native="downloadPdf"
+        />
+      </div>
+
+      <div class="d-btnwrap bottomCloseBtn">
+        <PaymentButton
+          color="cancel"
+          text="CLOSE"
+          icon="dismiss"
+          size="s"
+          @click.native="hideModal()"
+        />
+      </div>
+    </PaymentModal>
   </div>
 </template>
 
 <script>
-
 import {errorCodeList} from "@/enum/error_code";
 import {saveAs} from 'file-saver';
 import moment from 'moment'
+import PaymentModal from '@/components/organisms/Payment/Modal'
+import PaymentText from '@/components/organisms/Payment/Text'
+import PaymentButton from '@/components/organisms/Payment/Button'
 
 export default {
   name: "paymentReceiptModal",
+  components: {
+    PaymentModal,
+    PaymentText,
+    PaymentButton
+  },
   data() {
     return {
       loading: false
@@ -67,12 +79,18 @@ export default {
       this.$store.dispatch('modal/hide')
     },
     openPaymentReceiptEmailModal() {
+      if (this.loading) {
+        return
+      }
       this.$store.dispatch('modal/show', {
         target: 'payment-receipt-email-modal',
         size: 'small'
       })
     },
     downloadPdf() {
+      if (this.loading) {
+        return
+      }
       this.loading = true;
       this.apiDownloadPdf().then((response) => {
         this.loading = false;
@@ -100,9 +118,9 @@ export default {
       })
     },
     showErrorModal(message) {
-      this.$store.dispatch("modal/show", {
-        target: "error-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'error-modal',
+        size: 'small',
         params: {
           message: message,
         },
@@ -114,108 +132,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
-.modal-box {
-  border-radius: 10px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #292536;
-  @include media(pc) {
-    &.--small {
-      width: 470px;
-    }
-    &.--medium {
-      width: 760px;
-    }
-  }
-  @include media(sp) {
-    width: calc(100vw - 32px);
-  }
-}
-
-.header {
-  @include media(pc) {
-    padding: 24px 24px 0 24px;
-    &__title {
-      font-size: 2.5rem;
-      margin-bottom: 4rem;
-    }
-  }
-  @include media(sp) {
-    padding: 18px;
-    &__title {
-      font-size: 2rem;
-    }
-  }
-
-  &__title {
-    text-align: center;
-    font-weight: 500;
-  }
-
-}
-
-.close {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  font-size: 0;
-
-  @include media(pc) {
-    top: 30px;
-    right: 24px;
-  }
-  @include media(sp) {
-    top: 24px;
-    right: 24px;
-  }
-}
-
-.body {
-  @include media(pc) {
-    padding: 0 24px 40px;
-  }
-  @include media(sp) {
-    padding: 0 12px 48px;
-  }
-
-  &__desc {
-    font-size: 13px;
-  }
-
-  .btn {
-    font-size: 17px;
-    font-weight: 500;
-    text-align: center;
-    margin: 10px auto;
-    height: 5.5rem;
-    line-height: 5.5rem;
-    color: #fff;
-    background: $gradation-pale;
-  }
-}
-
-.footer {
-  text-align: center;
-  @include media(pc) {
-    padding: 0 40px 40px;
-  }
-  @include media(sp) {
-    padding: 0 32px 32px;
-  }
-
-  .btn {
-    font-size: 18px;
-    text-align: center;
-    margin: 10px auto;
-    width: 80%;
-    height: 5.5rem;
-    line-height: 5.5rem;
-    border-radius: 1rem;
-    font-weight: 400;
-
-  }
-}
+@import "@/assets/scss/delaunay.scss";
 </style>
