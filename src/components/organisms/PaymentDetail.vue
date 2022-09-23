@@ -454,6 +454,8 @@ export default {
         wallet_address: this.userAccountAddress,
         pay_symbol: this.userSelectedTokenSymbol,
         pay_amount: this.userSelectedTokenPaymentAmount,
+      }, {
+        withCredentials: true
       });
     },
     setExchangeDataExpireTimer() {

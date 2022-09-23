@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       loading: false,
+      csrfToken: {}
     };
   },
   computed: {
@@ -48,19 +49,37 @@ export default {
   },
   methods: {
     apiGetPaymentToken() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/merchant`
-      return this.axios.post(url, {
-        payment_token: this.$route.params.payment_token
+      const url = `${this.API_BASE_URL}/api/v1/payment/generate`
+      return this.axios.post(url,
+      {
+        ...this.csrfToken,
+        payment_token: this.$route.params.payment_token,
+      }, {
+            withCredentials: true,
+          });
+    },
+    apiGetCsrfToken() {
+      const url = `${this.API_BASE_URL}/api/v1/security/csrf`
+      return this.axios({
+        url,
+        method: 'get',
+        dataType: "JSON",
+        withCredentials: true,
       });
     },
     refresh() {
-      this.processPayment()
+      this.handlePayment()
     },
-    processPayment() {
+    async handlePayment() {
       this.loading = true
-      this.apiGetPaymentToken().then(response => {
-        this.$router.push({name: 'entrance', params: {token: response.data.token}})
-      }).catch((error) => {
+      try {
+        const csrfRes = await this.apiGetCsrfToken()
+        this.csrfToken = {...csrfRes.data}
+        const payment = await this.apiGetPaymentToken()
+
+        this.$router.push({name: 'entrance', params: {token: payment.data.token}})
+
+      } catch (error) {
         this.loading = false
         console.log({error})
         let message;
@@ -70,7 +89,7 @@ export default {
           message = "Please try again after a while.";
         }
         this.showErrorModal(message);
-      })
+      }
     },
     showErrorModal(message) {
       this.$store.dispatch("modal/show", {
@@ -84,7 +103,7 @@ export default {
 
   },
   created() {
-    this.processPayment()
+    this.handlePayment()
   }
 };
 </script>
