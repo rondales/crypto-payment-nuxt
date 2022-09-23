@@ -38,7 +38,7 @@
               <img class="spin" src="@/assets/images/loading.svg" />
             </div>
           </button>
-          <button class="btn __lg btn__cancel" @click="hideModal">
+          <button class="btn __g __l mt-1 non-translate" @click="hideModal">
             Cancel
           </button>
         </div>
