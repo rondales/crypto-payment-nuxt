@@ -451,6 +451,9 @@ export default {
         network_type: this.chainId,
         contract_address: this.contract.address,
         transaction_address: transactionHash,
+        wallet_address: this.userAccountAddress,
+        pay_symbol: this.userSelectedTokenSymbol,
+        pay_amount: this.userSelectedTokenPaymentAmount,
         device_id: this.$store.state.payment.deviceId
       });
     },
