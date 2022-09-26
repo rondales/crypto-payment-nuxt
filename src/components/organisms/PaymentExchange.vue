@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import * as Sentry from "@sentry/vue"
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import { Decimal as BigJs } from "decimal.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
@@ -539,6 +540,7 @@ export default {
           this.$store.dispatch("wallet/updatePendingStatus", false);
         })
         .catch((error) => {
+          Sentry.captureException(error)
           this.$store.dispatch("wallet/updatePendingStatus", false);
           if ("code" in error && error.code === 4001) {
             return;
@@ -626,8 +628,9 @@ export default {
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
         })
-        .catch((err) => { console.error(err) });
-    });
+        .catch((err) => { Sentry.captureException(err) });
+    })
+    .catch((err) => { Sentry.captureException(err) });
   },
   beforeDestroy() {
     this.$parent.loading = false;
