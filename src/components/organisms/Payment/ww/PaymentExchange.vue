@@ -6,11 +6,11 @@
         :icon="merchantReceiveTokenIcon"
         :price="merchantReceiveAmount"
       />
-      <div class="payment_detailwrap">
+
+      <div class="payment_balancewrap">
         <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
+          <p class="grd">Your Balance</p>
           <figure
-            v-if="!isWalletConfirming"
             class="reload"
             :class="{ loading: isReloading }"
             @click="updateTokenExchangeData(true)"
@@ -19,8 +19,8 @@
             <img v-else src="@/assets/images/reload-l.svg" />
           </figure>
         </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
+        <div class="payment_balance add-flex j-between mb-1">
+          <div class="payment_balance-name add-flex a-center mb-2">
             <figure>
               <img
                 :src="userSelectedTokenIcon"
@@ -31,15 +31,25 @@
               {{ userSelectedTokenSymbol }}
             </p>
           </div>
-          <div class="payment_detail-value">
+          <div class="payment_balance-value">
             <p>
-              {{ userSelectedTokenPaymentAmount }}
+              Balance : {{ userSelectedTokenBalance | balanceFormat }}
+              {{ userSelectedTokenSymbol }}
+            </p>
+            <p>
+              equivalent : {{ balanceEquivalentAmount | balanceFormat }}
+              {{ equivalentSymbol }}
             </p>
           </div>
         </div>
         <div
           class="payment-box"
-          v-if="!isWalletConfirming && isExpiredExchange"
+          v-if="
+            isExpiredExchange &&
+            isEnoughUserSelectedTokenBalance &&
+            !isNeedApprove &&
+            !isWalletConfirming
+          "
         >
           <div class="add-flex a-center j-between">
             <div class="add-flex a-center">
@@ -56,97 +66,80 @@
             </div>
           </div>
         </div>
-        <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Rate</p>
+        <div class="payment_balance-topken border mb-2">
+          <div class="payment_balance-tokenname add-flex j-between">
             <p>
-              1 {{ merchantReceiveTokenSymbol }} &#65309;
-              {{ userSelectedTokenExchangeRate }} {{ userSelectedTokenSymbol
-              }}<img src="@/assets/images/exchange.svg" alt="" />
+              {{ userSelectedTokenSymbol }}
             </p>
           </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Route</p>
-            <p v-html="tradeRoute"></p>
-          </div>
-          <!--
-          @todo Implement it when you are able to get various data from the contract
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Minimum received</p>
-            <p>388.213 BUSD</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Price Impact</p>
-            <p>-9.29%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Liquidity Provider Fee</p>
-            <p>0.002367 BNB</p>
-          </div>
-          -->
-          <!--
-          INFO:
-          Commented out due to the implementation of the fee collection feature.
-          Ref issue: https://github.com/beperson/web3payment-front/issues/633
-          <div
-            v-if="isDifferentToken"
-            class="dattail-list add-flex j-between mb-1"
-          >
-            <p>Slippage tolerance</p>
-            <p>{{ PAYMENT_FEE_RATE }}%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-2">
-            <p>Platform Fee</p>
-            <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
-          </div>
-          <p class="dattail-list_desc">
-            Output is estimated. You will receive at least
-            {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
-            transaction will revert.
-          </p>
-          -->
-        </div>
-        <div v-else class="payment-status mt-3 mb-3">
-          <div>
-            <img
-              class="mb-2 spin"
-              src="@/assets/images/loading.svg"
-              alt="waiting"
-            />
-            <p class="payment-status_title">Waiting for Confirmation</p>
-            <p class="payment-status_desc mb-2">
-              Pay {{ userSelectedTokenPaymentAmount }}
-              {{ userSelectedTokenSymbol }} for {{ merchantReceiveAmount }}
-              {{ merchantReceiveTokenSymbol }}
-            </p>
+          <div class="payment_balance-price">
+            {{ userSelectedTokenPayAmount }}
           </div>
         </div>
-        <button v-if="isExchangeDataUpdating" class="btn __g __l mb-2 inactive">
-          Price Updating...
-          <div class="loading-wrap active">
-            <img class="spin" src="@/assets/images/loading.svg" alt="loading" />
+        <div>
+          <div v-if="isSetRequreUserPayAmount" class="content-wrap">
+            <div
+              v-if="isEnoughUserSelectedTokenBalance"
+              class="btn-content-wrap"
+            >
+              <button
+                v-if="isNeedApprove"
+                class="btn __g __l mb-2 approve-token-btn"
+                :class="{ inactive: isWalletConfirming }"
+                @click="handleTokenApprove"
+              >
+                <img
+                  class="token-approve-btn-img"
+                  :src="userSelectedTokenIcon"
+                />
+                Allow the Slash protocol to use your
+                {{ userSelectedTokenSymbol }}
+                <div
+                  class="loading-wrap"
+                  :class="{ active: isWalletConfirming }"
+                >
+                  <img class="spin" src="@/assets/images/loading.svg" />
+                </div>
+              </button>
+              <button
+                v-if="isExchangeDataUpdating"
+                class="btn __g __l mb-2 inactive"
+              >
+                Price Updating...
+                <div class="loading-wrap active">
+                  <img class="spin" src="@/assets/images/loading.svg" />
+                </div>
+              </button>
+              <button
+                v-else
+                class="btn __g __l mb-2"
+                :class="{
+                  inactive:
+                    isNeedApprove || isExpiredExchange || isWalletConfirming,
+                }"
+                @click="executePayment()"
+              >
+                Go Payment
+              </button>
+              <p class="via">
+                via Slash Payment
+                <span>
+                  <img src="@/assets/images/slash-s.svg" alt="" />
+                </span>
+              </p>
+            </div>
+            <div v-else class="balance-warning">
+              <p>balance is insufficient</p>
+              <p>for this transaction.</p>
+            </div>
           </div>
-        </button>
-        <button
-          v-else-if="isWalletConfirming"
-          class="btn __g __l mb-2 inactive"
-        >
-          Please confirm Wallet
-        </button>
-        <button
-          v-else
-          class="btn __g __l mb-2"
-          :class="{ inactive: isExpiredExchange }"
-          @click="executePayment()"
-        >
-          Confirm Wallet
-        </button>
-        <p class="via">
-          via Slash Payment
-          <span>
-            <img src="@/assets/images/slash-s.svg" alt="slash" />
-          </span>
-        </p>
+          <div v-else class="content-wrap">
+            <div v-if="isNotEnoughLiquidity" class="balance-warning">
+              <p>Liquidity is not enough</p>
+              <p>for this transaction.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -154,12 +147,8 @@
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import {
-  METAMASK,
-  WALLET_CONNECT,
-  NETWORKS,
-  STATUS_PROCESSING,
-} from "@/constants";
+import { Decimal as BigJs } from "decimal.js";
+import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from "@/constants";
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -178,23 +167,36 @@ import {
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
+import NumberFormat from "number-format.js";
+import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
-  name: "PaymentDetail",
-  components: {
-    PaymentAmountBilled,
-  },
+  name: "ww-PaymentExchange",
+  mixins: [DisplayConfig],
   data() {
     return {
       expired: false,
       reloading: false,
       updating: false,
       exchangeDataExpireTimer: null,
+      userSelectedTokenAllowance: null,
+      requireAmount: null,
+      balanceEquivalentAmount: 0,
+      exchangeRate: 0,
       contract: {
         address: null,
         abi: null,
       },
+      isNotEnoughLiquidity: false,
     };
+  },
+  components: {
+    PaymentAmountBilled,
+  },
+  filters: {
+    balanceFormat(balance) {
+      return NumberFormat("0.0000", balance);
+    },
   },
   computed: {
     API_BASE_URL() {
@@ -210,26 +212,6 @@ export default {
         return process.env.VUE_APP_PAYMENT_NON_STABLE_TOKEN_FEE_RATE
       }
     },
-    NATIVE_TOKEN_SYMBOLS() {
-      return {
-        ETH: "ETH",
-        BNB: "BNB",
-        MATIC: "MATIC",
-        AVAX: "AVAX",
-        WETH: "WETH",
-        WBNB: "WBNB",
-        WMATIC: "WMATIC",
-        WAVAX: "WAVAX",
-      };
-    },
-    MERCHNAT_RECEIVE_TOKEN_ICONS() {
-      return {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg")
-      };
-    },
     EXCHANGE_RATE_EXPIRE_TIME() {
       return 30000;
     },
@@ -239,14 +221,17 @@ export default {
     web3Instance() {
       return this.$store.state.web3.instance;
     },
-    providerType() {
-      return this.$store.state.web3.provider;
-    },
     chainId() {
       return this.$store.state.web3.chainId;
     },
+    providerType() {
+      return this.$store.state.web3.provider;
+    },
     userAccountAddress() {
       return this.$store.state.account.address;
+    },
+    equivalentSymbol() {
+      return this.merchantReceiveTokenSymbol;
     },
     merchantReceiveTokens() {
       if (this.isCurrentNetworkEthereum) {
@@ -287,14 +272,8 @@ export default {
         return {};
       }
     },
-    nativeTokenSymbol() {
-      return this.chainId !== null ? NETWORKS[this.chainId].symbol : "";
-    },
     merchantReceiveAmount() {
       return this.$store.state.payment.amount;
-    },
-    merchantReceiveWeiAmount() {
-      return this.$store.state.payment.amountWei;
     },
     merchantReceiveTokenSymbol() {
       return this.$store.state.payment.symbol;
@@ -308,11 +287,25 @@ export default {
     userSelectedToken() {
       return this.$store.state.payment.token;
     },
-    userSelectedTokenAddress() {
-      return this.userSelectedToken.address;
+    userSelectedTokenDecimal() {
+      return this.userSelectedToken.decimal;
     },
-    userSelectedTokenPaymentAmount() {
-      return this.userSelectedToken.amount;
+    userSelectedTokenBalance() {
+      return this.userSelectedToken.balance;
+    },
+    userSelectedTokenPayAmount() {
+      if (this.requireAmount === null) {
+        return 0;
+      } else if (this.isEnoughUserSelectedTokenBalance) {
+        return this.requireAmount;
+      } else {
+        return this.userSelectedTokenBalance;
+      }
+    },
+    userSelectedTokenPayAmountEquivalent() {
+      return this.isEnoughUserSelectedTokenBalance
+        ? this.merchantReceiveAmount
+        : this.balanceEquivalentAmount;
     },
     userSelectedTokenSymbol() {
       return this.userSelectedToken.symbol;
@@ -322,35 +315,6 @@ export default {
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].icon
         : require("@/assets/images/symbol/unknown.svg");
-    },
-    userSelectedTokenExchangeRate() {
-      return this.$store.state.payment.token.rate;
-    },
-    tradeRoute() {
-      if (!this.isDifferentToken) {
-        return this.merchantReceiveTokenSymbol;
-      } else if (this.isCurrentNetworkEthereum) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkBinance) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkMatic) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkAvalanche) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else {
-        return "";
-      }
-    },
-    platformFee() {
-      return this.$store.state.payment.fee;
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;
@@ -391,20 +355,38 @@ export default {
         this.chainId === NETWORKS[43113].chainId
       );
     },
-    isDifferentToken() {
-      const receiveTokens = this.merchantReceiveTokens;
-      const receiveTokenAddress =
-        this.merchantReceiveTokenSymbol in receiveTokens
-          ? receiveTokens[this.merchantReceiveTokenSymbol].address.toLowerCase()
-          : "";
-      const paymentTokenAddress = this.userSelectedTokenAddress
-        ? this.userSelectedTokenAddress.toLowerCase()
-        : this.userSelectedTokenAddress;
-      return receiveTokenAddress !== paymentTokenAddress;
+    isUserSelectedNativeToken() {
+      return this.userSelectedToken.address === null;
     },
-    isSelectedNativeToken() {
-      return Object.values(this.NATIVE_TOKEN_SYMBOLS).includes(
-        this.userSelectedTokenSymbol
+    isSetRequreUserPayAmount() {
+      return this.requireAmount !== null;
+    },
+    isNeedApprove() {
+      return (
+        !this.isUserSelectedNativeToken &&
+        !this.isEnoughUserSelectedTokenAllowance
+      );
+    },
+    isEnoughUserSelectedTokenAllowance() {
+      if (
+        this.userSelectedTokenAllowance === null ||
+        this.requireAmount === null
+      ) {
+        return false;
+      }
+      return new BigJs(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
+        this.requireAmount
+      );
+    },
+    isEnoughUserSelectedTokenBalance() {
+      if (
+        this.userSelectedTokenBalance === null ||
+        this.requireAmount === null
+      ) {
+        return false;
+      }
+      return new BigJs(this.userSelectedTokenBalance).greaterThanOrEqualTo(
+        this.requireAmount
       );
     },
     isExpiredExchange() {
@@ -431,9 +413,21 @@ export default {
         .map(token => token.address ? token.address.toLowerCase() : token.address)
         .filter(address => address)
         .includes(this.userSelectedToken.address.toLowerCase())
-    }
+    },
+    userSelectedTokenPaymentAmount() {
+      return this.userSelectedToken.amount;
+    },
+    platformFee() {
+      return this.$store.state.payment.fee;
+    },
+    merchantReceiveWeiAmount() {
+      return this.$store.state.payment.amountWei;
+    },
   },
   methods: {
+    formatNumber(number) {
+      return this.$_displayConfig_formatNumber(number)
+    },
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
       const request = {
@@ -443,21 +437,6 @@ export default {
         ]),
       };
       return this.axios.get(url, request);
-    },
-    apiUpdateTransaction(transactionHash) {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
-      return this.axios.patch(url, {
-        payment_token: this.paymentToken,
-        network_type: this.chainId,
-        contract_address: this.contract.address,
-        transaction_address: transactionHash,
-        device_id: this.$store.state.payment.deviceId
-      });
-    },
-    setExchangeDataExpireTimer() {
-      return setTimeout(() => {
-        this.expired = true;
-      }, this.EXCHANGE_RATE_EXPIRE_TIME);
     },
     getTokenExchangeDataFromContract() {
       return this.$web3.getTokenExchangeData(
@@ -470,7 +449,51 @@ export default {
         this.merchantReceiveAmount,
         this.GAS_FEE_RATE,
         this.PAYMENT_FEE_RATE
+      )
+      .catch((err) => {
+        if(err.message.includes('execution reverted: No valid exchange')) {
+          this.isNotEnoughLiquidity = true
+          this.$parent.loading = false;
+          this.$store.dispatch("modal/show", {
+            target: "error-modal",
+            size: "small",
+            params: {
+              message:
+                "There appears to be no liquidity between \
+                  the token you selected and the \
+                  merchant receive token on this network. \
+                  <br> \
+                  <br> \
+                  Please return to the token selection screen \
+                  and select another token or try paying \
+                  with another network.",
+            },
+          });
+        }
+      })
+    },
+    getTokenApprovedAmountFromContract() {
+      return this.$web3.getTokenApprovedAmount(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken
       );
+    },
+    sendTokenApproveTransactoinToBlockChain() {
+      return this.$web3.tokenApprove(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken
+      );
+    },
+    setExchangeDataExpireTimer() {
+      return setTimeout(() => {
+        this.expired = true;
+      }, this.EXCHANGE_RATE_EXPIRE_TIME);
     },
     updateTokenExchangeData(reload) {
       clearTimeout(this.exchangeDataExpireTimer);
@@ -488,11 +511,45 @@ export default {
             amount: exchangeData.requireAmount,
             rate: exchangeData.rate,
           });
+          this.balanceEquivalentAmount = exchangeData.equivalentAmount;
+          this.requireAmount = exchangeData.requireAmount;
+          this.exchangeRate = exchangeData.rate;
         })
         .finally(() => {
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
           this.reloading = false;
           this.updating = false;
+        });
+    },
+    handleTokenApprove() {
+      this.$store.dispatch("wallet/updatePendingStatus", true);
+      this.sendTokenApproveTransactoinToBlockChain()
+        .then((receipt) => {
+          if (!receipt.status) {
+            Promise.reject();
+          }
+          const approvedAmountInWei =
+            receipt.events["Approval"].returnValues.value;
+          this.userSelectedTokenAllowance = this.$web3.convertFromWei(
+            this.web3Instance,
+            approvedAmountInWei,
+            this.userSelectedTokenDecimal
+          );
+          this.$store.dispatch("wallet/updatePendingStatus", false);
+        })
+        .catch((error) => {
+          this.$store.dispatch("wallet/updatePendingStatus", false);
+          if ("code" in error && error.code === 4001) {
+            return;
+          }
+          this.$store.dispatch("modal/show", {
+            target: "error-modal",
+            size: "small",
+            params: {
+              message:
+                "The Slash protocol allow failed with your token, please allow it again.",
+            },
+          });
         });
     },
     sendPaymentTransactionToBlockChain() {
@@ -508,6 +565,18 @@ export default {
         this.merchantReceiveWeiAmount
       );
     },
+    apiUpdateTransaction(transactionHash) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
+      return this.axios.patch(url, {
+        payment_token: this.paymentToken,
+        network_type: this.chainId,
+        contract_address: this.contract.address,
+        transaction_address: transactionHash,
+        wallet_address: this.userAccountAddress,
+        pay_symbol: this.userSelectedTokenSymbol,
+        pay_amount: this.userSelectedTokenPaymentAmount,
+      });
+    },
     executePayment() {
       this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
@@ -516,7 +585,7 @@ export default {
           this.apiUpdateTransaction(txHash)
             .then(() => {
               this.$router.push({
-                name: "result",
+                name: "ww-result",
                 params: { token: this.paymentToken },
               });
             })
@@ -534,25 +603,28 @@ export default {
         ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId;
       this.$store.dispatch("web3/updateChainId", chainId);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
+      this.$router.push({ path: `/payments-uiswitchable/token/${this.paymentToken}/ww` });
     },
     handleAccountChangedEvent(address) {
       this.$store.dispatch("account/updateAddress", address[0]);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
+      this.$router.push({ path: `/payments-uiswitchable/token/${this.paymentToken}/ww` });
     },
   },
   created() {
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
-        name: "wallets",
+        name: "ww-wallets",
         params: { token: this.paymentToken },
       });
     }
   },
   mounted() {
+    this.$parent.loading = true;
+
     if (this.isNeedRestoreWeb3Connection) {
       return;
     }
+
     this.web3Instance.currentProvider.on(
       "chainChanged",
       this.handleChainChangedEvent
@@ -561,13 +633,39 @@ export default {
       "accountsChanged",
       this.handleAccountChangedEvent
     );
+
     this.apiGetContract().then((response) => {
-      this.contract.abi = JSON.parse(response.data.args);
       this.contract.address = response.data.address;
-      this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
+      this.contract.abi = JSON.parse(response.data.args);
+      const funcList = [this.getTokenExchangeDataFromContract()];
+      if (!this.isUserSelectedNativeToken) {
+        funcList.push(this.getTokenApprovedAmountFromContract());
+      }
+      Promise.all(funcList)
+        .then((results) => {
+          if (!this.isUserSelectedNativeToken) {
+            this.userSelectedTokenAllowance = results[1];
+          }
+          this.$store.dispatch("payment/updateFee", results[0].fee);
+          this.$store.dispatch(
+            "payment/updateAmountWei",
+            results[0].requestAmountWei
+          );
+          this.$store.dispatch("payment/updateToken", {
+            amount: results[0].requireAmount,
+            rate: results[0].rate,
+          });
+          this.balanceEquivalentAmount = results[0].equivalentAmount;
+          this.requireAmount = results[0].requireAmount;
+          this.exchangeRate = results[0].rate;
+          this.$parent.loading = false;
+          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
+        })
+        .catch((err) => { console.error(err) });
     });
   },
   beforeDestroy() {
+    this.$parent.loading = false;
     clearTimeout(this.exchangeDataExpireTimer);
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
@@ -582,6 +680,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.$parent.loading = false;
+    clearTimeout(this.exchangeDataExpireTimer);
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
         "chainChanged",
@@ -627,23 +726,6 @@ export default {
     min-width: auto;
   }
 
-  .dattail-lists {
-    .dattail-list {
-      p {
-        font-size: 11px;
-        font-weight: 100;
-        img {
-          margin-left: 8px;
-        }
-      }
-    }
-    .dattail-list_desc {
-      font-size: 11px;
-      font-weight: 100;
-      padding-bottom: 16px;
-      margin-bottom: 16px;
-    }
-  }
   .reload {
     cursor: pointer;
     img {
@@ -659,13 +741,13 @@ export default {
       }
     }
   }
-  .payment_detail {
+  .payment_balance {
     &-name {
       p {
         font-size: 16px;
         font-weight: 400;
+        margin-left: 11px;
         line-height: 25px;
-        margin-left: 7px;
       }
       figure {
         width: 25px;
@@ -676,35 +758,42 @@ export default {
       }
     }
     &-value {
-      font-size: 20px;
+      font-size: 13px;
       font-weight: 100;
       margin-left: 16px;
     }
-  }
-  .payment-status {
-    text-align: center;
-    margin: auto;
-    &_title {
-      font-size: 18px;
-      font-weight: 100;
+    &-topken {
+      width: 100%;
+      padding: 12px;
+      position: relative;
     }
-    &_desc {
-      font-size: 10px;
-      font-weight: 100;
-    }
-    &_btn {
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
-      img {
-        margin-left: 4px;
-        vertical-align: middle;
+    &-tokenname {
+      p {
+        font-size: 16px;
+        font-weight: 200;
       }
     }
+    &-equivalent {
+      color: #01f63a;
+      font-weight: 100;
+      font-size: 11px;
+      line-height: 24px;
+      &.warning {
+        color: #f75d68;
+      }
+    }
+    &-price {
+      text-align: right;
+      width: 100%;
+      font-weight: 100;
+      font-size: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .estimate {
+    font-size: 10px;
+    font-weight: 100;
   }
   .via {
     font-size: 12px;
@@ -717,8 +806,21 @@ export default {
       margin-left: 5px;
     }
   }
-  .new-tab-icon {
-    padding: 0 !important;
+  .balance-warning {
+    color: #f75d68;
+    font-size: 15px;
+    font-weight: 100;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .token-approve-btn-img {
+    padding-top: 0px !important;
+    width: 25px;
+    height: 25px;
+  }
+  .approve-token-btn {
+    padding: 0;
+    font-size: 11px;
   }
 }
 </style>

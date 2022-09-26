@@ -4,9 +4,9 @@
       <div>
         <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure">
         <p class="payment-status_desc mb-2">
-          The transaction cannot succeed due to error: execution
+          Invalid Transaction.
           <br>
-          Check the reason for the reverted from Explorer.
+          Check the transaction in Explorer.
         </p>
       </div>
       <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
