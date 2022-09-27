@@ -160,6 +160,7 @@
 
 <script>
 import Web3 from "web3";
+import { Decimal } from "decimal.js"
 import {
   WALLET_CONNECT,
   METAMASK,
@@ -221,19 +222,7 @@ export default {
   },
   filters: {
     balanceFormat(balance) {
-      const pattern = /^[0-9]+.[0-9]+$/;
-      if (pattern.test(balance)) {
-        let balanceSplit = balance.toString().split(".");
-        if (balanceSplit[1].length > 4) {
-          balanceSplit[1] = balanceSplit[1].substr(0, 4);
-        } else {
-          balanceSplit[1] = (balanceSplit[1] + "0000").substr(0, 4);
-        }
-        balance = balanceSplit[0] + "." + balanceSplit[1];
-      } else {
-        balance = balance + "." + "0000";
-      }
-      return balance;
+      return Decimal(balance).toFixed(4, Decimal.ROUND_FLOOR)
     },
     walletAddressFormat(walletAddress) {
       if (walletAddress) {

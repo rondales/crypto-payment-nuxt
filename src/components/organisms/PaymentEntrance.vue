@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { Decimal } from 'decimal.js'
 import PaymentAmount from '@/components/organisms/PaymentAmount'
 import { errorCodeList } from '@/enum/error_code'
 import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
@@ -85,6 +86,9 @@ export default {
     },
     incrementProgressCompletedSteps() {
       this.$emit('incrementProgressCompletedSteps')
+    },
+    formatAmount(amount) {
+      return (amount) ? Decimal(amount).toString() : amount
     }
   },
   created() {
@@ -105,7 +109,7 @@ export default {
         symbol: receiveResponse.data.symbol,
         isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
-        amount: this.$_displayConfig_formatNumber(receiveResponse.data.amount)
+        amount: this.formatAmount(receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.$emit('incrementProgressCompletedSteps')
@@ -122,7 +126,7 @@ export default {
           if (error.response.data.errors.includes(2110)) {
             this.apiGetTransactionData().then((transactionResponse) => {
               this.$emit('incrementProgressCompletedSteps')
-              this.$store.dispatch('payment/updateAmount', this.$_displayConfig_formatNumber(transactionResponse.data.base_amount))
+              this.$store.dispatch('payment/updateAmount', this.formatAmount(transactionResponse.data.base_amount))
               this.apiGetTransactionState().then((response) => {
                 this.$emit('incrementProgressCompletedSteps')
                 switch(response.data.state) {
@@ -158,9 +162,12 @@ export default {
                     break;
                 }
               }).catch(() => {
+                console.log('block 1')
                 this.showErrorModal('Please try again after a while.')
               })
-            }).catch(() => {
+            }).catch((error) => {
+              console.log('block 2')
+              console.log(error)
               this.showErrorModal('Please try again after a while.')
             })
           } else {

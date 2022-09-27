@@ -125,7 +125,7 @@
                   {{ network(record.network_type) }}
                 </td>
                 <td>
-                  {{ formatNumber(record.base_amount) }} {{ record.base_symbol }}
+                  {{ record.base_amount | formatAmount }} {{ record.base_symbol }}
                 </td>
               </tr>
             </tbody>
@@ -164,11 +164,10 @@ import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 import moment from 'moment'
 import { saveAs } from 'file-saver';
-import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
+import Decimal from 'decimal.js'
 
 export default {
   name: 'AdminTransactionHistory',
-  mixins: [DisplayConfig],
   components: {
     DatetimePicker,
     Paginate
@@ -195,6 +194,14 @@ export default {
         total: null,
         records: []
       }
+    }
+  },
+  filters: {
+    formatAmount(amount) {
+      if (!amount) {
+        return '0'
+      }
+      return Decimal(amount).toString()
     }
   },
   computed: {
@@ -229,9 +236,6 @@ export default {
     }
   },
   methods: {
-    formatNumber(number) {
-      return this.$_displayConfig_formatNumber(number)
-    },
     apiGetHistory() {
       const url = `${this.baseUrl}/api/v1/management/transaction/normal`
       const inputedParams = Object.entries(this.searchParams).map(([key, param]) => {
@@ -249,7 +253,6 @@ export default {
       const controlParams = Object.values(this.paginateParams).map((param) => {
         return [ param.key, param.value ]
       })
-      console.log(controlParams)
       const timezoneParam = [[ 'offset', moment().utcOffset() ]]
       const convertedParams = new URLSearchParams(inputedParams.concat(controlParams, timezoneParam))
       const request = {

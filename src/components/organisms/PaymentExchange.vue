@@ -44,7 +44,7 @@
       :symbol="userSelectedTokenSymbol"
       :cap="userSelectedTokenPayAmountEquivalent"
       :cap2="equivalentSymbol + ' equivalent'"
-      :price="userSelectedTokenPayAmount"
+      :price="userSelectedTokenPayAmount | formatPrice"
       class="exchange__price"
       :status="!isEnoughUserSelectedTokenBalance ? 'error' : 'success'"
     />
@@ -120,8 +120,7 @@ import PaymentAction from "@/components/organisms/Payment/Action";
 import PaymentPrice from "@/components/organisms/Payment/Price";
 import PaymentButton from "@/components/organisms/Payment/Button";
 import PaymentText from "@/components/organisms/Payment/Text";
-// import PaymentForm from "@/components/organisms/Payment/Form";
-import { Decimal as BigJs } from "decimal.js";
+import { Decimal } from "decimal.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
 import {
   EthereumTokens as EthereumDefaultTokens,
@@ -141,12 +140,9 @@ import {
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
-import NumberFormat from "number-format.js";
-import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: "PaymentExchange",
-  mixins: [DisplayConfig],
   data() {
     return {
       expired: false,
@@ -174,9 +170,9 @@ export default {
     PaymentText,
   },
   filters: {
-    balanceFormat(balance) {
-      return NumberFormat("0.0000", balance);
-    },
+    formatPrice(price) {
+      return Decimal(price).toString()
+    }
   },
   computed: {
     API_BASE_URL() {
@@ -354,7 +350,7 @@ export default {
       ) {
         return false;
       }
-      return new BigJs(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
+      return Decimal(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
         this.requireAmount
       );
     },
@@ -365,7 +361,7 @@ export default {
       ) {
         return false;
       }
-      return new BigJs(this.userSelectedTokenBalance).greaterThanOrEqualTo(
+      return Decimal(this.userSelectedTokenBalance).greaterThanOrEqualTo(
         this.requireAmount
       );
     },
@@ -393,18 +389,9 @@ export default {
         .map(token => token.address ? token.address.toLowerCase() : token.address)
         .filter(address => address)
         .includes(this.userSelectedToken.address.toLowerCase())
-    },
-    filterUserSelectedTokenBalance() {
-      return NumberFormat("0.0000", this.userSelectedTokenBalance);
-    },
-    filterBalanceEquivalentAmount() {
-      return NumberFormat("0.0000", this.balanceEquivalentAmount);
-    },
+    }
   },
   methods: {
-    formatNumber(number) {
-      return this.$_displayConfig_formatNumber(number)
-    },
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
       const request = {
@@ -550,10 +537,7 @@ export default {
     handleAccountChangedEvent(address) {
       this.$store.dispatch("account/updateAddress", address[0]);
       this.$router.push({ path: `/payment/token/${this.paymentToken}` });
-    },
-    filterUserSelectedTokenPayAmountEquivalent() {
-      return NumberFormat("0.00", this.userSelectedTokenPayAmountEquivalent);
-    },
+    }
   },
   created() {
     if (this.isNeedRestoreWeb3Connection) {
@@ -608,12 +592,12 @@ export default {
 
           this.balanceTable.push({
             title: "Balance",
-            price: NumberFormat("0.0000", this.userSelectedTokenBalance),
+            price: Decimal(this.userSelectedTokenBalance).toFixed(4, Decimal.ROUND_FLOOR),
             symbol: this.userSelectedTokenSymbol,
           });
           this.balanceTable.push({
             title: "Equivalent",
-            price: NumberFormat("0.0000", this.balanceEquivalentAmount),
+            price: Decimal(this.balanceEquivalentAmount).toFixed(4, Decimal.ROUND_FLOOR),
             symbol: this.equivalentSymbol,
           });
         })
