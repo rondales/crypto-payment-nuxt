@@ -1,9 +1,9 @@
 <template>
   <div>
-    <PaymentTitle v-if="hasCashback" class="mt-2 result__title" type="h2_g" html="Cash Back" />
     <PaymentAmountBilled
       v-if="hasCashback"
-      class="result__receivedToken"
+      class="result__receivedToken mt-1"
+      title="Cash Back"
       :icon="cashbackTokenIcon"
       :symbol="cashbackTokenSymbol"
       :price="cashbackTokenAmount"
@@ -28,7 +28,6 @@ import {
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
-import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
@@ -44,7 +43,6 @@ export default {
     isPaidAvalanche: Boolean
   },
   components: {
-    PaymentTitle,
     PaymentAmountBilled,
     PaymentTransaction
   },
@@ -93,11 +91,8 @@ export default {
       }
     },
     hasCashback() {
-      return this.cashbackAmount && this.cashbackAmount != 0
-    },
-    hasReturnUrl() {
-      return this.urls.success;
-    },
+      return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
+    }
   },
   methods: {
     apiGetTransactionRefundedData() {

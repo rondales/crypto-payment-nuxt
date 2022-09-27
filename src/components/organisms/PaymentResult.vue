@@ -11,6 +11,7 @@
     <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
     <PaymentAmountBilled
       class="result__receivedToken"
+      title="Paid Amount"
       :symbol="userPaidSymbol"
       :icon="userPaidTokenIcon"
       :price="filterUserPaidAmount"
