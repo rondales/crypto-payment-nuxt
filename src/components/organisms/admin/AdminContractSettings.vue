@@ -413,7 +413,7 @@ export default {
     },
     showAddChainModal(chainId) {
       this.$store.dispatch('modal/show', {
-        target: 'add-chain-modal',
+        target: 'add-chain-for-admin-modal',
         size: 'small',
         params: {
           chainId: chainId,
