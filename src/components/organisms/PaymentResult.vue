@@ -10,7 +10,7 @@
         <div class="payment_desc add-flex j-between mb-2">
           <p class="grd">Payment detail</p>
         </div>
-        <div v-if="!isStatusProcessing" class="payment_detail add-flex j-between mb-1">
+        <div class="payment_detail add-flex j-between mb-1">
           <div class="payment_detail-name add-flex a-center mb-1">
             <figure>
               <img :src="userPaidTokenIcon" :alt="userPaidSymbol" />
