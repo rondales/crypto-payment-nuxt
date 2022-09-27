@@ -3,8 +3,8 @@
     <PaymentTransaction
       class="result__transaction"
       type="dismiss"
-      title="Transaction Failed"
-      text="The transaction cannot succeed due to error: execution <br />Check the reason for the reverted from Explorer."
+      title="Invalid Transaction"
+      text="Check the transaction in Explorer."
       :explorer-url="explorerUrl"
       :link="linkData"
     />
