@@ -93,7 +93,7 @@ export default {
       }
     },
     hasCashback() {
-      return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
+      return this.cashbackAmount && this.cashbackAmount != 0
     },
     hasReturnUrl() {
       return this.urls.success;
@@ -105,8 +105,9 @@ export default {
       const request = {
         params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
-      return this.axios.get(url, request)
     },
+  },
+  methods: {
     openPaymentReceiptModal() {
       this.$store.dispatch('modal/show', {
         target: 'payment-receipt-modal',

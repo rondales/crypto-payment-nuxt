@@ -1,66 +1,63 @@
 <template>
-  <div class="result">
-    <PaymentAmountBilled
-      class="result__bill"
-      :symbol="merchantReceiveSymbol"
-      :icon="merchantReceiveTokenIcon"
-      :price="filterMerchantReceiveAmount"
-      size="big"
-    />
-
-    <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
-    <PaymentAmountBilled
-      class="result__receivedToken"
-      :symbol="userPaidSymbol"
-      :icon="userPaidTokenIcon"
-      :price="filterUserPaidAmount"
-    />
-
-    <PaymentResultPending
-      v-if="isStatusProcessing"
-      :explorer-url="explorerUrl"
-      :merchant-receive-symbol="merchantReceiveSymbol"
-      :merchant-receive-amount="filterMerchantReceiveAmount"
-      :user-paid-symbol="userPaidSymbol"
-      :user-paid-amount="filterUserPaidAmount"
-    />
-    <PaymentResultFailure
-      v-else-if="isStatusFailured"
-      :explorer-url="explorerUrl"
-      :back-url="failureReturnUrl"
-    />
-    <PaymentResultSuccess
-      v-else-if="isStatusSucceeded"
-      :payment-token="paymentToken"
-      :explorer-url="explorerUrl"
-      :back-url="successReturnUrl"
-      :is-paid-ethereum="isPaidEthereum"
-      :is-paid-binance="isPaidBinance"
-      :is-paid-matic="isPaidMatic"
-      :is-paid-avalanche="isPaidAvalanche"
-    />
+  <div class="payment_handleprice">
+    <div class="payment_handleprice-pricewrap">
+      <PaymentAmountBilled
+        :symbol="merchantReceiveSymbol"
+        :icon="merchantReceiveTokenIcon"
+        :price="merchantReceiveAmount | amountFormat"
+      />
+      <div class="payment_detailwrap">
+        <div class="payment_desc add-flex j-between mb-2">
+          <p class="grd">Payment detail</p>
+        </div>
+        <div class="payment_detail add-flex j-between mb-1">
+          <div class="payment_detail-name add-flex a-center mb-1">
+            <figure>
+              <img :src="userPaidTokenIcon" :alt="userPaidSymbol" />
+            </figure>
+            <p>
+              {{ userPaidSymbol }}
+            </p>
+          </div>
+          <div class="payment_detail-value">
+            <p>
+              {{ userPaidAmount | amountFormat }}
+            </p>
+          </div>
+        </div>
+        <pending
+          v-if="isStatusProcessing"
+          :urls="linkUrlData"
+          :transaction="transactionData"
+        />
+        <failure
+          v-else-if="isStatusFailured"
+          :urls="linkUrlData"
+          :isReceiptMode="isReceiptMode"
+        />
+        <success
+          v-else
+          :urls="linkUrlData"
+          :token="paymentToken"
+          :isReceiptMode="isReceiptMode"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentResultPending from "@/components/organisms/PaymentResultPending";
-import PaymentResultFailure from "@/components/organisms/PaymentResultFailure";
-import PaymentResultSuccess from "@/components/organisms/PaymentResultSuccess";
-import { Decimal as BigJs } from "decimal.js";
+import StringExtend from "@/utils/string_extend";
+import ResultPending from "@/components/organisms/PaymentResultPending";
+import ResultFailure from "@/components/organisms/PaymentResultFailure";
+import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
 import {
   NETWORKS,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS,
 } from "@/constants";
-import {
-  EthereumTokens as EthereumReceiveTokens,
-  BscTokens as BscReceiveTokens,
-  MaticTokens as MaticReceiveTokens,
-  AvalancheTokens as AvalacheReceiveTokens,
-} from "@/contracts/receive_tokens";
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -71,11 +68,10 @@ import {
 export default {
   name: "PaymentResult",
   components: {
+    pending: ResultPending,
+    failure: ResultFailure,
+    success: ResultSuccess,
     PaymentAmountBilled,
-    PaymentTitle,
-    PaymentResultPending,
-    PaymentResultFailure,
-    PaymentResultSuccess
   },
   props: {
     progressTotalSteps: Number,
@@ -88,13 +84,32 @@ export default {
       merchantReceiveSymbol: null,
       userPaidAmount: "0",
       userPaidSymbol: null,
-      cashbackAmount: "0",
       transactionHash: null,
       successReturnUrl: null,
       failureReturnUrl: null,
       status: STATUS_PROCESSING,
-      resultPollingTimer: null
+      resultPollingTimer: null,
+      merchantReceiveTokenIcons: {
+        USDT: require("@/assets/images/symbol/usdt.svg"),
+        USDC: require("@/assets/images/symbol/usdc.svg"),
+        DAI: require("@/assets/images/symbol/dai.svg"),
+        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/symbol/eth.svg')
+      },
     };
+  },
+  filters: {
+    amountFormat(amount) {
+      const splitAmount = amount.split('.')
+      if (splitAmount.length > 1) {
+        splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
+      }
+      if(splitAmount[1]) {
+        return splitAmount.join('.')
+      } else {
+        return splitAmount[0]
+      }
+    },
   },
   computed: {
     API_BASE_URL() {
@@ -105,19 +120,6 @@ export default {
     },
     paymentToken() {
       return this.$route.params.token;
-    },
-    merchantReceiveTokens() {
-      if (this.isPaidEthereum) {
-        return EthereumReceiveTokens;
-      } else if (this.isPaidBinance) {
-        return BscReceiveTokens;
-      } else if (this.isPaidMatic) {
-        return MaticReceiveTokens;
-      } else if (this.isPaidAvalanche) {
-        return AvalacheReceiveTokens;
-      } else {
-        return {};
-      }
     },
     paidNetworkDefaultTokens() {
       if (this.isPaidEthereum) {
@@ -133,25 +135,34 @@ export default {
       }
     },
     merchantReceiveTokenIcon() {
-      const tokens = this.merchantReceiveTokens
-      return this.merchantReceiveSymbol in tokens
-        ? tokens[this.merchantReceiveSymbol].iconPath
-        : "crypto_currency/unknown";
+      return this.merchantReceiveTokenIcons[this.merchantReceiveSymbol];
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens;
       if (tokens) {
         return this.userPaidSymbol in tokens
-          ? tokens[this.userPaidSymbol].iconPath
-          : "crypto_currency/unknown";
+          ? tokens[this.userPaidSymbol].icon
+          : require("@/assets/images/symbol/unknown.svg");
       } else {
-        return "crypto_currency/unknown";
+        return require("@/assets/images/symbol/unknown.svg");
       }
     },
-    explorerUrl() {
-      return this.chainId !== null && this.chainId in NETWORKS
-        ? `${NETWORKS[this.chainId].scanUrl}/tx/${this.transactionHash}`
-        : ''
+    transactionData() {
+      return {
+        merchantReceiveAmount: this.merchantReceiveAmount,
+        merchantReceiveSymbol: this.merchantReceiveSymbol,
+        userPaidAmount: this.userPaidAmount,
+        userPaidSymbol: this.userPaidSymbol,
+      };
+    },
+    linkUrlData() {
+      const scanSiteUrl =
+        this.chainId !== null ? NETWORKS[this.chainId].scanUrl : "";
+      return {
+        explorer: `${scanSiteUrl}/tx/${this.transactionHash}`,
+        success: this.successReturnUrl,
+        failure: this.failureReturnUrl,
+      };
     },
     isReceiptMode() {
       return "rcpt" in this.$route.query;
@@ -189,16 +200,17 @@ export default {
         this.chainId === NETWORKS[43113].chainId
       );
     },
-    filterMerchantReceiveAmount() {
-      return new BigJs(this.merchantReceiveAmount).toString();
-    },
-    filterUserPaidAmount() {
-      return new BigJs(this.userPaidAmount).toString();
-    },
   },
   methods: {
     apiGetTransaction() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
+      const request = {
+        params: new URLSearchParams([["payment_token", this.paymentToken]]),
+      };
+      return this.axios.get(url, request);
+    },
+    apiGetTransactionStatus() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`;
       const request = {
         params: new URLSearchParams([["payment_token", this.paymentToken]]),
       };
@@ -224,11 +236,9 @@ export default {
       this.merchantReceiveSymbol = data.base_symbol;
       this.userPaidAmount = data.user_amount;
       this.userPaidSymbol = data.user_symbol;
-      this.cashbackAmount = data.cashback_amount;
       this.transactionHash = data.transaction_address;
       this.successReturnUrl = data.succeeded_return_url;
       this.failureReturnUrl = data.failured_return_url;
-      this.status = data.status;
       this.$store.dispatch("payment/update", {
         domain: data.domain,
         orderCode: data.order_code,
@@ -238,8 +248,8 @@ export default {
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
-        this.apiGetTransaction().then((response) => {
-          this.setApiResultData(response.data);
+        this.apiGetTransactionStatus().then((response) => {
+          this.status = response.data.status;
           const stopTimerStatuses = [
             STATUS_RESULT_FAILURE,
             STATUS_RESULT_SUCCESS,
@@ -249,7 +259,7 @@ export default {
           }
         });
       }, this.RESULT_CHECK_CYCLE);
-    }
+    },
   },
   created() {
     this.$emit('updateProgressTotalSteps', 2)
@@ -263,7 +273,7 @@ export default {
       setTimeout(() => {
         this.$emit('updateInitializingStatus', false)
       }, 1500)
-    })
+    });
   },
   beforeDestroy() {
     clearInterval(this.resultPollingTimer);
@@ -280,27 +290,54 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
-.result {
-  &__bill {
-    margin-bottom: 2rem;
+
+.payment_handleprice {
+  width: 100%;
+  dl {
+    dt {
+      font-weight: 400;
+      font-size: 15px;
+    }
   }
-  &__title {
-    margin-bottom: 2rem;
+
+  .payment_desc {
+    p {
+      background: $gradation-pale;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 150% 150%;
+      display: inline;
+    }
   }
-  &__balance {
-    margin-bottom: 2rem;
+  .payment_handleprice-pricewrap {
+    width: 100%;
   }
-  &__update {
-    margin-bottom: 2rem;
+  .payment_handleprice-price {
+    padding: 0;
+    width: 100%;
+    min-width: auto;
   }
-  &__price {
-    margin-bottom: 2rem;
-  }
-  &__btnwrap {
-    margin-top: 2rem;
-    div + div {
-      margin-top: 0.5rem;
+
+  .payment_detail {
+    &-name {
+      p {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 25px;
+        margin-left: 7px;
+      }
+      figure {
+        width: 25px;
+        height: 25px;
+        img {
+          vertical-align: baseline;
+        }
+      }
+    }
+    &-value {
+      font-size: 20px;
+      font-weight: 100;
+      margin-left: 16px;
     }
   }
 }
