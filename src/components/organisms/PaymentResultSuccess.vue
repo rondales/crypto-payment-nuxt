@@ -105,9 +105,8 @@ export default {
       const request = {
         params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
+      return this.axios.get(url, request)
     },
-  },
-  methods: {
     openPaymentReceiptModal() {
       this.$store.dispatch('modal/show', {
         target: 'payment-receipt-modal',
