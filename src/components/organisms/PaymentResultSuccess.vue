@@ -7,15 +7,15 @@
       <div class="payment_detail add-flex j-between mb-1">
         <div class="payment_detail-name add-flex a-center mb-1">
           <figure>
-            <img :src="cashbackTokenIcon" :alt="cashbackTokenSymbol" />
+            <img :src="cashbackTokenIcon" :alt="merchantReceiveSymbol" />
           </figure>
           <p>
-            {{ cashbackTokenSymbol }}
+            {{ merchantReceiveSymbol }}
           </p>
         </div>
         <div class="payment_detail-value">
           <p>
-            {{ cashbackTokenAmount }}
+            {{ cashbackAmount | amountFormat }}
           </p>
         </div>
       </div>
@@ -51,20 +51,16 @@
 
 <script>
 import { STATUS_RESULT_SUCCESS } from '@/constants'
+import StringExtend from "@/utils/string_extend"
 
 export default {
   name: 'PaymentResultSuccess',
   props: {
     urls: Object,
     token: String,
-    isReceiptMode: Boolean
-  },
-  data() {
-    return {
-      cashbackTokenAmount: '',
-      cashbackTokenSymbol: '',
-      cashbackTokenIcon: ''
-    }
+    isReceiptMode: Boolean,
+    cashbackAmount: String,
+    merchantReceiveSymbol: String
   },
   computed: {
     API_BASE_URL() {
@@ -80,20 +76,31 @@ export default {
       }
     },
     hasCashback() {
-      return this.cashbackTokenAmount && this.cashbackTokenAmount !== '0'
+      return this.cashbackAmount && this.cashbackAmount != 0
     },
     hasReturnUrl() {
       return (this.urls.success)
+    },
+    cashbackTokenIcon() {
+      return this.MERCHANT_RECEIVE_ICONS[this.merchantReceiveSymbol]
     }
   },
-  methods: {
-    apiGetTransactionRefundedData() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/refunded`
-      const request = {
-        params: new URLSearchParams([['payment_token', this.token]])
+  filters: {
+    amountFormat(amount) {
+      if (amount) {
+        const splitAmount = amount.split('.')
+        if (splitAmount.length > 1) {
+          splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
+        }
+        if(splitAmount[1]) {
+          return splitAmount.join('.')
+        } else {
+          return splitAmount[0]
+        }
       }
-      return this.axios.get(url, request)
     },
+  },
+  methods: {
     openPaymentReceiptModal() {
       this.$store.dispatch('modal/show', {
         target: 'payment-receipt-modal',
@@ -104,12 +111,6 @@ export default {
   created() {
     if (!this.isReceiptMode) {
       this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
-      this.apiGetTransactionRefundedData().then((response) => {
-        const responseParams = response.data
-        this.cashbackTokenAmount = responseParams.cashback_token_amount
-        this.cashbackTokenSymbol = responseParams.cashback_token_symbol
-        this.cashbackTokenIcon = this.MERCHANT_RECEIVE_ICONS[responseParams.cashback_token_symbol]
-      })
     }
   }
 }

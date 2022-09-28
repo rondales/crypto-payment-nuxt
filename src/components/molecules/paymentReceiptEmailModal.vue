@@ -38,7 +38,7 @@
               <img class="spin" src="@/assets/images/loading.svg" />
             </div>
           </button>
-          <button class="btn __lg btn__cancel" @click="hideModal">
+          <button class="btn __g __l mt-1 non-translate" @click="hideModal">
             Cancel
           </button>
         </div>
@@ -125,7 +125,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #292536;
+  background:var(--color_bg);
   @include media(pc) {
     &.--small {
       width: 470px;

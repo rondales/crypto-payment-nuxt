@@ -66,18 +66,11 @@
             </div>
           </div>
         </div>
-        <div class="payment_balance-topken border">
+        <div class="payment_balance-topken border mb-2">
           <div class="payment_balance-tokenname add-flex j-between">
             <p>
               {{ userSelectedTokenSymbol }}
             </p>
-            <div
-              class="payment_balance-equivalent"
-              :class="{ warning: !isEnoughUserSelectedTokenBalance }"
-            >
-              {{ formatNumber(userSelectedTokenPayAmountEquivalent) }}
-              {{ equivalentSymbol }} equivalent
-            </div>
           </div>
           <div class="payment_balance-price">
             {{ userSelectedTokenPayAmount }}
@@ -89,9 +82,6 @@
               v-if="isEnoughUserSelectedTokenBalance"
               class="btn-content-wrap"
             >
-              <p class="estimate mb-2">
-                * This amount is an estimate and is subject to change
-              </p>
               <button
                 v-if="isNeedApprove"
                 class="btn __g __l mb-2 approve-token-btn"
@@ -127,7 +117,7 @@
                   inactive:
                     isNeedApprove || isExpiredExchange || isWalletConfirming,
                 }"
-                @click="handleGoPayment()"
+                @click="executePayment()"
               >
                 Go Payment
               </button>
@@ -156,10 +146,9 @@
 </template>
 
 <script>
-import * as Sentry from "@sentry/vue"
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import { Decimal as BigJs } from "decimal.js";
-import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
+import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from "@/constants";
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -182,7 +171,7 @@ import NumberFormat from "number-format.js";
 import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
-  name: "PaymentExchange",
+  name: "ww-PaymentExchange",
   mixins: [DisplayConfig],
   data() {
     return {
@@ -424,7 +413,16 @@ export default {
         .map(token => token.address ? token.address.toLowerCase() : token.address)
         .filter(address => address)
         .includes(this.userSelectedToken.address.toLowerCase())
-    }
+    },
+    userSelectedTokenPaymentAmount() {
+      return this.userSelectedToken.amount;
+    },
+    platformFee() {
+      return this.$store.state.payment.fee;
+    },
+    merchantReceiveWeiAmount() {
+      return this.$store.state.payment.amountWei;
+    },
   },
   methods: {
     formatNumber(number) {
@@ -540,7 +538,6 @@ export default {
           this.$store.dispatch("wallet/updatePendingStatus", false);
         })
         .catch((error) => {
-          Sentry.captureException(error)
           this.$store.dispatch("wallet/updatePendingStatus", false);
           if ("code" in error && error.code === 4001) {
             return;
@@ -555,32 +552,68 @@ export default {
           });
         });
     },
-    handleGoPayment() {
-      this.$store.dispatch("payment/updateToken", {
-        amount: this.requireAmount,
-        rate: this.exchangeRate,
+    sendPaymentTransactionToBlockChain() {
+      return this.$web3.sendPaymentTransaction(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken,
+        this.userSelectedTokenPaymentAmount,
+        this.$store.state.payment.symbol,
+        this.platformFee,
+        this.merchantReceiveWeiAmount
+      );
+    },
+    apiUpdateTransaction(transactionHash) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
+      return this.axios.patch(url, {
+        payment_token: this.paymentToken,
+        network_type: this.chainId,
+        contract_address: this.contract.address,
+        transaction_address: transactionHash,
+        wallet_address: this.userAccountAddress,
+        pay_symbol: this.userSelectedTokenSymbol,
+        pay_amount: this.userSelectedTokenPaymentAmount,
       });
-      this.$router.push({
-        name: "detail",
-        params: { token: this.paymentToken },
-      });
+    },
+    executePayment() {
+      this.$store.dispatch("wallet/updatePendingStatus", true);
+      this.sendPaymentTransactionToBlockChain()
+        .then((txHash) => {
+          this.$store.dispatch("payment/updateStatus", STATUS_PROCESSING);
+          this.apiUpdateTransaction(txHash)
+            .then(() => {
+              this.$router.push({
+                name: "ww-result",
+                params: { token: this.paymentToken },
+              });
+            })
+            .catch((error) => {
+              console.log(error.data);
+            });
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$store.dispatch("wallet/updatePendingStatus", false);
+        });
     },
     handleChainChangedEvent(chainId) {
       chainId = this.web3Instance.utils.isHex(chainId)
         ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId;
       this.$store.dispatch("web3/updateChainId", chainId);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
+      this.$router.push({ path: `/payments-uiswitchable/token/${this.paymentToken}/ww` });
     },
     handleAccountChangedEvent(address) {
       this.$store.dispatch("account/updateAddress", address[0]);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
+      this.$router.push({ path: `/payments-uiswitchable/token/${this.paymentToken}/ww` });
     },
   },
   created() {
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
-        name: "wallets",
+        name: "ww-wallets",
         params: { token: this.paymentToken },
       });
     }
@@ -628,9 +661,8 @@ export default {
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
         })
-        .catch((err) => { Sentry.captureException(err) });
-    })
-    .catch((err) => { Sentry.captureException(err) });
+        .catch((err) => { console.error(err) });
+    });
   },
   beforeDestroy() {
     this.$parent.loading = false;
