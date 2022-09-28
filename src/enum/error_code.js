@@ -16,6 +16,7 @@ export const errorCodeList = {
   2340: { msg: 'No currency is selected.' },
   2341: { msg: 'Please select the currency again.' },
   2350: { msg: 'Please reinput the amount.' },
+  2370: { msg: 'Merchant contract not published.' },
   2510: { msg: 'Empty payment receipt.' },
   2511: { msg: 'Invalid Payment URL.' },
   2520: { msg: 'Please enter your email address.' },
