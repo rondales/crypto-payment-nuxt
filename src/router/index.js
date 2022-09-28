@@ -104,6 +104,11 @@ const router = new Router({
           ]
         },
         {
+          name: "payment-merchant",
+          path: "/payment-merchant/:payment_token",
+          component: () => import("@/components/organisms/PaymentMerchant")
+        },
+        {
           name: "payment",
           path: "/payment",
           component: () => import("@/pages/payment"),
@@ -199,6 +204,12 @@ const router = new Router({
             {
               name: "admin",
               path: "/admin/payment/settings/domain",
+              component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
+              meta: { title: 'Slash Apps' }
+            },
+            {
+              name: "admin",
+              path: "/admin/payment/settings/payment-token",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
               meta: { title: 'Slash Apps' }
             },

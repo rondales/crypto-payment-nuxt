@@ -62,6 +62,9 @@ export default {
     addChainModal: () => import("@/components/molecules/addChainModal"),
     paymentReceiptModal: () => import("@/components/molecules/paymentReceiptModal"),
     paymentReceiptEmailModal: () => import("@/components/molecules/paymentReceiptEmailModal"),
+    paymentTokenDeleteModal: () => import("@/components/molecules/paymentTokenDeleteModal"),
+    paymentTokenRefreshModal: () => import("@/components/molecules/paymentTokenRefreshModal"),
+    paymentTokenModal: () => import("@/components/molecules/paymentTokenModal"),
   },
   computed: {
     classes() {

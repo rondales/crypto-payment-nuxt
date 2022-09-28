@@ -212,7 +212,7 @@ export default {
         rate: this.exchangeRate,
         margin_rate: this.exchangeMarginRate,
       };
-      return this.axios.patch(url, params);
+      return this.axios.patch(url, params, { withCredentials: true });
     },
     next() {
       this.loading = true;
