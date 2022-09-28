@@ -189,7 +189,7 @@ export default {
     justify-content: space-between;
     margin-bottom: 32px;
     p {
-      width: 70%;
+      width: 85%;
       font-size: 11px;
       word-break: break-word;
     }
