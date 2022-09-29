@@ -121,7 +121,7 @@ import PaymentTab from "@/components/organisms/Payment/Tab";
 import PaymentForm from "@/components/organisms/Payment/Form";
 import PaymentButton from "@/components/organisms/Payment/Button";
 
-import NumberFormat from "number-format.js";
+import { Decimal } from "decimal.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
 import {
   EthereumTokens as EthereumReceiveTokens,
@@ -156,7 +156,7 @@ export default {
   },
   filters: {
     balanceFormat(balance) {
-      return NumberFormat("0.0000", balance);
+      return Decimal(balance).toFixed(4, Decimal.ROUND_FLOOR)
     },
   },
   computed: {
