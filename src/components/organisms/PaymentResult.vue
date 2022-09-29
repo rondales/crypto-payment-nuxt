@@ -240,6 +240,7 @@ export default {
       );
     },
     hasCashback() {
+      if (!this.cashbackAmount) return false
       return Decimal(this.cashbackAmount).toString() !== '0'
     }
   },
