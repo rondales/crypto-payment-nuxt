@@ -142,6 +142,7 @@ export default {
       padding: 1px 8px;
       $img_w: 2rem;
       min-width: 6rem;
+      z-index: 1;
       &::v-deep {
         .svg {
           width: $img_w * 0.7;
@@ -165,6 +166,7 @@ export default {
       max-width: 30rem;
       margin-left: auto;
       margin-right: auto;
+      z-index: 1;
       @include media(sp) {
         max-width: 100%;
       }
@@ -188,6 +190,7 @@ export default {
       max-width: 30rem;
       margin-left: auto;
       margin-right: auto;
+      z-index: 1;
       @include media(sp) {
         max-width: 100%;
       }
