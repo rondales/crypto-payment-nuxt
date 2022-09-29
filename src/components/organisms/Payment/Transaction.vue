@@ -15,27 +15,12 @@
       <PaymentText v-if="cap" tag="p" type="cap" :html="cap" />
       <PaymentButton
         v-if="explorerUrl"
-        class="button"
+        class="button mt-0"
         size="s"
+        color="primary"
         icon="outerlink"
         text="View on explorer"
         :url="explorerUrl"
-        layout="reverse"
-      />
-      <PaymentButton
-        class="mb-2 button"
-        size="s"
-        color="cancel"
-        text="Click here to get a receipt"
-        @click.native="showGetReceiptModal"
-      />
-    </div>
-    <div class="transaction__foot">
-      <PaymentButton
-        v-if="hasLink"
-        :text="link.title"
-        :url="link.url"
-        :color="link.color"
         layout="reverse"
       />
     </div>
@@ -108,19 +93,6 @@ export default {
         array["spin"] = true;
       }
       return array;
-    },
-    hasLink() {
-      return this.link.color
-        && this.link.title
-        && this.link.url
-    }
-  },
-  methods: {
-    showGetReceiptModal() {
-      this.$store.dispatch('modal/show', {
-        target: 'payment-receipt-modal',
-        size: 'small'
-      })
     }
   }
 };
