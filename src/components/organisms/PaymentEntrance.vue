@@ -144,7 +144,7 @@ export default {
                         path: '/payment/wallets/' + this.$route.params.token
                       })
                     } else {
-                      this.$emit('incrementProgressCompletedSteps')
+                      this.$emit('updateProgressTotalSteps', 4)
                       this.$router.replace({
                         path: '/payment/wallets/' + this.$route.params.token
                       })
