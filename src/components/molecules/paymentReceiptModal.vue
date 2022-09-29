@@ -21,11 +21,14 @@
       <button @click="openPaymentReceiptEmailModal" class="btn __l">
         Send Email
       </button>
-      <button @click="downloadPdf" class="btn __l" :class="{ inactive: loading}">
+      <button v-if="!isMobileBrowser" @click="downloadPdf" class="btn __l" :class="{ inactive: loading}">
         Download PDF
         <div class="loading-wrap" :class="{ active: loading }">
           <img class="spin" src="@/assets/images/loading.svg" />
         </div>
+      </button>
+      <button v-else class="btn __l inactive">
+        Download PDF ( Coming Soon )
       </button>
     </div>
 
@@ -41,7 +44,8 @@
 
 import {errorCodeList} from "@/enum/error_code";
 import {saveAs} from 'file-saver';
-import moment from 'moment'
+import moment from 'moment';
+import isMobile from 'ismobilejs';
 
 export default {
   name: "paymentReceiptModal",
@@ -60,6 +64,9 @@ export default {
     },
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
+    },
+    isMobileBrowser() {
+      return isMobile(window.navigator).any
     },
   },
   methods: {
