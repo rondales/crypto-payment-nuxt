@@ -14,7 +14,6 @@
             class="verified"
             path="domain-verified"
           />
-          <PaymentIcon class="verified" path="domain-verified" />
         </dd>
       </dl>
     </div>
