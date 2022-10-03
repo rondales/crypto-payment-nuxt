@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 import { Decimal as BigJs } from "decimal.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from "@/constants";
 import {

@@ -55,52 +55,60 @@ const router = new Router({
         {
           name: "payments-uiswitchable",
           path: "/payments-uiswitchable",
-          component: () => import("@/pages/ww-payment"),
+          component: () => import("@/pages/payments-uiswitchable"),
           meta: { title: 'Slash Payment' },
           children: [
             {
-              //Window widget payment entrance component
-              name: "ww-entrance",
-              path: "/payments-uiswitchable/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentEntrance"),
-              meta: { title: 'Slash Payment' }
+              name: "/payments-uiswitchable/ww-payment",
+              path: "/payments-uiswitchable/ww",
+              component: () => import("@/pages/ww-payment"),
+              meta: { title: 'Slash Payment' },
+              children: [
+                {
+                  //Window widget payment entrance component
+                  name: "ww-entrance",
+                  path: "/payments-uiswitchable/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentEntrance"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-receipt",
+                  path: "/payments-uiswitchable/receipt/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentEmail"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-wallets",
+                  path: "/payments-uiswitchable/wallets/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentSelectWallets"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-token",
+                  path: "/payments-uiswitchable/token/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentToken"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-exchange",
+                  path: "/payments-uiswitchable/exchange/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentExchange"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-result",
+                  path: "/payments-uiswitchable/result/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentResult"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
+                  name: "ww-invoice",
+                  path: "/payments-uiswitchable/invoice",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentInvoice"),
+                  meta: { title: 'Slash Payment' }
+                }
+              ]
             },
-            {
-              name: "ww-receipt",
-              path: "/payments-uiswitchable/receipt/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentEmail"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "ww-wallets",
-              path: "/payments-uiswitchable/wallets/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentSelectWallets"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "ww-token",
-              path: "/payments-uiswitchable/token/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentToken"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "ww-exchange",
-              path: "/payments-uiswitchable/exchange/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentExchange"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "ww-result",
-              path: "/payments-uiswitchable/result/:token/ww",
-              component: () => import("@/components/organisms/Payment/ww/PaymentResult"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "ww-invoice",
-              path: "/payments-uiswitchable/invoice",
-              component: () => import("@/components/organisms/Payment/ww/PaymentInvoice"),
-              meta: { title: 'Slash Payment' }
-            }
           ]
         },
         {
