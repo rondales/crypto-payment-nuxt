@@ -14,7 +14,8 @@ export default {
     abi: null,
     url: null,
     icon: require("@/assets/images/symbol/bnb.svg"),
-    iconPath: "token-bnb",
+    iconPath: "crypto_currency/bnb",
+    iconType: "png"
   },
   USDT: {
     name: "Tether USD",
@@ -23,7 +24,8 @@ export default {
     abi: Usdt.abi,
     url: `${url}/0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684`,
     icon: require("@/assets/images/symbol/usdt.svg"),
-    iconPath: "token-usdt",
+    iconPath: "crypto_currency/usdt",
+    iconType: "png"
   },
   BUSD: {
     name: "Binance USD",
@@ -32,7 +34,8 @@ export default {
     abi: Busd.abi,
     url: `${url}/0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7`,
     icon: require("@/assets/images/symbol/busd.svg"),
-    iconPath: "token-busd",
+    iconPath: "crypto_currency/busd",
+    iconType: "png"
   },
   CAKE: {
     name: "PancakeSwap",
@@ -41,7 +44,8 @@ export default {
     abi: Cake.abi,
     url: `${url}/0xF9f93cF501BFaDB6494589Cb4b4C15dE49E85D0e`,
     icon: require("@/assets/images/symbol/cake.svg"),
-    iconPath: "token-cake",
+    iconPath: "crypto_currency/cake",
+    iconType: "png"
   },
   WBNB: {
     name: "Wrapped BNB",
@@ -50,6 +54,7 @@ export default {
     abi: Wbnb.abi,
     url: `${url}/0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd`,
     icon: require("@/assets/images/symbol/wbnb.svg"),
-    iconPath: "token-wbnb",
+    iconPath: "crypto_currency/wbnb",
+    iconType: "png"
   },
 };

@@ -21,6 +21,7 @@
       class="exchange__balance"
       :symbol="userSelectedTokenSymbol"
       :icon="userSelectedTokenIcon"
+      icon-type="png"
       :table="balanceTable"
     />
     <PaymentAction

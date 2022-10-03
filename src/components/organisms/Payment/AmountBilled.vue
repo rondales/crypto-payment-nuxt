@@ -5,6 +5,7 @@
       <div class="left">
         <PaymentToken
           :icon="icon"
+          :icon-type="iconType"
           :title="title"
           :symbol="symbol"
           :symboltext="symboltext"
@@ -49,6 +50,10 @@ export default {
     icon: {
       type: String,
       default: require("@/assets/images/usdt.png"),
+    },
+    iconType: {
+      type: String,
+      default: "svg",
     },
     symbol: {
       type: String,

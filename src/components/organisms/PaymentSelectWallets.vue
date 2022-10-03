@@ -78,11 +78,11 @@ export default {
     },
     RECEIVED_TOKEN_ICON_PATH() {
       return {
-        USDT: "crypto_currency/usdt",
-        USDC: "crypto_currency/usdc",
-        DAI: "crypto_currency/dai",
-        JPYC: "crypto_currency/jpyc",
-        WETH: "crypto_currency/weth",
+        USDT: "crypto_currency/received_token/usdt",
+        USDC: "crypto_currency/received_token/usdc",
+        DAI: "crypto_currency/received_token/dai",
+        JPYC: "crypto_currency/received_token/jpyc",
+        WETH: "crypto_currency/received_token/weth",
       };
     },
     currentDomain() {

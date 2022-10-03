@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <PaymentIcon :path="icon" />
+    <PaymentIcon :path="icon" :type="iconType" />
     <div class="textwrap">
       <PaymentText tag="p" type="cap" :html="title" />
       <PaymentText tag="p" class="symbol" type="h4b" :html="symbol" />
@@ -21,6 +21,10 @@ export default {
     icon: {
       type: String,
       default: "usdt",
+    },
+    iconType: {
+      type: String,
+      default: "svg"
     },
     symbol: {
       type: String,

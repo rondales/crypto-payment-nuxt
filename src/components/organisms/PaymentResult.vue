@@ -23,6 +23,7 @@
       title="Paid Amount"
       :symbol="userPaidSymbol"
       :icon="userPaidTokenIcon"
+      icon-type="png"
       :price="userPaidAmount | formatAmount"
     />
     <PaymentAmountBilled

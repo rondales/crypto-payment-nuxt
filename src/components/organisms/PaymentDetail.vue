@@ -34,6 +34,7 @@
       class="detail__selectedToken"
       :symbol="userSelectedTokenSymbol"
       :icon="userSelectedTokenIcon"
+      icon-type="png"
       :price="userSelectedTokenPaymentAmount"
     />
     <div class="detail__table">

@@ -12,7 +12,8 @@ export default {
     abi: null,
     url: null,
     icon: require("@/assets/images/symbol/avax.svg"),
-    iconPath: "token-avax",
+    iconPath: "crypto_currency/avax",
+    iconType: "png"
   },
   WAVAX: {
     name: "Wrapped AVAX",
@@ -21,7 +22,8 @@ export default {
     abi: Wavax.abi,
     url: `${url}/0xd00ae08403B9bbb9124bB305C09058E32C39A48c`,
     icon: require("@/assets/images/symbol/wavax.svg"),
-    iconPath: "token-wavax",
+    iconPath: "crypto_currency/wavax",
+    iconType: "png"
   },
   USDT: {
     name: "Tether USD",
@@ -30,6 +32,7 @@ export default {
     abi: Usdt.abi,
     url: `${url}/0x02823f9B469960Bb3b1de0B3746D4b95B7E35543`,
     icon: require("@/assets/images/symbol/usdt.svg"),
-    iconPath: "token-usdt",
+    iconPath: "crypto_currency/usdt",
+    iconType: "png"
   },
 };

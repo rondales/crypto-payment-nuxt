@@ -11,7 +11,8 @@ export default {
     address: '0x3813e82e6f7098b9583FC0F33a962D02018B6803',
     abi: Usdt.abi,
     url: `${url}/0x3813e82e6f7098b9583FC0F33a962D02018B6803`,
-    icon: require('@/assets/images/symbol/usdt.svg')
+    icon: require('@/assets/images/symbol/usdt.svg'),
+    iconPath: "crypto_currency/received_token/usdt"
   },
   USDC: {
     name: 'USD Coin',
@@ -19,7 +20,8 @@ export default {
     address: null,
     abi: null,
     url: null,
-    icon: require('@/assets/images/symbol/usdc.svg')
+    icon: require('@/assets/images/symbol/usdc.svg'),
+    iconPath: "crypto_currency/received_token/usdc"
   },
   DAI: {
     name: 'Maker DAO',
@@ -27,7 +29,8 @@ export default {
     address: null,
     abi: null,
     url: null,
-    icon: require('@/assets/images/symbol/dai.svg')
+    icon: require('@/assets/images/symbol/dai.svg'),
+    iconPath: "crypto_currency/received_token/dai"
   },
   JPYC: {
     name: 'JPY Coin',
@@ -35,7 +38,8 @@ export default {
     address: null,
     abi: null,
     url: null,
-    icon: require('@/assets/images/symbol/jpyc.svg')
+    icon: require('@/assets/images/symbol/jpyc.svg'),
+    iconPath: "crypto_currency/received_token/jpyc"
   },
   WETH: {
     name: 'Wrapped ETH',
@@ -43,6 +47,7 @@ export default {
     address: '0x43e833406286FfA76DBd456368594B1e5614aa06',
     abi: Weth.abi,
     url: `${url}/0x43e833406286FfA76DBd456368594B1e5614aa06`,
-    icon: require('@/assets/images/symbol/eth.svg')
+    icon: require('@/assets/images/symbol/eth.svg'),
+    iconPath: "crypto_currency/received_token/weth"
   },
 }

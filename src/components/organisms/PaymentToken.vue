@@ -40,6 +40,7 @@
         >
           <PaymentAmountBilled
             :icon="token.path"
+            :icon-type="token.type"
             :symbol="token.symbol"
             :symboltext="token.name"
             :price="token.balance | balanceFormat"

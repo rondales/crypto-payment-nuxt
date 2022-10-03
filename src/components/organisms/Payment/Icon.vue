@@ -1,6 +1,7 @@
 <template>
   <div :class="classes">
-    <component :is="IconArray.img" />
+    <component v-if="isSvg" :is="IconArray.img" />
+    <img v-else :src="IconArray.img">
   </div>
 </template>
 
@@ -8,12 +9,16 @@
 export default {
   props: {
     path: {
+      type: String
+    },
+    type: {
       type: String,
+      default: "svg"
     },
     color: {
       type: String,
       default: "text",
-    },
+    }
   },
   computed: {
     classes() {
@@ -26,9 +31,12 @@ export default {
         ...this.path,
         img:
           this.path &&
-          require(`@/assets/images/icon/${this.path}.svg?component`),
+          require(`@/assets/images/icon/${this.path}.${this.type}?component`),
       };
     },
+    isSvg() {
+      return this.type === 'svg'
+    }
   },
   created() {},
   mounted() {},
