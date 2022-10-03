@@ -81,7 +81,7 @@
 
 <script>
 import { Decimal } from "decimal.js";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 // import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
@@ -103,18 +103,18 @@ export default {
       exchangeMarginRate: null,
       exchangeTimer: null,
       receiveTokenIcons: {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
-        WETH: require('@/assets/images/symbol/eth.svg'),
-        SGD: require("@/assets/images/symbol/jpyc.svg"),
-        HKD: require("@/assets/images/symbol/jpyc.svg"),
-        CAD: require("@/assets/images/symbol/jpyc.svg"),
-        IDR: require("@/assets/images/symbol/jpyc.svg"),
-        PHP: require("@/assets/images/symbol/jpyc.svg"),
-        INR: require("@/assets/images/symbol/jpyc.svg"),
-        KRW: require("@/assets/images/symbol/jpyc.svg"),
+        USDT: require("@/assets/images/ww/symbol/usdt.svg"),
+        USDC: require("@/assets/images/ww/symbol/usdc.svg"),
+        DAI: require("@/assets/images/ww/symbol/dai.svg"),
+        JPYC: require("@/assets/images/ww/symbol/jpyc.svg"),
+        WETH: require('@/assets/images/ww/symbol/eth.svg'),
+        SGD: require("@/assets/images/ww/symbol/jpyc.svg"),
+        HKD: require("@/assets/images/ww/currency/HKD.svg"),
+        CAD: require("@/assets/images/ww/currency/CAD.svg"),
+        IDR: require("@/assets/images/ww/currency/IDR.svg"),
+        PHP: require("@/assets/images/ww/currency/PHP.svg"),
+        INR: require("@/assets/images/ww/currency/INR.svg"),
+        KRW: require("@/assets/images/ww/currency/KRW.svg"),
       },
     };
   },

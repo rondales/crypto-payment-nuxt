@@ -47,11 +47,11 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 import StringExtend from "@/utils/string_extend";
-import ResultPending from "@/components/organisms/PaymentResultPending";
-import ResultFailure from "@/components/organisms/PaymentResultFailure";
-import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
+import ResultPending from "@/components/organisms/Payment/ww/PaymentResultPending";
+import ResultFailure from "@/components/organisms/Payment/ww/PaymentResultFailure";
+import ResultSuccess from "@/components/organisms/Payment/ww/PaymentResultSuccess";
 import {
   NETWORKS,
   STATUS_PROCESSING,

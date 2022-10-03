@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 import { errorCodeList } from "@/enum/error_code";
 
 export default {

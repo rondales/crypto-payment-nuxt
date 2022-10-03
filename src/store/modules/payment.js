@@ -38,7 +38,8 @@ const store = {
       balance: null,
       amount: null,
       rate: null
-    }
+    },
+    payment_token: null
   },
   actions: {
     initialize({ commit }) {
@@ -91,6 +92,9 @@ const store = {
     },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
+    },
+    updatePaymentToken({ commit }, payload) {
+      commit('updatePaymentToken', payload)
     }
   },
   mutations: {
@@ -147,6 +151,9 @@ const store = {
     },
     updateDeviceId(state, payload) {
       state.deviceId = payload
+    },
+    updatePaymentToken(state, payload) {
+      state.payment_token = payload
     },
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload
