@@ -4,8 +4,8 @@
       <div class="header__inner">
         <div class="header__left">
           <h1 class="header__logo">
-            <PaymentIcon class="logoicon" path="logo-icon" />
-            <PaymentIcon class="logotext" path="logo-text" />
+            <LogoIcon class="logoicon" />
+            <LogoText class="logotext" />
             <PaymentText class="header__sub" type="h5" :html="subTitle" />
           </h1>
           <div
@@ -159,55 +159,59 @@
 </template>
 
 <script>
-import Web3 from "web3";
-import { Decimal } from "decimal.js"
+import Web3 from 'web3'
+import { Decimal } from 'decimal.js'
 import {
   WALLET_CONNECT,
   METAMASK,
   DARK_THEME,
   LIGHT_THEME,
-  NETWORKS,
-} from "@/constants";
-import AvailableNetworks from "@/network";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentToken from "@/components/organisms/Payment/Token";
+  NETWORKS
+} from '@/constants'
+import AvailableNetworks from '@/network'
+import LogoText from '@/components/common/LogoText'
+import LogoIcon from '@/components/common/LogoIcon'
+import PaymentText from '@/components/organisms/Payment/Text'
+// import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentToken from '@/components/organisms/Payment/Token'
 export default {
-  name: "Header",
-  props: ["width", "showMenu"],
+  name: 'Header',
+  props: ['width', 'showMenu'],
   components: {
+    LogoIcon,
+    LogoText,
     PaymentText,
-    PaymentIcon,
+    // PaymentIcon,
     PaymentButton,
-    PaymentToken,
+    PaymentToken
   },
   data() {
     return {
       monitoringInterval: null,
       receiveTokenIcons: {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
+        USDT: require('@/assets/images/symbol/usdt.svg'),
+        USDC: require('@/assets/images/symbol/usdc.svg'),
+        DAI: require('@/assets/images/symbol/dai.svg'),
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
       },
       receiveTokenIconPaths: {
-        USDT: "usdt",
-        USDC: "usdc",
-        DAI: "dai",
-        JPYC: "jpyc",
+        USDT: 'usdt',
+        USDC: 'usdc',
+        DAI: 'dai',
+        JPYC: 'jpyc'
       },
       isHover: false,
       theme: {
         // icon: require("@/assets/images/light.svg"),
-        mode: "light",
-      },
-    };
+        mode: 'light'
+      }
+    }
   },
   watch: {
     $route(to, from) {
-      if (from.fullPath === "/payment") {
-        this.show = true;
+      if (from.fullPath === '/payment') {
+        this.show = true
       }
     },
     chainId(id) {
@@ -215,10 +219,10 @@ export default {
         this.$web3
           .getAccountData(this.$store.state.web3.instance, id)
           .then((account) => {
-            this.$store.dispatch("account/update", account);
-          });
+            this.$store.dispatch('account/update', account)
+          })
       }
-    },
+    }
   },
   filters: {
     balanceFormat(balance) {
@@ -226,179 +230,177 @@ export default {
     },
     walletAddressFormat(walletAddress) {
       if (walletAddress) {
-        const prefix = walletAddress.substr(0, 6);
-        const sufix = walletAddress.slice(-4);
-        return prefix + "…" + sufix;
+        const prefix = walletAddress.substr(0, 6)
+        const sufix = walletAddress.slice(-4)
+        return prefix + '…' + sufix
       } else {
-        return "";
+        return ''
       }
-    },
+    }
   },
   computed: {
     MONITORING_INTERVAL_CYCLE() {
-      return 3000;
+      return 3000
     },
     darkTheme() {
-      return DARK_THEME;
+      return DARK_THEME
     },
     lightTheme() {
-      return LIGHT_THEME;
+      return LIGHT_THEME
     },
     subTitle() {
-      let subTitle = "";
-      if (this.$route.name === "admin") {
-        subTitle = "Apps";
+      let subTitle = ''
+      if (this.$route.name === 'admin') {
+        subTitle = 'Apps'
       } else {
-        subTitle = "Web3 Payment";
+        subTitle = 'Web3 Payment'
       }
-      return subTitle;
+      return subTitle
     },
     isDarkTheme() {
-      return this.$store.state.theme === this.darkTheme;
+      return this.$store.state.theme === this.darkTheme
     },
     isLightTheme() {
-      return this.$store.state.theme === this.lightTheme;
+      return this.$store.state.theme === this.lightTheme
     },
     isAdminPage() {
-      return this.$route.name === "admin";
+      return this.$route.name === 'admin'
     },
     isPaymentPage() {
-      const currentPath = this.$route.path;
-      const pattern = /^\/payment\//;
-      return pattern.test(currentPath);
+      const currentPath = this.$route.path
+      const pattern = /^\/payment\//
+      return pattern.test(currentPath)
     },
     isConnected() {
-      return this.$store.state.web3.instance;
+      return this.$store.state.web3.instance
     },
     isFixedReceiveToken() {
-      return this.$store.state.account.receiveSymbol;
+      return this.$store.state.account.receiveSymbol
     },
     isUseTestnet() {
-      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase());
+      return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     },
     isSupportedNetwork() {
       const systemAvailableNetworks = Object.values(AvailableNetworks).map(
         (network) => {
-          return network.chainId;
+          return network.chainId
         }
-      );
+      )
       return (
         this.$store.state.web3.chainId &&
         systemAvailableNetworks.includes(this.$store.state.web3.chainId)
-      );
+      )
     },
     receiveTokenSymbol() {
-      return this.$store.state.account.receiveSymbol;
+      return this.$store.state.account.receiveSymbol
     },
     receiveTokenIcon() {
-      return this.receiveTokenIcons[this.$store.state.account.receiveSymbol];
+      return this.receiveTokenIcons[this.$store.state.account.receiveSymbol]
     },
     receiveTokenIconPath() {
-      return this.receiveTokenIconPaths[
-        this.$store.state.account.receiveSymbol
-      ];
+      return this.receiveTokenIconPaths[this.$store.state.account.receiveSymbol]
     },
     walletAddress() {
-      return this.$store.state.account.address;
+      return this.$store.state.account.address
     },
     chainId() {
-      return this.$store.state.web3.chainId;
+      return this.$store.state.web3.chainId
     },
     networkName() {
       if (this.isSupportedNetwork) {
-        return NETWORKS[this.$store.state.web3.chainId].name;
+        return NETWORKS[this.$store.state.web3.chainId].name
       } else {
-        return "Not supported network";
+        return 'Not supported network'
       }
     },
     networkIcon() {
       // return NETWORKS[this.$store.state.web3.chainId].icon;
-      return NETWORKS[this.$store.state.web3.chainId].iconPath;
+      return NETWORKS[this.$store.state.web3.chainId].iconPath
     },
     symbol() {
-      return this.$store.state.account.symbol;
+      return this.$store.state.account.symbol
     },
     balance() {
-      return this.$store.state.account.balance;
+      return this.$store.state.account.balance
     },
     show() {
       const pathPattern =
-        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/;
-      return pathPattern.test(this.$route.path);
+        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+      return pathPattern.test(this.$route.path)
     },
     connected() {
-      return this.$store.state.web3.instance;
+      return this.$store.state.web3.instance
     },
     fixedNetwork() {
-      return this.$store.state.web3.chainId;
+      return this.$store.state.web3.chainId
     },
     accountNote() {
       return this.$store.state.account.note
         ? this.$store.state.account.note
-        : "No note found!";
+        : 'No note found!'
     },
     isWalletPending() {
-      return this.$store.state.wallet.pending;
+      return this.$store.state.wallet.pending
     },
     isSetWeb3Instance() {
-      return this.$store.state.web3.instance instanceof Web3;
+      return this.$store.state.web3.instance instanceof Web3
     },
     isSetWeb3ProviderType() {
       return (
         this.$store.state.web3.provider === METAMASK ||
         this.$store.state.web3.provider === WALLET_CONNECT
-      );
-    },
+      )
+    }
   },
   methods: {
     hideMenu() {
-      this.$emit("toggleMenu", !this.showMenu);
+      this.$emit('toggleMenu', !this.showMenu)
     },
     showWalletModal() {
-      this.$store.dispatch("modal/show", {
-        target: "wallet-modal",
-        size: "small",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'wallet-modal',
+        size: 'small'
+      })
     },
     showNetworkModal() {
-      this.$store.dispatch("modal/show", {
-        target: "switch-network-for-admin-modal",
-        size: "medium",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'switch-network-for-admin-modal',
+        size: 'medium'
+      })
     },
     switchColorTheme(color) {
-      this.$emit("switchColorTheme", color);
-      this.theme.mode = this.theme.mode == "dark" ? "light" : "dark";
+      this.$emit('switchColorTheme', color)
+      this.theme.mode = this.theme.mode == 'dark' ? 'light' : 'dark'
     },
     toggleSubMenu() {
       if (this.isAdminPage) {
-        this.$store.dispatch("toggleAccountMenu");
+        this.$store.dispatch('toggleAccountMenu')
       }
     },
     openAccountModal() {
-      this.$store.dispatch("modal/show", {
-        target: "account-modal",
-        size: "small",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'account-modal',
+        size: 'small'
+      })
     },
     editNote() {
-      this.$store.dispatch("modal/show", {
-        target: "edit-account-note-modal",
-        size: "small",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'edit-account-note-modal',
+        size: 'small'
+      })
     },
     disconnect() {
-      this.toggleSubMenu();
+      this.toggleSubMenu()
       if (this.$store.state.web3.provider === WALLET_CONNECT) {
-        this.$web3.disconnectByWalletConnect(this.$store.state.web3.instance);
+        this.$web3.disconnectByWalletConnect(this.$store.state.web3.instance)
       }
-      this.$router.push({ path: "/admin" });
+      this.$router.push({ path: '/admin' })
     },
     mouseOver() {
-      this.isHover = true;
+      this.isHover = true
     },
     mouseLeave() {
-      this.isHover = false;
+      this.isHover = false
     },
     pollAccountData() {
       if (this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
@@ -408,26 +410,26 @@ export default {
             this.$store.state.web3.chainId
           )
           .then((account) => {
-            this.$store.dispatch("account/update", account);
-          });
+            this.$store.dispatch('account/update', account)
+          })
       }
-    },
+    }
   },
   created() {
     this.monitoringInterval = setInterval(
       this.pollAccountData,
       this.MONITORING_INTERVAL_CYCLE
-    );
+    )
   },
   beforeDestroy() {
-    clearInterval(this.monitoringInterval);
-  },
-};
+    clearInterval(this.monitoringInterval)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .header {
   width: 100%;
   position: fixed;
@@ -463,6 +465,7 @@ export default {
     width: auto;
     .logoicon {
       width: 3rem;
+      height: 3rem;
       margin-right: 1rem;
       @include media(sp) {
         // margin-right: 0.5rem;
@@ -515,7 +518,7 @@ export default {
       border-radius: 0.5rem;
       text-align: left;
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: 20px;
@@ -591,7 +594,7 @@ export default {
     }
     &::before,
     &::after {
-      content: "";
+      content: '';
       display: block;
       width: 100%;
       height: 2px;
@@ -611,13 +614,13 @@ export default {
     }
     span {
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 100%;
         padding-top: 1rem;
       }
       &::after {
-        content: "";
+        content: '';
         display: block;
         width: 100%;
         height: 2px;
@@ -681,7 +684,7 @@ export default {
         }
       }
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: 20px;

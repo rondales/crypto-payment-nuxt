@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="_イヤー_1" data-name="レイヤー 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+<svg id="logo_icon" data-name="logo_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="_称未設定グラデーション_7" data-name="名称未設定グラデーション 7" x1="-2640" y1="0" x2="-2639" y2="0" gradientTransform="translate(211210 211210) rotate(45) scale(113.14)" gradientUnits="userSpaceOnUse">
+    <linearGradient id="logoIconGra" data-name="logoIconGra" x1="-2640" y1="0" x2="-2639" y2="0" gradientTransform="translate(211210 211210) rotate(45) scale(113.14)" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#49a4f8"/>
       <stop offset="1" stop-color="#803de4"/>
     </linearGradient>
   </defs>
-  <rect x="10" y="10" width="80" height="80" rx="16.75" ry="16.75" style="fill: url(#_称未設定グラデーション_7);"/>
+  <rect x="10" y="10" width="80" height="80" rx="16.75" ry="16.75" style="fill: url(#logoIconGra);"/>
   <rect x="17.55" y="47.08" width="64.63" height="5.85" transform="translate(-20.75 49.91) rotate(-45)" style="fill: #fff;"/>
 </svg>

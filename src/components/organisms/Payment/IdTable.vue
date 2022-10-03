@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <PaymentIcon class="icon" path="logo-icon" />
+    <LogoIcon class="icon" />
     <div class="table">
       <dl v-for="(item, index) in table" :key="index">
         <dt>
@@ -24,9 +24,11 @@
 <script>
 import PaymentIcon from '@/components/organisms/Payment/Icon'
 import PaymentText from '@/components/organisms/Payment/Text'
+import LogoIcon from '@/components/common/LogoIcon'
 export default {
   name: 'PaymentIdTable',
   components: {
+    LogoIcon,
     PaymentIcon,
     PaymentText
   },
