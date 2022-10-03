@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="pay__foot">
-          <PaymentIcon class="" path="logo-text" />
+          <LogoText class="svg" />
           <PaymentText tag="p" type="capb" html="Web3 Payment" />
         </div>
       </div>
@@ -74,8 +74,9 @@
 import RadialProgressBar from 'vue-radial-progress'
 import Header from '@/components/organisms/header'
 import PaymentTop from '@/components/organisms/PaymentTop'
+import LogoText from '@/components/common/LogoText'
 import PaymentText from '@/components/organisms/Payment/Text'
-import PaymentIcon from '@/components/organisms/Payment/Icon'
+// import PaymentIcon from '@/components/organisms/Payment/Icon'
 import PaymentIdTable from '@/components/organisms/Payment/IdTable'
 import PaymentTitle from '@/components/organisms/Payment/Title'
 import { DARK_THEME, LIGHT_THEME } from '@/constants'
@@ -84,11 +85,12 @@ export default {
   components: {
     RadialProgressBar,
     Header,
+    LogoText,
     PaymentTop,
     PaymentText,
     PaymentIdTable,
-    PaymentTitle,
-    PaymentIcon
+    PaymentTitle
+    // PaymentIcon
   },
   props: [
     'colorTheme',
