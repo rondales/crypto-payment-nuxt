@@ -447,6 +447,7 @@ export default {
   }
   &__inner {
     @include flex(space-between, center);
+    flex-wrap: nowrap;
   }
   &__left {
     @include flex(flex-start, center);
@@ -456,8 +457,9 @@ export default {
   &__right {
     @include flex(flex-end, center);
     width: auto;
-    & > * + * {
-      margin-left: 1rem;
+    gap: 1rem;
+    @include media(sp) {
+      gap: 0.5rem;
     }
   }
   &__logo {

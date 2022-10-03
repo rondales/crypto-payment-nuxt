@@ -65,6 +65,15 @@
           :loading="loading"
           @click.native="test"
         />
+        <PaymentButton
+          class="amount__pay__button"
+          size="l"
+          text="Go Payment"
+          icon="logo-icon"
+          color="inactive"
+          :loading="true"
+          @click.native="test"
+        />
         <PaymentVia />
       </div>
     </div>
@@ -136,13 +145,13 @@
         {
           title: 'Balance',
           price: '2340',
-          symbol: 'USDT',
+          symbol: 'USDT'
         },
         {
           title: 'Balance',
           price: '2340',
-          symbol: 'USDT',
-        },
+          symbol: 'USDT'
+        }
       ]"
     />
     <div class="d-payboxwrap">
@@ -151,13 +160,13 @@
           {
             title: 'Minimum received',
             price: '',
-            text: '1,000 USDT',
+            text: '1,000 USDT'
           },
           {
             title: 'Minimum received',
             price: '1,000',
-            text: 'USDT',
-          },
+            text: 'USDT'
+          }
         ]"
       />
       <PaymentTransaction
@@ -168,7 +177,7 @@
         :link="{
           url: 'https://www.google.com/',
           title: 'Processing...',
-          color: 'inactive',
+          color: 'inactive'
         }"
       />
       <PaymentTransaction
@@ -177,7 +186,7 @@
         explorerUrl="https://www.google.com/"
         :link="{
           url: 'https://www.google.com/',
-          title: 'Back to Payee’s Services',
+          title: 'Back to Payee’s Services'
         }"
       />
       <PaymentTransaction
@@ -186,7 +195,7 @@
         explorerUrl="https://www.google.com/"
         :link="{
           url: 'https://www.google.com/',
-          title: 'Back to Payee’s Services',
+          title: 'Back to Payee’s Services'
         }"
       />
 
@@ -267,25 +276,25 @@
   </div>
 </template>
 <script>
-import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentTable from "@/components/organisms/Payment/Table";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentTransaction from "@/components/organisms/Payment/Transaction";
-import PaymentVia from "@/components/organisms/Payment/Via";
-import PaymentPrice from "@/components/organisms/Payment/Price";
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentText from '@/components/organisms/Payment/Text'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentTable from '@/components/organisms/Payment/Table'
+import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+import PaymentTransaction from '@/components/organisms/Payment/Transaction'
+import PaymentVia from '@/components/organisms/Payment/Via'
+import PaymentPrice from '@/components/organisms/Payment/Price'
 // import PaymentIdTable from "@/components/organisms/Payment/IdTable";
-import PaymentForm from "@/components/organisms/Payment/Form";
-import PaymentToken from "@/components/organisms/Payment/Token";
-import PaymentSelectToken from "@/components/organisms/Payment/SelectToken";
-import PaymentAction from "@/components/organisms/Payment/Action";
-import PaymentTab from "@/components/organisms/Payment/Tab";
-import PaymentNav from "@/components/organisms/Payment/Nav";
-import { CURRENCIES } from "@/constants";
+import PaymentForm from '@/components/organisms/Payment/Form'
+import PaymentToken from '@/components/organisms/Payment/Token'
+import PaymentSelectToken from '@/components/organisms/Payment/SelectToken'
+import PaymentAction from '@/components/organisms/Payment/Action'
+import PaymentTab from '@/components/organisms/Payment/Tab'
+import PaymentNav from '@/components/organisms/Payment/Nav'
+import { CURRENCIES } from '@/constants'
 export default {
-  name: "PaymentIndex",
+  name: 'PaymentIndex',
   components: {
     PaymentButton,
     PaymentTitle,
@@ -302,78 +311,78 @@ export default {
     PaymentSelectToken,
     PaymentAction,
     PaymentTab,
-    PaymentNav,
+    PaymentNav
   },
   props: [],
   data() {
     return {
       modalList: [
-        { doneStatus: false, name: "accountModal" },
-        { doneStatus: false, name: "addChainModal" },
-        { doneStatus: false, name: "adminContractPausedModal" },
-        { doneStatus: true, name: "cautionPaymentRiskDisclaimerModal" },
-        { doneStatus: true, name: "cautionWalletConnectModal" },
-        { doneStatus: false, name: "contractCashbackChangeModal" },
-        { doneStatus: false, name: "contractIssuanceModal" },
-        { doneStatus: false, name: "contractReceiveAddressChangeModal" },
-        { doneStatus: false, name: "editAccountNoteModal" },
-        { doneStatus: false, name: "errorCurrentNetworkModal" },
-        { doneStatus: true, name: "errorForbiddenBackPaymentModal" },
-        { doneStatus: true, name: "errorMetamaskModal" },
-        { doneStatus: true, name: "errorModal" },
+        { doneStatus: false, name: 'accountModal' },
+        { doneStatus: false, name: 'addChainModal' },
+        { doneStatus: false, name: 'adminContractPausedModal' },
+        { doneStatus: true, name: 'cautionPaymentRiskDisclaimerModal' },
+        { doneStatus: true, name: 'cautionWalletConnectModal' },
+        { doneStatus: false, name: 'contractCashbackChangeModal' },
+        { doneStatus: false, name: 'contractIssuanceModal' },
+        { doneStatus: false, name: 'contractReceiveAddressChangeModal' },
+        { doneStatus: false, name: 'editAccountNoteModal' },
+        { doneStatus: false, name: 'errorCurrentNetworkModal' },
+        { doneStatus: true, name: 'errorForbiddenBackPaymentModal' },
+        { doneStatus: true, name: 'errorMetamaskModal' },
+        { doneStatus: true, name: 'errorModal' },
         {
           doneStatus: true,
-          name: "errorNotExistAvailablePaymentContractModal",
+          name: 'errorNotExistAvailablePaymentContractModal'
         },
-        { doneStatus: true, name: "errorWalletModal" },
-        { doneStatus: true, name: "networkModal" },
-        { doneStatus: false, name: "receiveModal" },
-        { doneStatus: false, name: "refundInfoModal" },
-        { doneStatus: false, name: "regeneratePaymentUrlModal" },
-        { doneStatus: false, name: "switchNetworkForAdminModal" },
-        { doneStatus: true, name: "walletModal" },
-      ],
-    };
+        { doneStatus: true, name: 'errorWalletModal' },
+        { doneStatus: true, name: 'networkModal' },
+        { doneStatus: false, name: 'receiveModal' },
+        { doneStatus: false, name: 'refundInfoModal' },
+        { doneStatus: false, name: 'regeneratePaymentUrlModal' },
+        { doneStatus: false, name: 'switchNetworkForAdminModal' },
+        { doneStatus: true, name: 'walletModal' }
+      ]
+    }
   },
   computed: {
     currencies() {
-      let list = {};
+      let list = {}
       Object.entries(this.$store.state.payment.allowCurrencies).forEach(
         ([key, value]) => {
           if (value) {
-            list[key] = CURRENCIES[key];
+            list[key] = CURRENCIES[key]
           }
         }
-      );
-      return list;
-    },
+      )
+      return list
+    }
   },
   methods: {
     switchTab(tab) {
-      console.log("aaaa");
-      console.log(tab);
+      console.log('aaaa')
+      console.log(tab)
     },
     showModal(target) {
-      this.$store.dispatch("modal/show", {
+      this.$store.dispatch('modal/show', {
         target: target,
-        size: "small",
+        size: 'small',
         params: {
-          message: "This is dummy massage.",
-        },
-      });
+          message: 'This is dummy massage.'
+        }
+      })
     },
     test() {
-      alert("aaaaaaa");
-    },
+      alert('aaaaaaa')
+    }
   },
   mounted() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 
 .amount {
   &__title {
@@ -454,7 +463,7 @@ export default {
       border: 1px solid var(--SubText);
       border-radius: 100%;
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 100%;
         padding-top: 100%;

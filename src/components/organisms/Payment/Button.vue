@@ -1,6 +1,11 @@
 <template>
   <div class="">
-    <component :is="tag" :href="url != null ? url : ''" :target="target" :class="classes">
+    <component
+      :is="tag"
+      :href="url != null ? url : ''"
+      :target="target"
+      :class="classes"
+    >
       <Icon v-if="icon" :path="icon" />
       <div class="textwrap">
         <PaymentText v-if="text" :type="textsize[size]" :html="text" />
@@ -22,13 +27,13 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-import Icon from "@/components/organisms/Payment/Icon";
+import PaymentText from '@/components/organisms/Payment/Text'
+import Icon from '@/components/organisms/Payment/Icon'
 export default {
-  name: "PaymentButton",
+  name: 'PaymentButton',
   components: {
     Icon,
-    PaymentText,
+    PaymentText
   },
   props: {
     // func: {
@@ -37,86 +42,87 @@ export default {
     // },
     icon: {
       type: String,
-      default: "",
+      default: ''
     },
     url: {
-      type: String,
+      type: String
     },
     target: {
       type: String,
-      default: "_self"
+      default: '_self'
     },
     text: {
-      type: String,
+      type: String
     },
     subtext: {
-      type: String,
+      type: String
     },
     color: {
       type: String,
-      default: "primary",
+      default: 'primary'
     },
     size: {
       type: String,
-      default: "m",
+      default: 'm'
     },
     layout: {
       type: String,
-      default: "normal",
+      default: 'normal'
     },
     loading: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       textsize: {
-        l: "h4b",
-        m: "h5",
-        s: "capb",
+        l: 'h4b',
+        m: 'h5',
+        s: 'capb'
       },
-      tag: "button",
-      binds: {},
-    };
+      tag: 'button',
+      binds: {}
+    }
   },
   filters: {},
   computed: {
     classes() {
       let array = {
-        button: true,
-      };
-      array["color_" + this.color] = true;
-      array["size_" + this.size] = true;
-      array["layout_" + this.layout] = true;
-      return array;
+        button: true
+      }
+      array['color_' + this.color] = true
+      array['size_' + this.size] = true
+      array['layout_' + this.layout] = true
+      return array
     },
     setFunction() {
       // let array = {};
       // if (this.function != {}) {
       //   array = this.function;
       // }
-      return {};
-    },
+      return {}
+    }
   },
 
   methods: {},
   created() {
     if (this.url != null) {
-      this.tag = "a";
-      this.binds["href"] = this.url;
+      this.tag = 'a'
+      this.binds['href'] = this.url
     }
   },
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .button {
   @include flex(center, center);
   width: auto;
+  flex-wrap: nowrap;
   position: relative;
   overflow: hidden;
   transition: color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
@@ -230,7 +236,7 @@ export default {
       border: 1px solid transparent;
       &::before,
       &::after {
-        content: "";
+        content: '';
         display: block;
         position: absolute;
         top: 0;
