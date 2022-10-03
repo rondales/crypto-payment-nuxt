@@ -66,6 +66,7 @@
         size="l"
         text="Go Payment"
         icon="logo-icon"
+        :color="requireUpdateExchange || isInvalidAmount ? 'inactive' : 'primary'"
         :loading="loading"
         @click.native="next"
       />
@@ -153,6 +154,9 @@ export default {
       let array = { amount: true };
       return array;
     },
+    isInvalidAmount() {
+      return Decimal(this.exchangedAmount).lessThan('0.000001')
+    }
   },
   methods: {
     calculationExchange() {
@@ -177,7 +181,7 @@ export default {
           this.exchangeTimer = setTimeout(() => {
             this.requireUpdateExchange = true;
             clearTimeout(this.exchangeTimer);
-          }, 120000);
+          }, 3000);
           this.$emit("incrementProgressCompletedSteps");
           setTimeout(() => {
             this.$emit("updateInitializingStatus", false);
@@ -215,6 +219,7 @@ export default {
       return this.axios.patch(url, params);
     },
     next() {
+      if (this.requireUpdateExchange || this.isInvalidAmount) return
       this.loading = true;
       this.apiUpdateTransaction()
         .then(() => {
