@@ -14,43 +14,44 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentText from '@/components/organisms/Payment/Text'
 export default {
-  name: "PaymentTitle",
+  name: 'PaymentTitle',
   components: {
-    PaymentText,
+    PaymentText
   },
   props: {
     error: {
-      type: String,
-    },
+      type: String
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { form: true };
-      array[this.type] = true;
-      return array;
-    },
+      let array = { form: true }
+      array[this.type] = true
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .form {
   $formh: 2rem;
   &__wrap {
     border: 1px solid var(--Border);
     border-radius: 6px;
     @include flex(flex-start, center);
+    flex-wrap: nowrap;
     padding: 0.8rem;
     &::v-deep {
       input {
@@ -60,7 +61,8 @@ export default {
         flex: 1;
       }
       select {
-        width: 5rem;
+        appearance: none;
+        // width: 5rem;
         text-align: center;
         padding: 0rem 0.5rem;
         @include font(1rem, 600, $ls, $formh, $en_go);

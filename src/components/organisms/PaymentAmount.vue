@@ -11,7 +11,7 @@
       class="amount__subtitle"
       type="h3"
       html="How much would you pay?"
-      layout="c"
+      layout=""
     />
     <PaymentForm class="amount__form">
       <input
@@ -66,7 +66,9 @@
         size="l"
         text="Go Payment"
         icon="logo-icon"
-        :color="requireUpdateExchange || isInvalidAmount ? 'inactive' : 'primary'"
+        :color="
+          requireUpdateExchange || isInvalidAmount ? 'inactive' : 'primary'
+        "
         :loading="loading"
         @click.native="next"
       />
@@ -75,21 +77,21 @@
 </template>
 
 <script>
-import { Decimal } from "decimal.js";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentForm from "@/components/organisms/Payment/Form";
-import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentAction from "@/components/organisms/Payment/Action";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import { errorCodeList } from "@/enum/error_code";
-import { CURRENCIES } from "@/constants";
+import { Decimal } from 'decimal.js'
+import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentForm from '@/components/organisms/Payment/Form'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentAction from '@/components/organisms/Payment/Action'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import { errorCodeList } from '@/enum/error_code'
+import { CURRENCIES } from '@/constants'
 
 export default {
-  name: "PaymentAmount",
+  name: 'PaymentAmount',
   props: {
     progressTotalSteps: Number,
-    progressCompletedSteps: Number,
+    progressCompletedSteps: Number
   },
   data() {
     return {
@@ -102,13 +104,13 @@ export default {
       exchangeMarginRate: null,
       exchangeTimer: null,
       receiveTokenIcons: {
-        USDT: "usdt",
-        USDC: "usdc",
-        DAI: "dai",
-        JPYC: "jpyc",
-        WETH: "eth"
-      },
-    };
+        USDT: 'usdt',
+        USDC: 'usdc',
+        DAI: 'dai',
+        JPYC: 'jpyc',
+        WETH: 'eth'
+      }
+    }
   },
   components: {
     PaymentAmountBilled,
@@ -116,43 +118,43 @@ export default {
     PaymentTitle,
     PaymentForm,
     PaymentAction,
-    PaymentIcon,
+    PaymentIcon
   },
   watch: {
     legalCurrencyAmount: function () {
-      this.calculationExchange();
+      this.calculationExchange()
     },
     selectedCurrency: function (currency) {
-      this.updateExchangeData(currency);
-    },
+      this.updateExchangeData(currency)
+    }
   },
   computed: {
     receiveTokenSymbol() {
-      return this.$store.state.payment.symbol;
+      return this.$store.state.payment.symbol
     },
     receiveTokenIcon() {
-      return this.receiveTokenIcons[this.$store.state.payment.symbol];
+      return this.receiveTokenIcons[this.$store.state.payment.symbol]
     },
     currencies() {
-      let list = {};
+      let list = {}
       Object.entries(this.$store.state.payment.allowCurrencies).forEach(
         ([key, value]) => {
           if (value) {
-            list[key] = CURRENCIES[key];
+            list[key] = CURRENCIES[key]
           }
         }
-      );
-      return list;
+      )
+      return list
     },
     selectedCurrencyName() {
-      return CURRENCIES[this.selectedCurrency].name;
+      return CURRENCIES[this.selectedCurrency].name
     },
     selectedCurrencyIcon() {
-      return CURRENCIES[this.selectedCurrency].iconPath;
+      return CURRENCIES[this.selectedCurrency].iconPath
     },
     classes() {
-      let array = { amount: true };
-      return array;
+      let array = { amount: true }
+      return array
     },
     isInvalidAmount() {
       return Decimal(this.exchangedAmount).lessThan('0.000001')
@@ -161,105 +163,107 @@ export default {
   methods: {
     calculationExchange() {
       if (this.legalCurrencyAmount && this.exchangeRate) {
-        this.exchangedAmount = Decimal
-          .div(this.legalCurrencyAmount, this.exchangeRate)
+        this.exchangedAmount = Decimal.div(
+          this.legalCurrencyAmount,
+          this.exchangeRate
+        )
           .toDP(6, Decimal.ROUND_CEIL)
           .toString()
       }
     },
     updateDefaultCurrency() {
-      this.selectedCurrency = Object.values(this.currencies)[0].name;
+      this.selectedCurrency = Object.values(this.currencies)[0].name
     },
     updateExchangeData(currency = null) {
-      if (currency === null) currency = this.selectedCurrency;
+      if (currency === null) currency = this.selectedCurrency
       this.apiGetExchangeRate(currency)
         .then((response) => {
-          this.exchangeRate = response.data.include_margin_rate;
-          this.exchangeMarginRate = response.data.margin_rate;
-          if (this.legalCurrencyAmount) this.calculationExchange();
-          this.requireUpdateExchange = false;
+          this.exchangeRate = response.data.include_margin_rate
+          this.exchangeMarginRate = response.data.margin_rate
+          if (this.legalCurrencyAmount) this.calculationExchange()
+          this.requireUpdateExchange = false
           this.exchangeTimer = setTimeout(() => {
-            this.requireUpdateExchange = true;
-            clearTimeout(this.exchangeTimer);
-          }, 12000);
-          this.$emit("incrementProgressCompletedSteps");
+            this.requireUpdateExchange = true
+            clearTimeout(this.exchangeTimer)
+          }, 12000)
+          this.$emit('incrementProgressCompletedSteps')
           setTimeout(() => {
-            this.$emit("updateInitializingStatus", false);
-          }, 1500);
+            this.$emit('updateInitializingStatus', false)
+          }, 1500)
         })
         .catch((error) => {
-          let message;
-          if ("errors" in error.response.data) {
-            message = errorCodeList[error.response.data.errors.shift()].msg;
+          let message
+          if ('errors' in error.response.data) {
+            message = errorCodeList[error.response.data.errors.shift()].msg
           } else {
-            message = "Please try again after a while.";
+            message = 'Please try again after a while.'
           }
-          this.showErrorModal(message);
-        });
+          this.showErrorModal(message)
+        })
     },
     apiGetExchangeRate(currency) {
-      const url = process.env.VUE_APP_API_BASE_URL + "/api/v1/exchange";
+      const url = process.env.VUE_APP_API_BASE_URL + '/api/v1/exchange'
       const params = new URLSearchParams([
-        ["payment_token", this.$route.params.token],
-        ["legal_currency", currency],
-      ]);
-      return this.axios.get(url, { params });
+        ['payment_token', this.$route.params.token],
+        ['legal_currency', currency]
+      ])
+      return this.axios.get(url, { params })
     },
     apiUpdateTransaction() {
       const url =
-        process.env.VUE_APP_API_BASE_URL + "/api/v1/payment/transaction";
+        process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
       const params = {
         payment_token: this.$route.params.token,
         base_currency: CURRENCIES[this.selectedCurrency].name,
         base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
-        margin_rate: this.exchangeMarginRate,
-      };
-      return this.axios.patch(url, params);
+        margin_rate: this.exchangeMarginRate
+      }
+      return this.axios.patch(url, params)
     },
     next() {
       if (this.requireUpdateExchange || this.isInvalidAmount) return
-      this.loading = true;
+      this.loading = true
       this.apiUpdateTransaction()
         .then(() => {
-          this.$store.dispatch("payment/updateAmount", this.exchangedAmount);
+          this.$store.dispatch('payment/updateAmount', this.exchangedAmount)
           this.$router.replace({
-            path: "wallets/" + this.$route.params.token,
-          });
+            path: 'wallets/' + this.$route.params.token
+          })
         })
         .catch((error) => {
-          let message;
+          let message
 
           if (error.response.status === 400) {
-            message = errorCodeList[error.response.data.errors.shift()].msg;
+            message = errorCodeList[error.response.data.errors.shift()].msg
           } else {
-            message = "Please try again after a while.";
+            message = 'Please try again after a while.'
           }
-          this.loading = false;
-          this.showErrorModal(message);
-        });
+          this.loading = false
+          this.showErrorModal(message)
+        })
     },
     showErrorModal(message) {
-      this.$store.dispatch("modal/show", {
-        target: "error-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'error-modal',
+        size: 'small',
         params: {
-          message: message,
-        },
-      });
-    },
+          message: message
+        }
+      })
+    }
   },
   created() {
-    this.updateDefaultCurrency();
-    this.updateExchangeData(this.selectedCurrency);
-  },
-};
+    this.updateDefaultCurrency()
+    this.updateExchangeData(this.selectedCurrency)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .amount {
   &__title {
     margin-bottom: 2rem;
@@ -271,12 +275,16 @@ export default {
     margin-bottom: 2rem;
     .selectwrap {
       @include flex(flex-start, center);
+      flex-wrap: nowrap;
       width: auto;
       padding-left: 1rem;
       border-left: 1px solid var(--Border);
       .svg {
         width: 2.5rem;
         height: 2.5rem;
+      }
+      select {
+        flex: 1;
       }
     }
   }
