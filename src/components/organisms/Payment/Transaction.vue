@@ -21,6 +21,7 @@
         icon="outerlink"
         text="View on explorer"
         :url="explorerUrl"
+        target="_blank"
         layout="reverse"
       />
     </div>

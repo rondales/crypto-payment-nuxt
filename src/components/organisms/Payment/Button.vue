@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <component :is="tag" :href="url != null ? url : ''" :class="classes">
+    <component :is="tag" :href="url != null ? url : ''" :target="target" :class="classes">
       <Icon v-if="icon" :path="icon" />
       <div class="textwrap">
         <PaymentText v-if="text" :type="textsize[size]" :html="text" />
@@ -41,6 +41,10 @@ export default {
     },
     url: {
       type: String,
+    },
+    target: {
+      type: String,
+      default: "_self"
     },
     text: {
       type: String,
