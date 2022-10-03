@@ -3,7 +3,9 @@
     <PaymentIcon class="icon" path="logo-icon" />
     <div class="table">
       <dl v-for="(item, index) in table" :key="index">
-        <dt><PaymentText type="cap" :html="item.title" :non-translate="true" /></dt>
+        <dt>
+          <PaymentText type="cap" :html="item.title" :non-translate="true" />
+        </dt>
         <dd>
           <PaymentText type="cap" :html="item.text" :non-translate="true" />
           {{ item.verified }}
@@ -12,6 +14,7 @@
             class="verified"
             path="domain-verified"
           />
+          <PaymentIcon class="verified" path="domain-verified" />
         </dd>
       </dl>
     </div>
@@ -19,42 +22,42 @@
 </template>
 
 <script>
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentText from '@/components/organisms/Payment/Text'
 export default {
-  name: "PaymentIdTable",
+  name: 'PaymentIdTable',
   components: {
     PaymentIcon,
-    PaymentText,
+    PaymentText
   },
   props: {
     table: {
-      type: Array,
+      type: Array
     },
     isVerifiedDomain: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { ids: true };
-      array[this.type] = true;
-      return array;
-    },
+      let array = { ids: true }
+      array[this.type] = true
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .ids {
   @include flex(space-between, center);
   .icon {
@@ -65,7 +68,6 @@ export default {
   }
   dl {
     font-size: 0;
-    // @include flex(flex-end, center);
     @include flex(flex-start, center);
     & + dl {
       margin-top: 3px;
@@ -94,6 +96,14 @@ export default {
       width: 1rem;
       height: 1rem;
       margin-left: 0.5rem;
+      // svg {
+      //   fill: var(--Text);
+      // }
+      // &::v-deep {
+      //   svg {
+      //     fill: var(--Text);
+      //   }
+      // }
     }
   }
 }
