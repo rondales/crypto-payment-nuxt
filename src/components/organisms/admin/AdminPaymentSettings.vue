@@ -24,6 +24,13 @@
       <input class="text-box" type="text" v-model="failureReturnUrl" />
     </div>
     <div class="manage-contents_clm">
+      <h4>Receipt Delivery Email</h4>
+      <p>
+        An email to receive receipt whenever a payment succeeds.
+      </p>
+      <input class="text-box" placeholder="your@mail.com" type="text" v-model="receiptEmail" />
+    </div>
+    <div class="manage-contents_clm">
       <h4><span>*</span>Exchange margin rate</h4>
       <p>The margin rate to be added to the actual exchange rate.</p>
       <input class="text-box" type="text" v-model="exchangeMarginRate" />
@@ -72,6 +79,7 @@ export default {
       successNotifyUrl: '',
       successReturnUrl: '',
       failureReturnUrl: '',
+      receiptEmail: '',
       exchangeMarginRate: '0.0',
       allowCurrencies: {
         USD: false,
@@ -110,6 +118,7 @@ export default {
         complete_kickback_url: this.successNotifyUrl,
         succeeded_return_url: this.successReturnUrl,
         failured_return_url: this.failureReturnUrl,
+        receipt_email: this.receiptEmail,
         exchange_margin_rate: this.exchangeMarginRate,
         allow_currencies: this.allowCurrencies
       }
@@ -121,6 +130,7 @@ export default {
           this.successNotifyUrl = response.data.complete_kickback_url
           this.successReturnUrl = response.data.succeeded_return_url
           this.failureReturnUrl = response.data.failured_return_url
+          this.receiptEmail = response.data.receipt_email
           this.exchangeMarginRate = response.data.exchange_margin_rate
           this.allowCurrencies = response.data.allow_currencies
         })
