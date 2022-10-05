@@ -17,7 +17,7 @@
             <p>Please wait for Generate</p>
             <p>Payment URL</p>
             <div class="payment_loading mt-2 mb-2" v-if="loading">
-              <div class="loading-wrap" :class="{ active: loading }">
+              <div :class="{ active: loading }">
                 <img class="spin" src="@/assets/images/loading.svg"/>
               </div>
             </div>
@@ -184,13 +184,8 @@ export default {
         height: 40px;
         display: flex;
         position: relative;
-        background: #ffff;
         width: 40px;
         margin: 0 auto;
-
-        .loading-wrap {
-          background: none;
-        }
       }
     }
   }
