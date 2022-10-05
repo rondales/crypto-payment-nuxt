@@ -28,6 +28,19 @@
       <p>
         An email to receive receipt whenever a payment succeeds.
       </p>
+      <p>
+        * Email notifications may be maintained without notice. <br>
+        Therefore, if you want to receive payment completion notification from Slash, please set 
+        <a 
+          target="_blank"
+          class="learn-more"
+          href="https://slash-fi.gitbook.io/docs/integration-guide/quick-start#url-to-receive-payment-result-kickback-from-slash-payment-optional">
+            URL to receive Payment Result kickback from Slash Payment
+        </a>.
+        You can also check the history of your account from <a href="/admin/payment/history">the administration page</a>.
+        <br>
+        Please note that we may stop sending notifications to your email address without prior notice if your email address is not receiving them.
+      </p>
       <input class="text-box" placeholder="your@mail.com" type="text" v-model="receiptEmail" />
     </div>
     <div class="manage-contents_clm">
@@ -184,6 +197,10 @@ export default {
       font-weight: 300;
       margin-bottom: 24px;
       width: 70%;
+    }
+    a {
+      color: #5390f2;
+      cursor: pointer;
     }
     .text-box {
       border-radius: 8px;
