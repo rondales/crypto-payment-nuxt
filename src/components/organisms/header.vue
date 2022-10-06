@@ -4,7 +4,8 @@
       <div class="header__inner">
         <div class="header__left">
           <h1 class="header__logo">
-            <LogoIcon class="logoicon" />
+            <!-- <LogoIcon class="logoicon" /> -->
+            <PaymentIcon class="logoicon" path="logo-icon" />
             <LogoText class="logotext" />
             <PaymentText class="header__sub" type="h5" :html="subTitle" />
           </h1>
@@ -165,7 +166,7 @@ import {
 } from '@/constants'
 import AvailableNetworks from '@/network'
 import LogoText from '@/components/common/LogoText'
-import LogoIcon from '@/components/common/LogoIcon'
+// import LogoIcon from '@/components/common/LogoIcon'
 import PaymentText from '@/components/organisms/Payment/Text'
 import PaymentIcon from '@/components/organisms/Payment/Icon'
 import PaymentButton from '@/components/organisms/Payment/Button'
@@ -174,7 +175,7 @@ export default {
   name: 'Header',
   props: ['width', 'showMenu'],
   components: {
-    LogoIcon,
+    // LogoIcon,
     LogoText,
     PaymentText,
     PaymentIcon,
