@@ -72,13 +72,8 @@
                 type="cap"
                 :html="walletAddress | walletAddressFormat"
               />
-              <div v-else-if="isWalletPending" class="id __pg">
-                <div class="loading-wrap-header loading-wrap active">
-                  <img
-                    class="spin spin-header"
-                    src="@/assets/images/loading.svg"
-                  />
-                </div>
+              <div v-else-if="isWalletPending" class="header__wallet__id pg">
+                <PaymentIcon class="loading spin" path="loading" />
                 <PaymentText type="cap" html="Pending" />
               </div>
             </button>
@@ -172,7 +167,7 @@ import AvailableNetworks from '@/network'
 import LogoText from '@/components/common/LogoText'
 import LogoIcon from '@/components/common/LogoIcon'
 import PaymentText from '@/components/organisms/Payment/Text'
-// import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentToken from '@/components/organisms/Payment/Token'
 export default {
@@ -182,7 +177,7 @@ export default {
     LogoIcon,
     LogoText,
     PaymentText,
-    // PaymentIcon,
+    PaymentIcon,
     PaymentButton,
     PaymentToken
   },
@@ -568,6 +563,15 @@ export default {
       background: $gradation-pale;
       padding: 2px 0.5rem;
       border-radius: 0.5rem;
+      &.pg {
+        @include flex(flex-start, center);
+        gap: 3px;
+        width: auto;
+        flex-wrap: nowrap;
+        .loading {
+          width: 1.3rem;
+        }
+      }
     }
   }
   &__hamburger {
