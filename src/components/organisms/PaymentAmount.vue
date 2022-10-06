@@ -51,7 +51,7 @@
       <PaymentAction
         class="amount__pay__action"
         v-if="requireUpdateExchange"
-        icon="warning"
+        icon="attention"
         text="Price Updated"
       >
         <PaymentButton
