@@ -6,7 +6,12 @@
       :target="target"
       :class="classes"
     >
-      <Icon v-if="icon" :path="icon" />
+      <div v-if="icon">
+        <div class="svg" v-if="icon == 'logo-icon'">
+          <LogoIcon />
+        </div>
+        <Icon v-else :path="icon" />
+      </div>
       <div class="textwrap">
         <PaymentText v-if="text" :type="textsize[size]" :html="text" />
         <PaymentText
@@ -29,10 +34,12 @@
 <script>
 import PaymentText from '@/components/organisms/Payment/Text'
 import Icon from '@/components/organisms/Payment/Icon'
+import LogoIcon from '@/components/common/LogoIcon'
 export default {
   name: 'PaymentButton',
   components: {
     Icon,
+    LogoIcon,
     PaymentText
   },
   props: {
