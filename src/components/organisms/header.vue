@@ -264,7 +264,7 @@ export default {
     },
     isPaymentPage() {
       const currentPath = this.$route.path
-      const pattern = /^\/payment\//
+      const pattern = /^\/(payment|payment-merchant)\//
       return pattern.test(currentPath)
     },
     isConnected() {
