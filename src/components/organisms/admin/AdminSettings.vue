@@ -27,10 +27,19 @@
           >
             Domain Setting
           </router-link>
+          <router-link
+              to="/admin/payment/settings/payment-token"
+              tag="div"
+              class="setting-toggle-left"
+              :class="{ active: isDomainPaymentTokenTab }"
+          >
+            QR Payment Setting
+          </router-link>
         </div>
         <AdminContractSettings v-if="isContractSettingTab" />
         <AdminPaymentSettings v-if="isPaymentSettingTab" />
         <AdminDomainSettings v-if="isDomainSettingTab" />
+        <AdminPaymentTokenSetting v-if="isDomainPaymentTokenTab" />
       </div>
     </div>
   </div>
@@ -40,6 +49,7 @@
 import AdminContractSettings from '@/components/organisms/admin/AdminContractSettings';
 import AdminPaymentSettings from '@/components/organisms/admin/AdminPaymentSettings';
 import AdminDomainSettings from '@/components/organisms/admin/AdminDomainSettings';
+import AdminPaymentTokenSetting from "@/components/organisms/admin/AdminPaymentTokenSetting";
 
 export default {
   name: 'AdminSettings',
@@ -47,6 +57,7 @@ export default {
     AdminContractSettings,
     AdminPaymentSettings,
     AdminDomainSettings,
+    AdminPaymentTokenSetting,
   },
   computed: {
     isContractSettingTab() {
@@ -59,6 +70,10 @@ export default {
     },
     isDomainSettingTab() {
       const targetPath = '/admin/payment/settings/domain';
+      return this.$route.path === targetPath;
+    },
+    isDomainPaymentTokenTab() {
+      const targetPath = '/admin/payment/settings/payment-token';
       return this.$route.path === targetPath;
     },
   },
@@ -75,7 +90,7 @@ change the style.scss to import style.scss directly under the scss directory.
 
 .setting-toggle {
   background: #292536;
-  width: 600px;
+  width: 700px;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 40px;
@@ -86,7 +101,7 @@ change the style.scss to import style.scss directly under the scss directory.
   &-center,
   &-left {
     text-align: center;
-    width: 33%;
+    width: 25%;
     font-size: 15px;
     padding: 8px 0;
     cursor: pointer;
@@ -96,6 +111,9 @@ change the style.scss to import style.scss directly under the scss directory.
       background: #4e455a;
       border-radius: 8px;
       color: #fff;
+    }
+    @include media(sp) {
+      width: 50%;
     }
   }
 }

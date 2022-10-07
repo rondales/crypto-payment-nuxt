@@ -52,8 +52,8 @@
 
 <script>
 import { METAMASK } from "@/constants";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
+import PaymentText from "@/components/organisms/Payment/ww/Text";
 import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
 import WwPaymentWalletConnectorMixin from "@/components/mixins/ww/PaymentWalletConnector";
 import isMobile from 'ismobilejs';

@@ -218,9 +218,9 @@ export default {
         base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
-        margin_rate: this.exchangeMarginRate
-      }
-      return this.axios.patch(url, params)
+        margin_rate: this.exchangeMarginRate,
+      };
+      return this.axios.patch(url, params, { withCredentials: true });
     },
     next() {
       if (this.requireUpdateExchange || this.isInvalidAmount) return

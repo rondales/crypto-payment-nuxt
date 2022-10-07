@@ -2,28 +2,24 @@
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
-        <img src="@/assets/images/trash-box.svg" />
-        Delete
+        <img src="@/assets/images/url-refresh.svg" />
+        Refresh Payment URL
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current Key</p>
+      <p class="sub-title">Current URL</p>
       <div class="text-wrap">
         <p>
-          {{ token }}
+          {{ paymentUrl }}
         </p>
-        <img class="copy" @click="copy(token)" src="@/assets/images/copy.svg" />
+        <img class="copy" @click="copy()" src="@/assets/images/copy.svg" />
       </div>
       <div class="dsc-wrap">
-        <span class="mb-3"> Do you want to remove this key? </span>
-        <span>
-          Any site that uses this key will stop working with Slash.fi Payment
-          System.
-        </span>
+        <span class="mb-3"> Would you like to Refresh this url? </span>
       </div>
-      <button @click="deleteClm" class="btn __l add-flex j-center a-center">
-        <img src="@/assets/images/trash-box.svg" />
-        <span> Delete </span>
+      <button @click="confirm" class="btn __l add-flex j-center a-center">
+        <img src="@/assets/images/url-refresh.svg" />
+        <span> Refresh </span>
       </button>
     </div>
     <button class="close" @click="hideModal">
@@ -38,10 +34,10 @@ import RequestUtility from '@/utils/request'
 import { errorCodeList } from '@/enum/error_code'
 
 export default {
-  name: 'walletModal',
+  name: 'paymentQrCodeRefreshModal',
   data() {
     return {
-      token: ''
+      paymentToken: ''
     }
   },
   computed: {
@@ -51,48 +47,49 @@ export default {
     params() {
       return this.$store.state.modal.params
     },
-    baseUrl() {
+    API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
-    }
+    },
+    paymentUrl() {
+      return `${location.protocol}//${location.host}/payment-merchant/${this.paymentToken}`;
+    },
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
     },
-    copy(value) {
+    copy() {
       this.$store.dispatch('account/copied')
-      this.$clipboard(value)
+      this.$clipboard(this.paymentUrl)
     },
-    // remove the linkage URL
-    deleteClm() {
-      this.apiDeletePlugInsToken()
-        .then((res) => {
-          if (res.data.updated) {
-            this.$store.dispatch('plugInsToken/updateToken', null)
+    // Refresh this URL and QR code
+    confirm() {
+      this.apiRefreshPaymentToken()
+          .then((res) => {
+            this.$store.dispatch('payment/updatePaymentToken', res.data.payment_token)
             this.hideModal()
-          }
-        })
-        .catch((error) => {
-          let message
-          if (error.response.status === 400) {
-            message = errorCodeList[error.response.data.errors.shift()].msg
-          } else {
-            message = 'Please try again after a while.'
-          }
-          this.showErrorModal(message)
-        })
+          })
+          .catch((error) => {
+            let message
+            if (error.response.status === 400) {
+              message = errorCodeList[error.response.data.errors.shift()].msg
+            } else {
+              message = 'Please try again after a while.'
+            }
+            this.showErrorModal(message)
+          })
     },
-    apiDeletePlugInsToken() {
-      const url = `${this.baseUrl}/api/v1/management/api-key`
+    apiRefreshPaymentToken() {
+      const url = `${this.API_BASE_URL}/api/v1/management/payment-token`
       const options = {
         headers: { Authorization: RequestUtility.getBearer() }
       }
 
-      return this.axios.delete(url, options)
+      return this.axios.post(url, null, options)
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
-        target: 'error-for-admin-modal',
+        target: 'error-modal',
         size: 'small',
         params: {
           message: message
@@ -101,7 +98,7 @@ export default {
     }
   },
   mounted() {
-    this.token = this.params.token
+    this.paymentToken = this.params.payment_token
   }
 }
 </script>
@@ -134,6 +131,9 @@ export default {
     &__title {
       font-size: 2.5rem;
       margin-bottom: 4rem;
+      img {
+        width: 20px;
+      }
     }
     &__desc {
       font-size: 2rem;
@@ -143,6 +143,9 @@ export default {
     padding: 18px;
     &__title {
       font-size: 2.3rem;
+      img {
+        width: 20px;
+      }
     }
   }
   &__title {
@@ -191,7 +194,7 @@ export default {
     justify-content: space-between;
     margin-bottom: 32px;
     p {
-      width: 85%;
+      width: 70%;
       font-size: 11px;
       word-break: break-word;
     }
@@ -211,8 +214,8 @@ export default {
     width: 70%;
     margin: auto;
     img {
-      padding: 0 12px 4px 0 !important;
-      width: 30px;
+      padding: 0 12px 0 0 !important;
+      width: 34px;
     }
   }
 }

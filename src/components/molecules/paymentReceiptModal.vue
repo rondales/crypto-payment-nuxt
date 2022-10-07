@@ -73,6 +73,9 @@ export default {
     API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
     },
+    isMobileBrowser() {
+      return isMobile(window.navigator).any
+    },
   },
   methods: {
     hideModal() {

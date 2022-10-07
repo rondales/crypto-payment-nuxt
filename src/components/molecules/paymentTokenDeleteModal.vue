@@ -3,25 +3,21 @@
     <div class="header">
       <h3 class="header__title">
         <img src="@/assets/images/trash-box.svg" />
-        Delete
+        Delete Payment URL
       </h3>
     </div>
     <div class="body">
-      <p class="sub-title">Current Key</p>
+      <div class="dsc-wrap">
+        <span class="mb-3"> Do you want to remove this url? </span>
+      </div>
+      <p class="sub-title">Current Url</p>
       <div class="text-wrap">
         <p>
-          {{ token }}
+          {{ paymentUrl }}
         </p>
-        <img class="copy" @click="copy(token)" src="@/assets/images/copy.svg" />
+        <img class="copy" @click="copy()" src="@/assets/images/copy.svg" />
       </div>
-      <div class="dsc-wrap">
-        <span class="mb-3"> Do you want to remove this key? </span>
-        <span>
-          Any site that uses this key will stop working with Slash.fi Payment
-          System.
-        </span>
-      </div>
-      <button @click="deleteClm" class="btn __l add-flex j-center a-center">
+      <button @click="deletePaymentToken" class="btn __l add-flex j-center a-center">
         <img src="@/assets/images/trash-box.svg" />
         <span> Delete </span>
       </button>
@@ -38,37 +34,39 @@ import RequestUtility from '@/utils/request'
 import { errorCodeList } from '@/enum/error_code'
 
 export default {
-  name: 'walletModal',
+  name: 'paymentTokenDeleteModal',
   data() {
     return {
-      token: ''
+      paymentToken: ''
     }
   },
   computed: {
+    API_BASE_URL() {
+      return process.env.VUE_APP_API_BASE_URL
+    },
     classes() {
       return ['modal-box', `--${this.$store.state.modal.size}`]
     },
     params() {
       return this.$store.state.modal.params
     },
-    baseUrl() {
-      return process.env.VUE_APP_API_BASE_URL
-    }
+    paymentUrl() {
+      return `${location.protocol}//${location.host}/payment-merchant/${this.paymentToken}`;
+    },
   },
   methods: {
     hideModal() {
       this.$store.dispatch('modal/hide')
     },
-    copy(value) {
+    copy() {
       this.$store.dispatch('account/copied')
-      this.$clipboard(value)
+      this.$clipboard(this.paymentUrl)
     },
-    // remove the linkage URL
-    deleteClm() {
-      this.apiDeletePlugInsToken()
+    deletePaymentToken() {
+      this.apiDeletePaymentToken()
         .then((res) => {
           if (res.data.updated) {
-            this.$store.dispatch('plugInsToken/updateToken', null)
+            this.$store.dispatch('payment/updatePaymentToken', null)
             this.hideModal()
           }
         })
@@ -82,8 +80,8 @@ export default {
           this.showErrorModal(message)
         })
     },
-    apiDeletePlugInsToken() {
-      const url = `${this.baseUrl}/api/v1/management/api-key`
+    apiDeletePaymentToken() {
+      const url = `${this.API_BASE_URL}/api/v1/management/payment-token`
       const options = {
         headers: { Authorization: RequestUtility.getBearer() }
       }
@@ -92,7 +90,7 @@ export default {
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
-        target: 'error-for-admin-modal',
+        target: 'error-modal',
         size: 'small',
         params: {
           message: message
@@ -101,7 +99,7 @@ export default {
     }
   },
   mounted() {
-    this.token = this.params.token
+    this.paymentToken = this.params.payment_token
   }
 }
 </script>

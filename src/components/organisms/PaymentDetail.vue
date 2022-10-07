@@ -417,6 +417,8 @@ export default {
         pay_symbol: this.userSelectedTokenSymbol,
         pay_amount: this.userSelectedTokenPaymentAmount,
         device_id: this.$store.state.payment.deviceId
+      }, {
+        withCredentials: true
       });
     },
     setExchangeDataExpireTimer() {
