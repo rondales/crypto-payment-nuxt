@@ -185,7 +185,7 @@ export default {
           this.exchangeTimer = setTimeout(() => {
             this.requireUpdateExchange = true
             clearTimeout(this.exchangeTimer)
-          }, 12000)
+          }, 60000)
           this.$emit('incrementProgressCompletedSteps')
           setTimeout(() => {
             this.$emit('updateInitializingStatus', false)
