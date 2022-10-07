@@ -46,6 +46,7 @@
 import {errorCodeList} from "@/enum/error_code";
 import {saveAs} from 'file-saver';
 import moment from 'moment'
+import isMobile from 'ismobilejs';
 import PaymentModal from '@/components/organisms/Payment/Modal'
 import PaymentText from '@/components/organisms/Payment/Text'
 import PaymentButton from '@/components/organisms/Payment/Button'
