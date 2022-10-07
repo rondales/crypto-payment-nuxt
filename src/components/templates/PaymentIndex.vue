@@ -64,7 +64,7 @@
       </div>
     </div>
     <footer>
-      <PaymentText type="cap" class="copy" html="Slash.fi Web3 Payment ®︎" />
+      <PaymentText type="min" class="copy" html="Slash.fi Web3 Payment ®︎" />
     </footer>
   </div>
 </template>
@@ -223,42 +223,38 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .pay {
-  min-height: 100vh;
-  padding-top: 100px;
+  // max-height: 80vh;
+  // padding-top: 5rem;
+  height: 100vh;
   @include media(sp) {
     padding-top: 61px;
   }
   &__box {
-    width: 35rem;
+    width: 32rem;
     margin-left: auto;
     margin-right: auto;
     border-radius: 1rem;
     overflow: hidden;
-    // border: 1px solid #eee;
-    // background-color: var(--color_lp_box);
-    box-shadow: 0px 8px 2rem rgba(139, 42, 225, 0.7),
-      0px -8px 2rem rgba(62, 185, 252, 0.7);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    // box-shadow: rgba(139, 42, 225, 0.4) 5px 5px,
-    //   rgba(139, 42, 225, 0.3) 10px 10px, rgba(139, 42, 225, 0.2) 15px 15px,
-    //   rgba(139, 42, 225, 0.1) 20px 20px, rgba(139, 42, 225, 0.05) 25px 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
     box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
       rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
+    max-height: 88vh;
+    overflow-y: scroll;
     @include media(sp) {
       width: 90%;
       width: 100%;
       box-shadow: none;
-      // border: 0px solid #eee;
-    }
-    &::before {
-      // content: "";
-      display: block;
-      width: 100%;
-      height: 1rem;
-      background: $gradation-pale;
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: translate(0%, 0%);
     }
     &__wrap {
-      padding: 0 2rem;
+      padding: 0 1.5rem;
       @include media(sp) {
         padding: 0 5vw;
       }
@@ -316,30 +312,30 @@ export default {
     }
   }
   &__head {
-    padding-top: 3rem;
-    &__ids {
-    }
+    padding-top: 2rem;
+  }
+  &__body {
+    padding-bottom: 2rem;
   }
   &__foot {
-    // padding: 4rem 0;
-    margin-bottom: 2rem;
-    margin-top: 5rem;
-    text-align: center;
-    // @include flex(center, self-end);
-    @include flex(center, center);
-    flex-direction: column;
-    .svg {
-      margin-bottom: 0.5rem;
-      width: 6rem;
-      // margin-right: 0.8rem;
-    }
-    .text {
-      &::v-deep {
-        * {
-          line-height: 1;
-        }
-      }
-    }
+    display: none;
+    // margin-bottom: 2rem;
+    // margin-top: 3rem;
+    // text-align: center;
+    // @include flex(center, center);
+    // flex-direction: column;
+    // gap: 0.5rem;
+    // .svg {
+    //   margin-bottom: 0.5rem;
+    //   width: 5rem;
+    // }
+    // .text {
+    //   &::v-deep {
+    //     * {
+    //       line-height: 1;
+    //     }
+    //   }
+    // }
   }
   &__loading {
     width: 20%;
@@ -386,174 +382,10 @@ export default {
 }
 footer {
   text-align: center;
-  padding: 10rem 0 2rem;
+  // padding: 10rem 0 2rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 0;
+  width: 100%;
 }
-// .slash-bg {
-//   width: 100%;
-//   min-height: 120vh;
-//   overflow: hidden;
-//   @include media(sp) {
-//     padding-top: 55px;
-//     min-height: 100vh;
-//   }
-//   position: relative;
-//   &::before {
-//     content: "";
-//     background: url(/assets/images/slash-bg.png) no-repeat center center;
-//     width: 100%;
-//     height: 100vh;
-//     position: fixed;
-//     top: 100px;
-//     z-index: 0;
-//     @include media(sp) {
-//       top: 70px;
-//     }
-//   }
-// }
-// .theme--light {
-//   .slash-bg {
-//     &::before {
-//       content: "";
-//       background: url(/assets/images/slash-bg-l.png) no-repeat center center;
-//     }
-//   }
-// }
-// .home {
-//   text-align: center;
-// }
-// .payment {
-//   position: absolute;
-//   top: 60vh;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   box-shadow: var(--color_shadow);
-//   width: 100%;
-//   max-width: 36.1rem;
-//   padding: 32px 24px 24px;
-//   border-radius: 8px;
-//   background: var(--color_bg);
-//   @include media(sp) {
-//     // top: calc(50% + 12rem);
-//     position: relative;
-//     top: 0;
-//     left: 0;
-//     transform: translate(0%, 0%);
-//     margin: 3rem auto;
-//   }
-//   &::before {
-//     content: "Slash.fi Web3 Payment ®︎";
-//     font-size: 11px;
-//     color: var(--color_font);
-//     font-weight: 300;
-//     position: absolute;
-//     bottom: -60px;
-//     left: 50%;
-//     transform: translate(-50%, 0);
-//     opacity: 0.7;
-//   }
-//   &.initializing {
-//     @include media(sp) {
-//       // top: calc(50% + 12rem);
-//       position: relative;
-//       top: 0;
-//       left: 0;
-//       transform: translate(0%, 23vh);
-//       margin: 3rem auto;
-//     }
-//   }
-//   .progress-wrap {
-//     height: 25vh;
-//     .step {
-//       font-weight: 400;
-//       font-size: 2.5rem;
-//       .percent {
-//         font-weight: 300;
-//         font-size: 1.5rem;
-//       }
-//     }
-//     .status {
-//       font-weight: 300;
-//       font-size: 1.5rem;
-//       animation: flash 1.5s linear infinite;
-//     }
-//     @keyframes flash {
-//       0%,100% {
-//         opacity: 0.5;
-//       }
-//       50% {
-//         opacity: 0;
-//       }
-//     }
-//   }
-//   .menu-nav {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 100%;
-//     background: var(--color_bg);
-//     padding: 32px;
-//     z-index: 1;
-//     border-radius: 10px;
-//   }
-//   .menu-nav_top {
-//     margin-bottom: 32px;
-//   }
-//   .menu-nav_body {
-//     a {
-//       display: block;
-//       font-size: 18px;
-//       font-weight: 300;
-//       margin-bottom: 24px;
-//     }
-//   }
-//   &_initializing {
-//     text-align: center;
-//     margin: auto;
-//     padding-top: 60px;
-//     padding-bottom: 60px;
-//     .title {
-//       font-weight: 200;
-//       font-size: 18px;
-//     }
-//   }
-//   .payment_Receiver,
-//   .payment_invoice-id {
-//     font-weight: 400;
-//     font-size: 15px;
-//   }
-//   .loading {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 100%;
-//     background: rgba(0, 0, 0, 0.6);
-//     border-radius: 8px;
-//     z-index: 9999;
-//   }
-// }
-// .fixed {
-//   position: fixed;
-//   bottom: 0;
-//   left: 50%;
-//   transform: translate(-50%, 0);
-//   width: 100%;
-//   padding: 16px;
-//   background: var(--color_darken);
-//   .btn {
-//     font-size: 12px;
-//     height: 4.2rem;
-//     line-height: 4.2rem;
-//     padding: 0 1.4rem;
-//     .icon-wrap {
-//       margin-right: 4px;
-//     }
-//     img {
-//       vertical-align: middle;
-//       width: 18px;
-//       height: 18px;
-//     }
-//   }
-// }
 </style>

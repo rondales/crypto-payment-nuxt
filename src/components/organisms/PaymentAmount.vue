@@ -1,15 +1,15 @@
 <template>
   <div :class="classes">
-    <PaymentTitle
+    <!-- <PaymentTitle
       class="amount__title"
       type="h3_g"
       html="Enter the payment amount"
       emoji="&#128591;"
       layout="c"
-    />
+    /> -->
     <PaymentTitle
       class="amount__subtitle"
-      type="h3"
+      type="h4"
       html="How much would you pay?"
       layout=""
     />
@@ -41,13 +41,13 @@
       :priceClass="{ inactive: requireUpdateExchange }"
     />
     <div class="amount__pay">
-      <PaymentTitle
+      <!-- <PaymentTitle
         class="amount__pay__title"
         v-if="!requireUpdateExchange"
         type="h3"
         html="Payment with Web3 Wallet"
         layout="c"
-      />
+      /> -->
       <PaymentAction
         class="amount__pay__action"
         v-if="requireUpdateExchange"
@@ -218,9 +218,9 @@ export default {
         base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
-        margin_rate: this.exchangeMarginRate,
-      };
-      return this.axios.patch(url, params, { withCredentials: true });
+        margin_rate: this.exchangeMarginRate
+      }
+      return this.axios.patch(url, params, { withCredentials: true })
     },
     next() {
       if (this.requireUpdateExchange || this.isInvalidAmount) return
@@ -265,14 +265,14 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .amount {
-  &__title {
-    margin-bottom: 2rem;
-  }
+  // &__title {
+  //   margin-bottom: 2rem;
+  // }
   &__subtitle {
     margin-bottom: 0.5rem;
   }
   &__form {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     .selectwrap {
       @include flex(flex-start, center);
       flex-wrap: nowrap;
@@ -280,8 +280,8 @@ export default {
       padding-left: 1rem;
       border-left: 1px solid var(--Border);
       .svg {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 1.8rem;
+        height: 1.8rem;
       }
       select {
         flex: 1;
@@ -289,17 +289,16 @@ export default {
     }
   }
   &__bill {
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
   }
   &__pay {
-    &__title {
-      margin-bottom: 2rem;
-    }
+    // &__title {
+    //   margin-bottom: 2rem;
+    // }
     &__action {
-      margin-bottom: 1rem;
     }
     &__button {
-      margin: 1rem;
+      margin-top: 2rem;
     }
   }
 }

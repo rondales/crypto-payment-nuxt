@@ -16,64 +16,64 @@
 
 
 <script>
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentButton from '@/components/organisms/Payment/Button'
 export default {
-  name: "PaymentTop",
+  name: 'PaymentTop',
   components: {
     PaymentTitle,
-    PaymentButton,
+    PaymentButton
   },
   data() {
     return {
       invoiceIcon: {
-        icon: "",
-        func: "",
-      },
-    };
+        icon: '',
+        func: ''
+      }
+    }
   },
   watch: {
     $route(route) {
       this.setIconData(route.name)
-    },
+    }
   },
   methods: {
     copyLink() {
-      this.$emit("copyLink");
+      this.$emit('copyLink')
     },
     prevPage() {
-      this.$router.back();
+      this.$router.back()
     },
     handle_function_call(function_name) {
-      if (function_name == "prevPage") {
-        this.prevPage();
-      } else if (function_name == "copyLink") {
-        this.copyLink();
+      if (function_name == 'prevPage') {
+        this.prevPage()
+      } else if (function_name == 'copyLink') {
+        this.copyLink()
       }
     },
     setIconData(routeName) {
-      this.invoiceIcon.icon = ""
-      this.invoiceIcon.func = ""
-      if (["token", "exchange", "detail"].includes(routeName)) {
-        this.invoiceIcon.icon = "left-arrow";
-        this.invoiceIcon.func = "prevPage";
+      this.invoiceIcon.icon = ''
+      this.invoiceIcon.func = ''
+      if (['token', 'exchange', 'detail'].includes(routeName)) {
+        this.invoiceIcon.icon = 'left-arrow'
+        this.invoiceIcon.func = 'prevPage'
       } else if (routeName === 'result') {
-        this.invoiceIcon.icon = "link";
-        this.invoiceIcon.func = "copyLink";
+        this.invoiceIcon.icon = 'link'
+        this.invoiceIcon.func = 'copyLink'
       }
     }
   },
   created() {
     this.setIconData(this.$route.name)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .payhead {
-  margin-top: 3rem;
+  margin-top: 2rem;
   @include flex(space-between, center);
   margin-bottom: 2rem;
   & > * {

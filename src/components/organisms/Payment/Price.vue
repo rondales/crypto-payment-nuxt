@@ -1,80 +1,93 @@
 <template>
   <div :class="classes">
     <div class="head">
-      <PaymentText tag="p" type="h4b" :html="symbol" />
-      <PaymentText :color="setCapColor" type="cap" :html="cap + cap2" />
+      <p class="symbol"><span v-html="symbol"></span></p>
+      <p class="cap" :class="setCapColor"><span v-html="cap + cap2"></span></p>
     </div>
-    <PaymentText class="price" tag="p" type="h2b" :html="price" />
+    <p class="price"><span v-html="price"></span></p>
   </div>
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
 export default {
-  name: "PaymentPrice",
-  components: {
-    PaymentText,
-  },
+  name: 'PaymentPrice',
+  components: {},
   props: {
     symbol: {
       type: String,
-      default: "USDT",
+      default: 'USDT'
     },
     cap: {
       type: [String, Number],
-      default: "",
+      default: ''
     },
     cap2: {
       type: String,
-      default: "",
+      default: ''
     },
     price: {
       type: [String, Number],
-      default: "0",
+      default: '0'
     },
     status: {
       type: String,
-      default: "success",
-    },
+      default: 'success'
+    }
   },
   data() {
     return {
       capColor: {
-        success: "green",
-        error: "red",
-      },
-    };
+        success: 'green',
+        error: 'red'
+      }
+    }
   },
   filters: {},
   computed: {
     classes() {
-      let array = { priceBox: true };
-      array[this.type] = true;
-      return array;
+      let array = { priceBox: true }
+      array[this.type] = true
+      return array
     },
     setCapColor() {
-      return this.capColor[this.status];
-    },
+      return this.capColor[this.status]
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .priceBox {
   border: 1px solid var(--Border);
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-radius: 1rem;
   .head {
     @include flex(space-between, center);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .symbol {
+    @include font(1.2rem, 600, $ls, $lh, $en_go);
+    color: var(--Text);
+  }
+  .cap {
+    @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+    color: var(--Text);
+    &.red {
+      color: var(--Alert);
+    }
+    &.green {
+      color: var(--Success);
+    }
   }
   .price {
     text-align: right;
+    @include font(1.44rem, 600, $ls, $lh, $en_go);
+    color: var(--Text);
   }
 }
 </style>

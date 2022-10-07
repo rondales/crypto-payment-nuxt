@@ -1,125 +1,110 @@
 <template>
-  <div class="d-payboxwrap">
-    <div :class="classes">
-      <!-- TODO style 最終調整 -->
-      <div class="left">
-        <PaymentToken
-          :icon="icon"
-          :icon-type="iconType"
-          :title="title"
-          :symbol="symbol"
-          :symboltext="symboltext"
-          :size="tokenSize"
-        />
+  <div :class="classes">
+    <div class="left">
+      <PaymentToken
+        :icon="icon"
+        :icon-type="iconType"
+        :title="title"
+        :symbol="symbol"
+        :symboltext="symboltext"
+        :size="tokenSize"
+      />
+    </div>
+    <div class="right">
+      <div v-if="table" class="balance">
+        <dl v-for="(dl, index) in table" :key="index">
+          <dt><span v-html="dl.title"></span></dt>
+          <dd>
+            <span class="balance_price" v-html="dl.price"></span>
+            <span class="balance_symbol" v-html="dl.symbol"></span>
+          </dd>
+        </dl>
       </div>
-      <div class="right">
-        <div v-if="table" class="balance">
-          <dl v-for="(dl, index) in table" :key="index">
-            <dt><PaymentText type="p" :html="dl.title" /></dt>
-            <dd>
-              <PaymentText type="h4b" :html="dl.price" />
-              <PaymentText type="p" :html="dl.symbol" />
-            </dd>
-          </dl>
-        </div>
-        <PaymentText
-          class="price"
-          v-else
-          tag="p"
-          :type="priceSize"
-          :html="price"
-        />
-      </div>
+      <p v-else class="price"><span v-html="price"></span></p>
     </div>
   </div>
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-// import PaymentIcon from "@m/components/organisms/Payment/Icon";
-import PaymentToken from "@/components/organisms/Payment/Token";
+import PaymentToken from '@/components/organisms/Payment/Token'
 export default {
-  name: "PaymentAmountBilled",
+  name: 'PaymentAmountBilled',
   components: {
-    // PaymentButton,
-    PaymentText,
-    // PaymentIcon,
-    PaymentToken,
+    PaymentToken
   },
   props: {
     icon: {
       type: String,
-      default: require("@/assets/images/usdt.png"),
+      default: require('@/assets/images/usdt.png')
     },
     iconType: {
       type: String,
-      default: "svg",
+      default: 'svg'
     },
     symbol: {
       type: String,
-      default: "USDT",
+      default: 'USDT'
     },
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     symboltext: {
       type: String,
-      default: "",
+      default: ''
     },
     price: {
       type: [String, Number],
-      default: 1,
+      default: 1
     },
     priceClass: {
-      type: Object,
+      type: Object
     },
     table: {
-      type: Array,
+      type: Array
     },
     size: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
   data() {
     return {
-      priceSize: "h3b",
-      tokenSize: "m",
-    };
+      priceSize: 'h3b',
+      tokenSize: 'm'
+    }
   },
   filters: {},
   computed: {
     classes() {
-      let array = { billed: true };
-      array[this.size] = true;
+      let array = { billed: true }
+      array[this.size] = true
       if (this.table) {
-        array["table"] = true;
+        array['table'] = true
       }
-      return array;
-    },
+      return array
+    }
   },
   methods: {},
   created() {
-    if (this.size == "big") {
-      this.priceSize = "h0";
-      this.tokenSize = "s";
+    if (this.size == 'big') {
+      this.priceSize = 'h0'
+      this.tokenSize = 's'
     }
   },
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .billed {
   // margin: 1.5rem 0 1rem;
   @include flex(space-between, center);
   flex-wrap: no-wrap;
   background-color: var(--Base2);
-  // background: $gradation-pale;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   &.table {
     @include flex(space-between, flex-start);
@@ -131,27 +116,23 @@ export default {
     cursor: pointer;
   }
   &.big {
-    @include flex(center, center);
-    flex-direction: column-reverse;
-    padding: 2.5rem 1rem 2rem;
-    flex-direction: column;
-    padding: 1.5rem 1rem;
-    &::before {
-      content: "Amout of money";
-      @include font(0.8rem, 500, 0.04em, 1.8, $en_go);
-      color: var(--SubText);
-      width: 100%;
-      text-align: center;
-    }
+    @include flex(space-between, center);
+    padding: 1.5rem 2rem;
+    // &::before {
+    //   // content: 'Amout of money';
+    //   @include font(0.8rem, 500, 0.04em, 1.8, $en_go);
+    //   color: var(--SubText);
+    //   width: 100%;
+    //   // text-align: center;
+    // }
     .price {
-      margin-top: 0.5rem;
+      @include font(1.728rem, 600, $ls, 1, $en_go);
     }
   }
-  .left {
-  }
-
   .price {
     text-align: right;
+    @include font(1.2rem, 600, $ls, 1, $en_go);
+    color: var(--Text);
     &::v-deep {
       span {
         line-height: 1;
@@ -160,7 +141,10 @@ export default {
   }
   .balance {
     dl {
-      @include flex(flex-end, flex-end);
+      @include flex(space-between, flex-end);
+      gap: 1rem;
+      // width: 12rem;
+      flex-wrap: nowrap;
       &::v-deep {
         span {
           line-height: 1;
@@ -172,23 +156,21 @@ export default {
     }
     dt {
       opacity: 0.6;
-      margin-right: 0.3rem;
+      @include font(0.8rem, 400, $ls, 1, $en_go);
     }
     dd {
       display: inline-flex;
       align-items: flex-end;
-
-      * + * {
-        margin-left: 3px;
-      }
+      gap: 0.2rem;
+    }
+    &_price {
+      color: var(--Text);
+      @include font(1rem, 500, $ls, 1, $en_go);
+    }
+    &_symbol {
+      color: var(--Text);
+      @include font(0.8rem, 400, $ls, 1, $en_go);
     }
   }
-  // figure {
-  //   img {
-  //     height: 46px;
-  //     width: 46px;
-  //     border-radius: 50%;
-  //   }
-  // }
 }
 </style>

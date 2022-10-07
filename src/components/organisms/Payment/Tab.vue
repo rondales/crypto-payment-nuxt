@@ -3,14 +3,10 @@
     <div class="head">
       <ul>
         <li :class="{ active: !status }">
-          <button @click="toList">
-            <PaymentText type="h4b" html="Lists" />
-          </button>
+          <button @click="toList"><span>Lists</span></button>
         </li>
         <li :class="{ active: status }">
-          <button @click="toToken">
-            <PaymentText type="h4b" html="Tokens" />
-          </button>
+          <button @click="toToken"><span>Tokens</span></button>
         </li>
       </ul>
     </div>
@@ -21,44 +17,41 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
 export default {
-  name: "PaymentTitle",
-  components: {
-    PaymentText,
-  },
+  name: 'PaymentTitle',
+  components: {},
   props: {
     status: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { tab: true };
+      let array = { tab: true }
       // array[this.type] = true;
-      return array;
-    },
+      return array
+    }
   },
   methods: {
     toList() {
-      this.$emit("changeToList");
+      this.$emit('changeToList')
     },
     toToken() {
-      this.$emit("changeToToken");
-    },
+      this.$emit('changeToToken')
+    }
   },
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .tab {
   .head {
     // background-color: var(--color_bg_parts);
@@ -91,11 +84,13 @@ export default {
       width: 100%;
       padding: 0.5rem;
       border-radius: 0.5rem;
+      color: var(--Text);
+      @include font(1rem, 600, 0.04em, $lh, $en_go);
     }
   }
   .body {
     background-color: var(--Base2);
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 0 0 0.5rem 0.5rem;
     @include media(sp) {
       padding: 1.5rem 1rem;

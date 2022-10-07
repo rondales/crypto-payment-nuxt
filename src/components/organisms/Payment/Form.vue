@@ -3,23 +3,14 @@
     <div class="form__wrap">
       <slot />
     </div>
-    <PaymentText
-      v-if="error"
-      class="error"
-      type="cap"
-      color="red"
-      :html="error"
-    />
+    <span v-if="error" class="error" v-html="error"></span>
   </div>
 </template>
 
 <script>
-import PaymentText from '@/components/organisms/Payment/Text'
 export default {
   name: 'PaymentTitle',
-  components: {
-    PaymentText
-  },
+  components: {},
   props: {
     error: {
       type: String
@@ -52,7 +43,7 @@ export default {
     border-radius: 6px;
     @include flex(flex-start, center);
     flex-wrap: nowrap;
-    padding: 0.8rem;
+    padding: 0.5rem 1rem;
     &::v-deep {
       input {
         @include font(1rem, 600, $ls, $formh, $en_go);
@@ -62,7 +53,6 @@ export default {
       }
       select {
         appearance: none;
-        // width: 5rem;
         text-align: center;
         padding: 0rem 0.5rem;
         @include font(1rem, 600, $ls, $formh, $en_go);
@@ -71,6 +61,8 @@ export default {
   }
   .error {
     margin-top: 0.5rem;
+    color: var(--Alert);
+    @include font(10px, 400, 0.04em, 1.8, $en_go);
   }
 }
 </style>

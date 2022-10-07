@@ -2,83 +2,87 @@
   <div :class="classes">
     <PaymentIcon v-if="icon" class="icon" :path="icon" />
     <div class="textwrap">
-      <PaymentText v-if="text" class="text" tag="p" type="h5" :html="text" />
+      <p v-if="text" class="text"><span v-html="text"></span></p>
       <PaymentButton v-if="url" size="icon" icon="outerlink" :url="link" />
     </div>
-    <!-- <PaymentButton size="s" text="Change" /> -->
     <slot />
   </div>
 </template>
 
 <script>
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentButton from "@/components/organisms/Payment/Button";
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentButton from '@/components/organisms/Payment/Button'
 export default {
-  name: "PaymentTitle",
+  name: 'PaymentTitle',
   components: {
     PaymentIcon,
-    PaymentButton,
-    PaymentText,
+    PaymentButton
   },
   props: {
     icon: {
       type: String,
-      default: "",
+      default: ''
     },
     text: {
       type: String,
-      default: "",
+      default: ''
     },
     link: {
       type: String,
-      default: "",
+      default: ''
     },
     url: {
       type: String,
-      default: "",
+      default: ''
     },
+    type: {
+      type: String,
+      default: ''
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { action: true };
-      // array[this.type] = true;
-      return array;
-    },
+      let array = { action: true }
+      array[this.type] = true
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .action {
   @include flex(space-between, center);
-  // background-color: var(--Base2);
-  // border: 1px solid var(--Border);
-  // padding: 0.5rem;
-  // border-radius: 0.5rem;
-  // @include media(sp) {
-  //   padding: 0.5rem;
-  // }
+  &.network {
+    .icon {
+      width: 2.5rem;
+    }
+    .text {
+      flex: 1;
+      @include font(1rem, 400, 0.04em, 1.8, $en_go);
+    }
+  }
   .textwrap {
     flex: 1;
   }
   .icon {
-    // width: 4rem;
-    width: 2rem;
+    width: 1.3rem;
     font-size: 0;
   }
   .text {
     flex: 1;
     padding: 0 0.5rem;
+    color: var(--Text);
+    @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
   }
 }
 </style>
