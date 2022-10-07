@@ -117,7 +117,7 @@ export default {
   }
   &.big {
     @include flex(space-between, center);
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 1rem;
     // &::before {
     //   // content: 'Amout of money';
     //   @include font(0.8rem, 500, 0.04em, 1.8, $en_go);

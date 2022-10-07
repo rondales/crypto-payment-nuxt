@@ -230,7 +230,7 @@ export default {
     padding-top: 61px;
   }
   &__box {
-    width: 32rem;
+    width: 28rem;
     margin-left: auto;
     margin-right: auto;
     border-radius: 1rem;

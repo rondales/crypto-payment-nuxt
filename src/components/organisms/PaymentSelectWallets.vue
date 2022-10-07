@@ -203,15 +203,15 @@ export default {
     @include flex(center, flex-start);
     gap: 0.8rem;
     flex-wrap: nowrap;
+    flex-direction: column;
     @include media(sp) {
       // display: block;
-      flex-direction: column;
     }
     * {
-      flex: 1;
+      // flex: 1;
+      width: 100%;
       @include media(sp) {
         flex: auto;
-        width: 100%;
       }
       //   margin-top: 1rem;
       //   &::v-deep {

@@ -8,7 +8,7 @@
       size="big"
     />
 
-    <PaymentTitle class="result__title mt-3" type="h2_g" html="Payment status" />
+    <PaymentTitle class="result__title" type="h2_g" html="Payment status" />
     <PaymentTransaction
       class="result__transaction"
       :type="transactionType"
@@ -17,7 +17,7 @@
       :explorer-url="explorerUrl"
     />
 
-    <PaymentTitle class="result__title mt-3" type="h2_g" html="Payment detail" />
+    <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
     <PaymentAmountBilled
       class="result__receivedToken"
       title="Paid Amount"
@@ -28,7 +28,7 @@
     />
     <PaymentAmountBilled
       v-if="hasCashback"
-      class="result__receivedToken mt-1"
+      class="result__receivedToken"
       title="Cash Back"
       :symbol="merchantReceiveSymbol"
       :icon="merchantReceiveTokenIcon"
@@ -36,7 +36,7 @@
     />
 
     <div v-if="isStatusProcessing || isStatusSucceeded">
-      <PaymentTitle class="result__title mt-3 mb-1" type="h2_g" html="Payment receipt" />
+      <PaymentTitle class="result__title" type="h2_g" html="Payment receipt" />
       <PaymentReceipt
         :payment-token="paymentToken"
         :is-registerd-email="Boolean(email)"
@@ -53,7 +53,6 @@
       color="primary"
       layout="reverse"
     />
-
   </div>
 </template>
 
@@ -68,19 +67,19 @@ import {
   NETWORKS,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS,
+  STATUS_RESULT_SUCCESS
 } from '@/constants'
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
-  AvalancheTokens as AvalacheReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
 } from '@/contracts/receive_tokens'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
-  AvalancheTokens as AvalancheDefaultTokens,
+  AvalancheTokens as AvalancheDefaultTokens
 } from '@/contracts/tokens'
 
 export default {
@@ -113,7 +112,7 @@ export default {
       transactionTitle: 'Waiting for transaction result',
       transactionText: '',
       resultPollingTimer: null
-    };
+    }
   },
   filters: {
     formatAmount(amount) {
@@ -205,7 +204,7 @@ export default {
         : this.failureReturnUrl
     },
     isReceiptMode() {
-      return "rcpt" in this.$route.query
+      return 'rcpt' in this.$route.query
     },
     isStatusProcessing() {
       return this.status === STATUS_PROCESSING
@@ -220,25 +219,25 @@ export default {
       return (
         this.chainId === NETWORKS[1].chainId ||
         this.chainId === NETWORKS[5].chainId
-      );
+      )
     },
     isPaidBinance() {
       return (
         this.chainId === NETWORKS[56].chainId ||
         this.chainId === NETWORKS[97].chainId
-      );
+      )
     },
     isPaidMatic() {
       return (
         this.chainId === NETWORKS[137].chainId ||
         this.chainId === NETWORKS[80001].chainId
-      );
+      )
     },
     isPaidAvalanche() {
       return (
         this.chainId === NETWORKS[43114].chainId ||
         this.chainId === NETWORKS[43113].chainId
-      );
+      )
     },
     hasCashback() {
       if (!this.cashbackAmount) return false
@@ -249,8 +248,8 @@ export default {
     apiGetTransaction() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
-        params: new URLSearchParams([['payment_token', this.paymentToken]]),
-      };
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
+      }
       return this.axios.get(url, request)
     },
     showDataInitialize() {
@@ -297,7 +296,7 @@ export default {
           if (stopTimerStatuses.includes(response.data.status)) {
             clearInterval(this.resultPollingTimer)
           }
-        });
+        })
       }, this.RESULT_CHECK_CYCLE)
     }
   },
@@ -306,11 +305,17 @@ export default {
     this.showDataInitialize()
     Decimal.set({ toExpNeg: -20 })
     this.apiGetTransaction().then((response) => {
-      this.setApiResultData(response.data);
+      this.setApiResultData(response.data)
       if (this.isStatusProcessing) {
-        const filterAmount = (amount) => { return Decimal(amount).toString() }
-        this.transactionText = `Pay ${filterAmount(this.userPaidAmount)}${this.userPaidSymbol} for ${filterAmount(this.merchantReceiveAmount)}${this.merchantReceiveSymbol}`
-        this.pollingTransactionResult();
+        const filterAmount = (amount) => {
+          return Decimal(amount).toString()
+        }
+        this.transactionText = `Pay ${filterAmount(this.userPaidAmount)}${
+          this.userPaidSymbol
+        } for ${filterAmount(this.merchantReceiveAmount)}${
+          this.merchantReceiveSymbol
+        }`
+        this.pollingTransactionResult()
       }
       this.$emit('incrementProgressCompletedSteps')
       setTimeout(() => {
@@ -327,34 +332,41 @@ export default {
       size: 'small'
     })
     next(false)
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .result {
   &__bill {
     margin-bottom: 2rem;
   }
   &__title {
+    margin-bottom: 0.5rem;
+  }
+  // &__balance {
+  //   margin-bottom: 1rem;
+  // }
+  &__transaction {
     margin-bottom: 2rem;
   }
-  &__balance {
+  &__receivedToken {
+    padding: 1rem;
     margin-bottom: 2rem;
   }
-  &__update {
-    margin-bottom: 2rem;
-  }
-  &__price {
-    margin-bottom: 2rem;
-  }
-  &__btnwrap {
-    margin-top: 2rem;
-    div + div {
-      margin-top: 0.5rem;
-    }
-  }
+  // &__update {
+  //   margin-bottom: 1rem;
+  // }
+  // &__price {
+  //   margin-bottom: 1rem;
+  // }
+  // &__btnwrap {
+  //   margin-top: 2rem;
+  //   div + div {
+  //     margin-top: 0.5rem;
+  //   }
+  // }
 }
 </style>
