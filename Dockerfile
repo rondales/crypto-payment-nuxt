@@ -47,4 +47,4 @@ RUN apk --no-cache add binutils curl && \
 
 WORKDIR /usr/local/src
 
-RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --acl public-read --cache-control "max-age=3600"
+RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --cache-control "max-age=3600"
