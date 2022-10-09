@@ -7,6 +7,7 @@ RUN mkdir /work
 COPY /src /work/src
 COPY /public /work/public
 COPY .env.mainnet /work/.env.mainnet
+COPY .env.premain /work/.env.premain
 COPY .env.testnet /work/.env.testnet
 COPY .env.staging /work/.env.staging
 COPY vue.config.js /work/vue.config.js

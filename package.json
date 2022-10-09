@@ -10,6 +10,7 @@
     "build:dev": "vue-cli-service build --mode development",
     "build:stg": "vue-cli-service build --mode staging",
     "build:testnet": "vue-cli-service build --mode testnet",
+    "build:premain": "vue-cli-service build --mode premain",
     "build:mainnet": "vue-cli-service build --mode mainnet",
     "lint": "vue-cli-service lint"
   },
