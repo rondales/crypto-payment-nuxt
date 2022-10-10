@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import PaymentIndex from '@/components/templates/PaymentIndex'
+import PaymentIndex from '@/components/templates/ww/PaymentIndex'
 import { STATUS_PUBLISHED } from '@/constants'
 
 export default {
