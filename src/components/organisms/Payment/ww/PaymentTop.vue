@@ -96,8 +96,8 @@ export default {
     },
     prevMode() {
       return (
-        (this.currentRouteName === "exchange" ||
-          this.currentRouteName === "detail") &&
+        (this.currentRouteName === "ww-exchange" ||
+          this.currentRouteName === "ww-detail") &&
         this.$store.state.payment.status === 1
       );
     },
@@ -109,14 +109,14 @@ export default {
       );
     },
     isCurrentRequestConnectWalletPage() {
-      return this.$route.name === "wallets";
+      return this.$route.name === "ww-wallets";
     },
     isCurrentBeforeSendTransactionPages() {
-      const pages = ["token", "exchange", "detail"];
+      const pages = ["ww-token", "ww-exchange", "ww-detail"];
       return pages.includes(this.$route.name);
     },
     isCurrentResultPage() {
-      return this.$route.name === "result";
+      return this.$route.name === "ww-result";
     },
     isDarkTheme() {
       return this.$store.state.theme === "dark";
