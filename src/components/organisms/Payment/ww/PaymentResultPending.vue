@@ -29,7 +29,7 @@
 import { Decimal as BigJs } from 'decimal.js'
 
 export default {
-  name: 'PaymentResultPending',
+  name: 'ww-PaymentResultPending',
   props: {
     urls: Object,
     transaction: Object

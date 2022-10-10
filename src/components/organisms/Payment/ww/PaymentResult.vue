@@ -40,6 +40,8 @@
           :urls="linkUrlData"
           :token="paymentToken"
           :isReceiptMode="isReceiptMode"
+          :cashbackAmount="cashbackAmount"
+          :merchantReceiveSymbol="merchantReceiveSymbol"
         />
       </div>
     </div>
@@ -66,7 +68,7 @@ import {
 } from "@/contracts/tokens";
 
 export default {
-  name: "PaymentResult",
+  name: "ww-PaymentResult",
   components: {
     pending: ResultPending,
     failure: ResultFailure,
@@ -84,6 +86,7 @@ export default {
       merchantReceiveSymbol: null,
       userPaidAmount: "0",
       userPaidSymbol: null,
+      cashbackAmount: "0",
       transactionHash: null,
       successReturnUrl: null,
       failureReturnUrl: null,
@@ -100,14 +103,16 @@ export default {
   },
   filters: {
     amountFormat(amount) {
-      const splitAmount = amount.split('.')
-      if (splitAmount.length > 1) {
-        splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
-      }
-      if(splitAmount[1]) {
-        return splitAmount.join('.')
-      } else {
-        return splitAmount[0]
+      if (amount) {
+        const splitAmount = amount.split('.')
+        if (splitAmount.length > 1) {
+          splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
+        }
+        if(splitAmount[1]) {
+          return splitAmount.join('.')
+        } else {
+          return splitAmount[0]
+        }
       }
     },
   },
@@ -209,13 +214,6 @@ export default {
       };
       return this.axios.get(url, request);
     },
-    apiGetTransactionStatus() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`;
-      const request = {
-        params: new URLSearchParams([["payment_token", this.paymentToken]]),
-      };
-      return this.axios.get(url, request);
-    },
     showDataInitialize() {
       this.chainId = this.$store.state.web3.chainId;
       this.merchantReceiveAmount =
@@ -236,9 +234,11 @@ export default {
       this.merchantReceiveSymbol = data.base_symbol;
       this.userPaidAmount = data.user_amount;
       this.userPaidSymbol = data.user_symbol;
+      this.cashbackAmount = data.cashback_amount;
       this.transactionHash = data.transaction_address;
       this.successReturnUrl = data.succeeded_return_url;
       this.failureReturnUrl = data.failured_return_url;
+      this.status = data.status;
       this.$store.dispatch("payment/update", {
         domain: data.domain,
         orderCode: data.order_code,
@@ -248,8 +248,8 @@ export default {
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
-        this.apiGetTransactionStatus().then((response) => {
-          this.status = response.data.status;
+        this.apiGetTransaction().then((response) => {
+          this.setApiResultData(response.data);
           const stopTimerStatuses = [
             STATUS_RESULT_FAILURE,
             STATUS_RESULT_SUCCESS,
