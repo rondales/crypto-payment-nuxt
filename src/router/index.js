@@ -102,7 +102,7 @@ const router = new Router({
                 },
                 {
                   name: "ww-invoice",
-                  path: "/payments-uiswitchable/invoice/:token/ww",
+                  path: "/payments-uiswitchable/invoice/ww",
                   component: () => import("@/components/organisms/Payment/ww/PaymentInvoice"),
                   meta: { title: 'Slash Payment' }
                 }
@@ -166,7 +166,7 @@ const router = new Router({
             {
               name: "invoice",
               path: "/payment/invoice",
-              alias: ["/payments-uiswitchable/invoice/:token/basic", "/payments-uiswitchable/invoice/:token" ],
+              alias: ["/payments-uiswitchable/invoice/basic", "/payments-uiswitchable/invoice" ],
               component: () => import("@/components/organisms/PaymentInvoice"),
               meta: { title: 'Slash Payment' }
             }
