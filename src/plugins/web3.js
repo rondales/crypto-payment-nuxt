@@ -29,6 +29,9 @@ import {
   AvalancheTokens as AvalancheReceiveTokens
 } from '@/contracts/receive_tokens'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
+import { UniswapVersion } from 'simple-uniswap-sdk'
+import { EXCHANGE_ROUTERS } from '@/constants'
+import bestRoute from '@/utils/best-route'
 
 export default {
   install(Vue) {
@@ -310,6 +313,7 @@ const getTokenExchangeData = async function(
   gasFeeRate,
   paymentFeeRate
 ) {
+  console.log(paymentRequestAmount)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
   const requestToken = defaultTokens[paymentRequestSymbol]
@@ -322,18 +326,22 @@ const getTokenExchangeData = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  let path
+  let path, decimals
   if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
     if(token.address === null || token.address === wrappedToken.address) {
       path = [wrappedToken.address, requestToken.address]
+      decimals = [18, requestTokenDecimal]
     } else {
       path = [token.address, requestToken.address]
+      decimals = [token.decimal, requestTokenDecimal]
     }
   } else {
     if(token.address === null || token.address === wrappedToken.address) {
       path = [wrappedToken.address, requestToken.address]
+      decimals = [18, requestTokenDecimal]
     } else {
       path = [token.address, wrappedToken.address, requestToken.address]
+      decimals = [token.decimal, 18, requestTokenDecimal]
     }
   }
   const payingTokenAddress = token.address === null
@@ -347,12 +355,18 @@ const getTokenExchangeData = async function(
       path,
       reservedParam
     ).call({ from: walletAddress })
-  const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
-      payingTokenAddress,
-      requestAmountWei,
-      path,
-      reservedParam
-    ).call({ from: walletAddress })
+
+  const bestExchange = await getBestRate(
+    web3,
+    chainId,
+    walletAddress,
+    path[0],
+    decimals[0],
+    path[path.length - 1],
+    decimals[path.length - 1],
+    paymentRequestAmount
+  )
+  const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
   const requireAmountWithSlippage = token.address == requestToken.address 
     ? requestTokenToUserToken
     : String(
@@ -379,7 +393,8 @@ const getTokenExchangeData = async function(
     equivalentAmount: convertFromWei(web3, userTokenToRequestToken, requestTokenDecimal),
     rate: convertFromWei(web3, perRequestTokenToUserTokenRate, token.decimal),
     fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
-    requestTokenDecimal: requestTokenDecimal
+    requestTokenDecimal: requestTokenDecimal,
+    bestExchange
   }
 }
 
@@ -468,7 +483,8 @@ const sendPaymentTransaction = async function(
   paymentAmount,
   paymentRequestSymbol,
   platformFee,
-  requestAmountWei
+  requestAmountWei,
+  bestExchange
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
@@ -479,7 +495,7 @@ const sendPaymentTransaction = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const paymentIdParam = ''
   const optionalParam = ''
-  const reservedParam = '0x'
+  let reservedParam = '0x'
   let path
   if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
     if(token.address === null || token.address === wrappedToken.address) {
@@ -501,6 +517,13 @@ const sendPaymentTransaction = async function(
   const msgValue = token.address === null
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
+
+  if (bestExchange.name == 'uniswapV3') {
+    reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, bestExchange.pathParam]);
+  } else {
+    reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, reservedParam]);
+  }
+
   return new Promise(function(resolve, reject) {
     merchantContract.methods.submitTransaction(
       paymentTokenAddress,
@@ -746,6 +769,88 @@ const convertFromWei = function convertFromWei(web3, wei, decimal) {
   const whole = web3.utils.toBN(wei.toString()).div(web3.utils.toBN(`1${'0'.repeat(decimal)}`)).toString(10)
   
   return `${whole}${fraction == '0' ? '' : `.${fraction}`}`;
+}
+
+const getBestRate = async function (
+  web3,
+  chainId,
+  walletAddress,
+  tokenInAddr,
+  tokenInDecimal,
+  tokenOutAddr,
+  tokenOutDecimal,
+  paymentAmount
+) {
+  try {
+    const rpcUrl = NETWORKS[chainId].rpcUrl
+    const exchanges = EXCHANGE_ROUTERS[chainId]
+    console.log(chainId)
+    console.log(exchanges)
+    console.log(paymentAmount)
+    console.log(tokenInDecimal, tokenOutDecimal)
+    let bestExchange = { name: '', exchange: '', flag: '', price: 0 }
+
+    console.log(bestRoute)
+    const uniswapVersions = []
+    for (const exchangeName in exchanges) {
+      if (Object.hasOwnProperty.call(exchanges, exchangeName)) {
+        if (exchangeName === 'uniswapV2')
+          uniswapVersions.push(UniswapVersion.v2)
+        else if (exchangeName === 'uniswapV3')
+          uniswapVersions.push(UniswapVersion.v3)
+        else if (Object.hasOwnProperty.call(bestRoute, exchangeName)) {
+          const nextBestExchange = await bestRoute[exchangeName].getBestRoute(
+            web3,
+            chainId,
+            tokenInAddr,
+            tokenInDecimal,
+            tokenOutAddr,
+            tokenOutDecimal,
+            paymentAmount
+          )
+
+          if (
+            bestExchange.price == 0 ||
+            (nextBestExchange.price > 0 &&
+              nextBestExchange.price < bestExchange.price)
+          ) {
+            bestExchange = nextBestExchange
+          }
+
+          console.log(bestExchange)
+        }
+      }
+    }
+
+    if (uniswapVersions.length > 0) {
+      const nextBestExchange = await bestRoute.uniswap.getBestRoute(
+        chainId,
+        rpcUrl,
+        walletAddress,
+        tokenInAddr,
+        tokenOutAddr,
+        paymentAmount,
+        uniswapVersions
+      )
+
+      if (
+        bestExchange.price == 0 ||
+        nextBestExchange.price < bestExchange.price
+      ) {
+        bestExchange = nextBestExchange
+      }
+    }
+
+    if (bestExchange.price == 0)
+      throw new Error('execution reverted: No valid exchange')
+
+    console.log(bestExchange)
+
+    return bestExchange
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
 
 function getNetworkDefaultTokens(chainId) {

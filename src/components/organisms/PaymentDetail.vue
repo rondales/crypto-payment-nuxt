@@ -352,6 +352,9 @@ export default {
     platformFee() {
       return this.$store.state.payment.fee;
     },
+    bestExchange() {
+      return this.$store.state.payment.bestExchange;
+    },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;
     },
@@ -485,6 +488,7 @@ export default {
       this.getTokenExchangeDataFromContract()
         .then((exchangeData) => {
           this.$store.dispatch("payment/updateFee", exchangeData.fee);
+          this.$store.dispatch("payment/updateBestExchange", exchangeData.bestExchange);
           this.$store.dispatch(
             "payment/updateAmountWei",
             exchangeData.requestAmountWei
@@ -510,7 +514,8 @@ export default {
         this.userSelectedTokenPaymentAmount,
         this.$store.state.payment.symbol,
         this.platformFee,
-        this.merchantReceiveWeiAmount
+        this.merchantReceiveWeiAmount,
+        this.bestExchange
       );
     },
     executePayment() {

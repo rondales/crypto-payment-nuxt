@@ -505,6 +505,7 @@ export default {
       this.getTokenExchangeDataFromContract()
         .then((exchangeData) => {
           this.$store.dispatch("payment/updateFee", exchangeData.fee);
+          this.$store.dispatch("payment/updateBestExchange", exchangeData.bestExchange);
           this.$store.dispatch(
             "payment/updateAmountWei",
             exchangeData.requestAmountWei
@@ -614,6 +615,7 @@ export default {
             this.userSelectedTokenAllowance = results[1];
           }
           this.$store.dispatch("payment/updateFee", results[0].fee);
+          this.$store.dispatch("payment/updateBestExchange", results[0].bestExchange);
           this.$store.dispatch(
             "payment/updateAmountWei",
             results[0].requestAmountWei

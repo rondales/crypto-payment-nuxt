@@ -24,9 +24,9 @@ export default {
   WMATIC: {
     name: 'Wrapped MATIC',
     symbol: "WMATIC",
-    address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
+    address: "0x5B67676a984807a212b1c59eBFc9B3568a474F0a",
     abi: Wmatix.abi,
-    url: `${url}/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889`,
+    url: `${url}/0x5B67676a984807a212b1c59eBFc9B3568a474F0a`,
     icon: require('@/assets/images/symbol/wmatic.svg')
   }
 }
