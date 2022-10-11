@@ -10,8 +10,7 @@
         />
       </div>
       <div>
-        <!-- <PaymentTitle type="h2_g" html="INVOICE" /> -->
-        <PaymentIcon class="logo" path="logo-text" />
+        <PaymentIcon class="logo" path="logo-icon" />
       </div>
       <div>
         <PaymentIcon v-if="loading" class="spin" path="loading" />
@@ -83,15 +82,9 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .payhead {
-  // margin-top: 2rem;
   @include flex(space-between, center);
   margin-bottom: 1rem;
-  // .icon {
-  //   width: 2.5rem;
-  // }
-  // .logo {
-  //   width: 2.5rem;
-  // }
+
   & > * {
     font-size: 0;
     &:nth-child(2) {
@@ -103,20 +96,11 @@ export default {
     }
   }
   .logo {
-    width: 5rem;
+    width: 3rem;
   }
   .spin {
     width: 2rem;
     height: 2rem;
   }
 }
-// .icon {
-//   position: absolute;
-//   top: 0;
-//   left: 50%;
-//   width: 4rem;
-//   transform-origin: center center;
-//   transform: translate(-50%, -50%);
-//   // display: none;
-// }
 </style>
