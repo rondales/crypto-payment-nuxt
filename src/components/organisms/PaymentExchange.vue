@@ -519,6 +519,7 @@ export default {
         });
     },
     handleGoPayment() {
+      if (this.expired) return
       this.$store.dispatch("payment/updateToken", {
         amount: this.requireAmount,
         rate: this.exchangeRate,
