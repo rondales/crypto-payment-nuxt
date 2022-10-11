@@ -162,13 +162,6 @@ const router = new Router({
               alias: ["/payments-uiswitchable/result/:token/basic","/payments-uiswitchable/result/:token"],
               component: () => import("@/components/organisms/PaymentResult"),
               meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "invoice",
-              path: "/payment/invoice",
-              alias: ["/payments-uiswitchable/invoice/basic", "/payments-uiswitchable/invoice" ],
-              component: () => import("@/components/organisms/PaymentInvoice"),
-              meta: { title: 'Slash Payment' }
             }
           ]
         },
@@ -218,12 +211,6 @@ const router = new Router({
               name: "admin",
               path: "/admin/payment/settings/payment-token",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
-              meta: { title: 'Slash Apps' }
-            },
-            {
-              name: "admin",
-              path: "/admin/invoice",
-              component: () => import("@/components/organisms/admin/AdminInvoice"),
               meta: { title: 'Slash Apps' }
             },
             {

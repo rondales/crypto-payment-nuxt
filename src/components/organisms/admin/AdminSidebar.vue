@@ -27,14 +27,6 @@
                 Settings
               </router-link>
             </li>
-            <!--
-            @todo remove comment out when implementing invoice function
-            <li @click="close()">
-              <router-link to="/admin/invoice">
-                invoice
-              </router-link>
-            </li>
-            -->
             <li @click="close()">
               <router-link
                 to="/admin/keys"
