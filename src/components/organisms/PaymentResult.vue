@@ -8,7 +8,7 @@
       size="big"
     />
 
-    <PaymentTitle class="result__title" type="h2_g" html="Payment status" />
+    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment status" /> -->
     <PaymentTransaction
       class="result__transaction"
       :type="transactionType"
@@ -17,7 +17,7 @@
       :explorer-url="explorerUrl"
     />
 
-    <PaymentTitle class="result__title" type="h2_g" html="Payment detail" />
+    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment detail" />
     <PaymentAmountBilled
       class="result__receivedToken"
       title="Paid Amount"
@@ -33,10 +33,15 @@
       :symbol="merchantReceiveSymbol"
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
-    />
+    /> -->
 
     <div v-if="isStatusProcessing || isStatusSucceeded">
-      <PaymentTitle class="result__title" type="h2_g" html="Payment receipt" />
+      <PaymentTitle
+        class="result__title"
+        type="h4_g"
+        html="Do you want a receipt?"
+        layout="c"
+      />
       <PaymentReceipt
         :payment-token="paymentToken"
         :is-registerd-email="Boolean(email)"
@@ -47,7 +52,7 @@
 
     <PaymentButton
       v-if="(isStatusSucceeded || isStatusFailured) && backUrl"
-      class="mt-3"
+      class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"
       color="primary"
@@ -109,7 +114,7 @@ export default {
       email: null,
       status: STATUS_PROCESSING,
       transactionType: 'loading',
-      transactionTitle: 'Waiting for transaction result',
+      transactionTitle: 'Waiting for tx result',
       transactionText: '',
       resultPollingTimer: null
     }

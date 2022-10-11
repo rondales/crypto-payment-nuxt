@@ -106,6 +106,9 @@ export default {
   background-color: var(--Base2);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  @include media(sp) {
+    padding: 0.8rem 1rem;
+  }
   &.table {
     @include flex(space-between, flex-start);
     padding: 0rem;
@@ -116,17 +119,25 @@ export default {
     cursor: pointer;
   }
   &.big {
-    @include flex(space-between, center);
-    padding: 1.5rem 1rem;
-    // &::before {
-    //   // content: 'Amout of money';
-    //   @include font(0.8rem, 500, 0.04em, 1.8, $en_go);
-    //   color: var(--SubText);
-    //   width: 100%;
-    //   // text-align: center;
+    @include flex(center, center);
+    flex-direction: column;
+    padding: 0.8rem 1rem 1rem;
+    // width: calc(100% + 3rem);
+    // margin-left: -1.5rem;
+    // @include media(sp) {
+    //   width: calc(100% + 5vw);
+    //   margin-left: 5vw;
     // }
+    &::before {
+      content: 'Amout of money';
+      @include font(10px, 500, 0.04em, 1.8, $en_go);
+      color: var(--SubText);
+      width: 100%;
+      text-align: center;
+    }
     .price {
       @include font(1.728rem, 600, $ls, 1, $en_go);
+      margin-top: 1rem;
     }
   }
   .price {

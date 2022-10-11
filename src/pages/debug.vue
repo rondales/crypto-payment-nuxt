@@ -168,7 +168,7 @@
             text: 'USDT'
           }
         ]"
-      />
+      /><br /><br />
       <PaymentTransaction
         type="loading"
         title="Waiting for Confimation"
@@ -179,7 +179,7 @@
           title: 'Processing...',
           color: 'inactive'
         }"
-      />
+      /><br /><br />
       <PaymentTransaction
         type="success"
         title="Transaction Submitted"
@@ -188,7 +188,7 @@
           url: 'https://www.google.com/',
           title: 'Back to Payee’s Services'
         }"
-      />
+      /><br /><br />
       <PaymentTransaction
         type="dismiss"
         cap="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."

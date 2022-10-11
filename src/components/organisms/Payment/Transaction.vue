@@ -9,7 +9,7 @@
       <p v-if="cap" class="cap"><span v-html="cap"></span></p>
       <PaymentButton
         v-if="explorerUrl"
-        class="button mt-0"
+        class="button"
         size="s"
         color="primary"
         icon="outerlink"
@@ -112,7 +112,7 @@ export default {
     }
   }
   &__icon {
-    max-width: 7rem;
+    max-width: 5rem;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
@@ -139,7 +139,7 @@ export default {
     .button {
       margin-left: auto;
       margin-right: auto;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
   }
   &__foot {

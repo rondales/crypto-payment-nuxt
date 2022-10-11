@@ -461,6 +461,7 @@ export default {
   &__logo {
     @include flex(flex-start, center);
     width: auto;
+
     .logoicon {
       width: 3rem;
       height: 3rem;
@@ -473,10 +474,13 @@ export default {
       }
     }
     .logotext {
-      width: 6.9rem;
+      width: 6rem;
       margin-right: 1rem;
       @include media(sp) {
         // display: none;
+        width: 4rem;
+        margin-right: 0.5rem;
+        margin-top: -2px;
       }
     }
     .text__header__sub {
@@ -486,7 +490,7 @@ export default {
   }
   &__sub {
     @include media(sp) {
-      display: none;
+      // display: none;
     }
   }
   &__testnet {

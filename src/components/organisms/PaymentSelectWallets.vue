@@ -186,9 +186,9 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .connectwallet {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   .title {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     @include font(1rem, 400, $ls, $lh, $en_go);
     text-align: center;
     color: var(--Text);
@@ -225,7 +225,7 @@ export default {
   .regenerate {
     width: 100%;
     margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
     ::v-deep {
       .button.color_cancel {
         margin: 0 auto;

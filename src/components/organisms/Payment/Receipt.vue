@@ -1,6 +1,6 @@
 <template>
   <div class="reciept">
-    <p class="text">
+    <!-- <p class="text">
       <span
         >Do you want a receipt for this payment?<br />You can get it by Email or
         PDF.</span
@@ -11,7 +11,7 @@
         >"While waiting for the payment result, you can reserve an e-mail
         address to send the receipt and download the receipt.</span
       >
-    </p>
+    </p> -->
 
     <PaymentForm>
       <input

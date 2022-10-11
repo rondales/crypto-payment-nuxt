@@ -50,6 +50,9 @@ export default {
         padding: 0rem 0.5rem;
         display: block;
         flex: 1;
+        @include media(sp) {
+          padding: 0.3rem 0.5rem;
+        }
       }
       select {
         appearance: none;

@@ -37,9 +37,10 @@
         </div>
         <div v-show="!initializing" class="payment">
           <div class="pay__head">
-            <PaymentIdTable class="pay__head__ids" :table="idTable" />
+            <!-- <PaymentIdTable class="pay__head__ids" :table="idTable" /> -->
             <PaymentTop
               :showMenu="showMenu"
+              :loading="loading"
               @copyLink="copyLink"
               @toggleMenu="toggleMenu"
             />
@@ -53,9 +54,10 @@
               @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
             />
           </div>
-          <div v-if="loading" class="pay__loading">
-            <img class="spin" src="@/assets/images/loading.svg" />
-          </div>
+          <!-- <div v-if="loading" class="pay__loading"> -->
+          <!-- <PaymentIcon class="spin" path="loading" /> -->
+          <!-- <img class="spin" src="@/assets/images/loading.svg" /> -->
+          <!-- </div> -->
         </div>
         <div class="pay__foot">
           <LogoText class="svg" />
@@ -77,7 +79,7 @@ import PaymentTop from '@/components/organisms/PaymentTop'
 import LogoText from '@/components/common/LogoText'
 import PaymentText from '@/components/organisms/Payment/Text'
 // import PaymentIcon from '@/components/organisms/Payment/Icon'
-import PaymentIdTable from '@/components/organisms/Payment/IdTable'
+// import PaymentIdTable from '@/components/organisms/Payment/IdTable'
 import PaymentTitle from '@/components/organisms/Payment/Title'
 import { DARK_THEME, LIGHT_THEME } from '@/constants'
 export default {
@@ -88,7 +90,7 @@ export default {
     LogoText,
     PaymentTop,
     PaymentText,
-    PaymentIdTable,
+    // PaymentIdTable,
     PaymentTitle
     // PaymentIcon
   },
@@ -227,14 +229,15 @@ export default {
   // padding-top: 5rem;
   height: 100vh;
   @include media(sp) {
-    padding-top: 61px;
+    padding-top: 7rem;
   }
   &__box {
-    width: 28rem;
+    // width: 28rem;
+    width: 460px; //Paypalの幅
     margin-left: auto;
     margin-right: auto;
     border-radius: 1rem;
-    overflow: hidden;
+    // overflow: hidden;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -243,7 +246,8 @@ export default {
     box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
       rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
     max-height: 88vh;
-    overflow-y: scroll;
+
+    // padding-top: 2rem;
     @include media(sp) {
       width: 90%;
       width: 100%;
@@ -255,6 +259,7 @@ export default {
     }
     &__wrap {
       padding: 0 1.5rem;
+      overflow-y: scroll;
       @include media(sp) {
         padding: 0 5vw;
       }
@@ -312,7 +317,7 @@ export default {
     }
   }
   &__head {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
   }
   &__body {
     padding-bottom: 2rem;
@@ -338,8 +343,8 @@ export default {
     // }
   }
   &__loading {
-    width: 20%;
-    margin: 4rem auto;
+    width: 5rem;
+    margin: 0rem auto;
   }
 
   &__token_import {

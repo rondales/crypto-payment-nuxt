@@ -12,7 +12,7 @@
         </div>
         <Icon v-else :path="icon" />
       </div>
-      <div class="textwrap">
+      <div class="textwrap" v-if="text">
         <span v-html="text"></span>
         <span v-if="subtext" class="subtext" v-html="subtext"></span>
       </div>
@@ -198,7 +198,7 @@ export default {
       }
     }
     &_icon {
-      $img_w: 2rem;
+      $img_w: 1.6rem;
       padding: 3px;
       border-radius: 4px;
 

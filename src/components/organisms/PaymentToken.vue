@@ -7,13 +7,13 @@
       class="token__bill"
       size="big"
     />
-    <p class="token__text">
+    <!-- <p class="token__text">
       <span
         >Select the network and currency you wish to pay for. If the currency
         you want is not on the list, you can import it by contract address
         &#x1f44d;</span
       >
-    </p>
+    </p> -->
     <PaymentAction
       class="token__network"
       :text="currentNetworkName"
@@ -27,8 +27,12 @@
       @changeToList="switchTab(LIST_TAB)"
       @changeToToken="switchTab(TOKEN_IMPORT_TAB)"
     >
-      <div v-if="isCurrentListTab">
+      <div v-if="isCurrentListTab" class="tab__wrap">
         <!-- <p class="tokentab__title"><span>Select token</span></p> -->
+        <div v-if="tokenList.length == 0" class="nowloading">
+          <PaymentIcon path="logo-icon-mono" />
+          <p><span>Now Loading...</span></p>
+        </div>
         <div
           class="tokentab__items"
           v-for="(token, key) in tokenList"
@@ -45,17 +49,25 @@
           />
         </div>
       </div>
-      <div v-else-if="isCurrentTokenImportTab">
+      <div v-else-if="isCurrentTokenImportTab" class="tab__wrap">
         <div class="tokentab">
           <p class="tokentab__title">
             <span>Enter token contract address</span>
           </p>
-          <p class="tokentab__cap">
+          <p class="tokentab__text">
+            <span>
+              If you want to pay with a Token that is not listed, you can import
+              it by entering the contract address. Tokenomics tokens with
+              characteristics that make the transaction subject to TAX are not
+              supported. &#x1f44d;</span
+            >
+          </p>
+          <!-- <p class="tokentab__cap">
             <span
               >*Does not support tokenomics tokens, which have the property that
               transactions are subject to TAX 🙅‍♂️</span
             >
-          </p>
+          </p> -->
 
           <PaymentForm
             class="tokentab__form"
@@ -110,6 +122,7 @@ import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentTab from '@/components/organisms/Payment/Tab'
 import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 
 import { Decimal } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
@@ -141,7 +154,8 @@ export default {
     PaymentAction,
     PaymentTab,
     PaymentForm,
-    PaymentButton
+    PaymentButton,
+    PaymentIcon
   },
   filters: {
     balanceFormat(balance) {
@@ -550,25 +564,68 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
+.nowloading {
+  height: 100%;
+  @include flex(center, center);
+  flex-direction: column;
+  gap: 0.5rem;
+  .svg {
+    width: 3rem;
+    height: 3rem;
+    &::v-deep {
+      svg {
+        fill: var(--Base3);
+      }
+    }
+  }
+  p {
+    @include font(1rem, 600, 0.04em, $lh, $en_go);
+    color: var(--Base3);
+    text-align: center;
+  }
+}
 .token {
   &__bill {
     margin-bottom: 1rem;
   }
-  &__text {
-    margin-bottom: 1.5rem;
-    @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
-    color: var(--Text);
-  }
+  // &__text {
+  //   margin-bottom: 1.5rem;
+  //   @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+  //   color: var(--Text);
+  // }
   &__network {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 }
 .tab {
   &::v-deep {
     .body {
-      height: calc(86vh - 470px);
+      height: calc(86vh - 400px);
       overflow-y: scroll;
       min-height: 150px;
+      &::-webkit-scrollbar {
+        width: 4px;
+        transform: translate(10px, 0);
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: var(--Base3);
+        // border-radius: 100px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 2rem;
+
+        background: linear-gradient(
+          to right bottom,
+          #3eb9fc 5.43%,
+          #8b2ae1 98.19%
+        );
+        &:hover {
+          background: linear-gradient(to right, #3eb9fc 5.43%, #8b2ae1 98.19%);
+        }
+        // background: var(--Key1);
+      }
       @include media(sp) {
         height: 100%;
       }
@@ -580,6 +637,11 @@ export default {
     margin-bottom: 0.5rem;
     // text-align: center;
     @include font(1rem, 600, 0.04em, $lh, $en_go);
+  }
+  &__text {
+    margin-bottom: 0.5rem;
+    @include font(12px, 400, 0.04em, 1.6, $en_go);
+    color: var(--Text);
   }
   &__items {
     & + * {

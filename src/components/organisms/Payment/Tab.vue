@@ -6,7 +6,7 @@
           <button @click="toList"><span>Lists</span></button>
         </li>
         <li :class="{ active: status }">
-          <button @click="toToken"><span>Tokens</span></button>
+          <button @click="toToken"><span>Import</span></button>
         </li>
       </ul>
     </div>
@@ -95,6 +95,9 @@ export default {
     @include media(sp) {
       padding: 1.5rem 1rem;
     }
+  }
+  &__wrap {
+    height: 100%;
   }
 }
 </style>

@@ -7,12 +7,7 @@
       emoji="&#128591;"
       layout="c"
     /> -->
-    <PaymentTitle
-      class="amount__subtitle"
-      type="h4"
-      html="How much would you pay?"
-      layout=""
-    />
+    <p class="amount__subtitle"><span>How much would you pay?</span></p>
     <PaymentForm class="amount__form">
       <input
         v-model="legalCurrencyAmount"
@@ -79,7 +74,6 @@
 <script>
 import { Decimal } from 'decimal.js'
 import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
-import PaymentTitle from '@/components/organisms/Payment/Title'
 import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentAction from '@/components/organisms/Payment/Action'
@@ -115,7 +109,6 @@ export default {
   components: {
     PaymentAmountBilled,
     PaymentButton,
-    PaymentTitle,
     PaymentForm,
     PaymentAction,
     PaymentIcon
@@ -270,6 +263,12 @@ export default {
   // }
   &__subtitle {
     margin-bottom: 0.5rem;
+    @include font(1.2rem, 600, $ls, $lh, $en_go);
+    text-align: center;
+    span {
+      display: inline-block;
+      text-align: left;
+    }
   }
   &__form {
     margin-bottom: 1rem;

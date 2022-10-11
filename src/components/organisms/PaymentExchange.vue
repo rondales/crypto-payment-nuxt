@@ -8,7 +8,7 @@
       size="big"
     />
 
-    <PaymentTitle class="exchange__title" type="h2_g" html="Your Balance">
+    <PaymentTitle class="exchange__title" type="h3_g" html="Your Balance">
       <PaymentButton
         icon="reload"
         color="icon"
@@ -656,10 +656,10 @@ export default {
     margin-bottom: 1rem;
   }
   &__price {
-    // margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
   }
   &__cap {
-    @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+    @include font(10px, 400, 0.04em, 1.8, $en_go);
     margin-bottom: 1rem;
   }
   &__btnwrap {
