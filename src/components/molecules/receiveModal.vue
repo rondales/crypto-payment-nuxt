@@ -74,7 +74,7 @@ export default {
         USDC: require('@/assets/images/icon/usdc-l.svg'),
         DAI: require('@/assets/images/icon/dai-l.svg'),
         JPYC: require('@/assets/images/icon/jpyc-l.svg'),
-        WETH: require('@/assets/images/icon/eth.svg')
+        WETH: require('@/assets/images/icon/eth-l.svg')
       },
       tokenMarketUrls: {
         USDT: "https://coinmarketcap.com/currencies/tether/",
