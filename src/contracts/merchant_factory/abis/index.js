@@ -6,12 +6,12 @@ import { PRODUCTION } from '@/constants'
 
 const environment = process.env.NODE_ENV.toLowerCase()
 const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-const isTestEnv = JSON.parse(process.env.VUE_APP_IS_TEST_ENV.toLowerCase())
+const isPremainEnv = JSON.parse(process.env.VUE_APP_IS_PREMAIN_ENV.toLowerCase())
 
 let abi = development
-if(isUseMainnet && !isTestEnv) {
+if(isUseMainnet && !isPremainEnv) {
   abi = mainnet
-} else if (isUseMainnet && isTestEnv) {
+} else if (isUseMainnet && isPremainEnv) {
   abi = premain
 } else if (environment === PRODUCTION)  {
   abi = testnet

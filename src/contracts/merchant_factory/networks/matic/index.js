@@ -4,11 +4,11 @@ import Development from './develoment'
 let contract
 const environment = process.env.NODE_ENV.toLowerCase()
 const isUseMainnet = JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
-const isTestEnv = JSON.parse(process.env.VUE_APP_IS_TEST_ENV.toLowerCase())
+const isPremainEnv = JSON.parse(process.env.VUE_APP_IS_PREMAIN_ENV.toLowerCase())
 
-if(isUseMainnet && !isTestEnv) {
+if(isUseMainnet && !isPremainEnv) {
   contract = Production.mainnet
-} else if(isUseMainnet && isTestEnv) {
+} else if(isUseMainnet && isPremainEnv) {
   contract = Development.premain
 } else if(environment === 'production' && !isUseMainnet) {
   contract = Production.testnet

@@ -15,7 +15,7 @@
     <meta name="author" content="Slash">
     <meta property="og:title" content="Slash Payment">
     <meta property="og:type" content="website">
-    <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_TEST_ENV==="false" ) { %>
+    <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_PREMAIN_ENV==="false" ) { %>
       <meta property="og:url" content="https://slash.fi/">
       <meta property="og:image" content="https://slash.fi/img/icon/ogp.png">
     <% } else { %>
@@ -26,7 +26,7 @@
     <meta property="og:description" content="Slash is the next generation of decentralized payment methods that supports any token payment. With Slash payment, merchants can accept tokens as payment from customers using the Web3 wallet.">
     <meta name="twitter:card" content="summary_large_image">
     <% if (NODE_ENV==="production" ) { %>
-      <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_TEST_ENV==="false" ) { %>
+      <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_PREMAIN_ENV==="false" ) { %>
         <!-- Google Tag Manager -->
         <script>(function (w, d, s, l, i) {
             console.log(toString.call('Hello'));
@@ -80,7 +80,7 @@
   <body>
     <meta charset="utf-8">
     <% if (NODE_ENV==="production" ) { %>
-      <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_TEST_ENV==="false" ) { %>
+      <% if (VUE_APP_USE_MAINNET==="true" && VUE_APP_IS_PREMAIN_ENV==="false" ) { %>
       <!-- Google Tag Manager (noscript) -->
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5QTRD3J" height="0" width="0"
           style="display:none;visibility:hidden"></iframe></noscript>
