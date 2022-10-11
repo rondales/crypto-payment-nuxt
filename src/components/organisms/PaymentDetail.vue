@@ -13,7 +13,7 @@
         icon="reload"
         color="icon"
         size="icon"
-        @click.native="updateTokenExchangeData(faltruese)"
+        @click.native="updateTokenExchangeData(true)"
         :class="{ loading: isReloading }"
       />
     </PaymentTitle>
