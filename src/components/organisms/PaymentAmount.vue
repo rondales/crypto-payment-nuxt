@@ -105,11 +105,11 @@ export default {
       exchangeMarginRate: null,
       exchangeTimer: null,
       receiveTokenIcons: {
-        USDT: 'usdt',
-        USDC: 'usdc',
-        DAI: 'dai',
-        JPYC: 'jpyc',
-        WETH: 'eth'
+        USDT: 'crypto_currency/received_token/usdt',
+        USDC: 'crypto_currency/received_token/usdc',
+        DAI: 'crypto_currency/received_token/dai',
+        JPYC: 'crypto_currency/received_token/jpyc',
+        WETH: 'crypto_currency/received_token/weth'
       }
     }
   },
