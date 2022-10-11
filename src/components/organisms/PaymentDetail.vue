@@ -476,6 +476,7 @@ export default {
       );
     },
     executePayment() {
+      if (this.isExpiredExchange) return
       this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
