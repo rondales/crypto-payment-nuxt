@@ -17,7 +17,8 @@
       <input
         v-model="legalCurrencyAmount"
         class="price"
-        type="text"
+        type="number"
+        inputmode="decimal"
         placeholder="0"
       />
       <div class="selectwrap">
@@ -273,6 +274,14 @@ export default {
   }
   &__form {
     margin-bottom: 2rem;
+    .price {
+      -moz-appearance:textfield;
+    }
+    .price::-webkit-outer-spin-button,
+    .price::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     .selectwrap {
       @include flex(flex-start, center);
       flex-wrap: nowrap;
