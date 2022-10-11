@@ -3,8 +3,7 @@ import { NETWORKS } from '@/constants'
 export default {
   premain: {
     chainId: NETWORKS[137].chainId,
-    // @TODO
-    address: ''
+    address: '0xd697eD2223a4363E3c252a5A1f9F69f7EeE0CC9B'
   },
   development: {
     chainId: NETWORKS[80001].chainId,

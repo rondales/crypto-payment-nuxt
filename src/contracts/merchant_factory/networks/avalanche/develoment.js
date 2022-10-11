@@ -7,7 +7,6 @@ export default {
   },
   premain: {
     chainId: NETWORKS[43114].chainId,
-    // @TODO
-    address: ''
+    address: '0x88b774e9Db03941b1Dc2AE4b9b38cd404C3445F4'
   }
 }
