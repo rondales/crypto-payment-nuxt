@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <PaymentIcon v-if="icon" class="icon" :path="icon" />
+    <PaymentIcon v-if="icon" class="icon" :path="icon" :type="iconType" />
     <div class="textwrap">
       <PaymentText v-if="text" class="text" tag="p" type="h5" :html="text" />
       <PaymentButton v-if="url" size="icon" icon="outerlink" :url="link" />
@@ -25,6 +25,10 @@ export default {
     icon: {
       type: String,
       default: "",
+    },
+    iconType: {
+      type: String,
+      default: "svg"
     },
     text: {
       type: String,

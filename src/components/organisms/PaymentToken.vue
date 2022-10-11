@@ -84,6 +84,7 @@
             <PaymentAction
               class="tokentab__tokenlist__items"
               :icon="token.path"
+              :icon-type="token.type"
               :text="token.symbol"
               :link="token.url"
             >
