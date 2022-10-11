@@ -350,7 +350,6 @@ export default {
       );
     },
     searchTokenToBlockChain() {
-      console.log("token search");
       return this.$web3.searchToken(
         this.web3Instance,
         this.searchTokenAddress,
