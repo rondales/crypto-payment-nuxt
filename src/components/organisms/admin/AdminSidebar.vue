@@ -45,6 +45,7 @@
             </li>
             <li v-if="isUseTestnet" @click="close()">
               <a
+                :class="{ inactive: isUnselectedReceiveToken }"
                 target="_blank"
                 href="/test"
               >
