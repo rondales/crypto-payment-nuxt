@@ -289,7 +289,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 
 .payment_handleprice {
   width: 100%;
