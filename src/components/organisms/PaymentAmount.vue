@@ -170,6 +170,8 @@ export default {
         )
           .toDP(6, Decimal.ROUND_CEIL)
           .toString()
+      } else {
+        this.exchangedAmount = 0
       }
     },
     updateDefaultCurrency() {
