@@ -61,6 +61,11 @@ export default {
 .text {
   font-size: 0;
   color: var(--Text);
+  .color {
+    &__white {
+      color: $white;
+    }
+  }
   &.color {
     &__red {
       color: var(--Alert);
