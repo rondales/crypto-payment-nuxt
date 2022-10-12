@@ -15,7 +15,7 @@
             v-on:mouseover="mouseOver"
             v-on:mouseleave="mouseLeave"
           >
-            <PaymentText type="header__testnet" html="Testnet" color="white" />
+            <span>Testnet</span>
             <div class="header__testnet__hover" v-if="isHover">
               <PaymentText
                 type="cap"
@@ -471,6 +471,7 @@ export default {
         // display: none;
         margin-right: 0;
         width: 0;
+        height: 0;
       }
     }
     .logotext {
@@ -478,9 +479,9 @@ export default {
       margin-right: 1rem;
       @include media(sp) {
         // display: none;
-        width: 4rem;
+        width: 5rem;
         margin-right: 0.5rem;
-        margin-top: -2px;
+        // margin-top: -2px;
       }
     }
     .text__header__sub {
@@ -490,25 +491,29 @@ export default {
   }
   &__sub {
     @include media(sp) {
-      // display: none;
+      display: none;
     }
   }
   &__testnet {
+    @include font(0.8rem, 400, $ls, 1, $en_go);
     background: #de4437;
     color: #fff;
     padding: 0.3rem 0.5rem;
     border-radius: 2rem;
     text-align: center;
     cursor: pointer;
-    position: relative;
-    font-size: 0;
+    // position: relative;
+    // font-size: 0;
     position: absolute;
     left: 2px;
     bottom: -12px;
     transform-origin: left bottom;
     transform: scale(0.7);
     @include media(sp) {
-      bottom: -0.6rem;
+      // bottom: -0.6rem;
+      position: relative;
+      bottom: 3px;
+      left: auto;
     }
     &__hover {
       position: absolute;
