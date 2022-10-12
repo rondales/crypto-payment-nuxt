@@ -7,10 +7,7 @@
       size="big"
     />
     <div class="connectwallet">
-      <p class="title">
-        Connect Web3 wallet<br />
-        to make a payment
-      </p>
+      <p class="title">Connect Web3 wallet to make a payment</p>
       <div class="button">
         <PaymentButton
           @click.native="handleConnect(METAMASK, false)"
@@ -192,12 +189,12 @@ export default {
     @include font(1rem, 400, $ls, $lh, $en_go);
     text-align: center;
     color: var(--Text);
-    br {
-      display: none;
-      @include media(sp) {
-        display: block;
-      }
-    }
+    // br {
+    // display: none;
+    // @include media(sp) {
+    //   display: block;
+    // }
+    // }
   }
   .button {
     @include flex(center, flex-start);
