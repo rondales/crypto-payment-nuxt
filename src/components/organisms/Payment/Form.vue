@@ -46,19 +46,23 @@ export default {
     padding: 0.5rem 1rem;
     &::v-deep {
       input {
-        @include font(1rem, 600, $ls, $formh, $en_go);
+        @include font(rem(1), 600, $ls, $formh, $en_go);
         padding: 0rem 0.5rem;
         display: block;
         flex: 1;
         @include media(sp) {
           padding: 0.3rem 0.5rem;
+          font-size: rem_sp(1);
         }
       }
       select {
         appearance: none;
         text-align: center;
         padding: 0rem 0.5rem;
-        @include font(1rem, 600, $ls, $formh, $en_go);
+        @include font(rem(1), 600, $ls, $formh, $en_go);
+        @include media(sp) {
+          font-size: rem_sp(1);
+        }
       }
     }
   }

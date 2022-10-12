@@ -12,42 +12,44 @@
         address to send the receipt and download the receipt.</span
       >
     </p> -->
-
-    <PaymentForm>
-      <input
-        type="email"
-        :placeholder="
-          isSent ? 'Receipt has been sent' : 'Send to email address'
-        "
-        v-model="email"
-        :disabled="isSent || isRegisterdEmail"
-      />
+    <div class="reciept__box">
+      <PaymentForm>
+        <input
+          type="email"
+          :placeholder="
+            isSent ? 'Receipt has been sent' : 'Send to email address'
+          "
+          v-model="email"
+          :disabled="isSent || isRegisterdEmail"
+        />
+        <PaymentButton
+          v-if="!isReservingMode"
+          size="s"
+          class="sendbutton"
+          :text="emailButtonText"
+          :color="isInvalidEmail || sending || isSent ? 'inactive' : 'primary'"
+          :loading="sending"
+          layout="reverse"
+          @click.native="sendEmail"
+        />
+      </PaymentForm>
       <PaymentButton
         v-if="!isReservingMode"
+        class="pdfbutton"
         size="s"
-        :text="emailButtonText"
-        :color="isInvalidEmail || sending || isSent ? 'inactive' : 'primary'"
-        :loading="sending"
-        layout="reverse"
-        @click.native="sendEmail"
+        text="PDF"
+        :color="downloading ? 'inactive' : ''"
+        icon="download"
+        :loading="downloading"
+        @click.native="downloadPdf"
       />
-    </PaymentForm>
+    </div>
     <PaymentConfirmCheckbox
       v-if="isReservingMode"
       id="reserve"
       ref="reserved"
       text="Download receipt after payment is completed"
       @clickCheckbox="updateDownloadReserveStatus()"
-    />
-    <PaymentButton
-      v-else
-      class="button mt-1"
-      size="s"
-      text="Download PDF"
-      :color="downloading ? 'inactive' : 'primary'"
-      layout="reverse"
-      :loading="downloading"
-      @click.native="downloadPdf"
     />
   </div>
 </template>
@@ -187,6 +189,64 @@ export default {
 @import '@/assets/scss/delaunay.scss';
 
 .reciept {
+  &__box {
+    @include flex(flex-start, center);
+    gap: 0rem;
+    flex-wrap: nowrap;
+    .form {
+      flex: 1;
+      &::v-deep {
+        .form__wrap {
+          padding: 0.5rem;
+          padding-left: 1rem;
+          input {
+            font-size: 14px;
+            padding: 0;
+            @include media(sp) {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .sendbutton {
+    &::v-deep {
+      .button.size_s {
+        min-width: 4rem;
+      }
+    }
+  }
+  .pdfbutton {
+    // margin-top: 1rem;
+    &::v-deep {
+      .button.size_s {
+        min-width: 4rem;
+        margin-left: auto;
+        margin-right: auto;
+        gap: 4px;
+        position: relative;
+        &::before {
+          content: '';
+          width: 0%;
+          height: 1px;
+          background-color: var(--Text);
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          transition: width 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+            visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+        }
+        @include media(pc) {
+          &:hover {
+            &::before {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
   .text {
     margin-bottom: 1rem;
     @include font(0.8rem, 400, $ls, $lh, $en_go);

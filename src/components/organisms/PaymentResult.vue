@@ -58,6 +58,13 @@
       color="primary"
       layout="reverse"
     />
+    <PaymentButton
+      class="result__button"
+      text="Back to Payee’s Services"
+      :url="backUrl"
+      color="primary"
+      layout="reverse"
+    />
   </div>
 </template>
 
@@ -360,6 +367,9 @@ export default {
   &__receivedToken {
     padding: 1rem;
     margin-bottom: 2rem;
+  }
+  &__button {
+    margin-top: 2rem;
   }
   // &__update {
   //   margin-bottom: 1rem;
