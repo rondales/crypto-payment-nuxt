@@ -13,7 +13,7 @@
         icon="reload"
         color="icon"
         size="icon"
-        @click.native="updateTokenExchangeData(faltruese)"
+        @click.native="updateTokenExchangeData(true)"
         :class="{ loading: isReloading }"
       />
     </PaymentTitle>
@@ -483,7 +483,8 @@ export default {
       )
     },
     executePayment() {
-      this.$store.dispatch('wallet/updatePendingStatus', true)
+      if (this.isExpiredExchange) return
+      this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
           this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)

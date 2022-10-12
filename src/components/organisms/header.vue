@@ -15,7 +15,7 @@
             v-on:mouseover="mouseOver"
             v-on:mouseleave="mouseLeave"
           >
-            <PaymentText type="header__testnet" html="Testnet" />
+            <PaymentText type="header__testnet" html="Testnet" color="white" />
             <div class="header__testnet__hover" v-if="isHover">
               <PaymentText
                 type="cap"
@@ -508,7 +508,7 @@ export default {
     transform-origin: left bottom;
     transform: scale(0.7);
     @include media(sp) {
-      bottom: -1.3rem;
+      bottom: -0.6rem;
     }
     &__hover {
       position: absolute;

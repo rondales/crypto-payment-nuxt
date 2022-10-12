@@ -65,16 +65,9 @@ const router = new Router({
               meta: { title: 'Slash Payment' },
               children: [
                 {
-                  //Window widget payment entrance component
                   name: "ww-entrance",
                   path: "/payments-uiswitchable/:token/ww",
                   component: () => import("@/components/organisms/Payment/ww/PaymentEntrance"),
-                  meta: { title: 'Slash Payment' }
-                },
-                {
-                  name: "ww-receipt",
-                  path: "/payments-uiswitchable/receipt/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentEmail"),
                   meta: { title: 'Slash Payment' }
                 },
                 {
@@ -96,6 +89,12 @@ const router = new Router({
                   meta: { title: 'Slash Payment' }
                 },
                 {
+                  name: "ww-detail",
+                  path: "/payments-uiswitchable/detail/:token/ww",
+                  component: () => import("@/components/organisms/Payment/ww/PaymentDetail"),
+                  meta: { title: 'Slash Payment' }
+                },
+                {
                   name: "ww-result",
                   path: "/payments-uiswitchable/result/:token/ww",
                   component: () => import("@/components/organisms/Payment/ww/PaymentResult"),
@@ -103,7 +102,7 @@ const router = new Router({
                 },
                 {
                   name: "ww-invoice",
-                  path: "/payments-uiswitchable/invoice",
+                  path: "/payments-uiswitchable/invoice/ww",
                   component: () => import("@/components/organisms/Payment/ww/PaymentInvoice"),
                   meta: { title: 'Slash Payment' }
                 }
@@ -163,13 +162,6 @@ const router = new Router({
               alias: ["/payments-uiswitchable/result/:token/basic","/payments-uiswitchable/result/:token"],
               component: () => import("@/components/organisms/PaymentResult"),
               meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "invoice",
-              path: "/payment/invoice",
-              alias: ["/payments-uiswitchable/invoice/:token/basic", "/payments-uiswitchable/invoice/:token" ],
-              component: () => import("@/components/organisms/PaymentInvoice"),
-              meta: { title: 'Slash Payment' }
             }
           ]
         },
@@ -219,12 +211,6 @@ const router = new Router({
               name: "admin",
               path: "/admin/payment/settings/payment-token",
               component: () => import("@/components/organisms/admin/AdminWeb3Payment"),
-              meta: { title: 'Slash Apps' }
-            },
-            {
-              name: "admin",
-              path: "/admin/invoice",
-              component: () => import("@/components/organisms/admin/AdminInvoice"),
               meta: { title: 'Slash Apps' }
             },
             {

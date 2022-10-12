@@ -509,7 +509,8 @@ export default {
         })
     },
     handleGoPayment() {
-      this.$store.dispatch('payment/updateToken', {
+      if (this.expired) return
+      this.$store.dispatch("payment/updateToken", {
         amount: this.requireAmount,
         rate: this.exchangeRate
       })
@@ -531,6 +532,7 @@ export default {
     }
   },
   created() {
+    Decimal.set({ toExpNeg: -20 })
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: 'wallets',

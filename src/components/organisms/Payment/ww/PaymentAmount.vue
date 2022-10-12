@@ -87,7 +87,7 @@ import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
 
 export default {
-  name: "PaymentAmount",
+  name: "ww-PaymentAmount",
   props: {
     progressTotalSteps: Number,
     progressCompletedSteps: Number
@@ -108,13 +108,6 @@ export default {
         DAI: require("@/assets/images/ww/symbol/dai.svg"),
         JPYC: require("@/assets/images/ww/symbol/jpyc.svg"),
         WETH: require('@/assets/images/ww/symbol/eth.svg'),
-        SGD: require("@/assets/images/ww/symbol/jpyc.svg"),
-        HKD: require("@/assets/images/ww/currency/HKD.svg"),
-        CAD: require("@/assets/images/ww/currency/CAD.svg"),
-        IDR: require("@/assets/images/ww/currency/IDR.svg"),
-        PHP: require("@/assets/images/ww/currency/PHP.svg"),
-        INR: require("@/assets/images/ww/currency/INR.svg"),
-        KRW: require("@/assets/images/ww/currency/KRW.svg"),
       },
     };
   },
@@ -212,7 +205,7 @@ export default {
         rate: this.exchangeRate,
         margin_rate: this.exchangeMarginRate,
       };
-      return this.axios.patch(url, params);
+      return this.axios.patch(url, params, { withCredentials: true });
     },
     next() {
       this.loading = true;
@@ -220,7 +213,8 @@ export default {
         .then(() => {
           this.$store.dispatch("payment/updateAmount", this.exchangedAmount);
           this.$router.replace({
-            path: `/payments-uiswitchable/receipt/${this.$route.params.token}`,
+            name: "ww-wallets",
+            params: {token:  this.$route.params.token}
           });
         })
         .catch((error) => {
@@ -253,7 +247,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 
 .payment_handleprice {
   width: 100%;

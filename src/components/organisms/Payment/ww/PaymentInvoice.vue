@@ -30,7 +30,7 @@
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 export default {
-  name: "PaymentInvoice",
+  name: "ww-PaymentInvoice",
   data() {
     return {
       Receiver: "E-check.online",

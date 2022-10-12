@@ -4,6 +4,7 @@
       title="Caution"
       text='Operation cannot be guaranteed when connecting with WalletConnect.<br />See the documentation for more information.<br><a
         href="https://slash-fi.gitbook.io/docs/support/help-center/notes-on-wallet-connect"
+        target="_blank"
         class="textlink"
         ><span>See to Document</span></a
       >'

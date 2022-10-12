@@ -12,7 +12,8 @@
       <input
         v-model="legalCurrencyAmount"
         class="price"
-        type="text"
+        type="number"
+        inputmode="decimal"
         placeholder="0"
       />
       <div class="selectwrap">
@@ -98,11 +99,11 @@ export default {
       exchangeMarginRate: null,
       exchangeTimer: null,
       receiveTokenIcons: {
-        USDT: 'usdt',
-        USDC: 'usdc',
-        DAI: 'dai',
-        JPYC: 'jpyc',
-        WETH: 'eth'
+        USDT: 'crypto_currency/received_token/usdt',
+        USDC: 'crypto_currency/received_token/usdc',
+        DAI: 'crypto_currency/received_token/dai',
+        JPYC: 'crypto_currency/received_token/jpyc',
+        WETH: 'crypto_currency/received_token/weth'
       }
     }
   },
@@ -162,6 +163,8 @@ export default {
         )
           .toDP(6, Decimal.ROUND_CEIL)
           .toString()
+      } else {
+        this.exchangedAmount = 0
       }
     },
     updateDefaultCurrency() {
@@ -272,6 +275,14 @@ export default {
   }
   &__form {
     margin-bottom: 1rem;
+    .price {
+      -moz-appearance:textfield;
+    }
+    .price::-webkit-outer-spin-button,
+    .price::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     .selectwrap {
       @include flex(flex-start, center);
       flex-wrap: nowrap;

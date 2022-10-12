@@ -162,11 +162,9 @@ export default {
                     break;
                 }
               }).catch(() => {
-                console.log('block 1')
                 this.showErrorModal('Please try again after a while.')
               })
             }).catch((error) => {
-              console.log('block 2')
               console.log(error)
               this.showErrorModal('Please try again after a while.')
             })
