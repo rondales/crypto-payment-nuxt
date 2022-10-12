@@ -22,13 +22,21 @@ export default {
       import("@/components/molecules/adminContractPausedModal"),
     networkModal: () => import("@/components/molecules/networkModal"),
     walletModal: () => import("@/components/molecules/walletModal"),
+    walletForAdminModal: () => import("@/components/molecules/walletForAdminModal"),
     cautionWalletConnectModal: () =>
       import("@/components/molecules/cautionWalletConnectModal"),
+    cautionWalletConnectForAdminModal: () =>
+      import("@/components/molecules/cautionWalletConnectForAdminModal"),
     errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
+    errorWalletForAdminModal: () => import("@/components/molecules/errorWalletForAdminModal"),
     errorMetamaskModal: () =>
       import("@/components/molecules/errorMetamaskModal"),
+    errorMetamaskForAdminModal: () =>
+      import("@/components/molecules/errorMetamaskForAdminModal"),
     errorCurrentNetworkModal: () =>
       import("@/components/molecules/errorCurrentNetworkModal"),
+    errorCurrentNetworkForAdminModal: () =>
+      import("@/components/molecules/errorCurrentNetworkForAdminModal"),
     errorNotExistAvailablePaymentContractModal: () =>
       import(
         "@/components/molecules/errorNotExistAvailablePaymentContractModal"
@@ -37,7 +45,10 @@ export default {
       import("@/components/molecules/errorForbiddenBackPaymentModal"),
     switchNetworkForAdminModal: () =>
       import("@/components/molecules/switchNetworkForAdminModal"),
+    switchNetworkForPaymentModal: () =>
+      import("@/components/molecules/switchNetworkForPaymentModal"),
     errorModal: () => import("@/components/molecules/errorModal"),
+    errorForAdminModal: () => import("@/components/molecules/errorForAdminModal"),
     receiveModal: () => import("@/components/molecules/receiveModal"),
     editNoteModal: () => import("@/components/molecules/editNoteModal"),
     urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
@@ -60,6 +71,7 @@ export default {
     cautionPaymentRiskDisclaimerModal: () =>
       import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
     addChainModal: () => import("@/components/molecules/addChainModal"),
+    addChainForAdminModal: () => import("@/components/molecules/addChainForAdminModal"),
     paymentReceiptModal: () => import("@/components/molecules/paymentReceiptModal"),
     paymentReceiptEmailModal: () => import("@/components/molecules/paymentReceiptEmailModal"),
     paymentTokenDeleteModal: () => import("@/components/molecules/paymentTokenDeleteModal"),
@@ -100,7 +112,7 @@ div.main {
   }
 }
 .modal-base {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8);
   position: fixed;
   // width: 100vw;
   // height: 100vh;
@@ -112,8 +124,10 @@ div.main {
 }
 
 .contents_height {
-  min-height: calc(100vh - 50px);
-  margin-top: 80px;
+  // min-height: calc(100vh - 50px);
+  min-height: 100vh;
+  // margin-top: 80px;
+  padding-top: 80px;
   position: relative;
   @include media(sp) {
     margin-top: 55px;

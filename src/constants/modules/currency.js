@@ -1,13 +1,13 @@
 export const CURRENCIES = {
-  JPY: { name: 'JPY', icon: require('@/assets/images/currency/JPY.svg') },
-  USD: { name: 'USD', icon: require('@/assets/images/currency/USD.svg') },
-  EUR: { name: 'EUR', icon: require('@/assets/images/currency/EUR.svg') },
-  AED: { name: 'AED', icon: require('@/assets/images/currency/AED.svg') },
-  SGD: { name: 'SGD', icon: require('@/assets/images/currency/SGD.svg') },
-  HKD: { name: 'HKD', icon: require('@/assets/images/currency/HKD.svg') },
-  CAD: { name: 'CAD', icon: require('@/assets/images/currency/CAD.svg') },
-  IDR: { name: 'IDR', icon: require('@/assets/images/currency/IDR.svg') },
-  PHP: { name: 'PHP', icon: require('@/assets/images/currency/PHP.svg') },
-  INR: { name: 'INR', icon: require('@/assets/images/currency/INR.svg') },
-  KRW: { name: 'KRW', icon: require('@/assets/images/currency/KRW.svg') }
+  JPY: { name: 'JPY', iconPath: 'fiat_currency/JPY' },
+  USD: { name: 'USD', iconPath: 'fiat_currency/USD' },
+  EUR: { name: 'EUR', iconPath: 'fiat_currency/EUR' },
+  AED: { name: 'AED', iconPath: 'fiat_currency/AED' },
+  SGD: { name: 'SGD', iconPath: 'fiat_currency/SGD' },
+  HKD: { name: 'HKD', iconPath: 'fiat_currency/HKD' },
+  CAD: { name: 'CAD', iconPath: 'fiat_currency/CAD' },
+  IDR: { name: 'IDR', iconPath: 'fiat_currency/IDR' },
+  PHP: { name: 'PHP', iconPath: 'fiat_currency/PHP' },
+  INR: { name: 'INR', iconPath: 'fiat_currency/INR' },
+  KRW: { name: 'KRW', iconPath: 'fiat_currency/KRW' }
 }

@@ -5,8 +5,8 @@
       <stop offset="1" stop-color="#803de4"/>
     </linearGradient>
   </defs>
-  <g id="グループ_67319" data-name="グループ 67319" transform="translate(2846.394 676.877)">
-    <rect id="長方形_18018" data-name="長方形 18018" width="120" height="120" rx="25.13" transform="translate(-2846.394 -676.877)" fill="url(#linear-gradient)"/>
-    <rect id="長方形_18019" data-name="長方形 18019" width="8.773" height="96.952" transform="translate(-2755.412 -654.247) rotate(45)" fill="#fff"/>
+  <g id="logoicon" data-name="logoicon" transform="translate(2846.394 676.877)">
+    <rect id="logoicon_box" data-name="logoicon_box" width="120" height="120" rx="25.13" transform="translate(-2846.394 -676.877)" fill="url(#linear-gradient)"/>
+    <rect id="logoicon_slash" data-name="logoicon_slash" width="8.773" height="96.952" transform="translate(-2755.412 -654.247) rotate(45)" fill="#fff"/>
   </g>
 </svg>

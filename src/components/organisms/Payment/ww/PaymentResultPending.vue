@@ -29,7 +29,7 @@
 import { Decimal as BigJs } from 'decimal.js'
 
 export default {
-  name: 'PaymentResultPending',
+  name: 'ww-PaymentResultPending',
   props: {
     urls: Object,
     transaction: Object
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import '@/assets/scss/old/style.scss';
 
 .payment-status{
   text-align: center;

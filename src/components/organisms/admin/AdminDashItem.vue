@@ -32,7 +32,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .item{
   background: #292536;

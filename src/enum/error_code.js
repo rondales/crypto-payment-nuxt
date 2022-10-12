@@ -37,6 +37,8 @@ export const errorCodeList = {
   3440: { msg: 'Please enter the note in 255 characters.' },
   3510: { msg: 'Invalid Merchant Id.' },
   3520: { msg: 'Invalid authorization code.' },
+  3550: { msg: 'Please enter the payment faliure return URL in the correct format.' },
+  3551: { msg: 'Invalid Receipt Delivery Email.' },
   3610: { msg: 'Invalid Merchant Id.' },
   3620: { msg: 'Note too long.' },
   3710: { msg: 'Invalid authorization code Id.' },

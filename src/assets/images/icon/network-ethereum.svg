@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_イヤー_1" data-name="レイヤー 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="clippath">
+      <polyline points="31.54 20.26 49.47 20.26 49.47 60.61 31.54 60.61 31.54 20.26" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <polyline points="49.47 20.26 67.4 20.26 67.4 60.61 49.47 60.61 49.47 20.26" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <polyline points="31.54 53.41 49.47 53.41 49.47 78.67 31.54 78.67 31.54 53.41" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <polyline points="49.47 53.41 67.41 53.41 67.41 78.67 49.47 78.67 49.47 53.41" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <path d="M31.54,10h36.92c11.33,0,20.51,9.18,20.51,20.51v38.97c0,11.33-9.18,20.51-20.51,20.51H31.54c-11.33,0-20.51-9.18-20.51-20.51V30.51c0-11.33,9.18-20.51,20.51-20.51" style="fill: #dedede;"/>
+  <g style="clip-path: url(#clippath);">
+    <polyline points="49.47 20.26 49.47 20.26 31.54 50.01 49.47 60.61 49.47 20.26" style="fill: #7a7a7a;"/>
+  </g>
+  <g style="clip-path: url(#clippath-1);">
+    <polyline points="49.47 20.26 49.47 20.26 49.47 60.61 67.4 50.01 49.47 20.26" style="fill: #2d2d2d;"/>
+  </g>
+  <g style="clip-path: url(#clippath-2);">
+    <polyline points="31.54 53.41 31.54 53.41 49.47 78.67 49.47 64 31.54 53.41" style="fill: #7a7a7a;"/>
+  </g>
+  <g style="clip-path: url(#clippath-3);">
+    <path d="M67.41,53.41l-17.94,10.59v14.67l17.94-25.26m0,0h0" style="fill: #2d2d2d;"/>
+  </g>
+</svg>

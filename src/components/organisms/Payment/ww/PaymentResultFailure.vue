@@ -4,9 +4,9 @@
       <div>
         <img class="mb-2" src="@/assets/images/multiply.svg" alt="failure">
         <p class="payment-status_desc mb-2">
-          The transaction cannot succeed due to error: execution
+          Invalid Transaction.
           <br>
-          Check the reason for the reverted from Explorer.
+          Check the transaction in Explorer.
         </p>
       </div>
       <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
@@ -32,7 +32,7 @@
 import { STATUS_RESULT_FAILURE } from '@/constants'
 
 export default {
-  name: 'PaymentResultFailure',
+  name: 'ww-PaymentResultFailure',
   props: {
     urls: Object,
     isReceiptMode: Boolean
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import '@/assets/scss/old/style.scss';
 
 .payment-status{
   text-align: center;
