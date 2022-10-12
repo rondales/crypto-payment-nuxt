@@ -1,4 +1,153 @@
 <template>
+  <!-- <div>
+    <PaymentModal title="Change of Cash back rate">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
+      <div class="caution" v-if="isConfirmationState">
+        <PaymentText type="h4g" html="Risk Disclaimer" />
+        <PaymentText
+          html=" This action will change the Cash back rate of your ethereum payment agreement. Please read the Risk Disclaimer carefully and review the
+          options below before proceeding."
+        />
+      </div>
+      <div v-if="isDetailState">
+        <figure>
+          <img src="@/assets/images/cash-back.svg" />
+        </figure>
+        <p class="margin-bottom-small">
+          Cash back rate：{{
+            isCashbackDefaultSetting ? "Default Setting" : `${cashbackRate}%`
+          }}
+        </p>
+        <p class="margin-bottom-small">
+          <img src="@/assets/images/double-caret.svg" />
+        </p>
+        <p class="margin-bottom-small">Changed rate</p>
+        <div class="box">
+          <input v-model="newCashbackRate" placeholder="0.00%" />
+        </div>
+
+        <PaymentText
+          v-if="!validCashbackRate"
+          class="invalid-rate"
+          html="Please enter number from 0.00 ~ 100.00"
+        />
+        <PaymentText
+          class="desc"
+          html="of amount back to the payer.<br>It is always your responsibility to set the cash back percentage. We
+          cannot be held responsible for lost funds due to incorrectly entered
+          values."
+        />
+        <button
+          class="btn __g __l mb-0"
+          @click="changePageToConfirmationState()"
+        >
+          Confirm
+          <div class="loading-wrap" :class="{ active: isProcessing }">
+            <img class="spin" src="@/assets/images/loading.svg" />
+          </div>
+        </button>
+        <PaymentButton text="Cancel" size="m" @click.native="hideModal()" />
+      </div>
+      <div v-if="isConfirmationState">
+        <PaymentText html="Changed Cash back rate" />
+        <PaymentText
+          class="changed-cashback-rate"
+          :html="newCashbackRate + '%'"
+        />
+        <PaymentText
+          class="desc"
+          html="of amount back to the payer<br>It is always your responsibility to set the cash back percentage. We
+          cannot be held responsible for lost funds due to incorrectly entered values. Do you understand this risk?"
+        />
+
+        <PaymentConfirmCheckbox
+          id="accept"
+          ref="accepted"
+          text="I understand the risk and continue this transaction."
+          @clickCheckbox="updateAcceptedStatus()"
+        />
+
+        <PaymentButton
+          text="Change Rate"
+          size="m"
+          :color="!isAccepted ? 'inactive' : 'primary'"
+          @click.native="changeCashbackRate(chainId)"
+          :loading="isProcessing"
+        />
+      </div>
+      <div v-else-if="isProcessingState">
+        <PaymentTransaction
+          type="loading"
+          title="Waiting for Confimation"
+          cap=" Do not close the screen until the payment contract has been successfully deployed. It may take some time due to network
+          congestion."
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton text="Processing..." size="m" color="inactive" />
+      </div>
+      <div v-else-if="isSuccessedState">
+        <PaymentTransaction
+          type="success"
+          title="Contract update Submitted"
+          :text="
+            'Current：Changed on ' +
+            currentDate +
+            '<br>Cash back rate <span>' +
+            cashbackRate +
+            '%</span> of amount back to the payer'
+          "
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+      <div v-else-if="isFailuredState">
+        <PaymentTransaction
+          type="dismiss"
+          title="Failed to update contract"
+          cap="The transaction cannot succeed due to error:"
+          :link="{
+            url: transactionUrl ? transactionUrl : '',
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+      <PaymentButton
+        v-if="isProcessingState"
+        size="icon"
+        color="icon"
+        icon="reload"
+        @click.native="refresh"
+      />
+      <PaymentButton
+        v-else-if="!isProcessingState"
+        text="Close"
+        size="m"
+        color="cancel"
+        @click.native="hideModal"
+      />
+    </PaymentModal>
+  </div> -->
   <div :class="classes">
     <div class="header" v-if="!isConfirmationState">
       <h3 class="header__title" >
@@ -132,11 +281,24 @@
 </template>
 
 <script>
-import { NETWORKS} from '@/constants'
+import { NETWORKS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
-
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
+// import PaymentConfirmCheckbox from "@/components/organisms/Payment/ConfirmCheckbox";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: 'contractCashbackChangeModal',
+  components: {
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
+    // PaymentConfirmCheckbox,
+    // PaymentTransaction,
+  },
   data() {
     return {
       pageStateList: {
@@ -329,296 +491,304 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-
-  .modal-box {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background:#292536;
-    @include media(pc) {
-      &.--small {
-        width: 470px;
-      }
-      &.--medium {
-        width: 760px;
-      }
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
+*/
+.modal-box {
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #292536;
+  @include media(pc) {
+    &.--small {
+      width: 470px;
     }
-    @include media(sp) {
-      width: calc(100vw - 32px);
+    &.--medium {
+      width: 760px;
     }
-
   }
-  .header {
-    @include media(pc) {
-      padding: 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__desc {
-        font-size: 2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 1.7rem;
-      }
-    }
+  @include media(sp) {
+    width: calc(100vw - 32px);
+  }
+}
+.header {
+  @include media(pc) {
+    padding: 24px;
     &__title {
-      font-weight: 500;
-      background: #ffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
     &__desc {
-      font-weight: 100;
+      font-size: 2rem;
     }
   }
-  .header-caution {
-    @include media(pc) {
-      padding: 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__title::before {
-        width: 2.5rem;
-        height: 2.5rem;
-      }
-      &__desc {
-        font-size: 1.2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-      &__title::before {
-        width: 2rem;
-        height: 2rem;
-      }
-      &__desc {
-        font-size: 1.2rem;
-      }
-    }
+  @include media(sp) {
+    padding: 18px;
     &__title {
-      font-weight: 500;
+      font-size: 1.7rem;
+    }
+  }
+  &__title {
+    font-weight: 500;
+    background: #ffff;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 150% 150%;
+    display: inline;
+  }
+  &__desc {
+    font-weight: 100;
+  }
+}
+.header-caution {
+  @include media(pc) {
+    padding: 24px;
+    &__title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
     &__title::before {
-      content: "";
-      margin-right: 5px;
-      display: inline-block;
-      background: url(/assets/images/caution.svg) no-repeat center center;
-      background-size: contain;
-      vertical-align: middle;
+      width: 2.5rem;
+      height: 2.5rem;
     }
     &__desc {
-      font-weight: 100;
+      font-size: 1.2rem;
     }
   }
-  .close {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    font-size: 0;
-    @include media(pc) {
-      top: 35px;
-      right: 24px;
+  @include media(sp) {
+    padding: 18px;
+    &__title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
-    @include media(sp) {
-      top: 24px;
-      right: 24px;
+    &__title::before {
+      width: 2rem;
+      height: 2rem;
     }
-  }
-  .reload{
-    cursor: pointer;
-    img{
-      vertical-align: middle;
-      transform: scale(1.35);
-    }
-    .spinning{
-      cursor: default;
-      animation: 0.7s linear infinite spinning;
-    }
-
-    @keyframes spinning {
-      from { transform: rotateZ(0deg) scale(1.35); }
-      to { transform: rotateZ(360deg) scale(1.35); }
+    &__desc {
+      font-size: 1.2rem;
     }
   }
-  .body {
-    text-align: center;
-    figure{
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 16px;
-      display: inline-block;
-    }
-    h4{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 32px;
-    }
-    p{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 30px;
-    }
-    span{
-      font-size: 13px;
-      font-weight: 400;
-    }
-    @include media(pc) {
-      padding: 24px 24px 40px;
-    }
-    @include media(sp) {
-      padding: 16px 12px 48px;
-    }
-    .btn {
-      width: 100%;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 24px;
-      &.__m {
-        background: $gradation-double;
-      }
-    }
+  &__title {
+    font-weight: 500;
   }
-  .footer {
-    text-align: center;
-
-    @include media(pc) {
-      padding: 0 40px 40px;
-    }
-    @include media(sp) {
-      padding: 0 32px 32px;
-    }
-  }
-  .network-icon {
-    position: relative;
-    left: 47px;
-    top: -25px;
-  }
-  .desc {
-    font-weight: 100 !important;
-    font-size: 1.2rem !important;
-    margin-bottom: 30px !important;
-  }
-  .payment-status{
-    text-align: center;
-    margin: auto;
-    &_btn{
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
-      img{
-        margin-left: 4px;
-        vertical-align: middle;
-      }
-    }
-  }
-  .box{
-    font-weight: 300;
-    background: #171522;
-    border-radius: 8px;
-    height: 46px;
-    line-height: 20px;
-    padding: 6px 6px;
-    display: inline-block;
-    width: 120px;
-    @include media(tb) {
-      margin-bottom: 16px;
-      font-size: 13px;
-    }
-    input {
-      text-align: center;
-      width: 100%;
-    }
-  }
-  .separate-line {
-    border-bottom: 1px solid #78668D;
-    @include media(pc) {
-      margin: 0 24px;
-    }
-    @include media(sp) {
-      margin: 0 18px;
-    }
-  }
-  .changed-cashback-rate {
-    font-size: 36px !important;
-    color: #00FF3B;
+  &__title::before {
+    content: "";
     margin-right: 5px;
-    margin-left: 5px;
+    display: inline-block;
+    background: url(/assets/images/caution.svg) no-repeat center center;
+    background-size: contain;
+    vertical-align: middle;
   }
-
-  .invalid-rate {
-    font-weight: 100 !important;
-    font-size: 1.2rem !important;
-    color:#E5676C!important;
-  }
-  .margin-bottom-small {
-    margin-bottom: 13px !important;
-  }
-
-  .margin-bottom-md {
-    margin-bottom: 20px !important;
-  }
-  .checkbox-container {
-    position: relative;
+  &__desc {
     font-weight: 100;
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    input[type="checkbox"] {
-        display: none;
+  }
+}
+.close {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
+  @include media(pc) {
+    top: 35px;
+    right: 24px;
+  }
+  @include media(sp) {
+    top: 24px;
+    right: 24px;
+  }
+}
+.reload {
+  cursor: pointer;
+  img {
+    vertical-align: middle;
+    transform: scale(1.35);
+  }
+  .spinning {
+    cursor: default;
+    animation: 0.7s linear infinite spinning;
+  }
+
+  @keyframes spinning {
+    from {
+      transform: rotateZ(0deg) scale(1.35);
     }
-    input[type="checkbox"]+label {
-      display: none;
-      cursor: pointer;
-      display: inline-block;
-      position: relative;
-      padding-left: 30px;
-      padding-right: 10px;
-    }
-    input[type="checkbox"]+label::before{
-      content: "";
-      position: absolute;
-      display: block;
-      box-sizing: border-box;
-      width: 18px;
-      height: 18px;
-      left: 0;
-      top: 0%;
-      border: 2px solid;
-      border-radius: 2px;
-      border-color:  var(--color_font);
-      background-color: #292536;
-    }
-    input[type="checkbox"]:checked+label::after{
-      content: "";
-      position: absolute;
-      display: block;
-      box-sizing: border-box;
-      width: 15px;
-      height: 6px;
-      margin-top: 5px;
-      top: 0%;
-      left: 3px;
-      transform: rotate(-45deg);
-      border-bottom: 3px solid;
-      border-left: 3px solid;
-      border-color:  #44d866;
+    to {
+      transform: rotateZ(360deg) scale(1.35);
     }
   }
+}
+.body {
+  text-align: center;
+  figure {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px;
+    display: inline-block;
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  p {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  span {
+    font-size: 13px;
+    font-weight: 400;
+  }
+  @include media(pc) {
+    padding: 24px 24px 40px;
+  }
+  @include media(sp) {
+    padding: 16px 12px 48px;
+  }
+  .btn {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 24px;
+    &.__m {
+      background: $gradation-double;
+    }
+  }
+}
+.footer {
+  text-align: center;
+
+  @include media(pc) {
+    padding: 0 40px 40px;
+  }
+  @include media(sp) {
+    padding: 0 32px 32px;
+  }
+}
+.network-icon {
+  position: relative;
+  left: 47px;
+  top: -25px;
+}
+.desc {
+  font-weight: 100 !important;
+  font-size: 1.2rem !important;
+  margin-bottom: 30px !important;
+}
+.payment-status {
+  text-align: center;
+  margin: auto;
+  &_btn {
+    font-size: 12px;
+    font-weight: 100;
+    cursor: pointer;
+    background: $gradation-pale;
+    padding: 4px 16px;
+    border-radius: 10px;
+    color: #fff;
+    img {
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+  }
+}
+.box {
+  font-weight: 300;
+  background: #171522;
+  border-radius: 8px;
+  height: 46px;
+  line-height: 20px;
+  padding: 6px 6px;
+  display: inline-block;
+  width: 120px;
+  @include media(tb) {
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  input {
+    text-align: center;
+    width: 100%;
+  }
+}
+.separate-line {
+  border-bottom: 1px solid #78668d;
+  @include media(pc) {
+    margin: 0 24px;
+  }
+  @include media(sp) {
+    margin: 0 18px;
+  }
+}
+.changed-cashback-rate {
+  font-size: 36px !important;
+  color: #00ff3b;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.invalid-rate {
+  font-weight: 100 !important;
+  font-size: 1.2rem !important;
+  color: #e5676c !important;
+}
+.margin-bottom-small {
+  margin-bottom: 13px !important;
+}
+
+.margin-bottom-md {
+  margin-bottom: 20px !important;
+}
+.checkbox-container {
+  position: relative;
+  font-weight: 100;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  input[type="checkbox"] {
+    display: none;
+  }
+  input[type="checkbox"] + label {
+    display: none;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    padding-right: 10px;
+  }
+  input[type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    left: 0;
+    top: 0%;
+    border: 2px solid;
+    border-radius: 2px;
+    border-color: var(--color_font);
+    background-color: #292536;
+  }
+  input[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    width: 15px;
+    height: 6px;
+    margin-top: 5px;
+    top: 0%;
+    left: 3px;
+    transform: rotate(-45deg);
+    border-bottom: 3px solid;
+    border-left: 3px solid;
+    border-color: #44d866;
+  }
+}
 </style>

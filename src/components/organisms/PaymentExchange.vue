@@ -1,155 +1,113 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveTokenSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount"
-      />
+  <div class="exchange">
+    <PaymentAmountBilled
+      class="exchange__bill"
+      :symbol="merchantReceiveTokenSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount"
+      size="big"
+    />
 
-      <div class="payment_balancewrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Your Balance</p>
-          <figure
-            class="reload"
-            :class="{ loading: isReloading }"
-            @click="updateTokenExchangeData(true)"
-          >
-            <img v-if="isDarkTheme" src="@/assets/images/reload.svg" />
-            <img v-else src="@/assets/images/reload-l.svg" />
-          </figure>
-        </div>
-        <div class="payment_balance add-flex j-between mb-1">
-          <div class="payment_balance-name add-flex a-center mb-2">
-            <figure>
-              <img
-                :src="userSelectedTokenIcon"
-                :alt="userSelectedTokenSymbol"
-              />
-            </figure>
-            <p>
-              {{ userSelectedTokenSymbol }}
-            </p>
-          </div>
-          <div class="payment_balance-value">
-            <p>
-              Balance : {{ userSelectedTokenBalance | balanceFormat }}
-              {{ userSelectedTokenSymbol }}
-            </p>
-            <p>
-              equivalent : {{ balanceEquivalentAmount | balanceFormat }}
-              {{ equivalentSymbol }}
-            </p>
-          </div>
-        </div>
-        <div
-          class="payment-box"
-          v-if="
-            isExpiredExchange &&
-            isEnoughUserSelectedTokenBalance &&
-            !isNeedApprove &&
-            !isWalletConfirming
+    <PaymentTitle class="exchange__title" type="h2_g" html="Your Balance">
+      <PaymentButton
+        icon="reload"
+        color="icon"
+        size="icon"
+        @click.native="updateTokenExchangeData(true)"
+      />
+    </PaymentTitle>
+
+    <PaymentAmountBilled
+      class="exchange__balance"
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      icon-type="png"
+      :table="balanceTable"
+    />
+    <PaymentAction
+      class="exchange__update"
+      v-if="
+        isExpiredExchange &&
+        isEnoughUserSelectedTokenBalance &&
+        !isNeedApprove &&
+        !isWalletConfirming
+      "
+      icon="attention"
+      text="Price Updated"
+    >
+      <PaymentButton
+        text="Update"
+        size="s"
+        @click.native="updateTokenExchangeData(false)"
+      />
+    </PaymentAction>
+    <PaymentPrice
+      :symbol="userSelectedTokenSymbol"
+      :cap="userSelectedTokenPayAmountEquivalent"
+      :cap2="equivalentSymbol + ' equivalent'"
+      :price="userSelectedTokenPayAmount | formatPrice"
+      class="exchange__price"
+      :status="!isEnoughUserSelectedTokenBalance ? 'error' : 'success'"
+    />
+    <PaymentText
+      class="ml-1 mb-2"
+      tag="p"
+      type="p"
+      html="* This amount is an estimate and is subject to change"
+    />
+
+    <div class="exchange__btnwrap" v-if="isSetRequreUserPayAmount">
+      <div v-if="isEnoughUserSelectedTokenBalance">
+        <PaymentButton
+          v-if="isNeedApprove"
+          :color="isWalletConfirming ? 'inactive' : 'primary'"
+          size="m"
+          :text="
+            'Allow the Slash protocol to use your ' + userSelectedTokenSymbol
           "
-        >
-          <div class="add-flex a-center j-between">
-            <div class="add-flex a-center">
-              <img src="@/assets/images/warning.svg" alt="" />
-              <div class="payment-box_desc">
-                <p>Price Updated</p>
-              </div>
-            </div>
-            <div
-              class="payment-box_btn"
-              @click="updateTokenExchangeData(false)"
-            >
-              Accept
-            </div>
-          </div>
-        </div>
-        <div class="payment_balance-topken border">
-          <div class="payment_balance-tokenname add-flex j-between">
-            <p>
-              {{ userSelectedTokenSymbol }}
-            </p>
-            <div
-              class="payment_balance-equivalent"
-              :class="{ warning: !isEnoughUserSelectedTokenBalance }"
-            >
-              {{ formatNumber(userSelectedTokenPayAmountEquivalent) }}
-              {{ equivalentSymbol }} equivalent
-            </div>
-          </div>
-          <div class="payment_balance-price">
-            {{ userSelectedTokenPayAmount }}
-          </div>
-        </div>
-        <div>
-          <div v-if="isSetRequreUserPayAmount" class="content-wrap">
-            <div
-              v-if="isEnoughUserSelectedTokenBalance"
-              class="btn-content-wrap"
-            >
-              <p class="estimate mb-2">
-                * This amount is an estimate and is subject to change
-              </p>
-              <button
-                v-if="isNeedApprove"
-                class="btn __g __l mb-2 approve-token-btn"
-                :class="{ inactive: isWalletConfirming }"
-                @click="handleTokenApprove"
-              >
-                <img
-                  class="token-approve-btn-img"
-                  :src="userSelectedTokenIcon"
-                />
-                Allow the Slash protocol to use your
-                {{ userSelectedTokenSymbol }}
-                <div
-                  class="loading-wrap"
-                  :class="{ active: isWalletConfirming }"
-                >
-                  <img class="spin" src="@/assets/images/loading.svg" />
-                </div>
-              </button>
-              <button
-                v-if="isExchangeDataUpdating"
-                class="btn __g __l mb-2 inactive"
-              >
-                Price Updating...
-                <div class="loading-wrap active">
-                  <img class="spin" src="@/assets/images/loading.svg" />
-                </div>
-              </button>
-              <button
-                v-else
-                class="btn __g __l mb-2"
-                :class="{
-                  inactive:
-                    isNeedApprove || isExpiredExchange || isWalletConfirming,
-                }"
-                @click="handleGoPayment()"
-              >
-                Go Payment
-              </button>
-              <p class="via">
-                via Slash Payment
-                <span>
-                  <img src="@/assets/images/slash-s.svg" alt="" />
-                </span>
-              </p>
-            </div>
-            <div v-else class="balance-warning">
-              <p>balance is insufficient</p>
-              <p>for this transaction.</p>
-            </div>
-          </div>
-          <div v-else class="content-wrap">
-            <div v-if="isNotEnoughLiquidity" class="balance-warning">
-              <p>Liquidity is not enough</p>
-              <p>for this transaction.</p>
-            </div>
-          </div>
-        </div>
+          :loading="isWalletConfirming"
+          @click.native="handleTokenApprove"
+        />
+
+        <PaymentButton
+          v-if="isExchangeDataUpdating"
+          color="inactive"
+          size="l"
+          text="Price Updating..."
+          :loading="true"
+        />
+        <PaymentButton
+          v-else
+          :color="
+            isNeedApprove || isExpiredExchange || isWalletConfirming
+              ? 'inactive'
+              : 'primary'
+          "
+          @click.native="handleGoPayment()"
+          size="l"
+          text="Go Payment"
+          icon="logo-icon"
+        />
+      </div>
+      <div v-else>
+        <PaymentText
+          class="blancewarning"
+          tag="p"
+          type="p"
+          color="red"
+          html="balance is insufficient<br>for this transaction."
+        />
+      </div>
+    </div>
+    <div v-else>
+      <div v-if="isNotEnoughLiquidity">
+        <PaymentText
+          class="blancewarning"
+          tag="p"
+          type="p"
+          color="red"
+          html="Liquidity is not enough<br>for this transaction."
+        />
       </div>
     </div>
   </div>
@@ -158,7 +116,12 @@
 <script>
 import * as Sentry from "@sentry/vue"
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import { Decimal as BigJs } from "decimal.js";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentPrice from "@/components/organisms/Payment/Price";
+import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentText from "@/components/organisms/Payment/Text";
+import { Decimal } from "decimal.js";
 import { METAMASK, WALLET_CONNECT, NETWORKS } from "@/constants";
 import {
   EthereumTokens as EthereumDefaultTokens,
@@ -178,12 +141,9 @@ import {
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
 } from "@/contracts/receive_tokens";
-import NumberFormat from "number-format.js";
-import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: "PaymentExchange",
-  mixins: [DisplayConfig],
   data() {
     return {
       expired: false,
@@ -198,16 +158,22 @@ export default {
         address: null,
         abi: null,
       },
+      balanceTable: [],
       isNotEnoughLiquidity: false,
     };
   },
   components: {
     PaymentAmountBilled,
+    PaymentTitle,
+    PaymentAction,
+    PaymentPrice,
+    PaymentButton,
+    PaymentText,
   },
   filters: {
-    balanceFormat(balance) {
-      return NumberFormat("0.0000", balance);
-    },
+    formatPrice(price) {
+      return Decimal(price).toString()
+    }
   },
   computed: {
     API_BASE_URL() {
@@ -292,8 +258,8 @@ export default {
     merchantReceiveTokenIcon() {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
+        : "crypto_currency/unknown";
     },
     userSelectedToken() {
       return this.$store.state.payment.token;
@@ -324,8 +290,8 @@ export default {
     userSelectedTokenIcon() {
       const tokens = this.defaultPaymentTokens;
       return this.userSelectedTokenSymbol in tokens
-        ? tokens[this.userSelectedTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.userSelectedTokenSymbol].iconPath
+        : "crypto_currency/unknown";
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null;
@@ -385,7 +351,7 @@ export default {
       ) {
         return false;
       }
-      return new BigJs(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
+      return Decimal(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
         this.requireAmount
       );
     },
@@ -396,7 +362,7 @@ export default {
       ) {
         return false;
       }
-      return new BigJs(this.userSelectedTokenBalance).greaterThanOrEqualTo(
+      return Decimal(this.userSelectedTokenBalance).greaterThanOrEqualTo(
         this.requireAmount
       );
     },
@@ -427,9 +393,6 @@ export default {
     }
   },
   methods: {
-    formatNumber(number) {
-      return this.$_displayConfig_formatNumber(number)
-    },
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
       const request = {
@@ -556,6 +519,7 @@ export default {
         });
     },
     handleGoPayment() {
+      if (this.expired) return
       this.$store.dispatch("payment/updateToken", {
         amount: this.requireAmount,
         rate: this.exchangeRate,
@@ -575,9 +539,10 @@ export default {
     handleAccountChangedEvent(address) {
       this.$store.dispatch("account/updateAddress", address[0]);
       this.$router.push({ path: `/payment/token/${this.paymentToken}` });
-    },
+    }
   },
   created() {
+    Decimal.set({ toExpNeg: -20 })
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: "wallets",
@@ -627,6 +592,17 @@ export default {
           this.exchangeRate = results[0].rate;
           this.$parent.loading = false;
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
+
+          this.balanceTable.push({
+            title: "Balance",
+            price: Decimal(this.userSelectedTokenBalance).toFixed(4, Decimal.ROUND_FLOOR),
+            symbol: this.userSelectedTokenSymbol,
+          });
+          this.balanceTable.push({
+            title: "Equivalent",
+            price: Decimal(this.balanceEquivalentAmount).toFixed(4, Decimal.ROUND_FLOOR),
+            symbol: this.equivalentSymbol,
+          });
         })
         .catch((err) => { Sentry.captureException(err) });
     })
@@ -666,129 +642,33 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
+@import "@/assets/scss/delaunay.scss";
+.exchange {
+  &__bill {
+    margin-bottom: 2rem;
+  }
+  &__title {
+    margin-bottom: 2rem;
+  }
+  &__balance {
+    margin-bottom: 2rem;
+  }
+  &__update {
+    margin-bottom: 2rem;
+  }
+  &__price {
+    margin-bottom: 2rem;
+  }
+  &__btnwrap {
+    .via {
+      margin-top: 0.5rem;
+    }
+    div + div {
+      margin-top: 0.5rem;
     }
   }
-
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
-  }
-  .payment_handleprice-pricewrap {
-    width: 100%;
-  }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
-  }
-
-  .reload {
-    cursor: pointer;
-    img {
-      vertical-align: middle;
-    }
-    &.loading {
-      animation: 3s linear infinite spin;
-      from {
-        transform: rotateZ(0deg);
-      }
-      to {
-        transform: rotateZ(360deg);
-      }
-    }
-  }
-  .payment_balance {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        margin-left: 11px;
-        line-height: 25px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 13px;
-      font-weight: 100;
-      margin-left: 16px;
-    }
-    &-topken {
-      width: 100%;
-      padding: 12px;
-      position: relative;
-    }
-    &-tokenname {
-      p {
-        font-size: 16px;
-        font-weight: 200;
-      }
-    }
-    &-equivalent {
-      color: #01f63a;
-      font-weight: 100;
-      font-size: 11px;
-      line-height: 24px;
-      &.warning {
-        color: #f75d68;
-      }
-    }
-    &-price {
-      text-align: right;
-      width: 100%;
-      font-weight: 100;
-      font-size: 24px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  .estimate {
-    font-size: 10px;
-    font-weight: 100;
-  }
-  .via {
-    font-size: 12px;
-    font-weight: 100;
-    text-align: center;
-    line-height: 20px;
-    img {
-      width: 20px;
-      height: 20px;
-      margin-left: 5px;
-    }
-  }
-  .balance-warning {
-    color: #f75d68;
-    font-size: 15px;
-    font-weight: 100;
-    letter-spacing: 0.05em;
-    text-align: center;
-  }
-  .token-approve-btn-img {
-    padding-top: 0px !important;
-    width: 25px;
-    height: 25px;
-  }
-  .approve-token-btn {
-    padding: 0;
-    font-size: 11px;
-  }
+}
+.blancewarning {
+  text-align: center;
 }
 </style>

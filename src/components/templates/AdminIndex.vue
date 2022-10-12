@@ -4,8 +4,15 @@
       <Header />
       <SideBar />
       <div class="contents">
-        <div class="user-status" :class="{'is-receive': this.$store.state.account.receive.isSelected}">
-          ReceiveToken：<img  src="@/assets/images/symbol/usdt.svg"><span>USDT</span>
+        <div
+          class="user-status"
+          :class="{
+            'is-receive': this.$store.state.account.receive.isSelected,
+          }"
+        >
+          ReceiveToken：<img src="@/assets/images/symbol/usdt.svg" /><span
+            >USDT</span
+          >
         </div>
         <router-view />
       </div>
@@ -14,25 +21,25 @@
 </template>
 
 <script>
-import Header from "@/components/organisms/header"
-import SideBar from "@/components/organisms/admin/AdminSidebar"
+import Header from "@/components/organisms/admin/header";
+import SideBar from "@/components/organisms/admin/AdminSidebar";
 
 export default {
-  name: 'Contents',
+  name: "Contents",
   components: {
     Header,
-    SideBar
+    SideBar,
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
-.user-status{
+@import "@/assets/scss/style.scss";
+.user-status {
   display: none;
 }
 @include media(sp) {
-  .user-status{
+  .user-status {
     font-size: 12px;
     padding: 2px 12px;
     width: 80%;
@@ -40,12 +47,12 @@ export default {
     font-weight: 200;
     line-height: 24px;
     background: $gradation-light;
-    border-radius:50px;
+    border-radius: 50px;
     align-items: center;
-    &.is-receive{
+    &.is-receive {
       display: flex;
     }
-    img{
+    img {
       width: 16px;
       height: 16px;
       margin-left: 54px;
@@ -53,7 +60,7 @@ export default {
     }
   }
 }
-.contents{
+.contents {
   padding: 48px;
   margin-left: 170px;
   @include media(sp) {
@@ -63,5 +70,4 @@ export default {
     margin-top: 55px;
   }
 }
-
 </style>

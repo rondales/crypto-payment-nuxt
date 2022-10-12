@@ -1,120 +1,142 @@
 <template>
-  <header class="global-header">
-    <div class="global-header__inner">
-      <div class="add-flex a-center">
-        <h1 class="logo">
-          <img class="pc" src="@/assets/images/logo.svg" alt="Web3 Payment">
-          <img v-if="connected" class="sp" src="@/assets/images/logo-icon.svg" alt="Web3 Payment">
-          <img v-else class="sp" src="@/assets/images/logo-sp.svg" alt="Web3 Payment">
-        </h1>
-        <p class="logo-sub">
-          {{ subTitle }}
-        </p>
-        <div class="testnet-navbar" v-if="isUseTestnet" v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave">
-          <span>
-            Testnet
-          </span>
-          <div class="testnet-hovercontens" v-if="isHover">
-            <p>
-              You are on the Slash test network.
-              If you want to use the product, Please wait for a little while longer.
-              <!--Go to <a href="https://slash.fi/admin">https://slash.fi/admin</a> -->
-            </p>
-          </div>
-        </div>
-        <div v-if="isAdminPage && isConnected && isFixedReceiveToken" class="user-status">
-          ReceiveToken：<img :src="receiveTokenIcon"><span>{{ receiveTokenSymbol }}</span>
-        </div>
-      </div>
-      <div class="global-header__actions add-flex a-center">
-        <div v-if="show" class="pc">
-          <button v-if="connected && fixedNetwork" v-on="isAdminPage ? { click: showNetworkModal } : {}" 
-            :class="{ pointer: isAdminPage }" class="btn __s sp-fixed">
-
-            <span v-if="isSupportedNetwork" class="btn-icon">
-              <img :src="networkIcon" alt="Web3 Payment">
-            </span>
-            {{ networkName }}
-          </button>
-        </div>
-        <div v-if="show" class="ml-1">
-          <button v-if="connected" class="account-wallet" :class="{ admin: isAdminPage }" @click="toggleSubMenu">
-            <span v-if="isSupportedNetwork" class="price">{{ balance | balanceFormat }} {{ symbol }}</span>
-            <span v-else class="price unknown">Balance unknown</span>
-            <span v-if="!isWalletPending" class="id" :class="{ __g: isAdminPage, __pg: !isAdminPage }">{{ walletAddress | walletAddressFormat }}</span>
-            <div v-else-if="isWalletPending" class="id __pg">
-              <div class="loading-wrap-header loading-wrap active">
-                  <img class="spin spin-header" src="@/assets/images/loading.svg">
-              </div>
-              Pending
+  <header class="header" :class="{ admin: isAdminPage }">
+    <div class="header__wrap">
+      <div class="header__inner">
+        <div class="header__left">
+          <h1 class="header__logo">
+            <!-- <LogoIcon class="logoicon" /> -->
+            <PaymentIcon class="logoicon" path="logo-icon" />
+            <LogoText class="logotext" />
+            <PaymentText class="header__sub" type="h5" :html="subTitle" />
+          </h1>
+          <div
+            class="header__testnet"
+            v-if="isUseTestnet"
+            v-on:mouseover="mouseOver"
+            v-on:mouseleave="mouseLeave"
+          >
+            <PaymentText type="header__testnet" html="Testnet" color="white" />
+            <div class="header__testnet__hover" v-if="isHover">
+              <PaymentText
+                type="cap"
+                html='You are on the Slash test network. If you want to use the product, Please wait for a little while longer.<!--Go to <a href="https://slash.fi/admin">https://slash.fi/admin</a> -->'
+              />
             </div>
-          </button>
-          <button v-else class="btn __s sp-fixed" :class="{ __g: isAdminPage, __pg: !isAdminPage }"  @click="showWalletModal">
-            Connect to wallet
+          </div>
+          <PaymentToken
+            v-if="isAdminPage && isConnected && isFixedReceiveToken"
+            class="header__token"
+            :icon="receiveTokenIconPath"
+            :symbol="receiveTokenSymbol"
+            title="ReceiveToken"
+          />
+        </div>
+        <div class="header__right">
+          <PaymentButton
+            v-if="show && connected && fixedNetwork"
+            v-on="isAdminPage ? { click: showNetworkModal } : {}"
+            size="s"
+            class="header__network"
+            :class="{ pointer: isAdminPage }"
+            :icon="isSupportedNetwork ? networkIcon : ''"
+            :text="networkName"
+          />
+          <div>
+            <button
+              v-if="show && connected"
+              class="header__wallet"
+              :class="{ admin: isAdminPage }"
+              @click="toggleSubMenu"
+            >
+              <div class="header__wallet__token">
+                <div
+                  v-if="isSupportedNetwork"
+                  class="header__wallet__token__textwrap"
+                >
+                  <PaymentText
+                    class="header__wallet__token__balance"
+                    type="h5"
+                    :html="balance | balanceFormat"
+                  />
+                  <PaymentText
+                    class="header__wallet__token__symbol"
+                    type="capb"
+                    :html="symbol"
+                  />
+                </div>
+                <PaymentText v-else type="p" html="Balance unknown" />
+              </div>
+              <PaymentText
+                v-if="!isWalletPending"
+                class="header__wallet__id"
+                :class="{ __g: isAdminPage, __pg: !isAdminPage }"
+                type="cap"
+                :html="walletAddress | walletAddressFormat"
+              />
+              <div v-else-if="isWalletPending" class="header__wallet__id pg">
+                <PaymentIcon class="loading spin" path="loading" />
+                <PaymentText type="cap" html="Pending" />
+              </div>
+            </button>
+            <PaymentButton
+              v-else-if="show"
+              @click.native="showWalletModal"
+              size="s"
+              :class="{ __g: isAdminPage, __pg: !isAdminPage }"
+              text="Connect to wallet"
+            />
+          </div>
+          <PaymentButton
+            v-if="isPaymentPage"
+            size="icon"
+            color="icon"
+            @click.native="switchColorTheme(theme.mode)"
+            :icon="theme.mode"
+          />
+
+          <button
+            class="header__hamburger"
+            @click="hideMenu"
+            :class="{ active: showMenu }"
+          >
+            <span></span>
           </button>
         </div>
-        <span v-if="isPaymentPage" class="toggle-theme">
-          <button
-            :class="[
-              'theme-button',
-              '--light',
-              { 'is-active': isLightTheme },
-            ]"
-            @click="switchColorTheme(lightTheme)"
-            v-if="isDarkTheme"
-          >
-            <img src="@/assets/images/light.svg" alt="">
-          </button>
-          <button
-            :class="[
-              'theme-button',
-              '--dark',
-              { 'is-active': isDarkTheme },
-            ]"
-            @click="switchColorTheme(darkTheme)"
-            v-if="isLightTheme"
-          >
-            <img src="@/assets/images/dark.svg" alt="">
-          </button>
-        </span>
       </div>
-    </div>
-    <div v-if="this.$store.state.accountMenu" class="account-menu">
-      <ul>
-        <li @click="openAccountModal()">
-          <p>
-            Account
-          </p>
-          <img src="@/assets/images/account.svg" alt="">
-        </li>
-        <li @click="editNote()" >
-          <p>
-            Account Note
-          </p>
-          <img src="@/assets/images/edit.svg" alt="">
-        </li>
-        <li>
-          <div class="account-note">
-            {{accountNote}}
-          </div>
-        </li>
-        <li>
-          <router-link class="add-flex j-between a-center" to="/admin/payment/history">
-            <p>
-              History
-            </p>
-            <img src="@/assets/images/history.svg" alt="">
-          </router-link>
-        </li>
-        <li>
-          <router-link class="add-flex j-between a-center" to="/admin/payment/settings/contract">
-            <p>
-              Settings
-            </p>
-            <img src="@/assets/images/settings.svg" alt="">
-          </router-link>
-        </li>
-        <!-- <li>
+      <div v-if="this.$store.state.accountMenu" class="account-menu">
+        <ul>
+          <li @click="openAccountModal()">
+            <p>Account</p>
+            <img src="@/assets/images/account.svg" alt="" />
+          </li>
+          <li @click="editNote()">
+            <p>Account Note</p>
+            <img src="@/assets/images/edit.svg" alt="" />
+          </li>
+          <li>
+            <div class="account-note">
+              {{ accountNote }}
+            </div>
+          </li>
+          <li>
+            <router-link
+              class="add-flex j-between a-center"
+              to="/admin/payment/history"
+            >
+              <p>History</p>
+              <img src="@/assets/images/history.svg" alt="" />
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              class="add-flex j-between a-center"
+              to="/admin/payment/settings/contract"
+            >
+              <p>Settings</p>
+              <img src="@/assets/images/settings.svg" alt="" />
+            </router-link>
+          </li>
+          <!-- <li>
           <router-link class="add-flex j-between a-center" to="/admin/store">
             <p>
               Store apps
@@ -122,25 +144,44 @@
             <img src="@/assets/images/scan.svg" alt="">
           </router-link>
         </li> -->
-        <li @click="disconnect()">
-          <p>
-            Disconnect
-          </p>
-          <img src="@/assets/images/logout.svg" alt="">
-        </li>
-      </ul>
+          <li @click="disconnect()">
+            <p>Disconnect</p>
+            <img src="@/assets/images/logout.svg" alt="" />
+          </li>
+        </ul>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
 import Web3 from 'web3'
-import { WALLET_CONNECT, METAMASK, DARK_THEME, LIGHT_THEME, NETWORKS } from '@/constants'
+import { Decimal } from 'decimal.js'
+import {
+  WALLET_CONNECT,
+  METAMASK,
+  DARK_THEME,
+  LIGHT_THEME,
+  NETWORKS
+} from '@/constants'
 import AvailableNetworks from '@/network'
-
+import LogoText from '@/components/common/LogoText'
+// import LogoIcon from '@/components/common/LogoIcon'
+import PaymentText from '@/components/organisms/Payment/Text'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentToken from '@/components/organisms/Payment/Token'
 export default {
   name: 'Header',
-  props: ['width'],
+  props: ['width', 'showMenu'],
+  components: {
+    // LogoIcon,
+    LogoText,
+    PaymentText,
+    PaymentIcon,
+    PaymentButton,
+    PaymentToken
+  },
   data() {
     return {
       monitoringInterval: null,
@@ -148,52 +189,48 @@ export default {
         USDT: require('@/assets/images/symbol/usdt.svg'),
         USDC: require('@/assets/images/symbol/usdc.svg'),
         DAI: require('@/assets/images/symbol/dai.svg'),
-        JPYC: require('@/assets/images/symbol/jpyc.svg'),
-        WETH: require('@/assets/images/symbol/eth.svg')
+        JPYC: require('@/assets/images/symbol/jpyc.svg')
       },
-      isHover: false
+      receiveTokenIconPaths: {
+        USDT: 'usdt',
+        USDC: 'usdc',
+        DAI: 'dai',
+        JPYC: 'jpyc'
+      },
+      isHover: false,
+      theme: {
+        // icon: require("@/assets/images/light.svg"),
+        mode: 'light'
+      }
     }
   },
   watch: {
     $route(to, from) {
-      if(from.fullPath === "/payment") {
+      if (from.fullPath === '/payment') {
         this.show = true
       }
     },
     chainId(id) {
       if (id) {
-        this.$web3.getAccountData(
-          this.$store.state.web3.instance,
-          id
-        ).then((account) => {
-          this.$store.dispatch('account/update', account)
-        })
+        this.$web3
+          .getAccountData(this.$store.state.web3.instance, id)
+          .then((account) => {
+            this.$store.dispatch('account/update', account)
+          })
       }
     }
   },
   filters: {
     balanceFormat(balance) {
-      const pattern = /^[0-9]+.[0-9]+$/
-      if (pattern.test(balance)) {
-        let balanceSplit = balance.toString().split('.')
-        if (balanceSplit[1].length > 4) {
-          balanceSplit[1] = balanceSplit[1].substr(0, 4)
-        } else {
-          balanceSplit[1] = (balanceSplit[1] + '0000').substr(0,4)
-        }
-        balance = balanceSplit[0] + '.' + balanceSplit[1]
-      } else {
-        balance = balance + '.' + '0000'
-      }
-      return balance
+      return Decimal(balance).toFixed(4, Decimal.ROUND_FLOOR)
     },
     walletAddressFormat(walletAddress) {
-      if ((walletAddress)) {
-        const prefix = walletAddress.substr(0, 6);
-        const sufix = walletAddress.slice(-4);
-        return prefix + '…' + sufix;
+      if (walletAddress) {
+        const prefix = walletAddress.substr(0, 6)
+        const sufix = walletAddress.slice(-4)
+        return prefix + '…' + sufix
       } else {
-        return '';
+        return ''
       }
     }
   },
@@ -227,31 +264,37 @@ export default {
     },
     isPaymentPage() {
       const currentPath = this.$route.path
-      const pattern = /^\/payment\//
+      const pattern = /^\/(payment|payment-merchant)\//
       return pattern.test(currentPath)
     },
     isConnected() {
-      return (this.$store.state.web3.instance)
+      return this.$store.state.web3.instance
     },
     isFixedReceiveToken() {
-      return (this.$store.state.account.receiveSymbol)
+      return this.$store.state.account.receiveSymbol
     },
     isUseTestnet() {
       return !JSON.parse(process.env.VUE_APP_USE_MAINNET.toLowerCase())
     },
     isSupportedNetwork() {
-      const systemAvailableNetworks = Object.values(AvailableNetworks).map((network) => {
-        return network.chainId
-      })
-      return this.$store.state.web3.chainId && systemAvailableNetworks.includes(this.$store.state.web3.chainId)
+      const systemAvailableNetworks = Object.values(AvailableNetworks).map(
+        (network) => {
+          return network.chainId
+        }
+      )
+      return (
+        this.$store.state.web3.chainId &&
+        systemAvailableNetworks.includes(this.$store.state.web3.chainId)
+      )
     },
     receiveTokenSymbol() {
       return this.$store.state.account.receiveSymbol
     },
     receiveTokenIcon() {
-      return this.receiveTokenIcons[
-        this.$store.state.account.receiveSymbol
-      ]
+      return this.receiveTokenIcons[this.$store.state.account.receiveSymbol]
+    },
+    receiveTokenIconPath() {
+      return this.receiveTokenIconPaths[this.$store.state.account.receiveSymbol]
     },
     walletAddress() {
       return this.$store.state.account.address
@@ -261,17 +304,14 @@ export default {
     },
     networkName() {
       if (this.isSupportedNetwork) {
-        return NETWORKS[
-          this.$store.state.web3.chainId
-        ].name
+        return NETWORKS[this.$store.state.web3.chainId].name
       } else {
         return 'Not supported network'
       }
     },
     networkIcon() {
-      return NETWORKS[
-        this.$store.state.web3.chainId
-      ].icon
+      // return NETWORKS[this.$store.state.web3.chainId].icon;
+      return NETWORKS[this.$store.state.web3.chainId].iconPath
     },
     symbol() {
       return this.$store.state.account.symbol
@@ -280,17 +320,20 @@ export default {
       return this.$store.state.account.balance
     },
     show() {
-      const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+      const pathPattern =
+        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
       return pathPattern.test(this.$route.path)
     },
     connected() {
-      return (this.$store.state.web3.instance)
+      return this.$store.state.web3.instance
     },
     fixedNetwork() {
-      return (this.$store.state.web3.chainId)
+      return this.$store.state.web3.chainId
     },
     accountNote() {
-      return this.$store.state.account.note ? this.$store.state.account.note : 'No note found!'
+      return this.$store.state.account.note
+        ? this.$store.state.account.note
+        : 'No note found!'
     },
     isWalletPending() {
       return this.$store.state.wallet.pending
@@ -299,11 +342,16 @@ export default {
       return this.$store.state.web3.instance instanceof Web3
     },
     isSetWeb3ProviderType() {
-      return this.$store.state.web3.provider === METAMASK
-              || this.$store.state.web3.provider === WALLET_CONNECT
-    },
+      return (
+        this.$store.state.web3.provider === METAMASK ||
+        this.$store.state.web3.provider === WALLET_CONNECT
+      )
+    }
   },
   methods: {
+    hideMenu() {
+      this.$emit('toggleMenu', !this.showMenu)
+    },
     showWalletModal() {
       this.$store.dispatch('modal/show', {
         target: 'wallet-modal',
@@ -318,46 +366,56 @@ export default {
     },
     switchColorTheme(color) {
       this.$emit('switchColorTheme', color)
+      this.theme.mode = this.theme.mode == 'dark' ? 'light' : 'dark'
     },
-    toggleSubMenu(){
+    toggleSubMenu() {
       if (this.isAdminPage) {
-        this.$store.dispatch("toggleAccountMenu");
+        this.$store.dispatch('toggleAccountMenu')
       }
     },
-    openAccountModal(){
-      this.$store.dispatch("modal/show", {target: 'account-modal', size: "small"});
+    openAccountModal() {
+      this.$store.dispatch('modal/show', {
+        target: 'account-modal',
+        size: 'small'
+      })
     },
-    editNote(){
-      this.$store.dispatch("modal/show", {target: 'edit-account-note-modal', size: "small"});
+    editNote() {
+      this.$store.dispatch('modal/show', {
+        target: 'edit-account-note-modal',
+        size: 'small'
+      })
     },
-    disconnect(){
+    disconnect() {
       this.toggleSubMenu()
       if (this.$store.state.web3.provider === WALLET_CONNECT) {
-        this.$web3.disconnectByWalletConnect(
-          this.$store.state.web3.instance
-        )
+        this.$web3.disconnectByWalletConnect(this.$store.state.web3.instance)
       }
       this.$router.push({ path: '/admin' })
     },
-    mouseOver(){
-      this.isHover = true;
+    mouseOver() {
+      this.isHover = true
     },
-    mouseLeave(){
-      this.isHover = false;
+    mouseLeave() {
+      this.isHover = false
     },
     pollAccountData() {
-      if(this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
-        this.$web3.getAccountData(
-          this.$store.state.web3.instance,
-          this.$store.state.web3.chainId
-        ).then((account) => {
-          this.$store.dispatch('account/update', account)
-        })
+      if (this.isSetWeb3Instance && this.isSetWeb3ProviderType) {
+        this.$web3
+          .getAccountData(
+            this.$store.state.web3.instance,
+            this.$store.state.web3.chainId
+          )
+          .then((account) => {
+            this.$store.dispatch('account/update', account)
+          })
       }
     }
   },
   created() {
-    this.monitoringInterval = setInterval(this.pollAccountData, this.MONITORING_INTERVAL_CYCLE)
+    this.monitoringInterval = setInterval(
+      this.pollAccountData,
+      this.MONITORING_INTERVAL_CYCLE
+    )
   },
   beforeDestroy() {
     clearInterval(this.monitoringInterval)
@@ -367,15 +425,236 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
-.testnet-navbar{
-  background: #DE4437;
+@import '@/assets/scss/delaunay.scss';
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  padding: 1rem 5vw;
+  @include media(sp) {
+    background: var(--Base);
+    border-bottom: 1px solid var(--Border);
+  }
+  &.admin {
+    background: var(--Base);
+  }
+  &__wrap {
+  }
+  &__inner {
+    @include flex(space-between, center);
+    flex-wrap: nowrap;
+  }
+  &__left {
+    @include flex(flex-start, center);
+    width: auto;
+    position: relative;
+  }
+  &__right {
+    @include flex(flex-end, center);
+    width: auto;
+    gap: 1rem;
+    @include media(sp) {
+      gap: 0.5rem;
+    }
+  }
+  &__logo {
+    @include flex(flex-start, center);
+    width: auto;
+    .logoicon {
+      width: 3rem;
+      height: 3rem;
+      margin-right: 1rem;
+      @include media(sp) {
+        // margin-right: 0.5rem;
+        // display: none;
+        margin-right: 0;
+        width: 0;
+      }
+    }
+    .logotext {
+      width: 6.9rem;
+      margin-right: 1rem;
+      @include media(sp) {
+        // display: none;
+      }
+    }
+    .text__header__sub {
+      display: block;
+      margin-right: 1rem;
+    }
+  }
+  &__sub {
+    @include media(sp) {
+      display: none;
+    }
+  }
+  &__testnet {
+    background: #de4437;
+    color: #fff;
+    padding: 0.3rem 0.5rem;
+    border-radius: 2rem;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 0;
+    position: absolute;
+    left: 2px;
+    bottom: -12px;
+    transform-origin: left bottom;
+    transform: scale(0.7);
+    @include media(sp) {
+      bottom: -0.6rem;
+    }
+    &__hover {
+      position: absolute;
+      top: 2rem;
+      left: 0;
+      background: $gray;
+      width: 17rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      text-align: left;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 20px;
+        top: -15px;
+        border: 8px solid transparent;
+        border-bottom: 8px solid $gray;
+      }
+      p {
+        a {
+          font-weight: 500;
+          background: $gradation-light;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-size: 150% 150%;
+          pointer-events: none;
+          position: relative;
+          &::after {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translate(0, -50%);
+            width: 100%;
+            height: 1px;
+            background: #fff;
+          }
+        }
+      }
+    }
+  }
+  &__wallet {
+    @include flex(flex-start, center);
+    background-color: var(--Base2);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    &__token {
+      padding: 0 0.5rem;
+      &__textwrap {
+        @include flex(flex-start, flex-end);
+      }
+      &__symbol {
+        margin-left: 0.3rem;
+      }
+    }
+    &__id {
+      background: $gradation-pale;
+      padding: 2px 0.5rem;
+      border-radius: 0.5rem;
+      &.pg {
+        @include flex(flex-start, center);
+        gap: 3px;
+        width: auto;
+        flex-wrap: nowrap;
+        .loading {
+          width: 1.3rem;
+        }
+      }
+    }
+  }
+  &__hamburger {
+    position: relative;
+    width: 1.5rem;
+    display: block;
+    &.active {
+      &::before {
+        top: 50%;
+        transform: rotate(45deg);
+        transition: top 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+          transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 200ms;
+      }
+      &::after {
+        top: 50%;
+        transform: rotate(-45deg);
+        transition: top 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+          transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 200ms;
+      }
+      span {
+        &::after {
+          opacity: 0;
+          transition: opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+        }
+      }
+    }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: var(--Text);
+      position: absolute;
+      left: 0;
+      transform-origin: center center;
+      transform: rotate(0deg);
+      transition: top 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 200ms,
+        transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+    }
+    &::before {
+      top: 0;
+    }
+    &::after {
+      top: 100%;
+    }
+    span {
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        padding-top: 1rem;
+      }
+      &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: var(--Text);
+        position: absolute;
+        left: 0;
+        top: 50%;
+        opacity: 1;
+        transition: opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1) 200ms;
+      }
+    }
+  }
+  &__network {
+    @include media(sp) {
+      display: none;
+    }
+  }
+}
+.testnet-navbar {
+  background: #de4437;
   color: #fff;
   font-size: 12px;
   padding: 2px 8px;
   border-radius: 20px;
   margin-top: 8px;
   margin-left: 8px;
-  margin-right:16px;
+  margin-right: 16px;
   @include media(sp) {
     margin: 0 0 0 2px;
     font-size: 8px;
@@ -383,17 +662,17 @@ export default {
   }
   cursor: pointer;
   position: relative;
-  .testnet-hovercontens{
+  .testnet-hovercontens {
     position: absolute;
     top: 32px;
-    left: 0;    
-    p{
+    left: 0;
+    p {
       width: 260px;
       background: $gray;
-      padding:8px 16px;
+      padding: 8px 16px;
       border-radius: 8px;
       position: relative;
-      a{
+      a {
         font-weight: 500;
         background: $gradation-light;
         -webkit-background-clip: text;
@@ -401,7 +680,7 @@ export default {
         background-size: 150% 150%;
         pointer-events: none;
         position: relative;
-        &::after{
+        &::after {
           position: absolute;
           top: 50%;
           left: 0;
@@ -409,11 +688,10 @@ export default {
           width: 100%;
           height: 1px;
           background: #fff;
-
         }
       }
-      &::before{
-        content: "";
+      &::before {
+        content: '';
         position: absolute;
         top: 0;
         left: 20px;
@@ -424,19 +702,19 @@ export default {
     }
   }
 }
-.user-status{
+.user-status {
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
   background: $gradation-light;
   padding: 2px 24px;
-  border-radius:50px;
+  border-radius: 50px;
   margin-left: 16px;
   align-items: center;
   @include media(sp) {
     display: none;
   }
-  img{
+  img {
     width: 18px;
     height: 24px;
     margin-left: 5px;
@@ -447,7 +725,7 @@ export default {
     margin-left: 16px;
     padding: 2px 12px;
   }
-  span{
+  span {
     vertical-align: bottom;
   }
 }
@@ -455,7 +733,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom:var(--color_border);
+  border-bottom: var(--color_border);
   width: 100%;
   position: fixed;
   top: 0;
@@ -477,7 +755,7 @@ export default {
     .logo {
       height: 36px;
     }
-    .logo-sub{
+    .logo-sub {
       margin-top: 10px;
       margin-left: 16px;
       font-size: 14px;
@@ -491,19 +769,19 @@ export default {
     .logo {
       height: 29px;
     }
-    .logo-sub{
+    .logo-sub {
       display: none;
     }
   }
   .logo {
     white-space: nowrap;
   }
-  .sp-fixed{
+  .sp-fixed {
     @include media(sp) {
       width: 100%;
     }
   }
-  .theme-button{
+  .theme-button {
     margin-right: 2rem;
     width: 54px;
     height: 54px;
@@ -513,7 +791,7 @@ export default {
       height: 32px;
       margin-right: 0;
     }
-    span{
+    span {
       margin-right: 8px;
     }
   }
@@ -569,7 +847,7 @@ export default {
     font-size: 14px;
     width: 100%;
     letter-spacing: 0.05em;
-    .price{
+    .price {
       max-width: 115px;
       margin: 0 8px;
       color: #fff;
@@ -652,7 +930,7 @@ export default {
     grid-column: 3;
   }
 }
-.account-menu{
+.account-menu {
   position: absolute;
   right: 24px;
   top: 70px;
@@ -662,35 +940,35 @@ export default {
   @include media(sp) {
     width: 90%;
   }
-  ul{
-    li{
+  ul {
+    li {
       font-size: 15px;
       margin-bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-content: center;
       cursor: pointer;
-      &:hover{
+      &:hover {
         opacity: 0.8;
       }
-      a{
+      a {
         width: 100%;
       }
-      &:nth-child(2){
-        img{
+      &:nth-child(2) {
+        img {
           cursor: pointer;
         }
       }
-      &:nth-child(3){
+      &:nth-child(3) {
         cursor: unset;
-        &:hover{
+        &:hover {
           opacity: 1;
         }
       }
-      &:last-child{
+      &:last-child {
         margin-bottom: 0;
       }
-      .account-note{
+      .account-note {
         overflow: scroll;
         background: #171522;
         border-radius: 8px;

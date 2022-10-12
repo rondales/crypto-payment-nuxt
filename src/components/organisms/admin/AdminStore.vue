@@ -418,7 +418,7 @@ export default {
     },
     showErrorModal(message) {
       this.$store.dispatch("modal/show", {
-        target: "error-modal",
+        target: "error-for-admin-modal",
         size: "small",
         params: {
           message: message,
@@ -433,7 +433,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import "@/assets/scss/old/style.scss";
 
 .title-gradation {
   background: $gradation-light;

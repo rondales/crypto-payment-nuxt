@@ -184,7 +184,7 @@
   </script>
   
   <style lang="scss" scoped>
-  @import "@/assets/scss/style.scss";
+  @import "@/assets/scss/old/style.scss";
   .slash-bg {
     width: 100%;
     min-height: 120vh;

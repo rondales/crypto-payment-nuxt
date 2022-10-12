@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .text {
   &__modalTitle {

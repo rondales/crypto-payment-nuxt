@@ -1,159 +1,123 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveTokenSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount"
+  <div class="detail">
+    <PaymentAmountBilled
+      class="detail__bill"
+      :symbol="merchantReceiveTokenSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount"
+      size="big"
+    />
+    <PaymentTitle class="detail__title" type="h2_g" html="Payment detail">
+      <PaymentButton
+        v-if="!isWalletConfirming"
+        icon="reload"
+        color="icon"
+        size="icon"
+        @click.native="updateTokenExchangeData(true)"
+        :class="{ loading: isReloading }"
       />
-      <div class="payment_detailwrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
-          <figure
-            v-if="!isWalletConfirming"
-            class="reload"
-            :class="{ loading: isReloading }"
-            @click="updateTokenExchangeData(true)"
-          >
-            <img v-if="isDarkTheme" src="@/assets/images/reload.svg" />
-            <img v-else src="@/assets/images/reload-l.svg" />
-          </figure>
-        </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
-            <figure>
-              <img
-                :src="userSelectedTokenIcon"
-                :alt="userSelectedTokenSymbol"
-              />
-            </figure>
-            <p>
-              {{ userSelectedTokenSymbol }}
-            </p>
-          </div>
-          <div class="payment_detail-value">
-            <p>
-              {{ userSelectedTokenPaymentAmount }}
-            </p>
-          </div>
-        </div>
-        <div
-          class="payment-box"
-          v-if="!isWalletConfirming && isExpiredExchange"
-        >
-          <div class="add-flex a-center j-between">
-            <div class="add-flex a-center">
-              <img src="@/assets/images/warning.svg" alt="" />
-              <div class="payment-box_desc">
-                <p>Price Updated</p>
-              </div>
-            </div>
-            <div
-              class="payment-box_btn"
-              @click="updateTokenExchangeData(false)"
-            >
-              Accept
-            </div>
-          </div>
-        </div>
-        <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Rate</p>
-            <p>
-              1 {{ merchantReceiveTokenSymbol }} &#65309;
-              {{ userSelectedTokenExchangeRate }} {{ userSelectedTokenSymbol
-              }}<img src="@/assets/images/exchange.svg" alt="" />
-            </p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Route</p>
-            <p v-html="tradeRoute"></p>
-          </div>
-          <!--
-          @todo Implement it when you are able to get various data from the contract
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Minimum received</p>
-            <p>388.213 BUSD</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Price Impact</p>
-            <p>-9.29%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Liquidity Provider Fee</p>
-            <p>0.002367 BNB</p>
-          </div>
-          -->
-          <!--
-          INFO:
-          Commented out due to the implementation of the fee collection feature.
-          Ref issue: https://github.com/beperson/web3payment-front/issues/633
-          <div
-            v-if="isDifferentToken"
-            class="dattail-list add-flex j-between mb-1"
-          >
-            <p>Slippage tolerance</p>
-            <p>{{ PAYMENT_FEE_RATE }}%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-2">
-            <p>Platform Fee</p>
-            <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
-          </div>
-          <p class="dattail-list_desc">
-            Output is estimated. You will receive at least
-            {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
-            transaction will revert.
-          </p>
-          -->
-        </div>
-        <div v-else class="payment-status mt-3 mb-3">
-          <div>
-            <img
-              class="mb-2 spin"
-              src="@/assets/images/loading.svg"
-              alt="waiting"
-            />
-            <p class="payment-status_title">Waiting for Confirmation</p>
-            <p class="payment-status_desc mb-2">
-              Pay {{ userSelectedTokenPaymentAmount }}
-              {{ userSelectedTokenSymbol }} for {{ merchantReceiveAmount }}
-              {{ merchantReceiveTokenSymbol }}
-            </p>
-          </div>
-        </div>
-        <button v-if="isExchangeDataUpdating" class="btn __g __l mb-2 inactive">
-          Price Updating...
-          <div class="loading-wrap active">
-            <img class="spin" src="@/assets/images/loading.svg" alt="loading" />
-          </div>
-        </button>
-        <button
-          v-else-if="isWalletConfirming"
-          class="btn __g __l mb-2 inactive"
-        >
-          Please confirm Wallet
-        </button>
-        <button
-          v-else
-          class="btn __g __l mb-2"
-          :class="{ inactive: isExpiredExchange }"
-          @click="executePayment()"
-        >
-          Confirm Wallet
-        </button>
-        <p class="via">
-          via Slash Payment
-          <span>
-            <img src="@/assets/images/slash-s.svg" alt="slash" />
-          </span>
-        </p>
+    </PaymentTitle>
+
+    <PaymentAction
+      class="detail__update"
+      v-if="!isWalletConfirming && isExpiredExchange"
+      icon="attention"
+      text="Price Updated"
+    >
+      <PaymentButton
+        text="Accept"
+        size="s"
+        @click.native="updateTokenExchangeData(false)"
+      />
+    </PaymentAction>
+    <PaymentAmountBilled
+      class="detail__selectedToken"
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      icon-type="png"
+      :price="userSelectedTokenPaymentAmount"
+    />
+    <div class="detail__table">
+      <PaymentTable
+        v-if="!isWalletConfirming"
+        :table="[
+          {
+            title: 'Exchange Rate',
+            price: '',
+            text:
+              '1 ' +
+              merchantReceiveTokenSymbol +
+              ' &#65309; ' +
+              userSelectedTokenExchangeRate +
+              ' ' +
+              userSelectedTokenSymbol,
+            icon: 'exchange',
+          },
+          {
+            title: 'Route',
+            text: tradeRoute,
+          }
+        ]"
+      />
+      <PaymentText
+        v-if="!isWalletConfirming"
+        type="cap"
+        :html="
+          'Output is estimated. You will receive at least ' +
+          merchantReceiveAmount +
+          ' ' +
+          merchantReceiveTokenSymbol +
+          ' or the transaction will revert.'
+        "
+      />
+      <div v-else>
+        <PaymentTransaction
+          type="loading"
+          title="Waiting for Confirmation"
+          :text="
+            'Pay ' +
+            userSelectedTokenPaymentAmount +
+            ' ' +
+            userSelectedTokenSymbol +
+            ' ' +
+            ' for ' +
+            merchantReceiveAmount +
+            ' ' +
+            merchantReceiveTokenSymbol
+          "
+        />
       </div>
+    </div>
+    <div class="detail__btnwrap">
+      <PaymentButton
+        v-if="isExchangeDataUpdating"
+        color="inactive"
+        text="Price Updating..."
+        :loading="true"
+      />
+      <PaymentButton
+        v-else-if="isWalletConfirming"
+        color="inactive"
+        text="Please confirm Wallet"
+      />
+      <PaymentButton
+        v-else
+        :color="isExpiredExchange ? 'inactive' : 'primary'"
+        text="Confirm Wallet"
+        @click.native="executePayment()"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
+import PaymentTitle from "@/components/organisms/Payment/Title";
+import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentTransaction from "@/components/organisms/Payment/Transaction";
+import PaymentAction from "@/components/organisms/Payment/Action";
+import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentTable from "@/components/organisms/Payment/Table";
 import {
   METAMASK,
   WALLET_CONNECT,
@@ -183,6 +147,12 @@ export default {
   name: "PaymentDetail",
   components: {
     PaymentAmountBilled,
+    PaymentButton,
+    PaymentTransaction,
+    PaymentAction,
+    PaymentText,
+    PaymentTitle,
+    PaymentTable,
   },
   data() {
     return {
@@ -220,14 +190,6 @@ export default {
         WBNB: "WBNB",
         WMATIC: "WMATIC",
         WAVAX: "WAVAX",
-      };
-    },
-    MERCHNAT_RECEIVE_TOKEN_ICONS() {
-      return {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg")
       };
     },
     EXCHANGE_RATE_EXPIRE_TIME() {
@@ -302,8 +264,8 @@ export default {
     merchantReceiveTokenIcon() {
       const tokens = this.merchantReceiveTokens;
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
+        : "crypto_currency/unknown";
     },
     userSelectedToken() {
       return this.$store.state.payment.token;
@@ -320,8 +282,8 @@ export default {
     userSelectedTokenIcon() {
       const tokens = this.defaultPaymentTokens;
       return this.userSelectedTokenSymbol in tokens
-        ? tokens[this.userSelectedTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.userSelectedTokenSymbol].iconPath
+        : "crypto_currency/unknown";
     },
     userSelectedTokenExchangeRate() {
       return this.$store.state.payment.token.rate;
@@ -514,6 +476,7 @@ export default {
       );
     },
     executePayment() {
+      if (this.isExpiredExchange) return
       this.$store.dispatch("wallet/updatePendingStatus", true);
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
@@ -604,126 +567,28 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
+@import "@/assets/scss/delaunay.scss";
+.detail {
+  &__bill {
+    margin-bottom: 2rem;
   }
-
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
+  &__title {
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-pricewrap {
-    width: 100%;
+  &__balance {
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
+  &__update {
+    margin-bottom: 2rem;
   }
-
-  .dattail-lists {
-    .dattail-list {
-      p {
-        font-size: 11px;
-        font-weight: 100;
-        img {
-          margin-left: 8px;
-        }
-      }
-    }
-    .dattail-list_desc {
-      font-size: 11px;
-      font-weight: 100;
-      padding-bottom: 16px;
-      margin-bottom: 16px;
-    }
+  &__price {
+    margin-bottom: 2rem;
   }
-  .reload {
-    cursor: pointer;
-    img {
-      vertical-align: middle;
+  &__btnwrap {
+    margin-top: 2rem;
+    div + div {
+      margin-top: 0.5rem;
     }
-    &.loading {
-      animation: 3s linear infinite spin;
-      from {
-        transform: rotateZ(0deg);
-      }
-      to {
-        transform: rotateZ(360deg);
-      }
-    }
-  }
-  .payment_detail {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-left: 7px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 20px;
-      font-weight: 100;
-      margin-left: 16px;
-    }
-  }
-  .payment-status {
-    text-align: center;
-    margin: auto;
-    &_title {
-      font-size: 18px;
-      font-weight: 100;
-    }
-    &_desc {
-      font-size: 10px;
-      font-weight: 100;
-    }
-    &_btn {
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
-      img {
-        margin-left: 4px;
-        vertical-align: middle;
-      }
-    }
-  }
-  .via {
-    font-size: 12px;
-    font-weight: 100;
-    text-align: center;
-    line-height: 20px;
-    img {
-      width: 20px;
-      height: 20px;
-      margin-left: 5px;
-    }
-  }
-  .new-tab-icon {
-    padding: 0 !important;
   }
 }
 </style>
