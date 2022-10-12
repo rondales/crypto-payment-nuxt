@@ -73,7 +73,7 @@ export default {
 @import "@/assets/scss/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .payhead {
-  margin-top: 3rem;
+  // margin-top: 3rem;
   @include flex(space-between, center);
   margin-bottom: 2rem;
   & > * {
