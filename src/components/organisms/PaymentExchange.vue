@@ -542,6 +542,7 @@ export default {
     }
   },
   created() {
+    Decimal.set({ toExpNeg: -20 })
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: "wallets",
