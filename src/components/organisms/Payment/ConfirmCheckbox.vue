@@ -78,21 +78,22 @@ export default {
         position: relative;
         display: block;
         padding-left: 2rem;
-        @include media(sp) {
-          padding-left: 2.5rem;
-        }
+        // @include media(sp) {
+        //   padding-left: 2rem;
+        // }
         &::before {
           content: '';
           display: block;
-          width: 1.2rem;
-          height: 1.2rem;
+          width: 1rem;
+          height: 1rem;
           border: 2px solid var(--Text);
           position: absolute;
           left: 0;
-          top: 2px;
+          top: 0.1rem;
           @include media(sp) {
             // width: 14px;
             // height: 14px;
+            // top: 0;
           }
         }
       }
@@ -105,8 +106,8 @@ export default {
           &::after {
             content: '';
             display: block;
-            width: 16px;
-            height: 8px;
+            width: 0.8rem;
+            height: 0.4rem;
             border-left: 3px solid var(--Success);
             border-bottom: 3px solid var(--Success);
             // border-left: 3px solid var(--Text);
@@ -114,11 +115,12 @@ export default {
             transform-origin: center center;
             transform: rotate(-45deg);
             position: absolute;
-            left: 1px;
-            top: 5px;
+            left: 0.1rem;
+            top: 6px;
             @include media(sp) {
-              width: 12px;
-              height: 6px;
+              top: 4px;
+              border-left: 2px solid var(--Success);
+              border-bottom: 2px solid var(--Success);
             }
           }
         }
