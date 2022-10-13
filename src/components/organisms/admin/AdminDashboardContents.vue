@@ -288,7 +288,7 @@ export default {
     this.apiGetPaymentSummary().then((response) => {
       const summary = response.data
       const amountFormat = function (amount) {
-        return Decimal(amount).toFixed(6, Decimal.ROUND_FLOOR)
+        return (amount) ? Decimal(amount).toFixed(6, Decimal.ROUND_FLOOR) : "0"
       }
       this.items.monthlyAmount.value = amountFormat(summary.monthly.total_amount) + " " + this.receiveTokenSymbol
       this.items.monthlyCashbackAmount.value = amountFormat(summary.monthly.total_cashback_amount) + " " + this.receiveTokenSymbol
