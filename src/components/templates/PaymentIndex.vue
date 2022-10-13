@@ -80,7 +80,7 @@
       </div>
     </div>
     <footer>
-      <PaymentText type="min" class="copy" html="Slash.fi Web3 Payment ®︎" />
+      <PaymentText type="min" class="copy" html="Slash Web3 Payment ®︎" />
     </footer>
   </div>
 </template>
