@@ -93,16 +93,19 @@
       <PaymentButton
         v-if="isExchangeDataUpdating"
         color="inactive"
+        size="l"
         text="Price Updating..."
         :loading="true"
       />
       <PaymentButton
         v-else-if="isWalletConfirming"
         color="inactive"
+        size="l"
         text="Please confirm Wallet"
       />
       <PaymentButton
         v-else
+        size="l"
         :color="isExpiredExchange ? 'inactive' : 'primary'"
         text="Confirm Wallet"
         @click.native="executePayment()"
@@ -484,7 +487,7 @@ export default {
     },
     executePayment() {
       if (this.isExpiredExchange) return
-      this.$store.dispatch("wallet/updatePendingStatus", true);
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
           this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)

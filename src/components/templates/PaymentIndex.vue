@@ -17,6 +17,24 @@
     </div>
     <div class="pay__box">
       <div class="pay__box__wrap">
+        <!-- <div class="pay__initializing">
+          <div class="progress-wrap">
+            <radial-progress-bar
+              :diameter="150"
+              :animate-speed="400"
+              :start-color="'#D97C87'"
+              :stop-color="'#8A2CE1'"
+              :completed-steps="progressCompletedSteps"
+              :total-steps="progressTotalSteps"
+            >
+              <p class="step">
+                <PaymentText type="h1" :html="progressCompletedPercent" />
+                <PaymentText type="h5" html="%" />
+              </p>
+              <PaymentText type="cap" html="Loading..." />
+            </radial-progress-bar>
+          </div>
+        </div> -->
         <div v-show="initializing" class="pay__initializing">
           <div class="progress-wrap">
             <radial-progress-bar
@@ -54,10 +72,6 @@
               @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
             />
           </div>
-          <!-- <div v-if="loading" class="pay__loading"> -->
-          <!-- <PaymentIcon class="spin" path="loading" /> -->
-          <!-- <img class="spin" src="@/assets/images/loading.svg" /> -->
-          <!-- </div> -->
         </div>
         <div class="pay__foot">
           <LogoText class="svg" />
@@ -268,6 +282,14 @@ export default {
   &__initializing {
     text-align: center;
     margin: 60px auto;
+    @include media(sp) {
+      position: relative;
+      top: 0;
+      left: 0;
+      margin: 0px auto;
+      min-height: calc(100vh - 140px);
+      @include flex(center, center);
+    }
     .spin {
       width: 6rem;
       margin-left: auto;
@@ -278,14 +300,7 @@ export default {
       // font-weight: 200;
       // font-size: 18px;
     }
-    @include media(sp) {
-      // top: calc(50% + 12rem);
-      position: relative;
-      top: 0;
-      left: 0;
-      // transform: translate(0%, 23vh);
-      margin: 3rem auto;
-    }
+
     .progress-wrap {
       // height: 25vh;
       .radial-progress-container {
