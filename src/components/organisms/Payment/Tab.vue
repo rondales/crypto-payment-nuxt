@@ -3,10 +3,10 @@
     <div class="head">
       <ul>
         <li :class="{ active: !status }">
-          <button @click="toList"><span>Lists</span></button>
+          <button @click="toList"><span class="non-translate">Lists</span></button>
         </li>
         <li :class="{ active: status }">
-          <button @click="toToken"><span>Import</span></button>
+          <button @click="toToken"><span class="non-translate">Import</span></button>
         </li>
       </ul>
     </div>

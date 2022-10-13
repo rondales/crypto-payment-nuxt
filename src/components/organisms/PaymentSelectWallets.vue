@@ -25,7 +25,7 @@
         />
       </div>
       <PaymentButton
-        class="regenerate"
+        class="regenerate non-translate"
         @click.native="showRegeneratePaymentUrlModal()"
         size="s"
         color="cancel"

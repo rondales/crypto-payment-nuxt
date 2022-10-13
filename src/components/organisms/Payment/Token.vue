@@ -3,8 +3,8 @@
     <PaymentIcon :path="icon" :type="iconType" />
     <div class="textwrap">
       <p class="title"><span v-html="title"></span></p>
-      <p class="symbol"><span v-html="symbol"></span></p>
-      <p class="symboltext"><span v-html="symboltext"></span></p>
+      <p class="symbol non-translate"><span v-html="symbol"></span></p>
+      <p class="symboltext non-translate"><span v-html="symboltext"></span></p>
     </div>
   </div>
 </template>

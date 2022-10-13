@@ -21,6 +21,7 @@
         <select name="currency" v-model="selectedCurrency">
           <option
             v-for="(currency, key) in currencies"
+            class="non-translate"
             :value="currency.name"
             :key="key"
           >

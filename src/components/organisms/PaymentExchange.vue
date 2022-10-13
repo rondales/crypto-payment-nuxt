@@ -36,6 +36,7 @@
       text="Price Updated"
     >
       <PaymentButton
+        class="non-translate"
         text="Update"
         size="s"
         @click.native="updateTokenExchangeData(false)"

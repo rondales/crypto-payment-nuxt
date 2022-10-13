@@ -7,7 +7,7 @@
             <!-- <LogoIcon class="logoicon" /> -->
             <PaymentIcon class="logoicon" path="logo-icon" />
             <LogoText class="logotext" />
-            <PaymentText class="header__sub" type="h5" :html="subTitle" />
+            <PaymentText class="header__sub non-translate" type="h5" :html="subTitle" />
           </h1>
           <div
             class="header__testnet"
@@ -59,7 +59,7 @@
                     :html="balance | balanceFormat"
                   />
                   <PaymentText
-                    class="header__wallet__token__symbol"
+                    class="header__wallet__token__symbol non-translate"
                     type="capb"
                     :html="symbol"
                   />
@@ -82,6 +82,7 @@
               v-else-if="show"
               @click.native="showWalletModal"
               size="s"
+              class="non-translate"
               :class="{ __g: isAdminPage, __pg: !isAdminPage }"
               text="Connect to wallet"
             />

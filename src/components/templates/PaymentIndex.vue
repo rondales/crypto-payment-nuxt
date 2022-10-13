@@ -6,7 +6,7 @@
       :showMenu="showMenu"
       @toggleMenu="toggleMenu"
     />
-    <div class="menu" :class="{ active: showMenu }">
+    <div class="menu non-translate" :class="{ active: showMenu }">
       <PaymentTitle type="h2_g" html="Menu" />
       <div class="menu-nav_body">
         <a v-for="nav in navList" :key="nav.url" :href="nav.url" target="_blank"
@@ -80,7 +80,7 @@
       </div>
     </div>
     <footer>
-      <PaymentText type="min" class="copy" html="Slash Web3 Payment ®︎" />
+      <PaymentText type="min" class="copy non-translate" html="Slash Web3 Payment ®︎" />
     </footer>
   </div>
 </template>

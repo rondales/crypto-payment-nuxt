@@ -88,7 +88,7 @@
             :key="key"
           >
             <PaymentAction
-              class="tokentab__tokenlist__items"
+              class="tokentab__tokenlist__items non-translate"
               :icon="token.path"
               :icon-type="token.type"
               :text="token.symbol"
@@ -102,7 +102,7 @@
             </PaymentAction>
           </div>
           <div class="foot">
-            <p><span v-html="searchedTokenCount + ' Custom Token'"></span></p>
+            <p><span class="non-translate" v-html="searchedTokenCount + ' Custom Token'"></span></p>
             <PaymentButton
               @click.native="clearSearchedTokens()"
               size="s"

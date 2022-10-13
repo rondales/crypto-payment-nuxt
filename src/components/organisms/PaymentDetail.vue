@@ -7,7 +7,7 @@
       :price="merchantReceiveAmount"
       size="big"
     />
-    <PaymentTitle class="detail__title" type="h3_g" html="Payment detail">
+    <PaymentTitle class="detail__title non-translate" type="h3_g" html="Payment detail">
       <PaymentButton
         v-if="!isWalletConfirming"
         icon="reload"

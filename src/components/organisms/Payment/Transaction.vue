@@ -5,11 +5,11 @@
     </div>
     <div class="transaction__textwrap">
       <p class="title"><span v-html="title"></span></p>
-      <p v-if="text" class="text"><span v-html="text"></span></p>
+      <p v-if="text" class="text non-translate"><span v-html="text"></span></p>
       <p v-if="cap" class="cap"><span v-html="cap"></span></p>
       <PaymentButton
         v-if="explorerUrl"
-        class="button"
+        class="button non-translate"
         size="s"
         color="primary"
         icon="outerlink"

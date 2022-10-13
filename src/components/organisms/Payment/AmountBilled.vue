@@ -12,7 +12,7 @@
     </div>
     <div class="right">
       <div v-if="table" class="balance">
-        <dl v-for="(dl, index) in table" :key="index">
+        <dl class="non-translate" v-for="(dl, index) in table" :key="index">
           <dt><span v-html="dl.title"></span></dt>
           <dd>
             <span class="balance_price" v-html="dl.price"></span>

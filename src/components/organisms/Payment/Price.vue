@@ -1,8 +1,8 @@
 <template>
   <div :class="classes">
     <div class="head">
-      <p class="symbol"><span v-html="symbol"></span></p>
-      <p class="cap" :class="setCapColor"><span v-html="cap + cap2"></span></p>
+      <p class="symbol non-translate"><span v-html="symbol"></span></p>
+      <p class="cap non-translate" :class="setCapColor"><span v-html="cap + cap2"></span></p>
     </div>
     <p class="price"><span v-html="price"></span></p>
   </div>
