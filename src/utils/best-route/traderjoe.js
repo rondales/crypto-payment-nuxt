@@ -48,10 +48,12 @@ export default {
         ? [reserve0, reserve1]
         : [reserve1, reserve0]
       console.log(balances)
+
       const pairAB = new Pair(
         new TokenAmount(tokenA, balances[0]),
         new TokenAmount(tokenB, balances[1])
       )
+
       console.log(pairAB)
       const route = new Route([pairAB], tokenA, tokenB)
       console.log(route)
