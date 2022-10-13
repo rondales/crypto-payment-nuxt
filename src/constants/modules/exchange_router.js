@@ -52,6 +52,32 @@ export const EXCHANGE_ROUTERS = {
     }
   },
   137: {
+    uniswapV3: {
+      address: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      flag: '0x02',
+      cloneUniswapContractDetails: {
+        v3Override: {
+          factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+          quoterAddress: '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
+          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 137,
+          contractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
+    },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
       flag: '0x01'
@@ -62,6 +88,33 @@ export const EXCHANGE_ROUTERS = {
     }
   },
   80001: {
+    uniswapV3: {
+      address: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      flag: '0x02',
+      cloneUniswapContractDetails: {
+        v3Override: {
+          factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+          quoterAddress: '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
+          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 80001,
+          contractAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
+    },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
       flag: '0x01'

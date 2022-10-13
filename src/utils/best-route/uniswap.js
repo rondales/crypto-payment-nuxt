@@ -44,6 +44,10 @@ export default {
     const exchanges = EXCHANGE_ROUTERS[chainId]
 
     try {
+      const cloneUniswapContractDetails = exchanges.uniswapV3?.cloneUniswapContractDetails
+      const customNetwork = exchanges.uniswapV3?.customNetwork
+      console.log(cloneUniswapContractDetails)
+      console.log(customNetwork)
       const uniswapPair = new UniswapPair({
         fromTokenContractAddress: tokenInAddr,
         toTokenContractAddress: tokenOutAddr,
@@ -51,6 +55,8 @@ export default {
         chainId,
         providerUrl: rpcUrl,
         settings: new UniswapPairSettings({
+          cloneUniswapContractDetails,
+          customNetwork,
           uniswapVersions
         })
       })

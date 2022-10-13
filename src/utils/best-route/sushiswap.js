@@ -56,10 +56,12 @@ export default {
       console.log(route.midPrice.toSignificant(6))
       console.log(route.midPrice.invert().toSignificant(6))
 
-      const paymentAmountOut = JSBI.multiply(
-        JSBI.BigInt(parseFloat(paymentAmount)),
+      // Fix float amount (support 6 point)
+      const paymentAmountOut = JSBI.divide(JSBI.multiply(
+        JSBI.BigInt(parseFloat(paymentAmount) * 10 ** 6),
         JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(tokenOutDecimal))
-      )
+      ), JSBI.BigInt(10 ** 6))
+
       const trade = new Trade(
         route,
         CurrencyAmount.fromRawAmount(tokenB, paymentAmountOut),
