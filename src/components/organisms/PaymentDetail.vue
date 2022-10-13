@@ -111,6 +111,7 @@
 </template>
 
 <script>
+import * as Sentry from "@sentry/vue"
 import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
 import PaymentTitle from "@/components/organisms/Payment/Title";
 import PaymentButton from "@/components/organisms/Payment/Button";
@@ -494,6 +495,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          Sentry.captureException(error)
           this.$store.dispatch("wallet/updatePendingStatus", false);
         });
     },
