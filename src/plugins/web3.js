@@ -835,11 +835,13 @@ const getBestRate = async function (
 
       if (
         bestExchange.price == 0 ||
-        nextBestExchange.price < bestExchange.price
+        (nextBestExchange.price > 0 &&
+          nextBestExchange.price < bestExchange.price)
       ) {
         bestExchange = nextBestExchange
       }
     }
+    console.log(bestExchange)
 
     if (bestExchange.price == 0)
       throw new Error('execution reverted: No valid exchange')

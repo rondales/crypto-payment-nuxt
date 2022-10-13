@@ -39,6 +39,7 @@
     "moment": "^2.29.1",
     "number-format.js": "^2.0.9",
     "p5": "^1.4.1",
+    "quickswap-sdk": "^3.0.14",
     "secure-ls": "^1.2.6",
     "simple-uniswap-sdk": "^3.7.0",
     "v-clipboard": "^2.2.3",

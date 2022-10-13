@@ -1,12 +1,12 @@
 import {
-  CurrencyAmount,
   JSBI,
   Pair,
   Route,
   Token,
+  TokenAmount,
   Trade,
   TradeType
-} from '@quickswap/sdk'
+} from 'quickswap-sdk'
 import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import {
   EXCHANGE_ROUTERS,
@@ -49,8 +49,8 @@ export default {
         : [reserve1, reserve0]
       console.log(balances)
       const pairAB = new Pair(
-        CurrencyAmount.fromRawAmount(tokenA, balances[0]),
-        CurrencyAmount.fromRawAmount(tokenB, balances[1])
+        new TokenAmount(tokenA, balances[0]),
+        new TokenAmount(tokenB, balances[1])
       )
       console.log(pairAB)
       const route = new Route([pairAB], tokenA, tokenB)
@@ -72,7 +72,7 @@ export default {
 
       const trade = new Trade(
         route,
-        CurrencyAmount.fromRawAmount(tokenB, paymentAmountOut),
+        new TokenAmount(tokenB, paymentAmountOut),
         TradeType.EXACT_OUTPUT
       )
       console.log(trade)
