@@ -39,7 +39,8 @@ const store = {
       amount: null,
       rate: null
     },
-    payment_token: null
+    payment_token: null,
+    bestExchange: null
   },
   actions: {
     initialize({ commit }) {
@@ -95,7 +96,10 @@ const store = {
     },
     updatePaymentToken({ commit }, payload) {
       commit('updatePaymentToken', payload)
-    }
+    },
+    updateBestExchange({ commit }, payload) {
+      commit('updateBestExchange', payload)
+    },
   },
   mutations: {
     initialize(state) {
@@ -197,7 +201,10 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state.token[key] = value
       })
-    }
+    },
+    updateBestExchange(state, payload) {
+      state.bestExchange = payload
+    },
   }
 }
 

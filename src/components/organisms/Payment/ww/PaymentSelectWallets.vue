@@ -55,12 +55,12 @@ import { METAMASK } from "@/constants";
 import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
 import PaymentText from "@/components/organisms/Payment/ww/Text";
 import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
-import WwPaymentWalletConnectorMixin from "@/components/mixins/ww/PaymentWalletConnector";
+import PaymentWalletConnectorMixin from "@/components/mixins/ww/PaymentWalletConnector";
 import isMobile from 'ismobilejs';
 
 export default {
-  name: "PaymentSelectWallets",
-  mixins: [ConnectWalletMixin, WwPaymentWalletConnectorMixin],
+  name: "ww-PaymentSelectWallets",
+  mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin],
   components: {
     PaymentAmountBilled,
     PaymentText,
@@ -117,10 +117,9 @@ export default {
       return isMobile(window.navigator).any && !window.ethereum
     },
     metamaskDeepLink() {
-      console.log('metamask deeplink')
       return 'https://metamask.app.link/dapp/'
         + this.currentDomain
-        + `/payments-uiswitchable/wallets/${this.paymentToken}/ww?dpl=1`
+        + `/payment/wallets/${this.paymentToken}?dpl=1`
     }
   },
   methods: {
@@ -165,7 +164,6 @@ export default {
   created() {
     this.$store.dispatch("web3/initialize");
     this.$store.dispatch("payment/initializeForBeforeConnectWallet");
-    this.$store.dispatch("payment/updateSelectReceiptStatus", true);
     // NOTE Temporarily commented out by issue #622
     // if (!this.isAgreeRisk && this.isInitialized) {
     //   this.showRiskDisclaimerModal();
