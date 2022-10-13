@@ -128,7 +128,7 @@ export const EXCHANGE_ROUTERS = {
   43114: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x20'
+      flag: '0x01'
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
@@ -142,7 +142,7 @@ export const EXCHANGE_ROUTERS = {
   43113: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x20'
+      flag: '0x01'
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
