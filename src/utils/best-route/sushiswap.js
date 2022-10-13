@@ -8,7 +8,10 @@ import {
   TradeType
 } from '@sushiswap/core-sdk'
 import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { EXCHANGE_ROUTERS } from '@/constants'
+import {
+  EXCHANGE_ROUTERS,
+  TOKEN_RECEIVE_FLOATING_POINT_EXPONENT
+} from '@/constants'
 
 export default {
   getBestRoute: async (
@@ -57,11 +60,17 @@ export default {
       console.log(route.midPrice.invert().toSignificant(6))
 
       // Fix float amount (support 6 point)
-      const paymentAmountOut = JSBI.divide(JSBI.multiply(
-        JSBI.BigInt(parseFloat(paymentAmount) * 10 ** 6),
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(tokenOutDecimal))
-      ), JSBI.BigInt(10 ** 6))
-
+      const paymentAmountOut = JSBI.divide(
+        JSBI.multiply(
+          JSBI.BigInt(
+            parseFloat(paymentAmount) *
+              10 ** TOKEN_RECEIVE_FLOATING_POINT_EXPONENT
+          ),
+          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(tokenOutDecimal))
+        ),
+        JSBI.BigInt(10 ** TOKEN_RECEIVE_FLOATING_POINT_EXPONENT)
+      )
+      console.log(paymentAmountOut)
       const trade = new Trade(
         route,
         CurrencyAmount.fromRawAmount(tokenB, paymentAmountOut),

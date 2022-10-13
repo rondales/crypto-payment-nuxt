@@ -1,3 +1,4 @@
+export const TOKEN_RECEIVE_FLOATING_POINT_EXPONENT = 6
 export const EXCHANGE_ROUTERS = {
   1: {
     uniswapV2: {
