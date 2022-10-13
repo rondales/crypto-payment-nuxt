@@ -128,29 +128,29 @@ export const EXCHANGE_ROUTERS = {
   43114: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x20'
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
-      flag: '0x01'
+      flag: '0x20'
     },
     traderjoe: {
       address: '0x60ae616a2155ee3d9a68541ba4544862310933d4',
-      flag: '0x01'
+      flag: '0x20'
     }
   },
   43113: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x20'
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
-      flag: '0x01'
+      flag: '0x20'
     },
     traderjoe: {
       address: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
-      flag: '0x01'
+      flag: '0x20'
     }
   }
 }
