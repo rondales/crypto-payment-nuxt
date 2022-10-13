@@ -26,8 +26,8 @@ export default {
     const exchanges = EXCHANGE_ROUTERS[chainId]
     const bestExchange = {
       name: 'pancakeswap',
-      exchange: exchanges.pancakeswap?.address,
-      flag: exchanges.pancakeswap?.flag,
+      exchange: exchanges.pancakeswap ? exchanges.pancakeswap.address : '',
+      flag: exchanges.pancakeswap ? exchanges.pancakeswap.flag : '',
       price: 0
     }
     try {

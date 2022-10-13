@@ -26,8 +26,8 @@ export default {
     const exchanges = EXCHANGE_ROUTERS[chainId]
     const bestExchange = {
       name: 'quickswap',
-      exchange: exchanges.quickswap?.address,
-      flag: exchanges.quickswap?.flag,
+      exchange: exchanges.quickswap ? exchanges.quickswap.address : '',
+      flag: exchanges.quickswap ? exchanges.quickswap.flag : '',
       price: 0
     }
     try {

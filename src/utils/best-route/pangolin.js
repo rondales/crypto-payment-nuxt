@@ -26,8 +26,8 @@ export default {
     const exchanges = EXCHANGE_ROUTERS[chainId]
     const bestExchange = {
       name: 'pangolin',
-      exchange: exchanges.pangolin?.address,
-      flag: exchanges.pangolin?.flag,
+      exchange: exchanges.pangolin ? exchanges.pangolin.address : '',
+      flag: exchanges.pangolin ? exchanges.pangolin.flag : '',
       price: 0
     }
     try {

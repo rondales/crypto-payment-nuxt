@@ -27,8 +27,8 @@ export default {
     console.log(exchanges)
     const bestExchange = {
       name: 'sushiswap',
-      exchange: exchanges.sushiswap?.address,
-      flag: exchanges.sushiswap?.flag,
+      exchange: exchanges.sushiswap ? exchanges.sushiswap.address : '',
+      flag: exchanges.sushiswap ? exchanges.sushiswap.flag : '',
       price: 0
     }
     try {

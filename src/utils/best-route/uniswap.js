@@ -44,8 +44,8 @@ export default {
     const exchanges = EXCHANGE_ROUTERS[chainId]
 
     try {
-      const cloneUniswapContractDetails = exchanges.uniswapV3?.cloneUniswapContractDetails
-      const customNetwork = exchanges.uniswapV3?.customNetwork
+      const cloneUniswapContractDetails = exchanges.uniswapV3 ? exchanges.uniswapV3.cloneUniswapContractDetails : undefined
+      const customNetwork = exchanges.uniswapV3 ? exchanges.uniswapV3.customNetwork : undefined
       console.log(cloneUniswapContractDetails)
       console.log(customNetwork)
       const uniswapPair = new UniswapPair({
