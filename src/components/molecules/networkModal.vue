@@ -92,7 +92,13 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          if (error.code === 4902) {
+          if (!("code" in error)) return
+          let errorCode = error.code
+          // @TODO I'd like to do something about this lame condition determination(saito)
+          if (error.data && error.data.originalError && error.data.originalError.code) {
+            errorCode = error.data.originalError.code
+          }
+          if (errorCode === 4902) {
             this.showAddChainModal(chainId);
           }
         });
