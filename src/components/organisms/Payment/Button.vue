@@ -232,7 +232,8 @@ export default {
           visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
       }
       &::after {
-        background: $gradation-light;
+        // background: $gradation-light;
+        background: $gradation-orange;
         z-index: 1;
       }
       &::v-deep {
