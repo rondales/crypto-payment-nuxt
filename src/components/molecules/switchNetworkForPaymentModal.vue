@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import * as Sentry from "@sentry/vue"
 import AvailableNetworks from "@/network";
 import PaymentModal from "@/components/organisms/Payment/Modal";
 // import PaymentText from "@/components/organisms/Payment/Text";
@@ -112,7 +111,6 @@ export default {
           this.hideModal();
         })
         .catch((error) => {
-          Sentry.captureException(error)
           console.log(error);
           if (error.code === 4902) {
             this.showAddChainModal(chainId);

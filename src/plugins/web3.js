@@ -256,8 +256,8 @@ const getBalance = async function(web3, walletAddress, tokenContract = null) {
   return convertFromWei(web3, balance, decimal)
 }
 
-const switchChain = function(web3, chainId) {
-  return web3.currentProvider.request({
+const switchChain = async function(web3, chainId) {
+  return await web3.currentProvider.request({
     method: 'wallet_switchEthereumChain',
     params: [{ chainId: web3.utils.toHex(chainId) }]
   })
