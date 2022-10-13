@@ -360,10 +360,8 @@ const getTokenExchangeData = async function(
     web3,
     chainId,
     walletAddress,
-    path[0],
-    decimals[0],
-    path[path.length - 1],
-    decimals[path.length - 1],
+    path,
+    decimals,
     paymentRequestAmount
   )
   const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
@@ -775,10 +773,8 @@ const getBestRate = async function (
   web3,
   chainId,
   walletAddress,
-  tokenInAddr,
-  tokenInDecimal,
-  tokenOutAddr,
-  tokenOutDecimal,
+  path,
+  decimals,
   paymentAmount
 ) {
   try {
@@ -787,7 +783,8 @@ const getBestRate = async function (
     console.log(chainId)
     console.log(exchanges)
     console.log(paymentAmount)
-    console.log(tokenInDecimal, tokenOutDecimal)
+    console.log(path)
+    console.log(decimals)
     let bestExchange = { name: '', exchange: '', flag: '', price: 0 }
 
     console.log(bestRoute)
@@ -802,10 +799,8 @@ const getBestRate = async function (
           const nextBestExchange = await bestRoute[exchangeName].getBestRoute(
             web3,
             chainId,
-            tokenInAddr,
-            tokenInDecimal,
-            tokenOutAddr,
-            tokenOutDecimal,
+            path,
+            decimals,
             paymentAmount
           )
 
@@ -827,8 +822,7 @@ const getBestRate = async function (
         chainId,
         rpcUrl,
         walletAddress,
-        tokenInAddr,
-        tokenOutAddr,
+        path,
         paymentAmount,
         uniswapVersions
       )

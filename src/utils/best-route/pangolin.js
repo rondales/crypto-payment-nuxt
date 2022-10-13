@@ -14,15 +14,11 @@ import {
 } from '@/constants'
 
 export default {
-  getBestRoute: async (
-    web3,
-    chainId,
-    tokenInAddr,
-    tokenInDecimal,
-    tokenOutAddr,
-    tokenOutDecimal,
-    paymentAmount
-  ) => {
+  getBestRoute: async (web3, chainId, path, decimals, paymentAmount) => {
+    const tokenInAddr = path[0],
+      tokenOutAddr = path[path.length - 1]
+    const tokenInDecimal = decimals[0],
+      tokenOutDecimal = decimals[decimals.length - 1]
     const exchanges = EXCHANGE_ROUTERS[chainId]
     const bestExchange = {
       name: 'pangolin',
