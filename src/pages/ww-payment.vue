@@ -211,21 +211,29 @@ export default {
         })
     },
     addParentWindowEventListener() {
-      this.parentWindowListener = this.listenMessageFromParentWindow.bind(this)
+      this.parentWindowListener = (ev) => this.listenMessageFromParentWindow(ev)
       window.addEventListener('message', this.parentWindowListener)
     },
     listenMessageFromParentWindow(ev) {
-      if(ev.data.action) {
+      if(ev && ev.data && ev.data.action) {
         switch(ev.data.action) {
           case 'setOrigin':
             this.$store.dispatch('wwPayment/updateParentOrigin', ev.data.value.origin)
             break;
         }
       }
+    },
+    sendCreatedMessage() {
+      if(!window.opener) return;
+      window.opener.postMessage({
+        action: 'createdWindow',
+        value: {}
+      }, '*');
     }
   },
   created() {
     this.addParentWindowEventListener()
+    this.sendCreatedMessage();
     this.checkAndSetAvailableNetworks()
     this.handleRedirect()
   },
