@@ -1,6 +1,7 @@
 <template>
   <div id="wrapAll">
     <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
+    <DonationButton />
     <main>
       <!-- SECTION MV -->
       <section :class="section.mv.class + ' '">
@@ -306,6 +307,7 @@ import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
 import LpIcon from "@/components/templates/LpParts/Icon";
+import DonationButton from '@/components/organisms/lp/section/DonationButton'
 
 export default {
   data() {
@@ -1152,6 +1154,7 @@ export default {
     LpImage,
     LpIcon,
     LpImageText,
+    DonationButton
   },
   mounted() {
     document.body.classList.add("is-mounted");
