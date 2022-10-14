@@ -198,10 +198,10 @@ export default {
     flex-wrap: nowrap;
     .form {
       flex: 1;
-      @include media(sp) {
-        flex: initial;
-        width: 22rem;
-      }
+      // @include media(sp) {
+      //   flex: initial;
+      //   width: 22rem;
+      // }
       &::v-deep {
         .form__wrap {
           padding: 0.5rem;
@@ -233,6 +233,9 @@ export default {
         margin-right: auto;
         gap: 4px;
         position: relative;
+        @include media(sp) {
+          width: 4rem;
+        }
         &::before {
           content: '';
           width: 0%;
