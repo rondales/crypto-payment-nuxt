@@ -106,10 +106,8 @@ export default {
      * @param params Object payment params
      */
     sendFixPaymentToParentWindow(status, params) {
-      console.log('sendMessage: 1', window.opener);
       if(!window.opener) return;
 
-      console.log('sendMessage: 2', this.$store.state.wwPayment.parentOrigin);
       window.opener.postMessage({
         action: 'fixPayment',
         value: {paymentStatus: status, optParams: params}

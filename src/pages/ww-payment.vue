@@ -215,7 +215,6 @@ export default {
       window.addEventListener('message', this.parentWindowListener)
     },
     listenMessageFromParentWindow(ev) {
-      console.log(ev);
       if(ev && ev.data && ev.data.action) {
         switch(ev.data.action) {
           case 'setOrigin':
