@@ -2,7 +2,7 @@
   <div :class="classes">
     <div class="modal__header">
       <PaymentTitle
-        class="modal__title"
+        class="modal__title non-translate"
         type="h3"
         :html="title"
         :emoji="emoji"

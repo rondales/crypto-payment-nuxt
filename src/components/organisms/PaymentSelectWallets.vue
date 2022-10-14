@@ -6,14 +6,8 @@
       :price="amount"
       size="big"
     />
-    <div class="connectwallet d-payboxwrap">
-      <PaymentTitle
-        class="title"
-        tag="p"
-        type="h4"
-        html="Connect Web3 wallet<br class='sp'> to make a payment"
-        layout="c"
-      />
+    <div class="connectwallet">
+      <p class="title">Connect Web3 wallet to make a payment</p>
       <div class="button">
         <PaymentButton
           @click.native="handleConnect(METAMASK, false)"
@@ -29,35 +23,33 @@
           icon="wallet-walletconnect"
           :loading="loadingWallet"
         />
-        <PaymentButton
-          class="regenerate"
-          @click.native="showRegeneratePaymentUrlModal()"
-          size="s"
-          color="cancel"
-          text="Regenerate URL"
-          icon="reload"
-        />
       </div>
+      <PaymentButton
+        class="regenerate non-translate"
+        @click.native="showRegeneratePaymentUrlModal()"
+        size="s"
+        color="cancel"
+        text="Regenerate URL"
+        icon="reload"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { METAMASK } from "@/constants";
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentButton from "@/components/organisms/Payment/Button";
-import ConnectWalletMixin from "@/components/mixins/ConnectWallet";
-import PaymentWalletConnectorMixin from "@/components/mixins/PaymentWalletConnector";
-import isMobile from "ismobilejs";
+import { METAMASK } from '@/constants'
+import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
+import PaymentWalletConnectorMixin from '@/components/mixins/PaymentWalletConnector'
+import isMobile from 'ismobilejs'
 
 export default {
-  name: "PaymentSelectWallets",
+  name: 'PaymentSelectWallets',
   mixins: [ConnectWalletMixin, PaymentWalletConnectorMixin],
   components: {
     PaymentAmountBilled,
-    PaymentTitle,
-    PaymentButton,
+    PaymentButton
   },
   props: {
     progressTotalSteps: Number,
@@ -66,88 +58,90 @@ export default {
   data() {
     return {
       loadingMeta: false,
-      loadingWallet: false,
-    };
+      loadingWallet: false
+    }
   },
   computed: {
     METAMASK() {
-      return METAMASK;
+      return METAMASK
     },
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     RECEIVED_TOKEN_ICON_PATH() {
       return {
-        USDT: "crypto_currency/received_token/usdt",
-        USDC: "crypto_currency/received_token/usdc",
-        DAI: "crypto_currency/received_token/dai",
-        JPYC: "crypto_currency/received_token/jpyc",
-        WETH: "crypto_currency/received_token/weth",
-      };
+        USDT: 'crypto_currency/received_token/usdt',
+        USDC: 'crypto_currency/received_token/usdc',
+        DAI: 'crypto_currency/received_token/dai',
+        JPYC: 'crypto_currency/received_token/jpyc',
+        WETH: 'crypto_currency/received_token/weth'
+      }
     },
     currentDomain() {
       return window.location.host
     },
     receiveTokenSymbol() {
-      return this.$store.state.payment.symbol;
+      return this.$store.state.payment.symbol
     },
     setIconPath() {
-      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol];
+      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol]
     },
     amount() {
-      return this.$store.state.payment.amount;
+      return this.$store.state.payment.amount
     },
     status() {
-      return this.$store.state.payment.status;
+      return this.$store.state.payment.status
     },
     paymentToken() {
-      return this.$route.params.token;
+      return this.$route.params.token
     },
     isInitialized() {
       return !this.$parent.initializing
     },
     isAgreeRisk() {
-      return this.$store.state.payment.isAgreeRisk;
+      return this.$store.state.payment.isAgreeRisk
     },
     isMobileAndMetamaskNotInstalled() {
       return isMobile(window.navigator).any && !window.ethereum
     },
     metamaskDeepLink() {
-      return 'https://metamask.app.link/dapp/'
-        + this.currentDomain
-        + `/payment/wallets/${this.paymentToken}?dpl=1`
+      return (
+        'https://metamask.app.link/dapp/' +
+        this.currentDomain +
+        `/payment/wallets/${this.paymentToken}?dpl=1`
+      )
     }
   },
   methods: {
     apiGetAvailableNetworks() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/contract/network`;
+      const url = `${this.API_BASE_URL}/api/v1/payment/contract/network`
       const request = {
         params: new URLSearchParams([
-          ["payment_token", this.$route.params.token],
-        ]),
-      };
-      return this.axios.get(url, request);
+          ['payment_token', this.$route.params.token]
+        ])
+      }
+      return this.axios.get(url, request)
     },
     showRiskDisclaimerModal() {
-      this.$store.dispatch("modal/show", {
-        target: "caution-payment-risk-disclaimer-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'caution-payment-risk-disclaimer-modal',
+        size: 'small',
         params: {
-          isVerifiedDomain: this.$store.state.payment.isVerifiedDomain,
-        },
-      });
+          isVerifiedDomain: this.$store.state.payment.isVerifiedDomain
+        }
+      })
     },
     showWalletConnectCautionModal() {
-      this.$store.dispatch("modal/show", {
-        target: "caution-wallet-connect-modal",
-        size: "small",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'caution-wallet-connect-modal',
+        size: 'small'
+      })
     },
     showRegeneratePaymentUrlModal() {
-      this.$store.dispatch("modal/show", {
-        target: "regenerate-payment-url-modal",
-        size: "small",
-      });
+      this.$store.dispatch('modal/show', {
+        target: 'regenerate-payment-url-modal',
+        size: 'small'
+      })
     },
     handleConnect(provider, mode) {
       if (this.isMobileAndMetamaskNotInstalled) {
@@ -158,8 +152,8 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("web3/initialize");
-    this.$store.dispatch("payment/initializeForBeforeConnectWallet");
+    this.$store.dispatch('web3/initialize')
+    this.$store.dispatch('payment/initializeForBeforeConnectWallet')
     // NOTE Temporarily commented out by issue #622
     // if (!this.isAgreeRisk && this.isInitialized) {
     //   this.showRiskDisclaimerModal();
@@ -175,36 +169,64 @@ export default {
     }, 1500)
   },
   beforeRouteLeave(to, from, next) {
-    const connectedWalletPages = ["tokens", "exchange", "detail"];
+    const connectedWalletPages = ['tokens', 'exchange', 'detail']
     if (connectedWalletPages.includes(to.name)) {
-      next(false);
+      next(false)
     } else {
-      next();
+      next()
     }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .connectwallet {
-  margin-top: 4rem;
+  margin-top: 2rem;
   .title {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    @include font(1rem, 400, $ls, $lh, $en_go);
+    text-align: center;
+    color: var(--Text);
+    // br {
+    // display: none;
+    // @include media(sp) {
+    //   display: block;
+    // }
+    // }
   }
   .button {
-    * {
-      margin-top: 1rem;
-      &::v-deep {
-        button {
-          margin-left: auto;
-          margin-right: auto;
-        }
-      }
+    @include flex(center, flex-start);
+    gap: 0.8rem;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    @include media(sp) {
+      // display: block;
     }
-    .regenerate {
-      margin-top: 2rem;
+    * {
+      // flex: 1;
+      width: 100%;
+      @include media(sp) {
+        flex: auto;
+      }
+      //   margin-top: 1rem;
+      //   &::v-deep {
+      //     button {
+      //       margin-left: auto;
+      //       margin-right: auto;
+      //     }
+      //   }
+    }
+  }
+  .regenerate {
+    width: 100%;
+    margin-top: 1.5rem;
+    // margin-bottom: 1rem;
+    ::v-deep {
+      .button.color_cancel {
+        margin: 0 auto;
+      }
     }
   }
 }

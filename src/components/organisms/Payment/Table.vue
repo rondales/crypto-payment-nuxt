@@ -3,10 +3,10 @@
     <ul>
       <li v-for="(v, index) in table" :key="index">
         <dl v-if="v.title">
-          <dt><PaymentText :html="v.title" /></dt>
+          <dt><span v-html="v.title"></span></dt>
           <dd>
-            <PaymentText type="h4b" :html="v.price" />
-            <PaymentText :html="v.text" />
+            <span v-html="v.price"></span>
+            <span class="cap" v-html="v.text"></span>
           </dd>
         </dl>
       </li>
@@ -15,62 +15,57 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-// import PaymentIcon from "@/components/organisms/Payment/Icon";
 export default {
-  name: "PaymentTable",
-  components: {
-    PaymentText,
-    // PaymentIcon,
-  },
+  name: 'PaymentTable',
+  components: {},
   props: {
     table: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { table: true };
+      let array = { table: true }
       // array[this.type] = true;
-      return array;
-    },
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .table {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  &::v-deep {
-    span {
-      line-height: 1;
-    }
-  }
   li {
     & + li {
-      margin-top: 1.2rem;
+      margin-top: 0rem;
     }
   }
   dl {
     @include flex(space-between, center);
     flex-wrap: nowrap;
+    color: var(--Text);
+    @include font(0.8rem, 400, $ls, 1, $en_go);
   }
   dd {
     display: inline-flex;
     align-items: flex-end;
-    // @include flex(space-between, center);
+    color: var(--Text);
+    @include font(0.8rem, 400, $ls, 1, $en_go);
     * + * {
       margin-left: 0.3rem;
+    }
+    .cap {
+      display: block;
+      @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
     }
   }
 }

@@ -13,91 +13,96 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
+import PaymentText from '@/components/organisms/Payment/Text'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 export default {
-  name: "PaymentTitle",
+  name: 'PaymentTitle',
   components: {
     PaymentText,
-    PaymentIcon,
+    PaymentIcon
   },
   props: {
     type: {
       type: String,
-      default: "span",
+      default: 'span'
     },
 
     html: {
-      type: [String, Number],
+      type: [String, Number]
     },
 
     emoji: {
       type: String,
-      default: "",
+      default: ''
     },
     icon: {
       type: String,
-      default: "",
+      default: ''
     },
     layout: {
       type: String,
-      default: "s",
+      default: 's'
     },
     tag: {
       type: [String, Number],
-      default: "",
-    },
+      default: ''
+    }
   },
   data() {
     return {
       title: {
         h2_g: {
-          color: "g",
-          tag: "h2",
-          type: "h2b",
+          color: 'g',
+          tag: 'h2',
+          type: 'h2b'
         },
         h2: {
-          color: "",
-          tag: "h2",
-          type: "h2b",
+          color: '',
+          tag: 'h2',
+          type: 'h3b'
         },
         h3_g: {
-          color: "g",
-          tag: "h3",
-          type: "h3b",
+          color: 'g',
+          tag: 'h3',
+          type: 'h3b'
         },
         h3: {
-          color: "",
-          tag: "h3",
-          type: "h3b",
+          color: '',
+          tag: 'h3',
+          type: 'h4b'
         },
         h4: {
-          color: "",
-          tag: "h4",
-          type: "h4b",
+          color: '',
+          tag: 'h4',
+          type: 'h4b'
         },
-      },
-    };
+        h4_g: {
+          color: 'g',
+          tag: 'h4',
+          type: 'h4b'
+        }
+      }
+    }
   },
   filters: {},
   computed: {
     classes() {
       // return "text__" + this.type;
-      let array = { title: true };
-      array[this.type] = true;
-      array["layout_" + this.layout] = true;
-      return array;
-    },
+      let array = { title: true }
+      array[this.type] = true
+      array['layout_' + this.layout] = true
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .title {
   @include flex(space-between, center);
   // margin-bottom: 2rem;
@@ -105,10 +110,18 @@ export default {
     margin-left: 0.3rem;
   }
   .icon {
-    width: 2.5rem;
+    width: 2rem;
   }
 
-  &.h3_b {
+  &.h3_g {
+    .button {
+      &::v-deep {
+        .button.size_icon {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+    }
   }
   &.layout {
     &_c {
