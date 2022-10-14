@@ -132,7 +132,13 @@ export default {
       })
     },
     sendEmail() {
-      if (this.sending || this.isSent || this.isInvalidEmail || !this.isPaymentSucceeded) return
+      if (
+        this.sending ||
+        this.isSent ||
+        this.isInvalidEmail ||
+        !this.isPaymentSucceeded
+      )
+        return
       this.sending = true
       this.apiSendReceiptByEmail()
         .then(() => {
@@ -192,6 +198,10 @@ export default {
     flex-wrap: nowrap;
     .form {
       flex: 1;
+      @include media(sp) {
+        flex: initial;
+        width: 22rem;
+      }
       &::v-deep {
         .form__wrap {
           padding: 0.5rem;

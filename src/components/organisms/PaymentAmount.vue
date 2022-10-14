@@ -277,7 +277,7 @@ export default {
   &__form {
     margin-bottom: 1rem;
     .price {
-      -moz-appearance:textfield;
+      -moz-appearance: textfield;
     }
     .price::-webkit-outer-spin-button,
     .price::-webkit-inner-spin-button {
@@ -287,7 +287,7 @@ export default {
     .selectwrap {
       @include flex(flex-start, center);
       flex-wrap: nowrap;
-      width: auto;
+      width: 7rem;
       padding-left: 1rem;
       border-left: 1px solid var(--Border);
       .svg {
