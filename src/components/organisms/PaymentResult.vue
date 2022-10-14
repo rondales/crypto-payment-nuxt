@@ -25,7 +25,7 @@
       :icon="userPaidTokenIcon"
       icon-type="png"
       :price="userPaidAmount | formatAmount"
-    />
+    /> -->
     <PaymentAmountBilled
       v-if="hasCashback"
       class="result__receivedToken"
@@ -33,7 +33,7 @@
       :symbol="merchantReceiveSymbol"
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
-    /> -->
+    />
 
     <div v-if="isStatusProcessing || isStatusSucceeded">
       <PaymentTitle
@@ -52,13 +52,6 @@
 
     <PaymentButton
       v-if="(isStatusSucceeded || isStatusFailured) && backUrl"
-      class="result__button"
-      text="Back to Payee’s Services"
-      :url="backUrl"
-      color="primary"
-      layout="reverse"
-    />
-    <PaymentButton
       class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"

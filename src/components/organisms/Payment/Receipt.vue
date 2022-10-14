@@ -23,7 +23,6 @@
           :disabled="isSent || isRegisterdEmail"
         />
         <PaymentButton
-          v-if="!isReservingMode"
           size="s"
           class="sendbutton"
           :text="emailButtonText"
@@ -38,9 +37,8 @@
         class="pdfbutton"
         size="s"
         text="PDF"
-        :color="downloading ? 'inactive' : ''"
+        color=""
         icon="download"
-        :loading="downloading"
         @click.native="downloadPdf"
       />
     </div>
@@ -134,7 +132,7 @@ export default {
       })
     },
     sendEmail() {
-      if (this.sending || this.isSent || this.isInvalidEmail) return
+      if (this.sending || this.isSent || this.isInvalidEmail || !this.isPaymentSucceeded) return
       this.sending = true
       this.apiSendReceiptByEmail()
         .then(() => {
