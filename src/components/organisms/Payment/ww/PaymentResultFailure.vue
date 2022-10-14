@@ -9,20 +9,14 @@
           Check the transaction in Explorer.
         </p>
       </div>
-      <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
+      <a class="payment-status_btn" target="_blank" :href="urls.explorer">
         View on explorer
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
     </div>
-    <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.failure">
+    <a @click.prevent="closeWidgetWindow">
       <button class="btn __g __l mb-2">
         Back to Payee’s Services
-      </button>
-    </a>
-    <a v-else target="_blank" :href="urls.explorer">
-      <button class="btn __g __l mb-2">
-        View on explorer
-        <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="another">
       </button>
     </a>
   </div>
@@ -37,12 +31,27 @@ export default {
     urls: Object,
     isReceiptMode: Boolean
   },
-  computed: {
-    hasReturnUrl() {
-      return (this.urls.failure)
+  methods: {
+    closeWidgetWindow() {
+      window.close()
+    },
+    /**
+     * call to Call on the payment completion screen
+     * @param status number 1: success, 2: failed
+     * @param params Object payment params
+     */
+     sendFixPaymentToParentWindow(status, params) {
+      if(!window.opener) {
+        return;
+      }
+      window.opener.postMessage({
+        action: 'fixPayment',
+        value: {paymentStatus: status, optParams: params}
+      }, this.$store.state.wwPayment.parentOrigin);
     }
   },
   created() {
+    this.sendFixPaymentToParentWindow(2, {payment_token: this.$route.params.token})
     this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
   }
 }
