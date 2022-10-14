@@ -204,9 +204,23 @@ export default {
         .then((data) => {
           this.$store.dispatch('account/update', data)
         })
+    },
+    addParentWindowEventListener() {
+      window.addEventListener('message', this.listenMessageFromParentWindow.bind(this))
+    },
+    listenMessageFromParentWindow(ev) {
+      if(ev.data.action) {
+        switch(ev.data.action) {
+          case 'setOrigin':
+            parentOrigin = ev.data.value.origin;
+            this.$store.dispatch('wwPayment/updateParentOrigin', ev.data.value.origin)
+            break;
+        }
+      }
     }
   },
   created() {
+    this.addParentWindowEventListener()
     this.checkAndSetAvailableNetworks()
     this.handleRedirect()
   }

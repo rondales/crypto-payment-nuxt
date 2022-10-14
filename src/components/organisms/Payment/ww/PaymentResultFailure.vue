@@ -34,11 +34,24 @@ export default {
   methods: {
     closeWidgetWindow() {
       window.close()
+    },
+    /**
+     * call to Call on the payment completion screen
+     * @param status number 1: success, 2: failed
+     * @param params Object payment params
+     */
+     sendFixPaymentToParentWindow(status, params) {
+      if(!window.opener) {
+        return;
+      }
+      window.opener.postMessage({
+        action: 'fixPayment',
+        value: {paymentStatus: status, optParams: params}
+      }, this.$store.state.wwPayment.parentOrigin);
     }
   },
   created() {
-    // Notify payment result to parent window. status 初期値=0, 成功=1, 失敗=2
-    window.opener.SLASH_FIN.fixPayment(2, {payment_token: this.$route.params.token});
+    this.sendFixPaymentToParentWindow(2, {payment_token: this.$route.params.token})
     this.$store.dispatch('payment/updateStatus', STATUS_RESULT_FAILURE)
   }
 }
