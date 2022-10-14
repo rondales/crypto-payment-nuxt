@@ -52,18 +52,24 @@
     <div class="exchange__btnwrap mt-2" v-if="isSetRequreUserPayAmount">
       <div v-if="isEnoughUserSelectedTokenBalance">
         <PaymentButton
-          v-if="isNeedApprove"
-          :color="isWalletConfirming ? 'inactive' : 'primary'"
-          size="m"
-          :text="
-            'Allow the Slash protocol to use your ' + userSelectedTokenSymbol
-          "
-          :loading="isWalletConfirming"
-          @click.native="handleTokenApprove"
+          v-if="isWalletConfirming"
+          color="inactive"
+          size="l"
+          text="Pending..."
+          :loading="true"
         />
-
         <PaymentButton
-          v-if="isExchangeDataUpdating"
+          v-else-if="isNeedApprove"
+          class="btn-allowance"
+          :color="isWalletConfirming ? 'inactive' : 'primary'"
+          size="l"
+          :text="'Allow the Slash protocol to use your ' + userSelectedTokenSymbol"
+          @click.native="handleTokenApprove"
+          :icon="userSelectedTokenIcon"
+          icon-type="png"
+        />
+        <PaymentButton
+          v-else-if="isExchangeDataUpdating"
           color="inactive"
           size="l"
           text="Price Updating..."
@@ -78,8 +84,7 @@
           "
           @click.native="handleGoPayment()"
           size="l"
-          text="Go Payment"
-          icon="logo-icon"
+          text="Pay"
         />
       </div>
       <div v-else>
@@ -480,7 +485,7 @@ export default {
             Promise.reject()
           }
           const approvedAmountInWei =
-            receipt.events['Approval'].returnValues.value
+            receipt.events.Approval.returnValues[2]
           this.userSelectedTokenAllowance = this.$web3.convertFromWei(
             this.web3Instance,
             approvedAmountInWei,
@@ -661,6 +666,19 @@ export default {
     margin-bottom: 1rem;
   }
   &__btnwrap {
+    .btn-allowance {
+      &::v-deep {
+        .button {
+          flex-direction: row-reverse;
+        }
+        .textwrap {
+          font-size: 12px;
+          @include media(sp) {
+            font-size: 10px;
+          }
+        }
+      }
+    }
     .via {
       margin-top: 0.5rem;
     }
