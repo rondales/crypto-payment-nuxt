@@ -44,17 +44,12 @@
     </PaymentAction>
     <PaymentPrice
       :symbol="userSelectedTokenSymbol"
-      :cap="userSelectedTokenPayAmountEquivalent"
-      :cap2="equivalentSymbol + ' equivalent'"
       :price="userSelectedTokenPayAmount | formatPrice"
       class="exchange__price"
       :status="!isEnoughUserSelectedTokenBalance ? 'error' : 'success'"
     />
-    <p class="exchange__cap">
-      <span>* This amount is an estimate and is subject to change</span>
-    </p>
 
-    <div class="exchange__btnwrap" v-if="isSetRequreUserPayAmount">
+    <div class="exchange__btnwrap mt-2" v-if="isSetRequreUserPayAmount">
       <div v-if="isEnoughUserSelectedTokenBalance">
         <PaymentButton
           v-if="isNeedApprove"
