@@ -15,6 +15,7 @@
     <div class="reciept__box">
       <PaymentForm>
         <input
+          class="email"
           type="email"
           :placeholder="
             isSent ? 'Receipt has been sent' : 'Send to email address'
@@ -198,10 +199,7 @@ export default {
     flex-wrap: nowrap;
     .form {
       flex: 1;
-      // @include media(sp) {
-      //   flex: initial;
-      //   width: 22rem;
-      // }
+      min-width: 0;
       &::v-deep {
         .form__wrap {
           padding: 0.5rem;
@@ -214,6 +212,9 @@ export default {
             }
           }
         }
+      }
+      .email {
+        min-width: 0;
       }
     }
   }
@@ -233,9 +234,6 @@ export default {
         margin-right: auto;
         gap: 4px;
         position: relative;
-        @include media(sp) {
-          width: 4rem;
-        }
         &::before {
           content: '';
           width: 0%;
