@@ -37,7 +37,7 @@
         </div>
         <div v-show="!initializing" class="payment">
           <div class="pay__head">
-            <PaymentIdTable class="pay__head__ids" :table="idTable" />
+            <!-- <PaymentIdTable class="pay__head__ids" :table="idTable" /> -->
             <PaymentTop
               :showMenu="showMenu"
               @copyLink="copyLink"
@@ -77,7 +77,7 @@ import PaymentTop from '@/components/organisms/PaymentTop'
 import LogoText from '@/components/common/LogoText'
 import PaymentText from '@/components/organisms/Payment/Text'
 // import PaymentIcon from '@/components/organisms/Payment/Icon'
-import PaymentIdTable from '@/components/organisms/Payment/IdTable'
+// import PaymentIdTable from '@/components/organisms/Payment/IdTable'
 import PaymentTitle from '@/components/organisms/Payment/Title'
 import { DARK_THEME, LIGHT_THEME } from '@/constants'
 export default {
@@ -88,7 +88,7 @@ export default {
     LogoText,
     PaymentTop,
     PaymentText,
-    PaymentIdTable,
+    // PaymentIdTable,
     PaymentTitle
     // PaymentIcon
   },

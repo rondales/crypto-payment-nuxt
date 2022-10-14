@@ -18,6 +18,11 @@ import { STATUS_PUBLISHED } from '@/constants'
 export default {
   name: 'payments-uiswitchable',
   components: { PaymentIndex },
+  data() {
+    return {
+      parentWindowListener: null
+    }
+  },
   watch: {
     $route() {
       this.checkAndSetAvailableNetworks()
@@ -204,11 +209,36 @@ export default {
         .then((data) => {
           this.$store.dispatch('account/update', data)
         })
+    },
+    addParentWindowEventListener() {
+      this.parentWindowListener = (ev) => this.listenMessageFromParentWindow(ev)
+      window.addEventListener('message', this.parentWindowListener)
+    },
+    listenMessageFromParentWindow(ev) {
+      if(ev && ev.data && ev.data.action) {
+        switch(ev.data.action) {
+          case 'setOrigin':
+            this.$store.dispatch('wwPayment/updateParentOrigin', ev.data.value.origin)
+            break;
+        }
+      }
+    },
+    sendCreatedMessage() {
+      if(!window.opener) return;
+      window.opener.postMessage({
+        action: 'createdWindow',
+        value: {}
+      }, '*');
     }
   },
   created() {
+    this.addParentWindowEventListener()
+    this.sendCreatedMessage();
     this.checkAndSetAvailableNetworks()
     this.handleRedirect()
+  },
+  beforeDestroy() {
+    window.removeEventListener('message', this.parentWindowListener)
   }
 }
 </script>
