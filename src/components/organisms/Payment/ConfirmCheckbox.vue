@@ -8,58 +8,58 @@
         v-model="checkbox"
         @change="clickCheckbox()"
       />
-      <PaymentText type="p" :html="text" />
+      <span v-html="text"></span>
     </label>
   </div>
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentText from '@/components/organisms/Payment/Text'
 export default {
-  name: "PaymentConfirmCheckbox",
+  name: 'PaymentConfirmCheckbox',
   components: {
-    PaymentText,
+    // PaymentText
   },
   props: {
     id: {
       type: String,
-      default: "",
+      default: ''
     },
     text: {
       type: String,
-      default: "",
+      default: ''
     },
     link: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
   data() {
     return {
-      checkbox: "",
-    };
+      checkbox: ''
+    }
   },
   filters: {},
   computed: {
     classes() {
-      let array = { confirmCheckbox: true };
+      let array = { confirmCheckbox: true }
       // array[this.type] = true;
-      return array;
-    },
+      return array
+    }
   },
   methods: {
     clickCheckbox() {
-      this.$emit("clickCheckbox", this.$refs.checkbox.checked);
-    },
+      this.$emit('clickCheckbox', this.$refs.checkbox.checked)
+    }
   },
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .confirmCheckbox {
   label {
     display: block;
@@ -68,6 +68,7 @@ export default {
     cursor: pointer;
     background-color: var(--Base2);
     border-radius: 4px;
+    @include font(0.8rem, 400, $ls, 1.2rem, $en_go);
     @include media(sp) {
       padding: 1rem;
     }
@@ -77,21 +78,22 @@ export default {
         position: relative;
         display: block;
         padding-left: 2rem;
-        @include media(sp) {
-          padding-left: 2.5rem;
-        }
+        // @include media(sp) {
+        //   padding-left: 2rem;
+        // }
         &::before {
-          content: "";
+          content: '';
           display: block;
-          width: 18px;
-          height: 18px;
+          width: 1rem;
+          height: 1rem;
           border: 2px solid var(--Text);
           position: absolute;
           left: 0;
-          top: 2px;
+          top: 0.1rem;
           @include media(sp) {
-            width: 14px;
-            height: 14px;
+            // width: 14px;
+            // height: 14px;
+            // top: 0;
           }
         }
       }
@@ -102,10 +104,10 @@ export default {
             // background-color: var(--Success);
           }
           &::after {
-            content: "";
+            content: '';
             display: block;
-            width: 16px;
-            height: 8px;
+            width: 0.8rem;
+            height: 0.4rem;
             border-left: 3px solid var(--Success);
             border-bottom: 3px solid var(--Success);
             // border-left: 3px solid var(--Text);
@@ -113,11 +115,12 @@ export default {
             transform-origin: center center;
             transform: rotate(-45deg);
             position: absolute;
-            left: 1px;
-            top: 5px;
+            left: 0.1rem;
+            top: 6px;
             @include media(sp) {
-              width: 12px;
-              height: 6px;
+              top: 4px;
+              border-left: 2px solid var(--Success);
+              border-bottom: 2px solid var(--Success);
             }
           }
         }

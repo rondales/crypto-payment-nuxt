@@ -12,14 +12,9 @@
         </div>
         <Icon v-else :path="icon" />
       </div>
-      <div class="textwrap">
-        <PaymentText v-if="text" :type="textsize[size]" :html="text" />
-        <PaymentText
-          v-if="subtext"
-          class="subtext"
-          type="cap"
-          :html="subtext"
-        />
+      <div class="textwrap" v-if="text">
+        <span v-html="text"></span>
+        <span v-if="subtext" class="subtext" v-html="subtext"></span>
       </div>
       <Icon
         class="loading spin"
@@ -32,15 +27,15 @@
 </template>
 
 <script>
-import PaymentText from '@/components/organisms/Payment/Text'
+// import PaymentText from '@/components/organisms/Payment/Text'
 import Icon from '@/components/organisms/Payment/Icon'
 import LogoIcon from '@/components/common/LogoIcon'
 export default {
   name: 'PaymentButton',
   components: {
     Icon,
-    LogoIcon,
-    PaymentText
+    LogoIcon
+    // PaymentText
   },
   props: {
     // func: {
@@ -134,11 +129,7 @@ export default {
   overflow: hidden;
   transition: color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
     background-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
-  img {
-    border-radius: 100%;
-    position: relative;
-    z-index: 10;
-  }
+  gap: 0.5rem;
   &::v-deep {
     .svg {
       position: relative;
@@ -148,7 +139,6 @@ export default {
     span {
       // margin-left: 1rem;
       display: block;
-      padding: 0 1rem;
       position: relative;
       z-index: 10;
     }
@@ -156,81 +146,66 @@ export default {
   &.size {
     &_s {
       border-radius: 3rem;
-      padding: 1px 8px;
-      $img_w: 2rem;
+      padding: 1px 0.8rem;
+      $img_w: 1.6rem;
       min-width: 6rem;
       z-index: 1;
+      @include font(0.8rem, 400, 0.04em, $img_w, $en_go);
       &::v-deep {
         .svg {
           width: $img_w * 0.7;
+          height: $img_w * 0.7;
         }
-        span {
-          line-height: $img_w;
-          padding: 0 0.5rem;
-        }
-      }
-      img {
-        width: $img_w;
-        position: relative;
-        z-index: 10;
       }
     }
     &_m {
       border-radius: 1rem;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
       $img_w: 2rem;
       width: 100%;
-      max-width: 30rem;
       margin-left: auto;
       margin-right: auto;
       z-index: 1;
+      @include font(1rem, 600, 0.04em, $img_w, $en_go);
       @include media(sp) {
         max-width: 100%;
       }
       &::v-deep {
         .svg {
           width: $img_w;
+          height: $img_w;
         }
-        span {
-          line-height: $img_w;
-        }
-      }
-      img {
-        width: $img_w;
       }
     }
     &_l {
       border-radius: 1rem;
-      padding: 1rem;
-      $img_w: 3rem;
+      padding: 0.5rem 1rem;
+      $img_w: 2.5rem;
       width: 100%;
-      max-width: 30rem;
+      // max-width: 15rem;
       margin-left: auto;
       margin-right: auto;
       z-index: 1;
+      @include font(1.1rem, 600, $ls, $img_w, $en_go);
       @include media(sp) {
         max-width: 100%;
       }
       &::v-deep {
         .svg {
-          width: $img_w;
+          width: 2rem;
+          height: 2rem;
         }
-        span {
-          line-height: $img_w;
-        }
-      }
-      img {
-        width: $img_w;
       }
     }
     &_icon {
-      $img_w: 2rem;
+      $img_w: 1.6rem;
       padding: 3px;
       border-radius: 4px;
 
       &::v-deep {
         .svg {
           width: $img_w;
+          height: $img_w;
         }
       }
       img {
@@ -257,7 +232,8 @@ export default {
           visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
       }
       &::after {
-        background: $gradation-light;
+        // background: $gradation-light;
+        background: $gradation-orange;
         z-index: 1;
       }
       &::v-deep {
@@ -368,6 +344,7 @@ export default {
       flex-wrap: nowrap;
       .subtext {
         margin-top: 0.5rem;
+        @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
         &::v-deep {
           span {
             line-height: 1.6;

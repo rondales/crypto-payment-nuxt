@@ -5,10 +5,10 @@
     <div class="table">
       <dl v-for="(item, index) in table" :key="index">
         <dt>
-          <PaymentText type="cap" :html="item.title" :non-translate="true" />
+          <span v-html="item.title" :non-translate="true"></span>
         </dt>
         <dd>
-          <PaymentText type="cap" :html="item.text" :non-translate="true" />
+          <span v-html="item.text" :non-translate="true"></span>
           {{ item.verified }}
           <PaymentIcon
             v-if="item.verified"
@@ -23,14 +23,14 @@
 
 <script>
 import PaymentIcon from '@/components/organisms/Payment/Icon'
-import PaymentText from '@/components/organisms/Payment/Text'
+// import PaymentText from '@/components/organisms/Payment/Text'
 // import LogoIcon from '@/components/common/LogoIcon'
 export default {
   name: 'PaymentIdTable',
   components: {
     // LogoIcon,
-    PaymentIcon,
-    PaymentText
+    PaymentIcon
+    // PaymentText
   },
   props: {
     table: {
@@ -62,23 +62,21 @@ export default {
 @import '@/assets/scss/delaunay.scss';
 .ids {
   @include flex(space-between, center);
+  gap: 3px;
   .icon {
-    width: 5rem;
-    margin-right: 2rem;
+    width: 3rem;
   }
   .table {
   }
   dl {
     font-size: 0;
     @include flex(flex-start, center);
-    & + dl {
-      margin-top: 3px;
-    }
   }
   dt,
   dd {
-    font-size: 0;
     white-space: nowrap;
+    color: var(--Text);
+    @include font(10px, 400, 0.08em, 1.8, $en_go);
   }
   dt {
     width: 5rem;
