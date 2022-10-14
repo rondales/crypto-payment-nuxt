@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="payhead">
-      <PaymentTitle type="h2_g" html="INVOICE" />
       <div>
         <PaymentButton
           :icon="invoiceIcon.icon"
@@ -10,81 +9,98 @@
           color="icon"
         />
       </div>
+      <div>
+        <PaymentIcon class="logo" path="logo-icon" />
+      </div>
+      <div>
+        <PaymentIcon v-if="loading" class="spin" path="loading" />
+      </div>
     </div>
   </div>
 </template>
 
 
 <script>
-import PaymentTitle from "@/components/organisms/Payment/Title";
-import PaymentButton from "@/components/organisms/Payment/Button";
+// import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 export default {
-  name: "PaymentTop",
+  name: 'PaymentTop',
   components: {
-    PaymentTitle,
-    PaymentButton,
+    // PaymentTitle,
+    PaymentIcon,
+    PaymentButton
   },
+  props: ['loading'],
   data() {
     return {
       invoiceIcon: {
-        icon: "",
-        func: "",
-      },
-    };
+        icon: '',
+        func: ''
+      }
+    }
   },
   watch: {
     $route(route) {
       this.setIconData(route.name)
-    },
+    }
   },
   methods: {
     copyLink() {
-      this.$emit("copyLink");
+      this.$emit('copyLink')
     },
     prevPage() {
-      this.$router.back();
+      this.$router.back()
     },
     handle_function_call(function_name) {
-      if (function_name == "prevPage") {
-        this.prevPage();
-      } else if (function_name == "copyLink") {
-        this.copyLink();
+      if (function_name == 'prevPage') {
+        this.prevPage()
+      } else if (function_name == 'copyLink') {
+        this.copyLink()
       }
     },
     setIconData(routeName) {
-      this.invoiceIcon.icon = ""
-      this.invoiceIcon.func = ""
-      if (["token", "exchange", "detail"].includes(routeName)) {
-        this.invoiceIcon.icon = "left-arrow";
-        this.invoiceIcon.func = "prevPage";
+      this.invoiceIcon.icon = ''
+      this.invoiceIcon.func = ''
+      if (['token', 'exchange', 'detail'].includes(routeName)) {
+        // this.invoiceIcon.icon = 'left-arrow'
+        this.invoiceIcon.icon = 'icon-back'
+        this.invoiceIcon.func = 'prevPage'
       } else if (routeName === 'result') {
-        this.invoiceIcon.icon = "link";
-        this.invoiceIcon.func = "copyLink";
+        this.invoiceIcon.icon = 'link'
+        this.invoiceIcon.func = 'copyLink'
       }
     }
   },
   created() {
     this.setIconData(this.$route.name)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .payhead {
-  // margin-top: 3rem;
   @include flex(space-between, center);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+
   & > * {
+    font-size: 0;
     &:nth-child(2) {
-      width: auto;
     }
     &:nth-child(1),
     &:nth-child(3) {
       width: 2.5rem;
       font-size: 0;
     }
+  }
+  .logo {
+    width: 3rem;
+  }
+  .spin {
+    width: 2rem;
+    height: 2rem;
   }
 }
 </style>

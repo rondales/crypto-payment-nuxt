@@ -4,18 +4,12 @@
       <PaymentIcon :class="iconClasses" :path="imgArr[type]" />
     </div>
     <div class="transaction__textwrap">
-      <PaymentText
-        v-if="title"
-        class="title"
-        tag="p"
-        type="h3b"
-        :html="title"
-      />
-      <PaymentText v-if="text" class="text" tag="p" :html="text" />
-      <PaymentText v-if="cap" tag="p" type="cap" :html="cap" />
+      <p class="title"><span v-html="title"></span></p>
+      <p v-if="text" class="text non-translate"><span v-html="text"></span></p>
+      <p v-if="cap" class="cap"><span v-html="cap"></span></p>
       <PaymentButton
         v-if="explorerUrl"
-        class="button mt-0"
+        class="button non-translate"
         size="s"
         color="primary"
         icon="outerlink"
@@ -29,36 +23,34 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
-import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentButton from '@/components/organisms/Payment/Button'
 export default {
-  name: "PaymentTransaction",
+  name: 'PaymentTransaction',
   components: {
     PaymentButton,
-    PaymentText,
     PaymentIcon
   },
   props: {
     type: {
       type: String,
-      default: "loading",
+      default: 'loading'
     },
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     text: {
       type: String,
-      default: "",
+      default: ''
     },
     cap: {
       type: String,
-      default: "",
+      default: ''
     },
     explorerUrl: {
       type: String,
-      default: "",
+      default: ''
     },
     link: {
       type: Object,
@@ -69,42 +61,42 @@ export default {
           url: ''
         }
       }
-    },
+    }
   },
   data() {
     return {
       imgArr: {
-        loading: "loading",
-        dismiss: "dismiss",
-        success: "check",
-      },
-    };
+        loading: 'loading',
+        dismiss: 'dismiss',
+        success: 'check'
+      }
+    }
   },
   filters: {},
   computed: {
     classes() {
-      let array = { transaction: true };
-      array[this.type] = true;
+      let array = { transaction: true }
+      array[this.type] = true
 
-      return array;
+      return array
     },
     iconClasses() {
-      let array = { icon: true };
-      if (this.type == "loading") {
-        array["spin"] = true;
+      let array = { icon: true }
+      if (this.type == 'loading') {
+        array['spin'] = true
       }
-      return array;
+      return array
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .transaction {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  // margin-top: 2rem;
+  // margin-bottom: 2rem;
   &.success {
     &::v-deep {
       svg {
@@ -120,7 +112,7 @@ export default {
     }
   }
   &__icon {
-    max-width: 10rem;
+    max-width: 5rem;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
@@ -132,14 +124,22 @@ export default {
     margin-right: auto;
     .title {
       margin-bottom: 0.5rem;
+      @include font(1.2rem, 600, $ls, $lh, $en_go);
+      color: var(--Text);
     }
     .text {
       margin-bottom: 0.5rem;
+      @include font(0.8rem, 400, $ls, $lh, $en_go);
+      color: var(--Text);
+    }
+    .cap {
+      @include font(10px, 400, 0.04em, 1.8, $en_go);
+      color: var(--Text);
     }
     .button {
       margin-left: auto;
       margin-right: auto;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
   }
   &__foot {

@@ -14,12 +14,14 @@
         />
         <div class="d-btnwrap">
           <PaymentButton
+            class="non-translate"
             :color="isConfirmed ? 'primary' : 'inactive'"
             text="OK"
             @click.native="handleRefreshPaymentToken"
             :loading="isPaymentUrlRefreshing"
           />
           <PaymentButton
+            class="non-translate"
             text="Cancel"
             @click.native="hideModal()"
           />

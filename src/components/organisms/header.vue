@@ -7,7 +7,11 @@
             <!-- <LogoIcon class="logoicon" /> -->
             <PaymentIcon class="logoicon" path="logo-icon" />
             <LogoText class="logotext" />
-            <PaymentText class="header__sub" type="h5" :html="subTitle" />
+            <PaymentText
+              class="header__sub non-translate"
+              type="h5"
+              :html="subTitle"
+            />
           </h1>
           <div
             class="header__testnet"
@@ -15,7 +19,7 @@
             v-on:mouseover="mouseOver"
             v-on:mouseleave="mouseLeave"
           >
-            <PaymentText type="header__testnet" html="Testnet" color="white" />
+            <span>Testnet</span>
             <div class="header__testnet__hover" v-if="isHover">
               <PaymentText
                 type="cap"
@@ -59,7 +63,7 @@
                     :html="balance | balanceFormat"
                   />
                   <PaymentText
-                    class="header__wallet__token__symbol"
+                    class="header__wallet__token__symbol non-translate"
                     type="capb"
                     :html="symbol"
                   />
@@ -82,6 +86,7 @@
               v-else-if="show"
               @click.native="showWalletModal"
               size="s"
+              class="non-translate"
               :class="{ __g: isAdminPage, __pg: !isAdminPage }"
               text="Connect to wallet"
             />
@@ -453,6 +458,7 @@ export default {
   &__right {
     @include flex(flex-end, center);
     width: auto;
+    flex-wrap: nowrap;
     gap: 1rem;
     @include media(sp) {
       gap: 0.5rem;
@@ -461,6 +467,7 @@ export default {
   &__logo {
     @include flex(flex-start, center);
     width: auto;
+
     .logoicon {
       width: 3rem;
       height: 3rem;
@@ -470,13 +477,17 @@ export default {
         // display: none;
         margin-right: 0;
         width: 0;
+        height: 0;
       }
     }
     .logotext {
-      width: 6.9rem;
+      width: 6rem;
       margin-right: 1rem;
       @include media(sp) {
         // display: none;
+        width: 5rem;
+        margin-right: 0.5rem;
+        // margin-top: -2px;
       }
     }
     .text__header__sub {
@@ -490,21 +501,25 @@ export default {
     }
   }
   &__testnet {
+    @include font(0.8rem, 400, $ls, 1, $en_go);
     background: #de4437;
     color: #fff;
     padding: 0.3rem 0.5rem;
     border-radius: 2rem;
     text-align: center;
     cursor: pointer;
-    position: relative;
-    font-size: 0;
+    // position: relative;
+    // font-size: 0;
     position: absolute;
     left: 2px;
     bottom: -12px;
     transform-origin: left bottom;
     transform: scale(0.7);
     @include media(sp) {
-      bottom: -0.6rem;
+      // bottom: -0.6rem;
+      position: relative;
+      bottom: 3px;
+      left: auto;
     }
     &__hover {
       position: absolute;
@@ -551,10 +566,12 @@ export default {
     background-color: var(--Base2);
     border-radius: 0.5rem;
     padding: 0.5rem;
+    flex-wrap: nowrap;
     &__token {
       padding: 0 0.5rem;
       &__textwrap {
         @include flex(flex-start, flex-end);
+        flex-wrap: nowrap;
       }
       &__symbol {
         margin-left: 0.3rem;
@@ -564,8 +581,10 @@ export default {
       background: $gradation-pale;
       padding: 2px 0.5rem;
       border-radius: 0.5rem;
+      white-space: nowrap;
       &.pg {
         @include flex(flex-start, center);
+        flex-wrap: nowrap;
         gap: 3px;
         width: auto;
         flex-wrap: nowrap;

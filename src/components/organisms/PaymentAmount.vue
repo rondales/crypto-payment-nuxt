@@ -1,18 +1,13 @@
 <template>
   <div :class="classes">
-    <PaymentTitle
+    <!-- <PaymentTitle
       class="amount__title"
       type="h3_g"
       html="Enter the payment amount"
       emoji="&#128591;"
       layout="c"
-    />
-    <PaymentTitle
-      class="amount__subtitle"
-      type="h3"
-      html="How much would you pay?"
-      layout=""
-    />
+    /> -->
+    <p class="amount__subtitle"><span>How much would you pay?</span></p>
     <PaymentForm class="amount__form">
       <input
         v-model="legalCurrencyAmount"
@@ -26,6 +21,7 @@
         <select name="currency" v-model="selectedCurrency">
           <option
             v-for="(currency, key) in currencies"
+            class="non-translate"
             :value="currency.name"
             :key="key"
           >
@@ -42,13 +38,13 @@
       :priceClass="{ inactive: requireUpdateExchange }"
     />
     <div class="amount__pay">
-      <PaymentTitle
+      <!-- <PaymentTitle
         class="amount__pay__title"
         v-if="!requireUpdateExchange"
         type="h3"
         html="Payment with Web3 Wallet"
         layout="c"
-      />
+      /> -->
       <PaymentAction
         class="amount__pay__action"
         v-if="requireUpdateExchange"
@@ -80,7 +76,6 @@
 <script>
 import { Decimal } from 'decimal.js'
 import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
-import PaymentTitle from '@/components/organisms/Payment/Title'
 import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentAction from '@/components/organisms/Payment/Action'
@@ -116,7 +111,6 @@ export default {
   components: {
     PaymentAmountBilled,
     PaymentButton,
-    PaymentTitle,
     PaymentForm,
     PaymentAction,
     PaymentIcon
@@ -221,9 +215,9 @@ export default {
         base_amount: this.legalCurrencyAmount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
-        margin_rate: this.exchangeMarginRate,
-      };
-      return this.axios.patch(url, params, { withCredentials: true });
+        margin_rate: this.exchangeMarginRate
+      }
+      return this.axios.patch(url, params, { withCredentials: true })
     },
     next() {
       if (this.requireUpdateExchange || this.isInvalidAmount) return
@@ -268,16 +262,23 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .amount {
-  &__title {
-    margin-bottom: 2rem;
-  }
+  // &__title {
+  //   margin-bottom: 2rem;
+  // }
   &__subtitle {
     margin-bottom: 0.5rem;
+    @include font(1.2rem, 600, $ls, $lh, $en_go);
+    text-align: center;
+    span {
+      display: inline-block;
+      text-align: left;
+    }
   }
   &__form {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     .price {
-      -moz-appearance:textfield;
+      -moz-appearance: textfield;
+      min-width: 0;
     }
     .price::-webkit-outer-spin-button,
     .price::-webkit-inner-spin-button {
@@ -291,8 +292,8 @@ export default {
       padding-left: 1rem;
       border-left: 1px solid var(--Border);
       .svg {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 1.8rem;
+        height: 1.8rem;
       }
       select {
         flex: 1;
@@ -300,17 +301,16 @@ export default {
     }
   }
   &__bill {
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
   }
   &__pay {
-    &__title {
-      margin-bottom: 2rem;
-    }
+    // &__title {
+    //   margin-bottom: 2rem;
+    // }
     &__action {
-      margin-bottom: 1rem;
     }
     &__button {
-      margin: 1rem;
+      margin-top: 2rem;
     }
   }
 }

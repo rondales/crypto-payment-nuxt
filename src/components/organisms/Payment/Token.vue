@@ -2,66 +2,64 @@
   <div :class="classes">
     <PaymentIcon :path="icon" :type="iconType" />
     <div class="textwrap">
-      <PaymentText tag="p" type="cap" :html="title" />
-      <PaymentText tag="p" class="symbol" type="h4b" :html="symbol" />
-      <PaymentText tag="p" type="cap" :html="symboltext" />
+      <p class="title"><span v-html="title"></span></p>
+      <p class="symbol non-translate"><span v-html="symbol"></span></p>
+      <p class="symboltext non-translate"><span v-html="symboltext"></span></p>
     </div>
   </div>
 </template>
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentIcon from "@/components/organisms/Payment/Icon";
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 export default {
-  name: "PaymentToken",
+  name: 'PaymentToken',
   components: {
-    PaymentText,
-    PaymentIcon,
+    PaymentIcon
   },
   props: {
     icon: {
       type: String,
-      default: "usdt",
+      default: 'usdt'
     },
     iconType: {
       type: String,
-      default: "svg"
+      default: 'svg'
     },
     symbol: {
       type: String,
-      default: "USDT",
+      default: 'USDT'
     },
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     symboltext: {
       type: String,
-      default: "",
+      default: ''
     },
     size: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
   data() {
-    return {};
+    return {}
   },
   filters: {},
   computed: {
     classes() {
-      let array = { token: true };
-      array[this.size] = true;
-      return array;
-    },
+      let array = { token: true }
+      array[this.size] = true
+      return array
+    }
   },
   methods: {},
   created() {},
-  beforeDestroy() {},
-};
+  beforeDestroy() {}
+}
 </script>
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 
 .token {
   @include flex(flex-start, center);
@@ -74,8 +72,8 @@ export default {
     }
   }
   .svg {
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
     margin-right: 1rem;
     &:v-deep {
       svg {
@@ -87,10 +85,6 @@ export default {
       }
     }
   }
-  img {
-    width: 2.5rem;
-    margin-right: 0.5rem;
-  }
   &::v-deep {
     p {
       line-height: 1;
@@ -100,6 +94,15 @@ export default {
     * + * {
       margin-top: 0.3rem;
     }
+  }
+  .title {
+    @include font(10px, 400, $ls, 1, $en_go);
+  }
+  .symbol {
+    @include font(1rem, 600, $ls, 1, $en_go);
+  }
+  .symboltext {
+    @include font(10px, 400, $ls, 1, $en_go);
   }
 }
 </style>
