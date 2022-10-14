@@ -137,7 +137,6 @@ export default {
       this.apiSendReceiptByEmail()
         .then(() => {
           this.sent = true
-          this.email = ''
         })
         .catch((error) => {
           let message = 'Please try again after a while.'
