@@ -2,7 +2,7 @@
   <a href="#donation" class="donation">
     <div class="donation__wrap">
       <div class="donation__head">
-        <div class="donation__title"><span>Try Slash Payments</span></div>
+        <div class="donation__title non-translate"><span>Try Slash Payments</span></div>
         <ul class="donation__logo">
           <li v-for="list in donations" :key="list.logo">
             <div class="donation__logo__list">
