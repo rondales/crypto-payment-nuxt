@@ -7,7 +7,11 @@
             <!-- <LogoIcon class="logoicon" /> -->
             <PaymentIcon class="logoicon" path="logo-icon" />
             <LogoText class="logotext" />
-            <PaymentText class="header__sub non-translate" type="h5" :html="subTitle" />
+            <PaymentText
+              class="header__sub non-translate"
+              type="h5"
+              :html="subTitle"
+            />
           </h1>
           <div
             class="header__testnet"
@@ -454,6 +458,7 @@ export default {
   &__right {
     @include flex(flex-end, center);
     width: auto;
+    flex-wrap: nowrap;
     gap: 1rem;
     @include media(sp) {
       gap: 0.5rem;
@@ -561,10 +566,12 @@ export default {
     background-color: var(--Base2);
     border-radius: 0.5rem;
     padding: 0.5rem;
+    flex-wrap: nowrap;
     &__token {
       padding: 0 0.5rem;
       &__textwrap {
         @include flex(flex-start, flex-end);
+        flex-wrap: nowrap;
       }
       &__symbol {
         margin-left: 0.3rem;
@@ -574,8 +581,10 @@ export default {
       background: $gradation-pale;
       padding: 2px 0.5rem;
       border-radius: 0.5rem;
+      white-space: nowrap;
       &.pg {
         @include flex(flex-start, center);
+        flex-wrap: nowrap;
         gap: 3px;
         width: auto;
         flex-wrap: nowrap;

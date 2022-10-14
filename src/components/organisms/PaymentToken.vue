@@ -102,7 +102,12 @@
             </PaymentAction>
           </div>
           <div class="foot">
-            <p><span class="non-translate" v-html="searchedTokenCount + ' Custom Token'"></span></p>
+            <p>
+              <span
+                class="non-translate"
+                v-html="searchedTokenCount + ' Custom Token'"
+              ></span>
+            </p>
             <PaymentButton
               @click.native="clearSearchedTokens()"
               size="s"
@@ -627,7 +632,7 @@ export default {
         // background: var(--Key1);
       }
       @include media(sp) {
-        height: 100%;
+        height: calc(100vh - 90px - 360px);
       }
     }
   }
