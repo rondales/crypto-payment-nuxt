@@ -212,7 +212,6 @@ export default {
       if(ev.data.action) {
         switch(ev.data.action) {
           case 'setOrigin':
-            parentOrigin = ev.data.value.origin;
             this.$store.dispatch('wwPayment/updateParentOrigin', ev.data.value.origin)
             break;
         }
