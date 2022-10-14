@@ -41,9 +41,8 @@ export default {
      * @param params Object payment params
      */
      sendFixPaymentToParentWindow(status, params) {
-      if(!window.opener) {
-        return;
-      }
+      if(!window.opener) return;
+
       window.opener.postMessage({
         action: 'fixPayment',
         value: {paymentStatus: status, optParams: params}
