@@ -18,6 +18,11 @@ import { STATUS_PUBLISHED } from '@/constants'
 export default {
   name: 'payments-uiswitchable',
   components: { PaymentIndex },
+  data() {
+    return {
+      parentWindowListener: null
+    }
+  },
   watch: {
     $route() {
       this.checkAndSetAvailableNetworks()
@@ -206,7 +211,8 @@ export default {
         })
     },
     addParentWindowEventListener() {
-      window.addEventListener('message', this.listenMessageFromParentWindow.bind(this))
+      this.parentWindowListener = this.listenMessageFromParentWindow.bind(this)
+      window.addEventListener('message', this.parentWindowListener)
     },
     listenMessageFromParentWindow(ev) {
       if(ev.data.action) {
@@ -222,6 +228,9 @@ export default {
     this.addParentWindowEventListener()
     this.checkAndSetAvailableNetworks()
     this.handleRedirect()
+  },
+  beforeDestroy() {
+    window.removeEventListener('message', this.parentWindowListener)
   }
 }
 </script>
