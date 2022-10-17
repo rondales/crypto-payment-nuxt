@@ -326,7 +326,7 @@ export default {
     },
     show() {
       const pathPattern =
-        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|detail)\/.+)/
       return pathPattern.test(this.$route.path)
     },
     connected() {

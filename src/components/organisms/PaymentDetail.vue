@@ -1,133 +1,117 @@
 <template>
-  <div class="detail">
+  <div class="exchange">
     <PaymentAmountBilled
-      class="detail__bill"
+      class="exchange__bill"
       :symbol="merchantReceiveTokenSymbol"
       :icon="merchantReceiveTokenIcon"
       :price="merchantReceiveAmount"
       size="big"
     />
-    <PaymentTitle class="detail__title non-translate" type="h3_g" html="Payment detail">
+
+    <PaymentTitle class="exchange__title" type="h3_g" html="Your Balance">
       <PaymentButton
-        v-if="!isWalletConfirming"
         icon="reload"
         color="icon"
         size="icon"
-        @click.native="updateTokenExchangeData(true)"
-        :class="{ loading: isReloading }"
+        @click.native="updateTokenExchangeData()"
       />
     </PaymentTitle>
 
+    <PaymentAmountBilled
+      class="exchange__balance"
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      icon-type="png"
+      :table="balanceTable"
+    />
     <PaymentAction
-      class="detail__update"
-      v-if="!isWalletConfirming && isExpiredExchange"
+      class="exchange__update"
+      v-if="
+        isExpiredExchange &&
+        isEnoughUserSelectedTokenBalance &&
+        !isNeedApprove &&
+        !isWalletConfirming
+      "
       icon="attention"
       text="Price Updated"
     >
       <PaymentButton
-        text="Accept"
+        class="non-translate"
+        text="Update"
         size="s"
-        @click.native="updateTokenExchangeData(false)"
+        @click.native="updateTokenExchangeData()"
       />
     </PaymentAction>
-    <PaymentAmountBilled
-      class="detail__selectedToken"
+    <PaymentPrice
       :symbol="userSelectedTokenSymbol"
-      :icon="userSelectedTokenIcon"
-      icon-type="png"
-      :price="userSelectedTokenPaymentAmount"
+      :price="userSelectedTokenPayAmount | formatPrice"
+      class="exchange__price"
+      :status="!isEnoughUserSelectedTokenBalance ? 'error' : 'success'"
     />
-    <div class="detail__table">
-      <PaymentTable
-        v-if="!isWalletConfirming"
-        :table="[
-          {
-            title: 'Exchange Rate',
-            price: '',
-            text:
-              '1 ' +
-              merchantReceiveTokenSymbol +
-              ' &#65309; ' +
-              userSelectedTokenExchangeRate +
-              ' ' +
-              userSelectedTokenSymbol,
-            icon: 'exchange'
-          },
-          {
-            title: 'Route',
-            text: tradeRoute
-          }
-        ]"
-      />
-      <p v-if="!isWalletConfirming" class="cap">
-        <span
-          v-html="
-            'Output is estimated. You will receive at least ' +
-            merchantReceiveAmount +
-            ' ' +
-            merchantReceiveTokenSymbol +
-            ' or the transaction will revert.'
-          "
-        ></span>
-      </p>
 
-      <div v-else>
-        <PaymentTransaction
-          type="loading"
-          title="Waiting for Confirmation"
-          :text="
-            'Pay ' +
-            userSelectedTokenPaymentAmount +
-            ' ' +
-            userSelectedTokenSymbol +
-            ' ' +
-            ' for ' +
-            merchantReceiveAmount +
-            ' ' +
-            merchantReceiveTokenSymbol
+    <div class="exchange__btnwrap mt-2" v-if="isSetRequreUserPayAmount">
+      <div v-if="isEnoughUserSelectedTokenBalance">
+        <PaymentButton
+          v-if="isWalletConfirming"
+          color="inactive"
+          size="l"
+          text="Pending..."
+          :loading="true"
+        />
+        <PaymentButton
+          v-else-if="isNeedApprove"
+          class="btn-allowance"
+          :color="isWalletConfirming ? 'inactive' : 'primary'"
+          size="l"
+          :text="'Allow the Slash protocol to use your ' + userSelectedTokenSymbol"
+          @click.native="handleTokenApprove"
+          :icon="userSelectedTokenIcon"
+          icon-type="png"
+        />
+        <PaymentButton
+          v-else-if="isExchangeDataUpdating"
+          color="inactive"
+          size="l"
+          text="Price Updating..."
+          :loading="true"
+        />
+        <PaymentButton
+          v-else
+          :color="
+            isNeedApprove || isExpiredExchange || isWalletConfirming
+              ? 'inactive'
+              : 'primary'
           "
+          @click.native="handlePay()"
+          size="l"
+          text="Pay"
         />
       </div>
+      <div v-else>
+        <p class="blancewarning">
+          <span>Balance is insufficient<br />for this transaction.</span>
+        </p>
+      </div>
     </div>
-    <div class="detail__btnwrap">
-      <PaymentButton
-        v-if="isExchangeDataUpdating"
-        color="inactive"
-        size="l"
-        text="Price Updating..."
-        :loading="true"
-      />
-      <PaymentButton
-        v-else-if="isWalletConfirming"
-        color="inactive"
-        size="l"
-        text="Please confirm Wallet"
-      />
-      <PaymentButton
-        v-else
-        size="l"
-        :color="isExpiredExchange ? 'inactive' : 'primary'"
-        text="Confirm Wallet"
-        @click.native="executePayment()"
-      />
+    <div v-else>
+      <div v-if="isNotEnoughLiquidity">
+        <p class="blancewarning">
+          <span>Liquidity is not enough<br />for this transaction.</span>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import * as Sentry from '@sentry/vue'
 import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
 import PaymentTitle from '@/components/organisms/Payment/Title'
-import PaymentButton from '@/components/organisms/Payment/Button'
-import PaymentTransaction from '@/components/organisms/Payment/Transaction'
 import PaymentAction from '@/components/organisms/Payment/Action'
-// import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentTable from '@/components/organisms/Payment/Table'
-import {
-  METAMASK,
-  WALLET_CONNECT,
-  NETWORKS,
-  STATUS_PROCESSING
-} from '@/constants'
+import PaymentPrice from '@/components/organisms/Payment/Price'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import { Decimal } from 'decimal.js'
+import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -149,25 +133,35 @@ import {
 
 export default {
   name: 'PaymentDetail',
-  components: {
-    PaymentAmountBilled,
-    PaymentButton,
-    PaymentTransaction,
-    PaymentAction,
-    // PaymentText,
-    PaymentTitle,
-    PaymentTable
-  },
   data() {
     return {
       expired: false,
-      reloading: false,
       updating: false,
       exchangeDataExpireTimer: null,
+      userSelectedTokenAllowance: null,
+      requireAmount: null,
+      balanceEquivalentAmount: 0,
+      exchangeRate: 0,
+      platformFee: 0,
+      merchantReceiveAmountWei: 0,
       contract: {
         address: null,
         abi: null
-      }
+      },
+      balanceTable: [],
+      isNotEnoughLiquidity: false
+    }
+  },
+  components: {
+    PaymentAmountBilled,
+    PaymentTitle,
+    PaymentAction,
+    PaymentPrice,
+    PaymentButton
+  },
+  filters: {
+    formatPrice(price) {
+      return Decimal(price).toString()
     }
   },
   computed: {
@@ -184,18 +178,6 @@ export default {
         return process.env.VUE_APP_PAYMENT_NON_STABLE_TOKEN_FEE_RATE
       }
     },
-    NATIVE_TOKEN_SYMBOLS() {
-      return {
-        ETH: 'ETH',
-        BNB: 'BNB',
-        MATIC: 'MATIC',
-        AVAX: 'AVAX',
-        WETH: 'WETH',
-        WBNB: 'WBNB',
-        WMATIC: 'WMATIC',
-        WAVAX: 'WAVAX'
-      }
-    },
     EXCHANGE_RATE_EXPIRE_TIME() {
       return 30000
     },
@@ -205,14 +187,17 @@ export default {
     web3Instance() {
       return this.$store.state.web3.instance
     },
-    providerType() {
-      return this.$store.state.web3.provider
-    },
     chainId() {
       return this.$store.state.web3.chainId
     },
+    providerType() {
+      return this.$store.state.web3.provider
+    },
     userAccountAddress() {
       return this.$store.state.account.address
+    },
+    equivalentSymbol() {
+      return this.merchantReceiveTokenSymbol
     },
     merchantReceiveTokens() {
       if (this.isCurrentNetworkEthereum) {
@@ -253,14 +238,8 @@ export default {
         return {}
       }
     },
-    nativeTokenSymbol() {
-      return this.chainId !== null ? NETWORKS[this.chainId].symbol : ''
-    },
     merchantReceiveAmount() {
       return this.$store.state.payment.amount
-    },
-    merchantReceiveWeiAmount() {
-      return this.$store.state.payment.amountWei
     },
     merchantReceiveTokenSymbol() {
       return this.$store.state.payment.symbol
@@ -274,11 +253,20 @@ export default {
     userSelectedToken() {
       return this.$store.state.payment.token
     },
-    userSelectedTokenAddress() {
-      return this.userSelectedToken.address
+    userSelectedTokenDecimal() {
+      return this.userSelectedToken.decimal
     },
-    userSelectedTokenPaymentAmount() {
-      return this.userSelectedToken.amount
+    userSelectedTokenBalance() {
+      return this.userSelectedToken.balance
+    },
+    userSelectedTokenPayAmount() {
+      if (this.requireAmount === null) {
+        return 0
+      } else if (this.isEnoughUserSelectedTokenBalance) {
+        return this.requireAmount
+      } else {
+        return this.userSelectedTokenBalance
+      }
     },
     userSelectedTokenSymbol() {
       return this.userSelectedToken.symbol
@@ -288,35 +276,6 @@ export default {
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].iconPath
         : 'crypto_currency/unknown'
-    },
-    userSelectedTokenExchangeRate() {
-      return this.$store.state.payment.token.rate
-    },
-    tradeRoute() {
-      if (!this.isDifferentToken) {
-        return this.merchantReceiveTokenSymbol
-      } else if (this.isCurrentNetworkEthereum) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`
-      } else if (this.isCurrentNetworkBinance) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`
-      } else if (this.isCurrentNetworkMatic) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`
-      } else if (this.isCurrentNetworkAvalanche) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
-      } else {
-        return ''
-      }
-    },
-    platformFee() {
-      return this.$store.state.payment.fee
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null
@@ -357,27 +316,42 @@ export default {
         this.chainId === NETWORKS[43113].chainId
       )
     },
-    isDifferentToken() {
-      const receiveTokens = this.merchantReceiveTokens
-      const receiveTokenAddress =
-        this.merchantReceiveTokenSymbol in receiveTokens
-          ? receiveTokens[this.merchantReceiveTokenSymbol].address.toLowerCase()
-          : ''
-      const paymentTokenAddress = this.userSelectedTokenAddress
-        ? this.userSelectedTokenAddress.toLowerCase()
-        : this.userSelectedTokenAddress
-      return receiveTokenAddress !== paymentTokenAddress
+    isUserSelectedNativeToken() {
+      return this.userSelectedToken.address === null
     },
-    isSelectedNativeToken() {
-      return Object.values(this.NATIVE_TOKEN_SYMBOLS).includes(
-        this.userSelectedTokenSymbol
+    isSetRequreUserPayAmount() {
+      return this.requireAmount !== null
+    },
+    isNeedApprove() {
+      return (
+        !this.isUserSelectedNativeToken &&
+        !this.isEnoughUserSelectedTokenAllowance
+      )
+    },
+    isEnoughUserSelectedTokenAllowance() {
+      if (
+        this.userSelectedTokenAllowance === null ||
+        this.requireAmount === null
+      ) {
+        return false
+      }
+      return Decimal(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
+        this.requireAmount
+      )
+    },
+    isEnoughUserSelectedTokenBalance() {
+      if (
+        this.userSelectedTokenBalance === null ||
+        this.requireAmount === null
+      ) {
+        return false
+      }
+      return Decimal(this.userSelectedTokenBalance).greaterThanOrEqualTo(
+        this.requireAmount
       )
     },
     isExpiredExchange() {
       return this.expired
-    },
-    isReloading() {
-      return this.reloading
     },
     isExchangeDataUpdating() {
       return this.updating
@@ -423,7 +397,7 @@ export default {
           transaction_address: transactionHash,
           wallet_address: this.userAccountAddress,
           pay_symbol: this.userSelectedTokenSymbol,
-          pay_amount: this.userSelectedTokenPaymentAmount,
+          pay_amount: this.userSelectedTokenPayAmount,
           device_id: this.$store.state.payment.deviceId
         },
         {
@@ -431,46 +405,58 @@ export default {
         }
       )
     },
-    setExchangeDataExpireTimer() {
-      return setTimeout(() => {
-        this.expired = true
-      }, this.EXCHANGE_RATE_EXPIRE_TIME)
-    },
     getTokenExchangeDataFromContract() {
-      return this.$web3.getTokenExchangeData(
+      return this.$web3
+        .getTokenExchangeData(
+          this.web3Instance,
+          this.chainId,
+          this.userAccountAddress,
+          this.contract,
+          this.userSelectedToken,
+          this.merchantReceiveTokenSymbol,
+          this.merchantReceiveAmount,
+          this.GAS_FEE_RATE,
+          this.PAYMENT_FEE_RATE
+        )
+        .catch((err) => {
+          if (err.message.includes('execution reverted: No valid exchange')) {
+            this.isNotEnoughLiquidity = true
+            this.$parent.loading = false
+            this.$store.dispatch('modal/show', {
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message:
+                  'There appears to be no liquidity between \
+                  the token you selected and the \
+                  merchant receive token on this network. \
+                  <br> \
+                  <br> \
+                  Please return to the token selection screen \
+                  and select another token or try paying \
+                  with another network.'
+              }
+            })
+          }
+        })
+    },
+    getTokenApprovedAmountFromContract() {
+      return this.$web3.getTokenApprovedAmount(
         this.web3Instance,
         this.chainId,
         this.userAccountAddress,
         this.contract,
-        this.userSelectedToken,
-        this.merchantReceiveTokenSymbol,
-        this.merchantReceiveAmount,
-        this.GAS_FEE_RATE,
-        this.PAYMENT_FEE_RATE
+        this.userSelectedToken
       )
     },
-    updateTokenExchangeData(reload) {
-      clearTimeout(this.exchangeDataExpireTimer)
-      this.expired = false
-      this.reloading = reload
-      this.updating = true
-      this.getTokenExchangeDataFromContract()
-        .then((exchangeData) => {
-          this.$store.dispatch('payment/updateFee', exchangeData.fee)
-          this.$store.dispatch(
-            'payment/updateAmountWei',
-            exchangeData.requestAmountWei
-          )
-          this.$store.dispatch('payment/updateToken', {
-            amount: exchangeData.requireAmount,
-            rate: exchangeData.rate
-          })
-        })
-        .finally(() => {
-          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
-          this.reloading = false
-          this.updating = false
-        })
+    sendTokenApproveTransactoinToBlockChain() {
+      return this.$web3.tokenApprove(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken
+      )
     },
     sendPaymentTransactionToBlockChain() {
       return this.$web3.sendPaymentTransaction(
@@ -479,14 +465,72 @@ export default {
         this.userAccountAddress,
         this.contract,
         this.userSelectedToken,
-        this.userSelectedTokenPaymentAmount,
+        this.userSelectedTokenPayAmount,
         this.$store.state.payment.symbol,
         this.platformFee,
-        this.merchantReceiveWeiAmount
+        this.merchantReceiveAmountWei
       )
     },
-    executePayment() {
-      if (this.isExpiredExchange) return
+    setExchangeDataExpireTimer() {
+      return setTimeout(() => {
+        this.expired = true
+      }, this.EXCHANGE_RATE_EXPIRE_TIME)
+    },
+    updateTokenExchangeData() {
+      clearTimeout(this.exchangeDataExpireTimer)
+      this.expired = false
+      this.updating = true
+      this.getTokenExchangeDataFromContract()
+        .then((exchangeData) => {
+          this.$store.dispatch('payment/updateToken', {
+            amount: exchangeData.requireAmount,
+            rate: exchangeData.rate
+          })
+          this.balanceEquivalentAmount = exchangeData.equivalentAmount
+          this.requireAmount = exchangeData.requireAmount
+          this.exchangeRate = exchangeData.rate
+          this.platformFee = exchangeData.fee
+          this.merchantReceiveAmountWei = exchangeData.requestAmountWei
+        })
+        .finally(() => {
+          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+          this.updating = false
+        })
+    },
+    handleTokenApprove() {
+      this.$store.dispatch('wallet/updatePendingStatus', true)
+      this.sendTokenApproveTransactoinToBlockChain()
+        .then((receipt) => {
+          if (!receipt.status) {
+            Promise.reject()
+          }
+          const approvedAmountInWei =
+            receipt.events.Approval.returnValues[2]
+          this.userSelectedTokenAllowance = this.$web3.convertFromWei(
+            this.web3Instance,
+            approvedAmountInWei,
+            this.userSelectedTokenDecimal
+          )
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+        })
+        .catch((error) => {
+          Sentry.captureException(error)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+          if ('code' in error && error.code === 4001) {
+            return
+          }
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message:
+                'The Slash protocol allow failed with your token, please allow it again.'
+            }
+          })
+        })
+    },
+    handlePay() {
+      if (this.expired) return
       this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
@@ -520,6 +564,7 @@ export default {
     }
   },
   created() {
+    Decimal.set({ toExpNeg: -20 })
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: 'wallets',
@@ -528,9 +573,12 @@ export default {
     }
   },
   mounted() {
+    this.$parent.loading = true
+
     if (this.isNeedRestoreWeb3Connection) {
       return
     }
+
     this.web3Instance.currentProvider.on(
       'chainChanged',
       this.handleChainChangedEvent
@@ -539,13 +587,59 @@ export default {
       'accountsChanged',
       this.handleAccountChangedEvent
     )
-    this.apiGetContract().then((response) => {
-      this.contract.abi = JSON.parse(response.data.args)
-      this.contract.address = response.data.address
-      this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
-    })
+
+    this.apiGetContract()
+      .then((response) => {
+        this.contract.address = response.data.address
+        this.contract.abi = JSON.parse(response.data.args)
+        const funcList = [this.getTokenExchangeDataFromContract()]
+        if (!this.isUserSelectedNativeToken) {
+          funcList.push(this.getTokenApprovedAmountFromContract())
+        }
+        Promise.all(funcList)
+          .then((results) => {
+            if (!this.isUserSelectedNativeToken) {
+              this.userSelectedTokenAllowance = results[1]
+            }
+            this.$store.dispatch('payment/updateToken', {
+              amount: results[0].requireAmount,
+              rate: results[0].rate
+            })
+            this.balanceEquivalentAmount = results[0].equivalentAmount
+            this.requireAmount = results[0].requireAmount
+            this.exchangeRate = results[0].rate
+            this.platformFee = results[0].fee
+            this.merchantReceiveAmountWei = results[0].requestAmountWei
+            this.$parent.loading = false
+            this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+
+            this.balanceTable.push({
+              title: 'Balance',
+              price: Decimal(this.userSelectedTokenBalance).toFixed(
+                4,
+                Decimal.ROUND_FLOOR
+              ),
+              symbol: this.userSelectedTokenSymbol
+            })
+            this.balanceTable.push({
+              title: 'Equivalent',
+              price: Decimal(this.balanceEquivalentAmount).toFixed(
+                4,
+                Decimal.ROUND_FLOOR
+              ),
+              symbol: this.equivalentSymbol
+            })
+          })
+          .catch((err) => {
+            Sentry.captureException(err)
+          })
+      })
+      .catch((err) => {
+        Sentry.captureException(err)
+      })
   },
   beforeDestroy() {
+    this.$parent.loading = false
     clearTimeout(this.exchangeDataExpireTimer)
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
@@ -560,6 +654,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.$parent.loading = false
+    clearTimeout(this.exchangeDataExpireTimer)
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
         'chainChanged',
@@ -578,12 +673,12 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
-.detail {
+.exchange {
   &__bill {
     margin-bottom: 2rem;
   }
   &__title {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
   &__balance {
     margin-bottom: 1rem;
@@ -591,25 +686,38 @@ export default {
   &__update {
     margin-bottom: 1rem;
   }
-  &__selectedToken {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
   &__price {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
   }
-  &__table {
+  &__cap {
+    @include font(10px, 400, 0.04em, 1.8, $en_go);
     margin-bottom: 1rem;
-    .cap {
-      margin-top: 1rem;
-      @include font(10px, 400, $ls, $lh, $en_go);
-    }
   }
   &__btnwrap {
-    margin-top: 1.5rem;
+    .btn-allowance {
+      &::v-deep {
+        .button {
+          flex-direction: row-reverse;
+        }
+        .textwrap {
+          font-size: 12px;
+          @include media(sp) {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+    .via {
+      margin-top: 0.5rem;
+    }
     div + div {
       margin-top: 0.5rem;
     }
   }
+}
+.blancewarning {
+  text-align: center;
+  @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+  color: var(--Alert);
 }
 </style>
