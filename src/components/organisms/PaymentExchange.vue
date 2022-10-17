@@ -13,7 +13,7 @@
         icon="reload"
         color="icon"
         size="icon"
-        @click.native="updateTokenExchangeData(true)"
+        @click.native="updateTokenExchangeData()"
       />
     </PaymentTitle>
 
@@ -39,7 +39,7 @@
         class="non-translate"
         text="Update"
         size="s"
-        @click.native="updateTokenExchangeData(false)"
+        @click.native="updateTokenExchangeData()"
       />
     </PaymentAction>
     <PaymentPrice
@@ -82,7 +82,7 @@
               ? 'inactive'
               : 'primary'
           "
-          @click.native="handleGoPayment()"
+          @click.native="handlePay()"
           size="l"
           text="Pay"
         />
@@ -111,7 +111,7 @@ import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentPrice from '@/components/organisms/Payment/Price'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import { Decimal } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -136,13 +136,14 @@ export default {
   data() {
     return {
       expired: false,
-      reloading: false,
       updating: false,
       exchangeDataExpireTimer: null,
       userSelectedTokenAllowance: null,
       requireAmount: null,
       balanceEquivalentAmount: 0,
       exchangeRate: 0,
+      platformFee: 0,
+      merchantReceiveAmountWei: 0,
       contract: {
         address: null,
         abi: null
@@ -267,11 +268,6 @@ export default {
         return this.userSelectedTokenBalance
       }
     },
-    userSelectedTokenPayAmountEquivalent() {
-      return this.isEnoughUserSelectedTokenBalance
-        ? this.merchantReceiveAmount
-        : this.balanceEquivalentAmount
-    },
     userSelectedTokenSymbol() {
       return this.userSelectedToken.symbol
     },
@@ -357,9 +353,6 @@ export default {
     isExpiredExchange() {
       return this.expired
     },
-    isReloading() {
-      return this.reloading
-    },
     isExchangeDataUpdating() {
       return this.updating
     },
@@ -392,6 +385,25 @@ export default {
         ])
       }
       return this.axios.get(url, request)
+    },
+    apiUpdateTransaction(transactionHash) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
+      return this.axios.patch(
+        url,
+        {
+          payment_token: this.paymentToken,
+          network_type: this.chainId,
+          contract_address: this.contract.address,
+          transaction_address: transactionHash,
+          wallet_address: this.userAccountAddress,
+          pay_symbol: this.userSelectedTokenSymbol,
+          pay_amount: this.userSelectedTokenPayAmount,
+          device_id: this.$store.state.payment.deviceId
+        },
+        {
+          withCredentials: true
+        }
+      )
     },
     getTokenExchangeDataFromContract() {
       return this.$web3
@@ -446,23 +458,30 @@ export default {
         this.userSelectedToken
       )
     },
+    sendPaymentTransactionToBlockChain() {
+      return this.$web3.sendPaymentTransaction(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken,
+        this.userSelectedTokenPayAmount,
+        this.$store.state.payment.symbol,
+        this.platformFee,
+        this.merchantReceiveAmountWei
+      )
+    },
     setExchangeDataExpireTimer() {
       return setTimeout(() => {
         this.expired = true
       }, this.EXCHANGE_RATE_EXPIRE_TIME)
     },
-    updateTokenExchangeData(reload) {
+    updateTokenExchangeData() {
       clearTimeout(this.exchangeDataExpireTimer)
       this.expired = false
-      this.reloading = reload
       this.updating = true
       this.getTokenExchangeDataFromContract()
         .then((exchangeData) => {
-          this.$store.dispatch('payment/updateFee', exchangeData.fee)
-          this.$store.dispatch(
-            'payment/updateAmountWei',
-            exchangeData.requestAmountWei
-          )
           this.$store.dispatch('payment/updateToken', {
             amount: exchangeData.requireAmount,
             rate: exchangeData.rate
@@ -470,10 +489,11 @@ export default {
           this.balanceEquivalentAmount = exchangeData.equivalentAmount
           this.requireAmount = exchangeData.requireAmount
           this.exchangeRate = exchangeData.rate
+          this.platformFee = exchangeData.fee
+          this.merchantReceiveAmountWei = exchangeData.requestAmountWei
         })
         .finally(() => {
           this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
-          this.reloading = false
           this.updating = false
         })
     },
@@ -509,16 +529,27 @@ export default {
           })
         })
     },
-    handleGoPayment() {
+    handlePay() {
       if (this.expired) return
-      this.$store.dispatch("payment/updateToken", {
-        amount: this.requireAmount,
-        rate: this.exchangeRate
-      })
-      this.$router.push({
-        name: 'detail',
-        params: { token: this.paymentToken }
-      })
+      this.$store.dispatch('wallet/updatePendingStatus', true)
+      this.sendPaymentTransactionToBlockChain()
+        .then((txHash) => {
+          this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
+          this.apiUpdateTransaction(txHash)
+            .then(() => {
+              this.$router.push({
+                name: 'result',
+                params: { token: this.paymentToken }
+              })
+            })
+            .catch((error) => {
+              console.log(error.data)
+            })
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+        })
     },
     handleChainChangedEvent(chainId) {
       chainId = this.web3Instance.utils.isHex(chainId)
@@ -570,11 +601,6 @@ export default {
             if (!this.isUserSelectedNativeToken) {
               this.userSelectedTokenAllowance = results[1]
             }
-            this.$store.dispatch('payment/updateFee', results[0].fee)
-            this.$store.dispatch(
-              'payment/updateAmountWei',
-              results[0].requestAmountWei
-            )
             this.$store.dispatch('payment/updateToken', {
               amount: results[0].requireAmount,
               rate: results[0].rate
@@ -582,6 +608,8 @@ export default {
             this.balanceEquivalentAmount = results[0].equivalentAmount
             this.requireAmount = results[0].requireAmount
             this.exchangeRate = results[0].rate
+            this.platformFee = results[0].fee
+            this.merchantReceiveAmountWei = results[0].requestAmountWei
             this.$parent.loading = false
             this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
 
