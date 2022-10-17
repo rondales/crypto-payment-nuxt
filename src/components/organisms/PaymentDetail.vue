@@ -689,10 +689,6 @@ export default {
   &__price {
     margin-bottom: 0.5rem;
   }
-  &__cap {
-    @include font(10px, 400, 0.04em, 1.8, $en_go);
-    margin-bottom: 1rem;
-  }
   &__btnwrap {
     .btn-allowance {
       &::v-deep {
@@ -706,9 +702,6 @@ export default {
           }
         }
       }
-    }
-    .via {
-      margin-top: 0.5rem;
     }
     div + div {
       margin-top: 0.5rem;
