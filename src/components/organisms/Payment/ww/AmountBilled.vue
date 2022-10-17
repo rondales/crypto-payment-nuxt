@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentText from "@/components/organisms/Payment/ww/Text";
 export default {
   name: "PaymentAmountBilled",
   components: {
