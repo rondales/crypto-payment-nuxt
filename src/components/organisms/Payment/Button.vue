@@ -189,6 +189,7 @@ export default {
       @include font(1.1rem, 600, $ls, $img_w, $en_go);
       @include media(sp) {
         max-width: 100%;
+        @include font(1.2rem, 600, $ls, 3rem, $en_go);
       }
       &::v-deep {
         .svg {

@@ -632,7 +632,10 @@ export default {
         // background: var(--Key1);
       }
       @include media(sp) {
-        height: calc(100vh - 90px - 360px);
+        height: fit-content;
+        &::-webkit-scrollbar {
+          width: 0px;
+        }
       }
     }
   }
@@ -642,6 +645,9 @@ export default {
     margin-bottom: 0.5rem;
     // text-align: center;
     @include font(1rem, 600, 0.04em, $lh, $en_go);
+    @include media(sp) {
+      font-size: 1.2rem;
+    }
   }
   &__text {
     margin-bottom: 0.5rem;

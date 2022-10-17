@@ -273,6 +273,9 @@ export default {
       display: inline-block;
       text-align: left;
     }
+    @include media(sp) {
+      font-size: 1.5rem;
+    }
   }
   &__form {
     margin-bottom: 1rem;

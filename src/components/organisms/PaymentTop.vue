@@ -84,6 +84,9 @@ export default {
 .payhead {
   @include flex(space-between, center);
   margin-bottom: 1rem;
+  @include media(sp) {
+    margin-bottom: 2rem;
+  }
 
   & > * {
     font-size: 0;
@@ -97,6 +100,9 @@ export default {
   }
   .logo {
     width: 3rem;
+    @include media(sp) {
+      width: 3.5rem;
+    }
   }
   .spin {
     width: 2rem;

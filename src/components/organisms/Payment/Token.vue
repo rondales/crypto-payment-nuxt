@@ -100,6 +100,11 @@ export default {
   }
   .symbol {
     @include font(1rem, 600, $ls, 1, $en_go);
+    @include media(sp) {
+      @include media(sp) {
+        font-size: 1.2rem;
+      }
+    }
   }
   .symboltext {
     @include font(10px, 400, $ls, 1, $en_go);
