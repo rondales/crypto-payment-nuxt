@@ -204,9 +204,13 @@ export default {
         : ''
     },
     backUrl() {
-      return this.isStatusSucceeded
-        ? this.successReturnUrl
-        : this.failureReturnUrl
+      let backUrl
+      if(this.isStatusSucceeded && this.successReturnUrl) {
+        backUrl = this.successReturnUrl
+      } else if (this.isStatusFailured && this.failureReturnUrl) {
+        backUrl = this.failureReturnUrl
+      }
+      return backUrl ? (backUrl + "?payment_token=" + this.$route.params.token) : null
     },
     isReceiptMode() {
       return 'rcpt' in this.$route.query
