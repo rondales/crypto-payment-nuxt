@@ -72,34 +72,24 @@ export default {
       console.log(uniswapTrade)
 
       if (uniswapTrade.allTriedRoutesQuotes.length > 0) {
-        for (let i = 0; i < uniswapTrade.allTriedRoutesQuotes.length; i++) {
-          const bestRoute = uniswapTrade.allTriedRoutesQuotes[i]
-          console.log(bestRoute)
-          if (bestRoute.uniswapVersion == 'v3') {
-            bestExchange.name = 'uniswapV3'
-            bestExchange.exchange = exchanges.uniswapV3.address
-            bestExchange.flag = exchanges.uniswapV3.flag
-            bestExchange.pathParam = encodePath(
-              bestRoute.routePathArray,
-              // Ref: https://github.com/Uniswap/v3-periphery/blob/9ca9575d09b0b8d985cc4d9a0f689f7a4470ecb7/test/shared/constants.ts#L5
-              bestRoute.liquidityProviderFeesV3.map((item) => item * 1000000)
-            )
-            bestExchange.price = bestRoute.expectedConvertQuote
-            break
-          } else {
-            if (
-              bestRoute.routePathArray.length == path.length &&
-              (path.length == 2 ||
-                (path.length == 3 && bestRoute.routePathArray[1] == path[1]))
-            ) {
-              bestExchange.name = 'uniswapV2'
-              bestExchange.exchange = exchanges.uniswapV2.address
-              bestExchange.flag = exchanges.uniswapV2.flag
-              bestExchange.price = bestRoute.expectedConvertQuote
-              break
-            }
-          }
+        const bestRoute = uniswapTrade.allTriedRoutesQuotes[0]
+        console.log(bestRoute)
+        if (bestRoute.uniswapVersion == 'v3') {
+          bestExchange.name = 'uniswapV3'
+          bestExchange.exchange = exchanges.uniswapV3.address
+          bestExchange.flag = exchanges.uniswapV3.flag
+          bestExchange.pathParam = encodePath(
+            bestRoute.routePathArray,
+            // Ref: https://github.com/Uniswap/v3-periphery/blob/9ca9575d09b0b8d985cc4d9a0f689f7a4470ecb7/test/shared/constants.ts#L5
+            bestRoute.liquidityProviderFeesV3.map((item) => item * 1000000)
+          )
+        } else {
+          bestExchange.name = 'uniswapV2'
+          bestExchange.exchange = exchanges.uniswapV2.address
+          bestExchange.flag = exchanges.uniswapV2.flag
+          bestExchange.pathParam = bestRoute.routePathArray
         }
+        bestExchange.price = bestRoute.expectedConvertQuote
       }
     } catch (error) {
       console.error(error)
