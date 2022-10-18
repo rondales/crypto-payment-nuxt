@@ -621,7 +621,7 @@ export default {
   }
   &::v-deep {
     .body {
-      height: calc(86vh - 400px);
+      max-height: calc(86vh - 400px);
       overflow-y: scroll;
       min-height: 150px;
       &::-webkit-scrollbar {
