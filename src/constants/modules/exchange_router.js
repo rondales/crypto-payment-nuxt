@@ -16,9 +16,9 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
           pairAddress: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
-          routerAddress: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
+          routerAddress: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
         }
-      },
+      }
     }
   },
   5: {
@@ -37,9 +37,9 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
-      },
+      }
     }
   },
   56: {
@@ -50,7 +50,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -59,7 +59,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 56,
@@ -68,7 +68,38 @@ export const EXCHANGE_ROUTERS = {
           name: 'Wrapped Token',
           symbol: 'WETH'
         },
-      },
+        baseTokens: {
+          usdt: {
+            chainId: 56,
+            contractAddress: '0x55d398326f99059ff775485246999027b3197955',
+            decimals: 18,
+            name: 'USDT',
+            symbol: 'USDT'
+          },
+          usdc: {
+            chainId: 56,
+            contractAddress: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+            decimals: 18,
+            name: 'USDC',
+            symbol: 'USDC'
+          },
+          dai: {
+            chainId: 56,
+            contractAddress: '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3',
+            decimals: 18,
+            name: 'DAI',
+            symbol: 'DAI'
+          },
+          // use key for BUSD
+          wbtc: {
+            chainId: 56,
+            contractAddress: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+            decimals: 18,
+            name: 'BUSD',
+            symbol: 'BUSD'
+          },
+        }
+      }
     },
     pancakeswap: {
       address: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
@@ -77,7 +108,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
           pairAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-          routerAddress: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
+          routerAddress: '0x10ED43C718714eb63d5aA57B78B54704E256024E'
         }
       },
       customNetwork: {
@@ -86,7 +117,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 56,
@@ -94,8 +125,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     biswap: {
       address: '0x3a6d8ca21d1cf76f653a67577fa0d27453350dd8',
@@ -104,7 +135,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x858E3312ed3A876947EA49d572A7C42DE08af7EE',
           pairAddress: '0x858E3312ed3A876947EA49d572A7C42DE08af7EE',
-          routerAddress: '0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8',
+          routerAddress: '0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8'
         }
       },
       customNetwork: {
@@ -113,7 +144,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 56,
@@ -121,8 +152,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   },
   97: {
@@ -133,7 +164,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -142,7 +173,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x73CCde5acdb9980f54BcCc0483B28B8b4a537b4A',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 97,
@@ -150,8 +181,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     pancakeswap: {
       address: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3',
@@ -160,7 +191,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
           pairAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
-          routerAddress: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3',
+          routerAddress: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3'
         }
       },
       customNetwork: {
@@ -169,7 +200,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x73CCde5acdb9980f54BcCc0483B28B8b4a537b4A',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 97,
@@ -177,8 +208,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   },
   137: {
@@ -189,7 +220,7 @@ export const EXCHANGE_ROUTERS = {
         v3Override: {
           factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
           quoterAddress: '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
-          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564'
         }
       },
       customNetwork: {
@@ -197,7 +228,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 137,
@@ -205,8 +236,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
@@ -215,7 +246,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -224,7 +255,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 137,
@@ -232,8 +263,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     quickswap: {
       address: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
@@ -242,7 +273,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
           pairAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
-          routerAddress: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
+          routerAddress: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff'
         }
       },
       customNetwork: {
@@ -251,7 +282,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 137,
@@ -259,8 +290,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   },
   80001: {
@@ -271,7 +302,7 @@ export const EXCHANGE_ROUTERS = {
         v3Override: {
           factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
           quoterAddress: '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
-          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+          routerAddress: '0xE592427A0AEce92De3Edee1F18E0157C05861564'
         }
       },
       customNetwork: {
@@ -280,7 +311,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 80001,
@@ -288,8 +319,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
@@ -298,7 +329,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -307,7 +338,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 80001,
@@ -315,8 +346,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     quickswap: {
       address: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
@@ -325,7 +356,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
           pairAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
-          routerAddress: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
+          routerAddress: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff'
         }
       },
       customNetwork: {
@@ -334,7 +365,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 80001,
@@ -342,8 +373,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   },
   43114: {
@@ -354,7 +385,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -363,7 +394,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43114,
@@ -371,8 +402,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
@@ -381,7 +412,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xefa94DE7a4656D787667C749f7E1223D71E9FD88',
           pairAddress: '0xefa94DE7a4656D787667C749f7E1223D71E9FD88',
-          routerAddress: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
+          routerAddress: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106'
         }
       },
       customNetwork: {
@@ -390,7 +421,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43114,
@@ -398,8 +429,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     traderjoe: {
       address: '0x60ae616a2155ee3d9a68541ba4544862310933d4',
@@ -408,7 +439,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10',
           pairAddress: '0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10',
-          routerAddress: '0x60aE616a2155Ee3d9A68541Ba4544862310933d4',
+          routerAddress: '0x60aE616a2155Ee3d9A68541Ba4544862310933d4'
         }
       },
       customNetwork: {
@@ -417,7 +448,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43114,
@@ -425,8 +456,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   },
   43113: {
@@ -437,7 +468,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
           pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
-          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
         }
       },
       customNetwork: {
@@ -446,7 +477,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43113,
@@ -454,8 +485,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     pangolin: {
       address: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860',
@@ -464,7 +495,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
           pairAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
-          routerAddress: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860',
+          routerAddress: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860'
         }
       },
       customNetwork: {
@@ -473,7 +504,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43113,
@@ -481,8 +512,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     },
     traderjoe: {
       address: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
@@ -491,7 +522,7 @@ export const EXCHANGE_ROUTERS = {
         v2Override: {
           factoryAddress: '0xF5c7d9733e5f53abCC1695820c4818C59B457C2C',
           pairAddress: '0xF5c7d9733e5f53abCC1695820c4818C59B457C2C',
-          routerAddress: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
+          routerAddress: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901'
         }
       },
       customNetwork: {
@@ -500,7 +531,7 @@ export const EXCHANGE_ROUTERS = {
         multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
         nativeCurrency: {
           name: 'native-currency',
-          symbol: 'nc',
+          symbol: 'nc'
         },
         nativeWrappedTokenInfo: {
           chainId: 43113,
@@ -508,8 +539,8 @@ export const EXCHANGE_ROUTERS = {
           decimals: 18,
           name: 'Wrapped Token',
           symbol: 'WETH'
-        },
-      },
+        }
+      }
     }
   }
 }
