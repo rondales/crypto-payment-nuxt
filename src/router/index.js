@@ -143,13 +143,6 @@ const router = new Router({
               meta: { title: 'Slash Payment' }
             },
             {
-              name: "exchange",
-              path: "/payment/exchange/:token",
-              alias: ["/payments-uiswitchable/exchange/:token/basic", "/payments-uiswitchable/exchange/:token"],
-              component: () => import("@/components/organisms/PaymentExchange"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
               name: "detail",
               path: "/payment/detail/:token",
               alias: ["/payments-uiswitchable/detail/:token/basic", "/payments-uiswitchable/detail/:token" ],

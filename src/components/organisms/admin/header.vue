@@ -269,7 +269,7 @@ export default {
       return this.$store.state.account.balance
     },
     show() {
-      const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|exchange|detail)\/.+)/
+      const pathPattern = /^\/(admin$|admin\/.+)|(payment\/(wallets|token|detail)\/.+)/
       return pathPattern.test(this.$route.path)
     },
     connected() {

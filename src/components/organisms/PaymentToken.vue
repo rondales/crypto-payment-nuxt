@@ -461,7 +461,7 @@ export default {
         amount: null
       })
       this.$router.push({
-        name: 'exchange',
+        name: 'detail',
         params: { token: this.paymentToken }
       })
     },

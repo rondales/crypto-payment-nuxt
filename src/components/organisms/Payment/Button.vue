@@ -10,7 +10,7 @@
         <div class="svg" v-if="icon == 'logo-icon'">
           <LogoIcon />
         </div>
-        <Icon v-else :path="icon" />
+        <Icon v-else :type="iconType" :path="icon" />
       </div>
       <div class="textwrap" v-if="text">
         <span v-html="text"></span>
@@ -45,6 +45,10 @@ export default {
     icon: {
       type: String,
       default: ''
+    },
+    iconType: {
+      type: String,
+      default: 'svg'
     },
     url: {
       type: String

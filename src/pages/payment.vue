@@ -103,7 +103,7 @@ export default {
       return this.$route.name === 'wallets'
     },
     isRequestConnectedWalletPage() {
-      const targetPages = ['tokens', 'exchange', 'detail']
+      const targetPages = ['tokens', 'detail']
       return targetPages.includes(this.$route.name)
     },
     isRequestResultPage() {
