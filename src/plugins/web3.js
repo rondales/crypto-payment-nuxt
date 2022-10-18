@@ -800,11 +800,12 @@ const getBestRate = async function (
         else if (exchangeName === 'uniswapV3')
           uniswapVersions.push(UniswapVersion.v3)
         else if (Object.hasOwnProperty.call(bestRoute, exchangeName)) {
-          const nextBestExchange = await bestRoute[exchangeName].getBestRoute(
-            web3,
+          const nextBestExchange = await bestRoute.dexV2.getBestRoute(
+            exchangeName,
             chainId,
+            rpcUrl,
+            walletAddress,
             path,
-            decimals,
             paymentAmount
           )
 

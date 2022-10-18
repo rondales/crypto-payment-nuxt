@@ -11,7 +11,14 @@ export const EXCHANGE_ROUTERS = {
     },
     sushiswap: {
       address: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
+          pairAddress: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
+          routerAddress: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
+        }
+      },
     }
   },
   5: {
@@ -25,31 +32,153 @@ export const EXCHANGE_ROUTERS = {
     },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
     }
   },
   56: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 56,
+          contractAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     pancakeswap: {
       address: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+          pairAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+          routerAddress: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 56,
+          contractAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     biswap: {
       address: '0x3a6d8ca21d1cf76f653a67577fa0d27453350dd8',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x858E3312ed3A876947EA49d572A7C42DE08af7EE',
+          pairAddress: '0x858E3312ed3A876947EA49d572A7C42DE08af7EE',
+          routerAddress: '0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xC50F4c1E81c873B2204D7eFf7069Ffec6Fbe136D',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 56,
+          contractAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   },
   97: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x73CCde5acdb9980f54BcCc0483B28B8b4a537b4A',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 97,
+          contractAddress: '0x094616f0bdfb0b526bd735bf66eca0ad254ca81f',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     pancakeswap: {
       address: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
+          pairAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
+          routerAddress: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x73CCde5acdb9980f54BcCc0483B28B8b4a537b4A',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 97,
+          contractAddress: '0x094616f0bdfb0b526bd735bf66eca0ad254ca81f',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   },
   137: {
@@ -81,11 +210,57 @@ export const EXCHANGE_ROUTERS = {
     },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 137,
+          contractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     quickswap: {
       address: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
+          pairAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
+          routerAddress: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x275617327c958bD06b5D6b871E7f491D76113dd8',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 137,
+          contractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   },
   80001: {
@@ -118,39 +293,223 @@ export const EXCHANGE_ROUTERS = {
     },
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 80001,
+          contractAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     quickswap: {
       address: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
+          pairAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
+          routerAddress: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 80001,
+          contractAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   },
   43114: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43114,
+          contractAddress: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     pangolin: {
       address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
-      flag: '0x20'
+      flag: '0x20',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xefa94DE7a4656D787667C749f7E1223D71E9FD88',
+          pairAddress: '0xefa94DE7a4656D787667C749f7E1223D71E9FD88',
+          routerAddress: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43114,
+          contractAddress: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     traderjoe: {
       address: '0x60ae616a2155ee3d9a68541ba4544862310933d4',
-      flag: '0x20'
+      flag: '0x20',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10',
+          pairAddress: '0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10',
+          routerAddress: '0x60aE616a2155Ee3d9A68541Ba4544862310933d4',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43114,
+          contractAddress: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   },
   43113: {
     sushiswap: {
       address: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      flag: '0x01'
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          pairAddress: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+          routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43113,
+          contractAddress: '0x1d308089a2d1ced3f1ce36b1fcaf815b07217be3',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     pangolin: {
-      address: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106',
-      flag: '0x20'
+      address: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860',
+      flag: '0x20',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
+          pairAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
+          routerAddress: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43113,
+          contractAddress: '0x1d308089a2d1ced3f1ce36b1fcaf815b07217be3',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     },
     traderjoe: {
       address: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
-      flag: '0x20'
+      flag: '0x20',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xF5c7d9733e5f53abCC1695820c4818C59B457C2C',
+          pairAddress: '0xF5c7d9733e5f53abCC1695820c4818C59B457C2C',
+          routerAddress: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
+        }
+      },
+      customNetwork: {
+        nameNetwork: 'custom',
+        // https://www.npmjs.com/package/ethereum-multicall
+        multicallContractAddress: '0x3D015943d2780fE97FE3f69C97edA2CCC094f78c',
+        nativeCurrency: {
+          name: 'native-currency',
+          symbol: 'nc',
+        },
+        nativeWrappedTokenInfo: {
+          chainId: 43113,
+          contractAddress: '0x1d308089a2d1ced3f1ce36b1fcaf815b07217be3',
+          decimals: 18,
+          name: 'Wrapped Token',
+          symbol: 'WETH'
+        },
+      },
     }
   }
 }
