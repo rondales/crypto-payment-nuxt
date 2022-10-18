@@ -328,7 +328,7 @@ export default {
   }
   .payment {
     @include media(sp) {
-      padding-top: 50px;
+      padding-top: 59px;
       padding-bottom: 3.5rem;
     }
   }

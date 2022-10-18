@@ -26,6 +26,7 @@
       :status="isCurrentTokenImportTab"
       @changeToList="switchTab(LIST_TAB)"
       @changeToToken="switchTab(TOKEN_IMPORT_TAB)"
+      :style="tabBodyStyle"
     >
       <div v-if="isCurrentListTab" class="tab__wrap">
         <!-- <p class="tokentab__title"><span>Select token</span></p> -->
@@ -152,6 +153,9 @@ export default {
       contract: {
         address: null,
         abi: null
+      },
+      tabBodyStyle: {
+        '--wh': '100vh'
       }
     }
   },
@@ -498,6 +502,13 @@ export default {
         this.searchedTokenCount = 0
         this.requireSwitchNetwork()
       }
+    },
+    handleWindowResize() {
+      this.getWindowSize()
+    },
+    getWindowSize() {
+      let height = window.innerHeight - 42 - 111 - 90 - 101 - 24
+      this.tabBodyStyle['--wh'] = `${height}px`
     }
   },
   created() {
@@ -535,6 +546,8 @@ export default {
     } else {
       this.requireSwitchNetwork()
     }
+    this.getWindowSize()
+    window.addEventListener('resize', this.handleWindowResize)
   },
   beforeDestroy() {
     this.$parent.loading = false
@@ -603,6 +616,9 @@ export default {
   }
 }
 .tab {
+  @include media(sp) {
+    max-height: var(--wh);
+  }
   &::v-deep {
     .body {
       height: calc(86vh - 400px);
@@ -633,9 +649,11 @@ export default {
       }
       @include media(sp) {
         height: fit-content;
-        &::-webkit-scrollbar {
-          width: 0px;
-        }
+        max-height: calc(var(--wh) - 30px);
+        // height: fit-content;
+        // &::-webkit-scrollbar {
+        //   width: 0px;
+        // }
       }
     }
   }
