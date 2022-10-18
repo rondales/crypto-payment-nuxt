@@ -298,6 +298,9 @@ export default {
 
     .progress-wrap {
       // height: 25vh;
+      @include media(sp) {
+        transform: translateY(-3rem);
+      }
       .radial-progress-container {
         margin-left: auto;
         margin-right: auto;
