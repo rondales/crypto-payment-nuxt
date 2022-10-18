@@ -3,7 +3,10 @@ import {
   UniswapPair,
   UniswapPairSettings
 } from 'simple-uniswap-sdk'
-import { EXCHANGE_ROUTERS } from '@/constants'
+import {
+  EXCHANGE_ROUTERS,
+  SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS
+} from '@/constants'
 
 // Ref: https://github.com/Uniswap/v3-periphery/blob/9ca9575d09b0b8d985cc4d9a0f689f7a4470ecb7/test/shared/path.ts
 const encodePath = (path, fees) => {
@@ -41,13 +44,14 @@ export default {
       pathParam: ''
     }
     const exchanges = EXCHANGE_ROUTERS[chainId]
+    const customNetworkConfig = SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS[chainId]
 
     try {
       const cloneUniswapContractDetails = exchanges.uniswapV3
         ? exchanges.uniswapV3.cloneUniswapContractDetails
         : undefined
-      const customNetwork = exchanges.uniswapV3
-        ? exchanges.uniswapV3.customNetwork
+      const customNetwork = customNetworkConfig
+        ? customNetworkConfig.customNetwork
         : undefined
       console.log(cloneUniswapContractDetails)
       console.log(customNetwork)

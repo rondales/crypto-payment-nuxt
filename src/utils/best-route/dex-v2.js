@@ -4,7 +4,10 @@ import {
   UniswapPairSettings,
   UniswapVersion
 } from 'simple-uniswap-sdk'
-import { EXCHANGE_ROUTERS } from '@/constants'
+import {
+  EXCHANGE_ROUTERS,
+  SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS
+} from '@/constants'
 
 export default {
   getBestRoute: async (
@@ -23,14 +26,15 @@ export default {
       pathParam: ''
     }
     const exchanges = EXCHANGE_ROUTERS[chainId]
+    const customNetworkConfig = SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS[chainId]
     console.log(dexName)
 
     try {
       const cloneUniswapContractDetails = exchanges[dexName]
         ? exchanges[dexName].cloneUniswapContractDetails
         : undefined
-      const customNetwork = exchanges[dexName]
-        ? exchanges[dexName].customNetwork
+      const customNetwork = customNetworkConfig
+        ? customNetworkConfig.customNetwork
         : undefined
       console.log(cloneUniswapContractDetails)
       console.log(customNetwork)
