@@ -62,7 +62,7 @@ export default {
     setIconData(routeName) {
       this.invoiceIcon.icon = ''
       this.invoiceIcon.func = ''
-      if (['token', 'exchange', 'detail'].includes(routeName)) {
+      if (['token', 'detail'].includes(routeName)) {
         // this.invoiceIcon.icon = 'left-arrow'
         this.invoiceIcon.icon = 'icon-back'
         this.invoiceIcon.func = 'prevPage'

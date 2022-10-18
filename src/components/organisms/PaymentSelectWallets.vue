@@ -169,7 +169,7 @@ export default {
     }, 1500)
   },
   beforeRouteLeave(to, from, next) {
-    const connectedWalletPages = ['tokens', 'exchange', 'detail']
+    const connectedWalletPages = ['tokens', 'detail']
     if (connectedWalletPages.includes(to.name)) {
       next(false)
     } else {
