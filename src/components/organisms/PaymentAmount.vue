@@ -201,10 +201,11 @@ export default {
     apiUpdateTransaction() {
       const url =
         process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
+      const amount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
       const params = {
         payment_token: this.$route.params.token,
         base_currency: CURRENCIES[this.selectedCurrency].name,
-        base_amount: this.legalCurrencyAmount,
+        base_amount: amount,
         exchanged_amount: this.exchangedAmount,
         rate: this.exchangeRate,
         margin_rate: this.exchangeMarginRate
