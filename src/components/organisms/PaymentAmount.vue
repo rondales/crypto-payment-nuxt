@@ -8,7 +8,7 @@
       layout="c"
     /> -->
     <div class="amount__title">
-      <img class="image" src="@/assets/images/logo-icon.svg" />
+      <!-- <img class="image" src="@/assets/images/logo-icon.svg" /> -->
       <p class="amount__subtitle"><span>How much would you pay?</span></p>
     </div>
     <div class="amount__form">
@@ -276,7 +276,8 @@ export default {
 @import '@/assets/scss/delaunay.scss';
 .amount {
   &__title {
-    @include flex(flex-start, center);
+    // @include flex(flex-start, center);
+    margin: 1rem;
     margin-bottom: 3rem;
     gap: 1rem;
     .svg,
@@ -324,7 +325,7 @@ export default {
         text-align: right;
         @include media(sp) {
           // padding: 0.3rem 0.5rem;
-          // font-size: rem_sp(1);
+          font-size: 2.488rem;
         }
       }
     }
