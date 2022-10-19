@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="linear-gradient" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#49a4f8"/>
+      <stop offset="1" stop-color="#803de4"/>
+    </linearGradient>
+  </defs>
+  <g id="logoicon" data-name="logoicon" transform="translate(2846.394 676.877)">
+    <rect id="logoicon_box" data-name="logoicon_box" width="120" height="120" rx="25.13" transform="translate(-2846.394 -676.877)" fill="url(#linear-gradient)"/>
+    <rect id="logoicon_slash" data-name="logoicon_slash" width="8.773" height="96.952" transform="translate(-2755.412 -654.247) rotate(45)" fill="#fff"/>
+  </g>
+</svg>

@@ -13,7 +13,6 @@
           ><PaymentText type="h5" :html="nav.title"
         /></a>
       </div>
-      <!-- TODO SPの時、この中にwalletとかを表示したい -->
     </div>
     <div class="pay__box">
       <div class="pay__box__wrap">
@@ -38,6 +37,7 @@
         <div v-show="!initializing" class="payment">
           <div class="pay__head">
             <!-- <PaymentIdTable class="pay__head__ids" :table="idTable" /> -->
+            <!-- TODO Amountの時PaymentTopを非表示 -->
             <PaymentTop
               :showMenu="showMenu"
               :loading="loading"

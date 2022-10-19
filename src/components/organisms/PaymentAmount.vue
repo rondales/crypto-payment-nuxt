@@ -7,15 +7,11 @@
       emoji="&#128591;"
       layout="c"
     /> -->
-    <p class="amount__subtitle"><span>How much would you pay?</span></p>
-    <PaymentForm class="amount__form">
-      <input
-        v-model="legalCurrencyAmount"
-        class="price"
-        type="number"
-        inputmode="decimal"
-        placeholder="0"
-      />
+    <div class="amount__title">
+      <img class="image" src="@/assets/images/logo-icon.svg" />
+      <p class="amount__subtitle"><span>How much would you pay?</span></p>
+    </div>
+    <div class="amount__form">
       <div class="selectwrap">
         <PaymentIcon :path="selectedCurrencyIcon" />
         <select name="currency" v-model="selectedCurrency">
@@ -29,14 +25,24 @@
           </option>
         </select>
       </div>
-    </PaymentForm>
-    <PaymentAmountBilled
+      <div class="inputwrap">
+        <input
+          v-model="legalCurrencyAmount"
+          class="price"
+          type="number"
+          inputmode="decimal"
+          placeholder="0"
+        />
+        <span>{{ selectedCurrency }}</span>
+      </div>
+    </div>
+    <!-- <PaymentAmountBilled
       class="amount__bill"
       :symbol="receiveTokenSymbol"
       :icon="receiveTokenIcon"
       :price="exchangedAmount"
       :priceClass="{ inactive: requireUpdateExchange }"
-    />
+    /> -->
     <div class="amount__pay">
       <!-- <PaymentTitle
         class="amount__pay__title"
@@ -61,7 +67,7 @@
       <PaymentButton
         class="amount__pay__button"
         size="l"
-        text="Go Payment"
+        :text="'Pay ' + receiveTokenSymbol + ' ' + exchangedAmount"
         icon="logo-icon"
         :color="
           requireUpdateExchange || isInvalidAmount ? 'inactive' : 'primary'
@@ -69,17 +75,23 @@
         :loading="loading"
         @click.native="next"
       />
+      <PaymentVia
+        class="amount__pay__via"
+        :text="receiveTokenSymbol + ' ' + exchangedAmount"
+        :icon="false"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { Decimal } from 'decimal.js'
-import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
-import PaymentForm from '@/components/organisms/Payment/Form'
+// import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+// import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentIcon from '@/components/organisms/Payment/Icon'
+import PaymentVia from '@/components/organisms/Payment/Via'
 import { errorCodeList } from '@/enum/error_code'
 import { CURRENCIES } from '@/constants'
 
@@ -109,11 +121,12 @@ export default {
     }
   },
   components: {
-    PaymentAmountBilled,
+    // PaymentAmountBilled,
     PaymentButton,
-    PaymentForm,
+    // PaymentForm,
     PaymentAction,
-    PaymentIcon
+    PaymentIcon,
+    PaymentVia
   },
   watch: {
     legalCurrencyAmount: function () {
@@ -262,11 +275,18 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .amount {
-  // &__title {
-  //   margin-bottom: 2rem;
-  // }
+  &__title {
+    @include flex(flex-start, center);
+    margin-bottom: 3rem;
+    gap: 1rem;
+    .svg,
+    .image {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
   &__subtitle {
-    margin-bottom: 0.5rem;
+    // margin-bottom: 0.5rem;
     @include font(1.2rem, 600, $ls, $lh, $en_go);
     text-align: center;
     span {
@@ -278,7 +298,8 @@ export default {
     }
   }
   &__form {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    $formh: 2rem;
     .price {
       -moz-appearance: textfield;
       min-width: 0;
@@ -288,18 +309,76 @@ export default {
       -webkit-appearance: none;
       margin: 0;
     }
+    .inputwrap {
+      border-bottom: 1px solid var(--Text);
+      @include flex(flex-start, baseline);
+      @include font(1.44rem, 400, $ls, 1, $en_go);
+      padding-bottom: 0.5rem;
+      // margin-bottom: 1rem;
+      input {
+        @include font(2.074rem, 600, $ls, 1, $en_go);
+        padding: 0rem 0.5rem;
+        display: block;
+
+        flex: 1;
+        text-align: right;
+        @include media(sp) {
+          // padding: 0.3rem 0.5rem;
+          // font-size: rem_sp(1);
+        }
+      }
+    }
+
     .selectwrap {
       @include flex(flex-start, center);
-      flex-wrap: nowrap;
-      width: auto;
-      padding-left: 1rem;
-      border-left: 1px solid var(--Border);
+      // flex-wrap: nowrap;
+      // width: auto;
+      // padding-left: 1rem;
+      // border-left: 1px solid var(--Border);
+      // display: block;
+      // width: 100%;
+      position: relative;
+      margin-bottom: 3rem;
+
+      @include media(pc) {
+        &:hover {
+          &::after {
+            background-color: var(--Text);
+            color: var(--Base);
+          }
+        }
+      }
       .svg {
         width: 1.8rem;
         height: 1.8rem;
       }
+      &::after {
+        content: 'Currency Change';
+        position: relative;
+        z-index: 1;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        @include font(10px, 500, 0.04em, 2, $en_go);
+        border: 1px solid var(--Border);
+        padding: 0 1rem;
+        border-radius: 3rem;
+        transform-origin: center center;
+        transform: translateY(-50%);
+        transition: background-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+          color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      }
       select {
+        position: relative;
+        z-index: 10;
+        appearance: none;
+        // text-align: center;
+        padding: 0rem 0.5rem;
         flex: 1;
+        @include font(rem(1), 600, $ls, $formh, $en_go);
+        @include media(sp) {
+          font-size: rem_sp(1);
+        }
       }
     }
   }
@@ -314,6 +393,10 @@ export default {
     }
     &__button {
       margin-top: 2rem;
+    }
+    &__via {
+      margin-top: 1rem;
+      display: none;
     }
   }
 }
