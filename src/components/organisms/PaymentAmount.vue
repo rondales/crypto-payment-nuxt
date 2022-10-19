@@ -1,14 +1,6 @@
 <template>
   <div :class="classes">
-    <!-- <PaymentTitle
-      class="amount__title"
-      type="h3_g"
-      html="Enter the payment amount"
-      emoji="&#128591;"
-      layout="c"
-    /> -->
     <div class="amount__title">
-      <!-- <img class="image" src="@/assets/images/logo-icon.svg" /> -->
       <p class="amount__subtitle"><span>How much would you pay?</span></p>
     </div>
     <div class="amount__form">
@@ -38,49 +30,15 @@
         <span>{{ selectedCurrency }}</span>
       </div>
     </div>
-    <!-- <PaymentAmountBilled
-      class="amount__bill"
-      :symbol="receiveTokenSymbol"
-      :icon="receiveTokenIcon"
-      :price="exchangedAmount"
-      :priceClass="{ inactive: requireUpdateExchange }"
-    /> -->
     <div class="amount__pay">
-      <!-- <PaymentTitle
-        class="amount__pay__title"
-        v-if="!requireUpdateExchange"
-        type="h3"
-        html="Payment with Web3 Wallet"
-        layout="c"
-      /> -->
-      <PaymentAction
-        class="amount__pay__action"
-        v-if="requireUpdateExchange"
-        icon="attention"
-        text="Price Updated"
-      >
-        <PaymentButton
-          text="Accept"
-          size="s"
-          @click.native="updateExchangeData()"
-        />
-      </PaymentAction>
-
       <PaymentButton
         class="amount__pay__button"
         size="l"
         :text="'Pay ' + receiveTokenSymbol + ' ' + exchangedAmount"
         icon="logo-icon"
-        :color="
-          requireUpdateExchange || isInvalidAmount ? 'inactive' : 'primary'
-        "
+        :color="isInvalidAmount ? 'inactive' : 'primary'"
         :loading="loading"
         @click.native="next"
-      />
-      <PaymentVia
-        class="amount__pay__via"
-        :text="receiveTokenSymbol + ' ' + exchangedAmount"
-        :icon="false"
       />
     </div>
   </div>
@@ -88,12 +46,8 @@
 
 <script>
 import { Decimal } from 'decimal.js'
-// import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
-// import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
-import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentIcon from '@/components/organisms/Payment/Icon'
-import PaymentVia from '@/components/organisms/Payment/Via'
 import { errorCodeList } from '@/enum/error_code'
 import { CURRENCIES } from '@/constants'
 
@@ -106,7 +60,6 @@ export default {
   data() {
     return {
       loading: false,
-      requireUpdateExchange: false,
       legalCurrencyAmount: null,
       selectedCurrency: null,
       exchangedAmount: 0,
@@ -123,19 +76,19 @@ export default {
     }
   },
   components: {
-    // PaymentAmountBilled,
     PaymentButton,
-    // PaymentForm,
-    PaymentAction,
-    PaymentIcon,
-    PaymentVia
+    PaymentIcon
   },
   watch: {
-    selectedCurrency(currency) {
-      this.updateExchangeData(currency)
+    selectedCurrency() {
+      clearInterval(this.exchangeTimer)
+      this.updateExchangeData()
     }
   },
   computed: {
+    RATE_UPDATE_INTERVAL() {
+      return 60000
+    },
     receiveTokenSymbol() {
       return this.$store.state.payment.symbol
     },
@@ -152,9 +105,6 @@ export default {
         }
       )
       return list
-    },
-    selectedCurrencyName() {
-      return CURRENCIES[this.selectedCurrency].name
     },
     selectedCurrencyIcon() {
       return CURRENCIES[this.selectedCurrency].iconPath
@@ -213,17 +163,17 @@ export default {
       this.selectedCurrency = Object.values(this.currencies)[0].name
     },
     updateExchangeData(currency = null) {
+      console.log('updateExchangeData')
       if (currency === null) currency = this.selectedCurrency
       this.apiGetExchangeRate(currency)
         .then((response) => {
           this.exchangeRate = response.data.include_margin_rate
           this.exchangeMarginRate = response.data.margin_rate
           if (this.legalCurrencyAmount) this.calculationExchange()
-          this.requireUpdateExchange = false
-          this.exchangeTimer = setTimeout(() => {
-            this.requireUpdateExchange = true
-            clearTimeout(this.exchangeTimer)
-          }, 60000)
+          this.exchangeTimer = setInterval(() => {
+            clearInterval(this.exchangeTimer)
+            this.updateExchangeData()
+          }, this.RATE_UPDATE_INTERVAL)
           this.$emit('incrementProgressCompletedSteps')
           setTimeout(() => {
             this.$emit('updateInitializingStatus', false)
@@ -261,7 +211,7 @@ export default {
       return this.axios.patch(url, params, { withCredentials: true })
     },
     next() {
-      if (this.requireUpdateExchange || this.isInvalidAmount) return
+      if (this.isInvalidAmount) return
       this.loading = true
       this.apiUpdateTransaction()
         .then(() => {
@@ -294,7 +244,7 @@ export default {
   },
   created() {
     this.updateDefaultCurrency()
-    this.updateExchangeData(this.selectedCurrency)
+    this.updateExchangeData()
   }
 }
 </script>
