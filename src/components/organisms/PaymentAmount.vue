@@ -149,8 +149,9 @@ export default {
     },
     calculationExchange() {
       if (this.legalCurrencyAmount && this.exchangeRate) {
+        const amount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
         this.exchangedAmount = Decimal.div(
-          this.legalCurrencyAmount,
+          amount,
           this.exchangeRate
         )
           .toDP(6, Decimal.ROUND_CEIL)
