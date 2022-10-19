@@ -174,7 +174,16 @@ export default {
         return
       }
       if (event.type === 'input') {
-        this.legalCurrencyAmount = this.legalCurrencyAmount.replace(/[^0-9.]/gi, '')
+        let amount = this.legalCurrencyAmount.replace(/[^0-9.]/gi, '')
+        if (event.data === '.' && (amount.match(/\./g) || []).length > 1) {
+          amount = amount.slice(0, -1)
+        }
+        let explodeAmount = amount.split('.')
+        if (explodeAmount.length > 1) {
+          explodeAmount[1] = explodeAmount[1].slice(0, 2)
+          amount = explodeAmount.join('.')
+        }
+        this.legalCurrencyAmount = amount
         this.calculationExchange()
         return
       }
