@@ -27,11 +27,13 @@
       </div>
       <div class="inputwrap">
         <input
-          v-model="legalCurrencyAmount"
           class="price"
-          type="number"
           inputmode="decimal"
           placeholder="0"
+          v-model="legalCurrencyAmount"
+          @input="formatFiatAmount"
+          @focus="formatFiatAmount"
+          @blur="formatFiatAmount"
         />
         <span>{{ selectedCurrency }}</span>
       </div>
@@ -129,10 +131,7 @@ export default {
     PaymentVia
   },
   watch: {
-    legalCurrencyAmount: function () {
-      this.calculationExchange()
-    },
-    selectedCurrency: function (currency) {
+    selectedCurrency(currency) {
       this.updateExchangeData(currency)
     }
   },
@@ -169,6 +168,26 @@ export default {
     }
   },
   methods: {
+    formatFiatAmount(event) {
+      if (this.legalCurrencyAmount === null || this.legalCurrencyAmount === '') {
+        this.calculationExchange()
+        return
+      }
+      if (event.type === 'input') {
+        this.legalCurrencyAmount = this.legalCurrencyAmount.replace(/[^0-9.]/gi, '')
+        this.calculationExchange()
+        return
+      }
+      if (event.type === 'focus') {
+        this.legalCurrencyAmount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
+        return
+      }
+      if (event.type === 'blur') {
+        this.legalCurrencyAmount = Decimal(this.legalCurrencyAmount.replace(/,/g, ''))
+        .toNumber().toLocaleString('en-US')
+        return
+      }
+    },
     calculationExchange() {
       if (this.legalCurrencyAmount && this.exchangeRate) {
         this.exchangedAmount = Decimal.div(
