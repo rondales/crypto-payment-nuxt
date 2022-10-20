@@ -520,9 +520,6 @@ const sendPaymentTransaction = async function(
     reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, bestExchange.pathParam]);
   } else {
     reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, reservedParam]);
-  }
-
-  if (bestExchange.name == 'uniswapV2') {
     path = bestExchange.pathParam
   }
 
