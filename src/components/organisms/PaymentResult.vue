@@ -322,7 +322,7 @@ export default {
     },
     handleAddMerchantSiteRedirectParam() {
       if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
-        if (this.isMetamaskBrowser) {
+        if (this.isMetamaskBrowser && (this.successReturnUrl || this.failureReturnUrl)) {
           history.pushState(
             {},
             null,
