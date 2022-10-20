@@ -67,6 +67,11 @@
         class="copy non-translate"
         html="Slash Web3 Payment ®︎"
       />
+      <div v-if="shouldShowOpenInNewTab" class="talk-bubble tri-right btm-right">
+        <div class="talktext">
+          <p>Click<br>"Open in Browser"</p>
+        </div>
+      </div>
     </footer>
   </div>
 </template>
@@ -81,7 +86,9 @@ import PaymentText from '@/components/organisms/Payment/Text'
 // import PaymentIcon from '@/components/organisms/Payment/Icon'
 // import PaymentIdTable from '@/components/organisms/Payment/IdTable'
 import PaymentTitle from '@/components/organisms/Payment/Title'
-import { DARK_THEME, LIGHT_THEME } from '@/constants'
+import { DARK_THEME, LIGHT_THEME, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS } from '@/constants'
+import isMobile from 'ismobilejs'
+
 export default {
   name: 'PaymentIndex',
   components: {
@@ -182,6 +189,19 @@ export default {
     },
     isShowMenu() {
       return this.showMenu
+    },
+    isMobileAndMetamaskInstalled() {
+      return isMobile(window.navigator).any && window.ethereum
+    },
+    isResultPage() {
+      return this.$route.name == 'result'
+    },
+    isPaymentStatusSuccessOrFail() {
+      return this.$store.state.payment.status == STATUS_RESULT_FAILURE 
+        || this.$store.state.payment.status == STATUS_RESULT_SUCCESS
+    },
+    shouldShowOpenInNewTab() {
+      return this.isMobileAndMetamaskInstalled && this.isResultPage && this.isPaymentStatusSuccessOrFail
     }
   },
   methods: {
@@ -416,5 +436,49 @@ footer {
   bottom: 1rem;
   left: 0;
   width: 100%;
+}
+
+.talk-bubble {
+  right: 10px;
+  bottom: 45px;
+  display: inline-block;
+  position: fixed;
+	width: 200px;
+	height: auto;
+	background-color: #ffff;
+  color: black;
+  font-size: 1.5rem;
+  text-align: center;
+  z-index: 214748369999948;
+}
+
+.talktext {
+  height: 100px;
+  padding-top: 21px;
+}
+.tri-right.border.btm-right:before {
+	content: ' ';
+	position: fixed;
+	width: 0;
+	height: 10px;
+  left: auto;
+	right: -40px;
+  top: 30px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #ffff  #ffff transparent transparent;
+  z-index: 214748369999948;
+}
+.tri-right.btm-right:after{
+	content: ' ';
+	position: fixed;
+	width: 0;
+	height: 10px;
+  left: auto;
+  right: 35px;
+	bottom: auto;
+	border: 12px solid;
+	border-color:  #ffff  #ffff transparent transparent;
+  z-index: 214748369999948;
 }
 </style>
