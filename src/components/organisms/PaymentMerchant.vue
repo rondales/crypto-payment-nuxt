@@ -129,8 +129,8 @@ export default {
       try {
         const csrfRes = await this.apiGetCsrfToken()
         this.csrfToken = {...csrfRes.data}
-        // const payment = await this.apiGetPaymentToken()
-        // this.$router.push({name: 'entrance', params: {token: payment.data.token}})
+        const payment = await this.apiGetPaymentToken()
+        this.$router.push({name: 'entrance', params: {token: payment.data.token}})
       } catch (error) {
         this.loading = false
         console.log({error})
