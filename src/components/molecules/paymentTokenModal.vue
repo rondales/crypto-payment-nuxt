@@ -16,7 +16,7 @@
           </a>
           <img
             class="logo2"
-            src="@/assets/images/logo-text.svg"
+            src="@/assets/images/logo-text2.svg"
             alt="Web3 Payment"
           />
         </div>
