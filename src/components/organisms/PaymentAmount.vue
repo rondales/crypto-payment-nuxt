@@ -127,8 +127,11 @@ export default {
         return
       }
       if (event.type === 'input') {
-        let amount = this.legalCurrencyAmount.replace(/[^0-9.]/gi, '')
-        if (event.data === '.' && (amount.match(/\./g) || []).length > 1) {
+        let amount = this.legalCurrencyAmount.replace(/[^0-9.,]/gi, '')
+        if (event.data === ',') {
+          amount = amount.replace(/,/gi, '.')
+        }
+        if (event.data === '.' && (amount.match(/\./gi) || []).length > 1) {
           amount = amount.slice(0, -1)
         }
         let explodeAmount = amount.split('.')
@@ -142,13 +145,13 @@ export default {
       }
       if (event.type === 'focus') {
         this.legalCurrencyAmount = Decimal(
-          this.legalCurrencyAmount.replace(/,/g, '')
+          this.legalCurrencyAmount.replace(/,/gi, '')
         ).toString()
         return
       }
       if (event.type === 'blur') {
         this.legalCurrencyAmount = Decimal(
-          this.legalCurrencyAmount.replace(/,/g, '')
+          this.legalCurrencyAmount.replace(/,/gi, '')
         )
           .toNumber()
           .toLocaleString('en-US')
