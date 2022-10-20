@@ -119,7 +119,10 @@ export default {
   },
   methods: {
     formatFiatAmount(event) {
-      if (this.legalCurrencyAmount === null || this.legalCurrencyAmount === '') {
+      if (
+        this.legalCurrencyAmount === null ||
+        this.legalCurrencyAmount === ''
+      ) {
         this.calculationExchange()
         return
       }
@@ -138,22 +141,26 @@ export default {
         return
       }
       if (event.type === 'focus') {
-        this.legalCurrencyAmount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
+        this.legalCurrencyAmount = Decimal(
+          this.legalCurrencyAmount.replace(/,/g, '')
+        ).toString()
         return
       }
       if (event.type === 'blur') {
-        this.legalCurrencyAmount = Decimal(this.legalCurrencyAmount.replace(/,/g, ''))
-        .toNumber().toLocaleString('en-US')
+        this.legalCurrencyAmount = Decimal(
+          this.legalCurrencyAmount.replace(/,/g, '')
+        )
+          .toNumber()
+          .toLocaleString('en-US')
         return
       }
     },
     calculationExchange() {
       if (this.legalCurrencyAmount && this.exchangeRate) {
-        const amount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
-        this.exchangedAmount = Decimal.div(
-          amount,
-          this.exchangeRate
-        )
+        const amount = Decimal(
+          this.legalCurrencyAmount.replace(/,/g, '')
+        ).toString()
+        this.exchangedAmount = Decimal.div(amount, this.exchangeRate)
           .toDP(6, Decimal.ROUND_CEIL)
           .toString()
       } else {
@@ -200,7 +207,9 @@ export default {
     apiUpdateTransaction() {
       const url =
         process.env.VUE_APP_API_BASE_URL + '/api/v1/payment/transaction'
-      const amount = Decimal(this.legalCurrencyAmount.replace(/,/g, '')).toString()
+      const amount = Decimal(
+        this.legalCurrencyAmount.replace(/,/g, '')
+      ).toString()
       const params = {
         payment_token: this.$route.params.token,
         base_currency: CURRENCIES[this.selectedCurrency].name,
@@ -291,7 +300,7 @@ export default {
     }
     .inputwrap {
       border-bottom: 1px solid var(--Text);
-      @include flex(flex-start, baseline);
+      @include flex(flex-start, center);
       @include font(1.44rem, 400, $ls, 1, $en_go);
       padding-bottom: 0.5rem;
       // margin-bottom: 1rem;
@@ -306,6 +315,9 @@ export default {
           // padding: 0.3rem 0.5rem;
           font-size: 2.488rem;
         }
+      }
+      span {
+        transform: translateY(4px);
       }
     }
 
