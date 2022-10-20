@@ -25,7 +25,7 @@ export default {
     },
     iconType: {
       type: String,
-      default: "svg"
+      default: 'svg'
     },
     text: {
       type: String,
@@ -81,12 +81,18 @@ export default {
   .icon {
     width: 1.3rem;
     font-size: 0;
+    @include media(sp) {
+      width: 1.5rem;
+    }
   }
   .text {
     flex: 1;
     padding: 0 0.5rem;
     color: var(--Text);
     @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+    @include media(sp) {
+      font-size: 1rem;
+    }
   }
 }
 </style>

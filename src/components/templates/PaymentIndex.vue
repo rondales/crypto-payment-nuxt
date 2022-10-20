@@ -1,5 +1,5 @@
 <template>
-  <div class="pay">
+  <div class="pay" :style="{ height: style }">
     <Header
       :width="windowWidth"
       @switchColorTheme="switchColorTheme"
@@ -13,28 +13,9 @@
           ><PaymentText type="h5" :html="nav.title"
         /></a>
       </div>
-      <!-- TODO SPの時、この中にwalletとかを表示したい -->
     </div>
     <div class="pay__box">
       <div class="pay__box__wrap">
-        <!-- <div class="pay__initializing">
-          <div class="progress-wrap">
-            <radial-progress-bar
-              :diameter="150"
-              :animate-speed="400"
-              :start-color="'#D97C87'"
-              :stop-color="'#8A2CE1'"
-              :completed-steps="progressCompletedSteps"
-              :total-steps="progressTotalSteps"
-            >
-              <p class="step">
-                <PaymentText type="h1" :html="progressCompletedPercent" />
-                <PaymentText type="h5" html="%" />
-              </p>
-              <PaymentText type="cap" html="Loading..." />
-            </radial-progress-bar>
-          </div>
-        </div> -->
         <div v-show="initializing" class="pay__initializing">
           <div class="progress-wrap">
             <radial-progress-bar
@@ -56,6 +37,7 @@
         <div v-show="!initializing" class="payment">
           <div class="pay__head">
             <!-- <PaymentIdTable class="pay__head__ids" :table="idTable" /> -->
+            <!-- TODO Amountの時PaymentTopを非表示 -->
             <PaymentTop
               :showMenu="showMenu"
               :loading="loading"
@@ -80,7 +62,11 @@
       </div>
     </div>
     <footer>
-      <PaymentText type="min" class="copy non-translate" html="Slash Web3 Payment ®︎" />
+      <PaymentText
+        type="min"
+        class="copy non-translate"
+        html="Slash Web3 Payment ®︎"
+      />
     </footer>
   </div>
 </template>
@@ -152,7 +138,10 @@ export default {
           title: 'AML Policy',
           url: 'https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy'
         }
-      ]
+      ],
+      style: {
+        '--wh': '100vh'
+      }
     }
   },
   watch: {
@@ -204,6 +193,7 @@ export default {
     },
     handleWindowResize() {
       this.windowWidth = window.innerWidth
+      this.getWindowSize()
     },
     copyLink() {
       this.$store.dispatch('account/copied')
@@ -224,9 +214,13 @@ export default {
     },
     incrementProgressCompletedSteps() {
       ++this.progressCompletedSteps
+    },
+    getWindowSize() {
+      this.style['--wh'] = `${window.innerHeight}px`
     }
   },
   mounted() {
+    this.getWindowSize()
     window.addEventListener('resize', this.handleWindowResize)
   },
   beforeDestroy() {
@@ -239,11 +233,10 @@ export default {
 @import '@/assets/scss/style.scss';
 @import '@/assets/scss/delaunay.scss';
 .pay {
-  // max-height: 80vh;
-  // padding-top: 5rem;
-  height: 100vh;
+  min-height: var(--wh, 100vh);
   @include media(sp) {
-    padding-top: 7rem;
+    // padding-top: 50px;
+    // padding-bottom: 3.5rem;
   }
   &__box {
     // width: 28rem;
@@ -263,13 +256,14 @@ export default {
 
     // padding-top: 2rem;
     @include media(sp) {
-      width: 90%;
       width: 100%;
       box-shadow: none;
       position: relative;
       top: auto;
       left: auto;
       transform: translate(0%, 0%);
+      min-height: var(--wh, 100vh);
+      max-height: initial;
     }
     &__wrap {
       padding: 0 1.5rem;
@@ -287,8 +281,9 @@ export default {
       top: 0;
       left: 0;
       margin: 0px auto;
-      min-height: calc(100vh - 140px);
       @include flex(center, center);
+      min-height: var(--wh, 100vh);
+      // min-height: calc(var(--wh) - 50px - 3.5rem);
     }
     .spin {
       width: 6rem;
@@ -303,6 +298,9 @@ export default {
 
     .progress-wrap {
       // height: 25vh;
+      @include media(sp) {
+        transform: translateY(-3rem);
+      }
       .radial-progress-container {
         margin-left: auto;
         margin-right: auto;
@@ -331,11 +329,23 @@ export default {
       }
     }
   }
+  .payment {
+    @include media(sp) {
+      padding-top: 59px;
+      padding-bottom: 3.5rem;
+    }
+  }
   &__head {
     padding-top: 1.5rem;
+    @include media(sp) {
+      padding-top: 4rem;
+    }
   }
   &__body {
     padding-bottom: 2rem;
+    @include media(sp) {
+      padding-bottom: 0;
+    }
   }
   &__foot {
     display: none;

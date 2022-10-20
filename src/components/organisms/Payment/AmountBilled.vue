@@ -138,12 +138,18 @@ export default {
     .price {
       @include font(1.728rem, 600, $ls, 1, $en_go);
       margin-top: 1rem;
+      @include media(sp) {
+        @include font(2.074rem, 600, $ls, 1, $en_go);
+      }
     }
   }
   .price {
     text-align: right;
     @include font(1.2rem, 600, $ls, 1, $en_go);
     color: var(--Text);
+    @include media(sp) {
+      font-size: 1.44rem;
+    }
     &::v-deep {
       span {
         line-height: 1;
