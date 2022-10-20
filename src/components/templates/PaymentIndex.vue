@@ -267,7 +267,7 @@ export default {
     }
     &__wrap {
       padding: 0 1.5rem;
-      overflow-y: scroll;
+      // overflow-y: scroll;
       @include media(sp) {
         padding: 0 5vw;
       }
