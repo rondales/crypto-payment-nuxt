@@ -7,8 +7,6 @@
       :price="merchantReceiveAmount | formatAmount"
       size="big"
     />
-
-    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment status" /> -->
     <PaymentTransaction
       class="result__transaction"
       :type="transactionType"
@@ -16,16 +14,6 @@
       :text="transactionText"
       :explorer-url="explorerUrl"
     />
-
-    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment detail" />
-    <PaymentAmountBilled
-      class="result__receivedToken"
-      title="Paid Amount"
-      :symbol="userPaidSymbol"
-      :icon="userPaidTokenIcon"
-      icon-type="png"
-      :price="userPaidAmount | formatAmount"
-    /> -->
     <PaymentAmountBilled
       v-if="hasCashback"
       class="result__receivedToken"
@@ -34,7 +22,6 @@
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
     />
-
     <div v-if="isStatusProcessing || isStatusSucceeded">
       <PaymentTitle
         class="result__title"
@@ -57,6 +44,7 @@
       :url="backUrl"
       color="primary"
       layout="reverse"
+      size="l"
     />
   </div>
 </template>
@@ -205,12 +193,14 @@ export default {
     },
     backUrl() {
       let backUrl
-      if(this.isStatusSucceeded && this.successReturnUrl) {
+      if (this.isStatusSucceeded && this.successReturnUrl) {
         backUrl = this.successReturnUrl
       } else if (this.isStatusFailured && this.failureReturnUrl) {
         backUrl = this.failureReturnUrl
       }
-      return backUrl ? (backUrl + "?payment_token=" + this.$route.params.token) : null
+      return backUrl
+        ? backUrl + '?payment_token=' + this.$route.params.token
+        : null
     },
     isReceiptMode() {
       return 'rcpt' in this.$route.query
@@ -355,9 +345,7 @@ export default {
   &__title {
     margin-bottom: 0.5rem;
   }
-  // &__balance {
-  //   margin-bottom: 1rem;
-  // }
+
   &__transaction {
     margin-bottom: 2rem;
   }
@@ -368,17 +356,5 @@ export default {
   &__button {
     margin-top: 2rem;
   }
-  // &__update {
-  //   margin-bottom: 1rem;
-  // }
-  // &__price {
-  //   margin-bottom: 1rem;
-  // }
-  // &__btnwrap {
-  //   margin-top: 2rem;
-  //   div + div {
-  //     margin-top: 0.5rem;
-  //   }
-  // }
 }
 </style>

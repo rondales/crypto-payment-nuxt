@@ -209,6 +209,7 @@ export default {
             padding: 0;
             @include media(sp) {
               font-size: 12px;
+              line-height: 30px;
             }
           }
         }
