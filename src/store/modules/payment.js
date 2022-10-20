@@ -39,7 +39,9 @@ const store = {
       amount: null,
       rate: null
     },
-    payment_token: null
+    payment_token: null,
+    successReturnUrl: null,
+    failReturnUrl: null
   },
   actions: {
     initialize({ commit }) {
@@ -129,7 +131,9 @@ const store = {
         balance: null,
         amount: null,
         rate: null
-      }
+      },
+      state.successReturnUrl = null,
+      state.failReturnUrl = null
     },
     initializeForBeforeConnectWallet(state) {
       state.amountWei = null
