@@ -17,7 +17,7 @@
           </option>
         </select>
       </div>
-      <div class="inputwrap">
+      <div class="inputwrap non-translate">
         <input
           class="price"
           inputmode="decimal"
@@ -32,7 +32,7 @@
     </div>
     <div class="amount__pay">
       <PaymentButton
-        class="amount__pay__button"
+        class="amount__pay__button non-translate"
         size="l"
         :text="'Pay ' + receiveTokenSymbol + ' ' + exchangedAmount"
         icon="logo-icon"
@@ -164,7 +164,6 @@ export default {
       this.selectedCurrency = Object.values(this.currencies)[0].name
     },
     updateExchangeData(currency = null) {
-      console.log('updateExchangeData')
       if (currency === null) currency = this.selectedCurrency
       this.apiGetExchangeRate(currency)
         .then((response) => {
