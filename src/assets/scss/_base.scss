@@ -33,6 +33,10 @@ html {
   }
 }
 
+.wg-drop.country-selector {
+  opacity: 0.85;
+}
+
 body {
   font-size: $size-font;
   line-height: $size-line-height;

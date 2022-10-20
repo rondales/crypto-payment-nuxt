@@ -38,7 +38,7 @@
     </div>
 
     <PaymentButton
-      v-if="(isStatusSucceeded || isStatusFailured) && backUrl"
+      v-if="(isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser"
       class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"
@@ -56,6 +56,7 @@ import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentReceipt from '@/components/organisms/Payment/Receipt'
 import PaymentTransaction from '@/components/organisms/Payment/Transaction'
 import { Decimal } from 'decimal.js'
+import isMobile from 'ismobilejs'
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -241,6 +242,15 @@ export default {
     hasCashback() {
       if (!this.cashbackAmount) return false
       return Decimal(this.cashbackAmount).toString() !== '0'
+    },
+    isMobile() {
+      return isMobile(window.navigator).any
+    },
+    metamaskInstalled() {
+      return window.ethereum ? true : false
+    },
+    isMetamaskBrowser() {
+      return this.isMobile && this.metamaskInstalled
     }
   },
   methods: {
@@ -281,13 +291,17 @@ export default {
         domain: data.domain,
         orderCode: data.order_code,
         isVerifiedDomain: Boolean(data.is_verified_domain),
-        merchantWalletAddress: data.merchant_wallet_address
+        merchantWalletAddress: data.merchant_wallet_address,
+        status: data.status,
+        successReturnUrl: data.succeeded_return_url,
+        failReturnUrl: data.failured_return_url
       })
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
         this.apiGetTransaction().then((response) => {
           this.setApiResultData(response.data)
+          this.handleAddMerchantSiteRedirectParam()
           const stopTimerStatuses = [
             STATUS_RESULT_FAILURE,
             STATUS_RESULT_SUCCESS
@@ -297,6 +311,22 @@ export default {
           }
         })
       }, this.RESULT_CHECK_CYCLE)
+    },
+    handleAddMerchantSiteRedirectParam() {
+      if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
+        if (this.backUrl != null && this.isMetamaskBrowser) {
+          history.pushState(
+            {},
+            null,
+            this.$route.path + '?redirect=' + this.backUrl
+          )
+        }
+      }
+    },
+    handleMerchantSiteRedirect() {
+      if(this.$route.query.redirect) {
+        window.open(this.$route.query.redirect, "_blank").focus()
+      }
     }
   },
   created() {
@@ -305,6 +335,8 @@ export default {
     Decimal.set({ toExpNeg: -20 })
     this.apiGetTransaction().then((response) => {
       this.setApiResultData(response.data)
+      this.handleMerchantSiteRedirect()
+      this.handleAddMerchantSiteRedirectParam()
       if (this.isStatusProcessing) {
         const filterAmount = (amount) => {
           return Decimal(amount).toString()
