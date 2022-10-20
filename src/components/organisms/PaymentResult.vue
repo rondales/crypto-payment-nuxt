@@ -302,7 +302,9 @@ export default {
         orderCode: data.order_code,
         isVerifiedDomain: Boolean(data.is_verified_domain),
         merchantWalletAddress: data.merchant_wallet_address,
-        status: data.status
+        status: data.status,
+        successReturnUrl: data.succeeded_return_url,
+        failReturnUrl: data.failured_return_url
       })
     },
     pollingTransactionResult() {

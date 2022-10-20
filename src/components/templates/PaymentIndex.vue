@@ -200,8 +200,17 @@ export default {
       return this.$store.state.payment.status == STATUS_RESULT_FAILURE 
         || this.$store.state.payment.status == STATUS_RESULT_SUCCESS
     },
+    hasBackUrl() {
+      let backUrl
+      if(this.$store.state.payment.status == STATUS_RESULT_FAILURE && this.$store.state.payment.failReturnUrl) {
+        backUrl = this.$store.state.payment.failReturnUrl
+      } else if (this.$store.state.payment.status == STATUS_RESULT_SUCCESS && this.$store.state.payment.successReturnUrl) {
+        backUrl = this.$store.state.payment.successReturnUrl
+      }
+      return backUrl ? true : false
+    },
     shouldShowOpenInNewTab() {
-      return this.isMobileAndMetamaskInstalled && this.isResultPage && this.isPaymentStatusSuccessOrFail
+      return this.isMobileAndMetamaskInstalled && this.isResultPage && this.isPaymentStatusSuccessOrFail && this.hasBackUrl
     }
   },
   methods: {
