@@ -216,9 +216,7 @@ export default {
     @include flex(space-between, center);
     &::v-deep {
       .title {
-        @include media(sp) {
-          justify-content: center;
-        }
+        justify-content: center;
       }
     }
     padding-top: 3rem;
