@@ -42,7 +42,7 @@
       </div>
     </div>
     <footer>
-      <PaymentText type="cap" class="copy" html="Slash.fi Web3 Payment ®︎" />
+      <PaymentText type="cap" class="copy" html="Slash Web3 Payment ®︎" />
     </footer>
   </div>
 </template>
@@ -214,6 +214,13 @@ export default {
   }
   &__head {
     @include flex(space-between, center);
+    &::v-deep {
+      .title {
+        @include media(sp) {
+          justify-content: center;
+        }
+      }
+    }
     padding-top: 3rem;
   }
   &__foot {
@@ -257,6 +264,9 @@ export default {
 footer {
   text-align: center;
   padding: 10rem 0 2rem;
+  @include media(sp) {
+    display: none;
+  }
 }
 </style>
 

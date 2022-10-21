@@ -7,8 +7,6 @@
       :price="merchantReceiveAmount | formatAmount"
       size="big"
     />
-
-    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment status" /> -->
     <PaymentTransaction
       class="result__transaction"
       :type="transactionType"
@@ -16,16 +14,6 @@
       :text="transactionText"
       :explorer-url="explorerUrl"
     />
-
-    <!-- <PaymentTitle class="result__title" type="h3_g" html="Payment detail" />
-    <PaymentAmountBilled
-      class="result__receivedToken"
-      title="Paid Amount"
-      :symbol="userPaidSymbol"
-      :icon="userPaidTokenIcon"
-      icon-type="png"
-      :price="userPaidAmount | formatAmount"
-    /> -->
     <PaymentAmountBilled
       v-if="hasCashback"
       class="result__receivedToken"
@@ -34,7 +22,6 @@
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
     />
-
     <div v-if="isStatusProcessing || isStatusSucceeded">
       <PaymentTitle
         class="result__title"
@@ -51,12 +38,13 @@
     </div>
 
     <PaymentButton
-      v-if="(isStatusSucceeded || isStatusFailured) && backUrl"
+      v-if="(isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser"
       class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"
       color="primary"
       layout="reverse"
+      size="l"
     />
   </div>
 </template>
@@ -68,6 +56,7 @@ import PaymentButton from '@/components/organisms/Payment/Button'
 import PaymentReceipt from '@/components/organisms/Payment/Receipt'
 import PaymentTransaction from '@/components/organisms/Payment/Transaction'
 import { Decimal } from 'decimal.js'
+import isMobile from 'ismobilejs'
 import {
   NETWORKS,
   STATUS_PROCESSING,
@@ -205,12 +194,14 @@ export default {
     },
     backUrl() {
       let backUrl
-      if(this.isStatusSucceeded && this.successReturnUrl) {
+      if (this.isStatusSucceeded && this.successReturnUrl) {
         backUrl = this.successReturnUrl
       } else if (this.isStatusFailured && this.failureReturnUrl) {
         backUrl = this.failureReturnUrl
       }
-      return backUrl ? (backUrl + "?payment_token=" + this.$route.params.token) : null
+      return backUrl
+        ? backUrl + '?payment_token=' + this.$route.params.token
+        : null
     },
     isReceiptMode() {
       return 'rcpt' in this.$route.query
@@ -251,6 +242,15 @@ export default {
     hasCashback() {
       if (!this.cashbackAmount) return false
       return Decimal(this.cashbackAmount).toString() !== '0'
+    },
+    isMobile() {
+      return isMobile(window.navigator).any
+    },
+    metamaskInstalled() {
+      return window.ethereum ? true : false
+    },
+    isMetamaskBrowser() {
+      return this.isMobile && this.metamaskInstalled
     }
   },
   methods: {
@@ -291,13 +291,17 @@ export default {
         domain: data.domain,
         orderCode: data.order_code,
         isVerifiedDomain: Boolean(data.is_verified_domain),
-        merchantWalletAddress: data.merchant_wallet_address
+        merchantWalletAddress: data.merchant_wallet_address,
+        status: data.status,
+        successReturnUrl: data.succeeded_return_url,
+        failReturnUrl: data.failured_return_url
       })
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
         this.apiGetTransaction().then((response) => {
           this.setApiResultData(response.data)
+          this.handleAddMerchantSiteRedirectParam()
           const stopTimerStatuses = [
             STATUS_RESULT_FAILURE,
             STATUS_RESULT_SUCCESS
@@ -307,6 +311,22 @@ export default {
           }
         })
       }, this.RESULT_CHECK_CYCLE)
+    },
+    handleAddMerchantSiteRedirectParam() {
+      if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
+        if (this.backUrl != null && this.isMetamaskBrowser) {
+          history.pushState(
+            {},
+            null,
+            this.$route.path + '?redirect=' + this.backUrl
+          )
+        }
+      }
+    },
+    handleMerchantSiteRedirect() {
+      if(this.$route.query.redirect) {
+        window.open(this.$route.query.redirect, "_blank").focus()
+      }
     }
   },
   created() {
@@ -315,6 +335,8 @@ export default {
     Decimal.set({ toExpNeg: -20 })
     this.apiGetTransaction().then((response) => {
       this.setApiResultData(response.data)
+      this.handleMerchantSiteRedirect()
+      this.handleAddMerchantSiteRedirectParam()
       if (this.isStatusProcessing) {
         const filterAmount = (amount) => {
           return Decimal(amount).toString()
@@ -355,9 +377,7 @@ export default {
   &__title {
     margin-bottom: 0.5rem;
   }
-  // &__balance {
-  //   margin-bottom: 1rem;
-  // }
+
   &__transaction {
     margin-bottom: 2rem;
   }
@@ -368,17 +388,5 @@ export default {
   &__button {
     margin-top: 2rem;
   }
-  // &__update {
-  //   margin-bottom: 1rem;
-  // }
-  // &__price {
-  //   margin-bottom: 1rem;
-  // }
-  // &__btnwrap {
-  //   margin-top: 2rem;
-  //   div + div {
-  //     margin-top: 0.5rem;
-  //   }
-  // }
 }
 </style>
