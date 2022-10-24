@@ -471,7 +471,7 @@ export default {
         this.userSelectedTokenPayAmount,
         this.$store.state.payment.symbol,
         this.platformFee,
-        this.merchantReceiveWeiAmount,
+        this.merchantReceiveAmountWei,
         this.bestExchange
       );
     },
