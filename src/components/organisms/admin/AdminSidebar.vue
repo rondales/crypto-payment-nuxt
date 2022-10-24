@@ -27,14 +27,6 @@
                 Settings
               </router-link>
             </li>
-            <!--
-            @todo remove comment out when implementing invoice function
-            <li @click="close()">
-              <router-link to="/admin/invoice">
-                invoice
-              </router-link>
-            </li>
-            -->
             <li @click="close()">
               <router-link
                 to="/admin/keys"
@@ -45,6 +37,7 @@
             </li>
             <li v-if="isUseTestnet" @click="close()">
               <a
+                :class="{ inactive: isUnselectedReceiveToken }"
                 target="_blank"
                 href="/test"
               >
@@ -146,7 +139,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import "@/assets/scss/old/style.scss";
 .side-bar {
   position: fixed;
   top: 80px;

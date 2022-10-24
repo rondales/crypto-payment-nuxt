@@ -15,7 +15,7 @@
         />
         <div class="add-flex currency a-center">
           <figure>
-            <img :src="selectedCurrencyIcon" />
+            <PaymentIcon :path="selectedCurrencyIcon" />
           </figure>
           <!-- <select name="currency" v-model="selectedCurrency">
             <option disabled value="">{{ selectedCurrencyName }}</option>
@@ -82,6 +82,7 @@
 <script>
 import { Decimal } from "decimal.js";
 import PaymentAmountBilled from "@/components/organisms/Payment/ww/AmountBilled";
+import PaymentIcon from '@/components/organisms/Payment/ww/Icon';
 // import MathExtend from "@/utils/math_extend";
 import { errorCodeList } from "@/enum/error_code";
 import { CURRENCIES } from "@/constants";
@@ -113,6 +114,7 @@ export default {
   },
   components: {
     PaymentAmountBilled,
+    PaymentIcon
   },
   watch: {
     legalCurrencyAmount: function () {
@@ -144,7 +146,7 @@ export default {
       return CURRENCIES[this.selectedCurrency].name;
     },
     selectedCurrencyIcon() {
-      return CURRENCIES[this.selectedCurrency].icon;
+      return CURRENCIES[this.selectedCurrency].iconPath;
     },
   },
   methods: {
@@ -247,7 +249,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 
 .payment_handleprice {
   width: 100%;
@@ -322,7 +324,7 @@ export default {
         }
       }
       select {
-        padding-left: 36px;
+        padding-left: 50px;
         font-weight: 400;
         width: 100%;
         border: none;

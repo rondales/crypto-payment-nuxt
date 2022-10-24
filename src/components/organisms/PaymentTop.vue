@@ -1,52 +1,19 @@
 <template>
-  <div class="payment_top">
-    <div class="payment_headbox add-flex j-between a-center">
-      <div v-if="isInvoiceHeaderMode" class="add-flex a-end j-between">
-        <div
-          v-if="isCurrentRequestConnectWalletPage"
-          class="logo copy"
-          @click="showRegeneratePaymentUrlModal()"
-        >
-          <figure>
-            <img :src="scanIcon" />
-          </figure>
-        </div>
-        <div
-          v-else-if="isCurrentBeforeSendTransactionPages"
-          class="logo copy"
-          @click="prevPage()"
-        >
-          <figure>
-            <img :src="prevIcon" />
-          </figure>
-        </div>
-        <div
-          v-else-if="isCurrentResultPage"
-          class="logo copy"
-          @click="copyLink()"
-        >
-          <figure>
-            <img :src="linkIcon" />
-          </figure>
-        </div>
+  <div>
+    <div class="payhead">
+      <div>
+        <PaymentButton
+          :icon="invoiceIcon.icon"
+          @click.native="handle_function_call(invoiceIcon.func)"
+          size="icon"
+          color="icon"
+        />
       </div>
-      <div v-if="isInvoiceHeaderMode">
-        <div class="logo">
-          <figure>
-            <img src="@/assets/images/invoice.svg" />
-          </figure>
-        </div>
+      <div>
+        <PaymentIcon class="logo" path="logo-icon" />
       </div>
-      <div v-else class="logo add-flex a-end">
-        <figure>
-          <img src="@/assets/images/slash.svg" />
-        </figure>
-        <div class="product_name">Web3 Payment</div>
-      </div>
-      <div class="hamburger" @click="hideMenu" :class="{ active: showMenu }">
-        <button type="button" class="menu-btn">
-          <img :src="hamburgerIcon" alt="" />
-        </button>
+      <div>
+        <PaymentIcon v-if="loading" class="spin" path="loading" />
       </div>
     </div>
   </div>
@@ -54,127 +21,92 @@
 
 
 <script>
-import VuexRestore from "@/components/mixins/VuexRestore";
-
+// import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentIcon from '@/components/organisms/Payment/Icon'
 export default {
-  name: "PaymentTop",
-  mixins: [VuexRestore],
-  props: ["showMenu"],
+  name: 'PaymentTop',
+  components: {
+    // PaymentTitle,
+    PaymentIcon,
+    PaymentButton
+  },
+  props: ['loading'],
   data() {
     return {
-      success: true,
-      invoice: false,
-      address: "hogefugahogefuga",
-      currentRouteName: "",
-    };
+      invoiceIcon: {
+        icon: '',
+        func: ''
+      }
+    }
   },
   watch: {
     $route(route) {
-      this.currentRouteName = route.name;
-    },
-  },
-  computed: {
-    scanIcon() {
-      return this.isDarkTheme
-        ? require("@/assets/images/camera-scan.svg")
-        : require("@/assets/images/camera-scan-l.svg");
-    },
-    linkIcon() {
-      return this.isDarkTheme
-        ? require("@/assets/images/link.svg")
-        : require("@/assets/images/link-l.svg");
-    },
-    prevIcon() {
-      return this.isDarkTheme
-        ? require("@/assets/images/left-arrow.svg")
-        : require("@/assets/images/left-arrow-l.svg");
-    },
-    hamburgerIcon() {
-      return this.isDarkTheme
-        ? require("@/assets/images/hamburger.svg")
-        : require("@/assets/images/hamburger-light.svg");
-    },
-    prevMode() {
-      return (
-        (this.currentRouteName === "exchange" ||
-          this.currentRouteName === "detail") &&
-        this.$store.state.payment.status === 1
-      );
-    },
-    isInvoiceHeaderMode() {
-      return (
-        this.isCurrentRequestConnectWalletPage ||
-        this.isCurrentBeforeSendTransactionPages ||
-        this.isCurrentResultPage
-      );
-    },
-    isCurrentRequestConnectWalletPage() {
-      return this.$route.name === "wallets";
-    },
-    isCurrentBeforeSendTransactionPages() {
-      const pages = ["token", "exchange", "detail"];
-      return pages.includes(this.$route.name);
-    },
-    isCurrentResultPage() {
-      return this.$route.name === "result";
-    },
-    isDarkTheme() {
-      return this.$store.state.theme === "dark";
-    },
+      this.setIconData(route.name)
+    }
   },
   methods: {
-    open() {
-      this.$store.dispatch("hamberger", { hamberger: true });
-    },
-    hideMenu() {
-      this.$emit("toggleMenu", !this.showMenu);
-    },
     copyLink() {
-      this.$emit("copyLink");
+      this.$emit('copyLink')
     },
     prevPage() {
-      this.$router.back();
+      this.$router.back()
     },
-    showRegeneratePaymentUrlModal() {
-      this.$store.dispatch("modal/show", {
-        target: "regenerate-payment-url-modal",
-        size: "small",
-      });
+    handle_function_call(function_name) {
+      if (function_name == 'prevPage') {
+        this.prevPage()
+      } else if (function_name == 'copyLink') {
+        this.copyLink()
+      }
     },
+    setIconData(routeName) {
+      this.invoiceIcon.icon = ''
+      this.invoiceIcon.func = ''
+      if (['token', 'detail'].includes(routeName)) {
+        // this.invoiceIcon.icon = 'left-arrow'
+        this.invoiceIcon.icon = 'icon-back'
+        this.invoiceIcon.func = 'prevPage'
+      } else if (routeName === 'result') {
+        this.invoiceIcon.icon = 'link'
+        this.invoiceIcon.func = 'copyLink'
+      }
+    }
   },
-};
+  created() {
+    this.setIconData(this.$route.name)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-.payment_top {
-  margin-bottom: 16px;
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
+.payhead {
+  @include flex(space-between, center);
+  margin-bottom: 1rem;
+  @include media(sp) {
+    margin-bottom: 2rem;
+  }
+
+  & > * {
+    font-size: 0;
+    &:nth-child(2) {
+    }
+    &:nth-child(1),
+    &:nth-child(3) {
+      width: 2.5rem;
+      font-size: 0;
+    }
+  }
   .logo {
-    .product_name {
-      font-size: 15px;
-      margin-left: 16px;
-      font-weight: 300;
+    width: 3rem;
+    @include media(sp) {
+      width: 3.5rem;
     }
   }
-  .copy {
-    cursor: pointer;
-  }
-  .hamburger {
-    display: block;
-    position: relative;
-    width: 24px;
-    height: 24px;
-    overflow: hidden;
-    z-index: 2;
-    &.active {
-      .menu-btn {
-        top: 0;
-      }
-    }
-    .menu-btn {
-      position: absolute;
-      top: -23px;
-    }
+  .spin {
+    width: 2rem;
+    height: 2rem;
   }
 }
 </style>

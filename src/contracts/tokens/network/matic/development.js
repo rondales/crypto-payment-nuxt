@@ -11,7 +11,9 @@ export default {
     address: null,
     abi: null,
     url: null,
-    icon: require('@/assets/images/symbol/matic.svg')
+    icon: require('@/assets/images/symbol/matic.svg'),
+    iconPath: "crypto_currency/matic",
+    iconType: "png"
   },
   USDT: {
     name: 'Tether USD',
@@ -19,7 +21,9 @@ export default {
     address: '0x3813e82e6f7098b9583FC0F33a962D02018B6803',
     abi: Usdt.abi,
     url: `${url}/0x3813e82e6f7098b9583FC0F33a962D02018B6803`,
-    icon: require('@/assets/images/symbol/usdt.svg')
+    icon: require('@/assets/images/symbol/usdt.svg'),
+    iconPath: "crypto_currency/usdt",
+    iconType: "png"
   },
   WMATIC: {
     name: 'Wrapped MATIC',
@@ -27,6 +31,8 @@ export default {
     address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
     abi: Wmatix.abi,
     url: `${url}/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889`,
-    icon: require('@/assets/images/symbol/wmatic.svg')
+    icon: require('@/assets/images/symbol/wmatic.svg'),
+    iconPath: "crypto_currency/wmatic",
+    iconType: "png"
   }
 }

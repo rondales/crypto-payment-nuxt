@@ -27,7 +27,7 @@
           Transaction Submitted
         </p>
       </div>
-      <a v-if="hasReturnUrl && !isReceiptMode" class="payment-status_btn" target="_blank" :href="urls.explorer">
+      <a class="payment-status_btn" target="_blank" :href="urls.explorer">
         View on explorer
         <img src="@/assets/images/link-icon.svg" alt="another">
       </a>
@@ -35,20 +35,13 @@
     <div class="payment-status_receipt mb-3">
       <a @click="openPaymentReceiptModal">Click here to get a receipt</a>
     </div>
-    <a v-if="hasReturnUrl && !isReceiptMode" :href="urls.success">
+    <a @click.prevent="closeWidgetWindow">
       <button class="btn __g __l mb-2">
         Back to Payee’s Services
       </button>
     </a>
-    <a v-else target="_blank" :href="urls.explorer">
-      <button class="btn __g __l mb-2">
-        View on explorer
-        <img class="new-tab-icon" src="@/assets/images/link-icon.svg" alt="another">
-      </button>
-    </a>
   </div>
 </template>
-
 <script>
 import { STATUS_RESULT_SUCCESS } from '@/constants'
 import StringExtend from "@/utils/string_extend"
@@ -78,9 +71,6 @@ export default {
     hasCashback() {
       return this.cashbackAmount && this.cashbackAmount != 0
     },
-    hasReturnUrl() {
-      return (this.urls.success)
-    },
     cashbackTokenIcon() {
       return this.MERCHANT_RECEIVE_ICONS[this.merchantReceiveSymbol]
     }
@@ -106,9 +96,26 @@ export default {
         target: 'payment-receipt-modal',
         size: 'small'
       })
+    },
+    closeWidgetWindow() {
+      window.close()
+    },
+    /**
+     * call to Call on the payment completion screen
+     * @param status number 1: success, 2: failed
+     * @param params Object payment params
+     */
+    sendFixPaymentToParentWindow(status, params) {
+      if(!window.opener) return;
+
+      window.opener.postMessage({
+        action: 'fixPayment',
+        value: {paymentStatus: status, optParams: params}
+      }, this.$store.state.wwPayment.parentOrigin);
     }
   },
   created() {
+    this.sendFixPaymentToParentWindow(1, {payment_token: this.$route.params.token})
     if (!this.isReceiptMode) {
       this.$store.dispatch('payment/updateStatus', STATUS_RESULT_SUCCESS)
     }
@@ -117,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import '@/assets/scss/old/style.scss';
 
 .payment_desc {
   p {

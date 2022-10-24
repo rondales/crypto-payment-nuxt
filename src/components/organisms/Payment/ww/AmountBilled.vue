@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import PaymentText from "@/components/organisms/Payment/Text";
+import PaymentText from "@/components/organisms/Payment/ww/Text";
 export default {
   name: "PaymentAmountBilled",
   components: {
@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 @import "@/assets/scss/delaunay.scss";
 .billed {
   padding-bottom: 16px;

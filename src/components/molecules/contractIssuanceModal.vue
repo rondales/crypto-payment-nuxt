@@ -1,4 +1,107 @@
 <template>
+  <!-- <div>
+    <PaymentModal title="Payment contract issuance">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
+      <div v-if="isDetailState">
+        <figure>
+          <img src="@/assets/images/contract-integration.svg" />
+          <img class="network-icon" :src="networkIcon" />
+        </figure>
+
+        <PaymentText
+          :html="
+            ' Deploy your own Slash payment contract to the ' +
+            networkName +
+            ' network'
+          "
+        />
+        <PaymentText
+          :html="
+            'This contract issuance process requires the preparation of ' +
+            symbol +
+            ' in the Web3 wallet that will be collected in the network as gas fee.'
+          "
+        />
+        <PaymentButton
+          v-if="!isPublishedContract"
+          text="Create Contract"
+          size="m"
+          @click.native="publishMerchantContract(chainId)"
+          :loading="isProcessing"
+        />
+      </div>
+      <div v-else-if="isProcessingState">
+        <PaymentTransaction
+          type="loading"
+          title="Waiting for Confimation"
+          cap=" Do not close the screen until the payment contract has been successfully deployed. It may take some time due to network
+          congestion."
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton text="Processing..." size="m" color="inactive" />
+      </div>
+      <div v-else-if="isSuccessedState">
+        <PaymentTransaction
+          type="success"
+          title="Contract update Submitted"
+          :text="
+            'Your exclusive Slash Payment Contract has been issued on the ' +
+            networkName +
+            ' network'
+          "
+          :link="{
+            url: transactionUrl,
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+      <div v-else-if="isFailuredState">
+        <PaymentTransaction
+          type="dismiss"
+          title="Failed to issue contract"
+          cap="The transaction cannot succeed due to error:"
+          :link="{
+            url: transactionUrl ? transactionUrl : '',
+            icon: 'outerlink',
+            title: 'View on explorer',
+          }"
+        />
+        <PaymentButton
+          text="Close"
+          size="m"
+          color="cancel"
+          @click.native="hideModal"
+        />
+      </div>
+
+      <PaymentButton
+        v-if="isProcessingState"
+        size="icon"
+        color="icon"
+        icon="reload"
+        @click.native="refresh"
+      />
+      <PaymentButton
+        v-else-if="!isProcessingState"
+        text="Close"
+        size="m"
+        color="cancel"
+        @click.native="hideModal"
+      />
+    </PaymentModal>
+  </div> -->
   <div :class="classes">
     <div class="header">
       <h3 class="header__title">
@@ -89,11 +192,20 @@
 </template>
 
 <script>
-import { NETWORKS, HTTP_CODES, LOGIN_TOKEN, NORMAL_TYPE_PAYMENT } from '@/constants'
+import {
+  NETWORKS,
+  HTTP_CODES,
+  LOGIN_TOKEN,
+  NORMAL_TYPE_PAYMENT
+} from '@/constants'
 import { errorCodeList } from '@/enum/error_code'
 import RequestUtility from '@/utils/request'
 import MerchantContract from '@/contracts/merchant'
-
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
+// import PaymentTransaction from "@/components/organisms/Payment/Transaction";
 export default {
   name: 'contractIssuanceModal',
   data() {
@@ -107,6 +219,13 @@ export default {
       pageState: 1,
       reloadSpinning: false,
     }
+  },
+  components: {
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
+    // PaymentTransaction
   },
   computed: {
     classes() {
@@ -207,7 +326,7 @@ export default {
       } else {
         if ('errors' in responseData && responseData.errors.length) {
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: {
               message: errorCodeList[responseData.errors.shift()].msg
@@ -324,160 +443,168 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-
-  .modal-box {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background:var(--color_bg);
-    @include media(pc) {
-      &.--small {
-        width: 470px;
-      }
-      &.--medium {
-        width: 760px;
-      }
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
+*/
+.modal-box {
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color_bg);
+  @include media(pc) {
+    &.--small {
+      width: 470px;
     }
-    @include media(sp) {
-      width: calc(100vw - 32px);
+    &.--medium {
+      width: 760px;
     }
-
   }
-  .header {
-    @include media(pc) {
-      padding: 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__desc {
-        font-size: 2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 1.7rem;
-      }
-    }
+  @include media(sp) {
+    width: calc(100vw - 32px);
+  }
+}
+.header {
+  @include media(pc) {
+    padding: 24px;
     &__title {
-      font-weight: 500;
-      background: #ffff;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
     &__desc {
-      font-weight: 100;
+      font-size: 2rem;
     }
   }
-  .close {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    font-size: 0;
-    @include media(pc) {
-      top: 35px;
-      right: 24px;
-    }
-    @include media(sp) {
-      top: 24px;
-      right: 24px;
+  @include media(sp) {
+    padding: 18px;
+    &__title {
+      font-size: 1.7rem;
     }
   }
-  .reload{
+  &__title {
+    font-weight: 500;
+    background: #ffff;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 150% 150%;
+    display: inline;
+  }
+  &__desc {
+    font-weight: 100;
+  }
+}
+.close {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
+  @include media(pc) {
+    top: 35px;
+    right: 24px;
+  }
+  @include media(sp) {
+    top: 24px;
+    right: 24px;
+  }
+}
+.reload {
+  cursor: pointer;
+  img {
+    vertical-align: middle;
+    transform: scale(1.35);
+  }
+  .spinning {
+    cursor: default;
+    animation: 0.7s linear infinite spinning;
+  }
+
+  @keyframes spinning {
+    from {
+      transform: rotateZ(0deg) scale(1.35);
+    }
+    to {
+      transform: rotateZ(360deg) scale(1.35);
+    }
+  }
+}
+.body {
+  text-align: center;
+  figure {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px;
+    display: inline-block;
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  p {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  span {
+    font-size: 13px;
+    font-weight: 400;
+  }
+  @include media(pc) {
+    padding: 24px 24px 40px;
+  }
+  @include media(sp) {
+    padding: 16px 12px 48px;
+  }
+  .btn {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 24px;
+    &.__m {
+      background: $gradation-double;
+    }
+  }
+}
+.footer {
+  text-align: center;
+
+  @include media(pc) {
+    padding: 0 40px 40px;
+  }
+  @include media(sp) {
+    padding: 0 32px 32px;
+  }
+}
+.network-icon {
+  position: relative;
+  left: 47px;
+  top: -25px;
+}
+.desc {
+  font-weight: 100 !important;
+  font-size: 1.2rem !important;
+  margin-bottom: 30px !important;
+}
+.payment-status {
+  text-align: center;
+  margin: auto;
+  &_btn {
+    font-size: 12px;
+    font-weight: 100;
     cursor: pointer;
-    img{
+    background: $gradation-pale;
+    padding: 4px 16px;
+    border-radius: 10px;
+    color: #fff;
+    img {
+      margin-left: 4px;
       vertical-align: middle;
-      transform: scale(1.35);
-    }
-    .spinning{
-      cursor: default;
-      animation: 0.7s linear infinite spinning;
-    }
-
-    @keyframes spinning {
-      from { transform: rotateZ(0deg) scale(1.35); }
-      to { transform: rotateZ(360deg) scale(1.35); }
     }
   }
-  .body {
-    text-align: center;
-    figure{
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 16px;
-      display: inline-block;
-    }
-    h4{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 32px;
-    }
-    p{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 30px;
-    }
-    span{
-      font-size: 13px;
-      font-weight: 400;
-    }
-    @include media(pc) {
-      padding: 24px 24px 40px;
-    }
-    @include media(sp) {
-      padding: 16px 12px 48px;
-    }
-    .btn {
-      width: 100%;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 24px;
-      &.__m {
-        background: $gradation-double;
-      }
-    }
-  }
-  .footer {
-    text-align: center;
-
-    @include media(pc) {
-      padding: 0 40px 40px;
-    }
-    @include media(sp) {
-      padding: 0 32px 32px;
-    }
-  }
-  .network-icon {
-    position: relative;
-    left: 47px;
-    top: -25px;
-  }
-  .desc {
-    font-weight: 100 !important;
-    font-size: 1.2rem !important;
-    margin-bottom: 30px !important;
-  }
-  .payment-status{
-    text-align: center;
-    margin: auto;
-    &_btn{
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
-      img{
-        margin-left: 4px;
-        vertical-align: middle;
-      }
-    }
-  }
+}
 </style>

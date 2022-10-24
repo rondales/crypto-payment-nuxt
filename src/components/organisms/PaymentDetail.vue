@@ -1,151 +1,102 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveTokenSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount"
+  <div class="exchange">
+    <PaymentAmountBilled
+      class="exchange__bill"
+      :symbol="merchantReceiveTokenSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount"
+      size="big"
+    />
+
+    <PaymentTitle class="exchange__title" type="h3_g" html="Your Balance">
+      <PaymentButton
+        icon="reload"
+        color="icon"
+        size="icon"
+        @click.native="updateTokenExchangeData()"
       />
-      <div class="payment_detailwrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
-          <figure
-            v-if="!isWalletConfirming"
-            class="reload"
-            :class="{ loading: isReloading }"
-            @click="updateTokenExchangeData(true)"
-          >
-            <img v-if="isDarkTheme" src="@/assets/images/reload.svg" />
-            <img v-else src="@/assets/images/reload-l.svg" />
-          </figure>
-        </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
-            <figure>
-              <img
-                :src="userSelectedTokenIcon"
-                :alt="userSelectedTokenSymbol"
-              />
-            </figure>
-            <p>
-              {{ userSelectedTokenSymbol }}
-            </p>
-          </div>
-          <div class="payment_detail-value">
-            <p>
-              {{ userSelectedTokenPaymentAmount }}
-            </p>
-          </div>
-        </div>
-        <div
-          class="payment-box"
-          v-if="!isWalletConfirming && isExpiredExchange"
-        >
-          <div class="add-flex a-center j-between">
-            <div class="add-flex a-center">
-              <img src="@/assets/images/warning.svg" alt="" />
-              <div class="payment-box_desc">
-                <p>Price Updated</p>
-              </div>
-            </div>
-            <div
-              class="payment-box_btn"
-              @click="updateTokenExchangeData(false)"
-            >
-              Accept
-            </div>
-          </div>
-        </div>
-        <div class="dattail-lists mt-1" v-if="!isWalletConfirming">
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Exchange Rate</p>
-            <p>
-              1 {{ merchantReceiveTokenSymbol }} &#65309;
-              {{ userSelectedTokenExchangeRate }} {{ userSelectedTokenSymbol
-              }}<img src="@/assets/images/exchange.svg" alt="" />
-            </p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Route</p>
-            <p v-html="tradeRoute"></p>
-          </div>
-          <!--
-          @todo Implement it when you are able to get various data from the contract
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Minimum received</p>
-            <p>388.213 BUSD</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Price Impact</p>
-            <p>-9.29%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-1">
-            <p>Liquidity Provider Fee</p>
-            <p>0.002367 BNB</p>
-          </div>
-          -->
-          <!--
-          INFO:
-          Commented out due to the implementation of the fee collection feature.
-          Ref issue: https://github.com/beperson/web3payment-front/issues/633
-          <div
-            v-if="isDifferentToken"
-            class="dattail-list add-flex j-between mb-1"
-          >
-            <p>Slippage tolerance</p>
-            <p>{{ PAYMENT_FEE_RATE }}%</p>
-          </div>
-          <div class="dattail-list add-flex j-between mb-2">
-            <p>Platform Fee</p>
-            <p>{{ platformFee }} {{ nativeTokenSymbol }}</p>
-          </div>
-          <p class="dattail-list_desc">
-            Output is estimated. You will receive at least
-            {{ merchantReceiveAmount }} {{ merchantReceiveTokenSymbol }} or the
-            transaction will revert.
-          </p>
-          -->
-        </div>
-        <div v-else class="payment-status mt-3 mb-3">
-          <div>
-            <img
-              class="mb-2 spin"
-              src="@/assets/images/loading.svg"
-              alt="waiting"
-            />
-            <p class="payment-status_title">Waiting for Confirmation</p>
-            <p class="payment-status_desc mb-2">
-              Pay {{ userSelectedTokenPaymentAmount }}
-              {{ userSelectedTokenSymbol }} for {{ merchantReceiveAmount }}
-              {{ merchantReceiveTokenSymbol }}
-            </p>
-          </div>
-        </div>
-        <button v-if="isExchangeDataUpdating" class="btn __g __l mb-2 inactive">
-          Price Updating...
-          <div class="loading-wrap active">
-            <img class="spin" src="@/assets/images/loading.svg" alt="loading" />
-          </div>
-        </button>
-        <button
-          v-else-if="isWalletConfirming"
-          class="btn __g __l mb-2 inactive"
-        >
-          Please confirm Wallet
-        </button>
-        <button
+    </PaymentTitle>
+
+    <PaymentAmountBilled
+      class="exchange__balance"
+      :symbol="userSelectedTokenSymbol"
+      :icon="userSelectedTokenIcon"
+      icon-type="png"
+      :table="balanceTable"
+    />
+    <PaymentAction
+      class="exchange__update"
+      v-if="
+        isExpiredExchange &&
+        isEnoughUserSelectedTokenBalance &&
+        !isNeedApprove &&
+        !isWalletConfirming
+      "
+      icon="attention"
+      text="Price Updated"
+    >
+      <PaymentButton
+        class="non-translate"
+        text="Update"
+        size="s"
+        @click.native="updateTokenExchangeData()"
+      />
+    </PaymentAction>
+    <PaymentPrice
+      :symbol="userSelectedTokenSymbol"
+      :price="userSelectedTokenPayAmount | formatPrice"
+      class="exchange__price"
+      :status="!isEnoughUserSelectedTokenBalance ? 'error' : 'success'"
+    />
+
+    <div class="exchange__btnwrap mt-2" v-if="isSetRequreUserPayAmount">
+      <div v-if="isEnoughUserSelectedTokenBalance">
+        <PaymentButton
+          v-if="isWalletConfirming"
+          color="inactive"
+          size="l"
+          text="Pending..."
+          :loading="true"
+        />
+        <PaymentButton
+          v-else-if="isNeedApprove"
+          class="btn-allowance"
+          :color="isWalletConfirming ? 'inactive' : 'primary'"
+          size="l"
+          :text="'Allow the Slash protocol to use your ' + userSelectedTokenSymbol"
+          @click.native="handleTokenApprove"
+          :icon="userSelectedTokenIcon"
+          icon-type="png"
+        />
+        <PaymentButton
+          v-else-if="isExchangeDataUpdating"
+          color="inactive"
+          size="l"
+          text="Price Updating..."
+          :loading="true"
+        />
+        <PaymentButton
           v-else
-          class="btn __g __l mb-2"
-          :class="{ inactive: isExpiredExchange }"
-          @click="executePayment()"
-        >
-          Confirm Wallet
-        </button>
-        <p class="via">
-          via Slash Payment
-          <span>
-            <img src="@/assets/images/slash-s.svg" alt="slash" />
-          </span>
+          :color="
+            isNeedApprove || isExpiredExchange || isWalletConfirming
+              ? 'inactive'
+              : 'primary'
+          "
+          @click.native="handlePay()"
+          size="l"
+          text="Pay"
+        />
+      </div>
+      <div v-else>
+        <p class="blancewarning">
+          <span>Balance is insufficient<br />for this transaction.</span>
+        </p>
+      </div>
+    </div>
+    <div v-else>
+      <div v-if="isNotEnoughLiquidity">
+        <p class="blancewarning">
+          <span>Liquidity is not enough<br />for this transaction.</span>
         </p>
       </div>
     </div>
@@ -153,52 +104,69 @@
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import {
-  METAMASK,
-  WALLET_CONNECT,
-  NETWORKS,
-  STATUS_PROCESSING,
-} from "@/constants";
+import * as Sentry from '@sentry/vue'
+import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentAction from '@/components/organisms/Payment/Action'
+import PaymentPrice from '@/components/organisms/Payment/Price'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import { Decimal } from 'decimal.js'
+import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
-  AvalancheTokens as AvalancheDefaultTokens,
-} from "@/contracts/tokens";
+  AvalancheTokens as AvalancheDefaultTokens
+} from '@/contracts/tokens'
 import {
   EthereumTokens as EthereumStableTokens,
   BscTokens as BscStableTokens,
   MaticTokens as MaticStableTokens,
-  AvalancheTokens as AvalancheStableTokens,
-} from "@/contracts/stable_tokens";
+  AvalancheTokens as AvalancheStableTokens
+} from '@/contracts/stable_tokens'
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
-  AvalancheTokens as AvalacheReceiveTokens,
-} from "@/contracts/receive_tokens";
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 
 export default {
-  name: "PaymentDetail",
-  components: {
-    PaymentAmountBilled,
-  },
+  name: 'PaymentDetail',
   data() {
     return {
       expired: false,
-      reloading: false,
       updating: false,
       exchangeDataExpireTimer: null,
+      userSelectedTokenAllowance: null,
+      requireAmount: null,
+      balanceEquivalentAmount: 0,
+      exchangeRate: 0,
+      platformFee: 0,
+      merchantReceiveAmountWei: 0,
       contract: {
         address: null,
-        abi: null,
+        abi: null
       },
-    };
+      balanceTable: [],
+      isNotEnoughLiquidity: false
+    }
+  },
+  components: {
+    PaymentAmountBilled,
+    PaymentTitle,
+    PaymentAction,
+    PaymentPrice,
+    PaymentButton
+  },
+  filters: {
+    formatPrice(price) {
+      return Decimal(price).toString()
+    }
   },
   computed: {
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     GAS_FEE_RATE() {
       return process.env.VUE_APP_PAYMENT_GAS_FEE_RATE
@@ -210,220 +178,192 @@ export default {
         return process.env.VUE_APP_PAYMENT_NON_STABLE_TOKEN_FEE_RATE
       }
     },
-    NATIVE_TOKEN_SYMBOLS() {
-      return {
-        ETH: "ETH",
-        BNB: "BNB",
-        MATIC: "MATIC",
-        AVAX: "AVAX",
-        WETH: "WETH",
-        WBNB: "WBNB",
-        WMATIC: "WMATIC",
-        WAVAX: "WAVAX",
-      };
-    },
-    MERCHNAT_RECEIVE_TOKEN_ICONS() {
-      return {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg")
-      };
-    },
     EXCHANGE_RATE_EXPIRE_TIME() {
-      return 30000;
+      return 30000
     },
     paymentToken() {
-      return this.$route.params.token;
+      return this.$route.params.token
     },
     web3Instance() {
-      return this.$store.state.web3.instance;
-    },
-    providerType() {
-      return this.$store.state.web3.provider;
+      return this.$store.state.web3.instance
     },
     chainId() {
-      return this.$store.state.web3.chainId;
+      return this.$store.state.web3.chainId
+    },
+    providerType() {
+      return this.$store.state.web3.provider
     },
     userAccountAddress() {
-      return this.$store.state.account.address;
+      return this.$store.state.account.address
+    },
+    equivalentSymbol() {
+      return this.merchantReceiveTokenSymbol
     },
     merchantReceiveTokens() {
       if (this.isCurrentNetworkEthereum) {
-        return EthereumReceiveTokens;
+        return EthereumReceiveTokens
       } else if (this.isCurrentNetworkBinance) {
-        return BscReceiveTokens;
+        return BscReceiveTokens
       } else if (this.isCurrentNetworkMatic) {
-        return MaticReceiveTokens;
+        return MaticReceiveTokens
       } else if (this.isCurrentNetworkAvalanche) {
-        return AvalacheReceiveTokens;
+        return AvalacheReceiveTokens
       } else {
-        return {};
+        return {}
       }
     },
     defaultPaymentTokens() {
       if (this.isCurrentNetworkEthereum) {
-        return EthereumDefaultTokens;
+        return EthereumDefaultTokens
       } else if (this.isCurrentNetworkBinance) {
-        return BscDefaultTokens;
+        return BscDefaultTokens
       } else if (this.isCurrentNetworkMatic) {
-        return MaticDefaultTokens;
+        return MaticDefaultTokens
       } else if (this.isCurrentNetworkAvalanche) {
-        return AvalancheDefaultTokens;
+        return AvalancheDefaultTokens
       } else {
-        return {};
+        return {}
       }
     },
     stableTokens() {
       if (this.isCurrentNetworkEthereum) {
-        return EthereumStableTokens;
+        return EthereumStableTokens
       } else if (this.isCurrentNetworkBinance) {
-        return BscStableTokens;
+        return BscStableTokens
       } else if (this.isCurrentNetworkMatic) {
-        return MaticStableTokens;
+        return MaticStableTokens
       } else if (this.isCurrentNetworkAvalanche) {
-        return AvalancheStableTokens;
+        return AvalancheStableTokens
       } else {
-        return {};
+        return {}
       }
-    },
-    nativeTokenSymbol() {
-      return this.chainId !== null ? NETWORKS[this.chainId].symbol : "";
     },
     merchantReceiveAmount() {
-      return this.$store.state.payment.amount;
-    },
-    merchantReceiveWeiAmount() {
-      return this.$store.state.payment.amountWei;
+      return this.$store.state.payment.amount
     },
     merchantReceiveTokenSymbol() {
-      return this.$store.state.payment.symbol;
+      return this.$store.state.payment.symbol
     },
     merchantReceiveTokenIcon() {
-      const tokens = this.merchantReceiveTokens;
+      const tokens = this.merchantReceiveTokens
       return this.merchantReceiveTokenSymbol in tokens
-        ? tokens[this.merchantReceiveTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
+        ? tokens[this.merchantReceiveTokenSymbol].iconPath
+        : 'crypto_currency/unknown'
     },
     userSelectedToken() {
-      return this.$store.state.payment.token;
+      return this.$store.state.payment.token
     },
-    userSelectedTokenAddress() {
-      return this.userSelectedToken.address;
+    userSelectedTokenDecimal() {
+      return this.userSelectedToken.decimal
     },
-    userSelectedTokenPaymentAmount() {
-      return this.userSelectedToken.amount;
+    userSelectedTokenBalance() {
+      return this.userSelectedToken.balance
     },
-    userSelectedTokenSymbol() {
-      return this.userSelectedToken.symbol;
-    },
-    userSelectedTokenIcon() {
-      const tokens = this.defaultPaymentTokens;
-      return this.userSelectedTokenSymbol in tokens
-        ? tokens[this.userSelectedTokenSymbol].icon
-        : require("@/assets/images/symbol/unknown.svg");
-    },
-    userSelectedTokenExchangeRate() {
-      return this.$store.state.payment.token.rate;
-    },
-    tradeRoute() {
-      if (!this.isDifferentToken) {
-        return this.merchantReceiveTokenSymbol;
-      } else if (this.isCurrentNetworkEthereum) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WETH} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkBinance) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WBNB} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkMatic) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WMATIC} &#8680; ${this.merchantReceiveTokenSymbol}`;
-      } else if (this.isCurrentNetworkAvalanche) {
-        return this.isSelectedNativeToken
-          ? `${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`
-          : `${this.userSelectedTokenSymbol} &#8680; ${this.NATIVE_TOKEN_SYMBOLS.WAVAX} &#8680; ${this.merchantReceiveTokenSymbol}`;
+    userSelectedTokenPayAmount() {
+      if (this.requireAmount === null) {
+        return 0
+      } else if (this.isEnoughUserSelectedTokenBalance) {
+        return this.requireAmount
       } else {
-        return "";
+        return this.userSelectedTokenBalance
       }
     },
-    platformFee() {
-      return this.$store.state.payment.fee;
+    userSelectedTokenSymbol() {
+      return this.userSelectedToken.symbol
+    },
+    userSelectedTokenIcon() {
+      const tokens = this.defaultPaymentTokens
+      return this.userSelectedTokenSymbol in tokens
+        ? tokens[this.userSelectedTokenSymbol].iconPath
+        : 'crypto_currency/unknown'
     },
     bestExchange() {
       return this.$store.state.payment.bestExchange;
     },
     isEmptyWeb3Instance() {
-      return this.web3Instance === null;
+      return this.web3Instance === null
     },
     isUseMetaMaskProvider() {
-      return this.providerType === METAMASK;
+      return this.providerType === METAMASK
     },
     isUseWalletConnectProvider() {
-      return this.providerType === WALLET_CONNECT;
+      return this.providerType === WALLET_CONNECT
     },
     isNeedRestoreWeb3Connection() {
       return (
         this.isEmptyWeb3Instance &&
         (this.isUseMetaMaskProvider || this.isUseWalletConnectProvider)
-      );
+      )
     },
     isCurrentNetworkEthereum() {
       return (
         this.chainId === NETWORKS[1].chainId ||
         this.chainId === NETWORKS[5].chainId
-      );
+      )
     },
     isCurrentNetworkBinance() {
       return (
         this.chainId === NETWORKS[56].chainId ||
         this.chainId === NETWORKS[97].chainId
-      );
+      )
     },
     isCurrentNetworkMatic() {
       return (
         this.chainId === NETWORKS[137].chainId ||
         this.chainId === NETWORKS[80001].chainId
-      );
+      )
     },
     isCurrentNetworkAvalanche() {
       return (
         this.chainId === NETWORKS[43114].chainId ||
         this.chainId === NETWORKS[43113].chainId
-      );
+      )
     },
-    isDifferentToken() {
-      const receiveTokens = this.merchantReceiveTokens;
-      const receiveTokenAddress =
-        this.merchantReceiveTokenSymbol in receiveTokens
-          ? receiveTokens[this.merchantReceiveTokenSymbol].address.toLowerCase()
-          : "";
-      const paymentTokenAddress = this.userSelectedTokenAddress
-        ? this.userSelectedTokenAddress.toLowerCase()
-        : this.userSelectedTokenAddress;
-      return receiveTokenAddress !== paymentTokenAddress;
+    isUserSelectedNativeToken() {
+      return this.userSelectedToken.address === null
     },
-    isSelectedNativeToken() {
-      return Object.values(this.NATIVE_TOKEN_SYMBOLS).includes(
-        this.userSelectedTokenSymbol
-      );
+    isSetRequreUserPayAmount() {
+      return this.requireAmount !== null
+    },
+    isNeedApprove() {
+      return (
+        !this.isUserSelectedNativeToken &&
+        !this.isEnoughUserSelectedTokenAllowance
+      )
+    },
+    isEnoughUserSelectedTokenAllowance() {
+      if (
+        this.userSelectedTokenAllowance === null ||
+        this.requireAmount === null
+      ) {
+        return false
+      }
+      return Decimal(this.userSelectedTokenAllowance).greaterThanOrEqualTo(
+        this.requireAmount
+      )
+    },
+    isEnoughUserSelectedTokenBalance() {
+      if (
+        this.userSelectedTokenBalance === null ||
+        this.requireAmount === null
+      ) {
+        return false
+      }
+      return Decimal(this.userSelectedTokenBalance).greaterThanOrEqualTo(
+        this.requireAmount
+      )
     },
     isExpiredExchange() {
-      return this.expired;
-    },
-    isReloading() {
-      return this.reloading;
+      return this.expired
     },
     isExchangeDataUpdating() {
-      return this.updating;
+      return this.updating
     },
     isWalletConfirming() {
-      return this.$store.state.wallet.pending;
+      return this.$store.state.wallet.pending
     },
     isDarkTheme() {
-      return this.$store.state.theme === "dark";
+      return this.$store.state.theme === 'dark'
     },
     isSelectedStableToken() {
       if (!this.userSelectedToken.address) {
@@ -431,78 +371,95 @@ export default {
         return false
       }
       return Object.values(this.stableTokens)
-        .map(token => token.address ? token.address.toLowerCase() : token.address)
-        .filter(address => address)
+        .map((token) =>
+          token.address ? token.address.toLowerCase() : token.address
+        )
+        .filter((address) => address)
         .includes(this.userSelectedToken.address.toLowerCase())
     }
   },
   methods: {
     apiGetContract() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/contract`;
+      const url = `${this.API_BASE_URL}/api/v1/payment/contract`
       const request = {
         params: new URLSearchParams([
-          ["payment_token", this.paymentToken],
-          ["network_type", this.chainId],
-        ]),
-      };
-      return this.axios.get(url, request);
+          ['payment_token', this.paymentToken],
+          ['network_type', this.chainId]
+        ])
+      }
+      return this.axios.get(url, request)
     },
     apiUpdateTransaction(transactionHash) {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
-      return this.axios.patch(url, {
-        payment_token: this.paymentToken,
-        network_type: this.chainId,
-        contract_address: this.contract.address,
-        transaction_address: transactionHash,
-        wallet_address: this.userAccountAddress,
-        pay_symbol: this.userSelectedTokenSymbol,
-        pay_amount: this.userSelectedTokenPaymentAmount,
-        device_id: this.$store.state.payment.deviceId
-      }, {
-        withCredentials: true
-      });
-    },
-    setExchangeDataExpireTimer() {
-      return setTimeout(() => {
-        this.expired = true;
-      }, this.EXCHANGE_RATE_EXPIRE_TIME);
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
+      return this.axios.patch(
+        url,
+        {
+          payment_token: this.paymentToken,
+          network_type: this.chainId,
+          contract_address: this.contract.address,
+          transaction_address: transactionHash,
+          wallet_address: this.userAccountAddress,
+          pay_symbol: this.userSelectedTokenSymbol,
+          pay_amount: this.userSelectedTokenPayAmount,
+          device_id: this.$store.state.payment.deviceId
+        },
+        {
+          withCredentials: true
+        }
+      )
     },
     getTokenExchangeDataFromContract() {
-      return this.$web3.getTokenExchangeData(
+      return this.$web3
+        .getTokenExchangeData(
+          this.web3Instance,
+          this.chainId,
+          this.userAccountAddress,
+          this.contract,
+          this.userSelectedToken,
+          this.merchantReceiveTokenSymbol,
+          this.merchantReceiveAmount,
+          this.GAS_FEE_RATE,
+          this.PAYMENT_FEE_RATE
+        )
+        .catch((err) => {
+          if (err.message.includes('execution reverted: No valid exchange')) {
+            this.isNotEnoughLiquidity = true
+            this.$parent.loading = false
+            this.$store.dispatch('modal/show', {
+              target: 'error-modal',
+              size: 'small',
+              params: {
+                message:
+                  'There appears to be no liquidity between \
+                  the token you selected and the \
+                  merchant receive token on this network. \
+                  <br> \
+                  <br> \
+                  Please return to the token selection screen \
+                  and select another token or try paying \
+                  with another network.'
+              }
+            })
+          }
+        })
+    },
+    getTokenApprovedAmountFromContract() {
+      return this.$web3.getTokenApprovedAmount(
         this.web3Instance,
         this.chainId,
         this.userAccountAddress,
         this.contract,
-        this.userSelectedToken,
-        this.merchantReceiveTokenSymbol,
-        this.merchantReceiveAmount,
-        this.GAS_FEE_RATE,
-        this.PAYMENT_FEE_RATE
-      );
+        this.userSelectedToken
+      )
     },
-    updateTokenExchangeData(reload) {
-      clearTimeout(this.exchangeDataExpireTimer);
-      this.expired = false;
-      this.reloading = reload;
-      this.updating = true;
-      this.getTokenExchangeDataFromContract()
-        .then((exchangeData) => {
-          this.$store.dispatch("payment/updateFee", exchangeData.fee);
-          this.$store.dispatch("payment/updateBestExchange", exchangeData.bestExchange);
-          this.$store.dispatch(
-            "payment/updateAmountWei",
-            exchangeData.requestAmountWei
-          );
-          this.$store.dispatch("payment/updateToken", {
-            amount: exchangeData.requireAmount,
-            rate: exchangeData.rate,
-          });
-        })
-        .finally(() => {
-          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
-          this.reloading = false;
-          this.updating = false;
-        });
+    sendTokenApproveTransactoinToBlockChain() {
+      return this.$web3.tokenApprove(
+        this.web3Instance,
+        this.chainId,
+        this.userAccountAddress,
+        this.contract,
+        this.userSelectedToken
+      )
     },
     sendPaymentTransactionToBlockChain() {
       return this.$web3.sendPaymentTransaction(
@@ -511,224 +468,255 @@ export default {
         this.userAccountAddress,
         this.contract,
         this.userSelectedToken,
-        this.userSelectedTokenPaymentAmount,
+        this.userSelectedTokenPayAmount,
         this.$store.state.payment.symbol,
         this.platformFee,
         this.merchantReceiveWeiAmount,
         this.bestExchange
       );
     },
-    executePayment() {
-      this.$store.dispatch("wallet/updatePendingStatus", true);
+    setExchangeDataExpireTimer() {
+      return setTimeout(() => {
+        this.expired = true
+      }, this.EXCHANGE_RATE_EXPIRE_TIME)
+    },
+    updateTokenExchangeData() {
+      clearTimeout(this.exchangeDataExpireTimer)
+      this.expired = false
+      this.updating = true
+      this.getTokenExchangeDataFromContract()
+        .then((exchangeData) => {
+          this.$store.dispatch("payment/updateFee", exchangeData.fee);
+          this.$store.dispatch("payment/updateBestExchange", exchangeData.bestExchange);
+          this.$store.dispatch('payment/updateToken', {
+            amount: exchangeData.requireAmount,
+            rate: exchangeData.rate
+          })
+          this.balanceEquivalentAmount = exchangeData.equivalentAmount
+          this.requireAmount = exchangeData.requireAmount
+          this.exchangeRate = exchangeData.rate
+          this.platformFee = exchangeData.fee
+          this.merchantReceiveAmountWei = exchangeData.requestAmountWei
+        })
+        .finally(() => {
+          this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+          this.updating = false
+        })
+    },
+    handleTokenApprove() {
+      this.$store.dispatch('wallet/updatePendingStatus', true)
+      this.sendTokenApproveTransactoinToBlockChain()
+        .then((receipt) => {
+          if (!receipt.status) {
+            Promise.reject()
+          }
+          const approvedAmountInWei =
+            receipt.events.Approval.returnValues[2]
+          this.userSelectedTokenAllowance = this.$web3.convertFromWei(
+            this.web3Instance,
+            approvedAmountInWei,
+            this.userSelectedTokenDecimal
+          )
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+        })
+        .catch((error) => {
+          Sentry.captureException(error)
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+          if ('code' in error && error.code === 4001) {
+            return
+          }
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
+            params: {
+              message:
+                'The Slash protocol allow failed with your token, please allow it again.'
+            }
+          })
+        })
+    },
+    handlePay() {
+      if (this.expired) return
+      this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
-          this.$store.dispatch("payment/updateStatus", STATUS_PROCESSING);
+          this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
           this.apiUpdateTransaction(txHash)
             .then(() => {
               this.$router.push({
-                name: "result",
-                params: { token: this.paymentToken },
-              });
+                name: 'result',
+                params: { token: this.paymentToken }
+              })
             })
             .catch((error) => {
-              console.log(error.data);
-            });
+              console.log(error.data)
+            })
         })
         .catch((error) => {
           console.log(error)
-          this.$store.dispatch("wallet/updatePendingStatus", false);
-        });
+          this.$store.dispatch('wallet/updatePendingStatus', false)
+        })
     },
     handleChainChangedEvent(chainId) {
       chainId = this.web3Instance.utils.isHex(chainId)
         ? this.web3Instance.utils.hexToNumber(chainId)
-        : chainId;
-      this.$store.dispatch("web3/updateChainId", chainId);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
+        : chainId
+      this.$store.dispatch('web3/updateChainId', chainId)
+      this.$router.push({ path: `/payment/token/${this.paymentToken}` })
     },
     handleAccountChangedEvent(address) {
-      this.$store.dispatch("account/updateAddress", address[0]);
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` });
-    },
+      this.$store.dispatch('account/updateAddress', address[0])
+      this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+    }
   },
   created() {
+    Decimal.set({ toExpNeg: -20 })
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
-        name: "wallets",
-        params: { token: this.paymentToken },
-      });
+        name: 'wallets',
+        params: { token: this.paymentToken }
+      })
     }
   },
   mounted() {
+    this.$parent.loading = true
+
     if (this.isNeedRestoreWeb3Connection) {
-      return;
+      return
     }
+
     this.web3Instance.currentProvider.on(
-      "chainChanged",
+      'chainChanged',
       this.handleChainChangedEvent
-    );
+    )
     this.web3Instance.currentProvider.on(
-      "accountsChanged",
+      'accountsChanged',
       this.handleAccountChangedEvent
-    );
-    this.apiGetContract().then((response) => {
-      this.contract.abi = JSON.parse(response.data.args);
-      this.contract.address = response.data.address;
-      this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer();
-    });
+    )
+
+    this.apiGetContract()
+      .then((response) => {
+        this.contract.address = response.data.address
+        this.contract.abi = JSON.parse(response.data.args)
+        const funcList = [this.getTokenExchangeDataFromContract()]
+        if (!this.isUserSelectedNativeToken) {
+          funcList.push(this.getTokenApprovedAmountFromContract())
+        }
+        Promise.all(funcList)
+          .then((results) => {
+            if (!this.isUserSelectedNativeToken) {
+              this.userSelectedTokenAllowance = results[1]
+            }
+            this.$store.dispatch('payment/updateToken', {
+              amount: results[0].requireAmount,
+              rate: results[0].rate
+            })
+            this.balanceEquivalentAmount = results[0].equivalentAmount
+            this.requireAmount = results[0].requireAmount
+            this.exchangeRate = results[0].rate
+            this.platformFee = results[0].fee
+            this.merchantReceiveAmountWei = results[0].requestAmountWei
+            this.$parent.loading = false
+            this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
+
+            this.balanceTable.push({
+              title: 'Balance',
+              price: Decimal(this.userSelectedTokenBalance).toFixed(
+                4,
+                Decimal.ROUND_FLOOR
+              ),
+              symbol: this.userSelectedTokenSymbol
+            })
+            this.balanceTable.push({
+              title: 'Equivalent',
+              price: Decimal(this.balanceEquivalentAmount).toFixed(
+                4,
+                Decimal.ROUND_FLOOR
+              ),
+              symbol: this.equivalentSymbol
+            })
+          })
+          .catch((err) => {
+            Sentry.captureException(err)
+          })
+      })
+      .catch((err) => {
+        Sentry.captureException(err)
+      })
   },
   beforeDestroy() {
-    clearTimeout(this.exchangeDataExpireTimer);
+    this.$parent.loading = false
+    clearTimeout(this.exchangeDataExpireTimer)
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
-        "chainChanged",
+        'chainChanged',
         this.handleChainChangedEvent
-      );
+      )
       this.web3Instance.currentProvider.removeListener(
-        "accountsChanged",
+        'accountsChanged',
         this.handleAccountChangedEvent
-      );
+      )
     }
   },
   beforeRouteLeave(to, from, next) {
-    this.$parent.loading = false;
+    this.$parent.loading = false
+    clearTimeout(this.exchangeDataExpireTimer)
     if (!this.isEmptyWeb3Instance) {
       this.web3Instance.currentProvider.removeListener(
-        "chainChanged",
+        'chainChanged',
         this.handleChainChangedEvent
-      );
+      )
       this.web3Instance.currentProvider.removeListener(
-        "accountsChanged",
+        'accountsChanged',
         this.handleAccountChangedEvent
-      );
+      )
     }
-    next();
-  },
-};
+    next()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
+.exchange {
+  &__bill {
+    margin-bottom: 2rem;
   }
-
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
+  &__title {
+    margin-bottom: 1.5rem;
   }
-  .payment_handleprice-pricewrap {
-    width: 100%;
+  &__balance {
+    margin-bottom: 1rem;
   }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
+  &__update {
+    margin-bottom: 1rem;
   }
-
-  .dattail-lists {
-    .dattail-list {
-      p {
-        font-size: 11px;
-        font-weight: 100;
-        img {
-          margin-left: 8px;
+  &__price {
+    margin-bottom: 0.5rem;
+  }
+  &__btnwrap {
+    .btn-allowance {
+      &::v-deep {
+        .button {
+          flex-direction: row-reverse;
+        }
+        .textwrap {
+          font-size: 12px;
+          @include media(sp) {
+            font-size: 10px;
+          }
         }
       }
     }
-    .dattail-list_desc {
-      font-size: 11px;
-      font-weight: 100;
-      padding-bottom: 16px;
-      margin-bottom: 16px;
+    div + div {
+      margin-top: 0.5rem;
     }
   }
-  .reload {
-    cursor: pointer;
-    img {
-      vertical-align: middle;
-    }
-    &.loading {
-      animation: 3s linear infinite spin;
-      from {
-        transform: rotateZ(0deg);
-      }
-      to {
-        transform: rotateZ(360deg);
-      }
-    }
-  }
-  .payment_detail {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-left: 7px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 20px;
-      font-weight: 100;
-      margin-left: 16px;
-    }
-  }
-  .payment-status {
-    text-align: center;
-    margin: auto;
-    &_title {
-      font-size: 18px;
-      font-weight: 100;
-    }
-    &_desc {
-      font-size: 10px;
-      font-weight: 100;
-    }
-    &_btn {
-      font-size: 12px;
-      font-weight: 100;
-      cursor: pointer;
-      background: $gradation-pale;
-      padding: 4px 16px;
-      border-radius: 10px;
-      color: #fff;
-      img {
-        margin-left: 4px;
-        vertical-align: middle;
-      }
-    }
-  }
-  .via {
-    font-size: 12px;
-    font-weight: 100;
-    text-align: center;
-    line-height: 20px;
-    img {
-      width: 20px;
-      height: 20px;
-      margin-left: 5px;
-    }
-  }
-  .new-tab-icon {
-    padding: 0 !important;
-  }
+}
+.blancewarning {
+  text-align: center;
+  @include font(0.8rem, 400, 0.04em, 1.8, $en_go);
+  color: var(--Alert);
 }
 </style>

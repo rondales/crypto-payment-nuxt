@@ -143,13 +143,6 @@ const router = new Router({
               meta: { title: 'Slash Payment' }
             },
             {
-              name: "exchange",
-              path: "/payment/exchange/:token",
-              alias: ["/payments-uiswitchable/exchange/:token/basic", "/payments-uiswitchable/exchange/:token"],
-              component: () => import("@/components/organisms/PaymentExchange"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
               name: "detail",
               path: "/payment/detail/:token",
               alias: ["/payments-uiswitchable/detail/:token/basic", "/payments-uiswitchable/detail/:token" ],
@@ -161,13 +154,6 @@ const router = new Router({
               path: "/payment/result/:token",
               alias: ["/payments-uiswitchable/result/:token/basic","/payments-uiswitchable/result/:token"],
               component: () => import("@/components/organisms/PaymentResult"),
-              meta: { title: 'Slash Payment' }
-            },
-            {
-              name: "invoice",
-              path: "/payment/invoice",
-              alias: ["/payments-uiswitchable/invoice/basic", "/payments-uiswitchable/invoice" ],
-              component: () => import("@/components/organisms/PaymentInvoice"),
               meta: { title: 'Slash Payment' }
             }
           ]
@@ -222,12 +208,6 @@ const router = new Router({
             },
             {
               name: "admin",
-              path: "/admin/invoice",
-              component: () => import("@/components/organisms/admin/AdminInvoice"),
-              meta: { title: 'Slash Apps' }
-            },
-            {
-              name: "admin",
               path: "/admin/keys",
               component: () => import("@/components/organisms/admin/AdminKeys"),
               meta: { title: 'Slash Apps' }
@@ -265,6 +245,17 @@ if (
     name: "test",
     path: "/test",
     component: () => import("@/pages/test"),
+    meta: { title: 'Slash Payment' },
+  })
+}
+
+if (
+  process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'development'
+) {
+  router.addRoute({
+    name: "debug",
+    path: "/debug",
+    component: () => import("@/pages/debug"),
     meta: { title: 'Slash Payment' },
   })
 }

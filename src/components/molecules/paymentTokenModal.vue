@@ -16,7 +16,7 @@
           </a>
           <img
             class="logo2"
-            src="@/assets/images/logo-text.svg"
+            src="@/assets/images/logo-text2.svg"
             alt="Web3 Payment"
           />
         </div>
@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
+@import "@/assets/scss/old/style.scss";
 
 .modal-box {
   border-radius: 10px;

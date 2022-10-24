@@ -18,7 +18,7 @@ export default {
       } else {
         if ('errors' in responseData && responseData.errors.length) {
           this.$store.dispatch('modal/show', {
-            target: 'error-modal',
+            target: 'error-for-admin-modal',
             size: 'small',
             params: {
               message: errorCodeList[responseData.errors.shift()].msg

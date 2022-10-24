@@ -1,79 +1,89 @@
 <template>
-  <div class="payment_handleprice">
-    <div class="payment_handleprice-pricewrap">
-      <PaymentAmountBilled
-        :symbol="merchantReceiveSymbol"
-        :icon="merchantReceiveTokenIcon"
-        :price="merchantReceiveAmount | amountFormat"
+  <div class="result">
+    <PaymentAmountBilled
+      class="result__bill"
+      :symbol="merchantReceiveSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="merchantReceiveAmount | formatAmount"
+      size="big"
+    />
+    <PaymentTransaction
+      class="result__transaction"
+      :type="transactionType"
+      :title="transactionTitle"
+      :text="transactionText"
+      :explorer-url="explorerUrl"
+    />
+    <PaymentAmountBilled
+      v-if="hasCashback"
+      class="result__receivedToken"
+      title="Cash Back"
+      :symbol="merchantReceiveSymbol"
+      :icon="merchantReceiveTokenIcon"
+      :price="cashbackAmount | formatAmount"
+    />
+    <div v-if="isStatusProcessing || isStatusSucceeded">
+      <PaymentTitle
+        class="result__title"
+        type="h4_g"
+        html="Do you want a receipt?"
+        layout="c"
       />
-      <div class="payment_detailwrap">
-        <div class="payment_desc add-flex j-between mb-2">
-          <p class="grd">Payment detail</p>
-        </div>
-        <div class="payment_detail add-flex j-between mb-1">
-          <div class="payment_detail-name add-flex a-center mb-1">
-            <figure>
-              <img :src="userPaidTokenIcon" :alt="userPaidSymbol" />
-            </figure>
-            <p>
-              {{ userPaidSymbol }}
-            </p>
-          </div>
-          <div class="payment_detail-value">
-            <p>
-              {{ userPaidAmount | amountFormat }}
-            </p>
-          </div>
-        </div>
-        <pending
-          v-if="isStatusProcessing"
-          :urls="linkUrlData"
-          :transaction="transactionData"
-        />
-        <failure
-          v-else-if="isStatusFailured"
-          :urls="linkUrlData"
-          :isReceiptMode="isReceiptMode"
-        />
-        <success
-          v-else
-          :urls="linkUrlData"
-          :token="paymentToken"
-          :isReceiptMode="isReceiptMode"
-          :cashbackAmount="cashbackAmount"
-          :merchantReceiveSymbol="merchantReceiveSymbol"
-        />
-      </div>
+      <PaymentReceipt
+        :payment-token="paymentToken"
+        :is-registerd-email="Boolean(email)"
+        :is-reserving-mode="status === STATUS_PROCESSING"
+        :status="status"
+      />
     </div>
+
+    <PaymentButton
+      v-if="(isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser"
+      class="result__button"
+      text="Back to Payee’s Services"
+      :url="backUrl"
+      color="primary"
+      layout="reverse"
+      size="l"
+    />
   </div>
 </template>
 
 <script>
-import PaymentAmountBilled from "@/components/organisms/Payment/AmountBilled";
-import StringExtend from "@/utils/string_extend";
-import ResultPending from "@/components/organisms/PaymentResultPending";
-import ResultFailure from "@/components/organisms/PaymentResultFailure";
-import ResultSuccess from "@/components/organisms/PaymentResultSuccess";
+import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import PaymentButton from '@/components/organisms/Payment/Button'
+import PaymentReceipt from '@/components/organisms/Payment/Receipt'
+import PaymentTransaction from '@/components/organisms/Payment/Transaction'
+import { Decimal } from 'decimal.js'
+import isMobile from 'ismobilejs'
 import {
   NETWORKS,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS,
-} from "@/constants";
+  STATUS_RESULT_SUCCESS
+} from '@/constants'
+import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens
+} from '@/contracts/receive_tokens'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
-  AvalancheTokens as AvalancheDefaultTokens,
-} from "@/contracts/tokens";
+  AvalancheTokens as AvalancheDefaultTokens
+} from '@/contracts/tokens'
 
 export default {
-  name: "PaymentResult",
+  name: 'PaymentResult',
   components: {
-    pending: ResultPending,
-    failure: ResultFailure,
-    success: ResultSuccess,
     PaymentAmountBilled,
+    PaymentTitle,
+    PaymentButton,
+    PaymentReceipt,
+    PaymentTransaction
   },
   props: {
     progressTotalSteps: Number,
@@ -82,263 +92,301 @@ export default {
   data() {
     return {
       chainId: null,
-      merchantReceiveAmount: "0",
+      merchantReceiveAmount: '0',
       merchantReceiveSymbol: null,
-      userPaidAmount: "0",
+      userPaidAmount: '0',
       userPaidSymbol: null,
-      cashbackAmount: "0",
+      cashbackAmount: '0',
       transactionHash: null,
       successReturnUrl: null,
       failureReturnUrl: null,
+      email: null,
       status: STATUS_PROCESSING,
-      resultPollingTimer: null,
-      merchantReceiveTokenIcons: {
-        USDT: require("@/assets/images/symbol/usdt.svg"),
-        USDC: require("@/assets/images/symbol/usdc.svg"),
-        DAI: require("@/assets/images/symbol/dai.svg"),
-        JPYC: require("@/assets/images/symbol/jpyc.svg"),
-        WETH: require('@/assets/images/symbol/eth.svg')
-      },
-    };
+      transactionType: 'loading',
+      transactionTitle: 'Waiting for tx result',
+      transactionText: '',
+      resultPollingTimer: null
+    }
   },
   filters: {
-    amountFormat(amount) {
-      if (amount) {
-        const splitAmount = amount.split('.')
-        if (splitAmount.length > 1) {
-          splitAmount[1] = StringExtend.rtrim(splitAmount[1], '0')
-        }
-        if(splitAmount[1]) {
-          return splitAmount.join('.')
-        } else {
-          return splitAmount[0]
-        }
+    formatAmount(amount) {
+      if (!amount) return '0'
+      return Decimal(amount).toString()
+    }
+  },
+  watch: {
+    status(newStatus) {
+      if (newStatus === STATUS_PROCESSING) {
+        this.transactionType = 'loading'
+        this.transactionTitle = 'Waiting for transaction result'
       }
-    },
+      if (newStatus === STATUS_RESULT_SUCCESS) {
+        this.transactionType = 'success'
+        this.transactionTitle = 'Transaction Submitted'
+        this.transactionText = ''
+      }
+      if (newStatus === STATUS_RESULT_FAILURE) {
+        this.transactionType = 'dismiss'
+        this.transactionTitle = 'Invalid Transaction'
+        this.transactionText = 'Check the transaction in Explorer.'
+      }
+    }
   },
   computed: {
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     RESULT_CHECK_CYCLE() {
-      return 5000;
+      return 5000
+    },
+    STATUS_PROCESSING() {
+      return STATUS_PROCESSING
     },
     paymentToken() {
-      return this.$route.params.token;
+      return this.$route.params.token
+    },
+    merchantReceiveTokens() {
+      if (this.isPaidEthereum) {
+        return EthereumReceiveTokens
+      } else if (this.isPaidBinance) {
+        return BscReceiveTokens
+      } else if (this.isPaidMatic) {
+        return MaticReceiveTokens
+      } else if (this.isPaidAvalanche) {
+        return AvalacheReceiveTokens
+      } else {
+        return {}
+      }
     },
     paidNetworkDefaultTokens() {
       if (this.isPaidEthereum) {
-        return EthereumDefaultTokens;
+        return EthereumDefaultTokens
       } else if (this.isPaidBinance) {
-        return BscDefaultTokens;
+        return BscDefaultTokens
       } else if (this.isPaidMatic) {
-        return MaticDefaultTokens;
+        return MaticDefaultTokens
       } else if (this.isPaidAvalanche) {
-        return AvalancheDefaultTokens;
+        return AvalancheDefaultTokens
       } else {
-        return null;
+        return null
       }
     },
     merchantReceiveTokenIcon() {
-      return this.merchantReceiveTokenIcons[this.merchantReceiveSymbol];
+      const tokens = this.merchantReceiveTokens
+      return this.merchantReceiveSymbol in tokens
+        ? tokens[this.merchantReceiveSymbol].iconPath
+        : 'crypto_currency/unknown'
     },
     userPaidTokenIcon() {
-      const tokens = this.paidNetworkDefaultTokens;
+      const tokens = this.paidNetworkDefaultTokens
       if (tokens) {
         return this.userPaidSymbol in tokens
-          ? tokens[this.userPaidSymbol].icon
-          : require("@/assets/images/symbol/unknown.svg");
+          ? tokens[this.userPaidSymbol].iconPath
+          : 'crypto_currency/unknown'
       } else {
-        return require("@/assets/images/symbol/unknown.svg");
+        return 'crypto_currency/unknown'
       }
     },
-    transactionData() {
-      return {
-        merchantReceiveAmount: this.merchantReceiveAmount,
-        merchantReceiveSymbol: this.merchantReceiveSymbol,
-        userPaidAmount: this.userPaidAmount,
-        userPaidSymbol: this.userPaidSymbol,
-      };
+    explorerUrl() {
+      return this.chainId !== null && this.chainId in NETWORKS
+        ? `${NETWORKS[this.chainId].scanUrl}/tx/${this.transactionHash}`
+        : ''
     },
-    linkUrlData() {
-      const scanSiteUrl =
-        this.chainId !== null ? NETWORKS[this.chainId].scanUrl : "";
-      return {
-        explorer: `${scanSiteUrl}/tx/${this.transactionHash}`,
-        success: this.successReturnUrl,
-        failure: this.failureReturnUrl,
-      };
+    backUrl() {
+      let backUrl
+      if (this.isStatusSucceeded && this.successReturnUrl) {
+        backUrl = this.successReturnUrl
+      } else if (this.isStatusFailured && this.failureReturnUrl) {
+        backUrl = this.failureReturnUrl
+      }
+      return backUrl
+        ? backUrl + '?payment_token=' + this.$route.params.token
+        : null
     },
     isReceiptMode() {
-      return "rcpt" in this.$route.query;
+      return 'rcpt' in this.$route.query
     },
     isStatusProcessing() {
-      return this.status === STATUS_PROCESSING;
+      return this.status === STATUS_PROCESSING
     },
     isStatusFailured() {
-      return this.status === STATUS_RESULT_FAILURE;
+      return this.status === STATUS_RESULT_FAILURE
     },
     isStatusSucceeded() {
-      return this.status === STATUS_RESULT_SUCCESS;
+      return this.status === STATUS_RESULT_SUCCESS
     },
     isPaidEthereum() {
       return (
         this.chainId === NETWORKS[1].chainId ||
         this.chainId === NETWORKS[5].chainId
-      );
+      )
     },
     isPaidBinance() {
       return (
         this.chainId === NETWORKS[56].chainId ||
         this.chainId === NETWORKS[97].chainId
-      );
+      )
     },
     isPaidMatic() {
       return (
         this.chainId === NETWORKS[137].chainId ||
         this.chainId === NETWORKS[80001].chainId
-      );
+      )
     },
     isPaidAvalanche() {
       return (
         this.chainId === NETWORKS[43114].chainId ||
         this.chainId === NETWORKS[43113].chainId
-      );
+      )
     },
+    hasCashback() {
+      if (!this.cashbackAmount) return false
+      return Decimal(this.cashbackAmount).toString() !== '0'
+    },
+    isMobile() {
+      return isMobile(window.navigator).any
+    },
+    metamaskInstalled() {
+      return window.ethereum ? true : false
+    },
+    isMetamaskBrowser() {
+      return this.isMobile && this.metamaskInstalled
+    }
   },
   methods: {
     apiGetTransaction() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`;
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
-        params: new URLSearchParams([["payment_token", this.paymentToken]]),
-      };
-      return this.axios.get(url, request);
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
+      }
+      return this.axios.get(url, request)
     },
     showDataInitialize() {
-      this.chainId = this.$store.state.web3.chainId;
+      this.chainId = this.$store.state.web3.chainId
       this.merchantReceiveAmount =
         this.$store.state.payment.amount !== null
           ? this.$store.state.payment.amount
-          : "0";
-      this.merchantReceiveSymbol = this.$store.state.payment.symbol;
+          : '0'
+      this.merchantReceiveSymbol = this.$store.state.payment.symbol
       this.userPaidAmount =
         this.$store.state.payment.token.amount !== null
           ? this.$store.state.payment.token.amount
-          : "0";
-      this.userPaidSymbol = this.$store.state.payment.token.symbol;
-      this.transactionHash = this.$store.state.payment.transactionHash;
+          : '0'
+      this.userPaidSymbol = this.$store.state.payment.token.symbol
+      this.transactionHash = this.$store.state.payment.transactionHash
     },
     setApiResultData(data) {
-      this.chainId = data.network_type;
-      this.merchantReceiveAmount = data.base_amount;
-      this.merchantReceiveSymbol = data.base_symbol;
-      this.userPaidAmount = data.user_amount;
-      this.userPaidSymbol = data.user_symbol;
-      this.cashbackAmount = data.cashback_amount;
-      this.transactionHash = data.transaction_address;
-      this.successReturnUrl = data.succeeded_return_url;
-      this.failureReturnUrl = data.failured_return_url;
-      this.status = data.status;
-      this.$store.dispatch("payment/update", {
+      this.chainId = data.network_type
+      this.merchantReceiveAmount = data.base_amount
+      this.merchantReceiveSymbol = data.base_symbol
+      this.userPaidAmount = data.user_amount
+      this.userPaidSymbol = data.user_symbol
+      this.cashbackAmount = data.cashback_amount
+      this.transactionHash = data.transaction_address
+      this.successReturnUrl = data.succeeded_return_url
+      this.failureReturnUrl = data.failured_return_url
+      this.email = data.email
+      this.status = data.status
+      this.$store.dispatch('payment/update', {
         domain: data.domain,
         orderCode: data.order_code,
         isVerifiedDomain: Boolean(data.is_verified_domain),
         merchantWalletAddress: data.merchant_wallet_address,
-      });
+        status: data.status,
+        successReturnUrl: data.succeeded_return_url,
+        failReturnUrl: data.failured_return_url
+      })
     },
     pollingTransactionResult() {
       this.resultPollingTimer = setInterval(() => {
         this.apiGetTransaction().then((response) => {
-          this.setApiResultData(response.data);
+          this.setApiResultData(response.data)
+          this.handleAddMerchantSiteRedirectParam()
           const stopTimerStatuses = [
             STATUS_RESULT_FAILURE,
-            STATUS_RESULT_SUCCESS,
-          ];
+            STATUS_RESULT_SUCCESS
+          ]
           if (stopTimerStatuses.includes(response.data.status)) {
-            clearInterval(this.resultPollingTimer);
+            clearInterval(this.resultPollingTimer)
           }
-        });
-      }, this.RESULT_CHECK_CYCLE);
+        })
+      }, this.RESULT_CHECK_CYCLE)
     },
+    handleAddMerchantSiteRedirectParam() {
+      if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
+        if (this.backUrl != null && this.isMetamaskBrowser) {
+          history.pushState(
+            {},
+            null,
+            this.$route.path + '?redirect=' + this.backUrl
+          )
+        }
+      }
+    },
+    handleMerchantSiteRedirect() {
+      if(this.$route.query.redirect) {
+        window.open(this.$route.query.redirect, "_blank").focus()
+      }
+    }
   },
   created() {
     this.$emit('updateProgressTotalSteps', 2)
-    this.showDataInitialize();
+    this.showDataInitialize()
+    Decimal.set({ toExpNeg: -20 })
     this.apiGetTransaction().then((response) => {
-      this.setApiResultData(response.data);
+      this.setApiResultData(response.data)
+      this.handleMerchantSiteRedirect()
+      this.handleAddMerchantSiteRedirectParam()
       if (this.isStatusProcessing) {
-        this.pollingTransactionResult();
+        const filterAmount = (amount) => {
+          return Decimal(amount).toString()
+        }
+        this.transactionText = `Pay ${filterAmount(this.userPaidAmount)}${
+          this.userPaidSymbol
+        } for ${filterAmount(this.merchantReceiveAmount)}${
+          this.merchantReceiveSymbol
+        }`
+        this.pollingTransactionResult()
       }
       this.$emit('incrementProgressCompletedSteps')
       setTimeout(() => {
         this.$emit('updateInitializingStatus', false)
       }, 1500)
-    });
+    })
   },
   beforeDestroy() {
-    clearInterval(this.resultPollingTimer);
+    clearInterval(this.resultPollingTimer)
   },
   beforeRouteLeave(to, from, next) {
-    this.$store.dispatch("modal/show", {
-      target: "error-forbidden-back-payment-modal",
-      size: "small",
-    });
-    next(false);
-  },
-};
+    this.$store.dispatch('modal/show', {
+      target: 'error-forbidden-back-payment-modal',
+      size: 'small'
+    })
+    next(false)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-
-.payment_handleprice {
-  width: 100%;
-  dl {
-    dt {
-      font-weight: 400;
-      font-size: 15px;
-    }
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
+.result {
+  &__bill {
+    margin-bottom: 2rem;
+  }
+  &__title {
+    margin-bottom: 0.5rem;
   }
 
-  .payment_desc {
-    p {
-      background: $gradation-pale;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
-    }
+  &__transaction {
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-pricewrap {
-    width: 100%;
+  &__receivedToken {
+    padding: 1rem;
+    margin-bottom: 2rem;
   }
-  .payment_handleprice-price {
-    padding: 0;
-    width: 100%;
-    min-width: auto;
-  }
-
-  .payment_detail {
-    &-name {
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 25px;
-        margin-left: 7px;
-      }
-      figure {
-        width: 25px;
-        height: 25px;
-        img {
-          vertical-align: baseline;
-        }
-      }
-    }
-    &-value {
-      font-size: 20px;
-      font-weight: 100;
-      margin-left: 16px;
-    }
+  &__button {
+    margin-top: 2rem;
   }
 }
 </style>
