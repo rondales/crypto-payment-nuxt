@@ -801,7 +801,7 @@ const getBestRate = async function (
           uniswapVersions.push(UniswapVersion.v2)
         else if (exchangeName === 'uniswapV3')
           uniswapVersions.push(UniswapVersion.v3)
-        else if (Object.hasOwnProperty.call(bestRoute, exchangeName)) {
+        else {
           const nextBestExchange = await bestRoute.dexV2.getBestRoute(
             exchangeName,
             chainId,
