@@ -1,5 +1,10 @@
 <script>
-import { METAMASK, WALLET_CONNECT, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING } from '@/constants'
+import { 
+  METAMASK,
+  WALLET_CONNECT,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS,
+  STATUS_PROCESSING } from '@/constants'
 
 export default {
   name: 'PaymentWalletConnector',
@@ -20,6 +25,7 @@ export default {
   methods: {
     connect(useProvider, modalMode) {
       this.$_paymentWalletConnector_apiGetTransactionStatus().then((response) => {
+        // Redirect to Result Page if status is Processing, Failure or Success
         if([STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING].includes(response.data.status)) {
           this.$_paymentWalletConnector_redirectToPaymentResultPage()
         } else {
