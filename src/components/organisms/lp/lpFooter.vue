@@ -232,6 +232,11 @@ export default {
           link: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
           status: true,
         },
+        medium: {
+          icon: "icon/medium",
+          link: "https://medium.com/slash-project-publishing",
+          status: true,
+        },
       },
       localUrl: "",
     };
