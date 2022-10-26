@@ -40,7 +40,6 @@ const store = {
       rate: null
     },
     payment_token: null,
-    bestExchange: null,
     successReturnUrl: null,
     failReturnUrl: null
   },
@@ -205,9 +204,6 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state.token[key] = value
       })
-    },
-    updateBestExchange(state, payload) {
-      state.bestExchange = payload
     },
   }
 }

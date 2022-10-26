@@ -27,7 +27,6 @@ export default {
     }
     const exchanges = EXCHANGE_ROUTERS[chainId]
     const customNetworkConfig = SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS[chainId]
-    console.log(dexName)
 
     try {
       const cloneUniswapContractDetails = exchanges[dexName]
@@ -36,8 +35,7 @@ export default {
       const customNetwork = customNetworkConfig
         ? customNetworkConfig.customNetwork
         : undefined
-      console.log(cloneUniswapContractDetails)
-      console.log(customNetwork)
+
       const uniswapPair = new UniswapPair({
         fromTokenContractAddress: path[0],
         toTokenContractAddress: path[path.length - 1],
@@ -56,11 +54,9 @@ export default {
         paymentAmount,
         TradeDirection.output
       )
-      console.log(uniswapTrade)
 
       if (uniswapTrade.allTriedRoutesQuotes.length > 0) {
         const bestRoute = uniswapTrade.allTriedRoutesQuotes[0]
-        console.log(bestRoute)
 
         bestExchange.name = dexName
         bestExchange.exchange = exchanges[dexName].address

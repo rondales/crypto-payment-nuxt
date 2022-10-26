@@ -318,7 +318,6 @@ const getTokenExchangeData = async function(
   gasFeeRate,
   paymentFeeRate
 ) {
-  console.log(paymentRequestAmount)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
   const requestToken = defaultTokens[paymentRequestSymbol]
@@ -362,7 +361,6 @@ const getTokenExchangeData = async function(
     ).call({ from: walletAddress })
 
   const bestExchange = await getBestRate(
-    web3,
     chainId,
     walletAddress,
     path,
@@ -776,7 +774,6 @@ const convertFromWei = function convertFromWei(web3, wei, decimal) {
 }
 
 const getBestRate = async function (
-  web3,
   chainId,
   walletAddress,
   path,
@@ -786,14 +783,8 @@ const getBestRate = async function (
   try {
     const rpcUrl = NETWORKS[chainId].rpcUrl
     const exchanges = EXCHANGE_ROUTERS[chainId]
-    console.log(chainId)
-    console.log(exchanges)
-    console.log(paymentAmount)
-    console.log(path)
-    console.log(decimals)
     let bestExchange = { name: '', exchange: '', flag: '', price: 0 }
 
-    console.log(bestRoute)
     const uniswapVersions = []
     for (const exchangeName in exchanges) {
       if (Object.hasOwnProperty.call(exchanges, exchangeName)) {
@@ -818,8 +809,6 @@ const getBestRate = async function (
           ) {
             bestExchange = nextBestExchange
           }
-
-          console.log(bestExchange)
         }
       }
     }
@@ -842,12 +831,9 @@ const getBestRate = async function (
         bestExchange = nextBestExchange
       }
     }
-    console.log(bestExchange)
 
     if (bestExchange.price == 0)
       throw new Error('execution reverted: No valid exchange')
-
-    console.log(bestExchange)
 
     return bestExchange
   } catch (error) {

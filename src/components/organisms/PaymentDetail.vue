@@ -143,6 +143,7 @@ export default {
       balanceEquivalentAmount: 0,
       exchangeRate: 0,
       platformFee: 0,
+      bestExchange: null,
       merchantReceiveAmountWei: 0,
       contract: {
         address: null,
@@ -276,9 +277,6 @@ export default {
       return this.userSelectedTokenSymbol in tokens
         ? tokens[this.userSelectedTokenSymbol].iconPath
         : 'crypto_currency/unknown'
-    },
-    bestExchange() {
-      return this.$store.state.payment.bestExchange;
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null
@@ -486,8 +484,6 @@ export default {
       this.updating = true
       this.getTokenExchangeDataFromContract()
         .then((exchangeData) => {
-          this.$store.dispatch("payment/updateFee", exchangeData.fee);
-          this.$store.dispatch("payment/updateBestExchange", exchangeData.bestExchange);
           this.$store.dispatch('payment/updateToken', {
             amount: exchangeData.requireAmount,
             rate: exchangeData.rate
@@ -496,6 +492,7 @@ export default {
           this.requireAmount = exchangeData.requireAmount
           this.exchangeRate = exchangeData.rate
           this.platformFee = exchangeData.fee
+          this.bestExchange = exchangeData.bestExchange
           this.merchantReceiveAmountWei = exchangeData.requestAmountWei
         })
         .finally(() => {
@@ -615,6 +612,7 @@ export default {
             this.requireAmount = results[0].requireAmount
             this.exchangeRate = results[0].rate
             this.platformFee = results[0].fee
+            this.bestExchange = results[0].bestExchange
             this.merchantReceiveAmountWei = results[0].requestAmountWei
             this.$parent.loading = false
             this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()

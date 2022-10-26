@@ -53,8 +53,7 @@ export default {
       const customNetwork = customNetworkConfig
         ? customNetworkConfig.customNetwork
         : undefined
-      console.log(cloneUniswapContractDetails)
-      console.log(customNetwork)
+
       const uniswapPair = new UniswapPair({
         fromTokenContractAddress: path[0],
         toTokenContractAddress: path[path.length - 1],
@@ -73,11 +72,10 @@ export default {
         paymentAmount,
         TradeDirection.output
       )
-      console.log(uniswapTrade)
 
       if (uniswapTrade.allTriedRoutesQuotes.length > 0) {
         const bestRoute = uniswapTrade.allTriedRoutesQuotes[0]
-        console.log(bestRoute)
+
         if (bestRoute.uniswapVersion == 'v3') {
           bestExchange.name = 'uniswapV3'
           bestExchange.exchange = exchanges.uniswapV3.address
