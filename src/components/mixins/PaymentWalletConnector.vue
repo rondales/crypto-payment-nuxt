@@ -102,6 +102,8 @@ export default {
                 .then((response) => {
                   if (response.data.match) {
                     return Promise.resolve(this.$_paymentWalletConnector_deviceId)
+                  } else {
+                    return Promise.reject()
                   }
                 })
             } else {
