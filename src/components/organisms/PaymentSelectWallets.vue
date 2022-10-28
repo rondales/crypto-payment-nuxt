@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { METAMASK } from '@/constants'
+import { METAMASK, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING } from '@/constants'
 import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
@@ -101,8 +101,11 @@ export default {
     isAgreeRisk() {
       return this.$store.state.payment.isAgreeRisk
     },
-    isMobileAndMetamaskNotInstalled() {
-      return isMobile(window.navigator).any && !window.ethereum
+    isMobile() {
+      return isMobile(window.navigator).any
+    },
+    isMetamaskInstalled() {
+      return window.ethereum ? true : false
     },
     metamaskDeepLink() {
       return (
@@ -115,6 +118,15 @@ export default {
   methods: {
     apiGetAvailableNetworks() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract/network`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.$route.params.token]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
+    apiGetTransactionStatus() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
       const request = {
         params: new URLSearchParams([
           ['payment_token', this.$route.params.token]
@@ -144,20 +156,66 @@ export default {
       })
     },
     handleConnect(provider, mode) {
-      if (this.isMobileAndMetamaskNotInstalled) {
+      if (this.isMobile && !this.isMetamaskInstalled) {
         window.location.href = this.metamaskDeepLink
       } else {
         this.connect(provider, mode)
+      }
+    },
+    checkPaymentStatus() {
+      this.apiGetTransactionStatus().then((response) => {
+        if([STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING].includes(response.data.status)) {
+          this.redirectToResultPage()
+        }
+      })
+    },
+    redirectToResultPage() {
+      this.$router.push({ name: 'result', params: { token: this.paymentToken } })
+    },
+    handleAddRedirectToResultPageEventListener() {
+      if (this.isMobile) {
+        this.setSPFocusEventListener()
+      } else {
+        this.setPCFocusEventListener()
+      }
+    },
+    handleRemoveRedirectToResultPageEventListener() {
+      if (this.isMobile) {
+        this.removeSPFocusEventListener()
+      } else {
+        this.removePCFocusEventListener()
+      }
+    },
+    setPCFocusEventListener() {
+      window.addEventListener('focus', this.onFocusPC);
+    },
+    removePCFocusEventListener() {
+      window.removeEventListener('focus', this.onFocusPC)
+    },
+    setSPFocusEventListener() {
+      document.addEventListener('visibilitychange', this.onFocusSP);
+    },
+    removeSPFocusEventListener() {
+      window.removeEventListener('visibilitychange', this.onFocusSP);
+    },
+    onFocusPC() {
+      this.checkPaymentStatus()
+    },
+    onFocusSP() {
+      if(document.visibilityState === 'visible') {
+        this.checkPaymentStatus()
       }
     }
   },
   created() {
     this.$store.dispatch('web3/initialize')
     this.$store.dispatch('payment/initializeForBeforeConnectWallet')
+    this.handleAddRedirectToResultPageEventListener()
     // NOTE Temporarily commented out by issue #622
     // if (!this.isAgreeRisk && this.isInitialized) {
     //   this.showRiskDisclaimerModal();
     // }
+
   },
   mounted() {
     setTimeout(() => {
@@ -175,6 +233,9 @@ export default {
     } else {
       next()
     }
+  },
+  beforeDestroy() {
+    this.handleRemoveRedirectToResultPageEventListener()
   }
 }
 </script>

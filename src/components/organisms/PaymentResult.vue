@@ -175,7 +175,7 @@ export default {
       const tokens = this.merchantReceiveTokens
       return this.merchantReceiveSymbol in tokens
         ? tokens[this.merchantReceiveSymbol].iconPath
-        : 'crypto_currency/unknown'
+        : 'crypto_currency/unknown-small'
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens
