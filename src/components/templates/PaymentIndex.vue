@@ -67,6 +67,17 @@
         class="copy non-translate"
         html="Slash Web3 Payment ®︎"
       />
+<<<<<<< HEAD
+=======
+      <div
+        v-if="shouldShowOpenInNewTab"
+        class="talk-bubble tri-right btm-right"
+      >
+        <div class="talktext">
+          <p>Click<br />"Open in Browser"</p>
+        </div>
+      </div>
+>>>>>>> 79c22871 (adjust language button)
     </footer>
   </div>
 </template>

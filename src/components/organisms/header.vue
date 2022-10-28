@@ -439,7 +439,8 @@ export default {
   padding: 1rem 5vw;
   @include media(sp) {
     background: var(--Base);
-    border-bottom: 1px solid var(--Border);
+    // border-bottom: 1px solid var(--Border);
+    // height: 58px;
   }
   &.admin {
     background: var(--Base);
@@ -454,6 +455,9 @@ export default {
     @include flex(flex-start, center);
     width: auto;
     position: relative;
+    @include media(sp) {
+      flex-wrap: nowrap;
+    }
   }
   &__right {
     @include flex(flex-end, center);
@@ -598,6 +602,10 @@ export default {
     position: relative;
     width: 1.5rem;
     display: block;
+    margin-left: 7rem;
+    @include media(sp) {
+      margin-left: 0;
+    }
     &.active {
       &::before {
         top: 50%;

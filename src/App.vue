@@ -13,87 +13,98 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   metaInfo: {
-    meta: [{ vmid: "seo-robot-setting", name: "robots", content: "none" }],
+    meta: [{ vmid: 'seo-robot-setting', name: 'robots', content: 'none' }]
   },
   components: {
     adminContractPausedModal: () =>
-      import("@/components/molecules/adminContractPausedModal"),
-    networkModal: () => import("@/components/molecules/networkModal"),
-    walletModal: () => import("@/components/molecules/walletModal"),
-    walletForAdminModal: () => import("@/components/molecules/walletForAdminModal"),
+      import('@/components/molecules/adminContractPausedModal'),
+    networkModal: () => import('@/components/molecules/networkModal'),
+    walletModal: () => import('@/components/molecules/walletModal'),
+    walletForAdminModal: () =>
+      import('@/components/molecules/walletForAdminModal'),
     cautionWalletConnectModal: () =>
-      import("@/components/molecules/cautionWalletConnectModal"),
+      import('@/components/molecules/cautionWalletConnectModal'),
     cautionWalletConnectForAdminModal: () =>
-      import("@/components/molecules/cautionWalletConnectForAdminModal"),
-    errorWalletModal: () => import("@/components/molecules/errorWalletModal"),
-    errorWalletForAdminModal: () => import("@/components/molecules/errorWalletForAdminModal"),
+      import('@/components/molecules/cautionWalletConnectForAdminModal'),
+    errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
+    errorWalletForAdminModal: () =>
+      import('@/components/molecules/errorWalletForAdminModal'),
     errorMetamaskModal: () =>
-      import("@/components/molecules/errorMetamaskModal"),
+      import('@/components/molecules/errorMetamaskModal'),
     errorMetamaskForAdminModal: () =>
-      import("@/components/molecules/errorMetamaskForAdminModal"),
+      import('@/components/molecules/errorMetamaskForAdminModal'),
     errorCurrentNetworkModal: () =>
-      import("@/components/molecules/errorCurrentNetworkModal"),
+      import('@/components/molecules/errorCurrentNetworkModal'),
     errorCurrentNetworkForAdminModal: () =>
-      import("@/components/molecules/errorCurrentNetworkForAdminModal"),
+      import('@/components/molecules/errorCurrentNetworkForAdminModal'),
     errorNotExistAvailablePaymentContractModal: () =>
       import(
-        "@/components/molecules/errorNotExistAvailablePaymentContractModal"
+        '@/components/molecules/errorNotExistAvailablePaymentContractModal'
       ),
     errorForbiddenBackPaymentModal: () =>
-      import("@/components/molecules/errorForbiddenBackPaymentModal"),
+      import('@/components/molecules/errorForbiddenBackPaymentModal'),
     switchNetworkForAdminModal: () =>
-      import("@/components/molecules/switchNetworkForAdminModal"),
+      import('@/components/molecules/switchNetworkForAdminModal'),
     switchNetworkForPaymentModal: () =>
-      import("@/components/molecules/switchNetworkForPaymentModal"),
-    errorModal: () => import("@/components/molecules/errorModal"),
-    errorForAdminModal: () => import("@/components/molecules/errorForAdminModal"),
-    receiveModal: () => import("@/components/molecules/receiveModal"),
-    editNoteModal: () => import("@/components/molecules/editNoteModal"),
-    urlRefreshModal: () => import("@/components/molecules/urlRefreshModal"),
-    plugInsTokenRefreshModal: () => import("@/components/molecules/plugInsTokenRefreshModal"),
-    plugInsTokenDeleteModal: () => import("@/components/molecules/plugInsTokenDeleteModal"),
-    deleteRowModal: () => import("@/components/molecules/deleteRowModal"),
-    createDeeplinkModal: () => import("@/components/molecules/createDeeplinkModal"),
-    openQrModal: () => import("@/components/molecules/openQrModal"),
+      import('@/components/molecules/switchNetworkForPaymentModal'),
+    errorModal: () => import('@/components/molecules/errorModal'),
+    errorForAdminModal: () =>
+      import('@/components/molecules/errorForAdminModal'),
+    receiveModal: () => import('@/components/molecules/receiveModal'),
+    editNoteModal: () => import('@/components/molecules/editNoteModal'),
+    urlRefreshModal: () => import('@/components/molecules/urlRefreshModal'),
+    plugInsTokenRefreshModal: () =>
+      import('@/components/molecules/plugInsTokenRefreshModal'),
+    plugInsTokenDeleteModal: () =>
+      import('@/components/molecules/plugInsTokenDeleteModal'),
+    deleteRowModal: () => import('@/components/molecules/deleteRowModal'),
+    createDeeplinkModal: () =>
+      import('@/components/molecules/createDeeplinkModal'),
+    openQrModal: () => import('@/components/molecules/openQrModal'),
     editAccountNoteModal: () =>
-      import("@/components/molecules/editAccountNoteModal"),
-    accountModal: () => import("@/components/molecules/accountModal"),
+      import('@/components/molecules/editAccountNoteModal'),
+    accountModal: () => import('@/components/molecules/accountModal'),
     contractIssuanceModal: () =>
-      import("@/components/molecules/contractIssuanceModal"),
+      import('@/components/molecules/contractIssuanceModal'),
     regeneratePaymentUrlModal: () =>
-      import("@/components/molecules/regeneratePaymentUrlModal"),
+      import('@/components/molecules/regeneratePaymentUrlModal'),
     contractCashbackChangeModal: () =>
-      import("@/components/molecules/contractCashbackChangeModal"),
+      import('@/components/molecules/contractCashbackChangeModal'),
     contractReceiveAddressChangeModal: () =>
-      import("@/components/molecules/contractReceiveAddressChangeModal"),
+      import('@/components/molecules/contractReceiveAddressChangeModal'),
     cautionPaymentRiskDisclaimerModal: () =>
-      import("@/components/molecules/cautionPaymentRiskDisclaimerModal"),
-    addChainModal: () => import("@/components/molecules/addChainModal"),
-    addChainForAdminModal: () => import("@/components/molecules/addChainForAdminModal"),
-    paymentReceiptModal: () => import("@/components/molecules/paymentReceiptModal"),
-    paymentReceiptEmailModal: () => import("@/components/molecules/paymentReceiptEmailModal"),
-    paymentTokenDeleteModal: () => import("@/components/molecules/paymentTokenDeleteModal"),
-    paymentTokenRefreshModal: () => import("@/components/molecules/paymentTokenRefreshModal"),
-    paymentTokenModal: () => import("@/components/molecules/paymentTokenModal"),
+      import('@/components/molecules/cautionPaymentRiskDisclaimerModal'),
+    addChainModal: () => import('@/components/molecules/addChainModal'),
+    addChainForAdminModal: () =>
+      import('@/components/molecules/addChainForAdminModal'),
+    paymentReceiptModal: () =>
+      import('@/components/molecules/paymentReceiptModal'),
+    paymentReceiptEmailModal: () =>
+      import('@/components/molecules/paymentReceiptEmailModal'),
+    paymentTokenDeleteModal: () =>
+      import('@/components/molecules/paymentTokenDeleteModal'),
+    paymentTokenRefreshModal: () =>
+      import('@/components/molecules/paymentTokenRefreshModal'),
+    paymentTokenModal: () => import('@/components/molecules/paymentTokenModal')
   },
   computed: {
     classes() {
-      return ["main", `theme--${this.$store.state.theme}`];
+      return ['main', `theme--${this.$store.state.theme}`]
     },
     isAdminPage() {
-      return this.$route.name === "admin";
+      return this.$route.name === 'admin'
     },
     modal() {
-      return this.$store.state.modal;
-    },
-  },
-};
+      return this.$store.state.modal
+    }
+  }
+}
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/style.scss";
+@import '@/assets/scss/style.scss';
 
 div.main {
   background: var(--color_bg);
