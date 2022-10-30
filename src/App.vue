@@ -87,7 +87,8 @@ export default {
       import('@/components/molecules/paymentTokenDeleteModal'),
     paymentTokenRefreshModal: () =>
       import('@/components/molecules/paymentTokenRefreshModal'),
-    paymentTokenModal: () => import('@/components/molecules/paymentTokenModal')
+    paymentTokenModal: () => import('@/components/molecules/paymentTokenModal'),
+    openBrowserModal: () => import('@/components/molecules/openBrowserModal')
   },
   computed: {
     classes() {
