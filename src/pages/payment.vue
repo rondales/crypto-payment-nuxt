@@ -219,7 +219,7 @@ body {
   // padding-top: 2rem;
   .weglot-container.wg-default {
     position: fixed;
-    z-index: 10000;
+    z-index: 9000;
     bottom: auto;
     // width: 100%;
     top: 1rem;

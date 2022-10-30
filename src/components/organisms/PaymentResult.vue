@@ -38,13 +38,29 @@
     </div>
 
     <PaymentButton
-      v-if="(isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser"
+      v-if="
+        (isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser
+      "
       class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"
       color="primary"
       layout="reverse"
       size="l"
+    />
+    <!-- <div class="opensafari">
+      <div class="close" @click="deleteOpenSafari"></div>
+      <span
+        >Please return to Safari or Chrome from the Metamask Mobile App by your
+        own actions. You can also return to Safari or Chrome by clicking on the
+        “Open in Browser” link below.</span
+      >
+    </div> -->
+    <PaymentButton
+      text="openBrowserModal"
+      size="s"
+      color="primary"
+      @click.native="showModal('openBrowserModal')"
     />
   </div>
 </template>
@@ -105,7 +121,8 @@ export default {
       transactionType: 'loading',
       transactionTitle: 'Waiting for tx result',
       transactionText: '',
-      resultPollingTimer: null
+      resultPollingTimer: null,
+      openSafariFlg: true
     }
   },
   filters: {
@@ -313,7 +330,10 @@ export default {
       }, this.RESULT_CHECK_CYCLE)
     },
     handleAddMerchantSiteRedirectParam() {
-      if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
+      if (
+        this.status == STATUS_RESULT_FAILURE ||
+        this.status == STATUS_RESULT_SUCCESS
+      ) {
         if (this.backUrl != null && this.isMetamaskBrowser) {
           history.pushState(
             {},
@@ -324,9 +344,21 @@ export default {
       }
     },
     handleMerchantSiteRedirect() {
-      if(this.$route.query.redirect) {
-        window.open(this.$route.query.redirect, "_blank").focus()
+      if (this.$route.query.redirect) {
+        window.open(this.$route.query.redirect, '_blank').focus()
       }
+    },
+    deleteOpenSafari() {
+      this.openSafariFlg = false
+    },
+    showModal(target) {
+      this.$store.dispatch('modal/show', {
+        target: target,
+        size: 'small',
+        params: {
+          message: 'This is dummy massage.'
+        }
+      })
     }
   },
   created() {
@@ -387,6 +419,95 @@ export default {
   }
   &__button {
     margin-top: 2rem;
+  }
+}
+// .opensafari {
+//   position: fixed;
+//   bottom: 1rem;
+//   width: 90%;
+//   left: 5%;
+//   z-index: 1000;
+//   @include font(12px, 400, 0.04em, 1.6, $en_go);
+//   background-color: var(--Base3);
+//   padding: 1rem;
+//   border-radius: 1rem;
+//   display: none;
+//   @include media(sp) {
+//     display: block;
+//     bottom: 4rem;
+//   }
+//   .close {
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     width: 1.5rem;
+//     height: 1.5rem;
+//     background-color: var(--Base2);
+//     border-radius: 100%;
+//     transform: translate(0.5rem, -0.5rem);
+//     cursor: pointer;
+//     border: 1px solid var(--Border);
+//     &::before,
+//     &::after {
+//       content: '';
+//       display: block;
+//       width: 1rem;
+//       height: 1px;
+//       position: absolute;
+//       background-color: var(--Text);
+//       top: 50%;
+//       left: 50%;
+//       transform-origin: center center;
+//       transform: translate(-50%, -50%) rotate(45deg) scale(1, 1);
+//     }
+//     &::after {
+//       transform: translate(-50%, -50%) rotate(-45deg) scale(1, 1);
+//     }
+//   }
+// }
+.opensafari {
+  position: fixed;
+  width: 90%;
+  left: 5%;
+  height: 80%;
+  top: 10%;
+  z-index: 1000;
+  background-color: var(--Base3);
+  padding: 1rem;
+  border-radius: 1rem;
+  @include font(12px, 400, 0.04em, 1.6, $en_go);
+  // display: none;
+  // @include media(sp) {
+  //   display: block;
+  //   bottom: 4rem;
+  // }
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--Base2);
+    border-radius: 100%;
+    transform: translate(0.5rem, -0.5rem);
+    cursor: pointer;
+    border: 1px solid var(--Border);
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 1rem;
+      height: 1px;
+      position: absolute;
+      background-color: var(--Text);
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) rotate(45deg) scale(1, 1);
+    }
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg) scale(1, 1);
+    }
   }
 }
 </style>
