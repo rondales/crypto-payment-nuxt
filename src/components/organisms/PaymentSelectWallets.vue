@@ -125,12 +125,10 @@ export default {
       }
       return this.axios.get(url, request)
     },
-    apiGetTransactionStatus() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
+    apiGetTransaction() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
-        params: new URLSearchParams([
-          ['payment_token', this.$route.params.token]
-        ])
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
       return this.axios.get(url, request)
     },
@@ -163,9 +161,23 @@ export default {
       }
     },
     checkPaymentStatus() {
-      this.apiGetTransactionStatus().then((response) => {
-        if([STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING].includes(response.data.status)) {
+      this.apiGetTransaction().then((response) => {
+        if(response.data.status == STATUS_PROCESSING) {
           this.redirectToResultPage()
+        }
+        if (response.data.status == STATUS_RESULT_SUCCESS) {
+          if(response.data.succeeded_return_url) {
+            window.location.href = response.data.succeeded_return_url + '?payment_token=' + this.$route.params.token
+          } else {
+            this.redirectToResultPage()
+          }
+        }
+        if (response.data.status == STATUS_RESULT_FAILURE) {
+          if(response.data.failured_return_url) {
+            window.location.href = response.data.failured_return_url + '?payment_token=' + this.$route.params.token
+          } else {
+            this.redirectToResultPage()
+          }
         }
       })
     },
