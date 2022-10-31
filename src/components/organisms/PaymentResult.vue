@@ -50,8 +50,8 @@
     />
 
     <!-- 下部バナーの時 -->
-    <div v-if="shouldShowNavigateBanner" class="opensafari">
-      <div class="close" @click="deleteOpenSafari"></div>
+    <div v-if="shouldShowNavigateBanner" class="openOriginalBrowser">
+      <div class="close" @click="deleteOpenOriginalBrowser"></div>
       <img
         class="image"
         src="@/assets/images/openbrowser.png"
@@ -123,7 +123,7 @@ export default {
       transactionTitle: 'Waiting for tx result',
       transactionText: '',
       resultPollingTimer: null,
-      openSafariFlg: true
+      openOriginalBrowserFlg: true
     }
   },
   filters: {
@@ -271,7 +271,7 @@ export default {
       return this.isMobile && this.metamaskInstalled
     },
     shouldShowNavigateBanner() {
-      return this.openSafariFlg 
+      return this.openOriginalBrowserFlg 
         && (this.isStatusSucceeded || this.isStatusFailured)
         && this.isMetamaskBrowser
     }
@@ -355,8 +355,8 @@ export default {
         window.open(this.$route.query.redirect, '_blank').focus()
       }
     },
-    deleteOpenSafari() {
-      this.openSafariFlg = false
+    deleteOpenOriginalBrowser() {
+      this.openOriginalBrowserFlg = false
     },
     showModal(target) {
       this.$store.dispatch('modal/show', {
@@ -428,7 +428,7 @@ export default {
     margin-top: 2rem;
   }
 }
-.opensafari {
+.openOriginalBrowser {
   @include flex(center, center);
   gap: 1rem;
   position: fixed;
