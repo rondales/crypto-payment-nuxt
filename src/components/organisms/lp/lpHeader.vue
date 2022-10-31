@@ -108,7 +108,8 @@
               {{list.title}}
           </router-link>
         </div>
-        <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="m" />
+        <LpButton v-if="isMobile" class="disable non-translate" :link="cvLink4" type="main" size="m" />
+        <LpButton v-else-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="m" />
         <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="cvLink2" type="main" size="m" font="small" />
         <LpButton v-else class="disable non-translate" :link="cvLink3" type="main" size="m" font="small" />
     </div>
@@ -124,7 +125,8 @@ export default {
   },
   props: {
     isUseMainnet: Boolean,
-    isEnableEnterApp: Boolean
+    isEnableEnterApp: Boolean,
+    isMobile: Boolean
   },
   data() {
     return {
@@ -166,6 +168,13 @@ export default {
       },
       cvLink3: {
         title:  "Launch June 30, 2022",
+        icon: "",
+        url: "",
+        func: "enterApp",
+        status: true,
+      },
+      cvLink4: {
+        title: "EnterApp for PC only",
         icon: "",
         url: "",
         func: "enterApp",
