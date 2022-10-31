@@ -267,37 +267,37 @@ export default {
       paymentButtons: [
         {
           title:"Light.ver1",
-          image01: require("@/assets/images/lp/payment-button/light-ver1/payment-button_light_ver1-01.svg"),
-          image02: require("@/assets/images/lp/payment-button/light-ver1/payment-button_light_ver1-02.svg"),
-          image03: require("@/assets/images/lp/payment-button/light-ver1/payment-button_light_ver1-03.svg"),
-          image04: require("@/assets/images/lp/payment-button/light-ver1/payment-button_light_ver1-04.svg"),
+          image01: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-04.svg"),
           svgLink: "/assets/images/lp/button/light-ver1-svg.zip",
           pngLink: "/assets/images/lp/button/light-ver1-png.zip"
         },
         {
           title:"Light.ver2",
-          image01: require("@/assets/images/lp/payment-button/light-ver2/payment-button_light_ver2-01.svg"),
-          image02: require("@/assets/images/lp/payment-button/light-ver2/payment-button_light_ver2-02.svg"),
-          image03: require("@/assets/images/lp/payment-button/light-ver2/payment-button_light_ver2-03.svg"),
-          image04: require("@/assets/images/lp/payment-button/light-ver2/payment-button_light_ver2-04.svg"),
+          image01: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-04.svg"),
           svgLink: "/assets/images/lp/button/light-ver2-svg.zip",
           pngLink: "/assets/images/lp/button/light-ver2-png.zip"
         },
         {
           title:"Dark.ver1",
-          image01: require("@/assets/images/lp/payment-button/dark-ver1/payment-button_dark_ver1-01.svg"),
-          image02: require("@/assets/images/lp/payment-button/dark-ver1/payment-button_dark_ver1-02.svg"),
-          image03: require("@/assets/images/lp/payment-button/dark-ver1/payment-button_dark_ver1-03.svg"),
-          image04: require("@/assets/images/lp/payment-button/dark-ver1/payment-button_dark_ver1-04.svg"),
+          image01: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-04.svg"),
           svgLink: "/assets/images/lp/button/dark-ver1-svg.zip",
           pngLink: "/assets/images/lp/button/dark-ver1-png.zip"
         },
         {
           title:"Dark.ver2",
-          image01: require("@/assets/images/lp/payment-button/dark-ver2/payment-button_dark_ver2-01.svg"),
-          image02: require("@/assets/images/lp/payment-button/dark-ver2/payment-button_dark_ver2-02.svg"),
-          image03: require("@/assets/images/lp/payment-button/dark-ver2/payment-button_dark_ver2-03.svg"),
-          image04: require("@/assets/images/lp/payment-button/dark-ver2/payment-button_dark_ver2-04.svg"),
+          image01: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-04.svg"),
           svgLink: "/assets/images/lp/button/dark-ver2-svg.zip",
           pngLink: "/assets/images/lp/button/dark-ver2-png.zip"
         },
