@@ -38,7 +38,9 @@
     </div>
 
     <PaymentButton
-      v-if="(isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser"
+      v-if="
+        (isStatusSucceeded || isStatusFailured) && backUrl && !isMetamaskBrowser
+      "
       class="result__button"
       text="Back to Payee’s Services"
       :url="backUrl"
@@ -46,6 +48,21 @@
       layout="reverse"
       size="l"
     />
+
+    <!-- 下部バナーの時 -->
+    <div v-if="shouldShowNavigateBanner" class="openOriginalBrowser">
+      <div class="close" @click="deleteOpenOriginalBrowser"></div>
+      <img
+        class="image"
+        src="@/assets/images/openbrowser.png"
+        alt="Open Browser"
+      />
+      <span
+        >Switching back to Safari or Chrome browsers from Web3 Mobile Apps
+        browsers such as Metamask or Coinbase Wallet will need to be done by
+        you.</span
+      >
+    </div>
   </div>
 </template>
 
@@ -105,7 +122,8 @@ export default {
       transactionType: 'loading',
       transactionTitle: 'Waiting for tx result',
       transactionText: '',
-      resultPollingTimer: null
+      resultPollingTimer: null,
+      openOriginalBrowserFlg: true
     }
   },
   filters: {
@@ -251,6 +269,11 @@ export default {
     },
     isMetamaskBrowser() {
       return this.isMobile && this.metamaskInstalled
+    },
+    shouldShowNavigateBanner() {
+      return this.openOriginalBrowserFlg 
+        && (this.isStatusSucceeded || this.isStatusFailured)
+        && this.isMetamaskBrowser
     }
   },
   methods: {
@@ -307,13 +330,17 @@ export default {
             STATUS_RESULT_SUCCESS
           ]
           if (stopTimerStatuses.includes(response.data.status)) {
+            // this.showModal('openBrowserModal')
             clearInterval(this.resultPollingTimer)
           }
         })
       }, this.RESULT_CHECK_CYCLE)
     },
     handleAddMerchantSiteRedirectParam() {
-      if (this.status == STATUS_RESULT_FAILURE || this.status == STATUS_RESULT_SUCCESS) {
+      if (
+        this.status == STATUS_RESULT_FAILURE ||
+        this.status == STATUS_RESULT_SUCCESS
+      ) {
         if (this.backUrl != null && this.isMetamaskBrowser) {
           history.pushState(
             {},
@@ -324,9 +351,21 @@ export default {
       }
     },
     handleMerchantSiteRedirect() {
-      if(this.$route.query.redirect) {
-        window.open(this.$route.query.redirect, "_blank").focus()
+      if (this.$route.query.redirect) {
+        window.open(this.$route.query.redirect, '_blank').focus()
       }
+    },
+    deleteOpenOriginalBrowser() {
+      this.openOriginalBrowserFlg = false
+    },
+    showModal(target) {
+      this.$store.dispatch('modal/show', {
+        target: target,
+        size: 'small',
+        params: {
+          message: 'This is dummy massage.'
+        }
+      })
     }
   },
   created() {
@@ -387,6 +426,62 @@ export default {
   }
   &__button {
     margin-top: 2rem;
+  }
+}
+.openOriginalBrowser {
+  @include flex(center, center);
+  gap: 1rem;
+  position: fixed;
+  width: 90%;
+  left: 5%;
+  // height: 80%;
+  bottom: 3rem;
+  z-index: 1000;
+  background-color: var(--Base3);
+  padding: 1rem;
+  border-radius: 1rem;
+
+  @include font(11px, 400, 0.04em, 1.6, $en_go);
+  // display: none;
+  // @include media(sp) {
+  //   display: block;
+  //   bottom: 4rem;
+  // }
+  img {
+    width: 40%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  span {
+    flex: 1;
+  }
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--Base2);
+    border-radius: 100%;
+    transform: translate(0.5rem, -0.5rem);
+    cursor: pointer;
+    border: 1px solid var(--Border);
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 1rem;
+      height: 1px;
+      position: absolute;
+      background-color: var(--Text);
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) rotate(45deg) scale(1, 1);
+    }
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg) scale(1, 1);
+    }
   }
 }
 </style>
