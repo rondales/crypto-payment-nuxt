@@ -7,9 +7,9 @@
         alt="Open Browser"
       />
       <PaymentText
-        html="Please return to Safari or Chrome from the Metamask Mobile App by your
-        own actions. You can also return to Safari or Chrome by clicking on the
-        “Open in Browser” link below."
+        html="Switching back to Safari or Chrome browsers from Web3 Mobile Apps
+        browsers such as Metamask or Coinbase Wallet will need to be done by
+        you."
       />
 
       <div class="d-btnwrap bottomCloseBtn">
