@@ -58,9 +58,9 @@
         alt="Open Browser"
       />
       <span
-        >Please return to Safari or Chrome from the Metamask Mobile App by your
-        own actions. You can also return to Safari or Chrome by clicking on the
-        “Open in Browser” link below.</span
+        >Switching back to Safari or Chrome browsers from Web3 Mobile Apps
+        browsers such as Metamask or Coinbase Wallet will need to be done by
+        you.</span
       >
     </div>
 
