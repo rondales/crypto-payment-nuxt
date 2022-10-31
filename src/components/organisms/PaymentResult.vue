@@ -50,7 +50,7 @@
     />
 
     <!-- 下部バナーの時 -->
-    <div class="opensafari">
+    <div v-if="shouldShowNavigateBanner" class="opensafari">
       <div class="close" @click="deleteOpenSafari"></div>
       <img
         class="image"
@@ -63,14 +63,6 @@
         you.</span
       >
     </div>
-
-    <!-- 全体モーダルで見せる時：現状は画面確認のためボタンでモーダルを呼び出していますが、Metamaskの判定をした時は自動でこのモーダルが開くイメージで実装をお願いします。 -->
-    <PaymentButton
-      text="openBrowserModal"
-      size="s"
-      color="primary"
-      @click.native="showModal('openBrowserModal')"
-    />
   </div>
 </template>
 
@@ -277,6 +269,11 @@ export default {
     },
     isMetamaskBrowser() {
       return this.isMobile && this.metamaskInstalled
+    },
+    shouldShowNavigateBanner() {
+      return this.openSafariFlg 
+        && (this.isStatusSucceeded || this.isStatusFailured)
+        && this.isMetamaskBrowser
     }
   },
   methods: {
@@ -333,6 +330,7 @@ export default {
             STATUS_RESULT_SUCCESS
           ]
           if (stopTimerStatuses.includes(response.data.status)) {
+            // this.showModal('openBrowserModal')
             clearInterval(this.resultPollingTimer)
           }
         })
