@@ -1,6 +1,6 @@
 <template>
   <div id="wrapAll">
-    <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
+    <LpHeader :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" :isMobile="isMobile" />
     <DonationButton />
     <main>
       <!-- SECTION MV -->
@@ -24,7 +24,8 @@
             <span v-html="section.mv.lead"></span>
           </p>
           <div :class="section.mv.class + '__button'">
-            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+            <LpButton v-if="isMobile"  class="disable non-translate" :link="section.mv.link7" type="main" size="m" />
+            <LpButton v-else-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
             <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small" />
             <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small" />
             <LpButton :link="section.mv.link4" type="main" size="m" />
@@ -280,7 +281,8 @@
                 <img src="@/assets/images/logo-icon.svg" alt="Slash payment" />
                 <h4>Slash.fi</h4>
               </div>
-              <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
+              <LpButton v-if="isMobile"  class="disable non-translate" :link="section.mv.link7" type="main" size="m" />
+              <LpButton v-else-if="isEnableEnterApp"  class="non-translate" :link="section.mv.link1" type="main" size="m" />
               <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="section.mv.link2" type="main" size="m" font="small"/>
               <LpButton v-else :link="section.mv.link3" class="disable non-translate" type="main" size="m" font="small"/>
             </div>
@@ -307,7 +309,8 @@ import LpTitle from "@/components/templates/LpParts/Title";
 import LpImageText from "@/components/templates/LpParts/ImageText";
 import LpImage from "@/components/templates/LpParts/Image";
 import LpIcon from "@/components/templates/LpParts/Icon";
-import DonationButton from '@/components/organisms/lp/section/DonationButton'
+import DonationButton from '@/components/organisms/lp/section/DonationButton';
+import isMobile from 'ismobilejs';
 
 export default {
   data() {
@@ -369,6 +372,13 @@ export default {
             icon: "icon/arrow",
             iconAfter: true,
             btnType: "a"
+          },
+          link7: {
+            url: "/",
+            title: "EnterApp for PC only",
+            // icon: "icon/arrow",
+            func: "enterApp",
+            font: "s"
           },
         },
         hello: {
@@ -1194,6 +1204,9 @@ export default {
     },
     isShowDonate() {
       return JSON.parse(process.env.VUE_APP_SHOW_DONATE.toLowerCase())
+    },
+    isMobile() {
+      return isMobile(window.navigator).any
     }
   },
 

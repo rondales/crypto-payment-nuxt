@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { METAMASK } from '@/constants'
+import { METAMASK, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING } from '@/constants'
 import PaymentAmountBilled from '@/components/organisms/Payment/AmountBilled'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
@@ -101,8 +101,11 @@ export default {
     isAgreeRisk() {
       return this.$store.state.payment.isAgreeRisk
     },
-    isMobileAndMetamaskNotInstalled() {
-      return isMobile(window.navigator).any && !window.ethereum
+    isMobile() {
+      return isMobile(window.navigator).any
+    },
+    isMetamaskInstalled() {
+      return window.ethereum ? true : false
     },
     metamaskDeepLink() {
       return (
@@ -119,6 +122,13 @@ export default {
         params: new URLSearchParams([
           ['payment_token', this.$route.params.token]
         ])
+      }
+      return this.axios.get(url, request)
+    },
+    apiGetTransaction() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
+      const request = {
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
       return this.axios.get(url, request)
     },
@@ -144,20 +154,80 @@ export default {
       })
     },
     handleConnect(provider, mode) {
-      if (this.isMobileAndMetamaskNotInstalled) {
+      if (this.isMobile && !this.isMetamaskInstalled) {
         window.location.href = this.metamaskDeepLink
       } else {
         this.connect(provider, mode)
+      }
+    },
+    checkPaymentStatus() {
+      this.apiGetTransaction().then((response) => {
+        if(response.data.status == STATUS_PROCESSING) {
+          this.redirectToResultPage()
+        }
+        if (response.data.status == STATUS_RESULT_SUCCESS) {
+          if(response.data.succeeded_return_url) {
+            window.location.href = response.data.succeeded_return_url + '?payment_token=' + this.$route.params.token
+          } else {
+            this.redirectToResultPage()
+          }
+        }
+        if (response.data.status == STATUS_RESULT_FAILURE) {
+          if(response.data.failured_return_url) {
+            window.location.href = response.data.failured_return_url + '?payment_token=' + this.$route.params.token
+          } else {
+            this.redirectToResultPage()
+          }
+        }
+      })
+    },
+    redirectToResultPage() {
+      this.$router.push({ name: 'result', params: { token: this.paymentToken } })
+    },
+    handleAddRedirectToResultPageEventListener() {
+      if (this.isMobile) {
+        this.setSPFocusEventListener()
+      } else {
+        this.setPCFocusEventListener()
+      }
+    },
+    handleRemoveRedirectToResultPageEventListener() {
+      if (this.isMobile) {
+        this.removeSPFocusEventListener()
+      } else {
+        this.removePCFocusEventListener()
+      }
+    },
+    setPCFocusEventListener() {
+      window.addEventListener('focus', this.onFocusPC);
+    },
+    removePCFocusEventListener() {
+      window.removeEventListener('focus', this.onFocusPC)
+    },
+    setSPFocusEventListener() {
+      document.addEventListener('visibilitychange', this.onFocusSP);
+    },
+    removeSPFocusEventListener() {
+      window.removeEventListener('visibilitychange', this.onFocusSP);
+    },
+    onFocusPC() {
+      this.checkPaymentStatus()
+    },
+    onFocusSP() {
+      if(document.visibilityState === 'visible') {
+        this.checkPaymentStatus()
       }
     }
   },
   created() {
     this.$store.dispatch('web3/initialize')
     this.$store.dispatch('payment/initializeForBeforeConnectWallet')
+    this.handleAddRedirectToResultPageEventListener()
     // NOTE Temporarily commented out by issue #622
     // if (!this.isAgreeRisk && this.isInitialized) {
     //   this.showRiskDisclaimerModal();
     // }
+
   },
   mounted() {
     setTimeout(() => {
@@ -175,6 +245,9 @@ export default {
     } else {
       next()
     }
+  },
+  beforeDestroy() {
+    this.handleRemoveRedirectToResultPageEventListener()
   }
 }
 </script>
