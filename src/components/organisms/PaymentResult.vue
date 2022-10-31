@@ -48,14 +48,23 @@
       layout="reverse"
       size="l"
     />
-    <!-- <div class="opensafari">
+
+    <!-- 下部バナーの時 -->
+    <div class="opensafari">
       <div class="close" @click="deleteOpenSafari"></div>
+      <img
+        class="image"
+        src="@/assets/images/openbrowser.png"
+        alt="Open Browser"
+      />
       <span
         >Please return to Safari or Chrome from the Metamask Mobile App by your
         own actions. You can also return to Safari or Chrome by clicking on the
         “Open in Browser” link below.</span
       >
-    </div> -->
+    </div>
+
+    <!-- 全体モーダルで見せる時：現状は画面確認のためボタンでモーダルを呼び出していますが、Metamaskの判定をした時は自動でこのモーダルが開くイメージで実装をお願いします。 -->
     <PaymentButton
       text="openBrowserModal"
       size="s"
@@ -421,66 +430,33 @@ export default {
     margin-top: 2rem;
   }
 }
-// .opensafari {
-//   position: fixed;
-//   bottom: 1rem;
-//   width: 90%;
-//   left: 5%;
-//   z-index: 1000;
-//   @include font(12px, 400, 0.04em, 1.6, $en_go);
-//   background-color: var(--Base3);
-//   padding: 1rem;
-//   border-radius: 1rem;
-//   display: none;
-//   @include media(sp) {
-//     display: block;
-//     bottom: 4rem;
-//   }
-//   .close {
-//     position: absolute;
-//     top: 0;
-//     right: 0;
-//     width: 1.5rem;
-//     height: 1.5rem;
-//     background-color: var(--Base2);
-//     border-radius: 100%;
-//     transform: translate(0.5rem, -0.5rem);
-//     cursor: pointer;
-//     border: 1px solid var(--Border);
-//     &::before,
-//     &::after {
-//       content: '';
-//       display: block;
-//       width: 1rem;
-//       height: 1px;
-//       position: absolute;
-//       background-color: var(--Text);
-//       top: 50%;
-//       left: 50%;
-//       transform-origin: center center;
-//       transform: translate(-50%, -50%) rotate(45deg) scale(1, 1);
-//     }
-//     &::after {
-//       transform: translate(-50%, -50%) rotate(-45deg) scale(1, 1);
-//     }
-//   }
-// }
 .opensafari {
+  @include flex(center, center);
+  gap: 1rem;
   position: fixed;
   width: 90%;
   left: 5%;
-  height: 80%;
-  top: 10%;
+  // height: 80%;
+  bottom: 3rem;
   z-index: 1000;
   background-color: var(--Base3);
   padding: 1rem;
   border-radius: 1rem;
-  @include font(12px, 400, 0.04em, 1.6, $en_go);
+
+  @include font(11px, 400, 0.04em, 1.6, $en_go);
   // display: none;
   // @include media(sp) {
   //   display: block;
   //   bottom: 4rem;
   // }
+  img {
+    width: 40%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  span {
+    flex: 1;
+  }
   .close {
     position: absolute;
     top: 0;
