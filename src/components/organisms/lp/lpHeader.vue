@@ -224,6 +224,9 @@ export default {
     },
     changeTheme(theme) {
       this.$store.dispatch('changeTheme', theme)
+      document.body.classList.remove('theme--dark')
+      document.body.classList.remove('theme--light')
+      document.body.classList.add('theme--' + this.$store.state.theme)
     },
     open() {
       this.$store.dispatch('hamberger', { hamberger: true })

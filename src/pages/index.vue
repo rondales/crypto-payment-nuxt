@@ -17,11 +17,7 @@ export default {
     return { meta }
   },
   mounted() {
-    document.body.classList.add('theme--' + this.$store.state.theme)
-  },
-  updated() {
-    document.body.classList.remove('theme--dark')
-    document.body.classList.remove('theme--light')
+    console.log('aaaaa')
     document.body.classList.add('theme--' + this.$store.state.theme)
   }
 }
