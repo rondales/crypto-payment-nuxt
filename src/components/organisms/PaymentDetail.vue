@@ -111,7 +111,14 @@ import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentPrice from '@/components/organisms/Payment/Price'
 import PaymentButton from '@/components/organisms/Payment/Button'
 import { Decimal } from 'decimal.js'
-import { METAMASK, WALLET_CONNECT, NETWORKS, STATUS_PROCESSING } from '@/constants'
+import DeviceIdHandlerMixin from '@/components/mixins/DeviceIdHandler'
+import { 
+  METAMASK,
+  WALLET_CONNECT,
+  NETWORKS,
+  STATUS_PROCESSING,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS } from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -152,6 +159,7 @@ export default {
       isNotEnoughLiquidity: false
     }
   },
+  mixins: [DeviceIdHandlerMixin],
   components: {
     PaymentAmountBilled,
     PaymentTitle,
@@ -398,12 +406,31 @@ export default {
           wallet_address: this.userAccountAddress,
           pay_symbol: this.userSelectedTokenSymbol,
           pay_amount: this.userSelectedTokenPayAmount,
-          device_id: this.$store.state.payment.deviceId
+          device_id: this.$_deviceIdHandler_get()
         },
         {
           withCredentials: true
         }
       )
+    },
+    apiGetTransactionStatus() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.paymentToken]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
+    apiGetTransactionDeviceIdMatchingStatus() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/lock/match`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.paymentToken],
+          ['device_id', this.$_deviceIdHandler_get()]
+        ])
+      }
+      return this.axios.get(url, request)
     },
     getTokenExchangeDataFromContract() {
       return this.$web3
@@ -529,8 +556,38 @@ export default {
           })
         })
     },
+    /*
+    * Handling logic:
+    * STATUS PROCESSING, SUCCESS, FAIL => Redirect to result page
+    */
     handlePay() {
       if (this.expired) return
+      this.apiGetTransactionStatus().then((response) => {
+        if ([STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS].includes(response.data.status)) {
+          this.$router.push({
+            name: 'result',
+            params: { token: this.paymentToken }
+          })
+        } else {
+          this.apiGetTransactionDeviceIdMatchingStatus().then(((response) => {
+            if(response.data.match) {
+              this.executePay()
+            } else {
+              this.$store.dispatch('modal/show', {
+                target: 'error-modal',
+                size: 'small',
+                params: {
+                  message:
+                    'Unexpected Error. Please reapply the payment again.'
+                }
+              })
+            }
+          }))
+        }
+      })
+      
+    },
+    executePay() {
       this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
@@ -544,6 +601,10 @@ export default {
             })
             .catch((error) => {
               console.log(error.data)
+              // User deny signing transaction
+              if (error.data.code == 4001) {
+                this.$store.dispatch('wallet/updatePendingStatus', false)
+              }
             })
         })
         .catch((error) => {
