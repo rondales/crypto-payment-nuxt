@@ -8,10 +8,8 @@
         <div class="add-flex a-center">
           <a href="/" class="lp-header__logo">
             <img src="@/assets/images/lp/lp-logo.svg" alt="Slash Payment" />
-          </a >
-          <div class="testnet-navbar" v-if="!isUseMainnet">
-            Testnet
-          </div>
+          </a>
+          <div class="testnet-navbar" v-if="!isUseMainnet">Testnet</div>
         </div>
 
         <div class="lp-header__navwrap">
@@ -29,19 +27,19 @@
           <div class="lp-header__nav">
             <div v-for="(list, index) in nav" :key="index">
               <router-link
-                  :to="{
-                      name: list.name,
-                      hash: list.link
-                  }"
+                :to="{
+                  name: list.name,
+                  hash: list.link
+                }"
               >
-                  {{list.title}}
+                {{ list.title }}
               </router-link>
             </div>
             <button
               :class="[
                 'theme-button',
                 '--light',
-                { 'is-active': $store.state.theme == 'light' },
+                { 'is-active': $store.state.theme == 'light' }
               ]"
               @click="changeTheme('light')"
               v-if="$store.state.theme == 'dark'"
@@ -52,16 +50,36 @@
               :class="[
                 'theme-button',
                 '--dark',
-                { 'is-active': $store.state.theme == 'dark' },
+                { 'is-active': $store.state.theme == 'dark' }
               ]"
               @click="changeTheme('dark')"
               v-if="$store.state.theme == 'light'"
             >
               <img src="@/assets/images/lp/light.svg" alt="" />
             </button>
-            <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="s" />
-            <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="cvLink2" type="main" size="s" font="small" />
-            <LpButton v-else class="disable non-translate" :link="cvLink3" type="main" size="s" font="small" />
+            <LpButton
+              v-if="isEnableEnterApp"
+              class="non-translate"
+              :link="cvLink1"
+              type="main"
+              size="s"
+            />
+            <LpButton
+              v-else-if="isUseMainnet"
+              class="disable non-translate"
+              :link="cvLink2"
+              type="main"
+              size="s"
+              font="small"
+            />
+            <LpButton
+              v-else
+              class="disable non-translate"
+              :link="cvLink3"
+              type="main"
+              size="s"
+              font="small"
+            />
           </div>
         </div>
       </div>
@@ -74,11 +92,11 @@
         :class="[
           'theme-button',
           '--light',
-          { 'is-active': $store.state.theme == 'light' },
+          { 'is-active': $store.state.theme == 'light' }
         ]"
         @click="
-          changeTheme('light');
-          close();
+          changeTheme('light')
+          close()
         "
         v-if="$store.state.theme == 'dark'"
       >
@@ -88,39 +106,59 @@
         :class="[
           'theme-button',
           '--dark',
-          { 'is-active': $store.state.theme == 'dark' },
+          { 'is-active': $store.state.theme == 'dark' }
         ]"
         @click="
-          changeTheme('dark');
-          close();
+          changeTheme('dark')
+          close()
         "
         v-if="$store.state.theme == 'light'"
       >
         <img src="@/assets/images/lp/light.svg" alt="" />
       </button>
-        <div v-for="(list, key) in nav" :key="key">
-          <router-link
-              :to="{
-                  name: list.name,
-                  hash: list.link
-              }"
-          >
-              {{list.title}}
-          </router-link>
-        </div>
-        <LpButton v-if="isEnableEnterApp"  class="non-translate" :link="cvLink1" type="main" size="m" />
-        <LpButton v-else-if="isUseMainnet"  class="disable non-translate" :link="cvLink2" type="main" size="m" font="small" />
-        <LpButton v-else class="disable non-translate" :link="cvLink3" type="main" size="m" font="small" />
+      <div v-for="(list, key) in nav" :key="key">
+        <router-link
+          :to="{
+            name: list.name,
+            hash: list.link
+          }"
+        >
+          {{ list.title }}
+        </router-link>
+      </div>
+      <LpButton
+        v-if="isEnableEnterApp"
+        class="non-translate"
+        :link="cvLink1"
+        type="main"
+        size="m"
+      />
+      <LpButton
+        v-else-if="isUseMainnet"
+        class="disable non-translate"
+        :link="cvLink2"
+        type="main"
+        size="m"
+        font="small"
+      />
+      <LpButton
+        v-else
+        class="disable non-translate"
+        :link="cvLink3"
+        type="main"
+        size="m"
+        font="small"
+      />
     </div>
   </header>
 </template>
 
 <script>
-import LpButton from "@/components/templates/LpParts/Button";
+import LpButton from '@/components/templates/LpParts/Button'
 export default {
-  name: "Header",
+  name: 'Header',
   components: {
-    LpButton,
+    LpButton
   },
   props: {
     isUseMainnet: Boolean,
@@ -130,90 +168,93 @@ export default {
     return {
       nav: [
         {
-          name: "home",
-          link: "#developers",
-          title: "Developers",
+          name: 'home',
+          link: '#developers',
+          title: 'Developers'
         },
         {
-          name: "home",
-          link: "#fee-ecosystem",
-          title: "Fee & Ecosystem",
+          name: 'home',
+          link: '#fee-ecosystem',
+          title: 'Fee & Ecosystem'
         },
         {
-          name: "home",
-          link: "#roadmap",
-          title: "Roadmap",
+          name: 'home',
+          link: '#roadmap',
+          title: 'Roadmap'
         },
         {
-          name: "media_kit",
-          link: "",
-          title: "Media Kit",
-        },
+          name: 'media_kit',
+          link: '',
+          title: 'Media Kit'
+        }
       ],
       cvLink1: {
-        title:  "Enter App",
-        icon: "",
-        url: "",
-        func: "enterApp",
-        status: true,
+        title: 'Enter App',
+        icon: '',
+        url: '',
+        func: 'enterApp',
+        status: true
       },
       cvLink2: {
-        title: "Coming Soon",
-        icon: "",
-        url: "",
-        func: "enterApp",
-        status: true,
+        title: 'Coming Soon',
+        icon: '',
+        url: '',
+        func: 'enterApp',
+        status: true
       },
       cvLink3: {
-        title:  "Launch June 30, 2022",
-        icon: "",
-        url: "",
-        func: "enterApp",
-        status: true,
+        title: 'Launch June 30, 2022',
+        icon: '',
+        url: '',
+        func: 'enterApp',
+        status: true
       },
-      localUrl: "",
-    };
+      localUrl: ''
+    }
   },
   created() {
-    this.localUrl = location.origin;
+    this.localUrl = location.origin
   },
   methods: {
-    mouseOver(){
-      this.isHover = true;
+    mouseOver() {
+      this.isHover = true
     },
-    mouseLeave(){
-      this.isHover = false;
+    mouseLeave() {
+      this.isHover = false
     },
     changeTheme(theme) {
-      this.$store.dispatch("changeTheme", theme);
+      this.$store.dispatch('changeTheme', theme)
     },
     open() {
-      this.$store.dispatch("hamberger", { hamberger: true });
+      this.$store.dispatch('hamberger', { hamberger: true })
     },
     close() {
-      this.$store.dispatch("hamberger", { hamberger: false });
+      this.$store.dispatch('hamberger', { hamberger: false })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .lp-header {
   position: fixed;
   top: 0;
   z-index: 100;
   width: 100%;
-  .testnet-navbar{
-    background: #DE4437;
+  @include media(tb) {
+    background-color: var(--Base);
+  }
+  .testnet-navbar {
+    background: #de4437;
     color: #fff;
     font-size: 12px;
     padding: 2px 8px;
     border-radius: 20px;
     margin-top: 2px;
     margin-left: 8px;
-    margin-right:16px;
+    margin-right: 16px;
     height: 22px;
     @include media(sp) {
       margin: 0 0 0 8px;
@@ -222,17 +263,17 @@ export default {
       height: 20px;
     }
     position: relative;
-    .testnet-hovercontens{
+    .testnet-hovercontens {
       position: absolute;
       top: 32px;
-      left: 0;    
-      p{
+      left: 0;
+      p {
         width: 260px;
         background: $gray;
-        padding:8px 16px;
+        padding: 8px 16px;
         border-radius: 8px;
         position: relative;
-        a{
+        a {
           font-weight: 500;
           background: $gradation-light;
           -webkit-background-clip: text;
@@ -240,7 +281,7 @@ export default {
           background-size: 150% 150%;
           pointer-events: none;
           position: relative;
-          &::after{
+          &::after {
             position: absolute;
             top: 50%;
             left: 0;
@@ -248,11 +289,10 @@ export default {
             width: 100%;
             height: 1px;
             background: #fff;
-
           }
         }
-        &::before{
-          content: "";
+        &::before {
+          content: '';
           position: absolute;
           top: 0;
           left: 20px;
@@ -267,6 +307,7 @@ export default {
     @extend .section__wrap;
     @include rem_padding(1, 0, 1, 0);
     position: relative;
+    max-width: 100%;
     z-index: 100;
     @include media(sp) {
       padding-top: rem_sp(1);
@@ -275,6 +316,7 @@ export default {
   }
   &__inner {
     @include flex(space-between, center);
+    flex-wrap: nowrap;
   }
   &__logo {
     width: rem(18);
@@ -285,36 +327,46 @@ export default {
 
   &__nav {
     @include flex(flex-end, center);
+    gap: rem(1);
     @include media(tb) {
       display: none;
     }
-
-    * {
-      margin-right: rem(0.5);
-      @include media(tb) {
-        margin-right: 0;
-        margin-bottom: rem(1);
-      }
+    div {
+      font-size: 0;
     }
 
-    button{
-      margin-right: rem(2);
+    * {
+      // margin-right: rem(0.5);
+      // @include media(tb) {
+      //   margin-right: 0;
+      //   margin-bottom: rem(1);
+      // }
+    }
+
+    button {
+      margin-left: 6rem;
+      @include media(sp) {
+        margin-left: 0;
+      }
       @include media(tb) {
         margin-right: 0;
         margin-bottom: rem_sp(1);
       }
     }
     a {
-      @include font(rem(1.1), $fw, $ls, $lh, $en_go);
+      @include font(rem(0.9), $fw, $ls, 3, $en_go);
       @include media(sp) {
-        font-size: rem_sp(1.1);
+        font-size: rem_sp(1);
       }
     }
     .theme-button {
-      width: rem(2);
+      width: rem(1.2);
       @include media(sp) {
         width: rem_sp(2);
       }
+    }
+    .lpButton.main.s {
+      margin: 0;
     }
   }
   &__hamburger {
@@ -409,140 +461,5 @@ export default {
       margin: 0;
     }
   }
-
-  //   &__actions {
-  //     width: 20%;
-  //     @include media(tb) {
-  //       width: 100%;
-  //     }
-  //   }
-  //   &__head {
-  //     @include media(tb) {
-  //       display: flex;
-  //       justify-content: space-between;
-  //       align-items: center;
-  //       padding: 16px;
-  //       background: var(--color_lp_bg);
-  //     }
-  //   }
-  //   .logo-wrap {
-  //     width: 80%;
-  //     @include media(tb) {
-  //       width: 100%;
-  //       display: block !important;
-  //     }
-  //     .link-wrap {
-  //       width: 50%;
-  //       margin-left: 20%;
-  //       @include media(tb) {
-  //         width: 100%;
-  //         display: none !important;
-  //         margin: 0;
-  //         padding: 80px 60px 0;
-  //       }
-  //       &.active {
-  //         display: block !important;
-  //       }
-  //       span {
-  //         @include media(tb) {
-  //           width: 100%;
-  //           display: block !important;
-  //           margin-bottom: 32px;
-  //         }
-  //         a {
-  //           font-size: 18px;
-  //           font-weight: 400;
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   .logo {
-  //     white-space: nowrap;
-  //     @include media(tb) {
-  //       width: 50%;
-  //     }
-  //   }
-  //   .theme-button {
-  //     margin-right: 3rem;
-  //     vertical-align: middle;
-  //     width: 32px;
-  //     height: 32px;
-  //     img {
-  //       width: 32px;
-  //       height: 32px;
-  //     }
-  //     span {
-  //       margin-right: 8px;
-  //     }
-  //   }
-  //   .app-link {
-  //     border-radius: 0.6rem;
-  //     padding: 0;
-  //     height: 4.2rem;
-  //     line-height: 4.2rem;
-  //     @include media(tb) {
-  //       width: 100% !important;
-  //       margin: auto;
-  //       height: 6rem;
-  //       line-height: 6rem;
-  //     }
-  //     a {
-  //       display: block;
-  //       padding: 0 4rem;
-  //       color: #fff;
-  //     }
-  //   }
-  // }
-
-  // .toggle-theme {
-  //   text-align: center;
-  //   @include media(pc) {
-  //     margin-left: 0;
-  //   }
-  //   @include media(tb) {
-  //     width: 10% !important;
-  //   }
-  // }
-  // .theme-button {
-  //   font-size: 0;
-  //   @include media(pc) {
-  //     .emoji {
-  //       font-size: 28px;
-  //     }
-  //   }
-  //   @include media(tb) {
-  //     .emoji {
-  //       font-size: 2rem;
-  //     }
-  //     &.is-active {
-  //       display: none;
-  //     }
-  //   }
-  //   &--light {
-  //     grid-row: 1;
-  //     grid-column: 1;
-  //   }
-  //   &--dark {
-  //     grid-row: 1;
-  //     grid-column: 3;
-  //   }
-  // }
-  // .hamburger {
-  //   display: block;
-  //   position: relative;
-  //   width: 24px;
-  //   height: 24px;
-  //   overflow: hidden;
-  //   z-index: 2;
-  //   &.active {
-  //     .menu-btn {
-  //       top: 0;
-  //     }
-  //   }
-  //   .menu-btn {
-  //     position: absolute;
-  //     top: -23px;
-  //   }
 }
 </style>
