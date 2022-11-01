@@ -462,12 +462,10 @@ export default {
     sendPaymentTransactionToBlockChain() {
       return this.$web3.sendPaymentTransaction(
         this.web3Instance,
-        this.chainId,
         this.userAccountAddress,
         this.contract,
         this.userSelectedToken,
         this.userSelectedTokenPayAmount,
-        this.$store.state.payment.symbol,
         this.platformFee,
         this.merchantReceiveAmountWei,
         this.bestExchange

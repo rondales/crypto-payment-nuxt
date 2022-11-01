@@ -330,22 +330,18 @@ const getTokenExchangeData = async function(
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const reservedParam = '0x'
 
-  let path, decimals
+  let path
   if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
     if(token.address === null || token.address === wrappedToken.address) {
       path = [wrappedToken.address, requestToken.address]
-      decimals = [18, requestTokenDecimal]
     } else {
       path = [token.address, requestToken.address]
-      decimals = [token.decimal, requestTokenDecimal]
     }
   } else {
     if(token.address === null || token.address === wrappedToken.address) {
       path = [wrappedToken.address, requestToken.address]
-      decimals = [18, requestTokenDecimal]
     } else {
       path = [token.address, wrappedToken.address, requestToken.address]
-      decimals = [token.decimal, 18, requestTokenDecimal]
     }
   }
   const payingTokenAddress = token.address === null
@@ -364,7 +360,6 @@ const getTokenExchangeData = async function(
     chainId,
     walletAddress,
     path,
-    decimals,
     paymentRequestAmount
   )
   const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
@@ -477,40 +472,22 @@ const getTokenDecimalUnit = function(web3, chainId, token) {
 
 const sendPaymentTransaction = async function(
   web3,
-  chainId,
   walletAddress,
   contract,
   token,
   paymentAmount,
-  paymentRequestSymbol,
   platformFee,
   requestAmountWei,
   bestExchange
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const defaultTokens = getMerchantReceiveTokens(chainId)
-  const requestToken = defaultTokens[paymentRequestSymbol]
   const userTokenAmountWei = convertToWei(web3, paymentAmount, token.decimal)
-  const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
   const paymentIdParam = ''
   const optionalParam = ''
   let reservedParam = '0x'
-  let path
-  if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, requestToken.address]
-    }
-  } else {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, wrappedToken.address, requestToken.address]
-    }
-  }
+  let path = []
   const feePath = []
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
@@ -777,7 +754,6 @@ const getBestRate = async function (
   chainId,
   walletAddress,
   path,
-  decimals,
   paymentAmount
 ) {
   try {
