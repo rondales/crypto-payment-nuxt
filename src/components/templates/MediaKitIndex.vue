@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lp-header :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" :isMobile="isMobile" />
+    <lp-header :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
     <article class="media_kit lp display">
       <section>
         <div class="title">
@@ -252,7 +252,6 @@
 <script>
 import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
-import isMobile from 'ismobilejs';
 
 export default {
   name: "payment",
@@ -332,9 +331,6 @@ export default {
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
-    },
-    isMobile() {
-      return isMobile(window.navigator).any
     }
   },
   methods: {
