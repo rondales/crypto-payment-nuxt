@@ -202,19 +202,23 @@ export default {
     this.handleRedirect()
   },
   mounted() {
+    document.body.classList.add('payment')
     document.body.classList.add('theme--' + this.$store.state.theme)
   },
   updated() {
     document.body.classList.remove('theme--dark')
     document.body.classList.remove('theme--light')
     document.body.classList.add('theme--' + this.$store.state.theme)
+  },
+  beforeDestroy() {
+    document.body.classList.remove('payment')
   }
 }
 </script>
 <style lang="scss">
 @import '@/assets/scss/style.scss';
 
-body {
+body.payment {
   position: relative;
   // padding-top: 2rem;
   .weglot-container.wg-default {

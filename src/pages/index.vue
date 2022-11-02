@@ -17,19 +17,22 @@ export default {
     return { meta }
   },
   mounted() {
-    console.log('aaaaa')
+    document.body.classList.add('lp')
     document.body.classList.add('theme--' + this.$store.state.theme)
+  },
+  beforeDestroy() {
+    document.body.classList.remove('lp')
   }
 }
 </script>
 
 <style lang="scss">
 @import '@/assets/scss/style.scss';
-@import '@/assets/scss/delaunay.scss';
-body {
+body.lp {
   position: relative;
   // padding-top: 2rem;
   .weglot-container.wg-default {
+    @import '@/assets/scss/delaunay.scss';
     position: fixed;
     z-index: 9000;
     bottom: auto;
