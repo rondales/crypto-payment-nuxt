@@ -12,6 +12,11 @@ import {
 import { METAMASK, WALLET_CONNECT } from './modules/provider'
 import { DARK_THEME, LIGHT_THEME } from './modules/color_theme'
 import { NETWORKS } from './modules/network'
+import {
+  EXCHANGE_ROUTERS,
+  SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS,
+  TOKEN_RECEIVE_FLOATING_POINT_EXPONENT
+} from './modules/exchange_router'
 import { CURRENCIES } from './modules/currency'
 import { HTTP_CODES } from './modules/http_code'
 import { SAFE_THE_CHILDREN, UNICEF } from './modules/donation'
@@ -41,6 +46,11 @@ export {
 export { METAMASK, WALLET_CONNECT }
 export { DARK_THEME, LIGHT_THEME }
 export { NETWORKS }
+export {
+  EXCHANGE_ROUTERS,
+  SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS,
+  TOKEN_RECEIVE_FLOATING_POINT_EXPONENT
+}
 export { CURRENCIES }
 export { HTTP_CODES }
 export { SAFE_THE_CHILDREN, UNICEF }

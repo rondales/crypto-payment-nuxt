@@ -7,6 +7,7 @@ RUN mkdir /work
 COPY /src /work/src
 COPY /public /work/public
 COPY .env.mainnet /work/.env.mainnet
+COPY .env.premain /work/.env.premain
 COPY .env.testnet /work/.env.testnet
 COPY .env.staging /work/.env.staging
 COPY vue.config.js /work/vue.config.js
@@ -46,4 +47,4 @@ RUN apk --no-cache add binutils curl && \
 
 WORKDIR /usr/local/src
 
-RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --acl public-read --cache-control "max-age=3600"
+RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --cache-control "max-age=3600"
