@@ -97,7 +97,10 @@ const store = {
     },
     updatePaymentToken({ commit }, payload) {
       commit('updatePaymentToken', payload)
-    }
+    },
+    updateBestExchange({ commit }, payload) {
+      commit('updateBestExchange', payload)
+    },
   },
   mutations: {
     initialize(state) {
@@ -201,7 +204,7 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state.token[key] = value
       })
-    }
+    },
   }
 }
 

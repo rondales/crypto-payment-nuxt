@@ -150,6 +150,7 @@ export default {
       balanceEquivalentAmount: 0,
       exchangeRate: 0,
       platformFee: 0,
+      bestExchange: null,
       merchantReceiveAmountWei: 0,
       contract: {
         address: null,
@@ -488,15 +489,14 @@ export default {
     sendPaymentTransactionToBlockChain() {
       return this.$web3.sendPaymentTransaction(
         this.web3Instance,
-        this.chainId,
         this.userAccountAddress,
         this.contract,
         this.userSelectedToken,
         this.userSelectedTokenPayAmount,
-        this.$store.state.payment.symbol,
         this.platformFee,
-        this.merchantReceiveAmountWei
-      )
+        this.merchantReceiveAmountWei,
+        this.bestExchange
+      );
     },
     setExchangeDataExpireTimer() {
       return setTimeout(() => {
@@ -517,6 +517,7 @@ export default {
           this.requireAmount = exchangeData.requireAmount
           this.exchangeRate = exchangeData.rate
           this.platformFee = exchangeData.fee
+          this.bestExchange = exchangeData.bestExchange
           this.merchantReceiveAmountWei = exchangeData.requestAmountWei
         })
         .finally(() => {
@@ -670,6 +671,7 @@ export default {
             this.requireAmount = results[0].requireAmount
             this.exchangeRate = results[0].rate
             this.platformFee = results[0].fee
+            this.bestExchange = results[0].bestExchange
             this.merchantReceiveAmountWei = results[0].requestAmountWei
             this.$parent.loading = false
             this.exchangeDataExpireTimer = this.setExchangeDataExpireTimer()
