@@ -17,7 +17,12 @@
     />
   </button>
   <div v-else>
-    <a v-if="link.btnType === 'a' && link.url !== ''" :class="linkClass"  :href="link.url" target="_blank">
+    <a
+      v-if="link.btnType === 'a' && link.url !== ''"
+      :class="linkClass"
+      :href="link.url"
+      target="_blank"
+    >
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
@@ -30,7 +35,7 @@
         :path="link.icon"
       />
     </a>
-    <a v-if="link.url===''" :class="linkClass">
+    <a v-if="link.url === ''" :class="linkClass">
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
@@ -43,7 +48,11 @@
         :path="link.icon"
       />
     </a>
-    <router-link v-if="link.btnType === 'router'" :class="linkClass" :to="link.url">
+    <router-link
+      v-if="link.btnType === 'router'"
+      :class="linkClass"
+      :to="link.url"
+    >
       <LpIcon
         v-if="!link.iconAfter && link.icon"
         class="icon before"
@@ -60,64 +69,64 @@
 </template>
 
 <script>
-import JsSHA from "jssha";
-import { SAFE_THE_CHILDREN, UNICEF } from "@/constants";
-import LpIcon from "@/components/templates/LpParts/Icon";
+import JsSHA from 'jssha'
+import { SAFE_THE_CHILDREN, UNICEF } from '@/constants'
+import LpIcon from '@/components/templates/LpParts/Icon'
 export default {
   components: {
-    LpIcon,
+    LpIcon
   },
   props: {
     link: {
       type: Object,
       default: () => ({
-        title: "",
-        url: "",
-        icon: "",
+        title: '',
+        url: '',
+        icon: '',
         status: true,
         blank: false,
-        func: "",
-      }),
+        func: ''
+      })
     },
     type: {
       type: String,
-      default: "main",
+      default: 'main'
     },
     size: {
       type: String,
-      default: "m",
+      default: 'm'
     },
     font: {
-      type: String,
-    },
+      type: String
+    }
   },
   computed: {
     API_BASE_URL() {
-      return process.env.VUE_APP_API_BASE_URL;
+      return process.env.VUE_APP_API_BASE_URL
     },
     SAFE_THE_CHILDREN() {
-      return SAFE_THE_CHILDREN;
+      return SAFE_THE_CHILDREN
     },
     UNICEF() {
-      return UNICEF;
+      return UNICEF
     },
     SAFE_THE_CHILDREN_MERCAHNT_IDENTIFICATION_TOKEN() {
-      return process.env
-        .VUE_APP_SAFE_THE_CHILDREN_MERCHANT_IDENTIFICATION_TOKEN;
+      return process.env.VUE_APP_SAFE_THE_CHILDREN_MERCHANT_IDENTIFICATION_TOKEN
     },
     SAFE_THE_CHILDREN_MERCAHNT_HASH_TOKEN() {
-      return process.env.VUE_APP_SAFE_THE_CHILDREN_MERCHANT_HASH_TOKEN;
+      return process.env.VUE_APP_SAFE_THE_CHILDREN_MERCHANT_HASH_TOKEN
     },
     UNICEF_MERCAHNT_IDENTIFICATION_TOKEN() {
-      return process.env.VUE_APP_UNICEF_MERCHANT_IDENTIFICATION_TOKEN;
+      return process.env.VUE_APP_UNICEF_MERCHANT_IDENTIFICATION_TOKEN
     },
     UNICEF_MERCAHNT_HASH_TOKEN() {
-      return process.env.VUE_APP_UNICEF_MERCHANT_HASH_TOKEN;
+      return process.env.VUE_APP_UNICEF_MERCHANT_HASH_TOKEN
     },
     linkClass() {
-      let classname = "lpButton " + this.type + " " + this.size + " " + this.font;
-      return classname;
-    },
+      let classname =
+        'lpButton ' + this.type + ' ' + this.size + ' ' + this.font
+      return classname
+    }
 
     // aHref() {
     //   let prop = {};
@@ -141,90 +150,90 @@ export default {
   methods: {
     // 外部リンクかどうかチェック
     isExternalLink(url) {
-      let reg = new RegExp("^(https?:)?//" + document.domain);
-      return url.match(reg) || url.charAt(0) === "/"; //boolean
+      let reg = new RegExp('^(https?:)?//' + document.domain)
+      return url.match(reg) || url.charAt(0) === '/' //boolean
     },
     handle_function_call(function_name) {
-      if (function_name == "enterApp") {
-        this.enterApp();
-      } else if (function_name == "paymentForDonate_SAFE_THE_CHILDREN") {
-        this.paymentForDonate(SAFE_THE_CHILDREN);
-      } else if (function_name == "paymentForDonate_UNICEF") {
-        this.paymentForDonate(UNICEF);
+      if (function_name == 'enterApp') {
+        this.enterApp()
+      } else if (function_name == 'paymentForDonate_SAFE_THE_CHILDREN') {
+        this.paymentForDonate(SAFE_THE_CHILDREN)
+      } else if (function_name == 'paymentForDonate_UNICEF') {
+        this.paymentForDonate(UNICEF)
       }
     },
     enterApp() {
-      this.$router.push({ path: "/admin" });
+      this.$router.push({ path: '/admin' })
     },
     paymentForDonate(donationFor) {
       if (donationFor !== SAFE_THE_CHILDREN && donationFor !== UNICEF) {
-        return;
+        return
       }
-      const tokens = this.getDonationPaymentTokens(donationFor);
+      const tokens = this.getDonationPaymentTokens(donationFor)
       this.apiGetDonateOrderCode(tokens.identification, donationFor)
         .then((apiResponse) => {
-          const orderCode = apiResponse.data.order_code;
-          const raw = `${orderCode}::::${tokens.hash}`;
-          const hash = this.getDonationPaymentHash(raw);
+          const orderCode = apiResponse.data.order_code
+          const raw = `${orderCode}::::${tokens.hash}`
+          const hash = this.getDonationPaymentHash(raw)
           return {
             identification_token: tokens.identification,
             order_code: orderCode,
-            verify_token: hash,
-          };
+            verify_token: hash
+          }
         })
         .then(this.apiGetPaymentUrl)
         .then((apiResponse) => {
-          location.href = apiResponse.data.url;
+          location.href = apiResponse.data.url
         })
         .catch(() => {
-          this.$store.dispatch("modal/show", {
-            target: "error-modal",
-            size: "small",
+          this.$store.dispatch('modal/show', {
+            target: 'error-modal',
+            size: 'small',
             params: {
               message:
-                "Please try again because an error occurred during processing.",
-            },
-          });
-        });
+                'Please try again because an error occurred during processing.'
+            }
+          })
+        })
     },
     getDonationPaymentTokens(donationFor) {
-      const tokens = { identification: null, hash: null };
+      const tokens = { identification: null, hash: null }
       switch (donationFor) {
         case SAFE_THE_CHILDREN:
           tokens.identification =
-            this.SAFE_THE_CHILDREN_MERCAHNT_IDENTIFICATION_TOKEN;
-          tokens.hash = this.SAFE_THE_CHILDREN_MERCAHNT_HASH_TOKEN;
-          break;
+            this.SAFE_THE_CHILDREN_MERCAHNT_IDENTIFICATION_TOKEN
+          tokens.hash = this.SAFE_THE_CHILDREN_MERCAHNT_HASH_TOKEN
+          break
         case UNICEF:
-          tokens.identification = this.UNICEF_MERCAHNT_IDENTIFICATION_TOKEN;
-          tokens.hash = this.UNICEF_MERCAHNT_HASH_TOKEN;
+          tokens.identification = this.UNICEF_MERCAHNT_IDENTIFICATION_TOKEN
+          tokens.hash = this.UNICEF_MERCAHNT_HASH_TOKEN
       }
-      return tokens;
+      return tokens
     },
     getDonationPaymentHash(str) {
-      const sha = new JsSHA("SHA-256", "TEXT");
-      sha.update(str);
-      return sha.getHash("HEX");
+      const sha = new JsSHA('SHA-256', 'TEXT')
+      sha.update(str)
+      return sha.getHash('HEX')
     },
     apiGetDonateOrderCode(identificationToken, donationFor) {
-      const url = `${this.API_BASE_URL}/api/v1/payment/donation/code`;
+      const url = `${this.API_BASE_URL}/api/v1/payment/donation/code`
       const params = new URLSearchParams([
-        ["identification_token", identificationToken],
-        ["donation_for", donationFor],
-      ]);
-      return this.axios.get(url, { params });
+        ['identification_token', identificationToken],
+        ['donation_for', donationFor]
+      ])
+      return this.axios.get(url, { params })
     },
     apiGetPaymentUrl(submitData) {
-      const url = `${this.API_BASE_URL}/api/v1/payment/receive`;
-      return this.axios.post(url, submitData);
-    },
-  },
-};
+      const url = `${this.API_BASE_URL}/api/v1/payment/receive`
+      return this.axios.post(url, submitData)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 .lpButton {
   cursor: pointer;
   position: relative;
@@ -245,12 +254,12 @@ export default {
       opacity: 1;
     }
   }
-  &.disable{
-    opacity: .8 !important;
-    pointer-events:none;
+  &.disable {
+    opacity: 0.8 !important;
+    pointer-events: none;
     position: relative;
-    &::before{
-      background: #AAAAAA !important;
+    &::before {
+      background: #aaaaaa !important;
     }
   }
   .icon {
@@ -321,8 +330,8 @@ export default {
     }
   }
   &.s {
-    @include font(rem(1), 500, 0.02em, 1, $ff);
-    height: rem(3);
+    @include font(rem(0.9), 500, 0.02em, 1, $ff);
+    height: rem(2.5);
     padding: 0 rem(1.2);
     border-radius: rem(3);
     .icon {
@@ -342,8 +351,8 @@ export default {
       }
     }
   }
-  &.small{
-    font-size: 14px
+  &.small {
+    font-size: 14px;
   }
   &.main {
     @extend .lpButton;
@@ -357,7 +366,7 @@ export default {
     }
     &::before,
     &::after {
-      content: "";
+      content: '';
       display: block;
       width: 100%;
       height: 100%;
@@ -408,7 +417,7 @@ export default {
     }
     &::before,
     &::after {
-      content: "";
+      content: '';
       display: block;
       width: 100%;
       height: 100%;
@@ -466,7 +475,7 @@ export default {
     color: var(--color_font);
     position: relative;
     &::before {
-      content: "";
+      content: '';
       display: block;
       position: absolute;
       width: 100%;
