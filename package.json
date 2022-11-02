@@ -10,6 +10,7 @@
     "build:dev": "vue-cli-service build --mode development",
     "build:stg": "vue-cli-service build --mode staging",
     "build:testnet": "vue-cli-service build --mode testnet",
+    "build:premain": "vue-cli-service build --mode premain",
     "build:mainnet": "vue-cli-service build --mode mainnet",
     "lint": "vue-cli-service lint"
   },
@@ -32,6 +33,7 @@
     "number-format.js": "^2.0.9",
     "p5": "^1.4.1",
     "secure-ls": "^1.2.6",
+    "simple-uniswap-sdk": "^3.7.0",
     "v-clipboard": "^2.2.3",
     "vue": "^2.6.11",
     "vue-axios": "^3.4.0",

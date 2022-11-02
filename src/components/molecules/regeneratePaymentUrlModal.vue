@@ -85,6 +85,7 @@ import PaymentConfirmCheckbox from "@/components/organisms/Payment/ConfirmCheckb
 import PaymentCopy from "@/components/organisms/Payment/Copy";
 import PaymentModal from "@/components/organisms/Payment/Modal";
 import { DARK_THEME } from "@/constants";
+import DeviceIdHandlerMixin from '@/components/mixins/DeviceIdHandler'
 
 export default {
   name: "regeneratePaymentUrlModal",
@@ -96,6 +97,7 @@ export default {
     PaymentCopy,
     PaymentModal,
   },
+  mixins: [DeviceIdHandlerMixin],
   data() {
     return {
       confirmed: false,
@@ -157,7 +159,8 @@ export default {
       this.refreshing = true;
       this.apiRefreshPaymentToken()
         .then((response) => {
-          this.$store.dispatch("payment/updateDeviceId", null);
+          // this.$store.dispatch("payment/updateDeviceId", null);
+          this.$_deviceIdHandler_destroy()
           this.paymentUrl = `${location.protocol}//${location.host}/payment/${response.data.token}?ucnv=1`;
           this.refreshing = false;
           this.refreshed = true;
