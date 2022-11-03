@@ -364,7 +364,7 @@ const getTokenExchangeData = async function(
   )
   const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
   const requireAmountWithSlippage = token.address == requestToken.address 
-    ? requestTokenToUserToken
+    ? requestAmountWei
     : String(
         Math.round(
           parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
@@ -498,6 +498,8 @@ const sendPaymentTransaction = async function(
 
   if (bestExchange.name == 'uniswapV3') {
     reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, bestExchange.pathParam]);
+  } else if (bestExchange.name == '') {
+    path = bestExchange.pathParam
   } else {
     reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, reservedParam]);
     path = bestExchange.pathParam
@@ -760,6 +762,11 @@ const getBestRate = async function (
     const rpcUrl = NETWORKS[chainId].rpcUrl
     const exchanges = EXCHANGE_ROUTERS[chainId]
     let bestExchange = { name: '', exchange: '', flag: '', price: 0 }
+
+    if (path[0] == path[path.length - 1]) {
+      bestExchange.pathParam = [path[0], path[path.length - 1]]
+      return bestExchange;
+    }
 
     const uniswapVersions = []
     for (const exchangeName in exchanges) {
