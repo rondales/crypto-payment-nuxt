@@ -40,7 +40,7 @@
     <PaymentButton v-if="isStatusSucceeded || isStatusFailured"
       class="result__button"
       text="Back to Payee’s Services"
-      @click.prevent="closeWidgetWindow"
+      @click.native="closeWidgetWindow"
       color="primary"
       layout="reverse"
       size="l"
