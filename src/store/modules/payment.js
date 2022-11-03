@@ -2,7 +2,6 @@ const store = {
   namespaced: true,
   state: {
     id: null,
-    deviceId: null,
     headerInvoice: false,
     domain: null,
     isVerifiedDomain: false,
@@ -53,9 +52,6 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
-    updateDeviceId({ commit }, payload) {
-      commit('updateDeviceId', payload)
-    },
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
     },
@@ -105,7 +101,6 @@ const store = {
   mutations: {
     initialize(state) {
       state.id = null
-      state.deviceId = null
       state.headerInvoice = false
       state.domain = null
       state.isVerifiedDomain = false
@@ -155,9 +150,6 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
-    },
-    updateDeviceId(state, payload) {
-      state.deviceId = payload
     },
     updatePaymentToken(state, payload) {
       state.payment_token = payload
