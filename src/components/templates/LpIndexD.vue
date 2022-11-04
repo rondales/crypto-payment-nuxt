@@ -890,7 +890,7 @@ export default {
                   list: [
                     { text: "Uniswap V2 specification Router", active: true },
                     { text: "Curve.fi Router", active: false },
-                    { text: "Uniswap V3 Router", active: false },
+                    { text: "Uniswap V3 Router", active: true },
                   ],
                 },
                 {
