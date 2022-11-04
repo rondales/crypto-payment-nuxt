@@ -253,7 +253,7 @@
         <a
           class="document-link align-left"
           target="_blank"
-          href="https://slash-fi.gitbook.io/docs/integration-guide/advanced-options/received-address"
+          href="https://slash-fi.gitbook.io/docs/advanced-features/slash.extension-store"
         >
           &nbsp;&nbsp;&nbsp;&nbsp;Learn more.
         </a>
