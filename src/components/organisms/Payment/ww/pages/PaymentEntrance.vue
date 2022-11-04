@@ -11,9 +11,10 @@
 </template>
 
 <script>
-import PaymentAmount from '@/components/organisms/Payment/ww/PaymentAmount'
+import { Decimal } from 'decimal.js'
+import PaymentAmount from '@/components/organisms/Payment/ww/pages/PaymentAmount'
 import { errorCodeList } from '@/enum/error_code'
-import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
+import DisplayConfig from '@/components/mixins/ww/DisplayConfig.vue'
 
 export default {
   name: 'ww-PaymentEntrance',
@@ -85,6 +86,9 @@ export default {
     },
     incrementProgressCompletedSteps() {
       this.$emit('incrementProgressCompletedSteps')
+    },
+    formatAmount(amount) {
+      return (amount) ? Decimal(amount).toString() : amount
     }
   },
   created() {
@@ -105,7 +109,7 @@ export default {
         symbol: receiveResponse.data.symbol,
         isVerifiedDomain: Boolean(receiveResponse.data.is_verified_domain),
         merchantWalletAddress: receiveResponse.data.merchant_wallet_address,
-        amount: this.$_displayConfig_formatNumber(receiveResponse.data.amount)
+        amount: this.formatAmount(receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
       this.$emit('incrementProgressCompletedSteps')
@@ -122,7 +126,7 @@ export default {
           if (error.response.data.errors.includes(2110)) {
             this.apiGetTransactionData().then((transactionResponse) => {
               this.$emit('incrementProgressCompletedSteps')
-              this.$store.dispatch('payment/updateAmount', this.$_displayConfig_formatNumber(transactionResponse.data.base_amount))
+              this.$store.dispatch('payment/updateAmount', this.formatAmount(transactionResponse.data.base_amount))
               this.apiGetTransactionState().then((response) => {
                 this.$emit('incrementProgressCompletedSteps')
                 switch(response.data.state) {
@@ -137,12 +141,12 @@ export default {
                       this.$emit('incrementProgressCompletedSteps')
                       this.$emit('updateProgressTotalSteps', 5)
                       this.$router.replace({
-                        path: `/payments-uiswitchable/wallets/${this.$route.params.token}/ww`
+                        name: 'ww-wallets', params: { token: this.paymentToken }
                       })
                     } else {
-                      this.$emit('incrementProgressCompletedSteps')
+                      this.$emit('updateProgressTotalSteps', 4)
                       this.$router.replace({
-                        path: `/payments-uiswitchable/wallets/${this.$route.params.token}/ww`
+                        name: 'ww-wallets', params: { token: this.paymentToken }
                       })
                     }
                     break;
@@ -153,14 +157,15 @@ export default {
                     this.$emit('incrementProgressCompletedSteps')
                     this.$emit('updateProgressTotalSteps', 5)
                     this.$router.replace({
-                      path: `/payments-uiswitchable/wallets/${this.$route.params.token}/ww`
+                      name: 'ww-wallets', params: { token: this.paymentToken }
                     })
                     break;
                 }
               }).catch(() => {
                 this.showErrorModal('Please try again after a while.')
               })
-            }).catch(() => {
+            }).catch((error) => {
+              console.log(error)
               this.showErrorModal('Please try again after a while.')
             })
           } else {

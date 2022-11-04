@@ -67,43 +67,31 @@ const router = new Router({
                 {
                   name: "ww-entrance",
                   path: "/payments-uiswitchable/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentEntrance"),
+                  component: () => import("@/components/organisms/Payment/ww/pages/PaymentEntrance"),
                   meta: { title: 'Slash Payment' }
                 },
                 {
                   name: "ww-wallets",
                   path: "/payments-uiswitchable/wallets/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentSelectWallets"),
+                  component: () => import("@/components/organisms/Payment/ww/pages/PaymentSelectWallets"),
                   meta: { title: 'Slash Payment' }
                 },
                 {
                   name: "ww-token",
                   path: "/payments-uiswitchable/token/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentToken"),
-                  meta: { title: 'Slash Payment' }
-                },
-                {
-                  name: "ww-exchange",
-                  path: "/payments-uiswitchable/exchange/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentExchange"),
+                  component: () => import("@/components/organisms/Payment/ww/pages/PaymentToken"),
                   meta: { title: 'Slash Payment' }
                 },
                 {
                   name: "ww-detail",
                   path: "/payments-uiswitchable/detail/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentDetail"),
+                  component: () => import("@/components/organisms/Payment/ww/pages/PaymentDetail"),
                   meta: { title: 'Slash Payment' }
                 },
                 {
                   name: "ww-result",
                   path: "/payments-uiswitchable/result/:token/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentResult"),
-                  meta: { title: 'Slash Payment' }
-                },
-                {
-                  name: "ww-invoice",
-                  path: "/payments-uiswitchable/invoice/ww",
-                  component: () => import("@/components/organisms/Payment/ww/PaymentInvoice"),
+                  component: () => import("@/components/organisms/Payment/ww/pages/PaymentResult"),
                   meta: { title: 'Slash Payment' }
                 }
               ]
