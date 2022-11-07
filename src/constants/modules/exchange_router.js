@@ -296,8 +296,8 @@ export const EXCHANGE_ROUTERS = {
       flag: '0x01',
       cloneUniswapContractDetails: {
         v2Override: {
-          factoryAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
-          pairAddress: '0x6725f303b657a9451d8ba641348b6761a6cc7a17',
+          factoryAddress: '0xb7926c0430afb07aa7defde6da862ae0bde767bc',
+          pairAddress: '0xb7926c0430afb07aa7defde6da862ae0bde767bc',
           routerAddress: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3'
         }
       }
@@ -362,13 +362,13 @@ export const EXCHANGE_ROUTERS = {
       }
     },
     quickswap: {
-      address: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff',
+      address: '0x8954AfA98594b838bda56FE4C12a09D7739D179b',
       flag: '0x01',
       cloneUniswapContractDetails: {
         v2Override: {
           factoryAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
           pairAddress: '0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
-          routerAddress: '0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff'
+          routerAddress: '0x8954AfA98594b838bda56FE4C12a09D7739D179b'
         }
       }
     }
@@ -421,13 +421,13 @@ export const EXCHANGE_ROUTERS = {
       }
     },
     pangolin: {
-      address: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860',
+      address: '0x2D99ABD9008Dc933ff5c0CD271B88309593aB921',
       flag: '0x20',
       cloneUniswapContractDetails: {
         v2Override: {
-          factoryAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
-          pairAddress: '0x2a496ec9e9bE22e66C61d4Eb9d316beaEE31A77b',
-          routerAddress: '0x688d21b0B8Dc35971AF58cFF1F7Bf65639937860'
+          factoryAddress: '0xE4A575550C2b460d2307b82dCd7aFe84AD1484dd',
+          pairAddress: '0xE4A575550C2b460d2307b82dCd7aFe84AD1484dd',
+          routerAddress: '0x2D99ABD9008Dc933ff5c0CD271B88309593aB921'
         }
       }
     },
