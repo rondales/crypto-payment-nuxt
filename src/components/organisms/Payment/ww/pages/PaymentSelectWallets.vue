@@ -143,7 +143,7 @@ export default {
     },
     showWalletConnectCautionModal() {
       this.$store.dispatch('modal/show', {
-        target: 'caution-wallet-connect-modal',
+        target: 'ww-caution-wallet-connect-modal',
         size: 'small'
       })
     },
