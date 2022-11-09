@@ -26,6 +26,8 @@ export default {
       import('@/components/molecules/walletForAdminModal'),
     cautionWalletConnectModal: () =>
       import('@/components/molecules/cautionWalletConnectModal'),
+    wwCautionWalletConnectModal: () =>
+      import('@/components/molecules/payment/ww/cautionWalletConnectModal'),
     cautionWalletConnectForAdminModal: () =>
       import('@/components/molecules/cautionWalletConnectForAdminModal'),
     errorWalletModal: () => import('@/components/molecules/errorWalletModal'),
