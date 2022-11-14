@@ -29,6 +29,16 @@ export default {
     iconPath: "crypto_currency/busd",
     iconType: "png"
   },
+  GMT: {
+    name: "Green Metaverse Token",
+    symbol: "GMT",
+    address: "0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1",
+    abi: Erc20Abi,
+    url: `${url}/0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1`,
+    icon: 'https://assets.coingecko.com/coins/images/23597/small/gmt.png?1644658792',
+    iconPath: "crypto_currency/gmt",
+    iconType: "png"
+  },
   CAKE: {
     name: "PancakeSwap",
     symbol: "CAKE",
