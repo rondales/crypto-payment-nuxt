@@ -17,9 +17,9 @@ export default {
     iconPath: "crypto_currency/avax",
     iconType: "png"
   },
-  USDT: {
+  "USDT.e": {
     name: "Tether USD",
-    symbol: "USDT",
+    symbol: "USDT.e",
     address: "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
     abi: Usdt.abi,
     url: `${url}/0xc7198437980c041c805A1EDcbA50c1Ce5db95118`,
@@ -27,9 +27,9 @@ export default {
     iconPath: "crypto_currency/usdt",
     iconType: "png"
   },
-  USDC: {
+  "USDC.e": {
     name: "USD Coin",
-    symbol: "USDC",
+    symbol: "USDC.e",
     address: "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
     abi: Usdc.abi,
     url: `${url}/0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664`,

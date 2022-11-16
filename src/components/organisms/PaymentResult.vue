@@ -330,7 +330,6 @@ export default {
             STATUS_RESULT_SUCCESS
           ]
           if (stopTimerStatuses.includes(response.data.status)) {
-            // this.showModal('openBrowserModal')
             clearInterval(this.resultPollingTimer)
           }
         })
