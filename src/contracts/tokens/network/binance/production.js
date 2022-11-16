@@ -39,6 +39,16 @@ export default {
     iconPath: "crypto_currency/gmt",
     iconType: "png"
   },
+  GST: {
+    name: "Green Satoshi Token",
+    symbol: "GST",
+    address: "0x4a2c860cEC6471b9F5F5a336eB4F38bb21683c98",
+    abi: Erc20Abi,
+    url: `${url}/0x4a2c860cEC6471b9F5F5a336eB4F38bb21683c98`,
+    icon: 'https://assets.coingecko.com/coins/images/25484/small/gst.png?1652064157',
+    iconPath: "crypto_currency/gst",
+    iconType: "png"
+  },
   CAKE: {
     name: "PancakeSwap",
     symbol: "CAKE",
