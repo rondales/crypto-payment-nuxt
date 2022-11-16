@@ -38,9 +38,9 @@ export default {
   JPYC: {
     name: 'JPY Coin',
     symbol: 'JPYC',
-    address: '0x2370f9d504c7a6E775bf6E14B3F12846b594cD53',
+    address: '0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB',
     abi: Jpyc.abi,
-    url: `${url}/0x2370f9d504c7a6E775bf6E14B3F12846b594cD53`,
+    url: `${url}/0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB`,
     icon: require('@/assets/images/symbol/jpyc.svg'),
     iconPath: "crypto_currency/received_token/jpyc"
   },

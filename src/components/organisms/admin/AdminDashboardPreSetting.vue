@@ -63,7 +63,7 @@
             <img src="@/assets/images/icon/jpyc-l.svg">
           </figure>
           <p class="welcome-receice_name">
-            JPYC
+            JPYC v2
             <br>
             JPY-peg
           </p>

@@ -66,7 +66,7 @@ export default {
         USDT: 'Tether USD',
         USDC: 'USD Coin',
         DAI: 'Maker DAO',
-        JPYC: 'JPY Coin',
+        JPYC: 'JPY Coin v2',
         WETH: 'Wrapped ETH'
       },
       tokenIcons: {
@@ -80,7 +80,7 @@ export default {
         USDT: "https://coinmarketcap.com/currencies/tether/",
         USDC: "https://coinmarketcap.com/currencies/usd-coin/",
         DAI: "https://coinmarketcap.com/currencies/multi-collateral-dai/",
-        JPYC: "https://coinmarketcap.com/currencies/jpycoin/",
+        JPYC: "https://coinmarketcap.com/currencies/jpy-coin/",
         WETH: 'https://coinmarketcap.com/currencies/weth/'
       },
     };
