@@ -117,7 +117,11 @@ export default {
         this.$emit('updateProgressTotalSteps', 5)
         this.$emit('incrementProgressCompletedSteps')
         if (receiveResponse.data.amount) {
-          this.$router.push({ name: 'ww-wallets', params: { token: this.paymentToken } })
+          this.$router.push({ 
+            name: 'ww-wallets',
+            params: { token: this.paymentToken },
+            query: this.$route.query
+          })
         } else {
           this.showComponent ='PaymentAmount'
         }
@@ -141,12 +145,16 @@ export default {
                       this.$emit('incrementProgressCompletedSteps')
                       this.$emit('updateProgressTotalSteps', 5)
                       this.$router.replace({
-                        name: 'ww-wallets', params: { token: this.paymentToken }
+                        name: 'ww-wallets',
+                        params: { token: this.paymentToken },
+                        query: this.$route.query
                       })
                     } else {
                       this.$emit('updateProgressTotalSteps', 4)
                       this.$router.replace({
-                        name: 'ww-wallets', params: { token: this.paymentToken }
+                        name: 'ww-wallets',
+                        params: { token: this.paymentToken },
+                        query: this.$route.query
                       })
                     }
                     break;
@@ -157,7 +165,9 @@ export default {
                     this.$emit('incrementProgressCompletedSteps')
                     this.$emit('updateProgressTotalSteps', 5)
                     this.$router.replace({
-                      name: 'ww-wallets', params: { token: this.paymentToken }
+                      name: 'ww-wallets',
+                      params: { token: this.paymentToken },
+                      query: this.$route.query
                     })
                     break;
                 }

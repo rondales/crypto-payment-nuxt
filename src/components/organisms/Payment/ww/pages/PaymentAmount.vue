@@ -229,7 +229,11 @@ export default {
       this.apiUpdateTransaction()
         .then(() => {
           this.$store.dispatch('payment/updateAmount', this.exchangedAmount)
-          this.$router.push({ name: 'ww-wallets', params: { token: this.$route.params.token } })
+          this.$router.push({ 
+            name: 'ww-wallets', 
+            params: { token: this.$route.params.token },
+            query: this.$route.query
+          })
         })
         .catch((error) => {
           let message
