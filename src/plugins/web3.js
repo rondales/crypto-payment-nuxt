@@ -36,6 +36,7 @@ import MerchantFactoryContract from '@/contracts/merchant_factory'
 import { UniswapVersion } from 'simple-uniswap-sdk'
 import { EXCHANGE_ROUTERS } from '@/constants'
 import bestRoute from '@/utils/best-route'
+import axios from 'axios'
 
 export default {
   install(Vue) {
@@ -165,6 +166,60 @@ const getAccountData = async function (web3, chainId) {
 
 const getDefaultTokens = async function (web3, chainId, walletAddress) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
+  const supportedNetwork = {
+    1: 'ethereum',
+    5: 'goerli',
+    56: 'bsc',
+    97: 'bsc_testnet',
+    137: 'matic',
+    43114: 'avalanche'
+  }
+  const isSupportNetwork = Object.keys(supportedNetwork).includes(
+    chainId.toString()
+  )
+  console.log(
+    chainId,
+    Object.keys(supportedNetwork),
+    Object.keys(supportedNetwork).includes(chainId.toString())
+  )
+  if (isSupportNetwork) {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000?network=${supportedNetwork[chainId]}&address=${walletAddress}`
+      )
+      const { data } = response
+      if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
+        const ethereum = data.data['ethereum']
+        const { address } = ethereum
+        const balanceTokens = {}
+        for (let i = 0; i < address[0].balances.length; i++) {
+          const balance = address[0].balances[i];
+          balanceTokens[balance.currency.address.toLowerCase()] = balance.currency
+          balanceTokens[balance.currency.address.toLowerCase()].value = balance.value
+        }
+        
+        return Object.values(defaultTokens).map((defaultToken) => {
+          const addressDefaultToken = defaultToken.address === null ? '-' : defaultToken.address
+          const token = balanceTokens[addressDefaultToken.toLowerCase()]
+          if (!token) return null
+
+          return {
+            name: defaultToken.name,
+            symbol: defaultToken.symbol,
+            decimal: token.decimals,
+            address: defaultToken.address,
+            balance: token.value,
+            icon: defaultToken.icon,
+            path: defaultToken.iconPath,
+            type: defaultToken.iconType
+          }
+        }).filter(item => item !== null)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const userTokens = Promise.all(
     Object.values(defaultTokens).map(async (defaultToken) => {
       const tokenContract =
