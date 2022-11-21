@@ -148,7 +148,6 @@ export default {
       userSelectedTokenAllowance: null,
       requireAmount: null,
       balanceEquivalentAmount: 0,
-      exchangeRate: 0,
       platformFee: 0,
       bestExchange: null,
       merchantReceiveAmountWei: 0,
@@ -511,11 +510,10 @@ export default {
         .then((exchangeData) => {
           this.$store.dispatch('payment/updateToken', {
             amount: exchangeData.requireAmount,
-            rate: exchangeData.rate
+
           })
           this.balanceEquivalentAmount = exchangeData.equivalentAmount
           this.requireAmount = exchangeData.requireAmount
-          this.exchangeRate = exchangeData.rate
           this.platformFee = exchangeData.fee
           this.bestExchange = exchangeData.bestExchange
           this.merchantReceiveAmountWei = exchangeData.requestAmountWei
@@ -664,12 +662,10 @@ export default {
               this.userSelectedTokenAllowance = results[1]
             }
             this.$store.dispatch('payment/updateToken', {
-              amount: results[0].requireAmount,
-              rate: results[0].rate
+              amount: results[0].requireAmount
             })
             this.balanceEquivalentAmount = results[0].equivalentAmount
             this.requireAmount = results[0].requireAmount
-            this.exchangeRate = results[0].rate
             this.platformFee = results[0].fee
             this.bestExchange = results[0].bestExchange
             this.merchantReceiveAmountWei = results[0].requestAmountWei

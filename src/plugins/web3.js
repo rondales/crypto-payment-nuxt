@@ -318,39 +318,20 @@ const getTokenExchangeData = async function(
   gasFeeRate,
   paymentFeeRate
 ) {
+  const reservedParam = '0x'
+  const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
+  const wrappedToken = getWrappedToken(chainId)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
-  const requestToken = defaultTokens[paymentRequestSymbol]
-  const requestTokenContract = new web3.eth.Contract(requestToken.abi, requestToken.address)
-  const requestTokenDecimal = await requestTokenContract.methods.decimals().call()
+  const inputTokenAddress = token.address == null ? wrappedToken.address : token.address
+  const outputToken = defaultTokens[paymentRequestSymbol]
+  const outputTokenAddress = outputToken.address == nativeTokenAddress ? wrappedToken.address : outputToken.address
   const userTokenBalanceWei = convertToWei(web3, token.balance, token.decimal)
-  const perRequestTokenWei = convertToWei(web3, '1', requestTokenDecimal)
-  const requestAmountWei = convertToWei(web3, paymentRequestAmount, requestTokenDecimal)
-  const wrappedToken = getWrappedToken(chainId)
-  const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
-  const reservedParam = '0x'
-
-  let path
-  if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, requestToken.address]
-    }
-  } else {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, wrappedToken.address, requestToken.address]
-    }
-  }
-  const payingTokenAddress = token.address === null
-    ? nativeTokenAddress
-    : token.address
-  const feePath = [wrappedToken.address, requestToken.address]
+  const requestAmountWei = convertToWei(web3, paymentRequestAmount, outputToken.decimals)
+  const path = [inputTokenAddress, outputTokenAddress]
 
   const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
-      payingTokenAddress,
+      inputTokenAddress,
       userTokenBalanceWei,  
       path,
       reservedParam
@@ -362,23 +343,21 @@ const getTokenExchangeData = async function(
     path,
     paymentRequestAmount
   )
-  const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
-  const requireAmountWithSlippage = token.address == requestToken.address 
+
+  const requestTokenToUserToken = bestExchange.price == 0 ? 
+    requestAmountWei
+    : convertToWei(web3, bestExchange.price.toString(), token.decimal)
+  
+  const requireAmountWithSlippage = inputTokenAddress == outputTokenAddress
     ? requestAmountWei
     : String(
         Math.round(
           parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
         )
       )
-  const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
-      payingTokenAddress,
-      perRequestTokenWei,
-      path,
-      reservedParam
-    ).call({ from: walletAddress })
   const feeArray = await merchantContract.methods.getFeeAmount(
       requestAmountWei,
-      feePath,
+      [], // feePath
       reservedParam
     ).call({ from: walletAddress })
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
@@ -386,10 +365,9 @@ const getTokenExchangeData = async function(
   return {
     requireAmount: convertFromWei(web3, requireAmountWithSlippage, token.decimal),
     requestAmountWei: requestAmountWei,
-    equivalentAmount: convertFromWei(web3, userTokenToRequestToken, requestTokenDecimal),
-    rate: convertFromWei(web3, perRequestTokenToUserTokenRate, token.decimal),
+    equivalentAmount: convertFromWei(web3, userTokenToRequestToken, outputToken.decimals),
     fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
-    requestTokenDecimal: requestTokenDecimal,
+    requestTokenDecimal: outputToken.decimals,
     bestExchange
   }
 }
@@ -504,7 +482,6 @@ const sendPaymentTransaction = async function(
     reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, reservedParam]);
     path = bestExchange.pathParam
   }
-
   return new Promise(function(resolve, reject) {
     merchantContract.methods.submitTransaction(
       paymentTokenAddress,
@@ -551,7 +528,6 @@ const publishMerchantContract = function(
     MerchantFactoryContract.addresses[chainId],
     { transactionBlockTimeout: scanBlockNumberMaxLimit }
   )
-
   return factoryContract.methods.deployMerchant(
       merchantWalletAddress,
       receiveTokenAddress,
