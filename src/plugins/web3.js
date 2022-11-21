@@ -185,7 +185,7 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
   if (isSupportNetwork) {
     try {
       const response = await axios.get(
-        `http://localhost:4000?network=${supportedNetwork[chainId]}&address=${walletAddress}`
+        `${process.env.VUE_APP_SERVERLESS_API_URL}/?network=${supportedNetwork[chainId]}&address=${walletAddress}`
       )
       const { data } = response
       if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
