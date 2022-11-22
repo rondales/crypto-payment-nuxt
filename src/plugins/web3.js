@@ -192,28 +192,36 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
         const ethereum = data.data['ethereum']
         const { address } = ethereum
         const balanceTokens = {}
-        for (let i = 0; i < address[0].balances.length; i++) {
-          const balance = address[0].balances[i];
-          balanceTokens[balance.currency.address.toLowerCase()] = balance.currency
-          balanceTokens[balance.currency.address.toLowerCase()].value = balance.value
-        }
-        
-        return Object.values(defaultTokens).map((defaultToken) => {
-          const addressDefaultToken = defaultToken.address === null ? '-' : defaultToken.address
-          const token = balanceTokens[addressDefaultToken.toLowerCase()]
-          if (!token) return null
 
-          return {
-            name: defaultToken.name,
-            symbol: defaultToken.symbol,
-            decimal: token.decimals,
-            address: defaultToken.address,
-            balance: token.value,
-            icon: defaultToken.icon,
-            path: defaultToken.iconPath,
-            type: defaultToken.iconType
+        if (address[0].balances !== null) {
+          for (let i = 0; i < address[0].balances.length; i++) {
+            const balance = address[0].balances[i]
+            balanceTokens[balance.currency.address.toLowerCase()] =
+              balance.currency
+            balanceTokens[balance.currency.address.toLowerCase()].value =
+              balance.value
           }
-        }).filter(item => item !== null)
+
+          return Object.values(defaultTokens)
+            .map((defaultToken) => {
+              const addressDefaultToken =
+                defaultToken.address === null ? '-' : defaultToken.address
+              const token = balanceTokens[addressDefaultToken.toLowerCase()]
+              if (!token) return null
+
+              return {
+                name: defaultToken.name,
+                symbol: defaultToken.symbol,
+                decimal: token.decimals,
+                address: defaultToken.address,
+                balance: token.value,
+                icon: defaultToken.icon,
+                path: defaultToken.iconPath,
+                type: defaultToken.iconType
+              }
+            })
+            .filter((item) => item !== null)
+        }
       }
     } catch (error) {
       console.error(error)
