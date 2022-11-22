@@ -478,13 +478,14 @@ const sendPaymentTransaction = async function(
   paymentAmount,
   platformFee,
   requestAmountWei,
-  bestExchange
+  bestExchange,
+  nftVaultPaymentId = null
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const userTokenAmountWei = convertToWei(web3, paymentAmount, token.decimal)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
-  const paymentIdParam = ''
+  const paymentIdParam = nftVaultPaymentId ? nftVaultPaymentId : ''
   const optionalParam = ''
   let reservedParam = '0x'
   let path = []

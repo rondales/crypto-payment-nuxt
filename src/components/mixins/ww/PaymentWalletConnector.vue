@@ -71,7 +71,8 @@ export default {
     $_paymentWalletConnector_redirectToPaymentResultPage() {
       this.$router.replace({
         name: 'ww-result',
-        params: { token: this.$_paymentWalletConnector_paymentToken }
+        params: { token: this.$_paymentWalletConnector_paymentToken },
+        query: this.$route.query
       })
     },
     $_paymentWalletConnector_apiGetTransactionDeviceIdMatchingStatus() {
@@ -129,7 +130,11 @@ export default {
             if (modalMode) {
               this.$store.dispatch('modal/hide')
             }
-            this.$router.push({ name: 'ww-token', params: { token: this.$route.params.token } })
+            this.$router.push({ 
+              name: 'ww-token',
+              params: { token: this.$route.params.token },
+              query: this.$route.query
+            })
           })
           .catch(() => {
             this.$store.dispatch('modal/show', {
