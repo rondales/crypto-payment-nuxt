@@ -212,9 +212,9 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
               return {
                 name: defaultToken.name,
                 symbol: defaultToken.symbol,
-                decimal: token.decimals,
+                decimal: token.decimals.toString(),
                 address: defaultToken.address,
-                balance: token.value,
+                balance: token.value.toString(),
                 icon: defaultToken.icon,
                 path: defaultToken.iconPath,
                 type: defaultToken.iconType
