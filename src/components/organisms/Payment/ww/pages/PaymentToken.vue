@@ -462,7 +462,8 @@ export default {
       })
       this.$router.push({
         name: 'ww-detail',
-        params: { token: this.paymentToken }
+        params: { token: this.paymentToken },
+        query: this.$route.query
       })
     },
     handleAccountChangedEvent() {
@@ -515,7 +516,8 @@ export default {
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: 'ww-wallets',
-        params: { token: this.paymentToken }
+        params: { token: this.paymentToken },
+        query: this.$route.query
       })
     }
   },

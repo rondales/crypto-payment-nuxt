@@ -167,7 +167,8 @@ export default {
         if (state === 'close' && !this.isRequestResultPage) {
           return this.$router.replace({
             name: 'ww-result',
-            params: { token: this.urlPaymentToken }
+            params: { token: this.urlPaymentToken },
+            query: this.$route.query
           })
         }
         if (

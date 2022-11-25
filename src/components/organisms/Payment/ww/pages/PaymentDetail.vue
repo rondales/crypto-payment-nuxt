@@ -382,6 +382,9 @@ export default {
         )
         .filter((address) => address)
         .includes(this.userSelectedToken.address.toLowerCase())
+    },
+    nftVaultPaymentId() {
+      return this.$route.query['nft-vault-paymentId']
     }
   },
   methods: {
@@ -495,7 +498,8 @@ export default {
         this.userSelectedTokenPayAmount,
         this.platformFee,
         this.merchantReceiveAmountWei,
-        this.bestExchange
+        this.bestExchange,
+        this.nftVaultPaymentId
       );
     },
     setExchangeDataExpireTimer() {
@@ -567,7 +571,8 @@ export default {
         if ([STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS].includes(response.data.status)) {
           this.$router.push({
             name: 'ww-result',
-            params: { token: this.paymentToken }
+            params: { token: this.paymentToken },
+            query: this.$route.query
           })
         } else {
           this.apiGetTransactionDeviceIdMatchingStatus().then(((response) => {
@@ -597,7 +602,8 @@ export default {
             .then(() => {
               this.$router.push({
                 name: 'ww-result',
-                params: { token: this.paymentToken }
+                params: { token: this.paymentToken },
+                query: this.$route.query
               })
             })
             .catch((error) => {
@@ -618,11 +624,19 @@ export default {
         ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId
       this.$store.dispatch('web3/updateChainId', chainId)
-      this.$router.push({ name: 'ww-token', params: { token: this.paymentToken } })
+      this.$router.push({ 
+        name: 'ww-token',
+        params: { token: this.paymentToken },
+        query: this.$route.query
+      })
     },
     handleAccountChangedEvent(address) {
       this.$store.dispatch('account/updateAddress', address[0])
-      this.$router.push({ name: 'ww-token', params: { token: this.paymentToken } })
+      this.$router.push({ 
+        name: 'ww-token',
+        params: { token: this.paymentToken },
+        query: this.$route.query
+      })
     }
   },
   created() {
@@ -630,7 +644,8 @@ export default {
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
         name: 'ww-wallets',
-        params: { token: this.paymentToken }
+        params: { token: this.paymentToken },
+        query: this.$route.query
       })
     }
   },

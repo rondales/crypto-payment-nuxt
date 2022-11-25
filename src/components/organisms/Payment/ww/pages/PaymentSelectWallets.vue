@@ -182,7 +182,11 @@ export default {
       })
     },
     redirectToResultPage() {
-      this.$router.push({ name: 'ww-result', params: { token: this.paymentToken } })
+      this.$router.push({ 
+        name: 'ww-result',
+        params: { token: this.paymentToken },
+        query: this.$route.query
+      })
     },
     handleAddRedirectToResultPageEventListener() {
       if (this.isMobile) {
