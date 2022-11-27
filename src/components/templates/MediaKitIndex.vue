@@ -485,9 +485,9 @@ export default {
               margin-left: 0;
             }
             img{
-              width: 62%;
+              width: 45%;
               @include media(tb) {
-                width: 70%;
+                width: 50%;
               }
             }
           }
@@ -624,9 +624,9 @@ export default {
             }
             &:nth-child(1){
               img{
-                width: 55%;
+                width: 40%;
                 @include media(tb) {
-                  width: 56px;
+                  width: 42px;
                 }
               }
             }
@@ -819,9 +819,9 @@ export default {
           }
           &:nth-child(2){
             img{
-              width: 45%;
+              width:  30%;
               @include media(tb) {
-                width: 50%;
+                width: 35%;
               }
             }
           }
