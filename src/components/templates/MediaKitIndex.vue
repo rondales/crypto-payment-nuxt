@@ -8,7 +8,7 @@
             Media Kit
           </h1>
           <p>
-            Latest update: October, 2022
+            Latest update: November, 2022
           </p>
         </div>
         <div class="sub-title border-bottom">
