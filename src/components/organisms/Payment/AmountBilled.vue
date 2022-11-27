@@ -8,6 +8,7 @@
         :symbol="symbol"
         :symboltext="symboltext"
         :size="tokenSize"
+        :networkIcon="networkIcon"
       />
     </div>
     <div class="right">
@@ -64,6 +65,10 @@ export default {
       type: Array
     },
     size: {
+      type: String,
+      default: ''
+    },
+    networkIcon: {
       type: String,
       default: ''
     }

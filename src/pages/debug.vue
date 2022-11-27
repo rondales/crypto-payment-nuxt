@@ -130,17 +130,24 @@
       html="balance is insufficient  for this transaction."
     />
 
-    <PaymentAmountBilled symbol="USDT" icon="usdt" price="1000.00" />
+    <PaymentAmountBilled
+      symbol="USDT"
+      icon="usdt"
+      price="1000.00"
+      networkIcon="network-avalanche"
+    />
     <PaymentAmountBilled
       title="Amount Billed"
       symbol="USDT"
       icon="usdt"
       price="1000.00"
+      networkIcon="network-binance"
     />
     <PaymentAmountBilled
       symboltext="Tether USD"
       symbol="USDT"
       icon="usdt"
+      networkIcon="network-ethereum"
       :table="[
         {
           title: 'Balance',
@@ -215,7 +222,8 @@
       <input type="text" placeholder="000000000" />
     </PaymentForm>
     <PaymentSelectToken />
-    <PaymentToken symbol="USDT" icon="usdt" />
+    <PaymentToken symbol="USDT" icon="usdt" networkIcon="network-avalanche" />
+    <PaymentToken symbol="USDT" icon="usdt" networkIcon="network-avalanche" />
     <PaymentAction icon="network-ethereum" text="Ethereum Main net" />
     <PaymentAction icon="network-matic" text="Matic Main net" />
     <PaymentAction icon="network-avalanche" text="Avalanche Main net" />
