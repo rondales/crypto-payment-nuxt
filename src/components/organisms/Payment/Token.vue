@@ -1,18 +1,30 @@
 <template>
   <div :class="classes">
     <div class="token__icon">
-      <PaymentIcon class="tokenicon" :path="icon" :type="iconType" />
+      <PaymentIcon
+        class="tokenicon"
+        :class="{ skelton: skelton }"
+        :path="icon"
+        :type="iconType"
+      />
       <PaymentIcon
         class="networkicon"
+        :class="{ skelton: skelton }"
         v-if="networkIcon"
         :path="networkIcon"
         :type="iconType"
       />
     </div>
     <div class="token__textwrap">
-      <p class="title"><span v-html="title"></span></p>
-      <p class="symbol non-translate"><span v-html="symbol"></span></p>
-      <p class="symboltext non-translate"><span v-html="symboltext"></span></p>
+      <p class="title" :class="{ skelton: skelton }">
+        <span v-html="title"></span>
+      </p>
+      <p class="symbol non-translate" :class="{ skelton: skelton }">
+        <span v-html="symbol"></span>
+      </p>
+      <p class="symboltext non-translate" :class="{ skelton: skelton }">
+        <span v-html="symboltext"></span>
+      </p>
     </div>
   </div>
 </template>
@@ -34,7 +46,7 @@ export default {
     },
     symbol: {
       type: String,
-      default: 'USDT'
+      default: ''
     },
     title: {
       type: String,
@@ -51,6 +63,10 @@ export default {
     networkIcon: {
       type: String,
       default: ''
+    },
+    skelton: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

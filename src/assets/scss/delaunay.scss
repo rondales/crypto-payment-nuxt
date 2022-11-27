@@ -1894,7 +1894,7 @@ body.is-mounted {
 .skelton {
   position: relative;
   overflow: hidden;
-  background-color: #ccc;
+  background-color: var(--Base3);
   border-radius: 1rem;
   &::after {
     content: '';
@@ -1904,7 +1904,7 @@ body.is-mounted {
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(#fff, 0.5),
+      rgba(#fff, 0.2),
       transparent
     );
     position: absolute;
@@ -1913,9 +1913,7 @@ body.is-mounted {
     animation: skeleton-animation 1.2s linear infinite;
     z-index: 10;
   }
-  .image,
-  span,
-  dt::after {
+  span {
     opacity: 0;
   }
 

@@ -9,19 +9,22 @@
         :symboltext="symboltext"
         :size="tokenSize"
         :networkIcon="networkIcon"
+        :skelton="skelton"
       />
     </div>
     <div class="right">
       <div v-if="table" class="balance">
         <dl class="non-translate" v-for="(dl, index) in table" :key="index">
-          <dt><span v-html="dl.title"></span></dt>
-          <dd>
+          <dt :class="{ skelton: skelton }"><span v-html="dl.title"></span></dt>
+          <dd :class="{ skelton: skelton }">
             <span class="balance_price" v-html="dl.price"></span>
             <span class="balance_symbol" v-html="dl.symbol"></span>
           </dd>
         </dl>
       </div>
-      <p v-else class="price"><span v-html="price"></span></p>
+      <p v-else class="price" :class="{ skelton: skelton }">
+        <span v-html="price"></span>
+      </p>
     </div>
   </div>
 </template>
@@ -44,7 +47,7 @@ export default {
     },
     symbol: {
       type: String,
-      default: 'USDT'
+      default: ''
     },
     title: {
       type: String,
@@ -71,6 +74,10 @@ export default {
     networkIcon: {
       type: String,
       default: ''
+    },
+    skelton: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
