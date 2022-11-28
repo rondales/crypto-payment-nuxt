@@ -456,7 +456,7 @@ export default {
           border-radius: 10px;
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
+            max-width: 558px;
             background: center center / contain no-repeat white;
             @include media(tb) {
               max-width: 273px;
@@ -501,7 +501,7 @@ export default {
           }
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
+            max-width: 558px;
             height: 250px;
             @include media(tb) {
               max-width: 273px;
