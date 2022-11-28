@@ -156,6 +156,7 @@ import PaymentButton from '@/components/organisms/Payment/Button'
 
 import { Decimal } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
+import AvailableNetworks from "@/network"
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
@@ -275,6 +276,9 @@ export default {
         ? tokens[this.merchantReceiveTokenSymbol].iconPath
         : 'crypto_currency/unknown'
     },
+    paymentAvailableNetworks() {
+      return this.$store.state.payment.availableNetworks;
+    },
     isEmptyWeb3Instance() {
       return this.web3Instance === null
     },
@@ -377,10 +381,15 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
+      const merchantNetworks = Object.values(AvailableNetworks).filter((network) =>
+        this.paymentAvailableNetworks.includes(network.chainId)
+          && this.chainId != network.chainId
+      )
       const func = this.$web3.getDefaultTokens(
         this.web3Instance,
         this.chainId,
-        this.userAccountAddress
+        this.userAccountAddress,
+        merchantNetworks
       )
       return func.catch(func).then((tokens) => {
         this.tokenList = tokens

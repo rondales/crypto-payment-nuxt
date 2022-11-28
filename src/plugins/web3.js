@@ -164,7 +164,7 @@ const getAccountData = async function (web3, chainId) {
   }
 }
 
-const getDefaultTokens = async function (web3, chainId, walletAddress) {
+const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNetworks = null) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
   console.log(chainId, defaultTokens)
   const supportedNetworkMainnet = {
@@ -185,11 +185,13 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
   )
   if (isSupportedNetworkMainnet || isSupportedNetworkTestnet) {
     try {
-      const isSupportNetWork = isSupportedNetworkMainnet
+      let isSupportNetWork = isSupportedNetworkMainnet
         ? supportedNetworkMainnet
         : supportedNetworkTestnet
       let tokens = []
       for (const chainId in isSupportNetWork) {
+        if (merchantNetworks && merchantNetworks.find(nw => nw.chainId == chainId) == undefined) continue;
+
         const response = await axios.get(
           `${process.env.VUE_APP_SERVERLESS_API_URL}?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
         )
