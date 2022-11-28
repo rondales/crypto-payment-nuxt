@@ -456,7 +456,7 @@ export default {
           border-radius: 10px;
           &:nth-child(1){
             width: 100%;
-            max-width: 558px;
+            max-width: 550px;
             background: center center / contain no-repeat white;
             @include media(tb) {
               max-width: 273px;
@@ -465,9 +465,6 @@ export default {
             }
             img{
               width: 70%;
-              @include media(tb) {
-                width: auto;
-              }
             }
           }
           &:nth-child(2){
@@ -502,8 +499,8 @@ export default {
           }
           &:nth-child(1){
             width: 100%;
-            max-width: 558px;
-            height: 250px;
+            max-width: 550px;
+            height: 224px;
             @include media(tb) {
               max-width: 273px;
               height: 138px;
@@ -513,7 +510,7 @@ export default {
           &:nth-child(2){
             width: 100%;
             max-width: 330px;
-            height: 250px;
+            height: 224px;
             margin-left: 24px;
             @include media(tb) {
               max-width: 181px;
@@ -692,6 +689,7 @@ export default {
           }
           figure{
             margin-bottom: 4px;
+            width: 335px;
             @include media(tb) {
               margin-bottom: 8px;
             }
@@ -814,8 +812,7 @@ export default {
             img{
               width: 65%;
               @include media(tb) {
-                width: 287px;
-                height: auto;
+                width: 75%;
               }
             }
           }
@@ -823,8 +820,7 @@ export default {
             img{
               width:  30%;
               @include media(tb) {
-                width: 134px;
-                height: auto;
+                width: 35%;
               }
             }
           }
