@@ -83,7 +83,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-01.svg" alt="">
+                <img src="@/assets/images/lp/misuse-01.png" alt="">
               </figure>
               <p>
                 Don’t adjust the
@@ -93,7 +93,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-02.svg" alt="">
+                <img src="@/assets/images/lp/misuse-02.png" alt="">
               </figure>
               <p>
                 Don’t add other visual
@@ -105,7 +105,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-03.svg" alt="">
+                <img src="@/assets/images/lp/misuse-03.png" alt="">
               </figure>
               <p>
                 Don’t change color
@@ -113,7 +113,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-04.svg" alt="">
+                <img src="@/assets/images/lp/misuse-04.png" alt="">
               </figure>
               <p>
                 Don't change the
@@ -690,6 +690,9 @@ export default {
           figure{
             margin-bottom: 4px;
             width: 335px;
+            img{
+              border-radius: 8px;
+            }
             @include media(tb) {
               margin-bottom: 8px;
             }
