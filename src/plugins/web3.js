@@ -166,63 +166,104 @@ const getAccountData = async function (web3, chainId) {
 
 const getDefaultTokens = async function (web3, chainId, walletAddress) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
-  const supportedNetwork = {
+  console.log(chainId, defaultTokens)
+  const supportedNetworkMainnet = {
     1: 'ethereum',
-    5: 'goerli',
     56: 'bsc',
-    97: 'bsc_testnet',
     137: 'matic',
     43114: 'avalanche'
   }
-  const isSupportNetwork = Object.keys(supportedNetwork).includes(
+  const supportedNetworkTestnet = {
+    5: 'goerli',
+    97: 'bsc_testnet',
+  }
+  const isSupportedNetworkMainnet = Object.keys(supportedNetworkMainnet).includes(
     chainId.toString()
   )
-  console.log(
-    chainId,
-    Object.keys(supportedNetwork),
-    Object.keys(supportedNetwork).includes(chainId.toString())
+  const isSupportedNetworkTestnet = Object.keys(supportedNetworkTestnet).includes(
+    chainId.toString()
   )
-  if (isSupportNetwork) {
+  if (isSupportedNetworkMainnet || isSupportedNetworkTestnet) {
     try {
-      const response = await axios.get(
-        `${process.env.VUE_APP_SERVERLESS_API_URL}?network=${supportedNetwork[chainId]}&address=${walletAddress}`
-      )
-      const { data } = response
-      if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
-        const ethereum = data.data['ethereum']
-        const { address } = ethereum
-        const balanceTokens = {}
+      const isSupportNetWork = isSupportedNetworkMainnet
+        ? supportedNetworkMainnet
+        : supportedNetworkTestnet
+      let tokens = []
+      for (const chainId in isSupportNetWork) {
+        const response = await axios.get(
+          `${process.env.VUE_APP_SERVERLESS_API_URL}?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
+        )
+        const { data } = response
+        if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
+          const ethereum = data.data['ethereum']
+          const { address } = ethereum
+          const balanceTokens = {}
 
-        if (address[0].balances !== null) {
-          for (let i = 0; i < address[0].balances.length; i++) {
-            const balance = address[0].balances[i]
-            balanceTokens[balance.currency.address.toLowerCase()] =
-              balance.currency
-            balanceTokens[balance.currency.address.toLowerCase()].value =
-              balance.value
-          }
+          if (address[0].balances !== null) {
+            for (let i = 0; i < address[0].balances.length; i++) {
+              const balance = address[0].balances[i]
+              balanceTokens[balance.currency.address.toLowerCase()] =
+                balance.currency
+              balanceTokens[balance.currency.address.toLowerCase()].value =
+                balance.value
+              balanceTokens[
+                balance.currency.address.toLowerCase()
+              ].isSupported = false
+            }
 
-          return Object.values(defaultTokens)
-            .map((defaultToken) => {
-              const addressDefaultToken =
-                defaultToken.address === null ? '-' : defaultToken.address
-              const token = balanceTokens[addressDefaultToken.toLowerCase()]
-              if (!token) return null
+            const defaultTokens = getNetworkDefaultTokens(parseInt(chainId))
+            tokens = tokens.concat(
+              Object.values(defaultTokens)
+                .map((defaultToken) => {
+                  const addressDefaultToken =
+                    defaultToken.address === null ? '-' : defaultToken.address
+                  const token = balanceTokens[addressDefaultToken.toLowerCase()]
+                  if (!token) return null
+                  balanceTokens[
+                    addressDefaultToken.toLowerCase()
+                  ].isSupported = true
 
-              return {
-                name: defaultToken.name,
-                symbol: defaultToken.symbol,
+                  return {
+                    chain: NETWORKS[chainId].name,
+                    chainId,
+                    name: defaultToken.name,
+                    symbol: defaultToken.symbol,
+                    decimal: token.decimals.toString(),
+                    address: defaultToken.address,
+                    balance: token.value.toString(),
+                    icon: defaultToken.icon,
+                    path: defaultToken.iconPath,
+                    type: defaultToken.iconType
+                  }
+                })
+                .filter((item) => item !== null)
+            )
+
+            console.log(balanceTokens)
+            const unsupportedTokens = Object.values(balanceTokens).filter(
+              (token) => !token.isSupported
+            )
+            console.log(unsupportedTokens)
+            tokens = tokens.concat(
+              unsupportedTokens.map((token) => ({
+                chain: NETWORKS[chainId].name,
+                chainId,
+                name: token.name,
+                symbol: token.symbol,
                 decimal: token.decimals.toString(),
-                address: defaultToken.address,
+                address: token.address,
                 balance: token.value.toString(),
-                icon: defaultToken.icon,
-                path: defaultToken.iconPath,
-                type: defaultToken.iconType
-              }
-            })
-            .filter((item) => item !== null)
+                icon: require('@/assets/images/symbol/unknown.svg'),
+                path: 'crypto_currency/unknown',
+                type: 'png'
+              }))
+            )
+          }
         }
       }
+
+      console.log(tokens)
+      if (tokens.length > 0) return tokens
     } catch (error) {
       console.error(error)
     }

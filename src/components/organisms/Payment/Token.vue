@@ -55,6 +55,10 @@ export default {
       type: String,
       default: ''
     },
+    chainName: {
+      type: String,
+      default: ''
+    },
     size: {
       type: String,
       default: ''

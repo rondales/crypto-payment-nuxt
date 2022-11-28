@@ -7,6 +7,7 @@
         :title="title"
         :symbol="symbol"
         :symboltext="symboltext"
+        :chain-name="chainName"
         :size="tokenSize"
         :networkIcon="networkIcon"
         :skelton="skelton"
@@ -54,6 +55,10 @@ export default {
       default: ''
     },
     symboltext: {
+      type: String,
+      default: ''
+    },
+    chainName: {
       type: String,
       default: ''
     },

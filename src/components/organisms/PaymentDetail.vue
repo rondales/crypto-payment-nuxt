@@ -668,8 +668,10 @@ export default {
       chainId = this.web3Instance.utils.isHex(chainId)
         ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId
-      this.$store.dispatch('web3/updateChainId', chainId)
-      this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+      if (chainId !== this.chainId) {
+        this.$store.dispatch('web3/updateChainId', chainId)
+        this.$router.push({ path: `/payment/token/${this.paymentToken}` })
+      }
     },
     handleAccountChangedEvent(address) {
       this.$store.dispatch('account/updateAddress', address[0])

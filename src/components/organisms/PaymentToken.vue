@@ -15,6 +15,7 @@
       >
     </p> -->
     <PaymentAction
+      v-if="isCurrentTokenImportTab"
       class="token__network"
       :text="currentNetworkName"
       :icon="currentNetworkIcon"
@@ -392,12 +393,16 @@ export default {
         this.searchTokenAddress
       )
     },
-    searchTokenToBlockChain() {
-      return this.$web3.searchToken(
+    async searchTokenToBlockChain() {
+      const importedToken = await this.$web3.searchToken(
         this.web3Instance,
         this.searchTokenAddress,
         this.userAccountAddress
       )
+      importedToken.chain = this.currentNetworkName
+      importedToken.chainId = this.chainId
+      console.log(importedToken)
+      return importedToken
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
@@ -483,7 +488,29 @@ export default {
       this.searchedTokenCount = 0
       this.searchTokenAddressInvalid = false
     },
-    handleSelectToken(selectedToken) {
+    async handleSelectToken(selectedToken) {
+      if (this.chainId != selectedToken.chainId) {
+        console.log('update chain')
+        await this.$web3
+          .switchChain(this.$store.state.web3.instance, selectedToken.chainId)
+          .then(() => {
+            this.$store.dispatch("web3/updateChainId", parseInt(selectedToken.chainId));
+          })
+          .catch((error) => {
+            console.log(error);
+            if (!("code" in error)) return
+            let errorCode = error.code
+            // @TODO I'd like to do something about this lame condition determination(saito)
+            if (error.data && error.data.originalError && error.data.originalError.code) {
+              errorCode = error.data.originalError.code
+            }
+            if (errorCode === 4902) {
+              this.showAddChainModal(selectedToken.chainId);
+            }
+          });
+      }
+
+      console.log('update chain continue', selectedToken)
       this.$store.dispatch('payment/updateToken', {
         name: selectedToken.name,
         symbol: selectedToken.symbol,
