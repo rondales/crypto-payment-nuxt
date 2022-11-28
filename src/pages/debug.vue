@@ -120,6 +120,14 @@
       :skelton="true"
     />
     <PaymentAmountBilled
+      symbol="symbol"
+      icon=""
+      price="0000.00"
+      networkIcon=""
+      size="bg"
+      :skelton="true"
+    />
+    <PaymentAmountBilled
       symboltext="symboltext"
       symbol="symbol"
       icon=""

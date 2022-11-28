@@ -30,10 +30,10 @@
     >
       <div v-if="isCurrentListTab" class="tab__wrap">
         <!-- <p class="tokentab__title"><span>Select token</span></p> -->
-        <div v-if="tokenList.length == 0" class="nowloading">
+        <!-- <div v-if="tokenList.length == 0" class="nowloading">
           <PaymentIcon path="logo-icon-mono" />
           <p><span>Now Loading...</span></p>
-        </div>
+        </div> -->
 
         <!-- ローディングの分岐を追加 -->
         <div v-if="skelton">
@@ -151,7 +151,7 @@ import PaymentAction from '@/components/organisms/Payment/Action'
 import PaymentTab from '@/components/organisms/Payment/Tab'
 import PaymentForm from '@/components/organisms/Payment/Form'
 import PaymentButton from '@/components/organisms/Payment/Button'
-import PaymentIcon from '@/components/organisms/Payment/Icon'
+// import PaymentIcon from '@/components/organisms/Payment/Icon'
 
 import { Decimal } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
@@ -173,6 +173,7 @@ export default {
       searchTokenAddressInvalid: false,
       searchedTokenList: [],
       searchedTokenCount: 0,
+      skelton: true,
       contract: {
         address: null,
         abi: null
@@ -187,8 +188,8 @@ export default {
     PaymentAction,
     PaymentTab,
     PaymentForm,
-    PaymentButton,
-    PaymentIcon
+    PaymentButton
+    // PaymentIcon
   },
   filters: {
     balanceFormat(balance) {
@@ -552,6 +553,9 @@ export default {
   },
   mounted() {
     this.$parent.loading = true
+    setTimeout(() => {
+      this.skelton = false
+    }, 5000)
 
     if (this.isNeedRestoreWeb3Connection) {
       return

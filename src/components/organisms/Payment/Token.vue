@@ -8,11 +8,10 @@
         :type="iconType"
       />
       <PaymentIcon
-        class="networkicon"
-        :class="{ skelton: skelton }"
         v-if="networkIcon"
+        class="networkicon"
         :path="networkIcon"
-        :type="iconType"
+        type="svg"
       />
     </div>
     <div class="token__textwrap">

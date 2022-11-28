@@ -129,6 +129,14 @@ export default {
   &.bg {
     background: $gradation-pale;
     cursor: pointer;
+    .skelton {
+      background-color: #aaa;
+    }
+    &::v-deep {
+      .skelton {
+        background-color: #aaa;
+      }
+    }
   }
   &.big {
     @include flex(center, center);

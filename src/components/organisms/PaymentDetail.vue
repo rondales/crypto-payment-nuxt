@@ -195,7 +195,8 @@ export default {
         abi: null
       },
       balanceTable: [],
-      isNotEnoughLiquidity: false
+      isNotEnoughLiquidity: false,
+      skelton: true
     }
   },
   mixins: [DeviceIdHandlerMixin],
@@ -686,7 +687,9 @@ export default {
   },
   mounted() {
     this.$parent.loading = true
-
+    setTimeout(() => {
+      this.skelton = false
+    }, 5000)
     if (this.isNeedRestoreWeb3Connection) {
       return
     }
