@@ -95,6 +95,14 @@
       networkIcon="network-binance"
     />
     <PaymentAmountBilled
+      title="Amount Billed"
+      symbol="USDT"
+      icon="network-unknown"
+      price="1000.00"
+      networkIcon="network-binance"
+      size="bg"
+    />
+    <PaymentAmountBilled
       symboltext="Tether USD"
       symbol="USDT"
       icon="usdt"
