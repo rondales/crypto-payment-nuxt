@@ -83,7 +83,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-01.svg" alt="">
+                <img src="@/assets/images/lp/misuse-01.png" alt="">
               </figure>
               <p>
                 Don’t adjust the
@@ -93,7 +93,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-02.svg" alt="">
+                <img src="@/assets/images/lp/misuse-02.png" alt="">
               </figure>
               <p>
                 Don’t add other visual
@@ -105,7 +105,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-03.svg" alt="">
+                <img src="@/assets/images/lp/misuse-03.png" alt="">
               </figure>
               <p>
                 Don’t change color
@@ -113,7 +113,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-04.svg" alt="">
+                <img src="@/assets/images/lp/misuse-04.png" alt="">
               </figure>
               <p>
                 Don't change the
@@ -456,7 +456,7 @@ export default {
           border-radius: 10px;
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             background: center center / contain no-repeat white;
             @include media(tb) {
               max-width: 273px;
@@ -465,9 +465,6 @@ export default {
             }
             img{
               width: 70%;
-              @include media(tb) {
-                width: 70%;
-              }
             }
           }
           &:nth-child(2){
@@ -487,7 +484,8 @@ export default {
             img{
               width: 45%;
               @include media(tb) {
-                width: 50%;
+                width: 90px;
+                height: 98px;
               }
             }
           }
@@ -501,8 +499,8 @@ export default {
           }
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
-            height: 250px;
+            max-width: 550px;
+            height: 224px;
             @include media(tb) {
               max-width: 273px;
               height: 138px;
@@ -512,7 +510,7 @@ export default {
           &:nth-child(2){
             width: 100%;
             max-width: 330px;
-            height: 250px;
+            height: 224px;
             margin-left: 24px;
             @include media(tb) {
               max-width: 181px;
@@ -626,7 +624,7 @@ export default {
               img{
                 width: 40%;
                 @include media(tb) {
-                  width: 42px;
+                  width: 34px;
                 }
               }
             }
@@ -691,6 +689,10 @@ export default {
           }
           figure{
             margin-bottom: 4px;
+            width: 335px;
+            img{
+              border-radius: 8px;
+            }
             @include media(tb) {
               margin-bottom: 8px;
             }
