@@ -10,7 +10,14 @@
     >
       <p class="d-todo">{{ $options.name }}</p>
 
-      <!-- iconをファイル名で取得したい -->
+      <!-- v-if : もしいずれかひとつのnetworkに選択されていたら-->
+      <PaymentButton
+        class="allnetwork"
+        icon="logo-icon"
+        text="All Network (some not shown)"
+        size="m"
+        @click.native="switchNetwork(network.chainId)"
+      />
       <PaymentButton
         v-for="network in supportedNetworks"
         :key="network.chainId"
@@ -31,111 +38,81 @@
         />
       </div>
     </PaymentModal>
-    <!-- <div :class="classes">
-      <div class="header">
-        <h3 class="header__title">Select a Network</h3>
-        <p v-if="isSupportedNetwork" class="header__desc">
-          Please select the network you wish to switch to.
-        </p>
-        <p v-else class="header__desc">
-          The currently connected network is not supported.
-          <br />
-          Please select a supported network below to switch networks.
-        </p>
-      </div>
-      <div class="body add-flex j-between">
-        <button
-          v-for="network in supportedNetworks"
-          :key="network.chainId"
-          class="btn __m half"
-          :class="{ __pg: isCurrentNetwork(network.chainId) }"
-          @click="switchNetwork(network.chainId)"
-        >
-          <span class="btn-icon">
-            <img :src="network.icon" />
-          </span>
-          {{ network.name }}
-        </button>
-      </div>
-      <button v-if="isSupportedNetwork" class="close" @click="hideModal">
-        <img src="@/assets/images/cross.svg" />
-      </button>
-    </div> -->
   </div>
 </template>
 
 <script>
-import AvailableNetworks from "@/network";
-import PaymentModal from "@/components/organisms/Payment/Modal";
+import AvailableNetworks from '@/network'
+import PaymentModal from '@/components/organisms/Payment/Modal'
 // import PaymentText from "@/components/organisms/Payment/Text";
-import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentButton from '@/components/organisms/Payment/Button'
 export default {
-  name: "networkModal",
+  name: 'networkModal',
   components: {
     // PaymentText,
     PaymentButton,
     // PaymentTitle,
-    PaymentModal,
+    PaymentModal
   },
   computed: {
     classes() {
-      const classes = ["modal-box", `--${this.$store.state.modal.size}`];
-      return classes;
+      const classes = ['modal-box', `--${this.$store.state.modal.size}`]
+      return classes
     },
     supportedNetworks() {
-      return AvailableNetworks;
+      return AvailableNetworks
     },
     isCurrentNetwork() {
       return (chainId) => {
-        return chainId === this.$store.state.web3.chainId;
-      };
+        return chainId === this.$store.state.web3.chainId
+      }
     },
     isSupportedNetwork() {
       const systemAvailableNetworks = Object.values(AvailableNetworks).map(
         (network) => {
-          return network.chainId;
+          return network.chainId
         }
-      );
-      return systemAvailableNetworks.includes(this.$store.state.web3.chainId);
-    },
+      )
+      return systemAvailableNetworks.includes(this.$store.state.web3.chainId)
+    }
   },
   methods: {
     hideModal() {
-      this.$store.dispatch("modal/hide");
+      this.$store.dispatch('modal/hide')
     },
     switchNetwork(chainId) {
       this.$web3
         .switchChain(this.$store.state.web3.instance, chainId)
         .then(() => {
-          this.$store.dispatch("web3/updateChainId", chainId);
-          this.hideModal();
+          this.$store.dispatch('web3/updateChainId', chainId)
+          this.hideModal()
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
           if (error.code === 4902) {
-            this.showAddChainModal(chainId);
+            this.showAddChainModal(chainId)
           }
-        });
+        })
     },
     showAddChainModal(chainId) {
-      this.$store.dispatch("modal/show", {
-        target: "add-chain-modal",
-        size: "small",
+      this.$store.dispatch('modal/show', {
+        target: 'add-chain-modal',
+        size: 'small',
         params: {
           chainId: chainId,
           hideCloseButton: false,
-          lastModalTarget: "switch-network-for-admin-modal",
-          lastModalSize: "medium",
-        },
-      });
-    },
-  },
-};
+          lastModalTarget: 'switch-network-for-admin-modal',
+          lastModalSize: 'medium'
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-@import "@/assets/scss/delaunay.scss";
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
 @include media(pc) {
   .btn:nth-child(n + 3) {
     margin-top: 25px;

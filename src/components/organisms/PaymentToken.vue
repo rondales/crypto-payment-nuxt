@@ -34,20 +34,42 @@
           <PaymentIcon path="logo-icon-mono" />
           <p><span>Now Loading...</span></p>
         </div>
-        <div
-          class="tokentab__items"
-          v-for="(token, key) in tokenList"
-          :key="key"
-          @click="handleSelectToken(token)"
-        >
-          <PaymentAmountBilled
-            :icon="token.path"
-            :icon-type="token.type"
-            :symbol="token.symbol"
-            :symboltext="token.name"
-            :price="token.balance | balanceFormat"
-            size="bg"
-          />
+
+        <!-- ローディングの分岐を追加 -->
+        <div v-if="skelton">
+          <div
+            class="tokentab__items"
+            v-for="(token, key) in 6"
+            :key="key"
+            @click="handleSelectToken(token)"
+          >
+            <PaymentAmountBilled
+              icon=""
+              symbol="symbol"
+              symboltext="symboltext"
+              price="0000.000"
+              size="bg"
+              :skelton="true"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <div
+            class="tokentab__items"
+            v-for="(token, key) in tokenList"
+            :key="key"
+            @click="handleSelectToken(token)"
+          >
+            <PaymentAmountBilled
+              :icon="token.path"
+              :icon-type="token.type"
+              :symbol="token.symbol"
+              :symboltext="token.name"
+              :price="token.balance | balanceFormat"
+              size="bg"
+              networkIcon="network-avalanche"
+            />
+          </div>
         </div>
       </div>
       <div v-else-if="isCurrentTokenImportTab" class="tab__wrap">
