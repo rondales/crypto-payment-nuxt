@@ -466,7 +466,7 @@ export default {
             img{
               width: 70%;
               @include media(tb) {
-                width: 70%;
+                width: auto;
               }
             }
           }
@@ -487,7 +487,8 @@ export default {
             img{
               width: 45%;
               @include media(tb) {
-                width: 50%;
+                width: 90px;
+                height: 98px;
               }
             }
           }
@@ -626,7 +627,7 @@ export default {
               img{
                 width: 40%;
                 @include media(tb) {
-                  width: 42px;
+                  width: 34px;
                 }
               }
             }
@@ -813,7 +814,8 @@ export default {
             img{
               width: 65%;
               @include media(tb) {
-                width: 75%;
+                width: 287px;
+                height: auto;
               }
             }
           }
@@ -821,7 +823,8 @@ export default {
             img{
               width:  30%;
               @include media(tb) {
-                width: 35%;
+                width: 134px;
+                height: auto;
               }
             }
           }
