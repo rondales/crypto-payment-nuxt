@@ -45,7 +45,11 @@
     </div>
     <div class="manage-contents_clm">
       <h4><span>*</span>Exchange margin rate</h4>
-      <p>The margin rate to be added to the actual exchange rate.</p>
+      <p>Merchants can choose to add a margin on top of Slash payments paid by the payer. 
+        Note, the input value is the percentage to be added.
+      </p>
+      <p>Example: Input a value of "3.0" below and click "save" in the case the merchant wants to add a 3.0% margin on top of the payment. <br>
+        For more information on how the final calculation is made, please refer to the <a href="https://slash-fi.gitbook.io/docs/advanced-features/exchange-margin-rate" target="_blank">exchange margin rate page</a> in our documents.</p>
       <input class="text-box" type="text" v-model="exchangeMarginRate" />
     </div>
     <div class="manage-contents_clm mb-6">
@@ -76,6 +80,7 @@
     <div class="manage-contents_create-url" @click="updatePaymentSettings">
       Save
     </div>
+    <div class="verify mt-1" v-if="updateSuccess">Successfully Saved!</div>
   </div>
 </template>
 
@@ -106,7 +111,8 @@ export default {
         PHP: false,
         INR: false,
         KRW: false
-      }
+      },
+      updateSuccess: false
     }
   },
   computed: {
@@ -155,7 +161,11 @@ export default {
         })
     },
     updatePaymentSettings() {
-      this.apiUpdateSettings().catch((error) => {
+      this.apiUpdateSettings().then(() => {
+        this.updateSuccess = true
+      })
+      .catch((error) => {
+        this.updateSuccess = false
         this.$_apiHandler_apiConnectionErrorHandler(
           error.response.status,
           error.response.data
@@ -216,24 +226,6 @@ change the style.scss to import style.scss directly under the scss directory.
       font-weight: 300;
       margin-bottom: 24px;
     }
-    .verify {
-      margin-top: 24px;
-      padding-left: 32px;
-      font-weight: 300;
-      font-size: 18px;
-      color: #00ff4e;
-      position: relative;
-      &::after {
-        content: '';
-        background: url(/assets/images/check-mark.svg) no-repeat center center;
-        width: 20px;
-        height: 20px;
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translate(-50%, -50%);
-      }
-    }
   }
   &_create-url {
     display: inline;
@@ -250,6 +242,25 @@ change the style.scss to import style.scss directly under the scss directory.
     padding: 12px 40px;
     border-radius: 8px;
     cursor: pointer;
+  }
+}
+
+.verify {
+  margin-top: 24px;
+  padding-left: 32px;
+  font-weight: 300;
+  font-size: 18px;
+  color: #00ff4e;
+  position: relative;
+  &::after {
+    content: '';
+    background: url(/assets/images/check-mark.svg) no-repeat center center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translate(-50%, -50%);
   }
 }
 .bases-wrap {
