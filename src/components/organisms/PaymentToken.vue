@@ -388,6 +388,7 @@ export default {
       )
       return func.catch(func).then((tokens) => {
         this.tokenList = tokens
+        this.skelton = false
       })
     },
     checkBlackListedTokenToBlockChain() {
@@ -583,9 +584,6 @@ export default {
   },
   mounted() {
     this.$parent.loading = true
-    setTimeout(() => {
-      this.skelton = false
-    }, 5000)
 
     if (this.isNeedRestoreWeb3Connection) {
       return

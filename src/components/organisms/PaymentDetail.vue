@@ -689,9 +689,6 @@ export default {
   },
   mounted() {
     this.$parent.loading = true
-    setTimeout(() => {
-      this.skelton = false
-    }, 5000)
     if (this.isNeedRestoreWeb3Connection) {
       return
     }
@@ -745,6 +742,7 @@ export default {
               ),
               symbol: this.equivalentSymbol
             })
+            this.skelton = false
           })
           .catch((err) => {
             Sentry.captureException(err)
