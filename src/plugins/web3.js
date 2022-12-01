@@ -193,7 +193,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         if (merchantNetworks && merchantNetworks.find(nw => nw.chainId == chainId) == undefined) continue;
 
         const response = await axios.get(
-          `${process.env.VUE_APP_SERVERLESS_API_URL}?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
+          `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
         )
         const { data } = response
         if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
