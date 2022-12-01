@@ -68,7 +68,7 @@
               :symboltext="token.name"
               :price="token.balance | balanceFormat"
               size="bg"
-              networkIcon="network-avalanche"
+              :networkIcon="token.networkIcon"
             />
           </div>
         </div>
@@ -156,7 +156,6 @@ import PaymentButton from '@/components/organisms/Payment/Button'
 
 import { Decimal } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
-import AvailableNetworks from "@/network"
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
@@ -381,15 +380,11 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
-      const merchantNetworks = Object.values(AvailableNetworks).filter((network) =>
-        this.paymentAvailableNetworks.includes(network.chainId)
-          && this.chainId != network.chainId
-      )
       const func = this.$web3.getDefaultTokens(
         this.web3Instance,
         this.chainId,
         this.userAccountAddress,
-        merchantNetworks
+        this.paymentAvailableNetworks
       )
       return func.catch(func).then((tokens) => {
         this.tokenList = tokens
@@ -410,6 +405,7 @@ export default {
       )
       importedToken.chain = this.currentNetworkName
       importedToken.chainId = this.chainId
+      importedToken.networkIcon = this.currentNetworkIcon
       console.log(importedToken)
       return importedToken
     },
@@ -499,7 +495,6 @@ export default {
     },
     async handleSelectToken(selectedToken) {
       if (this.chainId != selectedToken.chainId) {
-        console.log('update chain')
         await this.$web3
           .switchChain(this.$store.state.web3.instance, selectedToken.chainId)
           .then(() => {
@@ -519,7 +514,6 @@ export default {
           });
       }
 
-      console.log('update chain continue', selectedToken)
       this.$store.dispatch('payment/updateToken', {
         name: selectedToken.name,
         symbol: selectedToken.symbol,

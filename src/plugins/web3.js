@@ -189,8 +189,16 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         ? supportedNetworkMainnet
         : supportedNetworkTestnet
       let tokens = []
+      console.log('isSupportNetWork', isSupportNetWork)
       for (const chainId in isSupportNetWork) {
-        if (merchantNetworks && merchantNetworks.find(nw => nw.chainId == chainId) == undefined) continue;
+        console.log('merchantNetworks', merchantNetworks)
+        if (
+          merchantNetworks &&
+          merchantNetworks.find(
+            (merchantChainId) => merchantChainId == chainId
+          ) == undefined
+        )
+          continue
 
         const response = await axios.get(
           `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
@@ -228,6 +236,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
                   return {
                     chain: NETWORKS[chainId].name,
                     chainId,
+                    networkIcon: NETWORKS[chainId].iconPath,
                     name: defaultToken.name,
                     symbol: defaultToken.symbol,
                     decimal: token.decimals.toString(),
@@ -241,15 +250,16 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
                 .filter((item) => item !== null)
             )
 
-            console.log(balanceTokens)
+            console.log('balanceTokens', balanceTokens)
             const unsupportedTokens = Object.values(balanceTokens).filter(
               (token) => !token.isSupported
             )
-            console.log(unsupportedTokens)
+            console.log('unsupportedTokens', unsupportedTokens)
             tokens = tokens.concat(
               unsupportedTokens.map((token) => ({
                 chain: NETWORKS[chainId].name,
                 chainId,
+                networkIcon: NETWORKS[chainId].iconPath,
                 name: token.name,
                 symbol: token.symbol,
                 decimal: token.decimals.toString(),
@@ -264,7 +274,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         }
       }
 
-      console.log(tokens)
+      console.log('tokens', tokens)
       if (tokens.length > 0) return tokens
     } catch (error) {
       console.error(error)
@@ -283,6 +293,9 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
           : parseInt(await tokenContract.methods.decimals().call(), 10)
       const balance = await getBalance(web3, walletAddress, tokenContract)
       return {
+        chain: NETWORKS[chainId].name,
+        chainId,
+        networkIcon: NETWORKS[chainId].iconPath,
         name: defaultToken.name,
         symbol: defaultToken.symbol,
         decimal: decimal,
