@@ -14,7 +14,7 @@
       icon="logo-icon"
       text="All Network (some not shown)"
       size="m"
-      @click.native="switchNetwork(network.chainId)"
+      @click.native="switchNetwork(0)"
     />
     <PaymentButton
       v-for="(network, key) in networks"
@@ -92,28 +92,33 @@ export default {
       this.$store.dispatch('modal/hide')
     },
     switchNetwork(chainId) {
-      this.$web3
-        .switchChain(this.$store.state.web3.instance, chainId)
-        .then(() => {
-          this.$store.dispatch('web3/updateChainId', chainId)
-          this.hideModal()
-        })
-        .catch((error) => {
-          console.log(error)
-          if (!('code' in error)) return
-          let errorCode = error.code
-          // @TODO I'd like to do something about this lame condition determination(saito)
-          if (
-            error.data &&
-            error.data.originalError &&
-            error.data.originalError.code
-          ) {
-            errorCode = error.data.originalError.code
-          }
-          if (errorCode === 4902) {
-            this.showAddChainModal(chainId)
-          }
-        })
+      if (chainId == 0) {
+        this.$store.dispatch('web3/updateShowAllChain', true)
+        this.hideModal()
+      } else 
+        this.$web3
+          .switchChain(this.$store.state.web3.instance, chainId)
+          .then(() => {
+            this.$store.dispatch('web3/updateShowAllChain', false)
+            this.$store.dispatch('web3/updateChainId', chainId)
+            this.hideModal()
+          })
+          .catch((error) => {
+            console.log(error)
+            if (!('code' in error)) return
+            let errorCode = error.code
+            // @TODO I'd like to do something about this lame condition determination(saito)
+            if (
+              error.data &&
+              error.data.originalError &&
+              error.data.originalError.code
+            ) {
+              errorCode = error.data.originalError.code
+            }
+            if (errorCode === 4902) {
+              this.showAddChainModal(chainId)
+            }
+          })
     },
     showAddChainModal(chainId) {
       this.$store.dispatch('modal/show', {

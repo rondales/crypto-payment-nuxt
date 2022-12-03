@@ -15,7 +15,6 @@
       >
     </p> -->
     <PaymentAction
-      v-if="isCurrentTokenImportTab"
       class="token__network"
       :text="currentNetworkName"
       :icon="currentNetworkIcon"
@@ -221,6 +220,9 @@ export default {
     chainId() {
       return this.$store.state.web3.chainId
     },
+    showAllChain() {
+      return this.$store.state.web3.showAllChain
+    },
     providerType() {
       return this.$store.state.web3.provider
     },
@@ -237,11 +239,15 @@ export default {
       return this.availableNetworks.length
     },
     currentNetworkName() {
+      if (this.showAllChain) return 'All Network (some not shown)'
+
       return this.chainId && this.isAvailableCurrentNetwork
         ? NETWORKS[this.chainId].name
         : 'Not supported network'
     },
     currentNetworkIcon() {
+      if (this.showAllChain) return 'logo-icon'
+
       if (this.chainId && this.isAvailableCurrentNetwork) {
         return NETWORKS[this.chainId].iconPath
       } else {
@@ -357,6 +363,17 @@ export default {
       return this.$store.state.theme === 'dark'
     }
   },
+  watch: {
+    showAllChain(isShow) {
+      console.log('showAllChain', isShow)
+      if (isShow) {
+        this.$parent.loading = true
+        this.getDefaultTokens().then(() => {
+            this.$parent.loading = false
+          })
+      }
+    }
+  },
   methods: {
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`
@@ -380,11 +397,12 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
+      this.skelton = true
       const func = this.$web3.getDefaultTokens(
         this.web3Instance,
         this.chainId,
         this.userAccountAddress,
-        this.paymentAvailableNetworks
+        this.showAllChain ? this.paymentAvailableNetworks : [this.chainId]
       )
       return func.catch(func).then((tokens) => {
         this.tokenList = tokens
@@ -404,9 +422,9 @@ export default {
         this.searchTokenAddress,
         this.userAccountAddress
       )
-      importedToken.chain = this.currentNetworkName
+      importedToken.chain = NETWORKS[this.chainId].name
       importedToken.chainId = this.chainId
-      importedToken.networkIcon = this.currentNetworkIcon
+      importedToken.networkIcon = NETWORKS[this.chainId].iconPath
       console.log(importedToken)
       return importedToken
     },

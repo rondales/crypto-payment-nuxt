@@ -190,18 +190,18 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         : supportedNetworkTestnet
       let tokens = []
       console.log('isSupportNetWork', isSupportNetWork)
-      for (const chainId in isSupportNetWork) {
+      for (const supportedChainId in isSupportNetWork) {
         console.log('merchantNetworks', merchantNetworks)
         if (
           merchantNetworks &&
           merchantNetworks.find(
-            (merchantChainId) => merchantChainId == chainId
+            (merchantChainId) => merchantChainId == supportedChainId
           ) == undefined
         )
           continue
 
         const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[chainId]}&address=${walletAddress}`
+          `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[supportedChainId]}&address=${walletAddress}`
         )
         const { data } = response
         if (Object.hasOwnProperty.call(data.data, 'ethereum')) {
@@ -221,33 +221,62 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
               ].isSupported = false
             }
 
-            const defaultTokens = getNetworkDefaultTokens(parseInt(chainId))
-            tokens = tokens.concat(
-              Object.values(defaultTokens)
-                .map((defaultToken) => {
-                  const addressDefaultToken =
-                    defaultToken.address === null ? '-' : defaultToken.address
-                  const token = balanceTokens[addressDefaultToken.toLowerCase()]
-                  if (!token) return null
-                  balanceTokens[
-                    addressDefaultToken.toLowerCase()
-                  ].isSupported = true
+            const defaultTokens = getNetworkDefaultTokens(
+              parseInt(supportedChainId)
+            )
 
-                  return {
-                    chain: NETWORKS[chainId].name,
-                    chainId,
-                    networkIcon: NETWORKS[chainId].iconPath,
-                    name: defaultToken.name,
-                    symbol: defaultToken.symbol,
-                    decimal: token.decimals.toString(),
-                    address: defaultToken.address,
-                    balance: token.value.toString(),
-                    icon: defaultToken.icon,
-                    path: defaultToken.iconPath,
-                    type: defaultToken.iconType
-                  }
-                })
-                .filter((item) => item !== null)
+            const web3Instance = new Web3()
+            const rpcUrl = NETWORKS[supportedChainId].rpcUrl
+            web3Instance.setProvider(rpcUrl)
+
+            tokens = tokens.concat(
+              (
+                await Promise.all(
+                  Object.values(defaultTokens).map(async (defaultToken) => {
+                    const addressDefaultToken =
+                      defaultToken.address === null ? '-' : defaultToken.address
+                    const token =
+                      balanceTokens[addressDefaultToken.toLowerCase()]
+                    if (!token) return null
+                    balanceTokens[
+                      addressDefaultToken.toLowerCase()
+                    ].isSupported = true
+
+                    const tokenContract =
+                      defaultToken.address === null
+                        ? null
+                        : new web3Instance.eth.Contract(
+                            defaultToken.abi,
+                            defaultToken.address
+                          )
+                    const balance = await getBalance(
+                      web3Instance,
+                      walletAddress,
+                      tokenContract
+                    )
+                    console.log(
+                      'token balance',
+                      token.value,
+                      'balance',
+                      balance
+                    )
+
+                    return {
+                      chain: NETWORKS[supportedChainId].name,
+                      chainId: supportedChainId,
+                      networkIcon: NETWORKS[supportedChainId].iconPath,
+                      name: defaultToken.name,
+                      symbol: defaultToken.symbol,
+                      decimal: token.decimals.toString(),
+                      address: defaultToken.address,
+                      balance,
+                      icon: defaultToken.icon,
+                      path: defaultToken.iconPath,
+                      type: defaultToken.iconType
+                    }
+                  })
+                )
+              ).filter((item) => item !== null)
             )
 
             console.log('balanceTokens', balanceTokens)
@@ -256,19 +285,50 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
             )
             console.log('unsupportedTokens', unsupportedTokens)
             tokens = tokens.concat(
-              unsupportedTokens.map((token) => ({
-                chain: NETWORKS[chainId].name,
-                chainId,
-                networkIcon: NETWORKS[chainId].iconPath,
-                name: token.name,
-                symbol: token.symbol,
-                decimal: token.decimals.toString(),
-                address: token.address,
-                balance: token.value.toString(),
-                icon: require('@/assets/images/symbol/unknown.svg'),
-                path: 'crypto_currency/unknown',
-                type: 'png'
-              }))
+              (
+                await Promise.all(
+                  unsupportedTokens.map(async (token) => {
+                    console.log('unsupported', 'token', token)
+                    try {
+                      const tokenContract =
+                        token.address === '-'
+                          ? null
+                          : new web3Instance.eth.Contract(
+                              Erc20Abi,
+                              token.address
+                            )
+                      const balance = await getBalance(
+                        web3Instance,
+                        walletAddress,
+                        tokenContract
+                      )
+                      console.log(
+                        'unsupported',
+                        'token balance',
+                        token.value,
+                        'balance',
+                        balance
+                      )
+                      return {
+                        chain: NETWORKS[supportedChainId].name,
+                        chainId: supportedChainId,
+                        networkIcon: NETWORKS[supportedChainId].iconPath,
+                        name: token.name,
+                        symbol: token.symbol,
+                        decimal: token.decimals.toString(),
+                        address: token.address,
+                        balance,
+                        icon: require('@/assets/images/symbol/unknown.svg'),
+                        path: 'crypto_currency/unknown',
+                        type: 'png'
+                      }
+                    } catch (error) {
+                      console.log(error)
+                      return null
+                    }
+                  })
+                )
+              ).filter((item) => item != null)
             )
           }
         }
