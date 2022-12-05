@@ -70,6 +70,26 @@
               :networkIcon="token.networkIcon"
             />
           </div>
+          <div class="tokentab__items" v-if="otherTokenDisplay">
+            <PaymentButton
+              class="tokentab__othertoken"
+              color="cancel"
+              size="m"
+              icon="arrowBottom"
+              text="Other Token Display"
+              @click.native="switchOtherTokenDisplay"
+            />
+          </div>
+          <div class="tokentab__items" v-else>
+            <PaymentButton
+              class="tokentab__othertoken"
+              color="cancel"
+              size="m"
+              icon="arrowTop"
+              text="Other Token Hide"
+              @click.native="switchOtherTokenDisplay"
+            />
+          </div>
         </div>
       </div>
       <div v-else-if="isCurrentTokenImportTab" class="tab__wrap">
@@ -180,7 +200,8 @@ export default {
       },
       tabBodyStyle: {
         '--wh': '100vh'
-      }
+      },
+      otherTokenDisplay: false
     }
   },
   components: {
@@ -282,7 +303,7 @@ export default {
         : 'crypto_currency/unknown'
     },
     paymentAvailableNetworks() {
-      return this.$store.state.payment.availableNetworks;
+      return this.$store.state.payment.availableNetworks
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null
@@ -369,8 +390,8 @@ export default {
       if (isShow) {
         this.$parent.loading = true
         this.getDefaultTokens().then(() => {
-            this.$parent.loading = false
-          })
+          this.$parent.loading = false
+        })
       }
     }
   },
@@ -517,20 +538,27 @@ export default {
         await this.$web3
           .switchChain(this.$store.state.web3.instance, selectedToken.chainId)
           .then(() => {
-            this.$store.dispatch("web3/updateChainId", parseInt(selectedToken.chainId));
+            this.$store.dispatch(
+              'web3/updateChainId',
+              parseInt(selectedToken.chainId)
+            )
           })
           .catch((error) => {
-            console.log(error);
-            if (!("code" in error)) return
+            console.log(error)
+            if (!('code' in error)) return
             let errorCode = error.code
             // @TODO I'd like to do something about this lame condition determination(saito)
-            if (error.data && error.data.originalError && error.data.originalError.code) {
+            if (
+              error.data &&
+              error.data.originalError &&
+              error.data.originalError.code
+            ) {
               errorCode = error.data.originalError.code
             }
             if (errorCode === 4902) {
-              this.showAddChainModal(selectedToken.chainId);
+              this.showAddChainModal(selectedToken.chainId)
             }
-          });
+          })
       }
 
       this.$store.dispatch('payment/updateToken', {
@@ -590,6 +618,9 @@ export default {
     getWindowSize() {
       let height = window.innerHeight - 42 - 111 - 90 - 101 - 24
       this.tabBodyStyle['--wh'] = `${height}px`
+    },
+    switchOtherTokenDisplay() {
+      this.otherTokenDisplay = !this.otherTokenDisplay
     }
   },
   created() {
@@ -769,6 +800,15 @@ export default {
     margin-bottom: 1rem;
     &__items {
       margin-bottom: 0.5rem;
+    }
+  }
+  &__othertoken {
+    &::v-deep {
+      .button.size_m {
+        border-radius: 0.5rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
   .foot {
