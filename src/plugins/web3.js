@@ -75,7 +75,8 @@ export default {
           viewCashBacks: viewCashBacks,
           isSlashCustomPlugin: isSlashCustomPlugin,
           updateMerchantReceiveAddress: updateMerchantReceiveAddress,
-          updateCashbackPercent: updateCashbackPercent
+          updateCashbackPercent: updateCashbackPercent,
+          checkMerchantContractPaused: checkMerchantContractPaused
         }
       }
     })
@@ -677,6 +678,24 @@ const updateCashbackPercent = function(
     maxPriorityFeePerGas: null,
     maxFeePerGas: null
   })
+}
+
+const checkMerchantContractPaused = async function (
+  web3,
+  contractAbi,
+  contract
+) {
+  const { chainId, address: contractAddress } = contract
+
+  if (contractAddress) {
+    const rpcUrl = NETWORKS[chainId].rpcUrl
+    web3.setProvider(rpcUrl)
+
+    const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
+    return { chainId, paused: await merchantContract.methods.paused().call() }
+  }
+
+  return { chainId, paused: true }
 }
 
 const deleteMerchantContract = function() {

@@ -103,7 +103,7 @@
             class="manage-contents_address-wrap"
             :class="{
               available: contract.available,
-              unavailable: !contract.available,
+              unavailable: contract.available == false,
               separate_bottom: isCurrentNetwork(chainId),
               separate_upper: !isCurrentNetwork(chainId)
             }"
@@ -187,7 +187,7 @@
                     </div>
                     <div v-else class="manage-contents_btn other">
                       switch network
-                  </div>
+                    </div>
                   </template>
                 </div>
               </div>
@@ -210,7 +210,7 @@ import {
 } from '@/contracts/receive_tokens'
 import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
-import Web3 from "web3";
+import Web3 from 'web3'
 
 export default {
   name: 'AdminContractSettings',
@@ -220,7 +220,7 @@ export default {
       monitoringReceiveAddressInterval: null,
       monitoringCashbackRateInterval: null,
       monitoringInterval: null,
-      contractLoaded: false,
+      contractLoaded: false
     }
   },
   computed: {
@@ -373,6 +373,7 @@ export default {
     getContracts() {
       return this.apiGetContracts()
         .then((response) => {
+          const web3Instance = new Web3()
           response.data.forEach((contract) => {
             if (
               contract.payment_type === 1 &&
@@ -382,10 +383,18 @@ export default {
                 contract.network_type,
                 contract.address
               )
-              this.updateContractAvailable(
-                contract.network_type,
-                contract.available
-              )
+              this.$web3
+                .checkMerchantContractPaused(
+                  web3Instance,
+                  MerchantContract.abi,
+                  { chainId: contract.network_type, address: contract.address }
+                )
+                .then((data) => {
+                  this.updateContractAvailable(
+                    contract.network_type,
+                    !data.paused
+                  )
+                })
             }
           })
           this.contractLoaded = true
@@ -544,7 +553,7 @@ export default {
     })
     this.$store.dispatch('contract/addContracts', contractSettings)
     this.getContracts().then(() => {
-      const web3Instance = new Web3();
+      const web3Instance = new Web3()
       this.getContractCashbacks(web3Instance)
       this.getContractReceiveAddresses(web3Instance)
     })

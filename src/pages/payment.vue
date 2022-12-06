@@ -14,6 +14,8 @@
 <script>
 import PaymentIndex from '@/components/templates/PaymentIndex'
 import { STATUS_PUBLISHED } from '@/constants'
+import MerchantContract from '@/contracts/merchant'
+import Web3 from 'web3'
 
 export default {
   name: 'payment',
@@ -138,22 +140,40 @@ export default {
       this.$store.dispatch('changeTheme', color)
     },
     checkAndSetAvailableNetworks() {
-      this.apiGetMerchantContractAvailableStatus().then((response) => {
-        const availableNetworks = Object.keys(response.data.statuses)
-          .filter((key) => !response.data.statuses[key])
-          .map(Number)
-        this.$store.dispatch(
-          'payment/updateAvailableNetworks',
-          availableNetworks
-        )
-        if (!availableNetworks.length) {
-          this.$store.dispatch('modal/show', {
-            target: 'error-not-exist-available-payment-contract-modal',
-            size: 'small',
-            params: { returnUrl: response.data.return_url }
+      this.apiGetMerchantContractAvailableStatus()
+        .then((response) => {
+          const statuses = response.data.statuses
+          const status = {}
+          const funcGetContractPaused = []
+          const web3Instance = new Web3()
+          for (const chainId in statuses) {
+            funcGetContractPaused.push(
+              this.$web3.checkMerchantContractPaused(
+                web3Instance,
+                MerchantContract.abi,
+                { chainId, address: statuses[chainId] }
+              )
+            )
+            status[chainId] = true
+          }
+          Promise.all(funcGetContractPaused).then((response) => {
+            for (const result of response) {
+              status[result.chainId] = result.paused
+            }
+
+            const availableNetworks = Object.keys(status)
+              .filter(key => !status[key])
+              .map(Number)
+            this.$store.dispatch('payment/updateAvailableNetworks', availableNetworks)
+            if (!availableNetworks.length) {
+              this.$store.dispatch('modal/show', {
+                target: 'error-not-exist-available-payment-contract-modal',
+                size: 'small',
+                params: { returnUrl: response.data.return_url }
+              })
+            }
           })
-        }
-      })
+        })
     },
     handleRedirect() {
       this.apiGetTransactionState().then((response) => {
