@@ -16,13 +16,13 @@
           icon="wallet-metamask"
           :loading="loadingMeta"
         />
-        <PaymentButton
+        <!-- <PaymentButton
           @click.native="handleConnect(METAMASK, false)"
           size="l"
           text="Fireblocks"
           icon="fireblocks"
           :loading="loadingFireblocks"
-        />
+        /> -->
         <PaymentButton
           @click.native="showWalletConnectCautionModal()"
           size="l"
@@ -39,8 +39,8 @@
         text="Regenerate URL"
         icon="reload"
       />
-      <p class="duplicate-ext-disclaimer mt-1">If both Metamask and Fireblocks coexist in extensions to chrome, 
-        it will not work. Only one of the extensions should be enabled.</p>
+      <!-- <p class="duplicate-ext-disclaimer mt-1">If both Metamask and Fireblocks coexist in extensions to chrome, 
+        it will not work. Only one of the extensions should be enabled.</p> -->
     </div>
   </div>
 </template>
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       loadingMeta: false,
-      loadingFireblocks: false,
+      // loadingFireblocks: false,
       loadingWallet: false
     }
   },

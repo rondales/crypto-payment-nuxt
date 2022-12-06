@@ -18,22 +18,22 @@
               </span>
               MetaMask
             </button>
-            <button class="btn __m icon-right full" @click="authentification(METAMASK, true, false)">
+            <!-- <button class="btn __m icon-right full" @click="authentification(METAMASK, true, false)">
               <span class="btn-icon">
                 <img src="@/assets/images/icon/fireblocks.svg">
               </span>
               Fireblocks
-            </button>
+            </button> -->
             <button class="btn __m icon-right full" @click="showWalletConnectCautionModal()">
               <span class="btn-icon">
                 <img src="@/assets/images/wallet-connect.svg">
               </span>
               WalletConnect
             </button>
-            <p class="duplicate-ext-disclaimer">
+            <!-- <p class="duplicate-ext-disclaimer">
               If both Metamask and Fireblocks coexist in extensions to chrome, 
               it will not work. Only one of the extensions should be enabled.
-            </p>
+            </p> -->
           </dd>
         </dl>
       </div>
