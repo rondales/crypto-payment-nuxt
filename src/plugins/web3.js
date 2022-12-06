@@ -29,6 +29,9 @@ import {
   AvalancheTokens as AvalancheReceiveTokens
 } from '@/contracts/receive_tokens'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
+import { UniswapVersion } from 'simple-uniswap-sdk'
+import { EXCHANGE_ROUTERS } from '@/constants'
+import bestRoute from '@/utils/best-route'
 
 export default {
   install(Vue) {
@@ -70,7 +73,7 @@ export default {
           viewMerchantReceiveAddresses: viewMerchantReceiveAddresses,
           viewCashBackPercent: viewCashBackPercent,
           viewCashBacks: viewCashBacks,
-          isContractAddress: isContractAddress,
+          isSlashCustomPlugin: isSlashCustomPlugin,
           updateMerchantReceiveAddress: updateMerchantReceiveAddress,
           updateCashbackPercent: updateCashbackPercent,
           checkMerchantContractPaused: checkMerchantContractPaused
@@ -171,14 +174,15 @@ const getDefaultTokens = async function(web3, chainId, walletAddress) {
         walletAddress,
         tokenContract
       )
-
       return {
         name: defaultToken.name,
         symbol: defaultToken.symbol,
         decimal: decimal,
         address: defaultToken.address,
         balance: balance,
-        icon: defaultToken.icon
+        icon: defaultToken.icon,
+        path: defaultToken.iconPath,
+        type: defaultToken.iconType
       }
     })
   )
@@ -198,7 +202,9 @@ const searchToken = async function(web3, contractAddress, walletAddress) {
     decimal: decimal,
     balance: balance,
     address: contractAddress,
-    icon: require('@/assets/images/symbol/unknown.svg')
+    icon: require('@/assets/images/symbol/unknown.svg'),
+    path: "crypto_currency/unknown",
+    type: "png"
   }
 }
 
@@ -216,7 +222,9 @@ const importToken = async function(web3, contractAddress, walletAddress) {
     name: name,
     symbol: symbol,
     balance: balance,
-    icon: require('@/assets/images/symbol/unknown.svg')
+    icon: require('@/assets/images/symbol/unknown.svg'),
+    path: "crypto_currency/unknown",
+    type: "png"
   }
 }
 
@@ -308,7 +316,8 @@ const getTokenExchangeData = async function(
   token,
   paymentRequestSymbol,
   paymentRequestAmount,
-  slippageTolerance
+  gasFeeRate,
+  paymentFeeRate
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
@@ -347,17 +356,19 @@ const getTokenExchangeData = async function(
       path,
       reservedParam
     ).call({ from: walletAddress })
-  const requestTokenToUserToken = await merchantContract.methods.getAmountIn(
-      payingTokenAddress,
-      requestAmountWei,
-      path,
-      reservedParam
-    ).call({ from: walletAddress })
+
+  const bestExchange = await getBestRate(
+    chainId,
+    walletAddress,
+    path,
+    paymentRequestAmount
+  )
+  const requestTokenToUserToken = convertToWei(web3, bestExchange.price.toString(), token.decimal)
   const requireAmountWithSlippage = token.address == requestToken.address 
-    ? requestTokenToUserToken
+    ? requestAmountWei
     : String(
         Math.round(
-          parseInt(requestTokenToUserToken, 10) * (1 + (slippageTolerance / 100))
+          parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
         )
       )
   const perRequestTokenToUserTokenRate = await merchantContract.methods.getAmountIn(
@@ -372,14 +383,15 @@ const getTokenExchangeData = async function(
       reservedParam
     ).call({ from: walletAddress })
   const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
-  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (slippageTolerance / 100))))
+  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (gasFeeRate / 100))))
   return {
     requireAmount: convertFromWei(web3, requireAmountWithSlippage, token.decimal),
     requestAmountWei: requestAmountWei,
     equivalentAmount: convertFromWei(web3, userTokenToRequestToken, requestTokenDecimal),
     rate: convertFromWei(web3, perRequestTokenToUserTokenRate, token.decimal),
     fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
-    requestTokenDecimal: requestTokenDecimal
+    requestTokenDecimal: requestTokenDecimal,
+    bestExchange
   }
 }
 
@@ -461,39 +473,23 @@ const getTokenDecimalUnit = function(web3, chainId, token) {
 
 const sendPaymentTransaction = async function(
   web3,
-  chainId,
   walletAddress,
   contract,
   token,
   paymentAmount,
-  paymentRequestSymbol,
   platformFee,
-  requestAmountWei
+  requestAmountWei,
+  bestExchange,
+  nftVaultPaymentId = null
 ) {
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
-  const defaultTokens = getMerchantReceiveTokens(chainId)
-  const requestToken = defaultTokens[paymentRequestSymbol]
   const userTokenAmountWei = convertToWei(web3, paymentAmount, token.decimal)
-  const wrappedToken = getWrappedToken(chainId)
   const platformFeeWei = web3.utils.toWei(platformFee, 'ether')
   const nativeTokenAddress = '0x0000000000000000000000000000000000000000'
-  const paymentIdParam = ''
+  const paymentIdParam = nftVaultPaymentId ? nftVaultPaymentId : ''
   const optionalParam = ''
-  const reservedParam = '0x'
-  let path
-  if ((chainId == '5' || chainId == '1') && paymentRequestSymbol == 'WETH') {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, requestToken.address]
-    }
-  } else {
-    if(token.address === null || token.address === wrappedToken.address) {
-      path = [wrappedToken.address, requestToken.address]
-    } else {
-      path = [token.address, wrappedToken.address, requestToken.address]
-    }
-  }
+  let reservedParam = '0x'
+  let path = []
   const feePath = []
   const paymentTokenAddress = token.address === null
     ? nativeTokenAddress
@@ -501,6 +497,16 @@ const sendPaymentTransaction = async function(
   const msgValue = token.address === null
     ? (parseInt(userTokenAmountWei) + parseInt(platformFeeWei))
     : platformFeeWei
+
+  if (bestExchange.name == 'uniswapV3') {
+    reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, bestExchange.pathParam]);
+  } else if (bestExchange.name == '') {
+    path = bestExchange.pathParam
+  } else {
+    reservedParam = web3.eth.abi.encodeParameters(['address', 'uint256','bytes'], [bestExchange.exchange, bestExchange.flag, reservedParam]);
+    path = bestExchange.pathParam
+  }
+
   return new Promise(function(resolve, reject) {
     merchantContract.methods.submitTransaction(
       paymentTokenAddress,
@@ -652,9 +658,16 @@ const viewCashBacks = async function (web3, contractAbi, contracts) {
   return cashbacks
 }
 
-const isContractAddress = async function(web3, address) {
-  const code = await web3.eth.getCode(address)
-  return code == '0x' ? false : true
+// Check if given address is SlashCustomPlugin compatible
+const isSlashCustomPlugin = async function (web3, slashCustomPluginAbi, address) {
+  let isSlashCustomPlugin
+  const slashCustomPlugin = new web3.eth.Contract(slashCustomPluginAbi, address)
+  try {
+    isSlashCustomPlugin = await slashCustomPlugin.methods.supportSlashExtensionInterface().call()
+  } catch(e) {
+    isSlashCustomPlugin = false
+  }
+  return isSlashCustomPlugin
 }
 
 const updateMerchantReceiveAddress = function(
@@ -662,12 +675,12 @@ const updateMerchantReceiveAddress = function(
   contractAbi,
   contractAddress,
   receiveAddress,
-  isContractAddress,
+  isSlashCustomPlugin,
   merchantWalletAddress
 ) {
   const merchantContract = new web3.eth.Contract(contractAbi, contractAddress)
   return merchantContract.methods
-    .updateReceiveAddress(receiveAddress,isContractAddress)
+    .updateReceiveAddress(receiveAddress,isSlashCustomPlugin)
     .send({
     from: merchantWalletAddress,
     maxPriorityFeePerGas: null,
@@ -757,6 +770,79 @@ const convertFromWei = function convertFromWei(web3, wei, decimal) {
   const whole = web3.utils.toBN(wei.toString()).div(web3.utils.toBN(`1${'0'.repeat(decimal)}`)).toString(10)
   
   return `${whole}${fraction == '0' ? '' : `.${fraction}`}`;
+}
+
+const getBestRate = async function (
+  chainId,
+  walletAddress,
+  path,
+  paymentAmount
+) {
+  try {
+    const rpcUrl = NETWORKS[chainId].rpcUrl
+    const exchanges = EXCHANGE_ROUTERS[chainId]
+    let bestExchange = { name: '', exchange: '', flag: '', price: 0 }
+
+    if (path[0] == path[path.length - 1]) {
+      bestExchange.pathParam = [path[0], path[path.length - 1]]
+      return bestExchange;
+    }
+
+    const uniswapVersions = []
+    for (const exchangeName in exchanges) {
+      if (Object.hasOwnProperty.call(exchanges, exchangeName)) {
+        if (exchangeName === 'uniswapV2')
+          uniswapVersions.push(UniswapVersion.v2)
+        else if (exchangeName === 'uniswapV3')
+          uniswapVersions.push(UniswapVersion.v3)
+        else {
+          const nextBestExchange = await bestRoute.dexV2.getBestRoute(
+            exchangeName,
+            chainId,
+            rpcUrl,
+            walletAddress,
+            path,
+            paymentAmount
+          )
+
+          if (
+            bestExchange.price == 0 ||
+            (nextBestExchange.price > 0 &&
+              nextBestExchange.price < bestExchange.price)
+          ) {
+            bestExchange = nextBestExchange
+          }
+        }
+      }
+    }
+
+    if (uniswapVersions.length > 0) {
+      const nextBestExchange = await bestRoute.uniswap.getBestRoute(
+        chainId,
+        rpcUrl,
+        walletAddress,
+        path,
+        paymentAmount,
+        uniswapVersions
+      )
+
+      if (
+        bestExchange.price == 0 ||
+        (nextBestExchange.price > 0 &&
+          nextBestExchange.price < bestExchange.price)
+      ) {
+        bestExchange = nextBestExchange
+      }
+    }
+
+    if (bestExchange.price == 0)
+      throw new Error('execution reverted: No valid exchange')
+
+    return bestExchange
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
 
 function getNetworkDefaultTokens(chainId) {

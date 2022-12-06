@@ -134,7 +134,7 @@ export default {
     },
     showErrorModal(message) {
       this.$store.dispatch("modal/show", {
-        target: "error-modal",
+        target: "error-for-admin-modal",
         size: "small",
         params: {
           message: message,

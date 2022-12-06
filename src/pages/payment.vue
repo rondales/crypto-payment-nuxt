@@ -56,8 +56,10 @@ export default {
     },
     receiver() {
       if (!this.isVerifiedDomain && this.merchantAccountAddress) {
-        const omittedMerchantAccountAddress = this.merchantAccountAddress.substr(0, 10)
-          + "…" + this.merchantAccountAddress.substr(-10)
+        const omittedMerchantAccountAddress =
+          this.merchantAccountAddress.substr(0, 10) +
+          '…' +
+          this.merchantAccountAddress.substr(-10)
         return omittedMerchantAccountAddress
       }
       return this.storedPaymentData.domain
@@ -95,23 +97,17 @@ export default {
     isDifferentPayment() {
       return this.urlPaymentToken !== this.storedPaymentToken
     },
-    isSelectedReceipt() {
-      return this.storedPaymentData.isSelectedReceipt
-    },
     isSentTransactionToBlockChain() {
       return this.storedPaymentData.status !== STATUS_PUBLISHED
     },
     isRequestEntrancePage() {
       return this.$route.name === 'entrance'
     },
-    isRequestSelectReceiptPage() {
-      return this.$route.name === 'receipt'
-    },
     isRequestedSelectWalletPage() {
       return this.$route.name === 'wallets'
     },
     isRequestConnectedWalletPage() {
-      const targetPages = ['tokens', 'exchange', 'detail']
+      const targetPages = ['tokens', 'detail']
       return targetPages.includes(this.$route.name)
     },
     isRequestResultPage() {
@@ -121,19 +117,20 @@ export default {
   methods: {
     apiGetMerchantContractAvailableStatus() {
       const url = `${this.API_BASE_URL}/api/v1/payment/merchant/status`
-      const request = { params: new URLSearchParams([['payment_token', this.urlPaymentToken]])}
+      const request = {
+        params: new URLSearchParams([['payment_token', this.urlPaymentToken]])
+      }
       return this.axios.get(url, request)
     },
     apiGetTransactionState() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction/state`
-      const request = { params: new URLSearchParams([['payment_token', this.urlPaymentToken]]) }
+      const request = {
+        params: new URLSearchParams([['payment_token', this.urlPaymentToken]])
+      }
       return this.axios.get(url, request)
     },
     getAccountDataFromBlockChain() {
-      const func = this.$web3.getAccountData(
-        this.web3Instance,
-        this.chainId
-      )
+      const func = this.$web3.getAccountData(this.web3Instance, this.chainId)
       return func.catch(this.getAccountDataFromBlockChain)
     },
     openModal(target, size) {
@@ -179,58 +176,187 @@ export default {
         })
     },
     handleRedirect() {
-      this.apiGetTransactionState()
-        .then((response) => {
-          this.$refs.paymentIndex.incrementProgressCompletedSteps()
-          const state = response.data.state
-          if (state === 'close' && !this.isRequestResultPage) {
-            return this.$router.replace({
-              name: 'result',
-              params: { token: this.urlPaymentToken }
-            })
-          }
-          if (
-            (!this.isDifferentPayment && state === 'unset_base_amount' && !this.isRequestEntrancePage)
-            || (this.isDifferentPayment && !this.isRequestEntrancePage && !this.isRequestResultPage)
-          ) {
-            return this.$router.replace({
-              name: 'entrance',
-              params: { token: this.urlPaymentToken },
-              query: this.urlQueries
-            })
-          }
-          if (this.isRequestSelectReceiptPage && this.isSelectedReceipt) {
-            this.$refs.paymentIndex.updateProgressTotalSteps(
-              this.$refs.paymentIndex.progressCompletedSteps
-            )
-            return this.$router.replace({
-              name: 'wallets',
-              params: { token: this.urlPaymentToken }
-            })
-          }
-          if (this.isRequestSelectReceiptPage || this.isRequestedSelectWalletPage) {
-            this.$refs.paymentIndex.updateProgressTotalSteps(
-              this.$refs.paymentIndex.progressCompletedSteps
-            )
-          }
-        })
+      this.apiGetTransactionState().then((response) => {
+        this.$refs.paymentIndex.incrementProgressCompletedSteps()
+        const state = response.data.state
+        if (state === 'close' && !this.isRequestResultPage) {
+          return this.$router.replace({
+            name: 'result',
+            params: { token: this.urlPaymentToken }
+          })
+        }
+        if (
+          (!this.isDifferentPayment &&
+            state === 'unset_base_amount' &&
+            !this.isRequestEntrancePage) ||
+          (this.isDifferentPayment &&
+            !this.isRequestEntrancePage &&
+            !this.isRequestResultPage)
+        ) {
+          return this.$router.replace({
+            name: 'entrance',
+            params: { token: this.urlPaymentToken },
+            query: this.urlQueries
+          })
+        }
+        if (this.isRequestedSelectWalletPage) {
+          this.$refs.paymentIndex.updateProgressTotalSteps(
+            this.$refs.paymentIndex.progressCompletedSteps
+          )
+        }
+      })
     },
     handleChainChanged() {
-      this.getAccountDataFromBlockChain()
-        .then((data) => {
-          this.$store.dispatch('account/update', data)
-        })
+      this.getAccountDataFromBlockChain().then((data) => {
+        this.$store.dispatch('account/update', data)
+      })
     },
     handleAccountChanged() {
-      this.getAccountDataFromBlockChain()
-        .then((data) => {
-          this.$store.dispatch('account/update', data)
-        })
+      this.getAccountDataFromBlockChain().then((data) => {
+        this.$store.dispatch('account/update', data)
+      })
     }
   },
   created() {
     this.checkAndSetAvailableNetworks()
     this.handleRedirect()
+  },
+  mounted() {
+    document.body.classList.add('payment')
+    document.body.classList.add('theme--' + this.$store.state.theme)
+  },
+  updated() {
+    document.body.classList.remove('theme--dark')
+    document.body.classList.remove('theme--light')
+    document.body.classList.add('theme--' + this.$store.state.theme)
+  },
+  beforeDestroy() {
+    document.body.classList.remove('payment')
   }
 }
 </script>
+<style lang="scss">
+@import '@/assets/scss/style.scss';
+
+body.payment {
+  position: relative;
+  // padding-top: 2rem;
+  .weglot-container.wg-default {
+    position: fixed;
+    z-index: 9000;
+    bottom: auto;
+    // width: 100%;
+    top: 1rem;
+    right: calc(5vw + 1.2rem + 2rem);
+    // height: 1.6rem;
+    font-size: 0;
+    padding: 0.5rem 0;
+    @include media(sp) {
+      right: calc(5vw + 18px);
+      right: 0;
+      padding: 0rem 0;
+      width: 100%;
+      top: 50px;
+    }
+    .wg-drop.country-selector {
+      width: 100%;
+      position: relative;
+      bottom: auto;
+      right: auto;
+      font-size: 0;
+      // background-color: var(--Base3);
+      background: transparent;
+      transition: background-color 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms,
+        visibility 400ms cubic-bezier(0.25, 0.1, 0.25, 1) 0ms;
+      @include media(pc) {
+        &:hover {
+          background-color: var(--Base3);
+        }
+      }
+
+      @include media(sp) {
+        background-color: var(--Base3);
+        // border: 1px solid var(--Border);
+      }
+      &.weg-openleft {
+        background-color: var(--Base3);
+      }
+
+      a {
+        // background-color: var(--Base3);
+        background: transparent;
+        padding: 0;
+        height: auto;
+        display: block;
+        width: 5rem;
+        font-size: 0.8rem;
+        line-height: 2rem;
+        letter-spacing: 0.02em;
+        color: var(--Text);
+        padding: 0 0.5rem;
+        padding-right: 1.5rem;
+        @include media(sp) {
+          text-align: center;
+          line-height: 26px;
+          font-size: 0.9rem;
+          width: 100%;
+        }
+      }
+      .wgcurrent {
+        border: none;
+        position: relative;
+        &::after {
+          display: none;
+        }
+        &::before {
+          content: '';
+          display: block;
+          width: 6px;
+          height: 6px;
+          border-bottom: 1px solid var(--Text);
+          border-left: 1px solid var(--Text);
+          position: absolute;
+          top: 50%;
+          right: 6px;
+          transform-origin: center center;
+          transform: translateY(-75%) rotate(-45deg) scale(1, 1);
+          @include media(sp) {
+            transform: translateY(-90%) rotate(-45deg) scale(1, 1);
+          }
+        }
+        // a {
+        //   line-height: 2rem;
+        // }
+      }
+
+      ul {
+        background: transparent;
+        border: none;
+        background-color: var(--Base3);
+        li {
+          border-top: 1px solid var(--Border);
+        }
+      }
+      .wg-flags {
+        a {
+          @include media(sp) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          img.wg-flag {
+            display: none;
+            @include media(sp) {
+              display: block;
+              gap: 1rem;
+              width: 24px;
+              height: 12px;
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

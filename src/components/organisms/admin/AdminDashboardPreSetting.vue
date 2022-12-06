@@ -63,7 +63,7 @@
             <img src="@/assets/images/icon/jpyc-l.svg">
           </figure>
           <p class="welcome-receice_name">
-            JPYC
+            JPYC v2
             <br>
             JPY-peg
           </p>
@@ -167,7 +167,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .title-gradation{
   background: $gradation-light;

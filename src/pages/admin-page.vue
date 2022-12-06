@@ -199,6 +199,17 @@ export default {
 }
 </script>
 
+<!--
+Override global scope style in App.vue
+TODO: Remove this when applying the new UI to the Admin side pages as well
+-->
+<style lang="scss">
+@import '@/assets/scss/old/style.scss';
+</style>
+
+<!--
+TODO: For new UI
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
 </style>
+-->

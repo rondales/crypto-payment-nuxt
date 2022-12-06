@@ -12,6 +12,7 @@ import plugInsToken from "./modules/plugInsToken";
 import merchant from "./modules/merchant";
 import contract from "./modules/contract";
 import wallet from "./modules/wallet";
+import wwPayment from "./modules/wwPayment";
 
 Vue.use(Vuex);
 
@@ -31,6 +32,7 @@ const store = new Vuex.Store({
         "merchant",
         "contract",
         "wallet",
+        "wwPayment"
       ],
       storage: {
         getItem: (key) => ls.get(key),
@@ -48,7 +50,8 @@ const store = new Vuex.Store({
     deeplink,
     plugInsToken,
     wallet,
-    modal
+    modal,
+    wwPayment
   },
   state: {
     hamberger: false,

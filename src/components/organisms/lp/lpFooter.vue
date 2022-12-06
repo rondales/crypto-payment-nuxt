@@ -219,7 +219,7 @@ export default {
         },
         discord: {
           icon: "icon/discord",
-          link: "https://discord.gg/ZFNP2Mfr",
+          link: "https://discord.com/invite/gk25cyBs78",
           status: true,
         },
         mail: {
@@ -230,6 +230,11 @@ export default {
         gitbook: {
           icon: "icon/gitbook",
           link: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+          status: true,
+        },
+        medium: {
+          icon: "icon/medium",
+          link: "https://medium.com/slash-project-publishing",
           status: true,
         },
       },

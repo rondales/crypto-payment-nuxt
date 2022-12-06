@@ -33,7 +33,7 @@
 
 <script>
 import { METAMASK, WALLET_CONNECT, LOGIN_TOKEN } from '@/constants'
-import Header from "@/components/organisms/header"
+import Header from "@/components/organisms/admin/header"
 import ConnectWalletMixin from '@/components/mixins/ConnectWallet'
 import MerchantAdminAuthentificationMixin from '@/components/mixins/MerchantAdminAuthentification'
 
@@ -57,7 +57,7 @@ export default {
   methods: {
     showWalletConnectCautionModal() {
       this.$store.dispatch('modal/show', {
-        target: 'caution-wallet-connect-modal',
+        target: 'caution-wallet-connect-for-admin-modal',
         size: 'small'
       })
     }
@@ -71,8 +71,16 @@ export default {
 }
 </script>
 
+<!--
+Override global scope style in App.vue
+TODO: Remove this when applying the new UI to the Admin side pages as well
+-->
+<style lang="scss">
+@import '@/assets/scss/old/style.scss';
+</style>
+
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+@import '@/assets/scss/old/style.scss';
 header{
   .logo{
     width: 250px;

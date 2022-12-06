@@ -103,7 +103,7 @@
             class="manage-contents_address-wrap"
             :class="{
               available: contract.available,
-              unavailable: !contract.available,
+              unavailable: contract.available == false,
               separate_bottom: isCurrentNetwork(chainId),
               separate_upper: !isCurrentNetwork(chainId)
             }"
@@ -141,17 +141,14 @@
                     </span>
                   </div>
                   <template v-if="isCurrentNetwork(chainId)">
-                    <!-- <div
+                    <div
                       class="manage-contents_btn"
                       v-if="isPublishedContract(chainId)"
                       @click="showContractReceiveAddressChangeModal(chainId)"
                     >
                       Change
-                    </div> -->
-                    <div
-                      v-if="!isPublishedContract(chainId)"
-                      class="manage-contents_btn other"
-                    >
+                    </div>
+                    <div v-else class="manage-contents_btn other">
                       switch network
                     </div>
                   </template>
@@ -425,7 +422,7 @@ export default {
     },
     showAddChainModal(chainId) {
       this.$store.dispatch('modal/show', {
-        target: 'add-chain-modal',
+        target: 'add-chain-for-admin-modal',
         size: 'small',
         params: {
           chainId: chainId,
@@ -571,7 +568,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .manage-setting {
   .setting-wrap {

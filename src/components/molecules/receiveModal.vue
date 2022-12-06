@@ -1,46 +1,72 @@
 <template>
-  <div :class="classes">
-    <div class="header">
-      <h3 class="header__title">
-        Receive Token
-      </h3>
-    </div>
-    <div class="body">
+  <div>
+    <!-- <PaymentModal title="Receive Token">
+      // INFO: This is new UI code
+      <p class="d-todo">{{ $options.name }}</p> // TODO: please comment out
       <figure>
-        <img :src="tokenIcon">
+        <img :src="tokenIcon" />
       </figure>
-      <h4>
-        {{ tokenName }}
-      </h4>
+      <PaymentText type="h4b" :html="tokenName" />
       <p>
-        <a :href="tokenMarketUrl" target="_blank" rel="noopener noreferrer">{{ tokenMarketUrl }}</a>
+        <a :href="tokenMarketUrl" target="_blank" rel="noopener noreferrer">{{
+          tokenMarketUrl
+        }}</a>
       </p>
-      <button @click="confirm" class="btn __m">
-        Submit
+      <PaymentButton text="Submit" size="m" @click.native="confirm()" />
+      <PaymentText type="cap" html="Submited cannot be changed later." />
+
+      <div class="d-btnwrap bottomCloseBtn">
+        <PaymentButton
+          color="cancel"
+          text="CLOSE"
+          icon="dismiss"
+          size="s"
+          @click.native="hideModal()"
+        />
+      </div>
+    </PaymentModal> -->
+    <div :class="classes">
+      <div class="header">
+        <h3 class="header__title">Receive Token</h3>
+      </div>
+      <div class="body">
+        <figure>
+          <img :src="tokenIcon" />
+        </figure>
+        <h4>
+          {{ tokenName }}
+        </h4>
+        <p>
+          <a :href="tokenMarketUrl" target="_blank" rel="noopener noreferrer">{{
+            tokenMarketUrl
+          }}</a>
+        </p>
+        <button @click="confirm" class="btn __m">Submit</button>
+        <span> Submited cannot be changed later. </span>
+      </div>
+      <button class="close" @click="hideModal">
+        <img src="@/assets/images/cross.svg" />
+        閉じる
       </button>
-      <span>
-        Submited cannot be changed later.
-      </span>
     </div>
-    <button class="close" @click="hideModal">
-      <img src="@/assets/images/cross.svg">
-      閉じる
-    </button>
   </div>
 </template>
 
 <script>
-import RequestUtility from '@/utils/request'
-
+import RequestUtility from "@/utils/request";
+// TODO: Uncomment the following when applying the new UI
+// import PaymentModal from "@/components/organisms/Payment/Modal";
+// import PaymentText from "@/components/organisms/Payment/Text";
+// import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
-  name: 'receiveModal',
+  name: "receiveModal",
   data() {
     return {
       tokenNames: {
         USDT: 'Tether USD',
         USDC: 'USD Coin',
         DAI: 'Maker DAO',
-        JPYC: 'JPY Coin',
+        JPYC: 'JPY Coin v2',
         WETH: 'Wrapped ETH'
       },
       tokenIcons: {
@@ -48,16 +74,22 @@ export default {
         USDC: require('@/assets/images/icon/usdc-l.svg'),
         DAI: require('@/assets/images/icon/dai-l.svg'),
         JPYC: require('@/assets/images/icon/jpyc-l.svg'),
-        WETH: require('@/assets/images/icon/eth.svg')
+        WETH: require('@/assets/images/icon/eth-l.svg')
       },
       tokenMarketUrls: {
-        USDT: 'https://coinmarketcap.com/currencies/tether/',
-        USDC: 'https://coinmarketcap.com/currencies/usd-coin/',
-        DAI: 'https://coinmarketcap.com/currencies/multi-collateral-dai/',
-        JPYC: 'https://coinmarketcap.com/currencies/jpycoin/',
+        USDT: "https://coinmarketcap.com/currencies/tether/",
+        USDC: "https://coinmarketcap.com/currencies/usd-coin/",
+        DAI: "https://coinmarketcap.com/currencies/multi-collateral-dai/",
+        JPYC: "https://coinmarketcap.com/currencies/jpy-coin/",
         WETH: 'https://coinmarketcap.com/currencies/weth/'
-      }
-    }
+      },
+    };
+  },
+  components: {
+    // TODO: Uncomment the following when applying the new UI
+    // PaymentText,
+    // PaymentButton,
+    // PaymentModal,
   },
   computed: {
     baseUrl() {
@@ -104,121 +136,122 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-
-  .modal-box {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background:var(--color_bg);
-    @include media(pc) {
-      &.--small {
-        width: 470px;
-      }
-      &.--medium {
-        width: 760px;
-      }
+// TODO: Delete the following when applying the new UI
+@import "@/assets/scss/old/style.scss";
+/*
+TODO: Uncomment the following when applying the new UI
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
+*/
+.modal-box {
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color_bg);
+  @include media(pc) {
+    &.--small {
+      width: 470px;
     }
-    @include media(sp) {
-      width: calc(100vw - 32px);
+    &.--medium {
+      width: 760px;
     }
-
   }
-  .header {
-    @include media(pc) {
-      padding: 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__desc {
-        font-size: 2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 2.3rem;
-      }
-    }
+  @include media(sp) {
+    width: calc(100vw - 32px);
+  }
+}
+.header {
+  @include media(pc) {
+    padding: 24px;
     &__title {
-      font-weight: 500;
-      background: $gradation-light;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 150% 150%;
-      display: inline;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
     &__desc {
-      font-weight: 100;
+      font-size: 2rem;
     }
   }
-  .close {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    font-size: 0;
+  @include media(sp) {
+    padding: 18px;
+    &__title {
+      font-size: 1.7rem;
+    }
+  }
+  &__title {
+    font-weight: 500;
+    background: $gradation-light;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 150% 150%;
+    display: inline;
+  }
+  &__desc {
+    font-weight: 100;
+  }
+}
+.close {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
 
-    @include media(pc) {
-      top: 30px;
-      right: 24px;
-    }
-    @include media(sp) {
-      top: 24px;
-      right: 24px;
+  @include media(pc) {
+    top: 30px;
+    right: 24px;
+  }
+  @include media(sp) {
+    top: 24px;
+    right: 24px;
+  }
+}
+.body {
+  text-align: center;
+  figure {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 16px;
+    display: inline-block;
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  p {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 40px;
+  }
+  span {
+    font-size: 13px;
+    font-weight: 400;
+  }
+  @include media(pc) {
+    padding: 24px 24px 40px;
+  }
+  @include media(sp) {
+    padding: 16px 12px 48px;
+  }
+  .btn {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 24px;
+    &.__m {
+      background: $gradation-double;
     }
   }
-  .body {
-    text-align: center;
-    figure{
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 16px;
-      display: inline-block;
-      img {
-        width: 100%;
-      }
-    }
-    h4{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 32px;
-    }
-    p{
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 40px;
-    }
-    span{
-      font-size: 13px;
-      font-weight: 400;
-    }
-    @include media(pc) {
-      padding: 24px 24px 40px;
-    }
-    @include media(sp) {
-      padding: 16px 12px 48px;
-    }
-    .btn {
-      width: 100%;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 24px;
-      &.__m {
-        background: $gradation-double;
-      }
-    }
-  }
-  .footer {
-    text-align: center;
+}
+.footer {
+  text-align: center;
 
-    @include media(pc) {
-      padding: 0 40px 40px;
-    }
-    @include media(sp) {
-      padding: 0 32px 32px;
-    }
+  @include media(pc) {
+    padding: 0 40px 40px;
   }
+  @include media(sp) {
+    padding: 0 32px 32px;
+  }
+}
 </style>

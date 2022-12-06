@@ -7,6 +7,7 @@ RUN mkdir /work
 COPY /src /work/src
 COPY /public /work/public
 COPY .env.mainnet /work/.env.mainnet
+COPY .env.premain /work/.env.premain
 COPY .env.testnet /work/.env.testnet
 COPY .env.staging /work/.env.staging
 COPY vue.config.js /work/vue.config.js
@@ -39,11 +40,11 @@ RUN apk --no-cache add binutils curl && \
   curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub && \
   curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk && \
   curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-bin-2.33-r0.apk && \
-  apk add --no-cache glibc-2.33-r0.apk glibc-bin-2.33-r0.apk && \
+  apk add --no-cache --force-overwrite glibc-2.33-r0.apk glibc-bin-2.33-r0.apk && \
   curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
   unzip -q awscliv2.zip && \
   aws/install
 
 WORKDIR /usr/local/src
 
-RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --acl public-read --cache-control "max-age=3600"
+RUN aws s3 sync . s3://${AWS_S3_BUCKET}/ --include "*" --cache-control "max-age=3600"

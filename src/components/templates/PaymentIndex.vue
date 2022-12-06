@@ -1,110 +1,106 @@
 <template>
-  <div class="slash-bg">
-    <Header :width="windowWidth" @switchColorTheme="switchColorTheme" />
-    <div v-show="initializing" class="payment initializing">
-      <div class="progress-wrap add-flex j-center a-center">
-        <radial-progress-bar
-          :diameter="150"
-          :animate-speed="400"
-          :start-color="'#D97C87'"
-          :stop-color="'#8A2CE1'"
-          :completed-steps="progressCompletedSteps"
-          :total-steps="progressTotalSteps"
-        >
-          <p class="step">{{ progressCompletedPercent }}<span class="percent">%</span></p>
-          <p class="status">Loading</p>
-        </radial-progress-bar>
+  <div class="pay" :style="{ height: style }">
+    <Header
+      :width="windowWidth"
+      @switchColorTheme="switchColorTheme"
+      :showMenu="showMenu"
+      @toggleMenu="toggleMenu"
+    />
+    <div class="menu non-translate" :class="{ active: showMenu }">
+      <PaymentTitle type="h2_g" html="Menu" />
+      <div class="menu-nav_body">
+        <a v-for="nav in navList" :key="nav.url" :href="nav.url" target="_blank"
+          ><PaymentText type="h5" :html="nav.title"
+        /></a>
       </div>
     </div>
-    <div v-show="!initializing" class="payment">
-      <div class="menu-nav" v-if="showMenu">
-        <div class="menu-nav_top">
-          <img src="@/assets/images/menu.svg" />
+    <div class="pay__box">
+      <div class="pay__box__wrap">
+        <div v-show="initializing" class="pay__initializing">
+          <div class="progress-wrap">
+            <radial-progress-bar
+              :diameter="150"
+              :animate-speed="400"
+              :start-color="'#D97C87'"
+              :stop-color="'#8A2CE1'"
+              :completed-steps="progressCompletedSteps"
+              :total-steps="progressTotalSteps"
+            >
+              <p class="step">
+                <PaymentText type="h1" :html="progressCompletedPercent" />
+                <PaymentText type="h5" html="%" />
+              </p>
+              <PaymentText type="cap" html="Loading..." />
+            </radial-progress-bar>
+          </div>
         </div>
-        <div class="menu-nav_body">
-          <!-- <a href="/">
-            Cookie settings
-          </a> -->
-          <a
-            href="https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper"
-            target="_blank"
-          >
-            About Slash.fi
-          </a>
-          <a
-            href="https://slash-fi.gitbook.io/docs/support/help-center"
-            target="_blank"
-          >
-            FAQ
-          </a>
-          <a
-            href="https://slash-fi.gitbook.io/docs/support/terms-of-use"
-            target="_blank"
-          >
-            Terms of Service
-          </a>
-          <a
-            href="https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy"
-            target="_blank"
-          >
-            Privacy Policy
-          </a>
-          <a
-            href="https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy"
-            target="_blank"
-          >
-            AML Policy
-          </a>
+        <div v-show="!initializing" class="payment">
+          <div class="pay__head">
+            <!-- <PaymentIdTable class="pay__head__ids" :table="idTable" /> -->
+            <!-- TODO Amountの時PaymentTopを非表示 -->
+            <PaymentTop
+              :showMenu="showMenu"
+              :loading="loading"
+              @copyLink="copyLink"
+              @toggleMenu="toggleMenu"
+            />
+          </div>
+          <div class="pay__body">
+            <router-view
+              :progressTotalSteps="progressTotalSteps"
+              :progressCompletedSteps="progressCompletedSteps"
+              @updateInitializingStatus="updateInitializingStatus"
+              @updateProgressTotalSteps="updateProgressTotalSteps"
+              @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
+            />
+          </div>
+        </div>
+        <div class="pay__foot">
+          <LogoText class="svg" />
+          <PaymentText tag="p" type="capb" html="Web3 Payment" />
         </div>
       </div>
-      <payment-top
-        :showMenu="showMenu"
-        @copyLink="copyLink"
-        @toggleMenu="toggleMenu"
+    </div>
+    <footer>
+      <PaymentText
+        type="min"
+        class="copy non-translate"
+        html="Slash Web3 Payment ®︎"
       />
-      <div class="add-flex j-between">
-        <div>
-          <p class="payment_Receiver mb-1 non-translate">
-            Payee：{{ receiver }}
-            <img v-if="isVerifiedDomain" :src="domainVerifiedIcon" />
-          </p>
-          <p class="payment_invoice-id non-translate">Invoice ID：{{ invoiceId }}</p>
-        </div>
-        <router-view
-          :progressTotalSteps="progressTotalSteps"
-          :progressCompletedSteps="progressCompletedSteps"
-          @updateInitializingStatus="updateInitializingStatus"
-          @updateProgressTotalSteps="updateProgressTotalSteps"
-          @incrementProgressCompletedSteps="incrementProgressCompletedSteps"
-        />
-      </div>
-      <div v-if="loading" class="loading add-flex j-center a-center">
-        <img class="spin" src="@/assets/images/loading.svg" />
-      </div>
-    </div>
+    </footer>
   </div>
 </template>
 
 
 <script>
 import RadialProgressBar from 'vue-radial-progress'
-import Header from "@/components/organisms/header";
-import PaymentTop from "@/components/organisms/PaymentTop";
-import { DARK_THEME, LIGHT_THEME } from "@/constants";
+import Header from '@/components/organisms/header'
+import PaymentTop from '@/components/organisms/PaymentTop'
+import LogoText from '@/components/common/LogoText'
+import PaymentText from '@/components/organisms/Payment/Text'
+// import PaymentIcon from '@/components/organisms/Payment/Icon'
+// import PaymentIdTable from '@/components/organisms/Payment/IdTable'
+import PaymentTitle from '@/components/organisms/Payment/Title'
+import { DARK_THEME, LIGHT_THEME } from '@/constants'
 
 export default {
-  name: "PaymentIndex",
+  name: 'PaymentIndex',
   components: {
     RadialProgressBar,
     Header,
+    LogoText,
     PaymentTop,
+    PaymentText,
+    // PaymentIdTable,
+    PaymentTitle
+    // PaymentIcon
   },
   props: [
-    "colorTheme",
-    "receiver",
-    "isVerifiedDomain",
-    "invoiceId",
-    "base64VuexData",
+    'colorTheme',
+    'receiver',
+    'isVerifiedDomain',
+    'invoiceId',
+    'base64VuexData'
   ],
   data() {
     return {
@@ -114,55 +110,102 @@ export default {
       initializing: true,
       progressTotalSteps: 20,
       progressCompletedSteps: 0,
-    };
+      idTable: [
+        {
+          title: 'Payee',
+          text: this.receiver,
+          verified: this.isVerifiedDomain
+        },
+        { title: 'Invoice ID', text: this.invoiceId }
+      ],
+      navList: [
+        {
+          title: 'About Slash.fi',
+          url: 'https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper'
+        },
+        {
+          title: 'FAQ',
+          url: 'https://slash-fi.gitbook.io/docs/support/help-center'
+        },
+        {
+          title: 'Terms of Service',
+          url: 'https://slash-fi.gitbook.io/docs/support/terms-of-use'
+        },
+        {
+          title: 'Privacy Policy',
+          url: 'https://slash-fi.gitbook.io/docs/support/data-protection-and-privacy-policy'
+        },
+        {
+          title: 'AML Policy',
+          url: 'https://slash-fi.gitbook.io/docs/support/anti-money-laundering-policy'
+        }
+      ],
+      style: {
+        '--wh': '100vh'
+      }
+    }
+  },
+  watch: {
+    receiver(value) {
+      this.idTable[0].text = value
+    },
+    isVerifiedDomain(value) {
+      this.idTable[0].verified = value
+    },
+    invoiceId(value) {
+      this.idTable[1].text = value
+    }
   },
   computed: {
     darkTheme() {
-      return DARK_THEME;
+      return DARK_THEME
     },
     lightTheme() {
-      return LIGHT_THEME;
+      return LIGHT_THEME
     },
     progressCompletedPercent() {
       return this.progressCompletedSteps && this.progressTotalSteps
-        ? Math.floor(this.progressCompletedSteps / this.progressTotalSteps * 100)
+        ? Math.floor(
+            (this.progressCompletedSteps / this.progressTotalSteps) * 100
+          )
         : 0
     },
     domainVerifiedIcon() {
       return this.isDarkTheme
-        ? require("@/assets/images/domain-verified.svg")
-        : require("@/assets/images/domain-verified-l.svg");
+        ? require('@/assets/images/domain-verified.svg')
+        : require('@/assets/images/domain-verified-l.svg')
     },
     isDarkTheme() {
-      return this.colorTheme === this.darkTheme;
+      return this.colorTheme === this.darkTheme
     },
     isLightTheme() {
-      return this.colorTheme === this.lightTheme;
+      return this.colorTheme === this.lightTheme
     },
     isShowMenu() {
-      return this.showMenu;
-    },
+      return this.showMenu
+    }
   },
   methods: {
     openModal(target, size) {
-      this.$emit("openModal", target, size);
+      this.$emit('openModal', target, size)
     },
     switchColorTheme(color) {
-      this.$emit("switchColorTheme", color);
+      this.$emit('switchColorTheme', color)
     },
     handleWindowResize() {
-      this.windowWidth = window.innerWidth;
+      this.windowWidth = window.innerWidth
+      this.getWindowSize()
     },
     copyLink() {
-      this.$store.dispatch("account/copied");
-      const uri = new URL(window.location.href);
-      const token = this.$route.params.token;
+      this.$store.dispatch('account/copied')
+      const uri = new URL(window.location.href)
+      const token = this.$route.params.token
       this.$clipboard(
         `${uri.protocol}//${uri.host}/payment/result/${token}?rcpt=1`
-      );
+      )
     },
     toggleMenu(state) {
-      this.showMenu = state;
+      this.showMenu = state
     },
     updateInitializingStatus(initializing) {
       this.initializing = initializing
@@ -172,185 +215,207 @@ export default {
     },
     incrementProgressCompletedSteps() {
       ++this.progressCompletedSteps
+    },
+    getWindowSize() {
+      this.style['--wh'] = `${window.innerHeight}px`
     }
   },
   mounted() {
-    window.addEventListener("resize", this.handleWindowResize);
+    this.getWindowSize()
+    window.addEventListener('resize', this.handleWindowResize)
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener('resize', this.handleResize)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/style.scss";
-.slash-bg {
-  width: 100%;
-  min-height: 120vh;
-  overflow: hidden;
+@import '@/assets/scss/style.scss';
+@import '@/assets/scss/delaunay.scss';
+.pay {
+  min-height: var(--wh, 100vh);
   @include media(sp) {
-    padding-top: 55px;
-    min-height: 100vh;
+    // padding-top: 50px;
+    // padding-bottom: 3.5rem;
   }
-  position: relative;
-  &::before {
-    content: "";
-    background: url(/assets/images/slash-bg.png) no-repeat center center;
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    top: 100px;
-    z-index: 0;
-    @include media(sp) {
-      top: 70px;
-    }
-  }
-}
-.theme--light {
-  .slash-bg {
-    &::before {
-      content: "";
-      background: url(/assets/images/slash-bg-l.png) no-repeat center center;
-    }
-  }
-}
-.home {
-  text-align: center;
-}
-.payment {
-  position: absolute;
-  top: 60vh;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: var(--color_shadow);
-  width: 100%;
-  max-width: 36.1rem;
-  padding: 32px 24px 24px;
-  border-radius: 8px;
-  background: var(--color_bg);
-  @include media(sp) {
-    // top: calc(50% + 12rem);
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: translate(0%, 0%);
-    margin: 3rem auto;
-  }
-  &::before {
-    content: "Slash.fi Web3 Payment ®︎";
-    font-size: 11px;
-    color: var(--color_font);
-    font-weight: 300;
+  &__box {
+    // width: 28rem;
+    width: 460px; //Paypalの幅
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    // overflow: hidden;
     position: absolute;
-    bottom: -60px;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, 0);
-    opacity: 0.7;
-  }
-  &.initializing {
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+    box-shadow: rgba(139, 42, 225, 0.3) -4px 9px 25px -6px,
+      rgba(62, 185, 252, 0.7) 4px -9px 25px -10px;
+    max-height: 88vh;
+
+    // padding-top: 2rem;
     @include media(sp) {
-      // top: calc(50% + 12rem);
+      width: 100%;
+      box-shadow: none;
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: translate(0%, 0%);
+      min-height: var(--wh, 100vh);
+      max-height: initial;
+    }
+    &__wrap {
+      padding: 0 1.5rem;
+      @include media(sp) {
+        padding: 0 5vw;
+      }
+    }
+  }
+  &__initializing {
+    text-align: center;
+    margin: 60px auto;
+    @include media(sp) {
       position: relative;
       top: 0;
       left: 0;
-      transform: translate(0%, 23vh);
-      margin: 3rem auto;
+      margin: 0px auto;
+      @include flex(center, center);
+      min-height: var(--wh, 100vh);
+      // min-height: calc(var(--wh) - 50px - 3.5rem);
     }
-  }
-  .progress-wrap {
-    height: 25vh;
-    .step {
-      font-weight: 400;
-      font-size: 2.5rem;
-      .percent {
-        font-weight: 300;
-        font-size: 1.5rem;
-      }
+    .spin {
+      width: 6rem;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .status {
-      font-weight: 300;
-      font-size: 1.5rem;
-      animation: flash 1.5s linear infinite;
-    }
-    @keyframes flash {
-      0%,100% {
-        opacity: 0.5;
-      }
-      50% {
-        opacity: 0;
-      }
-    }
-  }
-  .menu-nav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color_bg);
-    padding: 32px;
-    z-index: 1;
-    border-radius: 10px;
-  }
-  .menu-nav_top {
-    margin-bottom: 32px;
-  }
-  .menu-nav_body {
-    a {
-      display: block;
-      font-size: 18px;
-      font-weight: 300;
-      margin-bottom: 24px;
-    }
-  }
-  &_initializing {
-    text-align: center;
-    margin: auto;
-    padding-top: 60px;
-    padding-bottom: 60px;
     .title {
-      font-weight: 200;
-      font-size: 18px;
+      margin-left: 1rem;
+      // font-weight: 200;
+      // font-size: 18px;
+    }
+
+    .progress-wrap {
+      // height: 25vh;
+      @include media(sp) {
+        transform: translateY(-3rem);
+      }
+      .radial-progress-container {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .step {
+        @include flex(center, baseline);
+        &::v-deep {
+          span {
+            line-height: 1;
+          }
+        }
+      }
+      .status {
+        // font-weight: 300;
+        // font-size: 1.5rem;
+        animation: flash 1.5s linear infinite;
+      }
+      @keyframes flash {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
     }
   }
-  .payment_Receiver,
-  .payment_invoice-id {
-    font-weight: 400;
-    font-size: 15px;
+  .payment {
+    @include media(sp) {
+      padding-top: 59px;
+      padding-bottom: 3.5rem;
+    }
   }
-  .loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 8px;
-    z-index: 9999;
+  &__head {
+    padding-top: 1.5rem;
+    @include media(sp) {
+      padding-top: 4rem;
+    }
+  }
+  &__body {
+    padding-bottom: 2rem;
+    @include media(sp) {
+      padding-bottom: 0;
+    }
+  }
+  &__foot {
+    display: none;
+    // margin-bottom: 2rem;
+    // margin-top: 3rem;
+    // text-align: center;
+    // @include flex(center, center);
+    // flex-direction: column;
+    // gap: 0.5rem;
+    // .svg {
+    //   margin-bottom: 0.5rem;
+    //   width: 5rem;
+    // }
+    // .text {
+    //   &::v-deep {
+    //     * {
+    //       line-height: 1;
+    //     }
+    //   }
+    // }
+  }
+  &__loading {
+    width: 5rem;
+    margin: 0rem auto;
+  }
+
+  &__token_import {
+    @include flex(space-between, center);
+    .icon {
+      width: 2.5rem;
+      font-size: 0;
+      border-radius: 100%;
+      &::v-deep {
+        svg {
+          fill: var(--color_font);
+        }
+      }
+    }
+    .text {
+      flex: 1;
+      padding: 0 1rem;
+      @include flex(flex-start, center);
+    }
   }
 }
-.fixed {
+.menu {
   position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 100%;
-  padding: 16px;
-  background: var(--color_darken);
-  .btn {
-    font-size: 12px;
-    height: 4.2rem;
-    line-height: 4.2rem;
-    padding: 0 1.4rem;
-    .icon-wrap {
-      margin-right: 4px;
-    }
-    img {
-      vertical-align: middle;
-      width: 18px;
-      height: 18px;
-    }
+  right: 0;
+  top: 0;
+  background-color: var(--Base);
+  height: 100vh;
+  padding: 3rem;
+  padding-top: 100px;
+  transform: translateX(100%);
+  transition: transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  z-index: 100;
+  a {
+    display: block;
+    padding: 0.5rem 0;
   }
+  &.active {
+    transform: translateX(0%);
+  }
+}
+footer {
+  text-align: center;
+  // padding: 10rem 0 2rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 0;
+  width: 100%;
 }
 </style>

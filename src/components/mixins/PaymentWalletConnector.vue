@@ -1,8 +1,15 @@
 <script>
-import { METAMASK, WALLET_CONNECT } from '@/constants'
+import { 
+  METAMASK,
+  WALLET_CONNECT,
+  STATUS_RESULT_FAILURE,
+  STATUS_RESULT_SUCCESS,
+  STATUS_PROCESSING } from '@/constants'
+import DeviceIdHandlerMixin from '@/components/mixins/DeviceIdHandler'
 
 export default {
   name: 'PaymentWalletConnector',
+  mixins: [DeviceIdHandlerMixin],
   computed: {
     $_paymentWalletConnector_API_BASE_URL() {
       return process.env.VUE_APP_API_BASE_URL
@@ -11,7 +18,7 @@ export default {
       return this.$route.params.token
     },
     $_paymentWalletConnector_deviceId() {
-      return this.$store.state.payment.deviceId
+      return this.$_deviceIdHandler_get()
     },
     $_paymentWalletConnector_isSetDeviceId() {
       return this.$_paymentWalletConnector_deviceId !== null
@@ -19,22 +26,29 @@ export default {
   },
   methods: {
     connect(useProvider, modalMode) {
-      const successFunc = this.$_paymentWalletConnector_getConnectSucceededFunction(modalMode)
-      const failureFunc = this.$_paymentWalletConnector_getConnectFailuredFunction(useProvider)
-      switch(useProvider) {
-        case METAMASK:
-          this.useMetaMask(successFunc, failureFunc)
-          break
-        case WALLET_CONNECT:
-          this.useWalletConnect(successFunc, failureFunc)
-          break
-        default:
-          this.$store.dispatch('modal/show', {
-            target: 'error-modal',
-            size: 'small',
-            params: { message: 'This provider is not supported.' }
-          })
-      }
+      this.$_paymentWalletConnector_apiGetTransactionStatus().then((response) => {
+        // Redirect to Result Page if status is Processing, Failure or Success
+        if([STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS, STATUS_PROCESSING].includes(response.data.status)) {
+          this.$_paymentWalletConnector_redirectToPaymentResultPage()
+        } else {
+          const successFunc = this.$_paymentWalletConnector_getConnectSucceededFunction(modalMode)
+          const failureFunc = this.$_paymentWalletConnector_getConnectFailuredFunction(useProvider)
+          switch(useProvider) {
+            case METAMASK:
+              this.useMetaMask(successFunc, failureFunc)
+              break
+            case WALLET_CONNECT:
+              this.useWalletConnect(successFunc, failureFunc)
+              break
+            default:
+              this.$store.dispatch('modal/show', {
+                target: 'error-modal',
+                size: 'small',
+                params: { message: 'This provider is not supported.' }
+              })
+          }
+        }
+      })
     },
     $_paymentWalletConnector_apiGetTransactionLockStatus() {
       const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/lock/status`
@@ -44,6 +58,21 @@ export default {
         ])
       }
       return this.axios.get(url, request)
+    },
+    $_paymentWalletConnector_apiGetTransactionStatus() {
+      const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/status`
+      const request = {
+        params: new URLSearchParams([
+          ['payment_token', this.$_paymentWalletConnector_paymentToken]
+        ])
+      }
+      return this.axios.get(url, request)
+    },
+    $_paymentWalletConnector_redirectToPaymentResultPage() {
+      this.$router.replace({
+        name: 'result',
+        params: { token: this.$_paymentWalletConnector_paymentToken }
+      })
     },
     $_paymentWalletConnector_apiGetTransactionDeviceIdMatchingStatus() {
       const url = `${this.$_paymentWalletConnector_API_BASE_URL}/api/v1/payment/transaction/lock/match`
@@ -75,6 +104,8 @@ export default {
                 .then((response) => {
                   if (response.data.match) {
                     return Promise.resolve(this.$_paymentWalletConnector_deviceId)
+                  } else {
+                    return Promise.reject()
                   }
                 })
             } else {
@@ -85,7 +116,8 @@ export default {
             }
           })
           .then((deviceId) => {
-            this.$store.dispatch('payment/updateDeviceId', deviceId)
+            // this.$store.dispatch('payment/updateDeviceId', deviceId)
+            this.$_deviceIdHandler_update(deviceId)
             return Promise.resolve()
           })
           .then(() => {

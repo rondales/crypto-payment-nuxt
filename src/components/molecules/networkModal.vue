@@ -1,221 +1,136 @@
 <template>
-  <div :class="classes">
-    <div class="header">
-      <h3 class="header__title">
-        Select a Network
-      </h3>
-      <p v-if="unsupported" class="header__desc">
-        The current network is unsupported.
-        <br>
-        Select a network of tokens to pay for.
-      </p>
-      <p v-else class="header__desc">
-        Select a network of tokens to pay for.
-      </p>
+  <PaymentModal
+    title="Select a Network"
+    :text="
+      unsupported
+        ? 'The current network is unsupported.<br />Select a network of tokens to pay for.'
+        : 'Select a network of tokens to pay for.'
+    "
+    :close-display="!unsupported || !required"
+  >
+    <PaymentButton
+      v-for="(network, key) in networks"
+      :key="key"
+      :class="{
+        __pg: isCurrentNetwork(network.chainId),
+        half: !isNetworkOnlyOne,
+        full: isNetworkOnlyOne,
+        'mb-0': isNetworkOnlyOne,
+      }"
+      @click.native="switchNetwork(network.chainId)"
+      :text="network.name"
+      :icon="network.iconPath"
+      size="m"
+    />
+    <div class="d-btnwrap bottomCloseBtn" v-if="!unsupported || !required">
+      <PaymentButton
+        color="cancel"
+        text="CLOSE"
+        icon="dismiss"
+        size="s"
+        @click.native="hideModal()"
+      />
     </div>
-    <div class="body add-flex j-between">
-      <button
-        v-for="(network, key) in networks"
-        :key="key"
-        class="btn __m half"
-        :class="{ __pg: isCurrentNetwork(network.chainId), half: !isNetworkOnlyOne, full: isNetworkOnlyOne, 'mb-0': isNetworkOnlyOne}"
-        @click="switchNetwork(network.chainId)"
-      >
-        <span class="btn-icon">
-          <img :src="network.icon">
-        </span>
-          {{network.name}}
-      </button>
-    </div>
-    <button v-if="!unsupported" class="close" @click="hideModal">
-      <img v-if="$store.state.theme == 'dark'" src="@/assets/images/cross.svg">
-      <img v-if="$store.state.theme == 'light'" src="@/assets/images/cross-l.svg">
-      閉じる
-    </button>
-  </div>
+  </PaymentModal>
 </template>
 
 <script>
-import AvailableNetworks from '@/network'
-
+import AvailableNetworks from "@/network";
+import PaymentModal from "@/components/organisms/Payment/Modal";
+import PaymentButton from "@/components/organisms/Payment/Button";
 export default {
-  name: 'networkModal',
+  name: "networkModal",
   data() {
     return {
-      networks: []
+      networks: [],
     };
+  },
+  components: {
+    PaymentButton,
+    PaymentModal,
   },
   computed: {
     classes() {
-      const classes = [ 'modal-box', `--${this.$store.state.modal.size}` ]
-      return classes
+      const classes = ["modal-box", `--${this.$store.state.modal.size}`];
+      return classes;
+    },
+    chainId() {
+      return this.$store.state.web3.chainId;
     },
     paymentAvailableNetworks() {
-      return this.$store.state.payment.availableNetworks
+      return this.$store.state.payment.availableNetworks;
     },
     isCurrentNetwork() {
       return (chainId) => {
-        return chainId === this.$store.state.web3.chainId
-      }
+        return chainId === this.$store.state.web3.chainId;
+      };
     },
     isNetworkOnlyOne() {
-      return this.$store.state.modal.params.itemCount === 1
+      return this.$store.state.modal.params.itemCount === 1;
     },
     unsupported() {
-      return 'unsupported' in this.$store.state.modal.params
+      return "unsupported" in this.$store.state.modal.params
         ? this.$store.state.modal.params.unsupported
-        : false
+        : false;
     },
-    require() {
-      return 'hideCloseButton' in this.$store.state.modal.params
+    required() {
+      return "hideCloseButton" in this.$store.state.modal.params
         ? this.$store.state.modal.params.hideCloseButton
-        : false
-    }
+        : false;
+    },
   },
   methods: {
     hideModal() {
-      this.$store.dispatch('modal/hide')
+      this.$store.dispatch("modal/hide");
     },
     switchNetwork(chainId) {
-      this.$web3.switchChain(
-        this.$store.state.web3.instance,
-        chainId
-      ).then(() => {
-        this.$store.dispatch('web3/updateChainId', chainId)
-        this.hideModal()
-      }).catch((error) => {
-        console.log(error)
-        if (error.code === 4902) {
-          this.showAddChainModal(chainId)
-        }
-      })
+      this.$web3
+        .switchChain(this.$store.state.web3.instance, chainId)
+        .then(() => {
+          this.$store.dispatch("web3/updateChainId", chainId);
+          this.hideModal();
+        })
+        .catch((error) => {
+          console.log(error);
+          if (!("code" in error)) return
+          let errorCode = error.code
+          // @TODO I'd like to do something about this lame condition determination(saito)
+          if (error.data && error.data.originalError && error.data.originalError.code) {
+            errorCode = error.data.originalError.code
+          }
+          if (errorCode === 4902) {
+            this.showAddChainModal(chainId);
+          }
+        });
     },
     showAddChainModal(chainId) {
-      this.$store.dispatch('modal/show', {
-        target: 'add-chain-modal',
-        size: 'small',
-        params: { 
+      this.$store.dispatch("modal/show", {
+        target: "add-chain-modal",
+        size: "small",
+        params: {
           chainId: chainId,
           hideCloseButton: false,
-          lastModalTarget: 'network-modal',
+          lastModalTarget: "network-modal",
           lastModalSize: this.$store.state.modal.size,
           lastModalParams: {
             unsupported: this.$store.state.modal.params.unsupported,
             hideCloseButton: this.$store.state.modal.params.hideCloseButton,
-            itemCount: this.$store.state.modal.params.itemCount
-          }
-        }
-      })
+            itemCount: this.$store.state.modal.params.itemCount,
+          },
+        },
+      });
     },
   },
   created() {
-    this.networks = Object.values(AvailableNetworks).filter(
-      network => this.paymentAvailableNetworks.includes(network.chainId)
-    )
-  }
-}
+    this.networks = Object.values(AvailableNetworks).filter((network) =>
+      this.paymentAvailableNetworks.includes(network.chainId)
+        && this.chainId != network.chainId
+    );
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/style.scss';
-
-  @include media(pc) {
-    .btn:nth-child(n + 3) {
-      margin-top: 25px;
-    }
-  }
-  @include media(sp) {
-    .btn:not(:last-child) {
-      margin-bottom: 16px;
-    }
-  }
-
-  .modal-box {
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background:var(--color_bg);
-    @include media(pc) {
-      &.--small {
-        width: 470px;
-      }
-      &.--medium {
-        width: 760px;
-      }
-    }
-    @include media(sp) {
-      width: calc(100vw - 32px);
-    }
-
-  }
-  .header {
-    @include media(pc) {
-      padding: 24px;
-      &__title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-      }
-      &__desc {
-        font-size: 2rem;
-      }
-    }
-    @include media(sp) {
-      padding: 18px;
-      &__title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-      &__desc {
-        font-size: 1.5rem;
-      }
-    }
-    &__title {
-      font-weight: 500;
-    }
-    &__desc {
-      font-weight: 100;
-    }
-  }
-  .close {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    font-size: 0;
-
-    @include media(pc) {
-      top: 30px;
-      right: 24px;
-    }
-    @include media(sp) {
-      top: 24px;
-      right: 24px;
-    }
-  }
-  .body {
-    @include media(pc) {
-      padding: 24px 24px 40px;
-    }
-    @include media(sp) {
-      padding: 24px 12px 48px;
-      flex-wrap: wrap;
-      .btn{
-        width: 100% !important;
-        &:nth-child(1){
-          margin-bottom: 16px;
-        }
-      }
-    }
-  }
-  .footer {
-    text-align: center;
-
-    @include media(pc) {
-      padding: 0 40px 40px;
-    }
-    @include media(sp) {
-      padding: 0 32px 32px;
-    }
-  }
+@import "@/assets/scss/style.scss";
+@import "@/assets/scss/delaunay.scss";
 </style>

@@ -11,10 +11,32 @@ body {
   font-weight: 600;
 }
 html {
-  font-size: 62.5%;
+  font-size: 16px;
   color: #fff;
   scroll-behavior: smooth;
+  @include media(tb) {
+    font-size: 14px;
+  }
+  @include media(sp) {
+    font-size: 12px;
+  }
 }
+
+#walletconnect-wrapper {
+  font-size: 0.75rem !important;
+  .walletconnect-modal__footer {
+    a {
+      @include media(sp) {
+        margin: 0 auto !important;
+      }
+    }
+  }
+}
+
+.wg-drop.country-selector {
+  opacity: 0.85;
+}
+
 body {
   font-size: $size-font;
   line-height: $size-line-height;

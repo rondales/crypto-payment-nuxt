@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import { Decimal } from 'decimal.js'
 import moment from 'moment'
 import RequestUtility from '@/utils/request'
 import AvailableNetworks from '@/network'
@@ -110,11 +111,9 @@ import {
   AvalancheTokens
 } from '@/contracts/receive_tokens'
 import DashItem from "@/components/organisms/admin/AdminDashItem"
-import DisplayConfig from '@/components/mixins/DisplayConfig.vue'
 
 export default {
   name: 'AdminDashboardContents',
-  mixins: [DisplayConfig],
   components: { DashItem },
   props: ['contractsStatus'],
   data() {
@@ -235,7 +234,7 @@ export default {
     },
     showAddChainModal(chainId) {
       this.$store.dispatch('modal/show', {
-        target: 'add-chain-modal',
+        target: 'add-chain-for-admin-modal',
         size: 'small',
         params: { 
           chainId: chainId,
@@ -288,14 +287,17 @@ export default {
   created() {
     this.apiGetPaymentSummary().then((response) => {
       const summary = response.data
-      this.items.monthlyAmount.value = this.$_displayConfig_formatNumber(summary.monthly.total_amount) + " " + this.receiveTokenSymbol
-      this.items.monthlyCashbackAmount.value = this.$_displayConfig_formatNumber(summary.monthly.total_cashback_amount) + " " + this.receiveTokenSymbol
+      const amountFormat = function (amount) {
+        return (amount) ? Decimal(amount).toFixed(6, Decimal.ROUND_FLOOR) : "0"
+      }
+      this.items.monthlyAmount.value = amountFormat(summary.monthly.total_amount) + " " + this.receiveTokenSymbol
+      this.items.monthlyCashbackAmount.value = amountFormat(summary.monthly.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.monthlyCount.value = summary.monthly.total_count
-      this.items.weeklyAmount.value = this.$_displayConfig_formatNumber(summary.weekly.total_amount) + " " + this.receiveTokenSymbol
-      this.items.weeklyCashbackAmount.value = this.$_displayConfig_formatNumber(summary.weekly.total_cashback_amount) + " " + this.receiveTokenSymbol
+      this.items.weeklyAmount.value = amountFormat(summary.weekly.total_amount) + " " + this.receiveTokenSymbol
+      this.items.weeklyCashbackAmount.value = amountFormat(summary.weekly.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.weeklyCount.value = summary.weekly.total_count
-      this.items.todayAmount.value = this.$_displayConfig_formatNumber(summary.daily.total_amount) + " " + this.receiveTokenSymbol
-      this.items.todayCashbackAmount.value = this.$_displayConfig_formatNumber(summary.daily.total_cashback_amount) + " " + this.receiveTokenSymbol
+      this.items.todayAmount.value = amountFormat(summary.daily.total_amount) + " " + this.receiveTokenSymbol
+      this.items.todayCashbackAmount.value = amountFormat(summary.daily.total_cashback_amount) + " " + this.receiveTokenSymbol
       this.items.todayCount.value = summary.daily.total_count
     })
     this.receiveTokens = this.generateReceiveTokenList()
@@ -304,7 +306,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .title{
   margin-bottom: 24px;

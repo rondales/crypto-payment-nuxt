@@ -2,12 +2,10 @@ const store = {
   namespaced: true,
   state: {
     id: null,
-    deviceId: null,
     headerInvoice: false,
     domain: null,
     isVerifiedDomain: false,
     merchantWalletAddress: null,
-    isSelectedReceipt: false,
     isAgreeRisk: false,
     orderCode: null,
     amount: null,
@@ -39,7 +37,10 @@ const store = {
       balance: null,
       amount: null,
       rate: null
-    }
+    },
+    payment_token: null,
+    successReturnUrl: null,
+    failReturnUrl: null
   },
   actions: {
     initialize({ commit }) {
@@ -51,14 +52,8 @@ const store = {
     update({ commit }, payload) {
       commit('update', payload)
     },
-    updateDeviceId({ commit }, payload) {
-      commit('updateDeviceId', payload)
-    },
     updateHeaderInvoice({ commit }, payload) {
       commit('updateHeaderInvoice', payload)
-    },
-    updateSelectReceiptStatus({ commit }, payload) {
-      commit('updateSelectReceiptStatus', payload)
     },
     updateAgreeRiskStatus({ commit }, payload) {
       commit('updateAgreeRiskStatus', payload)
@@ -95,17 +90,21 @@ const store = {
     },
     updateToken({ commit }, payload) {
       commit('updateToken', payload)
-    }
+    },
+    updatePaymentToken({ commit }, payload) {
+      commit('updatePaymentToken', payload)
+    },
+    updateBestExchange({ commit }, payload) {
+      commit('updateBestExchange', payload)
+    },
   },
   mutations: {
     initialize(state) {
       state.id = null
-      state.deviceId = null
       state.headerInvoice = false
       state.domain = null
       state.isVerifiedDomain = false
       state.merchantWalletAddress = null
-      state.isSelectedReceipt = false
       state.isAgreeRisk = false
       state.orderCode = null
       state.amount = null
@@ -130,7 +129,9 @@ const store = {
         balance: null,
         amount: null,
         rate: null
-      }
+      },
+      state.successReturnUrl = null,
+      state.failReturnUrl = null
     },
     initializeForBeforeConnectWallet(state) {
       state.amountWei = null
@@ -150,17 +151,14 @@ const store = {
         state[key] = value
       })
     },
-    updateDeviceId(state, payload) {
-      state.deviceId = payload
+    updatePaymentToken(state, payload) {
+      state.payment_token = payload
     },
     updateHeaderInvoice(state, payload) {
       state.headerInvoice = payload
     },
     updateIsVerifiedDomain(state, payload) {
       state.isVerifiedDomain = payload
-    },
-    updateSelectReceiptStatus(state, payload) {
-      state.isSelectedReceipt = payload
     },
     updateAgreeRiskStatus(state, payload) {
       state.isAgreeRisk = payload
@@ -198,7 +196,7 @@ const store = {
       Object.entries(payload).forEach(([key, value]) => {
         state.token[key] = value
       })
-    }
+    },
   }
 }
 

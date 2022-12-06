@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lp-header :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" />
+    <lp-header :isUseMainnet="isUseMainnet" :isEnableEnterApp="isEnableEnterApp" :isMobile="isMobile" />
     <article class="media_kit lp display">
       <section>
         <div class="title">
@@ -8,7 +8,7 @@
             Media Kit
           </h1>
           <p>
-            Latest update: June, 2022
+            Latest update: November, 2022
           </p>
         </div>
         <div class="sub-title border-bottom">
@@ -59,21 +59,6 @@
             </h3>
             <div class="usecase-block">
               <h4>
-                STANDARD BUTTON
-              </h4>
-              <div class="usecase-bg">
-                <figure>
-                  <div class="usecase-img">
-                    <img src="@/assets/images/lp/standard-button-w.svg" alt="">
-                  </div>
-                  <div class="usecase-img">
-                    <img src="@/assets/images/lp/standard-button-b.svg" alt="">
-                  </div>
-                </figure>
-              </div>
-            </div>
-            <div class="usecase-block">
-              <h4>
                 Settlement indication
               </h4>
               <div class="usecase-content">
@@ -98,7 +83,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-01.svg" alt="">
+                <img src="@/assets/images/lp/misuse-01.png" alt="">
               </figure>
               <p>
                 Don’t adjust the
@@ -108,7 +93,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-02.svg" alt="">
+                <img src="@/assets/images/lp/misuse-02.png" alt="">
               </figure>
               <p>
                 Don’t add other visual
@@ -120,7 +105,7 @@
           <div class="misuse-items add-flex">
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-03.svg" alt="">
+                <img src="@/assets/images/lp/misuse-03.png" alt="">
               </figure>
               <p>
                 Don’t change color
@@ -128,7 +113,7 @@
             </div>
             <div class="misuse-item">
               <figure>
-                <img src="@/assets/images/lp/misuse-04.svg" alt="">
+                <img src="@/assets/images/lp/misuse-04.png" alt="">
               </figure>
               <p>
                 Don't change the
@@ -178,6 +163,28 @@
             </div>
           </div>
         </div>
+        <div class="usecase border-bottom misuse">
+          <div class="contents-title">
+            <h3>
+              Payment Button
+            </h3>
+            <div class="usecase-block mb-0">
+              <h4>
+                STANDARD BUTTON
+              </h4>
+              <div class="usecase-bg">
+                <figure>
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/payment_button01.svg" alt="">
+                  </div>
+                  <div class="usecase-img">
+                    <img src="@/assets/images/lp/payment_button01-d.svg" alt="">
+                  </div>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="download">
           <div class="contents-title">
             <h3>
@@ -189,12 +196,48 @@
               <div class="download-item-left">
                 <p>{{svg.title}}</p>
                 <a class="tb-inline" :href="svg.svgImage" download>SVG</a>
+                <a class="tb-inline ml-1" :href="svg.pngImage" download>PNG</a>
               </div>
               <div class="download-item-right">
                 <figure>
                   <img :src="svg.svgImage">
                 </figure>
                 <a class="download sp-inline" :href="svg.svgImage" download>SVG</a>
+                <a class="download sp-inline ml-1" :href="svg.pngImage" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="download">
+          <div class="contents-title">
+            <h3>
+              Payment Button
+            </h3>
+          </div>
+          <div class="download-items">
+            <div v-for="(buttonWrap, index) in paymentButtons" :key="index" class="download-item add-flex payment-button">
+              <div class="download-item-left">
+                <p>{{buttonWrap.title}}</p>
+                <a class="tb-inline" :href="buttonWrap.svgLink" download>SVG</a>
+                <a class="tb-inline ml-1" :href="buttonWrap.pngLink" download>PNG</a>
+              </div>
+              <div class="download-item-right">
+                <div class="download-item-wrap">
+                    <div class="download-item-img">
+                      <img :src="buttonWrap.image01">  
+                    </div>
+                    <div class="download-item-img">
+                      <img :src="buttonWrap.image02">  
+                    </div>
+                    <div class="download-item-img">
+                      <img :src="buttonWrap.image03">  
+                    </div>
+                    <div class="download-item-img">
+                      <img :src="buttonWrap.image04">  
+                    </div>
+                </div>
+                <a class="download sp-inline" :href="buttonWrap.svgLink" download>SVG</a>
+                <a class="download sp-inline ml-1" :href="buttonWrap.pngLink" download>PNG</a>
               </div>
             </div>
           </div>
@@ -209,17 +252,56 @@
 <script>
 import LpHeader from "@/components/organisms/lp/lpHeader";
 import LpFooter from "@/components/organisms/lp/lpFooter";
+import isMobile from 'ismobilejs';
 
 export default {
   name: "payment",
   data() {
     return {
       svgList: [
-        {title:"Slash Logomark", svgImage: require("@/assets/images/lp/slash-logo.svg")},
-        {title:"Slash Logomark2", svgImage: require("@/assets/images/lp/slash-logo2.svg")},
-        {title:"Mark only", svgImage: require("@/assets/images/lp/slash-mark.svg")},
-        {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg")},
-        {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg")}
+        {title:"Slash Logomark", svgImage: require("@/assets/images/lp/slash-logo.svg"),  pngImage: require("@/assets/images/lp/slash-logo.png")},
+        {title:"Slash Logomark2", svgImage: require("@/assets/images/lp/slash-logo2.svg"), pngImage: require("@/assets/images/lp/slash-logo2.png")},
+        {title:"Mark only", svgImage: require("@/assets/images/lp/slash-mark.svg"),  pngImage: require("@/assets/images/lp/slash-mark.png")},
+        {title:"Text only", svgImage: require("@/assets/images/lp/slash-text.svg"),  pngImage: require("@/assets/images/lp/slash-text.png")},
+        {title:"Full name", svgImage: require("@/assets/images/lp/slash-full.svg"), pngImage: require("@/assets/images/lp/slash-full.png") }
+      ],
+      paymentButtons: [
+        {
+          title:"Light.ver1",
+          image01: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/light-ver1-svg/payment-button_light_ver1-04.svg"),
+          svgLink: "/assets/images/lp/button/light-ver1-svg.zip",
+          pngLink: "/assets/images/lp/button/light-ver1-png.zip"
+        },
+        {
+          title:"Light.ver2",
+          image01: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/light-ver2-svg/payment-button_light_ver2-04.svg"),
+          svgLink: "/assets/images/lp/button/light-ver2-svg.zip",
+          pngLink: "/assets/images/lp/button/light-ver2-png.zip"
+        },
+        {
+          title:"Dark.ver1",
+          image01: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/dark-ver1-svg/payment-button_dark_ver1-04.svg"),
+          svgLink: "/assets/images/lp/button/dark-ver1-svg.zip",
+          pngLink: "/assets/images/lp/button/dark-ver1-png.zip"
+        },
+        {
+          title:"Dark.ver2",
+          image01: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-01.svg"),
+          image02: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-02.svg"),
+          image03: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-03.svg"),
+          image04: require("@/assets/images/lp/payment-button/dark-ver2-svg/payment-button_dark_ver2-04.svg"),
+          svgLink: "/assets/images/lp/button/dark-ver2-svg.zip",
+          pngLink: "/assets/images/lp/button/dark-ver2-png.zip"
+        },
       ],
       logoList: [
         {svg: require("@/assets/images/lp/indication/icon-01.svg")},
@@ -250,6 +332,9 @@ export default {
     },
     isEnableEnterApp() {
       return JSON.parse(process.env.VUE_APP_ENABLE_ENTER_APP.toLowerCase())
+    },
+    isMobile() {
+      return isMobile(window.navigator).any
     }
   },
   methods: {
@@ -371,7 +456,7 @@ export default {
           border-radius: 10px;
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             background: center center / contain no-repeat white;
             @include media(tb) {
               max-width: 273px;
@@ -380,9 +465,6 @@ export default {
             }
             img{
               width: 70%;
-              @include media(tb) {
-                width: 70%;
-              }
             }
           }
           &:nth-child(2){
@@ -400,9 +482,10 @@ export default {
               margin-left: 0;
             }
             img{
-              width: 62%;
+              width: 45%;
               @include media(tb) {
-                width: 70%;
+                width: 90px;
+                height: 98px;
               }
             }
           }
@@ -416,8 +499,8 @@ export default {
           }
           &:nth-child(1){
             width: 100%;
-            max-width: 500px;
-            height: 250px;
+            max-width: 550px;
+            height: 224px;
             @include media(tb) {
               max-width: 273px;
               height: 138px;
@@ -427,7 +510,7 @@ export default {
           &:nth-child(2){
             width: 100%;
             max-width: 330px;
-            height: 250px;
+            height: 224px;
             margin-left: 24px;
             @include media(tb) {
               max-width: 181px;
@@ -494,17 +577,6 @@ export default {
                 max-width: 275px;
                 width: 100%;
               }
-              &::before{
-                position: absolute;
-                content: "";
-                background: url(/assets/images/lp/slash-logo-s.svg) no-repeat center center;
-                width: 124px;
-                height: 100%;
-                top: 50%;
-                right: 8%;
-                transform: translate(0, -50%);
-                z-index: 0;
-              }
             }
             @media only screen and (max-width: 660px) {
               .usecase-img{
@@ -550,9 +622,9 @@ export default {
             }
             &:nth-child(1){
               img{
-                width: 55%;
+                width: 40%;
                 @include media(tb) {
-                  width: 56px;
+                  width: 34px;
                 }
               }
             }
@@ -617,6 +689,10 @@ export default {
           }
           figure{
             margin-bottom: 4px;
+            width: 335px;
+            img{
+              border-radius: 8px;
+            }
             @include media(tb) {
               margin-bottom: 8px;
             }
@@ -705,6 +781,11 @@ export default {
       .download-items{
         .download-item{
           margin-bottom: 96px;
+          &.payment-button{
+            &:nth-last-child(1){
+              margin-bottom: 0;
+            }
+          }
           @include media(tb) {
             margin-bottom: 56px;
           }
@@ -717,7 +798,7 @@ export default {
             p{
               margin-bottom: 16px;
               font-size: 20px;
-              font-weight: 300;
+              font-weight: 500;
             }
             a{
               padding: 8px 24px;
@@ -726,6 +807,8 @@ export default {
               border-radius: 30px;
               font-weight: 500;
               margin-bottom: 16px;
+              font-size: 20px;
+              cursor: pointer;
             }
           }
           &:nth-child(1){
@@ -738,9 +821,9 @@ export default {
           }
           &:nth-child(2){
             img{
-              width: 45%;
+              width:  30%;
               @include media(tb) {
-                width: 50%;
+                width: 35%;
               }
             }
           }
@@ -787,7 +870,29 @@ export default {
                 background: $gradation-light !important;
                 box-sizing: border-box !important;
                 border-radius: 30px;
-                font-weight: 400;
+                font-weight: 300;
+                font-size: 20px;
+              }
+            }
+            .download-item-wrap{
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              background: #fff;
+              max-width: 498px;
+              padding: 64px 22px;
+              border-radius: 8px;
+              margin-bottom: 16px;
+              @include media(sp) {
+                padding: 48px 22px;
+              }
+              .download-item-img{
+                width: 50%;
+                padding: 4px;
+                img{
+                  width: 100%;
+                }
               }
             }
           }

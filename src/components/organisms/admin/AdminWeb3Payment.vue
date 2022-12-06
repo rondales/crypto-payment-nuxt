@@ -41,7 +41,8 @@ export default {
       const targetPaths = [
         '/admin/payment/settings/basic',
         '/admin/payment/settings/contract',
-        '/admin/payment/settings/domain'
+        '/admin/payment/settings/domain',
+        '/admin/payment/settings/payment-token',
       ]
       return targetPaths.includes(this.$route.path)
     }
@@ -55,7 +56,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style.scss';
+/*
+TODO:
+To apply the new UI on the Admin side,
+change the style.scss to import style.scss directly under the scss directory.
+*/
+@import '@/assets/scss/old/style.scss';
 
 .toggle-btn{
   width: 30%;
