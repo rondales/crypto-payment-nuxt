@@ -16,13 +16,26 @@
         </button>
         <!-- <button
           class="btn __m __pg icon-right full"
+          @click="connector(METAMASK)"
+        >
+          <span class="btn-icon">
+            <img src="@/assets/images/icon/fireblocks.svg" />
+          </span>
+          Fireblocks
+        </button> -->
+        <button
+          class="btn __m __pg icon-right full"
           @click="showWalletConnectCautionModal()"
         >
           <span class="btn-icon">
             <img src="@/assets/images/wallet-connect_w.svg" />
           </span>
           WalletConnect
-        </button> -->
+        </button>
+        <!-- <p class="duplicate-ext-disclaimer">
+          If both Metamask and Fireblocks coexist in extensions to chrome, 
+          it will not work. Only one of the extensions should be enabled.
+        </p> -->
       </div>
       <button class="close" @click="hideModal()">
         <img src="@/assets/images/cross.svg" />
@@ -155,6 +168,9 @@ export default {
     &.__m {
       background: $gradation-pale;
     }
+  }
+  .duplicate-ext-disclaimer {
+    font-size: 10px;
   }
 }
 .footer {

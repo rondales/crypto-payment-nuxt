@@ -211,7 +211,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (from.fullPath === '/payment') {
+      if (from.fullPath === '/payment' || from.fullPath === '/payments-uiswitchable') {
         this.show = true
       }
     },
@@ -269,7 +269,7 @@ export default {
     },
     isPaymentPage() {
       const currentPath = this.$route.path
-      const pattern = /^\/(payment|payment-merchant)\//
+      const pattern = /^\/(payment|payment-merchant|payments-uiswitchable)\//
       return pattern.test(currentPath)
     },
     isConnected() {
@@ -326,7 +326,7 @@ export default {
     },
     show() {
       const pathPattern =
-        /^\/(admin$|admin\/.+)|(payment\/(wallets|token|detail)\/.+)/
+        /^\/(admin$|admin\/.+)|(payment|payments-uiswitachable\/(wallets|token|detail)\/.+)/
       return pathPattern.test(this.$route.path)
     },
     connected() {

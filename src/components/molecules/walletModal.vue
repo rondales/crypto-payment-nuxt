@@ -8,6 +8,12 @@
           text="MetaMask"
           icon="wallet-metamask"
         />
+        <!-- <PaymentButton
+          @click.native="connector(METAMASK)"
+          size="l"
+          text="Fireblocks"
+          icon="fireblocks"
+        /> -->
         <PaymentButton
           @click.native="showWalletConnectCautionModal()"
           size="l"
@@ -15,6 +21,8 @@
           icon="wallet-walletconnect"
         />
       </div>
+      <!-- <p class="duplicate-ext-disclaimer mt-1 mb-1">If both Metamask and Fireblocks coexist in extensions to chrome, 
+        it will not work. Only one of the extensions should be enabled.</p> -->
       <div class="d-btnwrap bottomCloseBtn">
         <PaymentButton
           color="cancel"
@@ -99,5 +107,8 @@ export default {
       }
     }
   }
+}
+.duplicate-ext-disclaimer {
+  font-size: 10px;
 }
 </style>
