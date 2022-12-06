@@ -67,21 +67,33 @@ export default {
         USDC: 'USD Coin',
         DAI: 'Maker DAO',
         JPYC: 'JPY Coin v2',
-        WETH: 'Wrapped ETH'
+        WETH: 'Wrapped ETH',
+        ETH: 'ETH native token',
+        BNB: 'BNB native token',
+        MATIC: 'MATIC native token',
+        AVAX: 'AVAX native token'
       },
       tokenIcons: {
         USDT: require('@/assets/images/icon/usdt-l.svg'),
         USDC: require('@/assets/images/icon/usdc-l.svg'),
         DAI: require('@/assets/images/icon/dai-l.svg'),
         JPYC: require('@/assets/images/icon/jpyc-l.svg'),
-        WETH: require('@/assets/images/icon/eth-l.svg')
+        WETH: require('@/assets/images/icon/eth-l.svg'),
+        ETH: require('@/assets/images/icon/eth-l.svg'),
+        BNB: require('@/assets/images/symbol/bnb.svg'),
+        MATIC: require('@/assets/images/symbol/matic.svg'),
+        AVAX: require('@/assets/images/symbol/avax.svg')
       },
       tokenMarketUrls: {
         USDT: "https://coinmarketcap.com/currencies/tether/",
         USDC: "https://coinmarketcap.com/currencies/usd-coin/",
         DAI: "https://coinmarketcap.com/currencies/multi-collateral-dai/",
         JPYC: "https://coinmarketcap.com/currencies/jpy-coin/",
-        WETH: 'https://coinmarketcap.com/currencies/weth/'
+        WETH: "https://coinmarketcap.com/currencies/weth/",
+        ETH: "https://coinmarketcap.com/currencies/ethereum/",
+        BNB: "https://coinmarketcap.com/currencies/bnb/",
+        MATIC: "https://coinmarketcap.com/currencies/polygon/",
+        AVAX: "https://coinmarketcap.com/currencies/avalanche/"
       },
     };
   },

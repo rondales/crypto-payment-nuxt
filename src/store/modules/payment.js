@@ -35,8 +35,7 @@ const store = {
       decimal: null,
       address: null,
       balance: null,
-      amount: null,
-      rate: null
+      amount: null
     },
     payment_token: null,
     successReturnUrl: null,
@@ -127,8 +126,7 @@ const store = {
         decimal: null,
         address: null,
         balance: null,
-        amount: null,
-        rate: null
+        amount: null
       },
       state.successReturnUrl = null,
       state.failReturnUrl = null
@@ -142,8 +140,7 @@ const store = {
         decimal: null,
         address: null,
         balance: null,
-        amount: null,
-        rate: null
+        amount: null
       }
     },
     update(state, payload) {

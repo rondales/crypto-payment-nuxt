@@ -135,7 +135,11 @@ export default {
         USDC: require('@/assets/images/symbol/usdc.svg'),
         DAI: require('@/assets/images/symbol/dai.svg'),
         JPYC: require('@/assets/images/symbol/jpyc.svg'),
-        WETH: require('@/assets/images/symbol/eth.svg')
+        WETH: require('@/assets/images/symbol/eth.svg'),
+        ETH: require('@/assets/images/symbol/eth.svg'),
+        BNB: require('@/assets/images/symbol/bnb.svg'),
+        MATIC: require('@/assets/images/symbol/matic.svg'),
+        AVAX: require('@/assets/images/symbol/avax.svg'),
       },
       receiveTokens: {}
     }

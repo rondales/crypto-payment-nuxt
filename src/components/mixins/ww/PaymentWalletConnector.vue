@@ -157,14 +157,14 @@ export default {
               params: { message: error.message }
             })
           } else {
-            this.$store.dispatch('modal/show', { target: 'error-metamask-modal', size: 'small'})
+            // this.$store.dispatch('modal/show', { target: 'error-metamask-modal', size: 'small'})
           }
           return
         }
 
-        if (useProvider === WALLET_CONNECT) {
-          this.$store.dispatch('modal/show', { target: 'error-wallet-modal', size: 'small'})
-        }
+        // if (useProvider === WALLET_CONNECT) {
+        //   this.$store.dispatch('modal/show', { target: 'error-wallet-modal', size: 'small'})
+        // }
       }
     },
   }
