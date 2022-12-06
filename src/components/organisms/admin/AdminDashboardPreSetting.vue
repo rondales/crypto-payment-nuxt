@@ -85,9 +85,66 @@
           </div>
         </div>
       </div>
-        <button @click="showConfirmModal" class="welcome-receice_btn">
-          Confirm
-        </button>
+      <div v-if="nativeTokensAllowed">
+        <p class="mb-2">Native Tokens</p>
+        <div class="welcome-receice_tokens add-flex ">
+          <div class="welcome-receice_token one" @click="selectToken(symbols.eth)" :class="{ active: isTokenSelected(symbols.eth) }">
+            <figure>
+              <img src="@/assets/images/symbol/eth.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              ETH
+              <br>
+              ETH-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
+          <div class="welcome-receice_token one" @click="selectToken(symbols.bnb)" :class="{ active: isTokenSelected(symbols.bnb) }">
+            <figure>
+              <img src="@/assets/images/symbol/bnb.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              BNB
+              <br>
+              BNB-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
+          <div class="welcome-receice_token two" @click="selectToken(symbols.matic)" :class="{ active: isTokenSelected(symbols.matic) }">
+            <figure>
+              <img src="@/assets/images/symbol/matic.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              MATIC
+              <br>
+              MATIC-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
+          <div class="welcome-receice_token tree" @click="selectToken(symbols.avax)" :class="{ active: isTokenSelected(symbols.avax) }">
+            <figure>
+              <img src="@/assets/images/symbol/avax.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              AVAX
+              <br>
+              AVAX-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
+        </div>
+      </div>
+      <button @click="showConfirmModal" class="welcome-receice_btn">
+        Confirm
+      </button>
     </div>
   </div>
   <div v-else class="DASHBOARD-two">
@@ -132,7 +189,11 @@ export default {
         usdc: 'USDC',
         jpyc: 'JPYC',
         dai: 'DAI',
-        weth: 'WETH'
+        weth: 'WETH',
+        eth: 'ETH',
+        bnb: 'BNB',
+        avax: 'AVAX',
+        matic: 'MATIC'
       }
     }
   },
@@ -147,6 +208,9 @@ export default {
       return (selectedSymbol) => {
         return this.symbol === selectedSymbol
       }
+    },
+    nativeTokensAllowed() {
+      return 'allow_native_token' in this.$route.query
     }
   },
   methods: {

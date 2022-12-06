@@ -10,6 +10,7 @@ export default {
     symbol: 'USDT',
     address: '0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684',
     abi: Usdt.abi,
+    decimals: 18,
     url: `${url}/0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684`,
     icon: require('@/assets/images/symbol/usdt.svg'),
     iconPath: "crypto_currency/received_token/usdt"
@@ -19,6 +20,7 @@ export default {
     symbol: 'USDC',
     address: null,
     abi: null,
+    decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/usdt.svg'),
     iconPath: "crypto_currency/received_token/usdc"
@@ -28,6 +30,7 @@ export default {
     symbol: 'DAI',
     address: null,
     abi: null,
+    decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/dai.svg'),
     iconPath: "crypto_currency/received_token/dai"
@@ -37,6 +40,7 @@ export default {
     symbol: 'JPYC',
     address: null,
     abi: null,
+    decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/jpyc.svg'),
     iconPath: "crypto_currency/received_token/jpyc"
@@ -46,8 +50,49 @@ export default {
     symbol: 'WETH',
     address: '0xC21bCff75936E28292C0987CDdD2fd0C9E4F1300',
     abi: Weth.abi,
+    decimals: 18,
     url: `${url}/0xC21bCff75936E28292C0987CDdD2fd0C9E4F1300`,
     icon: require('@/assets/images/symbol/eth.svg'),
     iconPath: "crypto_currency/received_token/weth"
   },
+  ETH: {
+    name: 'ETH native token',
+    symbol: 'ETH',
+    address: null,
+    abi: null,
+    decimals: null,
+    url: null,
+    icon: require('@/assets/images/symbol/eth.svg'),
+    iconPath: "crypto_currency/received_token/eth"
+  },
+  BNB: {
+    name: 'BNB native token',
+    symbol: 'BNB',
+    address: '0x0000000000000000000000000000000000000000',
+    abi: null,
+    decimals: 18,
+    url: null,
+    icon: require('@/assets/images/symbol/bnb.svg'),
+    iconPath: "crypto_currency/received_token/bnb"
+  },
+  MATIC: {
+    name: 'MATIC native token',
+    symbol: 'MAIC',
+    address: null,
+    abi: null,
+    decimals: null,
+    url: null,
+    icon: require('@/assets/images/symbol/matic.svg'),
+    iconPath: "crypto_currency/received_token/matic"
+  },
+  AVAX: {
+    name: 'AVAX native token',
+    symbol: 'AVAX',
+    address: null,
+    abi: null,
+    decimals: null,
+    url: null,
+    icon: require('@/assets/images/symbol/avax.svg'),
+    iconPath: "crypto_currency/received_token/avax"
+  }
 }

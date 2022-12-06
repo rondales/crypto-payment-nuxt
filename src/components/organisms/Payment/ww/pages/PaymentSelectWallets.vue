@@ -74,7 +74,11 @@ export default {
         USDC: 'crypto_currency/received_token/usdc',
         DAI: 'crypto_currency/received_token/dai',
         JPYC: 'crypto_currency/received_token/jpyc',
-        WETH: 'crypto_currency/received_token/weth'
+        WETH: 'crypto_currency/received_token/weth',
+        ETH: 'crypto_currency/received_token/eth',
+        BNB: 'crypto_currency/received_token/bnb',
+        MATIC: 'crypto_currency/received_token/matic',
+        AVAX: 'crypto_currency/received_token/avax',
       }
     },
     currentDomain() {
