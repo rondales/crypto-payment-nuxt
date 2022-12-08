@@ -4,6 +4,7 @@
       <PaymentToken
         :icon="icon"
         :icon-type="iconType"
+        :icon-url="iconUrl"
         :title="title"
         :symbol="symbol"
         :symboltext="symboltext"
@@ -45,6 +46,10 @@ export default {
     iconType: {
       type: String,
       default: 'svg'
+    },
+    iconUrl: {
+      type: String,
+      default: ''
     },
     symbol: {
       type: String,

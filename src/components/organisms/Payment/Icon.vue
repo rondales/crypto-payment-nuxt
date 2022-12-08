@@ -1,7 +1,8 @@
 <template>
   <div :class="classes">
     <component v-if="isSvg" :is="IconArray.img" />
-    <img v-else :src="IconArray.img">
+    <img v-else-if="url == '' || url == undefined" :src="IconArray.img">
+    <img v-else :src="url">
   </div>
 </template>
 
@@ -18,7 +19,11 @@ export default {
     color: {
       type: String,
       default: "text",
-    }
+    },
+    url: {
+      type: String,
+      default: ''
+    },
   },
   computed: {
     classes() {

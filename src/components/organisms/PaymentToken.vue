@@ -56,13 +56,14 @@
         <div v-else>
           <div
             class="tokentab__items"
-            v-for="(token, key) in tokenList"
+            v-for="(token, key) in tokenList.filter(token => otherTokenDisplay ? true : !token.isShitCoin)"
             :key="key"
             @click="handleSelectToken(token)"
           >
             <PaymentAmountBilled
               :icon="token.path"
               :icon-type="token.type"
+              :icon-url="token.logo"
               :symbol="token.symbol"
               :symboltext="token.name"
               :price="token.balance | balanceFormat"
@@ -156,7 +157,7 @@
               size="s"
               v-if="isExistSearchedTokens"
               color="cancel"
-              text="Crear All"
+              text="Clear All"
             />
           </div>
         </div>
@@ -426,7 +427,7 @@ export default {
         this.showAllChain ? this.paymentAvailableNetworks : [this.chainId]
       )
       return func.catch(func).then((tokens) => {
-        this.tokenList = tokens
+        this.tokenList = tokens.sort((a, b) => a.isShitCoin - b.isShitCoin)
         this.skelton = false
       })
     },

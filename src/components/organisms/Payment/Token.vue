@@ -6,6 +6,7 @@
         :class="{ skelton: skelton }"
         :path="icon"
         :type="iconType"
+        :url="iconUrl"
       />
       <PaymentIcon
         v-if="networkIcon"
@@ -42,6 +43,10 @@ export default {
     iconType: {
       type: String,
       default: 'svg'
+    },
+    iconUrl: {
+      type: String,
+      default: ''
     },
     symbol: {
       type: String,
