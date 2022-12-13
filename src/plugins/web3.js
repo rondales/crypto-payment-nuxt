@@ -200,12 +200,23 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         )
           continue
 
-        const response = await axios.get(
-          `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[supportedChainId]}&address=${walletAddress}`
-        )
+        let response = null
+        try {
+          response = await axios.get(
+            `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[supportedChainId]}&address=${walletAddress}`
+          )
+        } catch (error) {
+          console.log(error)
+          continue
+        }
+        
+        if (response == null) continue
+
         const { data } = response
         const tokensFromServer = Object.values(data)
         const balanceTokens = {}
+
+        if (tokensFromServer.length == 0) continue
 
         for (let i = 0; i < tokensFromServer.length; i++) {
           const balance = tokensFromServer[i]
@@ -320,7 +331,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
       }
 
       console.log('tokens', tokens)
-      if (tokens.length > 0) return tokens
+      return tokens
     } catch (error) {
       console.error(error)
     }
