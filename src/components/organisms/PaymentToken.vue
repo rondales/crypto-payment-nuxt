@@ -56,7 +56,7 @@
         <div v-else>
           <div
             class="tokentab__items"
-            v-for="(token, key) in tokenList.filter(token => otherTokenDisplay ? true : !token.isShitCoin)"
+            v-for="(token, key) in tokenList.filter(token => !token.isShitCoin)"
             :key="key"
             @click="handleSelectToken(token)"
           >
@@ -89,6 +89,23 @@
               icon="arrowTop"
               text="Other Token Hide"
               @click.native="switchOtherTokenDisplay"
+            />
+          </div>
+          <div
+            class="tokentab__items"
+            v-for="(token, key) in tokenList.filter(token => otherTokenDisplay && token.isShitCoin)"
+            :key="key"
+            @click="handleSelectToken(token)"
+          >
+            <PaymentAmountBilled
+              :icon="token.path"
+              :icon-type="token.type"
+              :icon-url="token.logo"
+              :symbol="token.symbol"
+              :symboltext="token.name"
+              :price="token.balance | balanceFormat"
+              size="bg"
+              :networkIcon="token.networkIcon"
             />
           </div>
         </div>
@@ -195,6 +212,7 @@ export default {
       searchedTokenList: [],
       searchedTokenCount: 0,
       skelton: true,
+      gotDefaultTokenAllChain: false,
       contract: {
         address: null,
         abi: null
@@ -419,6 +437,10 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
+      console.log('getDefaultTokens');
+      if (this.gotDefaultTokenAllChain && this.showAllChain) return;
+
+      this.tokenList = []
       this.skelton = true
       const func = this.$web3.getDefaultTokens(
         this.web3Instance,
@@ -429,6 +451,7 @@ export default {
       return func.catch(func).then((tokens) => {
         this.tokenList = tokens.sort((a, b) => a.isShitCoin - b.isShitCoin)
         this.skelton = false
+        this.gotDefaultTokenAllChain = this.showAllChain && !this.gotDefaultTokenAllChain
       })
     },
     checkBlackListedTokenToBlockChain() {
@@ -577,6 +600,7 @@ export default {
     },
     handleAccountChangedEvent() {
       this.$parent.loading = true
+      this.gotDefaultTokenAllChain = false
       this.getAccountDataFromBlockChain()
         .then((account) => {
           return this.$store.dispatch('account/update', account)
@@ -594,7 +618,6 @@ export default {
       this.$store.dispatch('web3/updateChainId', chainId)
 
       if (this.isAvailableCurrentNetwork) {
-        this.tokenList = []
         this.$parent.loading = true
         if (this.isShowNetworkModal) {
           this.$store.dispatch('modal/hide')
