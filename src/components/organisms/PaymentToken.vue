@@ -71,43 +71,6 @@
               :networkIcon="token.networkIcon"
             />
           </div>
-          <div class="tokentab__items" v-if="otherTokenDisplay">
-            <PaymentButton
-              class="tokentab__othertoken"
-              color="cancel"
-              size="m"
-              icon="arrowBottom"
-              text="Other Token Display"
-              @click.native="switchOtherTokenDisplay"
-            />
-          </div>
-          <div class="tokentab__items" v-else>
-            <PaymentButton
-              class="tokentab__othertoken"
-              color="cancel"
-              size="m"
-              icon="arrowTop"
-              text="Other Token Hide"
-              @click.native="switchOtherTokenDisplay"
-            />
-          </div>
-          <div
-            class="tokentab__items"
-            v-for="(token, key) in tokenList.filter(token => otherTokenDisplay && token.isShitCoin)"
-            :key="key"
-            @click="handleSelectToken(token)"
-          >
-            <PaymentAmountBilled
-              :icon="token.path"
-              :icon-type="token.type"
-              :icon-url="token.logo"
-              :symbol="token.symbol"
-              :symboltext="token.name"
-              :price="token.balance | balanceFormat"
-              size="bg"
-              :networkIcon="token.networkIcon"
-            />
-          </div>
         </div>
       </div>
       <div v-else-if="isCurrentTokenImportTab" class="tab__wrap">
@@ -220,7 +183,6 @@ export default {
       tabBodyStyle: {
         '--wh': '100vh'
       },
-      otherTokenDisplay: false
     }
   },
   components: {
@@ -405,7 +367,6 @@ export default {
   },
   watch: {
     showAllChain(isShow) {
-      console.log('showAllChain', isShow)
       if (isShow) {
         this.$parent.loading = true
         this.getDefaultTokens().then(() => {
@@ -437,7 +398,6 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
-      console.log('getDefaultTokens');
       if (this.gotDefaultTokenAllChain && this.showAllChain) return;
 
       this.tokenList = []
@@ -470,7 +430,7 @@ export default {
       importedToken.chain = NETWORKS[this.chainId].name
       importedToken.chainId = this.chainId
       importedToken.networkIcon = NETWORKS[this.chainId].iconPath
-      console.log(importedToken)
+
       return importedToken
     },
     showErrorModal(message) {
@@ -642,9 +602,6 @@ export default {
     getWindowSize() {
       let height = window.innerHeight - 42 - 111 - 90 - 101 - 24
       this.tabBodyStyle['--wh'] = `${height}px`
-    },
-    switchOtherTokenDisplay() {
-      this.otherTokenDisplay = !this.otherTokenDisplay
     }
   },
   created() {

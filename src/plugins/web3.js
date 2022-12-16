@@ -166,7 +166,6 @@ const getAccountData = async function (web3, chainId) {
 
 const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNetworks = null) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
-  console.log(chainId, defaultTokens)
   const supportedNetworkMainnet = {
     1: 'ethereum',
     56: 'bsc',
@@ -189,9 +188,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         ? supportedNetworkMainnet
         : supportedNetworkTestnet
       let tokens = []
-      console.log('isSupportNetWork', isSupportNetWork)
       for (const supportedChainId in isSupportNetWork) {
-        console.log('merchantNetworks', merchantNetworks)
         if (
           merchantNetworks &&
           merchantNetworks.find(
@@ -256,7 +253,6 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
                   walletAddress,
                   tokenContract
                 )
-                console.log('token balance', token.value, 'balance', balance)
 
                 return {
                   chain: NETWORKS[supportedChainId].name,
@@ -278,16 +274,13 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
           ).filter((item) => item !== null)
         )
 
-        console.log('balanceTokens', balanceTokens)
         const unsupportedTokens = Object.values(balanceTokens).filter(
-          (token) => !token.isSupported
+          (token) => !token.isSupported && !token.isShitCoin
         )
-        console.log('unsupportedTokens', unsupportedTokens)
         tokens = tokens.concat(
           (
             await Promise.all(
               unsupportedTokens.map(async (token) => {
-                console.log('unsupported', 'token', token)
                 try {
                   const tokenContract =
                     token.address === '-'
@@ -298,13 +291,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
                     walletAddress,
                     tokenContract
                   )
-                  console.log(
-                    'unsupported',
-                    'token balance',
-                    token.value,
-                    'balance',
-                    balance
-                  )
+
                   return {
                     chain: NETWORKS[supportedChainId].name,
                     chainId: supportedChainId,
@@ -330,7 +317,6 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         )
       }
 
-      console.log('tokens', tokens)
       return tokens
     } catch (error) {
       console.error(error)
