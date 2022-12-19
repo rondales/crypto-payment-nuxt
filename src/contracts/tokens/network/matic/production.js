@@ -57,16 +57,16 @@ export default {
     iconPath: "crypto_currency/usdt",
     iconType: "png"
   },
-  'QUICK(OLD)': {
-    name: 'QuickSwap(OLD)',
-    symbol: 'QUICK(OLD)',
-    address: '0x831753DD7087CaC61aB5644b308642cc1c33Dc13',
-    abi: Erc20Abi,
-    url: `${url}/0x831753DD7087CaC61aB5644b308642cc1c33Dc13`,
-    icon: 'https://assets.coingecko.com/coins/images/25393/small/quickswap.jpg?1651680141',
-    iconPath: "crypto_currency/quick-swap",
-    iconType: "png"
-  },
+  // 'QUICK(OLD)': {
+  //   name: 'QuickSwap(OLD)',
+  //   symbol: 'QUICK(OLD)',
+  //   address: '0x831753DD7087CaC61aB5644b308642cc1c33Dc13',
+  //   abi: Erc20Abi,
+  //   url: `${url}/0x831753DD7087CaC61aB5644b308642cc1c33Dc13`,
+  //   icon: 'https://assets.coingecko.com/coins/images/25393/small/quickswap.jpg?1651680141',
+  //   iconPath: "crypto_currency/quick-swap",
+  //   iconType: "png"
+  // },
   'QUICK(NEW)': {
     name: 'QuickSwap(NEW)',
     symbol: 'QUICK(NEW)',
