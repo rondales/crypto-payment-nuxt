@@ -137,7 +137,8 @@ import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
-  AvalancheTokens as AvalacheReceiveTokens
+  AvalancheTokens as AvalacheReceiveTokens,
+  DogeTokens as DogeReceiveTokens
 } from '@/contracts/receive_tokens'
 
 export default {
@@ -232,6 +233,8 @@ export default {
         return MaticReceiveTokens
       } else if (this.isCurrentNetworkAvalanche) {
         return AvalacheReceiveTokens
+      } else if (this.isCurrentNetworkDoge) {
+        return DogeReceiveTokens
       } else {
         return {}
       }
@@ -285,6 +288,12 @@ export default {
       return (
         this.chainId === NETWORKS[43114].chainId ||
         this.chainId === NETWORKS[43113].chainId
+      )
+    },
+    isCurrentNetworkDoge() {
+      return (
+        this.chainId === NETWORKS[568].chainId ||
+        this.chainId === NETWORKS[2000].chainId
       )
     },
     isAvailableCurrentNetwork() {

@@ -36,5 +36,14 @@ export default {
     scanUrl: NETWORKS[43114].scanUrl,
     icon: require('@/assets/images/network/avalanche.svg'),
     iconPath: 'network-avalanche'
+  },
+  doge: {
+    name: NETWORKS[2000].name,
+    alias: NETWORKS[2000].alias,
+    chainId: NETWORKS[2000].chainId,
+    rpcUrl: NETWORKS[2000].rpcUrl,
+    scanUrl: NETWORKS[2000].scanUrl,
+    icon: require('@/assets/images/network/doge.svg'),
+    iconPath: 'network-doge'
   }
 }

@@ -140,6 +140,19 @@
               beta ver.
             </div>
           </div>
+          <div class="welcome-receice_token tree" @click="selectToken(symbols.doge)" :class="{ active: isTokenSelected(symbols.doge) }">
+            <figure>
+              <img src="@/assets/images/symbol/wdoge.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              wrapped DOGE
+              <br>
+              DogeChain-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
         </div>
       </div>
       <button @click="showConfirmModal" class="welcome-receice_btn">
@@ -193,7 +206,8 @@ export default {
         eth: 'ETH',
         bnb: 'BNB',
         avax: 'AVAX',
-        matic: 'MATIC'
+        matic: 'MATIC',
+        doge: 'DOGE'
       }
     }
   },

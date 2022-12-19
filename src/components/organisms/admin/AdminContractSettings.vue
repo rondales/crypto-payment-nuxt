@@ -206,7 +206,8 @@ import {
   BscTokens,
   EthereumTokens,
   MaticTokens,
-  AvalancheTokens
+  AvalancheTokens,
+  DogeTokens
 } from '@/contracts/receive_tokens'
 import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
@@ -525,11 +526,14 @@ export default {
     const supportStatuses = {
       [AvailableNetworks.ethereum.chainId]:
         EthereumTokens[receiveTokenSymbol].address,
-      [AvailableNetworks.bsc.chainId]: BscTokens[receiveTokenSymbol].address,
+      [AvailableNetworks.bsc.chainId]:
+        BscTokens[receiveTokenSymbol].address,
       [AvailableNetworks.matic.chainId]:
         MaticTokens[receiveTokenSymbol].address,
       [AvailableNetworks.avalanche.chainId]:
-        AvalancheTokens[receiveTokenSymbol].address
+        AvalancheTokens[receiveTokenSymbol].address,
+      [AvailableNetworks.doge.chainId]:
+        DogeTokens[receiveTokenSymbol].address
     }
     let contractSettings = {}
     Object.values(AvailableNetworks).forEach((network) => {
