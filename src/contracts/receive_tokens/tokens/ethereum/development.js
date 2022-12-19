@@ -98,5 +98,15 @@ export default {
     url: null,
     icon: require('@/assets/images/symbol/avax.svg'),
     iconPath: "crypto_currency/received_token/avax"
+  },
+  DOGE: {
+    name: 'wrapped DOGE token',
+    symbol: 'DOGE',
+    address: null,
+    abi: null,
+    decimals: null,
+    url: null,
+    icon: require('@/assets/images/symbol/doge.svg'),
+    iconPath: "crypto_currency/received_token/doge"
   }
 }

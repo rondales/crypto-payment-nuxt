@@ -154,7 +154,8 @@ export default {
         ETH: require('@/assets/images/symbol/eth.svg'),
         BNB: require('@/assets/images/symbol/bnb.svg'),
         MATIC: require('@/assets/images/symbol/matic.svg'),
-        AVAX: require('@/assets/images/symbol/avax.svg')
+        AVAX: require('@/assets/images/symbol/avax.svg'),
+        DOGE: require('@/assets/images/symbol/wdoge.svg')
       },
       isHover: false
     }

@@ -108,7 +108,8 @@ import {
   BscTokens,
   EthereumTokens,
   MaticTokens,
-  AvalancheTokens
+  AvalancheTokens,
+  DogeTokens
 } from '@/contracts/receive_tokens'
 import DashItem from "@/components/organisms/admin/AdminDashItem"
 
@@ -140,6 +141,7 @@ export default {
         BNB: require('@/assets/images/symbol/bnb.svg'),
         MATIC: require('@/assets/images/symbol/matic.svg'),
         AVAX: require('@/assets/images/symbol/avax.svg'),
+        DOGE: require('@/assets/images/symbol/doge.svg'),
       },
       receiveTokens: {}
     }
@@ -284,6 +286,11 @@ export default {
           alias: AvailableNetworks.avalanche.alias,
           icon: AvailableNetworks.avalanche.icon,
           token: AvalancheTokens[this.receiveTokenSymbol]
+        },
+        [AvailableNetworks.doge.chainId]: {
+          alias: AvailableNetworks.doge.alias,
+          icon: AvailableNetworks.doge.icon,
+          token: DogeTokens[this.receiveTokenSymbol]
         }
       }
     }
@@ -532,9 +539,10 @@ change the style.scss to import style.scss directly under the scss directory.
   max-width: 1000px;
   .deployed-wrapper{
     display: grid;
+    grid-gap: 1%;
     grid-template:
-    "item-1 ...... item-2 ...... item-3 ...... item-4" auto
-    / 23% 2.66% 23% 2.66% 23% 2.66% 23%;
+    "item-1  item-2  item-3  item-4 item-5" auto
+    / 20% 20% 20% 20% 20%;
     @include media(sp) {
       grid-template:
       "head   head   head"

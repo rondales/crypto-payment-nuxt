@@ -34,5 +34,17 @@ export const networkList = {
     symbol: 'AVAX',
     icon: 'h-avalanche.svg',
     type: null
+  },
+  2000: {
+    name: 'Doge Mainnet',
+    symbol: 'DOGE',
+    icon: 'h-doge.svg',
+    type: null
+  },
+  568: {
+    name: 'Doge Testnet',
+    symbol: 'DOGE',
+    icon: 'h-doge.svg',
+    type: null
   }
 }

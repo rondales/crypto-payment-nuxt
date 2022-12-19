@@ -18,5 +18,15 @@ export const network = {
     name: 'BSC Test Net',
     symbol: 'BNB',
     icon: 'h-bsc.svg'
+  },
+  2000: {
+    name: 'Doge Mainnet',
+    symbol: 'DOGE',
+    icon: 'h-doge.svg'
+  },
+  568: {
+    name: 'Doge Testnet',
+    symbol: 'BNB',
+    icon: 'h-doge.svg'
   }
 }

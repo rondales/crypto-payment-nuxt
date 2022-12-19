@@ -199,6 +199,65 @@ export const SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS = {
         symbol: 'WETH'
       }
     }
+  },
+  568: {
+    customNetwork: {
+      nameNetwork: 'Dogechain Testnet',
+      multicallContractAddress: '0x0C978b9E4D94698df101092d8616E05b4D10069d',
+      nativeCurrency: {
+        name: 'native-currency',
+        symbol: 'nc'
+      },
+      nativeWrappedTokenInfo: {
+        chainId: 568,
+        contractAddress: '0x1d308089a2d1ced3f1ce36b1fcaf815b07217be3',
+        decimals: 18,
+        name: 'Wrapped Token',
+        symbol: 'WETH'
+      },
+      baseTokens: {
+        usdt: {
+          chainId: 568,
+          contractAddress: '0xebca682b6C15d539284432eDc5b960771F0009e8',
+          decimals: 6,
+          name: 'USDT',
+          symbol: 'USDT'
+        }
+      }
+    }
+  },
+  2000: {
+    customNetwork: {
+      nameNetwork: 'Dogechain Mainnet',
+      multicallContractAddress: '0xF38fFE881d0b1DE39ef7a661F40841C0A5Bd7D3c',
+      nativeCurrency: {
+        name: 'native-currency',
+        symbol: 'nc'
+      },
+      nativeWrappedTokenInfo: {
+        chainId: 2000,
+        contractAddress: '0xb7ddc6414bf4f5515b52d8bdd69973ae205ff101',
+        decimals: 18,
+        name: 'Wrapped WDoge',
+        symbol: 'WWDOGE'
+      },
+      baseTokens: {
+        usdt: {
+          chainId: 2000,
+          contractAddress: '0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d',
+          decimals: 6,
+          name: 'USDT',
+          symbol: 'USDT'
+        },
+        usdc: {
+          chainId: 2000,
+          contractAddress: '0x765277eebeca2e31912c9946eae1021199b39c61',
+          decimals: 6,
+          name: 'USDC',
+          symbol: 'USDC'
+        }
+      }
+    }
   }
 }
 export const EXCHANGE_ROUTERS = {
@@ -442,5 +501,53 @@ export const EXCHANGE_ROUTERS = {
         }
       }
     }
+  },
+  568: {
+    dogeswap: {
+      address: '0xf78CB981272840292a1275224aF55C917d106983',
+      flag: '0x21',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x3d82cf3c8b34e13314a66645a97749910a0627b3',
+          pairAddress: '0x3d82cf3c8b34e13314a66645a97749910a0627b3',
+          routerAddress: '0xf78CB981272840292a1275224aF55C917d106983'
+        }
+      }
+    }
+  },
+  2000: {
+    kibbleswap: {
+      address: '0x6258c967337D3faF0C2ba3ADAe5656bA95419d5f',
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xf4bc79d32a7defd87c8a9c100fd83206bbf19af5',
+          pairAddress: '0xf4bc79d32a7defd87c8a9c100fd83206bbf19af5',
+          routerAddress: '0x6258c967337D3faF0C2ba3ADAe5656bA95419d5f'
+        }
+      }
+    },
+    yodedex: {
+      address: '0x72d85Ab47fBfc5E7E04a8bcfCa1601D8f8cE1a50',
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xaaa04462e35f3e40d798331657ca015169e005d7',
+          pairAddress: '0xaaa04462e35f3e40d798331657ca015169e005d7',
+          routerAddress: '0x72d85Ab47fBfc5E7E04a8bcfCa1601D8f8cE1a50'
+        }
+      }
+    },
+    dogeswap: {
+      address: '0xa4EE06Ce40cb7e8c04E127c1F7D3dFB7F7039C81',
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xd27d9d61590874bf9ee2a19b27e265399929c9c3',
+          pairAddress: '0xd27d9d61590874bf9ee2a19b27e265399929c9c3',
+          routerAddress: '0xa4EE06Ce40cb7e8c04E127c1F7D3dFB7F7039C81'
+        }
+      }
+    },
   }
 }

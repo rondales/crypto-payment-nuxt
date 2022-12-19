@@ -89,6 +89,7 @@ export default {
         BNB: 'crypto_currency/received_token/bnb',
         MATIC: 'crypto_currency/received_token/matic',
         AVAX: 'crypto_currency/received_token/avax',
+        DOGE: 'crypto_currency/received_token/doge'
       }
     },
     currentDomain() {
