@@ -171,21 +171,27 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
         defaultToken.address === null
           ? null
           : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
-      const decimal =
+      try {
+        const decimal =
         tokenContract === null
           ? 18
           : parseInt(await tokenContract.methods.decimals().call(), 10)
-      const balance = await getBalance(web3, walletAddress, tokenContract)
-      return {
-        name: defaultToken.name,
-        symbol: defaultToken.symbol,
-        decimal: decimal,
-        address: defaultToken.address,
-        balance: balance,
-        icon: defaultToken.icon,
-        path: defaultToken.iconPath,
-        type: defaultToken.iconType
+        const balance = await getBalance(web3, walletAddress, tokenContract)
+        return {
+          name: defaultToken.name,
+          symbol: defaultToken.symbol,
+          decimal: decimal,
+          address: defaultToken.address,
+          balance: balance,
+          icon: defaultToken.icon,
+          path: defaultToken.iconPath,
+          type: defaultToken.iconType
+        }
+      } catch (err) {
+        console.log(err)
+        return null
       }
+      
     })
   )
 
