@@ -546,18 +546,17 @@ export default {
       'chainChanged',
       this.handleChainChangedEvent
     )
-    this.getDefaultTokens()
-    // if (this.isAvailableCurrentNetwork) {
-    //   const funcList = [
-    //     this.updateContractDataFromApi(),
-    //     this.getDefaultTokens()
-    //   ]
-    //   Promise.all(funcList).then(() => {
-    //     this.$parent.loading = false
-    //   })
-    // } else {
-    //   this.requireSwitchNetwork()
-    // }
+    if (this.isAvailableCurrentNetwork) {
+      const funcList = [
+        this.updateContractDataFromApi(),
+        this.getDefaultTokens()
+      ]
+      Promise.all(funcList).then(() => {
+        this.$parent.loading = false
+      })
+    } else {
+      this.requireSwitchNetwork()
+    }
     this.getWindowSize()
     window.addEventListener('resize', this.handleWindowResize)
   },
