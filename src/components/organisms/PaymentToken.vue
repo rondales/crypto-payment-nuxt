@@ -359,6 +359,9 @@ export default {
         this.userAccountAddress
       )
       return func.catch(func).then((tokens) => {
+        tokens = tokens.filter((token) => {
+          return token != null
+        })
         this.tokenList = tokens
       })
     },
@@ -543,7 +546,6 @@ export default {
       'chainChanged',
       this.handleChainChangedEvent
     )
-
     if (this.isAvailableCurrentNetwork) {
       const funcList = [
         this.updateContractDataFromApi(),
