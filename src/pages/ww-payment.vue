@@ -172,9 +172,8 @@ export default {
             this.$store.dispatch('payment/updateAvailableNetworks', availableNetworks)
             if (!availableNetworks.length) {
               this.$store.dispatch('modal/show', {
-                target: 'error-not-exist-available-payment-contract-modal',
-                size: 'small',
-                params: { returnUrl: response.data.return_url }
+                target: 'ww-error-not-exist-available-payment-contract-modal',
+                size: 'small'
               })
             }
           })
