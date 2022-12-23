@@ -174,14 +174,16 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
   }
   const supportedNetworkTestnet = {
     5: 'goerli',
-    97: 'bsc_testnet',
+    97: 'bsc_testnet'
   }
-  const isSupportedNetworkMainnet = Object.keys(supportedNetworkMainnet).includes(
-    chainId.toString()
-  )
-  const isSupportedNetworkTestnet = Object.keys(supportedNetworkTestnet).includes(
-    chainId.toString()
-  )
+
+  const isSupportedNetworkMainnet =
+    Object.keys(supportedNetworkMainnet).includes(chainId.toString()) ||
+    chainId == 2000
+  const isSupportedNetworkTestnet = Object.keys(
+    supportedNetworkTestnet
+  ).includes(chainId.toString()) || chainId == 568
+
   if (isSupportedNetworkMainnet || isSupportedNetworkTestnet) {
     try {
       let isSupportNetWork = isSupportedNetworkMainnet
@@ -206,7 +208,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
           console.log(error)
           continue
         }
-        
+
         if (response == null) continue
 
         const { data } = response
@@ -221,7 +223,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
           balanceTokens[balance.address.toLowerCase()].isSupported = false
         }
 
-        const defaultTokens = getNetworkDefaultTokens(
+        const supportedChainDefaultTokens = getNetworkDefaultTokens(
           parseInt(supportedChainId)
         )
 
@@ -232,7 +234,7 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         tokens = tokens.concat(
           (
             await Promise.all(
-              Object.values(defaultTokens).map(async (defaultToken) => {
+              Object.values(supportedChainDefaultTokens).map(async (defaultToken) => {
                 const addressDefaultToken =
                   defaultToken.address === null ? '-' : defaultToken.address
                 const token = balanceTokens[addressDefaultToken.toLowerCase()]
@@ -314,6 +316,58 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
               })
             )
           ).filter((item) => item != null)
+        )
+      }
+
+      if (
+        merchantNetworks &&
+        merchantNetworks.find(
+          (merchantChainId) => merchantChainId == 568 || merchantChainId == 2000
+        )
+      ) {
+        const isMainnet = [1, 56, 137, 43114, 2000].includes(chainId)
+        const web3Instance = new Web3()
+        const rpcUrl = NETWORKS[isMainnet ? 2000 : 568].rpcUrl
+        web3Instance.setProvider(rpcUrl)
+        const supportedChainDefaultTokens = getNetworkDefaultTokens(
+          isMainnet ? 2000 : 568
+        )
+
+        tokens = tokens.concat(
+          await Promise.all(
+            Object.values(supportedChainDefaultTokens).map(async (defaultToken) => {
+              const tokenContract =
+                defaultToken.address === null
+                  ? null
+                  : new web3Instance.eth.Contract(
+                      defaultToken.abi,
+                      defaultToken.address
+                    )
+              const decimal =
+                tokenContract === null
+                  ? 18
+                  : parseInt(await tokenContract.methods.decimals().call(), 10)
+              const balance = await getBalance(
+                web3Instance,
+                walletAddress,
+                tokenContract
+              )
+              return {
+                chain: NETWORKS[chainId].name,
+                chainId,
+                networkIcon: NETWORKS[chainId].iconPath,
+                name: defaultToken.name,
+                symbol: defaultToken.symbol,
+                decimal: decimal,
+                address: defaultToken.address,
+                balance: balance,
+                icon: defaultToken.icon,
+                path: defaultToken.iconPath,
+                type: defaultToken.iconType,
+                isShitCoin: false
+              }
+            })
+          )
         )
       }
 
