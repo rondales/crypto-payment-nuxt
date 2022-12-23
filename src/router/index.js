@@ -112,35 +112,35 @@ const router = new Router({
             {
               name: "entrance",
               path: "/payment/:token",
-              alias: ["/payments-uiswitchable/:token/basic", "/payments-uiswitchable/:token"],
+              alias: ["/payments-uiswitchable/:token/basic"],
               component: () => import("@/components/organisms/PaymentEntrance"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "wallets",
               path: "/payment/wallets/:token",
-              alias: ["/payments-uiswitchable/wallets/:token/basic", "/payments-uiswitchable/wallets/:token"],
+              alias: ["/payments-uiswitchable/wallets/:token/basic"],
               component: () => import("@/components/organisms/PaymentSelectWallets"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "token",
               path: "/payment/token/:token",
-              alias: ["/payments-uiswitchable/token/:token/basic", "/payments-uiswitchable/token/:token"],
+              alias: ["/payments-uiswitchable/token/:token/basic"],
               component: () => import("@/components/organisms/PaymentToken"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "detail",
               path: "/payment/detail/:token",
-              alias: ["/payments-uiswitchable/detail/:token/basic", "/payments-uiswitchable/detail/:token" ],
+              alias: ["/payments-uiswitchable/detail/:token/basic"],
               component: () => import("@/components/organisms/PaymentDetail"),
               meta: { title: 'Slash Payment' }
             },
             {
               name: "result",
               path: "/payment/result/:token",
-              alias: ["/payments-uiswitchable/result/:token/basic","/payments-uiswitchable/result/:token"],
+              alias: ["/payments-uiswitchable/result/:token/basic"],
               component: () => import("@/components/organisms/PaymentResult"),
               meta: { title: 'Slash Payment' }
             }
