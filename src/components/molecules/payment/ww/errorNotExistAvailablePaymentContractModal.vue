@@ -2,6 +2,7 @@
   <div>
     <PaymentModal
       title="Error"
+      v-bind:closeDisplay="false"
       emoji="&#x1F501;"
       text="This payment cannot be continued due to merchant's circumstances.<br />Please contact the merchant for details."
     >
@@ -11,8 +12,8 @@
 </template>
 
 <script>
-import PaymentModal from "@/components/organisms/Payment/Modal";
-import PaymentButton from "@/components/organisms/Payment/Button";
+import PaymentModal from "@/components/organisms/Payment/ww/fragments/Modal";
+import PaymentButton from "@/components/organisms/Payment/ww/fragments/Button";
 export default {
   name: "wwErrorNotExistAvailablePaymentContractModal",
   components: {
