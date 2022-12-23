@@ -45,6 +45,10 @@ export default {
       import(
         '@/components/molecules/errorNotExistAvailablePaymentContractModal'
       ),
+    wwErrorNotExistAvailablePaymentContractModal: () =>
+    import(
+      '@/components/molecules/payment/ww/errorNotExistAvailablePaymentContractModal'
+    ),
     errorForbiddenBackPaymentModal: () =>
       import('@/components/molecules/errorForbiddenBackPaymentModal'),
     switchNetworkForAdminModal: () =>
