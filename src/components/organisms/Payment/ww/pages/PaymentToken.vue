@@ -359,6 +359,9 @@ export default {
         this.userAccountAddress
       )
       return func.catch(func).then((tokens) => {
+        tokens = tokens.filter((token) => {
+          return token != null
+        })
         this.tokenList = tokens
       })
     },

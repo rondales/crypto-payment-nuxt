@@ -383,7 +383,8 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         defaultToken.address === null
           ? null
           : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
-      const decimal =
+      try {
+        const decimal =
         tokenContract === null
           ? 18
           : parseInt(await tokenContract.methods.decimals().call(), 10)
@@ -400,7 +401,12 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         icon: defaultToken.icon,
         path: defaultToken.iconPath,
         type: defaultToken.iconType
+        }
+      } catch (err) {
+        console.log(err)
+        return null
       }
+      
     })
   )
 

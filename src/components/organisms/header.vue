@@ -210,11 +210,6 @@ export default {
     }
   },
   watch: {
-    $route(to, from) {
-      if (from.fullPath === '/payment' || from.fullPath === '/payments-uiswitchable') {
-        this.show = true
-      }
-    },
     chainId(id) {
       if (id) {
         this.$web3
@@ -326,7 +321,7 @@ export default {
     },
     show() {
       const pathPattern =
-        /^\/(admin$|admin\/.+)|(payment|payments-uiswitachable\/(wallets|token|detail)\/.+)/
+        /^\/(admin$|admin\/.+)|((payment|payments-uiswitchable)\/(wallets|token|detail)\/.+)/
       return pathPattern.test(this.$route.path)
     },
     connected() {

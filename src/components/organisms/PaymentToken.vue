@@ -409,7 +409,9 @@ export default {
         this.showAllChain ? this.paymentAvailableNetworks : [this.chainId]
       )
       return func.catch(func).then((tokens) => {
-        this.tokenList = tokens.sort((a, b) => a.isShitCoin - b.isShitCoin)
+        this.tokenList = tokens.filter((token) => {
+          return token != null
+        }).sort((a, b) => a.isShitCoin - b.isShitCoin)
         this.skelton = false
         this.gotDefaultTokenAllChain = this.showAllChain && !this.gotDefaultTokenAllChain
       })
@@ -627,7 +629,6 @@ export default {
       'chainChanged',
       this.handleChainChangedEvent
     )
-
     if (this.isAvailableCurrentNetwork) {
       const funcList = [
         this.updateContractDataFromApi(),
