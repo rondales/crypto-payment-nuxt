@@ -180,7 +180,8 @@ export default {
       this.apiGetTransaction().then((response) => {
         this.$refs.paymentIndex.incrementProgressCompletedSteps()
         if (([STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS].includes(response.data.status)
-          || response.data.is_cancelled == true) && !this.isRequestResultPage) {
+          || response.data.is_cancelled == true)
+          && !this.isRequestResultPage) {
           return this.$router.replace({
             name: 'result',
             params: { token: this.urlPaymentToken }
@@ -189,7 +190,8 @@ export default {
         if (
           (!this.isDifferentPayment &&
             response.data.base_amount == null &&
-            !this.isRequestEntrancePage) ||
+            !this.isRequestEntrancePage &&
+            !this.isRequestResultPage) ||
           (this.isDifferentPayment &&
             !this.isRequestEntrancePage &&
             !this.isRequestResultPage)
@@ -205,6 +207,8 @@ export default {
             this.$refs.paymentIndex.progressCompletedSteps
           )
         }
+      }).catch((error) => {
+        console.log(error)
       })
     },
     handleChainChanged() {

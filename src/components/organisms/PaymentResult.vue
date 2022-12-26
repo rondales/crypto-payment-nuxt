@@ -8,7 +8,7 @@
       size="big"
     />
     <PaymentTransaction
-      v-if="transactionHash"
+      v-if="!isCancelledByMerchant"
       class="result__transaction"
       :type="transactionType"
       :title="transactionTitle"
@@ -23,7 +23,12 @@
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
     />
-    <p class="title" v-if="isCancelledByMerchant">This payment has been cancelled, please contact the Merchant for more information</p>
+    <p class="title" v-if="isCancelledByMerchant">This payment has been cancelled, 
+      please contact the Merchant for more information.
+      <br>
+      <br>
+      Payment Token: {{ this.$route.params.token }}
+    </p>
     <div v-if="isStatusProcessing || isStatusSucceeded">
       <PaymentTitle
         class="result__title"
@@ -391,7 +396,6 @@ export default {
         }`
         this.pollingTransactionResult()
       }
-      this.$emit('incrementProgressCompletedSteps')
       setTimeout(() => {
         this.$emit('updateInitializingStatus', false)
       }, 1500)

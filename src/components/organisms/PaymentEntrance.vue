@@ -112,6 +112,9 @@ export default {
         amount: this.formatAmount(receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
+      if (receiveResponse.data.is_cancelled) {
+        return
+      }
       this.$emit('incrementProgressCompletedSteps')
       this.apiPublishTransaction().then(() => {
         this.$emit('updateProgressTotalSteps', 5)
@@ -127,6 +130,25 @@ export default {
             this.apiGetTransactionData().then((transactionResponse) => {
               this.$emit('incrementProgressCompletedSteps')
               this.$store.dispatch('payment/updateAmount', this.formatAmount(transactionResponse.data.base_amount))
+              if (transactionResponse.data.base_amount == null) {
+                this.showComponent = 'PaymentAmount'
+                this.$emit('updateProgressTotalSteps', 7)
+                this.$emit('incrementProgressCompletedSteps')
+              } else {
+                if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
+                  this.$store.dispatch('payment/updateAgreeRiskStatus', true)
+                  this.$emit('incrementProgressCompletedSteps')
+                  this.$emit('updateProgressTotalSteps', 5)
+                  this.$router.replace({
+                    path: '/payment/wallets/' + this.$route.params.token
+                  })
+                } else {
+                  this.$emit('updateProgressTotalSteps', 4)
+                  this.$router.replace({
+                    path: '/payment/wallets/' + this.$route.params.token
+                  })
+                }
+              }
             }).catch((error) => {
               console.log(error)
               this.showErrorModal('Please try again after a while.')
