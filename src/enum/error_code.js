@@ -4,6 +4,7 @@ export const errorCodeList = {
   2080: { msg: 'Please reapply for payment again.' },
   2081: { msg: 'Please reapply for payment again.' },
   2090: { msg: 'Payment cannot be continued due to system reasons.' },
+  2022: { msg: 'Payment has already been cancelled.'},
   2130: { msg: 'Please reapply for payment again.' },
   2140: { msg: 'Please enter your email address.' },
   2150: { msg: 'Please try again.' },

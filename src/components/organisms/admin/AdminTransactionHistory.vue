@@ -87,6 +87,7 @@
                 <th>Transaction ID</th>
                 <th>Network</th>
                 <th>Transaction Amount</th>
+                <th>Merchant Cancelled</th>
               </tr>
             </thead>
             <tbody v-if="summaries.records.length">
@@ -126,6 +127,9 @@
                 </td>
                 <td>
                   {{ record.base_amount | formatAmount }} {{ record.base_symbol }}
+                </td>
+                <td>
+                  {{ record.is_cancelled ? "Yes" : "No" }}
                 </td>
               </tr>
             </tbody>
@@ -636,7 +640,7 @@ change the style.scss to import style.scss directly under the scss directory.
           overflow-wrap: break-word;
           font-weight: 100;
           &:nth-child(1){
-            width: 22.22vw;
+            width: 18vw;
             @include media(sp) {
               width:200px;
             }
@@ -667,6 +671,12 @@ change the style.scss to import style.scss directly under the scss directory.
           }
           &:nth-child(6){
             width: 16.666vw;
+            @include media(sp) {
+              width:200px;
+            }
+          }
+          &:nth-child(7){
+            width: 4.22vw;
             @include media(sp) {
               width:200px;
             }
