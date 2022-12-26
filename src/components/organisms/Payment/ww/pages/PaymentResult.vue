@@ -190,7 +190,9 @@ export default {
       }
     },
     merchantReceiveTokenIcon() {
-      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol]
+      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
+        ? this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
+        : 'crypto_currency/unknown-small'
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens
@@ -341,7 +343,7 @@ export default {
       this.apiGetTransaction().then((response) => {
         this.setApiResultData(response.data)
         this.handleAddMerchantSiteRedirectParam()
-        if(response.data.status == STATUS_RESULT_FAILURE) {
+        if(response.data.status == STATUS_RESULT_FAILURE || response.data.is_cancelled) {
           this.sendFixPaymentToParentWindow(2, {payment_token: this.$route.params.token})
           clearTimeout(this.resultPollingTimer)
         }
@@ -412,16 +414,6 @@ export default {
     setTimeout(() => {
       this.$emit('updateInitializingStatus', false)
     }, 1500)
-
-    // this.apiGetTransaction().then((response) => {
-    //   this.setApiResultData(response.data)
-    //   this.handleMerchantSiteRedirect()
-    //   this.handleAddMerchantSiteRedirectParam()
-    //   this.$emit('incrementProgressCompletedSteps')
-      // setTimeout(() => {
-      //   this.$emit('updateInitializingStatus', false)
-      // }, 1500)
-    // })
   },
   beforeDestroy() {
     clearTimeout(this.resultPollingTimer)

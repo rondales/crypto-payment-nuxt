@@ -124,7 +124,6 @@ export default {
       isCancelledByMerchant: false,
       transactionType: 'loading',
       transactionTitle: 'Waiting for tx result',
-      transactionText: '',
       resultPollingTimer: null,
       openOriginalBrowserFlg: true
     }
@@ -144,12 +143,10 @@ export default {
       if (newStatus === STATUS_RESULT_SUCCESS) {
         this.transactionType = 'success'
         this.transactionTitle = 'Transaction Submitted'
-        this.transactionText = ''
       }
       if (newStatus === STATUS_RESULT_FAILURE) {
         this.transactionType = 'dismiss'
         this.transactionTitle = 'Invalid Transaction'
-        this.transactionText = 'Check the transaction in Explorer.'
       }
     }
   },
@@ -196,7 +193,9 @@ export default {
       }
     },
     merchantReceiveTokenIcon() {
-      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol]
+      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
+        ? this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
+        : 'crypto_currency/unknown-small'
     },
     userPaidTokenIcon() {
       const tokens = this.paidNetworkDefaultTokens
@@ -283,6 +282,19 @@ export default {
       return this.openOriginalBrowserFlg 
         && (this.isStatusSucceeded || this.isStatusFailured)
         && this.isMetamaskBrowser
+    },
+    transactionText() {
+      let transactionText = ''
+      if (this.isStatusProcessing) {
+        transactionText = `Pay ${this.filterAmount(this.userPaidAmount)}${
+            this.userPaidSymbol
+          } for ${this.filterAmount(this.merchantReceiveAmount)}${
+            this.merchantReceiveSymbol
+          }`
+      } else if (this.isStatusFailured) {
+        transactionText = 'Check the transaction in Explorer.'
+      }
+      return transactionText
     }
   },
   methods: {
@@ -331,19 +343,16 @@ export default {
       })
     },
     pollingTransactionResult() {
-      this.resultPollingTimer = setInterval(() => {
-        this.apiGetTransaction().then((response) => {
-          this.setApiResultData(response.data)
-          this.handleAddMerchantSiteRedirectParam()
-          const stopTimerStatuses = [
-            STATUS_RESULT_FAILURE,
-            STATUS_RESULT_SUCCESS
-          ]
-          if (stopTimerStatuses.includes(response.data.status)) {
-            clearInterval(this.resultPollingTimer)
-          }
-        })
-      }, this.RESULT_CHECK_CYCLE)
+      this.apiGetTransaction().then((response) => {
+        this.setApiResultData(response.data)
+        this.handleAddMerchantSiteRedirectParam()
+        if(response.data.status == STATUS_RESULT_FAILURE || 
+          response.data.status == STATUS_RESULT_SUCCESS ||
+          response.data.is_cancelled) {
+          clearTimeout(this.resultPollingTimer)
+        }
+      })
+      this.resultPollingTimer = setTimeout(this.pollingTransactionResult, this.RESULT_CHECK_CYCLE)
     },
     handleAddMerchantSiteRedirectParam() {
       if (
@@ -375,31 +384,20 @@ export default {
           message: 'This is dummy massage.'
         }
       })
-    }
+    },
+    filterAmount(amount) {
+      return Decimal(amount).toString()
+    },
   },
   created() {
     this.$emit('updateProgressTotalSteps', 2)
     this.showDataInitialize()
     Decimal.set({ toExpNeg: -20 })
-    this.apiGetTransaction().then((response) => {
-      this.setApiResultData(response.data)
-      this.handleMerchantSiteRedirect()
-      this.handleAddMerchantSiteRedirectParam()
-      if (this.isStatusProcessing) {
-        const filterAmount = (amount) => {
-          return Decimal(amount).toString()
-        }
-        this.transactionText = `Pay ${filterAmount(this.userPaidAmount)}${
-          this.userPaidSymbol
-        } for ${filterAmount(this.merchantReceiveAmount)}${
-          this.merchantReceiveSymbol
-        }`
-        this.pollingTransactionResult()
-      }
-      setTimeout(() => {
-        this.$emit('updateInitializingStatus', false)
-      }, 1500)
-    })
+    this.pollingTransactionResult()
+    this.handleMerchantSiteRedirect()
+    setTimeout(() => {
+      this.$emit('updateInitializingStatus', false)
+    }, 1500)
   },
   beforeDestroy() {
     clearInterval(this.resultPollingTimer)
