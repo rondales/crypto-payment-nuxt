@@ -8,7 +8,7 @@
       size="big"
     />
     <PaymentTransaction
-      v-if="!isCancelledByMerchant"
+      v-if="isStatusProcessing || isStatusSucceeded || isStatusFailured"
       class="result__transaction"
       :type="transactionType"
       :title="transactionTitle"
@@ -120,7 +120,7 @@ export default {
       successReturnUrl: null,
       failureReturnUrl: null,
       email: null,
-      status: STATUS_PROCESSING,
+      status: null,
       isCancelledByMerchant: false,
       transactionType: 'loading',
       transactionTitle: 'Waiting for tx result',
