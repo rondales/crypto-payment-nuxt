@@ -1,96 +1,15 @@
 <template>
   <div class="style">
-    <div class="amount">
-      <PaymentTitle
-        class="amount__title"
-        type="h3_g"
-        html="Enter the payment amount"
-        emoji="&#128591;"
-        layout="c"
-      />
-      <PaymentTitle
-        class="amount__subtitle"
-        type="h4"
-        html="How much would you pay?"
-        layout=""
-      />
-      <PaymentForm class="amount__form">
-        <input
-          v-model="legalCurrencyAmount"
-          class="price"
-          type="text"
-          placeholder="0"
-        />
-        <div class="selectwrap">
-          <PaymentIcon path="token-usdt" />
-          <select name="currency" v-model="selectedCurrency">
-            <option
-              v-for="(currency, key) in currencies"
-              :value="currency.name"
-              :key="key"
-            >
-              {{ currency.name }}
-            </option>
-          </select>
-        </div>
-      </PaymentForm>
-      <PaymentAmountBilled
-        class="amount__bill"
-        :symbol="receiveTokenSymbol"
-        icon="token-usdt"
-        :price="exchangedAmount"
-        :priceClass="{ inactive: requireUpdateExchange }"
-        size="big"
-      />
-      <div class="amount__pay">
-        <PaymentTitle
-          class="amount__pay__title"
-          type="h3"
-          html="Payment with Web3 Wallet"
-          layout="c"
-        />
-        <PaymentAction
-          class="amount__pay__action"
-          icon="warning"
-          text="Price Updated"
-        >
-          <PaymentButton text="Accept" size="s" @click.native="test" />
-        </PaymentAction>
-
-        <PaymentButton
-          class="amount__pay__button"
-          size="l"
-          text="Go Payment"
-          icon="logo-icon"
-          :loading="loading"
-          @click.native="test"
-        />
-        <PaymentButton
-          class="amount__pay__button"
-          size="l"
-          text="Go Payment"
-          icon="logo-icon"
-          color="inactive"
-          :loading="true"
-          @click.native="test"
-        />
-        <PaymentVia />
-      </div>
-    </div>
-
-    <PaymentButton
-      v-for="(m, index) in modalList"
-      :key="index"
-      :text="m.name"
-      size="s"
-      :color="m.doneStatus ? 'primary' : 'cancel'"
-      @click.native="showModal(m.name)"
-    />
+    <PaymentIcon class="logo" path="logo-icon" />
     <PaymentTitle type="h3" html="Color Valiation" layout="c" />
     <ul class="color">
       <li v-for="n in 10" :key="n"></li>
     </ul>
-    <PaymentIcon class="icon" path="logo-icon" />
+
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Text Valiation" layout="c" />
     <PaymentTitle type="h2_g" html="Your Balance" icon="reload" />
     <PaymentTitle
       type="h3_g"
@@ -130,17 +49,64 @@
       html="balance is insufficient  for this transaction."
     />
 
-    <PaymentAmountBilled symbol="USDT" icon="usdt" price="1000.00" />
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Token Valiation" layout="c" />
+    <PaymentForm class="amount__form">
+      <input
+        v-model="legalCurrencyAmount"
+        class="price"
+        type="text"
+        placeholder="0"
+      />
+      <div class="selectwrap">
+        <PaymentIcon path="token-usdt" />
+        <select name="currency" v-model="selectedCurrency">
+          <option
+            v-for="(currency, key) in currencies"
+            :value="currency.name"
+            :key="key"
+          >
+            {{ currency.name }}
+          </option>
+        </select>
+      </div>
+    </PaymentForm>
+    <PaymentAmountBilled
+      class="amount__bill"
+      :symbol="receiveTokenSymbol"
+      icon="token-usdt"
+      :price="exchangedAmount"
+      :priceClass="{ inactive: requireUpdateExchange }"
+      size="big"
+    />
+    <PaymentAmountBilled
+      symbol="USDT"
+      icon="usdt"
+      price="1000.00"
+      networkIcon="network-avalanche"
+    />
     <PaymentAmountBilled
       title="Amount Billed"
       symbol="USDT"
       icon="usdt"
       price="1000.00"
+      networkIcon="network-binance"
+    />
+    <PaymentAmountBilled
+      title="Amount Billed"
+      symbol="USDT"
+      icon="network-unknown"
+      price="1000.00"
+      networkIcon="network-binance"
+      size="bg"
     />
     <PaymentAmountBilled
       symboltext="Tether USD"
       symbol="USDT"
       icon="usdt"
+      networkIcon="network-ethereum"
       :table="[
         {
           title: 'Balance',
@@ -154,53 +120,43 @@
         }
       ]"
     />
-    <div class="d-payboxwrap">
-      <PaymentTable
-        :table="[
-          {
-            title: 'Minimum received',
-            price: '',
-            text: '1,000 USDT'
-          },
-          {
-            title: 'Minimum received',
-            price: '1,000',
-            text: 'USDT'
-          }
-        ]"
-      /><br /><br />
-      <PaymentTransaction
-        type="loading"
-        title="Waiting for Confimation"
-        text="Pay 1000.00 USDT for 1000.00 USDT"
-        explorerUrl="https://www.google.com/"
-        :link="{
-          url: 'https://www.google.com/',
-          title: 'Processing...',
-          color: 'inactive'
-        }"
-      /><br /><br />
-      <PaymentTransaction
-        type="success"
-        title="Transaction Submitted"
-        explorerUrl="https://www.google.com/"
-        :link="{
-          url: 'https://www.google.com/',
-          title: 'Back to Payee’s Services'
-        }"
-      /><br /><br />
-      <PaymentTransaction
-        type="dismiss"
-        cap="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."
-        explorerUrl="https://www.google.com/"
-        :link="{
-          url: 'https://www.google.com/',
-          title: 'Back to Payee’s Services'
-        }"
-      />
-
-      <PaymentVia />
-    </div>
+    <PaymentAmountBilled
+      symbol="symbol"
+      icon=""
+      price="0000.00"
+      networkIcon=""
+      :skelton="true"
+    />
+    <PaymentAmountBilled
+      symbol="symbol"
+      icon=""
+      price="0000.00"
+      networkIcon=""
+      size="bg"
+      :skelton="true"
+    />
+    <PaymentAmountBilled
+      symboltext="symboltext"
+      symbol="symbol"
+      icon=""
+      networkIcon=""
+      :skelton="true"
+      :table="[
+        {
+          title: 'Balance',
+          price: '0000',
+          symbol: 'USDT'
+        },
+        {
+          title: 'Balance',
+          price: '0000',
+          symbol: 'USDT'
+        }
+      ]"
+    />
+    <PaymentToken symbol="USDT" icon="usdt" networkIcon="network-avalanche" />
+    <PaymentToken symbol="USDT" icon="usdt" networkIcon="network-avalanche" />
+    <PaymentToken symbol="USDT" icon="" :skelton="true" />
     <PaymentPrice symbol="USDT" cap="499 USDT equivalent" price="499.00" />
     <PaymentPrice
       symbol="USDT"
@@ -209,36 +165,125 @@
       status="error"
     />
 
-    <!-- <PaymentIdTable /> -->
+    <PaymentPrice
+      symbol="USDT"
+      cap="499 USDT equivalent"
+      price="00000.00"
+      status="error"
+      :skelton="true"
+    />
 
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Transaction Valiation" layout="c" />
+
+    <PaymentTransaction
+      type="loading"
+      title="Waiting for Confimation"
+      text="Pay 1000.00 USDT for 1000.00 USDT"
+      explorerUrl="https://www.google.com/"
+      :link="{
+        url: 'https://www.google.com/',
+        title: 'Processing...',
+        color: 'inactive'
+      }"
+    />
+    <PaymentTransaction
+      type="success"
+      title="Transaction Submitted"
+      explorerUrl="https://www.google.com/"
+      :link="{
+        url: 'https://www.google.com/',
+        title: 'Back to Payee’s Services'
+      }"
+    />
+    <PaymentTransaction
+      type="dismiss"
+      cap="The transaction cannot succeed due to error: execution reverted: PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT."
+      explorerUrl="https://www.google.com/"
+      :link="{
+        url: 'https://www.google.com/',
+        title: 'Back to Payee’s Services'
+      }"
+    />
+
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Other Valiation" layout="c" />
+    <PaymentTable
+      :table="[
+        {
+          title: 'Minimum received',
+          price: '',
+          text: '1,000 USDT'
+        },
+        {
+          title: 'Minimum received',
+          price: '1,000',
+          text: 'USDT'
+        }
+      ]"
+    />
     <PaymentForm error="Enter valid token address">
       <input type="text" placeholder="000000000" />
     </PaymentForm>
-    <PaymentSelectToken />
-    <PaymentToken symbol="USDT" icon="usdt" />
-    <PaymentAction icon="network-ethereum" text="Ethereum Main net" />
-    <PaymentAction icon="network-matic" text="Matic Main net" />
-    <PaymentAction icon="network-avalanche" text="Avalanche Main net" />
-    <PaymentAction icon="network-unknown" text="Unknown Main net" />
+
     <PaymentTab
       status="1"
       @changeToList="switchTab('list')"
       @changeToToken="switchTab('token')"
-    ></PaymentTab>
+    >
+      <PaymentSelectToken />
+    </PaymentTab>
+    <PaymentAction
+      class="amount__pay__action"
+      icon="warning"
+      text="Price Updated"
+    >
+      <PaymentButton text="Accept" size="s" @click.native="test" />
+    </PaymentAction>
+
+    <PaymentAction icon="network-ethereum" text="Ethereum Main net"
+      ><PaymentButton text="Change" size="s" @click.native="test"
+    /></PaymentAction>
+    <PaymentAction icon="network-matic" text="Matic Main net"
+      ><PaymentButton text="Change" size="s" @click.native="test"
+    /></PaymentAction>
+    <PaymentAction icon="network-avalanche" text="Avalanche Main net"
+      ><PaymentButton text="Change" size="s" @click.native="test"
+    /></PaymentAction>
+    <PaymentAction icon="network-unknown" text="Unknown Main net"
+      ><PaymentButton text="Change" size="s" @click.native="test"
+    /></PaymentAction>
 
     <PaymentNav :list="['Lists', 'Tokens']" :active="0" />
+
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Button Valiation" layout="c" />
     <div class="button">
-      <div class="pay__btnwrap">
-        <PaymentButton text="Confirm Wallet" color="inactive" />
-      </div>
-      <div class="pay__btnwrap">
-        <PaymentButton text="Confirm Pay" />
-      </div>
-      <div class="pay__btnwrap">
-        <PaymentButton text="Button Text" />
-        <PaymentButton color="cancel" text="Button Text" />
-      </div>
-      <PaymentButton size="l" text="MetaMask" icon="wallet-metamask" />
+      <PaymentButton
+        class="amount__pay__button"
+        size="l"
+        text="Go Payment"
+        icon="logo-icon"
+        :loading="loading"
+        @click.native="test"
+      />
+      <PaymentButton
+        class="amount__pay__button"
+        size="l"
+        text="Go Payment"
+        icon="logo-icon"
+        color="inactive"
+        :loading="true"
+        @click.native="test"
+      />
+      <PaymentVia />
+
       <PaymentButton
         size="l"
         text="MetaMask"
@@ -251,27 +296,37 @@
         text="WalletConnect"
         icon="wallet-walletconnect"
       />
-      <PaymentButton size="l" text="Go Payment" icon="logo-icon" />
-
-      <PaymentButton size="l" text="Button Text" />
-      <PaymentButton text="Button Text" />
+      <PaymentButton size="l" text="MetaMask" icon="wallet-metamask" />
       <PaymentButton
         text="Binance Smart Chain Mainnet"
         icon="usdt"
         layout="left"
       />
-      <PaymentButton size="icon" color="icon" icon="usdt" />
-      <PaymentButton size="s" icon="light" text="aaaaaa" />
       <PaymentButton
-        size="s"
-        color="secondary"
-        icon="light"
-        text="aaaaaa"
+        text="Binance Smart Chain Mainnet"
+        icon="usdt"
         layout="reverse"
       />
-      <PaymentButton size="s" color="cancel" icon="light" text="aaaaaa" />
-      <PaymentButton size="s" color="inactive" icon="light" text="aaaaaa" />
-      <PaymentButton size="s" color="danger" icon="light" text="aaaaaa" />
+      <PaymentButton size="icon" color="icon" icon="usdt" />
+      <PaymentButton size="s" icon="" text="Mini size button" />
+      <PaymentButton color="secondary" icon="light" text="Color secondary" />
+      <PaymentButton color="cancel" text="Color cancel" />
+      <PaymentButton color="inactive" text="Color inactive" />
+      <PaymentButton color="danger" text="Color danger" />
+    </div>
+    <br />
+    <br />
+
+    <PaymentTitle type="h3" html="Modal Valiation" layout="c" />
+    <div class="modal">
+      <PaymentButton
+        v-for="(m, index) in modalList"
+        :key="index"
+        :text="m.name"
+        size="s"
+        :color="m.doneStatus ? 'primary' : 'cancel'"
+        @click.native="showModal(m.name)"
+      />
     </div>
   </div>
 </template>
@@ -454,11 +509,15 @@ export default {
   &__title {
     margin-bottom: 2rem;
   }
-
+  .logo {
+    max-width: 4rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .color {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
+    gap: 2rem;
     li {
       border: 1px solid var(--SubText);
       border-radius: 100%;
@@ -497,6 +556,17 @@ export default {
       }
       &:nth-child(10) {
         background: var(--Button3);
+      }
+    }
+  }
+
+  .button,
+  .modal {
+    @include flex(flex-start, flex-start);
+    gap: 0.5rem;
+    &::v-deep {
+      .button.size_m {
+        width: 100%;
       }
     }
   }
