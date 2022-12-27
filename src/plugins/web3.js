@@ -326,47 +326,51 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         )
       ) {
         const isMainnet = [1, 56, 137, 43114, 2000].includes(chainId)
+        const dogeChainId = isMainnet ? 2000 : 568
         const web3Instance = new Web3()
-        const rpcUrl = NETWORKS[isMainnet ? 2000 : 568].rpcUrl
+        const rpcUrl = NETWORKS[dogeChainId].rpcUrl
         web3Instance.setProvider(rpcUrl)
-        const supportedChainDefaultTokens = getNetworkDefaultTokens(
-          isMainnet ? 2000 : 568
-        )
+        const supportedChainDefaultTokens = getNetworkDefaultTokens(dogeChainId)
 
         tokens = tokens.concat(
           await Promise.all(
-            Object.values(supportedChainDefaultTokens).map(async (defaultToken) => {
-              const tokenContract =
-                defaultToken.address === null
-                  ? null
-                  : new web3Instance.eth.Contract(
-                      defaultToken.abi,
-                      defaultToken.address
-                    )
-              const decimal =
-                tokenContract === null
-                  ? 18
-                  : parseInt(await tokenContract.methods.decimals().call(), 10)
-              const balance = await getBalance(
-                web3Instance,
-                walletAddress,
-                tokenContract
-              )
-              return {
-                chain: NETWORKS[chainId].name,
-                chainId,
-                networkIcon: NETWORKS[chainId].iconPath,
-                name: defaultToken.name,
-                symbol: defaultToken.symbol,
-                decimal: decimal,
-                address: defaultToken.address,
-                balance: balance,
-                icon: defaultToken.icon,
-                path: defaultToken.iconPath,
-                type: defaultToken.iconType,
-                isShitCoin: false
+            Object.values(supportedChainDefaultTokens).map(
+              async (defaultToken) => {
+                const tokenContract =
+                  defaultToken.address === null
+                    ? null
+                    : new web3Instance.eth.Contract(
+                        defaultToken.abi,
+                        defaultToken.address
+                      )
+                const decimal =
+                  tokenContract === null
+                    ? 18
+                    : parseInt(
+                        await tokenContract.methods.decimals().call(),
+                        10
+                      )
+                const balance = await getBalance(
+                  web3Instance,
+                  walletAddress,
+                  tokenContract
+                )
+                return {
+                  chain: NETWORKS[dogeChainId].name,
+                  dogeChainId,
+                  networkIcon: NETWORKS[dogeChainId].iconPath,
+                  name: defaultToken.name,
+                  symbol: defaultToken.symbol,
+                  decimal: decimal,
+                  address: defaultToken.address,
+                  balance: balance,
+                  icon: defaultToken.icon,
+                  path: defaultToken.iconPath,
+                  type: defaultToken.iconType,
+                  isShitCoin: false
+                }
               }
-            })
+            )
           )
         )
       }
