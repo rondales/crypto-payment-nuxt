@@ -113,8 +113,7 @@
                 <td>
                   {{ record.payment_token }}
                 </td>
-                <td>
-                  {{ record.order_code }}
+                <td v-html="wrapOrderCode(record.order_code)">
                 </td>
                 <td>
                   {{ record.updated_at }}
@@ -238,6 +237,11 @@ export default {
         }
         return url
       }    
+    },
+    wrapOrderCode() {
+      return (orderCode) => {
+        return orderCode.replace(/.{16}/g, "$&" + "<br>")
+      }
     }
   },
   methods: {
