@@ -112,6 +112,9 @@ export default {
         amount: this.formatAmount(receiveResponse.data.amount)
       })
       this.$store.dispatch('payment/updateAllowCurrencies', receiveResponse.data.allow_currencies)
+      if (receiveResponse.data.is_cancelled) {
+        return
+      }
       this.$emit('incrementProgressCompletedSteps')
       this.apiPublishTransaction().then(() => {
         this.$emit('updateProgressTotalSteps', 5)
@@ -129,51 +132,31 @@ export default {
         if (error.response.status === 400) {
           if (error.response.data.errors.includes(2110)) {
             this.apiGetTransactionData().then((transactionResponse) => {
+            this.$emit('incrementProgressCompletedSteps')
+            this.$store.dispatch('payment/updateAmount', this.formatAmount(transactionResponse.data.base_amount))
+            if (transactionResponse.data.base_amount == null) {
+              this.showComponent = 'PaymentAmount'
+              this.$emit('updateProgressTotalSteps', 7)
               this.$emit('incrementProgressCompletedSteps')
-              this.$store.dispatch('payment/updateAmount', this.formatAmount(transactionResponse.data.base_amount))
-              this.apiGetTransactionState().then((response) => {
+            } else {
+              if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
+                this.$store.dispatch('payment/updateAgreeRiskStatus', true)
                 this.$emit('incrementProgressCompletedSteps')
-                switch(response.data.state) {
-                  case 'unset_base_amount':
-                    this.showComponent = 'PaymentAmount'
-                    this.$emit('updateProgressTotalSteps', 7)
-                    this.$emit('incrementProgressCompletedSteps')
-                    break;
-                  case 'unset_email':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
-                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
-                      this.$emit('incrementProgressCompletedSteps')
-                      this.$emit('updateProgressTotalSteps', 5)
-                      this.$router.replace({
-                        name: 'ww-wallets',
-                        params: { token: this.paymentToken },
-                        query: this.$route.query
-                      })
-                    } else {
-                      this.$emit('updateProgressTotalSteps', 4)
-                      this.$router.replace({
-                        name: 'ww-wallets',
-                        params: { token: this.paymentToken },
-                        query: this.$route.query
-                      })
-                    }
-                    break;
-                  case 'unset_token':
-                    if (this.isAccessFromDeepLink || this.isAccessFromRegeneratedUrl) {
-                      this.$store.dispatch('payment/updateAgreeRiskStatus', true)
-                    }
-                    this.$emit('incrementProgressCompletedSteps')
-                    this.$emit('updateProgressTotalSteps', 5)
-                    this.$router.replace({
-                      name: 'ww-wallets',
-                      params: { token: this.paymentToken },
-                      query: this.$route.query
-                    })
-                    break;
-                }
-              }).catch(() => {
-                this.showErrorModal('Please try again after a while.')
-              })
+                this.$emit('updateProgressTotalSteps', 5)
+                this.$router.replace({
+                  name: 'ww-wallets',
+                  params: { token: this.paymentToken },
+                  query: this.$route.query
+                })
+              } else {
+                this.$emit('updateProgressTotalSteps', 4)
+                this.$router.replace({
+                  name: 'ww-wallets',
+                  params: { token: this.paymentToken },
+                  query: this.$route.query
+                })
+              }
+            }
             }).catch((error) => {
               console.log(error)
               this.showErrorModal('Please try again after a while.')
@@ -190,7 +173,7 @@ export default {
         }
       })
     }).catch((error) => {
-      if (error.response.status === 400) {
+      if (error.response.status === 400  && error.response.data.errors.includes(2022)) {
         this.showErrorModal(
           errorCodeList[
             error.response.data.errors.shift()
