@@ -1,10 +1,30 @@
 <template>
   <div :class="classes">
-    <PaymentIcon :path="icon" :type="iconType" />
-    <div class="textwrap">
-      <p class="title"><span v-html="title"></span></p>
-      <p class="symbol non-translate"><span v-html="symbol"></span></p>
-      <p class="symboltext non-translate"><span v-html="symboltext"></span></p>
+    <div class="token__icon">
+      <PaymentIcon
+        class="tokenicon"
+        :class="{ skelton: skelton }"
+        :path="icon"
+        :type="iconType"
+        :url="iconUrl"
+      />
+      <PaymentIcon
+        v-if="networkIcon"
+        class="networkicon"
+        :path="networkIcon"
+        type="svg"
+      />
+    </div>
+    <div class="token__textwrap">
+      <p class="title" :class="{ skelton: skelton }">
+        <span v-html="title"></span>
+      </p>
+      <p class="symbol non-translate" :class="{ skelton: skelton }">
+        <span v-html="symbol"></span>
+      </p>
+      <p class="symboltext non-translate" :class="{ skelton: skelton }">
+        <span v-html="symboltext"></span>
+      </p>
     </div>
   </div>
 </template>
@@ -24,9 +44,13 @@ export default {
       type: String,
       default: 'svg'
     },
+    iconUrl: {
+      type: String,
+      default: ''
+    },
     symbol: {
       type: String,
-      default: 'USDT'
+      default: ''
     },
     title: {
       type: String,
@@ -36,9 +60,21 @@ export default {
       type: String,
       default: ''
     },
+    chainName: {
+      type: String,
+      default: ''
+    },
     size: {
       type: String,
       default: ''
+    },
+    networkIcon: {
+      type: String,
+      default: ''
+    },
+    skelton: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -65,49 +101,64 @@ export default {
   @include flex(flex-start, center);
   width: auto;
   &.s {
-    .svg {
-      width: 1.5rem;
-      height: 1.5rem;
-      margin-right: 0.5rem;
-    }
-  }
-  .svg {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 1rem;
-    &:v-deep {
-      svg {
-        height: 100%;
-        image {
-          width: 100%;
-          height: 100%;
+    .token {
+      &__icon {
+        margin-right: 0.5rem;
+        .tokenicon {
+          width: 1.5rem;
+          height: 1.5rem;
         }
       }
     }
   }
-  &::v-deep {
-    p {
-      line-height: 1;
+  &__icon {
+    position: relative;
+    margin-right: 1rem;
+    .tokenicon {
+      width: 2rem;
+      height: 2rem;
+      &:v-deep {
+        svg {
+          height: 100%;
+          image {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+    .networkicon {
+      position: absolute;
+      width: 1.2rem;
+      height: 1.2rem;
+      bottom: -0.3rem;
+      right: -0.3rem;
+      border-radius: 100%;
     }
   }
-  .textwrap {
+  &__textwrap {
+    &::v-deep {
+      p {
+        line-height: 1;
+      }
+    }
     * + * {
       margin-top: 0.3rem;
     }
-  }
-  .title {
-    @include font(10px, 400, $ls, 1, $en_go);
-  }
-  .symbol {
-    @include font(1rem, 600, $ls, 1, $en_go);
-    @include media(sp) {
+    .title {
+      @include font(10px, 400, $ls, 1, $en_go);
+    }
+    .symbol {
+      @include font(1rem, 600, $ls, 1, $en_go);
       @include media(sp) {
-        font-size: 1.2rem;
+        @include media(sp) {
+          font-size: 1.2rem;
+        }
       }
     }
-  }
-  .symboltext {
-    @include font(10px, 400, $ls, 1, $en_go);
+    .symboltext {
+      @include font(10px, 400, $ls, 1, $en_go);
+    }
   }
 }
 </style>

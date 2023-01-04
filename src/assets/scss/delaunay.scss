@@ -1890,3 +1890,39 @@ body.is-mounted {
   margin: 1rem;
   padding: 4px;
 }
+
+.skelton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--Base3);
+  border-radius: 1rem;
+  &::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(#fff, 0.2),
+      transparent
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: skeleton-animation 1.2s linear infinite;
+    z-index: 10;
+  }
+  span {
+    opacity: 0;
+  }
+
+  @keyframes skeleton-animation {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

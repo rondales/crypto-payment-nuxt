@@ -4,23 +4,29 @@
       <PaymentToken
         :icon="icon"
         :icon-type="iconType"
+        :icon-url="iconUrl"
         :title="title"
         :symbol="symbol"
         :symboltext="symboltext"
+        :chain-name="chainName"
         :size="tokenSize"
+        :networkIcon="networkIcon"
+        :skelton="skelton"
       />
     </div>
     <div class="right">
       <div v-if="table" class="balance">
         <dl class="non-translate" v-for="(dl, index) in table" :key="index">
-          <dt><span v-html="dl.title"></span></dt>
-          <dd>
+          <dt :class="{ skelton: skelton }"><span v-html="dl.title"></span></dt>
+          <dd :class="{ skelton: skelton }">
             <span class="balance_price" v-html="dl.price"></span>
             <span class="balance_symbol" v-html="dl.symbol"></span>
           </dd>
         </dl>
       </div>
-      <p v-else class="price"><span v-html="price"></span></p>
+      <p v-else class="price" :class="{ skelton: skelton }">
+        <span v-html="price"></span>
+      </p>
     </div>
   </div>
 </template>
@@ -41,15 +47,23 @@ export default {
       type: String,
       default: 'svg'
     },
+    iconUrl: {
+      type: String,
+      default: ''
+    },
     symbol: {
       type: String,
-      default: 'USDT'
+      default: ''
     },
     title: {
       type: String,
       default: ''
     },
     symboltext: {
+      type: String,
+      default: ''
+    },
+    chainName: {
       type: String,
       default: ''
     },
@@ -66,6 +80,14 @@ export default {
     size: {
       type: String,
       default: ''
+    },
+    networkIcon: {
+      type: String,
+      default: ''
+    },
+    skelton: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -117,6 +139,14 @@ export default {
   &.bg {
     background: $gradation-pale;
     cursor: pointer;
+    .skelton {
+      background-color: #aaa;
+    }
+    &::v-deep {
+      .skelton {
+        background-color: #aaa;
+      }
+    }
   }
   &.big {
     @include flex(center, center);

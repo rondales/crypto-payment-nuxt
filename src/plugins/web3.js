@@ -36,6 +36,7 @@ import MerchantFactoryContract from '@/contracts/merchant_factory'
 import { UniswapVersion } from 'simple-uniswap-sdk'
 import { EXCHANGE_ROUTERS } from '@/constants'
 import bestRoute from '@/utils/best-route'
+import axios from 'axios'
 
 export default {
   install(Vue) {
@@ -163,8 +164,223 @@ const getAccountData = async function (web3, chainId) {
   }
 }
 
-const getDefaultTokens = async function (web3, chainId, walletAddress) {
+const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNetworks = null) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
+  const supportedNetworkMainnet = {
+    1: 'ethereum',
+    56: 'bsc',
+    137: 'matic',
+    43114: 'avalanche'
+  }
+  const supportedNetworkTestnet = {
+    5: 'goerli',
+    97: 'bsc_testnet'
+  }
+
+  const isSupportedNetworkMainnet =
+    Object.keys(supportedNetworkMainnet).includes(chainId.toString()) ||
+    chainId == 2000
+  const isSupportedNetworkTestnet = Object.keys(
+    supportedNetworkTestnet
+  ).includes(chainId.toString()) || chainId == 568
+
+  if (isSupportedNetworkMainnet || isSupportedNetworkTestnet) {
+    try {
+      let isSupportNetWork = isSupportedNetworkMainnet
+        ? supportedNetworkMainnet
+        : supportedNetworkTestnet
+      let tokens = []
+      for (const supportedChainId in isSupportNetWork) {
+        if (
+          merchantNetworks &&
+          merchantNetworks.find(
+            (merchantChainId) => merchantChainId == supportedChainId
+          ) == undefined
+        )
+          continue
+
+        let response = null
+        try {
+          response = await axios.get(
+            `${process.env.VUE_APP_API_BASE_URL}/api/v1/payment/tokens-held?network=${isSupportNetWork[supportedChainId]}&address=${walletAddress}`
+          )
+        } catch (error) {
+          console.log(error)
+          continue
+        }
+
+        if (response == null) continue
+
+        const { data } = response
+        const tokensFromServer = Object.values(data)
+        const balanceTokens = {}
+
+        if (tokensFromServer.length == 0) continue
+
+        for (let i = 0; i < tokensFromServer.length; i++) {
+          const balance = tokensFromServer[i]
+          balanceTokens[balance.address.toLowerCase()] = balance
+          balanceTokens[balance.address.toLowerCase()].isSupported = false
+        }
+
+        const supportedChainDefaultTokens = getNetworkDefaultTokens(
+          parseInt(supportedChainId)
+        )
+
+        const web3Instance = new Web3()
+        const rpcUrl = NETWORKS[supportedChainId].rpcUrl
+        web3Instance.setProvider(rpcUrl)
+
+        tokens = tokens.concat(
+          (
+            await Promise.all(
+              Object.values(supportedChainDefaultTokens).map(async (defaultToken) => {
+                const addressDefaultToken =
+                  defaultToken.address === null ? '-' : defaultToken.address
+                const token = balanceTokens[addressDefaultToken.toLowerCase()]
+                if (!token) return null
+                balanceTokens[
+                  addressDefaultToken.toLowerCase()
+                ].isSupported = true
+
+                const tokenContract =
+                  defaultToken.address === null
+                    ? null
+                    : new web3Instance.eth.Contract(
+                        defaultToken.abi,
+                        defaultToken.address
+                      )
+                const balance = await getBalance(
+                  web3Instance,
+                  walletAddress,
+                  tokenContract
+                )
+
+                return {
+                  chain: NETWORKS[supportedChainId].name,
+                  chainId: supportedChainId,
+                  networkIcon: NETWORKS[supportedChainId].iconPath,
+                  name: defaultToken.name,
+                  symbol: defaultToken.symbol,
+                  decimal: token.decimals.toString(),
+                  address: defaultToken.address,
+                  balance,
+                  icon: defaultToken.icon,
+                  path: defaultToken.iconPath,
+                  type: defaultToken.iconType,
+                  isShitCoin: token.isShitCoin,
+                  logo: token.logo
+                }
+              })
+            )
+          ).filter((item) => item !== null)
+        )
+
+        const unsupportedTokens = Object.values(balanceTokens).filter(
+          (token) => !token.isSupported && !token.isShitCoin
+        )
+        tokens = tokens.concat(
+          (
+            await Promise.all(
+              unsupportedTokens.map(async (token) => {
+                try {
+                  const tokenContract =
+                    token.address === '-'
+                      ? null
+                      : new web3Instance.eth.Contract(Erc20Abi, token.address)
+                  const balance = await getBalance(
+                    web3Instance,
+                    walletAddress,
+                    tokenContract
+                  )
+
+                  return {
+                    chain: NETWORKS[supportedChainId].name,
+                    chainId: supportedChainId,
+                    networkIcon: NETWORKS[supportedChainId].iconPath,
+                    name: token.name,
+                    symbol: token.symbol,
+                    decimal: token.decimals.toString(),
+                    address: token.address,
+                    balance,
+                    icon: require('@/assets/images/symbol/unknown.svg'),
+                    path: 'crypto_currency/unknown',
+                    type: 'png',
+                    isShitCoin: token.isShitCoin,
+                    logo: token.logo
+                  }
+                } catch (error) {
+                  console.log(error)
+                  return null
+                }
+              })
+            )
+          ).filter((item) => item != null)
+        )
+      }
+
+      if (
+        merchantNetworks &&
+        merchantNetworks.find(
+          (merchantChainId) => merchantChainId == 568 || merchantChainId == 2000
+        )
+      ) {
+        const isMainnet = [1, 56, 137, 43114, 2000].includes(chainId)
+        const dogeChainId = isMainnet ? 2000 : 568
+        const web3Instance = new Web3()
+        const rpcUrl = NETWORKS[dogeChainId].rpcUrl
+        web3Instance.setProvider(rpcUrl)
+        const supportedChainDefaultTokens = getNetworkDefaultTokens(dogeChainId)
+
+        tokens = tokens.concat(
+          await Promise.all(
+            Object.values(supportedChainDefaultTokens).map(
+              async (defaultToken) => {
+                const tokenContract =
+                  defaultToken.address === null
+                    ? null
+                    : new web3Instance.eth.Contract(
+                        defaultToken.abi,
+                        defaultToken.address
+                      )
+                const decimal =
+                  tokenContract === null
+                    ? 18
+                    : parseInt(
+                        await tokenContract.methods.decimals().call(),
+                        10
+                      )
+                const balance = await getBalance(
+                  web3Instance,
+                  walletAddress,
+                  tokenContract
+                )
+                return {
+                  chain: NETWORKS[dogeChainId].name,
+                  dogeChainId,
+                  networkIcon: NETWORKS[dogeChainId].iconPath,
+                  name: defaultToken.name,
+                  symbol: defaultToken.symbol,
+                  decimal: decimal,
+                  address: defaultToken.address,
+                  balance: balance,
+                  icon: defaultToken.icon,
+                  path: defaultToken.iconPath,
+                  type: defaultToken.iconType,
+                  isShitCoin: false
+                }
+              }
+            )
+          )
+        )
+      }
+
+      return tokens
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const userTokens = Promise.all(
     Object.values(defaultTokens).map(async (defaultToken) => {
       const tokenContract =
@@ -176,16 +392,19 @@ const getDefaultTokens = async function (web3, chainId, walletAddress) {
         tokenContract === null
           ? 18
           : parseInt(await tokenContract.methods.decimals().call(), 10)
-        const balance = await getBalance(web3, walletAddress, tokenContract)
-        return {
-          name: defaultToken.name,
-          symbol: defaultToken.symbol,
-          decimal: decimal,
-          address: defaultToken.address,
-          balance: balance,
-          icon: defaultToken.icon,
-          path: defaultToken.iconPath,
-          type: defaultToken.iconType
+      const balance = await getBalance(web3, walletAddress, tokenContract)
+      return {
+        chain: NETWORKS[chainId].name,
+        chainId,
+        networkIcon: NETWORKS[chainId].iconPath,
+        name: defaultToken.name,
+        symbol: defaultToken.symbol,
+        decimal: decimal,
+        address: defaultToken.address,
+        balance: balance,
+        icon: defaultToken.icon,
+        path: defaultToken.iconPath,
+        type: defaultToken.iconType
         }
       } catch (err) {
         console.log(err)
