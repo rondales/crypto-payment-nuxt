@@ -8,6 +8,7 @@
       size="big"
     />
     <PaymentTransaction
+      v-if="isStatusProcessing || isStatusSucceeded || isStatusFailured"
       class="result__transaction"
       :type="transactionType"
       :title="transactionTitle"
@@ -22,6 +23,12 @@
       :icon="merchantReceiveTokenIcon"
       :price="cashbackAmount | formatAmount"
     />
+    <p class="title" v-if="isCancelledByMerchant">This payment has been cancelled, 
+      please contact the Merchant for more information.
+      <br>
+      <br>
+      Payment Token: {{ this.$route.params.token }}
+    </p>
     <div v-if="isStatusProcessing || isStatusSucceeded">
       <PaymentTitle
         class="result__title"
@@ -78,13 +85,6 @@ import {
   STATUS_RESULT_SUCCESS
 } from '@/constants'
 import {
-  EthereumTokens as EthereumReceiveTokens,
-  BscTokens as BscReceiveTokens,
-  MaticTokens as MaticReceiveTokens,
-  AvalancheTokens as AvalacheReceiveTokens,
-  DogeTokens as DogeReceiveTokens
-} from '@/contracts/receive_tokens'
-import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
@@ -117,7 +117,8 @@ export default {
       successReturnUrl: null,
       failureReturnUrl: null,
       email: null,
-      status: STATUS_PROCESSING,
+      status: null,
+      isCancelledByMerchant: false,
       transactionType: 'loading',
       transactionTitle: 'Waiting for tx result',
       resultPollingTimer: null,
@@ -159,19 +160,18 @@ export default {
     paymentToken() {
       return this.$route.params.token
     },
-    merchantReceiveTokens() {
-      if (this.isPaidEthereum) {
-        return EthereumReceiveTokens
-      } else if (this.isPaidBinance) {
-        return BscReceiveTokens
-      } else if (this.isPaidMatic) {
-        return MaticReceiveTokens
-      } else if (this.isPaidAvalanche) {
-        return AvalacheReceiveTokens
-      } else if (this.isPaidDoge) {
-        return DogeReceiveTokens
-      } else {
-        return {}
+    RECEIVED_TOKEN_ICON_PATH() {
+      return {
+        USDT: 'crypto_currency/received_token/usdt',
+        USDC: 'crypto_currency/received_token/usdc',
+        DAI: 'crypto_currency/received_token/dai',
+        JPYC: 'crypto_currency/received_token/jpyc',
+        WETH: 'crypto_currency/received_token/weth',
+        ETH: 'crypto_currency/received_token/eth',
+        BNB: 'crypto_currency/received_token/bnb',
+        MATIC: 'crypto_currency/received_token/matic',
+        AVAX: 'crypto_currency/received_token/avax',
+        DOGE: 'crypto_currency/received_token/doge'
       }
     },
     paidNetworkDefaultTokens() {
@@ -190,9 +190,8 @@ export default {
       }
     },
     merchantReceiveTokenIcon() {
-      const tokens = this.merchantReceiveTokens
-      return this.merchantReceiveSymbol in tokens
-        ? tokens[this.merchantReceiveSymbol].iconPath
+      return this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
+        ? this.RECEIVED_TOKEN_ICON_PATH[this.$store.state.payment.symbol] 
         : 'crypto_currency/unknown-small'
     },
     userPaidTokenIcon() {
@@ -327,6 +326,7 @@ export default {
       this.transactionHash = data.transaction_address
       this.successReturnUrl = data.succeeded_return_url
       this.failureReturnUrl = data.failured_return_url
+      this.isCancelledByMerchant = data.is_cancelled
       this.email = data.email
       this.status = data.status
       this.$store.dispatch('payment/update', {
@@ -343,7 +343,7 @@ export default {
       this.apiGetTransaction().then((response) => {
         this.setApiResultData(response.data)
         this.handleAddMerchantSiteRedirectParam()
-        if(response.data.status == STATUS_RESULT_FAILURE) {
+        if(response.data.status == STATUS_RESULT_FAILURE || response.data.is_cancelled) {
           this.sendFixPaymentToParentWindow(2, {payment_token: this.$route.params.token})
           clearTimeout(this.resultPollingTimer)
         }
@@ -411,20 +411,9 @@ export default {
     Decimal.set({ toExpNeg: -20 })
     this.pollingTransactionResult()
     this.handleMerchantSiteRedirect()
-    this.$emit('incrementProgressCompletedSteps')
     setTimeout(() => {
       this.$emit('updateInitializingStatus', false)
     }, 1500)
-
-    // this.apiGetTransaction().then((response) => {
-    //   this.setApiResultData(response.data)
-    //   this.handleMerchantSiteRedirect()
-    //   this.handleAddMerchantSiteRedirectParam()
-    //   this.$emit('incrementProgressCompletedSteps')
-      // setTimeout(() => {
-      //   this.$emit('updateInitializingStatus', false)
-      // }, 1500)
-    // })
   },
   beforeDestroy() {
     clearTimeout(this.resultPollingTimer)
@@ -461,6 +450,19 @@ export default {
     margin-top: 2rem;
   }
 }
+
+.title {
+    margin-bottom: 1rem;
+    @include font(1rem, 400, $ls, $lh, $en_go);
+    text-align: center;
+    color: var(--Text);
+    // br {
+    // display: none;
+    // @include media(sp) {
+    //   display: block;
+    // }
+    // }
+  }
 .openOriginalBrowser {
   @include flex(center, center);
   gap: 1rem;

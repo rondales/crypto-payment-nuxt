@@ -465,8 +465,8 @@ export default {
         }
       )
     },
-    apiGetTransactionStatus() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/status`
+    apiGetTransaction() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
         params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
@@ -610,14 +610,9 @@ export default {
      */
     handlePay() {
       if (this.expired) return
-      this.apiGetTransactionStatus().then((response) => {
-        if (
-          [
-            STATUS_PROCESSING,
-            STATUS_RESULT_FAILURE,
-            STATUS_RESULT_SUCCESS
-          ].includes(response.data.status)
-        ) {
+      this.apiGetTransaction().then((response) => {
+        if ([STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS].includes(response.data.status) 
+          || response.data.is_cancelled == true) {
           this.$router.push({
             name: 'result',
             params: { token: this.paymentToken }

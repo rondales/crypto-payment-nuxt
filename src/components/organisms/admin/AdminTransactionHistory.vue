@@ -82,11 +82,13 @@
             <thead>
               <tr>
                 <th>Status</th>
+                <th>Payment Token</th>
                 <th>Order ID</th>
                 <th>Time</th>
                 <th>Transaction ID</th>
                 <th>Network</th>
                 <th>Transaction Amount</th>
+                <th>Merchant Cancelled</th>
               </tr>
             </thead>
             <tbody v-if="summaries.records.length">
@@ -109,23 +111,28 @@
                   </div>
                 </td>
                 <td>
-                  {{ record.order_code }}
+                  {{ record.payment_token }}
+                </td>
+                <td v-html="wrapOrderCode(record.order_code)">
                 </td>
                 <td>
                   {{ record.updated_at }}
                 </td>
-                <td>
-                  <a
+                <td class="center">
+                  <a class="link"
                     :href="scanSiteUrl(record.network_type, record.transaction_address)"
-                    v-html="wrapScanSiteUrl(record.network_type, record.transaction_address)"
+                    v-html="wrapScanSiteUrl(record.transaction_address)"
                     target="_blank"
                   ></a>
                 </td>
-                <td>
+                <td class="center">
                   {{ network(record.network_type) }}
                 </td>
-                <td>
+                <td class="center">
                   {{ record.base_amount | formatAmount }} {{ record.base_symbol }}
+                </td>
+                <td class="center">
+                  {{ record.is_cancelled ? "Yes" : "No" }}
                 </td>
               </tr>
             </tbody>
@@ -223,15 +230,17 @@ export default {
       }
     },
     wrapScanSiteUrl() {
-      return (chainId, transactionHash) => {
-        const url = this.scanSiteUrl(chainId, transactionHash)
-        if (url.length >= 50) {
-          const prefix = url.slice(0, 50)
-          const sufix = url.slice(50)
-          return `${prefix}<br>${sufix}`
-        } else {
-          return url
+      return (transactionHash) => {
+        let url = ''
+        if (transactionHash) {
+          url = '...' + transactionHash.slice(-5)
         }
+        return url
+      }    
+    },
+    wrapOrderCode() {
+      return (orderCode) => {
+        return orderCode.replace(/.{16}/g, "$&" + "<br>")
       }
     }
   },
@@ -591,6 +600,12 @@ change the style.scss to import style.scss directly under the scss directory.
       scrollbar-width: none;
       margin-bottom: 0;
     }
+    .link {
+      color: #5390f2;
+    }
+    .center {
+      text-align: center;
+    }
     thead,tbody{
       width: 100%;
       tr{
@@ -636,37 +651,49 @@ change the style.scss to import style.scss directly under the scss directory.
           overflow-wrap: break-word;
           font-weight: 100;
           &:nth-child(1){
-            width: 22.22vw;
+            width: 18vw;
             @include media(sp) {
               width:200px;
             }
           }
           &:nth-child(2){
-            width: 11.111vw;
+            width: 20vw;
             @include media(sp) {
               width:200px;
             }
           }
           &:nth-child(3){
-            width: 11.111vw;
+            width: 15vw;
             @include media(sp) {
               width:200px;
             }
           }
           &:nth-child(4){
-            width: 27.77vw;
+            width: 12vw;
             @include media(sp) {
               width:200px;
             }
           }
           &:nth-child(5){
-            width: 11.111vw;
+            width: 12vw;
             @include media(sp) {
               width:200px;
             }
           }
           &:nth-child(6){
-            width: 16.666vw;
+            width: 10vw;
+            @include media(sp) {
+              width:200px;
+            }
+          }
+          &:nth-child(7){
+            width: 10vw;
+            @include media(sp) {
+              width:200px;
+            }
+          }
+          &:nth-child(8){
+            width: 4.22vw;
             @include media(sp) {
               width:200px;
             }

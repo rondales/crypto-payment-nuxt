@@ -13,7 +13,7 @@
   
 <script>
 import PaymentIndex from '@/components/templates/ww/PaymentIndex'
-import { STATUS_PUBLISHED } from '@/constants'
+import { STATUS_PUBLISHED, STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
 import Web3 from 'web3'
 
@@ -28,6 +28,7 @@ export default {
   watch: {
     $route() {
       this.checkAndSetAvailableNetworks()
+      this.handleRedirect()
     },
     chainId() {
       if (this.isRequestConnectedWalletPage) {
@@ -127,8 +128,8 @@ export default {
       }
       return this.axios.get(url, request)
     },
-    apiGetTransactionState() {
-      const url = `${this.API_BASE_URL}/api/v1/payment/transaction/state`
+    apiGetTransaction() {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
         params: new URLSearchParams([['payment_token', this.urlPaymentToken]])
       }
@@ -180,10 +181,10 @@ export default {
         })
     },
     handleRedirect() {
-      this.apiGetTransactionState().then((response) => {
+      this.apiGetTransaction().then((response) => {
         this.$refs.paymentIndex.incrementProgressCompletedSteps()
-        const state = response.data.state
-        if (state === 'close' && !this.isRequestResultPage) {
+        if (([STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS].includes(response.data.status)
+          || response.data.is_cancelled == true) && !this.isRequestResultPage) {
           return this.$router.replace({
             name: 'ww-result',
             params: { token: this.urlPaymentToken },
@@ -192,8 +193,9 @@ export default {
         }
         if (
           (!this.isDifferentPayment &&
-            state === 'unset_base_amount' &&
-            !this.isRequestEntrancePage) ||
+            response.data.base_amount == null &&
+            !this.isRequestEntrancePage &&
+            !this.isRequestResultPage) ||
           (this.isDifferentPayment &&
             !this.isRequestEntrancePage &&
             !this.isRequestResultPage)
@@ -209,6 +211,8 @@ export default {
             this.$refs.paymentIndex.progressCompletedSteps
           )
         }
+      }).catch((error) => {
+        console.log(error)
       })
     },
     handleChainChanged() {
