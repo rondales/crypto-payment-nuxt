@@ -53,6 +53,6 @@ export default {
     rpcUrl: NETWORKS[81].rpcUrl,
     scanUrl: NETWORKS[81].scanUrl,
     icon: require('@/assets/images/network/astar.svg'),
-    iconPath: 'network-astar'
+    iconPath: 'network-doge'
   }
 }

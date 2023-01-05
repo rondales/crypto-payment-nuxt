@@ -1,6 +1,6 @@
 import { NETWORKS } from '@/constants'
-import Usdt from '../../abis/matic/usdt'
-import Wastr from '../../abis/matic/wastr'
+import Usdt from '../../abis/astr/usdt'
+import Wastr from '../../abis/astr/wastr'
 
 const url = NETWORKS[81].scanUrl + '/token'
 

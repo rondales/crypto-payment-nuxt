@@ -116,7 +116,7 @@ export const NETWORKS = {
     chainId: 81,
     rpcUrl: 'https://evm.shibuya.astar.network',
     scanUrl: 'https://shibuya.subscan.io',
-    icon: require('@/assets/images/network/astr.svg'),
+    icon: require('@/assets/images/network/astar.svg'),
     iconPath: 'network-astar',
     type: null
   },
@@ -127,7 +127,7 @@ export const NETWORKS = {
     chainId: 592,
     rpcUrl: 'https://evm.astar.network',
     scanUrl: 'https://blockscout.com/astar',
-    icon: require('@/assets/images/network/astr.svg'),
+    icon: require('@/assets/images/network/astar.svg'),
     iconPath: 'network-astar',
     type: null
   }

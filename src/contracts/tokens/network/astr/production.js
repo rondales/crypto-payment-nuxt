@@ -63,7 +63,7 @@ export default {
     address: '0xDe2578Edec4669BA7F41c5d5D2386300bcEA4678',
     abi: Erc20Abi,
     url: `${url}/0xDe2578Edec4669BA7F41c5d5D2386300bcEA4678`,
-    icon: require('https://app.arthswap.org/images/coins/0xDe2578Edec4669BA7F41c5d5D2386300bcEA4678.png'),
+    icon: require('@/assets/images/icon/crypto_currency/arsw.png'),
     iconPath: 'crypto_currency/arsw',
     iconType: 'png'
   },
@@ -73,7 +73,7 @@ export default {
     address: '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF',
     abi: Erc20Abi,
     url: `${url}/0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF`,
-    icon: require('https://app.arthswap.org/images/coins/0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF.png'),
+    icon: require('@/assets/images/icon/crypto_currency/dot.png'),
     iconPath: 'crypto_currency/dot',
     iconType: 'png'
   },
@@ -83,7 +83,7 @@ export default {
     address: '0xfffFFfFF00000000000000010000000000000003',
     abi: Erc20Abi,
     url: `${url}/0xfffFFfFF00000000000000010000000000000003`,
-    icon: require('https://app.arthswap.org/images/coins/0xfffFFfFF00000000000000010000000000000003.png'),
+    icon: require('@/assets/images/icon/crypto_currency/glmr.png'),
     iconPath: 'crypto_currency/glmr',
     iconType: 'png'
   }
