@@ -15,7 +15,9 @@ import {
   AVALANCHE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
   AVALANCHE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
   DOGE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
-  DOGE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+  DOGE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT,
+  ASTR_MAINNET_SCAN_BLOCK_NUMBER_LIMIT,
+  ASTR_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
 } from '@/constants'
 import AvailableNetworks from '@/network'
 import {
@@ -23,14 +25,16 @@ import {
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
   AvalancheTokens as AvalancheDefaultTokens,
-  DogeTokens as DogeDefaultTokens
+  DogeTokens as DogeDefaultTokens,
+  AstrTokens as AstrDefaultTokens
 } from '@/contracts/tokens'
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalancheReceiveTokens,
-  DogeTokens as DogeReceiveTokens
+  DogeTokens as DogeReceiveTokens,
+  AstrTokens as AstrReceiveTokens
 } from '@/contracts/receive_tokens'
 import MerchantFactoryContract from '@/contracts/merchant_factory'
 import { UniswapVersion } from 'simple-uniswap-sdk'
@@ -164,7 +168,12 @@ const getAccountData = async function (web3, chainId) {
   }
 }
 
-const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNetworks = null) {
+const getDefaultTokens = async function (
+  web3,
+  chainId,
+  walletAddress,
+  merchantNetworks = null
+) {
   const defaultTokens = getNetworkDefaultTokens(chainId)
   const supportedNetworkMainnet = {
     1: 'ethereum',
@@ -177,8 +186,9 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
     97: 'bsc_testnet'
   }
 
-  const isSupportedNetworkMainnet =
-    Object.keys(supportedNetworkMainnet).includes(chainId.toString())
+  const isSupportedNetworkMainnet = Object.keys(
+    supportedNetworkMainnet
+  ).includes(chainId.toString())
   const isSupportedNetworkTestnet = Object.keys(
     supportedNetworkTestnet
   ).includes(chainId.toString())
@@ -233,44 +243,46 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
         tokens = tokens.concat(
           (
             await Promise.all(
-              Object.values(supportedChainDefaultTokens).map(async (defaultToken) => {
-                const addressDefaultToken =
-                  defaultToken.address === null ? '-' : defaultToken.address
-                const token = balanceTokens[addressDefaultToken.toLowerCase()]
-                if (!token) return null
-                balanceTokens[
-                  addressDefaultToken.toLowerCase()
-                ].isSupported = true
+              Object.values(supportedChainDefaultTokens).map(
+                async (defaultToken) => {
+                  const addressDefaultToken =
+                    defaultToken.address === null ? '-' : defaultToken.address
+                  const token = balanceTokens[addressDefaultToken.toLowerCase()]
+                  if (!token) return null
+                  balanceTokens[
+                    addressDefaultToken.toLowerCase()
+                  ].isSupported = true
 
-                const tokenContract =
-                  defaultToken.address === null
-                    ? null
-                    : new web3Instance.eth.Contract(
-                        defaultToken.abi,
-                        defaultToken.address
-                      )
-                const balance = await getBalance(
-                  web3Instance,
-                  walletAddress,
-                  tokenContract
-                )
+                  const tokenContract =
+                    defaultToken.address === null
+                      ? null
+                      : new web3Instance.eth.Contract(
+                          defaultToken.abi,
+                          defaultToken.address
+                        )
+                  const balance = await getBalance(
+                    web3Instance,
+                    walletAddress,
+                    tokenContract
+                  )
 
-                return {
-                  chain: NETWORKS[supportedChainId].name,
-                  chainId: supportedChainId,
-                  networkIcon: NETWORKS[supportedChainId].iconPath,
-                  name: defaultToken.name,
-                  symbol: defaultToken.symbol,
-                  decimal: token.decimals.toString(),
-                  address: defaultToken.address,
-                  balance,
-                  icon: defaultToken.icon,
-                  path: defaultToken.iconPath,
-                  type: defaultToken.iconType,
-                  isShitCoin: token.isShitCoin,
-                  logo: token.logo
+                  return {
+                    chain: NETWORKS[supportedChainId].name,
+                    chainId: supportedChainId,
+                    networkIcon: NETWORKS[supportedChainId].iconPath,
+                    name: defaultToken.name,
+                    symbol: defaultToken.symbol,
+                    decimal: token.decimals.toString(),
+                    address: defaultToken.address,
+                    balance,
+                    icon: defaultToken.icon,
+                    path: defaultToken.iconPath,
+                    type: defaultToken.iconType,
+                    isShitCoin: token.isShitCoin,
+                    logo: token.logo
+                  }
                 }
-              })
+              )
             )
           ).filter((item) => item !== null)
         )
@@ -332,28 +344,27 @@ const getDefaultTokens = async function(web3, chainId, walletAddress, merchantNe
           : new web3.eth.Contract(defaultToken.abi, defaultToken.address)
       try {
         const decimal =
-        tokenContract === null
-          ? 18
-          : parseInt(await tokenContract.methods.decimals().call(), 10)
-      const balance = await getBalance(web3, walletAddress, tokenContract)
-      return {
-        chain: NETWORKS[chainId].name,
-        chainId,
-        networkIcon: NETWORKS[chainId].iconPath,
-        name: defaultToken.name,
-        symbol: defaultToken.symbol,
-        decimal: decimal,
-        address: defaultToken.address,
-        balance: balance,
-        icon: defaultToken.icon,
-        path: defaultToken.iconPath,
-        type: defaultToken.iconType
+          tokenContract === null
+            ? 18
+            : parseInt(await tokenContract.methods.decimals().call(), 10)
+        const balance = await getBalance(web3, walletAddress, tokenContract)
+        return {
+          chain: NETWORKS[chainId].name,
+          chainId,
+          networkIcon: NETWORKS[chainId].iconPath,
+          name: defaultToken.name,
+          symbol: defaultToken.symbol,
+          decimal: decimal,
+          address: defaultToken.address,
+          balance: balance,
+          icon: defaultToken.icon,
+          path: defaultToken.iconPath,
+          type: defaultToken.iconType
         }
       } catch (err) {
         console.log(err)
         return null
       }
-      
     })
   )
 
@@ -500,19 +511,24 @@ const getTokenExchangeData = async function (
   const wrappedToken = getWrappedToken(chainId)
   const merchantContract = new web3.eth.Contract(contract.abi, contract.address)
   const defaultTokens = getMerchantReceiveTokens(chainId)
-  const inputTokenAddress = token.address == null ? wrappedToken.address : token.address
+  const inputTokenAddress =
+    token.address == null ? wrappedToken.address : token.address
   const outputToken = defaultTokens[paymentRequestSymbol]
-  const outputTokenAddress = outputToken.address == nativeTokenAddress ? wrappedToken.address : outputToken.address
+  const outputTokenAddress =
+    outputToken.address == nativeTokenAddress
+      ? wrappedToken.address
+      : outputToken.address
   const userTokenBalanceWei = convertToWei(web3, token.balance, token.decimal)
-  const requestAmountWei = convertToWei(web3, paymentRequestAmount, outputToken.decimals)
+  const requestAmountWei = convertToWei(
+    web3,
+    paymentRequestAmount,
+    outputToken.decimals
+  )
   const path = [inputTokenAddress, outputTokenAddress]
 
-  const userTokenToRequestToken = await merchantContract.methods.getAmountOut(
-      inputTokenAddress,
-      userTokenBalanceWei,  
-      path,
-      reservedParam
-    ).call({ from: walletAddress })
+  const userTokenToRequestToken = await merchantContract.methods
+    .getAmountOut(inputTokenAddress, userTokenBalanceWei, path, reservedParam)
+    .call({ from: walletAddress })
 
   const bestExchange = await getBestRate(
     chainId,
@@ -521,24 +537,33 @@ const getTokenExchangeData = async function (
     paymentRequestAmount
   )
 
-  const requestTokenToUserToken = bestExchange.price == 0 ? 
-    requestAmountWei
-    : convertToWei(web3, bestExchange.price.toString(), token.decimal)
-  
-  const requireAmountWithSlippage = inputTokenAddress == outputTokenAddress
-    ? requestAmountWei
-    : String(
-        Math.round(
-          parseInt(requestTokenToUserToken, 10) * (1 + (paymentFeeRate / 100))
+  const requestTokenToUserToken =
+    bestExchange.price == 0
+      ? requestAmountWei
+      : convertToWei(web3, bestExchange.price.toString(), token.decimal)
+
+  const requireAmountWithSlippage =
+    inputTokenAddress == outputTokenAddress
+      ? requestAmountWei
+      : String(
+          Math.round(
+            parseInt(requestTokenToUserToken, 10) * (1 + paymentFeeRate / 100)
+          )
         )
-      )
-  const feeArray = await merchantContract.methods.getFeeAmount(
+  const feeArray = await merchantContract.methods
+    .getFeeAmount(
       requestAmountWei,
       [], // feePath
       reservedParam
-    ).call({ from: walletAddress })
-  const totalFee = Object.values(feeArray).reduce((a, b) => parseInt(a) + parseInt(b), 0)
-  const totalFeeWithSlippage = String(Math.round(totalFee * (1 + (gasFeeRate / 100))))
+    )
+    .call({ from: walletAddress })
+  const totalFee = Object.values(feeArray).reduce(
+    (a, b) => parseInt(a) + parseInt(b),
+    0
+  )
+  const totalFeeWithSlippage = String(
+    Math.round(totalFee * (1 + gasFeeRate / 100))
+  )
   return {
     requireAmount: convertFromWei(
       web3,
@@ -546,7 +571,11 @@ const getTokenExchangeData = async function (
       token.decimal
     ),
     requestAmountWei: requestAmountWei,
-    equivalentAmount: convertFromWei(web3, userTokenToRequestToken, outputToken.decimals),
+    equivalentAmount: convertFromWei(
+      web3,
+      userTokenToRequestToken,
+      outputToken.decimals
+    ),
     fee: web3.utils.fromWei(totalFeeWithSlippage, 'ether'),
     requestTokenDecimal: outputToken.decimals,
     bestExchange
@@ -699,29 +728,34 @@ const sendPaymentTransaction = async function (
     )
     path = bestExchange.pathParam
   }
-  return new Promise(function(resolve, reject) {
-    merchantContract.methods.submitTransaction(
-      paymentTokenAddress,
-      userTokenAmountWei,
-      requestAmountWei,
-      path,
-      feePath,
-      paymentIdParam,
-      optionalParam,
-      reservedParam
-    ).send({
-      from: walletAddress,
-      to: contract.address,
-      value: msgValue,
-      maxPriorityFeePerGas: null,
-      maxFeePerGas: null
-    },(error, txHash) => {
-      if(error) {
-        reject(error)
-      } else {
-        resolve(txHash)
-      }
-    })
+  return new Promise(function (resolve, reject) {
+    merchantContract.methods
+      .submitTransaction(
+        paymentTokenAddress,
+        userTokenAmountWei,
+        requestAmountWei,
+        path,
+        feePath,
+        paymentIdParam,
+        optionalParam,
+        reservedParam
+      )
+      .send(
+        {
+          from: walletAddress,
+          to: contract.address,
+          value: msgValue,
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null
+        },
+        (error, txHash) => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve(txHash)
+          }
+        }
+      )
   })
 }
 
@@ -745,11 +779,9 @@ const publishMerchantContract = function (
     MerchantFactoryContract.addresses[chainId],
     { transactionBlockTimeout: scanBlockNumberMaxLimit }
   )
-  return factoryContract.methods.deployMerchant(
-      merchantWalletAddress,
-      receiveTokenAddress,
-      reservedParam
-    ).send({ 
+  return factoryContract.methods
+    .deployMerchant(merchantWalletAddress, receiveTokenAddress, reservedParam)
+    .send({
       from: merchantWalletAddress,
       maxPriorityFeePerGas: null,
       maxFeePerGas: null
@@ -956,7 +988,7 @@ const checkMerchantContractPaused = async function (
   return { chainId, paused: true }
 }
 
-const deleteMerchantContract = function() {
+const deleteMerchantContract = function () {
   // @todo Implement functions for deletion inside smart contracts as soon as they are known
   throw new Error('deleteMerchantContract function is not yet implemented')
 }
@@ -1110,6 +1142,9 @@ function getNetworkDefaultTokens(chainId) {
     case NETWORKS[2000].chainId:
     case NETWORKS[568].chainId:
       return DogeDefaultTokens
+    case NETWORKS[592].chainId:
+    case NETWORKS[81].chainId:
+      return AstrDefaultTokens
   }
 }
 
@@ -1130,11 +1165,21 @@ function getMerchantReceiveTokens(chainId) {
     case NETWORKS[2000].chainId:
     case NETWORKS[568].chainId:
       return DogeReceiveTokens
+    case NETWORKS[592].chainId:
+    case NETWORKS[81].chainId:
+      return AstrReceiveTokens
   }
 }
 
 function getWrappedToken(chainId) {
-  const wrappedTokenSymbols = ['WETH', 'WBNB', 'WMATIC', 'WAVAX', 'WWDOGE']
+  const wrappedTokenSymbols = [
+    'WETH',
+    'WBNB',
+    'WMATIC',
+    'WAVAX',
+    'WWDOGE',
+    'WASTR'
+  ]
   const defaultTokens = getNetworkDefaultTokens(chainId)
   let wrappedToken = null
   wrappedTokenSymbols.forEach((symbol) => {
@@ -1167,6 +1212,10 @@ const getScanBlockNumberMaxLimit = function getScanBlockNumberMaxLimit(
       return DOGE_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
     case NETWORKS[568].chainId:
       return DOGE_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[592].chainId:
+      return ASTR_MAINNET_SCAN_BLOCK_NUMBER_LIMIT
+    case NETWORKS[81].chainId:
+      return ASTR_TESTNET_SCAN_BLOCK_NUMBER_LIMIT
     default:
       return DEFAULT_SCAN_BLOCK_NUMBER_LIMIT
   }

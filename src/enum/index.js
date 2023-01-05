@@ -28,5 +28,15 @@ export const network = {
     name: 'Doge Testnet',
     symbol: 'BNB',
     icon: 'h-doge.svg'
+  },
+  81: {
+    name: 'Astar Testnet',
+    symbol: 'ASTR',
+    icon: 'h-astr.svg'
+  },
+  592: {
+    name: 'Astar Mainnet',
+    symbol: 'ASTR',
+    icon: 'h-astr.svg'
   }
 }

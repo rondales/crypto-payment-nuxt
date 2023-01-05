@@ -72,7 +72,8 @@ export default {
         BNB: 'BNB native token',
         MATIC: 'MATIC native token',
         AVAX: 'AVAX native token',
-        DOGE: 'Dogechain native token'
+        DOGE: 'Dogechain native token',
+        ASTAR: 'Astar native token'
       },
       tokenIcons: {
         USDT: require('@/assets/images/icon/usdt-l.svg'),
@@ -84,7 +85,8 @@ export default {
         BNB: require('@/assets/images/symbol/bnb.svg'),
         MATIC: require('@/assets/images/symbol/matic.svg'),
         AVAX: require('@/assets/images/symbol/avax.svg'),
-        DOGE: require('@/assets/images/symbol/wdoge.svg')
+        DOGE: require('@/assets/images/symbol/wdoge.svg'),
+        ASTR: require('@/assets/images/symbol/astr.svg')
       },
       tokenMarketUrls: {
         USDT: "https://coinmarketcap.com/currencies/tether/",
@@ -96,7 +98,8 @@ export default {
         BNB: "https://coinmarketcap.com/currencies/bnb/",
         MATIC: "https://coinmarketcap.com/currencies/polygon/",
         AVAX: "https://coinmarketcap.com/currencies/avalanche/",
-        DOGE: 'https://coinmarketcap.com/currencies/dogecoin/'
+        DOGE: 'https://coinmarketcap.com/currencies/dogecoin/',
+        ASTR: 'https://coinmarketcap.com/currencies/astar/'
       },
     };
   },

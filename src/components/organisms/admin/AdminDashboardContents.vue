@@ -109,7 +109,8 @@ import {
   EthereumTokens,
   MaticTokens,
   AvalancheTokens,
-  DogeTokens
+  DogeTokens,
+  AstrTokens
 } from '@/contracts/receive_tokens'
 import DashItem from "@/components/organisms/admin/AdminDashItem"
 
@@ -142,6 +143,7 @@ export default {
         MATIC: require('@/assets/images/symbol/matic.svg'),
         AVAX: require('@/assets/images/symbol/avax.svg'),
         DOGE: require('@/assets/images/symbol/doge.svg'),
+        ASTR: require('@/assets/images/symbol/astr.svg')
       },
       receiveTokens: {}
     }
@@ -291,6 +293,11 @@ export default {
           alias: AvailableNetworks.doge.alias,
           icon: AvailableNetworks.doge.icon,
           token: DogeTokens[this.receiveTokenSymbol]
+        },
+        [AvailableNetworks.astr.chainId]: {
+          alias: AvailableNetworks.astr.alias,
+          icon: AvailableNetworks.astr.icon,
+          token: AstrTokens[this.receiveTokenSymbol]
         }
       }
     }

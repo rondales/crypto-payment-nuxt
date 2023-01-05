@@ -160,21 +160,24 @@ import {
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
   AvalancheTokens as AvalancheDefaultTokens,
-  DogeTokens as DogeDefaultTokens
+  DogeTokens as DogeDefaultTokens,
+  AstrTokens as AstrDefaultTokens
 } from '@/contracts/tokens'
 import {
   EthereumTokens as EthereumStableTokens,
   BscTokens as BscStableTokens,
   MaticTokens as MaticStableTokens,
   AvalancheTokens as AvalancheStableTokens,
-  DogeTokens as DogeStableTokens
+  DogeTokens as DogeStableTokens,
+  AstrTokens as AstrStableTokens
 } from '@/contracts/stable_tokens'
 import {
   EthereumTokens as EthereumReceiveTokens,
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
-  DogeTokens as DogeReceiveTokens
+  DogeTokens as DogeReceiveTokens,
+  AstrTokens as AstrReceiveTokens
 } from '@/contracts/receive_tokens'
 
 export default {
@@ -258,6 +261,8 @@ export default {
         return AvalacheReceiveTokens
       } else if (this.isCurrentNetworkDoge) {
         return DogeReceiveTokens
+      } else if(this.isCurrentNetworkAstr) {
+        return AstrReceiveTokens
       } else {
         return {}
       }
@@ -273,6 +278,8 @@ export default {
         return AvalancheDefaultTokens
       } else if (this.isCurrentNetworkDoge) {
         return DogeDefaultTokens
+      } else if (this.isCurrentNetworkAstr) {
+        return AstrDefaultTokens
       } else {
         return {}
       }
@@ -288,6 +295,8 @@ export default {
         return AvalancheStableTokens
       } else if (this.isCurrentNetworkDoge) {
         return DogeStableTokens
+      } else if (this.isCurrentNetworkAstr) {
+        return AstrStableTokens
       } else {
         return {}
       }
@@ -374,6 +383,12 @@ export default {
       return (
         this.chainId === NETWORKS[568].chainId ||
         this.chainId === NETWORKS[2000].chainId
+      )
+    },
+    isCurrentNetworkAstr() {
+      return (
+        this.chainId === NETWORKS[592].chainId ||
+        this.chainId === NETWORKS[81].chainId
       )
     },
     isUserSelectedNativeToken() {
