@@ -312,16 +312,16 @@ export default {
       return this.isMobile && this.metamaskInstalled
     },
     shouldShowNavigateBanner() {
-      return this.openOriginalBrowserFlg 
+      return this.openOriginalBrowserFlg
         && (this.isStatusSucceeded || this.isStatusFailured)
         && this.isMetamaskBrowser
     },
     transactionText() {
       let transactionText = ''
       if (this.isStatusProcessing) {
-        transactionText = `Pay ${this.filterAmount(this.userPaidAmount)}${
+        transactionText = `Pay ${this.filterAmount(this.userPaidAmount)} ${
             this.userPaidSymbol
-          } for ${this.filterAmount(this.merchantReceiveAmount)}${
+          } for ${this.filterAmount(this.merchantReceiveAmount)} ${
             this.merchantReceiveSymbol
           }`
       } else if (this.isStatusFailured) {
