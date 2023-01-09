@@ -159,7 +159,7 @@
               <img src="@/assets/images/symbol/astr.svg">
             </figure>
             <p class="welcome-receice_name">
-              wrapped ASTR
+              ASTR
               <br>
               ASTAR-native token
             </p>

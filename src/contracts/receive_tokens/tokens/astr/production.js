@@ -113,7 +113,7 @@ export default {
     symbol: 'ASTR',
     address: '0x0000000000000000000000000000000000000000',
     abi: null,
-    decimals: null,
+    decimals: 18,
     url: null,
     icon: require('@/assets/images/symbol/astr.svg'),
     iconPath: 'crypto_currency/received_token/astr'
