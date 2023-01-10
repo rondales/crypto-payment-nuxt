@@ -30,24 +30,47 @@
     >
       <div v-if="isCurrentListTab" class="tab__wrap">
         <!-- <p class="tokentab__title"><span>Select token</span></p> -->
-        <div v-if="tokenList.length == 0" class="nowloading">
+        <!-- <div v-if="tokenList.length == 0" class="nowloading">
           <PaymentIcon path="logo-icon-mono" />
           <p><span>Now Loading...</span></p>
+        </div> -->
+
+        <!-- ローディングの分岐を追加 -->
+        <div v-if="skelton">
+          <div
+            class="tokentab__items"
+            v-for="(token, key) in 6"
+            :key="key"
+            @click="handleSelectToken(token)"
+          >
+            <PaymentAmountBilled
+              icon=""
+              symbol="symbol"
+              symboltext="symboltext"
+              price="0000.000"
+              size="bg"
+              :skelton="true"
+            />
+          </div>
         </div>
-        <div
-          class="tokentab__items"
-          v-for="(token, key) in tokenList"
-          :key="key"
-          @click="handleSelectToken(token)"
-        >
-          <PaymentAmountBilled
-            :icon="token.path"
-            :icon-type="token.type"
-            :symbol="token.symbol"
-            :symboltext="token.name"
-            :price="token.balance | balanceFormat"
-            size="bg"
-          />
+        <div v-else>
+          <div
+            class="tokentab__items"
+            v-for="(token, key) in tokenList.filter(token => !token.isShitCoin)"
+            :key="key"
+            @click="handleSelectToken(token)"
+          >
+            <PaymentAmountBilled
+              :icon="token.path"
+              :icon-type="token.type"
+              :icon-url="token.logo"
+              :symbol="token.symbol"
+              :symboltext="token.name"
+              :price="token.balance | balanceFormat"
+              size="bg"
+              :networkIcon="token.networkIcon"
+            />
+          </div>
         </div>
       </div>
       <div v-else-if="isCurrentTokenImportTab" class="tab__wrap">
@@ -114,7 +137,7 @@
               size="s"
               v-if="isExistSearchedTokens"
               color="cancel"
-              text="Crear All"
+              text="Clear All"
             />
           </div>
         </div>
@@ -129,7 +152,7 @@ import PaymentAction from '@/components/organisms/Payment/ww/fragments/Action'
 import PaymentTab from '@/components/organisms/Payment/ww/fragments/Tab'
 import PaymentForm from '@/components/organisms/Payment/ww/fragments/Form'
 import PaymentButton from '@/components/organisms/Payment/ww/fragments/Button'
-import PaymentIcon from '@/components/organisms/Payment/ww/fragments/Icon'
+// import PaymentIcon from '@/components/organisms/Payment/ww/fragments/Icon'
 
 import { Decimal } from 'decimal.js'
 import { METAMASK, WALLET_CONNECT, NETWORKS } from '@/constants'
@@ -151,13 +174,15 @@ export default {
       searchTokenAddressInvalid: false,
       searchedTokenList: [],
       searchedTokenCount: 0,
+      skelton: true,
+      gotDefaultTokenAllChain: false,
       contract: {
         address: null,
         abi: null
       },
       tabBodyStyle: {
         '--wh': '100vh'
-      }
+      },
     }
   },
   components: {
@@ -165,8 +190,8 @@ export default {
     PaymentAction,
     PaymentTab,
     PaymentForm,
-    PaymentButton,
-    PaymentIcon
+    PaymentButton
+    // PaymentIcon
   },
   filters: {
     balanceFormat(balance) {
@@ -197,6 +222,9 @@ export default {
     chainId() {
       return this.$store.state.web3.chainId
     },
+    showAllChain() {
+      return this.$store.state.web3.showAllChain
+    },
     providerType() {
       return this.$store.state.web3.provider
     },
@@ -213,11 +241,15 @@ export default {
       return this.availableNetworks.length
     },
     currentNetworkName() {
+      if (this.showAllChain) return 'All Network (some not shown)'
+
       return this.chainId && this.isAvailableCurrentNetwork
         ? NETWORKS[this.chainId].name
         : 'Not supported network'
     },
     currentNetworkIcon() {
+      if (this.showAllChain) return 'logo-icon'
+
       if (this.chainId && this.isAvailableCurrentNetwork) {
         return NETWORKS[this.chainId].iconPath
       } else {
@@ -250,6 +282,9 @@ export default {
       return this.merchantReceiveTokenSymbol in tokens
         ? tokens[this.merchantReceiveTokenSymbol].iconPath
         : 'crypto_currency/unknown'
+    },
+    paymentAvailableNetworks() {
+      return this.$store.state.payment.availableNetworks
     },
     isEmptyWeb3Instance() {
       return this.web3Instance === null
@@ -330,6 +365,16 @@ export default {
       return this.$store.state.theme === 'dark'
     }
   },
+  watch: {
+    showAllChain(isShow) {
+      if (isShow) {
+        this.$parent.loading = true
+        this.getDefaultTokens().then(() => {
+          this.$parent.loading = false
+        })
+      }
+    }
+  },
   methods: {
     apiGetContract() {
       const url = `${this.API_BASE_URL}/api/v1/payment/contract`
@@ -353,16 +398,22 @@ export default {
       return func.catch(func)
     },
     getDefaultTokens() {
+      if (this.gotDefaultTokenAllChain && this.showAllChain) return;
+
+      this.tokenList = []
+      this.skelton = true
       const func = this.$web3.getDefaultTokens(
         this.web3Instance,
         this.chainId,
-        this.userAccountAddress
+        this.userAccountAddress,
+        this.showAllChain ? this.paymentAvailableNetworks : [this.chainId]
       )
       return func.catch(func).then((tokens) => {
-        tokens = tokens.filter((token) => {
+        this.tokenList = tokens.filter((token) => {
           return token != null
-        })
-        this.tokenList = tokens
+        }).sort((a, b) => a.isShitCoin - b.isShitCoin)
+        this.skelton = false
+        this.gotDefaultTokenAllChain = this.showAllChain && !this.gotDefaultTokenAllChain
       })
     },
     checkBlackListedTokenToBlockChain() {
@@ -372,12 +423,17 @@ export default {
         this.searchTokenAddress
       )
     },
-    searchTokenToBlockChain() {
-      return this.$web3.searchToken(
+    async searchTokenToBlockChain() {
+      const importedToken = await this.$web3.searchToken(
         this.web3Instance,
         this.searchTokenAddress,
         this.userAccountAddress
       )
+      importedToken.chain = NETWORKS[this.chainId].name
+      importedToken.chainId = this.chainId
+      importedToken.networkIcon = NETWORKS[this.chainId].iconPath
+
+      return importedToken
     },
     showErrorModal(message) {
       this.$store.dispatch('modal/show', {
@@ -463,7 +519,34 @@ export default {
       this.searchedTokenCount = 0
       this.searchTokenAddressInvalid = false
     },
-    handleSelectToken(selectedToken) {
+    async handleSelectToken(selectedToken) {
+      if (this.chainId != selectedToken.chainId) {
+        await this.$web3
+          .switchChain(this.$store.state.web3.instance, selectedToken.chainId)
+          .then(() => {
+            this.$store.dispatch(
+              'web3/updateChainId',
+              parseInt(selectedToken.chainId)
+            )
+          })
+          .catch((error) => {
+            console.log(error)
+            if (!('code' in error)) return
+            let errorCode = error.code
+            // @TODO I'd like to do something about this lame condition determination(saito)
+            if (
+              error.data &&
+              error.data.originalError &&
+              error.data.originalError.code
+            ) {
+              errorCode = error.data.originalError.code
+            }
+            if (errorCode === 4902) {
+              this.showAddChainModal(selectedToken.chainId)
+            }
+          })
+      }
+
       this.$store.dispatch('payment/updateToken', {
         name: selectedToken.name,
         symbol: selectedToken.symbol,
@@ -480,6 +563,7 @@ export default {
     },
     handleAccountChangedEvent() {
       this.$parent.loading = true
+      this.gotDefaultTokenAllChain = false
       this.getAccountDataFromBlockChain()
         .then((account) => {
           return this.$store.dispatch('account/update', account)
@@ -497,7 +581,6 @@ export default {
       this.$store.dispatch('web3/updateChainId', chainId)
 
       if (this.isAvailableCurrentNetwork) {
-        this.tokenList = []
         this.$parent.loading = true
         if (this.isShowNetworkModal) {
           this.$store.dispatch('modal/hide')
@@ -527,9 +610,8 @@ export default {
   created() {
     if (this.isNeedRestoreWeb3Connection) {
       this.$router.push({
-        name: 'ww-wallets',
-        params: { token: this.paymentToken },
-        query: this.$route.query
+        name: 'wallets',
+        params: { token: this.paymentToken }
       })
     }
   },
@@ -548,7 +630,6 @@ export default {
       'chainChanged',
       this.handleChainChangedEvent
     )
-
     if (this.isAvailableCurrentNetwork) {
       const funcList = [
         this.updateContractDataFromApi(),
@@ -702,6 +783,15 @@ export default {
     margin-bottom: 1rem;
     &__items {
       margin-bottom: 0.5rem;
+    }
+  }
+  &__othertoken {
+    &::v-deep {
+      .button.size_m {
+        border-radius: 0.5rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
   .foot {

@@ -68,11 +68,11 @@ export default {
   @include flex(space-between, center);
   &.network {
     .icon {
-      width: 2.5rem;
+      width: 2rem;
     }
     .text {
       flex: 1;
-      @include font(1rem, 400, 0.04em, 1.8, $en_go);
+      @include font(0.9rem, 400, 0.04em, 1.8, $en_go);
     }
   }
   .textwrap {

@@ -17,13 +17,36 @@
       />
     </PaymentTitle>
 
+    <!-- ローディングの分岐を追加 -->
     <PaymentAmountBilled
+      v-if="skelton"
+      class="exchange__balance"
+      symboltext="symboltext"
+      symbol="symbol"
+      icon=""
+      :skelton="true"
+      :table="[
+        {
+          title: 'Balance',
+          price: '0000',
+          symbol: 'USDT'
+        },
+        {
+          title: 'Balance',
+          price: '0000',
+          symbol: 'USDT'
+        }
+      ]"
+    />
+    <PaymentAmountBilled
+      v-else
       class="exchange__balance"
       :symbol="userSelectedTokenSymbol"
       :icon="userSelectedTokenIcon"
       icon-type="png"
       :table="balanceTable"
     />
+
     <PaymentAction
       class="exchange__update"
       v-if="
@@ -42,7 +65,17 @@
         @click.native="updateTokenExchangeData()"
       />
     </PaymentAction>
+
+    <!-- ローディングの分岐を追加 -->
     <PaymentPrice
+      v-if="skelton"
+      class="exchange__price"
+      symbol="symbol"
+      price="0000.00"
+      :skelton="true"
+    />
+    <PaymentPrice
+      v-else
       :symbol="userSelectedTokenSymbol"
       :price="userSelectedTokenPayAmount | formatPrice"
       class="exchange__price"
@@ -63,7 +96,9 @@
           class="btn-allowance"
           :color="isWalletConfirming ? 'inactive' : 'primary'"
           size="l"
-          :text="'Allow the Slash protocol to use your ' + userSelectedTokenSymbol"
+          :text="
+            'Allow the Slash protocol to use your ' + userSelectedTokenSymbol
+          "
           @click.native="handleTokenApprove"
           :icon="userSelectedTokenIcon"
           icon-type="png"
@@ -112,13 +147,14 @@ import PaymentPrice from '@/components/organisms/Payment/ww/fragments/Price'
 import PaymentButton from '@/components/organisms/Payment/ww/fragments/Button'
 import { Decimal } from 'decimal.js'
 import DeviceIdHandlerMixin from '@/components/mixins/ww/DeviceIdHandler'
-import { 
+import {
   METAMASK,
   WALLET_CONNECT,
   NETWORKS,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
-  STATUS_RESULT_SUCCESS } from '@/constants'
+  STATUS_RESULT_SUCCESS
+} from '@/constants'
 import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
@@ -159,7 +195,8 @@ export default {
         abi: null
       },
       balanceTable: [],
-      isNotEnoughLiquidity: false
+      isNotEnoughLiquidity: false,
+      skelton: true
     }
   },
   mixins: [DeviceIdHandlerMixin],
@@ -434,9 +471,7 @@ export default {
     apiGetTransaction() {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       const request = {
-        params: new URLSearchParams([
-          ['payment_token', this.paymentToken]
-        ])
+        params: new URLSearchParams([['payment_token', this.paymentToken]])
       }
       return this.axios.get(url, request)
     },
@@ -574,9 +609,9 @@ export default {
         })
     },
     /*
-    * Handling logic:
-    * STATUS PROCESSING, SUCCESS, FAIL => Redirect to result page
-    */
+     * Handling logic:
+     * STATUS PROCESSING, SUCCESS, FAIL => Redirect to result page
+     */
     handlePay() {
       if (this.expired) return
         this.apiGetTransaction().then((response) => {
@@ -588,20 +623,19 @@ export default {
             query: this.$route.query
           })
         } else {
-          this.apiGetTransactionDeviceIdMatchingStatus().then(((response) => {
-            if(response.data.match) {
+          this.apiGetTransactionDeviceIdMatchingStatus().then((response) => {
+            if (response.data.match) {
               this.executePay()
             } else {
               this.$store.dispatch('modal/show', {
                 target: 'error-modal',
                 size: 'small',
                 params: {
-                  message:
-                    'Unexpected Error. Please reapply the payment again.'
+                  message: 'Unexpected Error. Please reapply the payment again.'
                 }
               })
             }
-          }))
+          })
         }
       })
     },
@@ -635,12 +669,14 @@ export default {
       chainId = this.web3Instance.utils.isHex(chainId)
         ? this.web3Instance.utils.hexToNumber(chainId)
         : chainId
-      this.$store.dispatch('web3/updateChainId', chainId)
-      this.$router.push({ 
-        name: 'ww-token',
-        params: { token: this.paymentToken },
-        query: this.$route.query
-      })
+      if (chainId !== this.chainId) {
+        this.$store.dispatch('web3/updateChainId', chainId)
+        this.$router.push({ 
+          name: 'ww-token',
+          params: { token: this.paymentToken },
+          query: this.$route.query
+        })
+      }
     },
     handleAccountChangedEvent(address) {
       this.$store.dispatch('account/updateAddress', address[0])
@@ -717,6 +753,7 @@ export default {
               ),
               symbol: this.equivalentSymbol
             })
+            this.skelton = false
           })
           .catch((err) => {
             Sentry.captureException(err)
