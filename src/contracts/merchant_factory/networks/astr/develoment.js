@@ -7,6 +7,6 @@ export default {
   },
   premain: {
     chainId: NETWORKS[592].chainId,
-    address: '0xEAcA40f44d368f3a72bF043e33aa0F0Fd8542283'
+    address: '0x94109CF78a94F857ecaf4822CA5011Da4B1D0F98'
   }
 }

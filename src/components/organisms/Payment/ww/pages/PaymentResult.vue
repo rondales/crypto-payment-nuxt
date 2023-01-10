@@ -199,7 +199,6 @@ export default {
         return AstrReceiveTokens
       } else {
         return {}
->>>>>>> add stg astar
       }
     },
     paidNetworkDefaultTokens() {
