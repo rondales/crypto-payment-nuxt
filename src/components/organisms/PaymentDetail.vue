@@ -745,7 +745,7 @@ export default {
               symbol: this.userSelectedTokenSymbol
             })
             this.balanceTable.push({
-              title: 'Equivalenttt',
+              title: 'Equivalent',
               price: Decimal(this.balanceEquivalentAmount).toFixed(
                 4,
                 Decimal.ROUND_FLOOR
