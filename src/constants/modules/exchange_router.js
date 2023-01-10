@@ -295,7 +295,7 @@ export const SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS = {
   592: {
     customNetwork: {
       nameNetwork: 'Astar Mainnet',
-      multicallContractAddress: '0xF38fFE881d0b1DE39ef7a661F40841C0A5Bd7D3c',
+      multicallContractAddress: '0x4a473406ec920b07687b25A7ee7630938Ff89c27',
       nativeCurrency: {
         name: 'native-currency',
         symbol: 'nc'
