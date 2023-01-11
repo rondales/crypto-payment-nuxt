@@ -711,7 +711,7 @@ const sendPaymentTransaction = async function (
     token.address === null ? nativeTokenAddress : token.address
   const msgValue =
     token.address === null
-      ? parseInt(userTokenAmountWei) + parseInt(platformFeeWei)
+      ? '0x' + (parseInt(userTokenAmountWei) + parseInt(platformFeeWei)).toString(16)
       : platformFeeWei
 
   if (bestExchange.name == 'uniswapV3') {
