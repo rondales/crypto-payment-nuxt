@@ -656,37 +656,38 @@ export default {
                 btnType: "a"
               },
             },
-            {
-              show: true,
-              addId: "donate",
-              layout: "c",
-              title: "Slash automatically donation program",
-              image: {
-                src: "lp/donated.jpg",
-                alt: "Slash automatically donation program",
-                lightSrc: "",
-              },
-              text: "0.1% of the 0.2~0.6% commission fee will be collected as a donation. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
-              logos: [
-                {
-                  alt: "save-the-children",
-                  src: "lp/logos/savethechildren.svg",
-                  lightSrc: "lp/logos/savethechildren_l.svg",
-                },
-                {
-                  alt: "unicef",
-                  src: "lp/logos/unicef.svg",
-                  lightSrc: "",
-                },
-              ],
-              link: {
-                url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
-                title: "donation program",
-                icon: "icon/arrow",
-                iconAfter: true,
-                btnType: "a"
-              },
-            },
+            // @INFO https://github.com/slash-fi/web3payment-front/issues/873
+            // {
+            //   show: true,
+            //   addId: "donate",
+            //   layout: "c",
+            //   title: "Slash automatically donation program",
+            //   image: {
+            //     src: "lp/donated.jpg",
+            //     alt: "Slash automatically donation program",
+            //     lightSrc: "",
+            //   },
+            //   text: "0.1% of the 0.2~0.6% commission fee will be collected as a donation. It are automatically sent to the Slash Donation Wallet to be donated to social causes. We question the Old ecosystem in which people need donations. Ideally, we would like to see a world where people who need donations do not exist, a world of peace and prosperity where children can envision a bright future without being caught up in conflicts between countries. In order to contribute as much as possible to this new ideal ecosystem in which people can live their lives, we have incorporated an automated donation system into the Slash Payment. In the future, we will form a community so that people can decide where to donate by voting on slash tokens.",
+            //   logos: [
+            //     {
+            //       alt: "save-the-children",
+            //       src: "lp/logos/savethechildren.svg",
+            //       lightSrc: "lp/logos/savethechildren_l.svg",
+            //     },
+            //     {
+            //       alt: "unicef",
+            //       src: "lp/logos/unicef.svg",
+            //       lightSrc: "",
+            //     },
+            //   ],
+            //   link: {
+            //     url: "https://slash-fi.gitbook.io/docs/whitepaper/slash-project-white-paper",
+            //     title: "donation program",
+            //     icon: "icon/arrow",
+            //     iconAfter: true,
+            //     btnType: "a"
+            //   },
+            // },
             {
               layout: "l",
               addId: "slash-token",
@@ -734,22 +735,23 @@ export default {
                 status: true,
               },
             },
-            {
-              title: "Experience it first hand.",
-              image: {
-                src: "lp/donate-image02.jpg",
-                alt: "Experience it first hand.",
-                lightSrc: "",
-              },
-              logo: "icon/donate-unicef",
-              text: "https://www.unicef.org/",
-              link: {
-                title: "Donate Now",
-                func: "paymentForDonate_UNICEF",
-                icon: "connect",
-                status: true,
-              },
-            },
+            // @INFO https://github.com/slash-fi/web3payment-front/issues/873
+            // {
+            //   title: "Experience it first hand.",
+            //   image: {
+            //     src: "lp/donate-image02.jpg",
+            //     alt: "Experience it first hand.",
+            //     lightSrc: "",
+            //   },
+            //   logo: "icon/donate-unicef",
+            //   text: "https://www.unicef.org/",
+            //   link: {
+            //     title: "Donate Now",
+            //     func: "paymentForDonate_UNICEF",
+            //     icon: "connect",
+            //     status: true,
+            //   },
+            // },
           ],
         },
         network: {

@@ -38,22 +38,23 @@ export default {
             status: true
           }
         },
-        {
-          title: 'Experience it first hand.',
-          image: {
-            src: 'lp/donate-image02.jpg',
-            alt: 'Experience it first hand.',
-            lightSrc: ''
-          },
-          logo: 'icon/unicef',
-          text: 'https://www.unicef.org/',
-          link: {
-            title: 'Donate Now',
-            func: 'paymentForDonate_UNICEF',
-            icon: 'connect',
-            status: true
-          }
-        }
+        // @INFO https://github.com/slash-fi/web3payment-front/issues/873
+        // {
+        //   title: 'Experience it first hand.',
+        //   image: {
+        //     src: 'lp/donate-image02.jpg',
+        //     alt: 'Experience it first hand.',
+        //     lightSrc: ''
+        //   },
+        //   logo: 'icon/unicef',
+        //   text: 'https://www.unicef.org/',
+        //   link: {
+        //     title: 'Donate Now',
+        //     func: 'paymentForDonate_UNICEF',
+        //     icon: 'connect',
+        //     status: true
+        //   }
+        // }
       ]
     }
   },
@@ -141,7 +142,9 @@ export default {
     }
   }
   &__logo {
-    @include flex(flex-start, stretch);
+    // @INFO https://github.com/slash-fi/web3payment-front/issues/873
+    // @include flex(flex-start, stretch);
+    @include flex(center, stretch);
     flex-wrap: nowrap;
     gap: rem(1);
     width: auto;
