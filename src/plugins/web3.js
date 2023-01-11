@@ -1004,15 +1004,16 @@ const convertToWei = function convertToWei(web3, amount, decimal) {
 }
 
 const convertFromWei = function convertFromWei(web3, wei, decimal) {
+  wei = Number.parseFloat(wei)
   let fraction = web3.utils
-    .toBN(wei.toString())
+    .toBN(wei.toString(16))
     .mod(web3.utils.toBN(`1${'0'.repeat(decimal)}`))
     .toString(10)
   while (fraction.length < decimal) {
     fraction = `0${fraction}`
   }
   const whole = web3.utils
-    .toBN(wei.toString())
+    .toBN(wei.toString(16))
     .div(web3.utils.toBN(`1${'0'.repeat(decimal)}`))
     .toString(10)
 
