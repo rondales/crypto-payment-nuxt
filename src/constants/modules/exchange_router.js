@@ -540,7 +540,7 @@ export const EXCHANGE_ROUTERS = {
     },
     dogeswap: {
       address: '0xa4EE06Ce40cb7e8c04E127c1F7D3dFB7F7039C81',
-      flag: '0x01',
+      flag: '0x21',
       cloneUniswapContractDetails: {
         v2Override: {
           factoryAddress: '0xd27d9d61590874bf9ee2a19b27e265399929c9c3',
@@ -548,6 +548,6 @@ export const EXCHANGE_ROUTERS = {
           routerAddress: '0xa4EE06Ce40cb7e8c04E127c1F7D3dFB7F7039C81'
         }
       }
-    },
+    }
   }
 }
