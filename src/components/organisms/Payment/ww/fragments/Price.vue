@@ -1,10 +1,16 @@
 <template>
   <div :class="classes">
     <div class="head">
-      <p class="symbol non-translate"><span v-html="symbol"></span></p>
-      <p class="cap non-translate" :class="setCapColor"><span v-html="cap + cap2"></span></p>
+      <p class="symbol non-translate" :class="{ skelton: skelton }">
+        <span v-html="symbol"></span>
+      </p>
+      <p class="cap non-translate" :class="skelton ? 'skelton' : setCapColor">
+        <span v-html="cap + cap2"></span>
+      </p>
     </div>
-    <p class="price"><span v-html="price"></span></p>
+    <p class="price" :class="{ skelton: skelton }">
+      <span v-html="price"></span>
+    </p>
   </div>
 </template>
 
@@ -32,6 +38,10 @@ export default {
     status: {
       type: String,
       default: 'success'
+    },
+    skelton: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -88,6 +98,9 @@ export default {
     text-align: right;
     @include font(1.44rem, 600, $ls, $lh, $en_go);
     color: var(--Text);
+    width: max-content;
+    margin-right: 0;
+    margin-left: auto;
   }
 }
 </style>

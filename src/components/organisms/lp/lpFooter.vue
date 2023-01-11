@@ -133,14 +133,15 @@ export default {
               blank: false,
               show: true
             },
-            donationProgram: {
-              title: "Donation Program",
-              url: "",
-              name: "home",
-              hash: "#donate",
-              blank: false,
-              show: true
-            },
+            // @INFO https://github.com/slash-fi/web3payment-front/issues/873
+            // donationProgram: {
+            //   title: "Donation Program",
+            //   url: "",
+            //   name: "home",
+            //   hash: "#donate",
+            //   blank: false,
+            //   show: true
+            // },
             slashToken: {
               title: "Slash Token",
               url: "",
