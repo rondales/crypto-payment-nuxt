@@ -46,5 +46,17 @@ export const networkList = {
     symbol: 'DOGE',
     icon: 'h-doge.svg',
     type: null
+  },
+  81: {
+    name: 'Astar Testnet',
+    symbol: 'ASTR',
+    icon: 'h-astr.svg',
+    type: null
+  },
+  592: {
+    name: 'Astar Mainnet',
+    symbol: 'ASTR',
+    icon: 'h-astr.svg',
+    type: null
   }
 }

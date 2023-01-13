@@ -258,6 +258,72 @@ export const SIMPLE_UNISWAP_SDK_CUSTOM_NETWORKS = {
         }
       }
     }
+  },
+  81: {
+    customNetwork: {
+      nameNetwork: 'Astar Testnet',
+      multicallContractAddress: '0x7b519fbA06c4eB42c31c0A58bE712e4b66607E50',
+      nativeCurrency: {
+        name: 'native-currency',
+        symbol: 'nc'
+      },
+      nativeWrappedTokenInfo: {
+        chainId: 81,
+        contractAddress: '0x9Af480478974a2fda7d5aE667541639164D2858B',
+        decimals: 18,
+        name: 'Wrapped Astar',
+        symbol: 'WASTR'
+      },
+      baseTokens: {
+        usdt: {
+          chainId: 81,
+          contractAddress: '0x94373a4919B3240D86eA41593D5eBa789FEF3848',
+          decimals: 6,
+          name: 'USDT',
+          symbol: 'USDT'
+        },
+        usdc: {
+          chainId: 81,
+          contractAddress: '0xebca682b6C15d539284432eDc5b960771F0009e8',
+          decimals: 6,
+          name: 'USDC',
+          symbol: 'USDC'
+        }
+      }
+    }
+  },
+  592: {
+    customNetwork: {
+      nameNetwork: 'Astar Mainnet',
+      multicallContractAddress: '0x4a473406ec920b07687b25A7ee7630938Ff89c27',
+      nativeCurrency: {
+        name: 'native-currency',
+        symbol: 'nc'
+      },
+      nativeWrappedTokenInfo: {
+        chainId: 592,
+        contractAddress: '0xAeaaf0e2c81Af264101B9129C00F4440cCF0F720',
+        decimals: 18,
+        name: 'Wrapped Astar',
+        symbol: 'WASTR'
+      },
+      baseTokens: {
+        usdt: {
+          chainId: 592,
+          contractAddress: '0x3795C36e7D12A8c252A20C5a7B455f7c57b60283',
+          decimals: 6,
+          name: 'USDT',
+          symbol: 'USDT'
+        },
+        usdc: {
+          chainId: 592,
+          contractAddress: '0x6a2d262D56735DbA19Dd70682B39F6bE9a931D98',
+          decimals: 6,
+          name: 'USDC',
+          symbol: 'USDC'
+        }
+      }
+    }
   }
 }
 export const EXCHANGE_ROUTERS = {
@@ -546,6 +612,32 @@ export const EXCHANGE_ROUTERS = {
           factoryAddress: '0xd27d9d61590874bf9ee2a19b27e265399929c9c3',
           pairAddress: '0xd27d9d61590874bf9ee2a19b27e265399929c9c3',
           routerAddress: '0xa4EE06Ce40cb7e8c04E127c1F7D3dFB7F7039C81'
+        }
+      }
+    }
+  },
+  81: {
+    arthswap: {
+      address: '0xB3260c3E7E5Af6d710C9B8Db74eC006C3B6Ba23c',
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0x0091f4e75a03c11cb9be8e3717219005eb780d89',
+          pairAddress: '0x0091f4e75a03c11cb9be8e3717219005eb780d89',
+          routerAddress: '0xB3260c3E7E5Af6d710C9B8Db74eC006C3B6Ba23c'
+        }
+      }
+    }
+  },
+  592: {
+    arthswap: {
+      address: '0xE915D2393a08a00c5A463053edD31bAe2199b9e7',
+      flag: '0x01',
+      cloneUniswapContractDetails: {
+        v2Override: {
+          factoryAddress: '0xa9473608514457b4bf083f9045fa63ae5810a03e',
+          pairAddress: '0xa9473608514457b4bf083f9045fa63ae5810a03e',
+          routerAddress: '0xE915D2393a08a00c5A463053edD31bAe2199b9e7'
         }
       }
     }

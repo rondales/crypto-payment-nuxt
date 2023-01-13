@@ -4,8 +4,9 @@ import Binance from './networks/binance'
 import Matic from './networks/matic'
 import Avalanche from './networks/avalanche'
 import Doge from './networks/doge'
+import Astr from './networks/astr'
 
-const networks = [Ethereum, Binance, Matic, Avalanche, Doge]
+const networks = [Ethereum, Binance, Matic, Avalanche, Doge, Astr]
 
 let addresses = {}
 networks.forEach((network) => {

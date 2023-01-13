@@ -108,5 +108,27 @@ export const NETWORKS = {
     icon: require('@/assets/images/network/doge.svg'),
     iconPath: 'network-doge',
     type: null
+  },
+  81: {
+    name: 'Astar testnet',
+    alias: 'Shibuya',
+    symbol: 'ASTR',
+    chainId: 81,
+    rpcUrl: 'https://evm.shibuya.astar.network',
+    scanUrl: 'https://shibuya.subscan.io',
+    icon: require('@/assets/images/network/astar.svg'),
+    iconPath: 'network-astar',
+    type: null
+  },
+  592: {
+    name: 'Astar mainnet',
+    alias: 'Astar',
+    symbol: 'ASTR',
+    chainId: 592,
+    rpcUrl: 'https://evm.astar.network',
+    scanUrl: 'https://blockscout.com/astar',
+    icon: require('@/assets/images/network/astar.svg'),
+    iconPath: 'network-astar',
+    type: null
   }
 }

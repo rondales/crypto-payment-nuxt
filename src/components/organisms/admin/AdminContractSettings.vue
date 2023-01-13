@@ -207,7 +207,8 @@ import {
   EthereumTokens,
   MaticTokens,
   AvalancheTokens,
-  DogeTokens
+  DogeTokens,
+  AstrTokens
 } from '@/contracts/receive_tokens'
 import apiMixin from '@/components/mixins/ApiHandler'
 import MerchantContract from '@/contracts/merchant'
@@ -533,7 +534,9 @@ export default {
       [AvailableNetworks.avalanche.chainId]:
         AvalancheTokens[receiveTokenSymbol].address,
       [AvailableNetworks.doge.chainId]:
-        DogeTokens[receiveTokenSymbol].address
+        DogeTokens[receiveTokenSymbol].address,
+      [AvailableNetworks.astr.chainId]:
+        AstrTokens[receiveTokenSymbol].address
     }
     let contractSettings = {}
     Object.values(AvailableNetworks).forEach((network) => {

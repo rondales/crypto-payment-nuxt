@@ -85,11 +85,20 @@ import {
   STATUS_RESULT_SUCCESS
 } from '@/constants'
 import {
+  EthereumTokens as EthereumReceiveTokens,
+  BscTokens as BscReceiveTokens,
+  MaticTokens as MaticReceiveTokens,
+  AvalancheTokens as AvalacheReceiveTokens,
+  DogeTokens as DogeReceiveTokens,
+  AstrTokens as AstrReceiveTokens
+} from '@/contracts/receive_tokens'
+import {
   EthereumTokens as EthereumDefaultTokens,
   BscTokens as BscDefaultTokens,
   MaticTokens as MaticDefaultTokens,
   AvalancheTokens as AvalancheDefaultTokens,
-  DogeTokens as DogeDefaultTokens
+  DogeTokens as DogeDefaultTokens,
+  AstrTokens as AstrDefaultTokens
 } from '@/contracts/tokens'
 
 export default {
@@ -171,7 +180,25 @@ export default {
         BNB: 'crypto_currency/received_token/bnb',
         MATIC: 'crypto_currency/received_token/matic',
         AVAX: 'crypto_currency/received_token/avax',
-        DOGE: 'crypto_currency/received_token/doge'
+        DOGE: 'crypto_currency/received_token/doge',
+        ASTR: 'crypto_currency/received_token/astr'
+      }
+    },
+    merchantReceiveTokens() {
+      if (this.isPaidEthereum) {
+        return EthereumReceiveTokens
+      } else if (this.isPaidBinance) {
+        return BscReceiveTokens
+      } else if (this.isPaidMatic) {
+        return MaticReceiveTokens
+      } else if (this.isPaidAvalanche) {
+        return AvalacheReceiveTokens
+      } else if (this.isPaidDoge) {
+        return DogeReceiveTokens
+      } else if (this.isPaidAstr) {
+        return AstrReceiveTokens
+      } else {
+        return {}
       }
     },
     paidNetworkDefaultTokens() {
@@ -185,6 +212,8 @@ export default {
         return AvalancheDefaultTokens
       } else if (this.isPaidDoge) {
         return DogeDefaultTokens
+      } else if (this.isPaidAstr) {
+        return AstrDefaultTokens
       } else {
         return null
       }
@@ -262,6 +291,12 @@ export default {
         this.chainId === NETWORKS[2000].chainId
       )
     },
+    isPaidAstr() {
+      return (
+        this.chainId === NETWORKS[592].chainId ||
+        this.chainId === NETWORKS[81].chainId
+      )
+    },
     hasCashback() {
       if (!this.cashbackAmount) return false
       return Decimal(this.cashbackAmount).toString() !== '0'
@@ -276,16 +311,16 @@ export default {
       return this.isMobile && this.metamaskInstalled
     },
     shouldShowNavigateBanner() {
-      return this.openOriginalBrowserFlg 
+      return this.openOriginalBrowserFlg
         && (this.isStatusSucceeded || this.isStatusFailured)
         && this.isMetamaskBrowser
     },
     transactionText() {
       let transactionText = ''
       if (this.isStatusProcessing) {
-        transactionText = `Pay ${this.filterAmount(this.userPaidAmount)}${
+        transactionText = `Pay ${this.filterAmount(this.userPaidAmount)} ${
             this.userPaidSymbol
-          } for ${this.filterAmount(this.merchantReceiveAmount)}${
+          } for ${this.filterAmount(this.merchantReceiveAmount)} ${
             this.merchantReceiveSymbol
           }`
       } else if (this.isStatusFailured) {
