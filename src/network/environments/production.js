@@ -45,5 +45,14 @@ export default {
     scanUrl: NETWORKS[2000].scanUrl,
     icon: require('@/assets/images/network/doge.svg'),
     iconPath: 'network-doge'
+  },
+  astr: {
+    name: NETWORKS[592].name,
+    alias: NETWORKS[592].alias,
+    chainId: NETWORKS[592].chainId,
+    rpcUrl: NETWORKS[592].rpcUrl,
+    scanUrl: NETWORKS[592].scanUrl,
+    icon: require('@/assets/images/network/astar.svg'),
+    iconPath: 'network-astar'
   }
 }

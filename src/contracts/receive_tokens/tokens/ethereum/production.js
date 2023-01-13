@@ -2,7 +2,7 @@ import { NETWORKS } from '@/constants'
 import Usdt from '../../abis/ethereum/usdt'
 import Usdc from '../../abis/ethereum/usdc'
 import Dai from '../../abis/ethereum/dai'
-import Jpyc  from '../../abis/ethereum/jpyc'
+import Jpyc from '../../abis/ethereum/jpyc'
 import Weth from '../../abis/ethereum/weth'
 
 const url = NETWORKS[1].scanUrl + '/token'
@@ -16,7 +16,7 @@ export default {
     decimals: 6,
     url: `${url}/0xdac17f958d2ee523a2206206994597c13d831ec7`,
     icon: require('@/assets/images/symbol/usdt.svg'),
-    iconPath: "crypto_currency/received_token/usdt"
+    iconPath: 'crypto_currency/received_token/usdt'
   },
   USDC: {
     name: 'USD Coin',
@@ -26,7 +26,7 @@ export default {
     decimals: 6,
     url: `${url}/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`,
     icon: require('@/assets/images/symbol/usdc.svg'),
-    iconPath: "crypto_currency/received_token/usdc"
+    iconPath: 'crypto_currency/received_token/usdc'
   },
   DAI: {
     name: 'MakerDAO',
@@ -36,7 +36,7 @@ export default {
     decimals: 18,
     url: `${url}/0x6B175474E89094C44Da98b954EedeAC495271d0F`,
     icon: require('@/assets/images/symbol/dai.svg'),
-    iconPath: "crypto_currency/received_token/dai"
+    iconPath: 'crypto_currency/received_token/dai'
   },
   JPYC: {
     name: 'JPY Coin',
@@ -46,7 +46,7 @@ export default {
     decimals: 18,
     url: `${url}/0x431D5dfF03120AFA4bDf332c61A6e1766eF37BDB`,
     icon: require('@/assets/images/symbol/jpyc.svg'),
-    iconPath: "crypto_currency/received_token/jpyc"
+    iconPath: 'crypto_currency/received_token/jpyc'
   },
   WETH: {
     name: 'Wrapped ETH',
@@ -56,7 +56,7 @@ export default {
     decimals: 18,
     url: `${url}/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2`,
     icon: require('@/assets/images/symbol/eth.svg'),
-    iconPath: "crypto_currency/received_token/weth"
+    iconPath: 'crypto_currency/received_token/weth'
   },
   ETH: {
     name: 'ETH native token',
@@ -66,7 +66,7 @@ export default {
     decimals: 18,
     url: null,
     icon: require('@/assets/images/symbol/eth.svg'),
-    iconPath: "crypto_currency/received_token/eth"
+    iconPath: 'crypto_currency/received_token/eth'
   },
   BNB: {
     name: 'BNB native token',
@@ -76,7 +76,7 @@ export default {
     decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/bnb.svg'),
-    iconPath: "crypto_currency/received_token/bnb"
+    iconPath: 'crypto_currency/received_token/bnb'
   },
   MATIC: {
     name: 'MATIC native token',
@@ -86,7 +86,7 @@ export default {
     decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/matic.svg'),
-    iconPath: "crypto_currency/received_token/matic"
+    iconPath: 'crypto_currency/received_token/matic'
   },
   AVAX: {
     name: 'AVAX native token',
@@ -96,7 +96,7 @@ export default {
     decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/avax.svg'),
-    iconPath: "crypto_currency/received_token/avax"
+    iconPath: 'crypto_currency/received_token/avax'
   },
   DOGE: {
     name: 'wrapped DOGE token',
@@ -106,6 +106,16 @@ export default {
     decimals: null,
     url: null,
     icon: require('@/assets/images/symbol/doge.svg'),
-    iconPath: "crypto_currency/received_token/doge"
+    iconPath: 'crypto_currency/received_token/doge'
+  },
+  ASTR: {
+    name: 'ASTAR native token',
+    symbol: 'ASTR',
+    address: null,
+    abi: null,
+    decimals: null,
+    url: null,
+    icon: require('@/assets/images/symbol/astr.svg'),
+    iconPath: 'crypto_currency/received_token/astr'
   }
 }

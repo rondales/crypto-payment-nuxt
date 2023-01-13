@@ -161,7 +161,8 @@ import {
   BscTokens as BscReceiveTokens,
   MaticTokens as MaticReceiveTokens,
   AvalancheTokens as AvalacheReceiveTokens,
-  DogeTokens as DogeReceiveTokens
+  DogeTokens as DogeReceiveTokens,
+  AstrTokens as AstrReceiveTokens
 } from '@/contracts/receive_tokens'
 
 export default {
@@ -267,6 +268,8 @@ export default {
         return AvalacheReceiveTokens
       } else if (this.isCurrentNetworkDoge) {
         return DogeReceiveTokens
+      } else if (this.isCurrentNetworkAstr) {
+        return AstrReceiveTokens
       } else {
         return {}
       }
@@ -329,6 +332,12 @@ export default {
       return (
         this.chainId === NETWORKS[568].chainId ||
         this.chainId === NETWORKS[2000].chainId
+      )
+    },
+    isCurrentNetworkAstr() {
+      return (
+        this.chainId === NETWORKS[592].chainId ||
+        this.chainId === NETWORKS[81].chainId
       )
     },
     isAvailableCurrentNetwork() {

@@ -153,6 +153,20 @@
               beta ver.
             </div>
           </div>
+          <div class="welcome-receice_token tree" @click="selectToken(symbols.astr)"
+            :class="{ active: isTokenSelected(symbols.astr) }">
+            <figure>
+              <img src="@/assets/images/symbol/astr.svg">
+            </figure>
+            <p class="welcome-receice_name">
+              ASTR
+              <br>
+              ASTAR-native token
+            </p>
+            <div class="welcome-receice_box gradation-gray">
+              beta ver.
+            </div>
+          </div>
         </div>
       </div>
       <button @click="showConfirmModal" class="welcome-receice_btn">
@@ -207,7 +221,8 @@ export default {
         bnb: 'BNB',
         avax: 'AVAX',
         matic: 'MATIC',
-        doge: 'DOGE'
+        doge: 'DOGE',
+        astr: 'ASTR',
       }
     }
   },
