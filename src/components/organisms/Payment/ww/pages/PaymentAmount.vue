@@ -376,6 +376,9 @@ export default {
         @include media(sp) {
           font-size: rem_sp(1);
         }
+        option {
+          background-color: var(--color_bg);
+        }
       }
     }
   }
