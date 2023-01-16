@@ -1,8 +1,6 @@
+import Sentry from './sentry/index'
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import * as Sentry from "@sentry/vue"
-import { BrowserTracing } from "@sentry/tracing"
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -14,6 +12,7 @@ import store from '@/store'
 import Clipboard from "v-clipboard"
 import VueMeta from 'vue-meta'
 
+Sentry.init(router)
 
 Vue.use(Clipboard);
 Vue.use(Vuex)
@@ -24,20 +23,6 @@ Vue.use(VueMeta, {
 })
 
 Vue.config.productionTip = false
-
-if (process.env.VUE_APP_SENTRY_DSN !== '') {
-  Sentry.init({
-    Vue,
-    dsn: process.env.VUE_APP_SENTRY_DSN,
-    integrations: [
-      new BrowserTracing({
-        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        tracingOrigins: ['localhost', /^\//],
-      })
-    ],
-    tracesSampleRate: 1.0
-  })
-}
 
 new Vue({
   router,
