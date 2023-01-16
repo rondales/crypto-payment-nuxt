@@ -151,6 +151,8 @@ import {
   METAMASK,
   WALLET_CONNECT,
   NETWORKS,
+  STATUS_PUBLISHED,
+  STATUS_WALLET_CONFIRMING,
   STATUS_PROCESSING,
   STATUS_RESULT_FAILURE,
   STATUS_RESULT_SUCCESS
@@ -461,7 +463,7 @@ export default {
       }
       return this.axios.get(url, request)
     },
-    apiUpdateTransaction(transactionHash) {
+    apiUpdateTransactionAddress(transactionHash) {
       const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
       return this.axios.patch(
         url,
@@ -474,6 +476,19 @@ export default {
           pay_symbol: this.userSelectedTokenSymbol,
           pay_amount: this.userSelectedTokenPayAmount,
           device_id: this.$_deviceIdHandler_get()
+        },
+        {
+          withCredentials: true
+        }
+      )
+    },
+    apiUpdateTransactionStatus(status) {
+      const url = `${this.API_BASE_URL}/api/v1/payment/transaction`
+      return this.axios.patch(
+        url,
+        {
+          payment_token: this.paymentToken,
+          status: status,
         },
         {
           withCredentials: true
@@ -621,7 +636,7 @@ export default {
     },
     /*
      * Handling logic:
-     * STATUS PROCESSING, SUCCESS, FAIL => Redirect to result page
+     * STATUS PROCESSING, SUCCESS, FAIL || is_cancelled  => Redirect to result page
      */
     handlePay() {
       if (this.expired) return
@@ -635,6 +650,7 @@ export default {
         } else {
           this.apiGetTransactionDeviceIdMatchingStatus().then((response) => {
             if (response.data.match) {
+              this.apiUpdateTransactionStatus(STATUS_WALLET_CONFIRMING)
               this.executePay()
             } else {
               this.$store.dispatch('modal/show', {
@@ -653,8 +669,9 @@ export default {
       this.$store.dispatch('wallet/updatePendingStatus', true)
       this.sendPaymentTransactionToBlockChain()
         .then((txHash) => {
+          console.log(txHash)
           this.$store.dispatch('payment/updateStatus', STATUS_PROCESSING)
-          this.apiUpdateTransaction(txHash)
+          this.apiUpdateTransactionAddress(txHash)
             .then(() => {
               this.$router.push({
                 name: 'result',
@@ -671,6 +688,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          this.apiUpdateTransactionStatus(STATUS_PUBLISHED)
           this.$store.dispatch('wallet/updatePendingStatus', false)
         })
     },
