@@ -526,10 +526,6 @@ const getTokenExchangeData = async function (
   )
   const path = [inputTokenAddress, outputTokenAddress]
 
-  const userTokenToRequestToken = await merchantContract.methods
-    .getAmountOut(inputTokenAddress, userTokenBalanceWei, path, reservedParam)
-    .call({ from: walletAddress })
-
   const bestExchange = await getBestRate(
     chainId,
     walletAddress,
@@ -541,6 +537,18 @@ const getTokenExchangeData = async function (
     bestExchange.price == 0
       ? requestAmountWei
       : convertToWei(web3, bestExchange.price.toString(), token.decimal)
+
+  const userTokenToRequestToken =
+    inputTokenAddress == outputTokenAddress
+      ? userTokenBalanceWei
+      : web3.utils
+          .toBN(userTokenBalanceWei)
+          .div(
+            web3.utils
+              .toBN(requestTokenToUserToken)
+              .div(web3.utils.toBN(requestAmountWei))
+          )
+          .toNumber()
 
   const requireAmountWithSlippage =
     inputTokenAddress == outputTokenAddress
@@ -1036,16 +1044,16 @@ const convertToWei = function convertToWei(web3, amount, decimal) {
 }
 
 const convertFromWei = function convertFromWei(web3, wei, decimal) {
-  wei = Number.parseFloat(wei)
+  wei = Number(wei)
   let fraction = web3.utils
-    .toBN(wei.toString(16))
+    .toBN('0x' + wei.toString(16))
     .mod(web3.utils.toBN(`1${'0'.repeat(decimal)}`))
     .toString(10)
   while (fraction.length < decimal) {
     fraction = `0${fraction}`
   }
   const whole = web3.utils
-    .toBN(wei.toString(16))
+    .toBN('0x' + wei.toString(16))
     .div(web3.utils.toBN(`1${'0'.repeat(decimal)}`))
     .toString(10)
 
