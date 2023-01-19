@@ -541,14 +541,12 @@ const getTokenExchangeData = async function (
   const userTokenToRequestToken =
     inputTokenAddress == outputTokenAddress
       ? userTokenBalanceWei
-      : web3.utils
-          .toBN(userTokenBalanceWei)
-          .div(
-            web3.utils
-              .toBN(requestTokenToUserToken)
-              .div(web3.utils.toBN(requestAmountWei))
-          )
-          .toNumber()
+      : convertToWei(
+          web3,
+          (parseFloat(token.balance) /
+            (parseFloat(bestExchange.price) / parseFloat(paymentRequestAmount))).toString(),
+          outputToken.decimals
+        )
 
   const requireAmountWithSlippage =
     inputTokenAddress == outputTokenAddress
@@ -1022,6 +1020,7 @@ const getNetworkGasPrice = function (web3) {
   return web3.eth.getGasPrice()
 }
 
+// Ref: https://github.com/ethjs/ethjs-unit/blob/master/src/index.js
 const convertToWei = function convertToWei(web3, amount, decimal) {
   const comps = amount.split('.')
   let whole = comps[0],
@@ -1032,13 +1031,17 @@ const convertToWei = function convertToWei(web3, amount, decimal) {
   if (!fraction) {
     fraction = '0'
   }
+
+  if (fraction.length > decimal)
+    fraction = fraction.slice(0, decimal)
+
   while (fraction.length < decimal) {
     fraction += '0'
   }
 
   return web3.utils
     .toBN(whole)
-    .mul(web3.utils.toBN(web3.utils.toBN(`1${'0'.repeat(decimal)}`)))
+    .mul(web3.utils.toBN(`1${'0'.repeat(decimal)}`))
     .add(web3.utils.toBN(fraction))
     .toString(10)
 }
