@@ -37,7 +37,7 @@ export const NETWORKS = {
     alias: 'BNB',
     symbol: 'BNB',
     chainId: 97,
-    rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    rpcUrl: 'https://data-seed-prebsc-1-s3.binance.org:8545/',
     scanUrl: 'https://testnet.bscscan.com',
     icon: require('@/assets/images/network/binance.svg'),
     iconPath: 'network-binance',
