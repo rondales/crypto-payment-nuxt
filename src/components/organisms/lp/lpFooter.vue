@@ -68,7 +68,7 @@
       </ul>
       <p class="copy">
         <span
-          >@ {{ copyrightYear }} Copyrights by <a href="https://slash.vision/">SLASH VISION.</a> All Rights
+          >@ 2022 Copyrights by <a href="https://slash.vision/">SLASH VISION.</a> All Rights
           Reserved.</span
         >
       </p>
@@ -77,7 +77,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import LpIcon from "@/components/templates/LpParts/Icon";
 export default {
   name: "Footer",
@@ -242,11 +241,6 @@ export default {
       },
       localUrl: "",
     };
-  },
-  computed: {
-    copyrightYear() {
-      return moment().format('YYYY')
-    }
   },
   created() {
     this.localUrl = location.origin;
