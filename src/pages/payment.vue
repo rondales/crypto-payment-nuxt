@@ -13,7 +13,7 @@
 
 <script>
 import PaymentIndex from '@/components/templates/PaymentIndex'
-import { STATUS_PUBLISHED, STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS } from '@/constants'
+import { STATUS_PUBLISHED, STATUS_WALLET_CONFIRMING, STATUS_PROCESSING, STATUS_RESULT_FAILURE, STATUS_RESULT_SUCCESS } from '@/constants'
 import MerchantContract from '@/contracts/merchant'
 import Web3 from 'web3'
 
@@ -99,7 +99,8 @@ export default {
       return this.urlPaymentToken !== this.storedPaymentToken
     },
     isSentTransactionToBlockChain() {
-      return this.storedPaymentData.status !== STATUS_PUBLISHED
+      return this.storedPaymentData.status !== STATUS_PUBLISHED 
+          || this.storedPaymentData.status !== STATUS_WALLET_CONFIRMING
     },
     isRequestEntrancePage() {
       return this.$route.name === 'entrance'

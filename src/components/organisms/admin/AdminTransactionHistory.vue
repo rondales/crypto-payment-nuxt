@@ -17,6 +17,7 @@
             <select v-model="searchParams.status.value">
               <option value="0">All</option>
               <option value="1">System Received</option>
+              <option value="5">Wallet Confirming</option>
               <option value="2">Result Pending</option>
               <option value="3">Cancelled</option>
               <option value="4">Completed</option>
@@ -102,6 +103,9 @@
                   </div>
                   <div v-if="record.status === 2" class="pending">
                     Result Pending
+                  </div>
+                  <div v-if="record.status === 5" class="wallet-confirming">
+                    Wallet Confirming
                   </div>
                   <div v-if="record.status === 3" class="cancelled">
                     Cancelled
@@ -629,6 +633,11 @@ change the style.scss to import style.scss directly under the scss directory.
           .received{
             border: 1px solid #C0C0C0;
             color: #C0C0C0;
+            padding: 16px 16px;
+          }
+          .wallet-confirming{
+            border: 1px solid #ee07ff;
+            color: #ee07ff;
             padding: 16px 16px;
           }
           .pending{
