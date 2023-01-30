@@ -111,7 +111,7 @@ export const NETWORKS = {
   },
   81: {
     name: 'Astar testnet',
-    alias: 'Shibuya',
+    alias: 'Astar',
     symbol: 'ASTR',
     chainId: 81,
     rpcUrl: 'https://evm.shibuya.astar.network',
