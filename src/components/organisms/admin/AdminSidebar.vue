@@ -4,7 +4,7 @@
       <div class="side-bar--top"></div>
       <div class="side-bar--content">
         <div class="side-bar--inner">
-          <ul>
+          <ul class="non-translate">
             <li @click="close()">
               <router-link to="/admin/dashboard"> Dashboard </router-link>
             </li>

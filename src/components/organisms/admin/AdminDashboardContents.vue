@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="receive-right add-flex a-center">
-            <p v-if="isCurrentNetworkSupport" class="receive-address">
+            <p v-if="isCurrentNetworkSupport" class="receive-address non-translate">
               {{ currentNetworkAlias }}：<span>{{ currentNetworkReceiveTokenAddress }}</span>
             </p>
             <p v-else class="receive-address">
@@ -41,8 +41,8 @@
                 <img :src="network.icon">
                 <div class="tokens-name">
                   <p>
-                    <span>{{network.alias}}</span>
-                    <span v-if="network.token.address">{{network.token.address | omittedText}}</span>
+                    <span class="non-translate">{{network.alias}}</span>
+                    <span v-if="network.token.address" class="non-translate">{{network.token.address | omittedText}}</span>
                     <span v-else>Not support</span>
                   </p>
                 </div>
@@ -53,7 +53,7 @@
                   <img :class="{ inactive: !network.token.address }" src="@/assets/images/copy.svg">
                 </div>
                 <div
-                  class="network-switch"
+                  class="network-switch non-translate"
                   :class="{ inactive: !network.token.address }"
                   @click="network.token.address ? switchNetwork(index) : null"
                 >
@@ -72,7 +72,7 @@
       <h3>Networks for Deployed Payment Contract</h3>
     </div>
     <div class="deployed">
-      <div class="deployed-wrapper">
+      <div class="deployed-wrapper non-translate">
         <button
           v-for="(network, index) in availableNetworks"
           :key="index"
